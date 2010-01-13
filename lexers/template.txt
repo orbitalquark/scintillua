@@ -1,0 +1,11 @@
+-- ? LPeg lexer
+
+module(..., package.seeall)
+local P, R, S = lpeg.P, lpeg.R, lpeg.S
+
+Token = any_char
+Tokens = lpeg.Ct(Token^0)
+
+function LoadStyles()
+  -- add_style('id', style_table)
+end

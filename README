@@ -1,0 +1,62 @@
+Overview:
+
+  Changes to Scintilla:
+    * Replaced all Lex*.cpp files with LexLPeg.cpp and over 56 dynamic Lua
+      lexers.
+    * Added the following functions:
+        * SCI_GETLEXERLANGUAGE - returns the string name of the current lexer.
+        * SCI_GETSTYLENAME - returns the string style name at the caret
+          position.
+    * Existing external lexer modules will not work.
+    * No lexer-specific folding (can be added to each lexer).
+    * Everything else is identical. 
+
+  Changes to SciTE:
+    * Added Lua lpeg.c file.
+    * Added the following properties (to be put in SciTEGlobal.properties or
+      SciTEUser.properties):
+        * lexer.lua.home - directory containing dynamic Lua lexers.
+        * lexer.lua.script - path of lexer.lua file.
+        * lexer.lua.color.theme - universal color theme to use.
+        * fold.by.indentation - fold code by indentation level.
+        * decoder.lua.script - path of Lua script to interpret double-clicking
+          error messages in the output pane. 
+    * Lexer-specific features do not work anymore:
+        * Python colon matching.
+        * HTML/XML tag auto-completion.
+        * Double-clicking on error messages in the output pane (can add a Lua
+          script to restore this functionality).
+        * Style, keyword, and folding properties in *.properties files. 
+    * Everything else is identical. 
+
+  Speed:
+    * Single-language dynamic lexers parse the same amount of text as
+      Scintilla's original lexers. Any differences in speed should be
+      negligible.
+    * Multi-language dynamic lexers must parse the entire document and can be
+      noticibly slower on large files. 
+
+Compiling:
+
+  Two compile methods:
+    * Patch official Scintilla/SciTE with provided `scintillua.patch` and
+      compile.
+    * Compile provided Scintilla/SciTE.
+
+  Patch:
+    1. Download official Scintilla/SciTE and unpack.
+    2. Copy `scintillua.patch` to the unpacked directory.
+    3. Run 'patch -p1 < scintillua.patch' (without quotes).
+    4. Compile as normal.
+
+  Otherwise:
+    1. Compile as normal.
+
+  Notes:
+    Use scite/boundscheck/SciTE.vcproj for compiling on Windows.
+    Use mingw32 on Linux for compiling for Windows (first change '<Shlobj.h>' to
+      '<shlobj.h>' in scite/win32/SciTEWinDlg.cxx).
+
+Usage:
+
+  Use as you would standard Scintilla/SciTE.
