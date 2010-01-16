@@ -6,6 +6,8 @@ local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
 local ws = token('whitespace', space^1)
 
+local word = alpha * (alnum + S('_-!?'))^0
+
 -- comments
 local line_comment = ';' * nonnewline^0
 local block_comment = '#|' * (any - '|#')^0 * '|#'
@@ -65,7 +67,7 @@ local func = token('function', word_match(word_list{
 }, '-/<>!?=#'))
 
 -- identifiers
-local word = (alpha + '-') * (alnum + '-')^0
+local word = (alpha + S('-!?')) * (alnum + S('-!?'))^0
 local identifier = token('identifier', word)
 
 -- operators
@@ -77,11 +79,11 @@ local entity = token('entity', '&' * word)
 function LoadTokens()
   local scheme = scheme
   add_token(scheme, 'whitespace', ws)
-  add_token(scheme, 'comment', comment)
-  add_token(scheme, 'string', string)
-  add_token(scheme, 'number', number)
   add_token(scheme, 'keyword', keyword)
   add_token(scheme, 'identifier', identifier)
+  add_token(scheme, 'string', string)
+  add_token(scheme, 'comment', comment)
+  add_token(scheme, 'number', number)
   add_token(scheme, 'operator', operator)
   add_token(scheme, 'entity', entity)
   add_token(scheme, 'any_char', any_char)
