@@ -39,7 +39,7 @@ local variable = token('variable', '%' * (digit + '%' * alpha) +
   delimited_range('%', nil, false, false, '\n'))
 
 -- labels
-local label = token('label', ':' * word)
+local label = token('constant', ':' * word)
 
 -- operators
 local operator = token('operator', S('+|&!<>='))
@@ -47,11 +47,11 @@ local operator = token('operator', S('+|&!<>='))
 function LoadTokens()
   local batch = batch
   add_token(batch, 'whitespace', ws)
-  add_token(batch, 'comment', comment)
-  add_token(batch, 'string', string)
   add_token(batch, 'keyword', keyword)
   add_token(batch, 'function', func)
+  add_token(batch, 'comment', comment)
   add_token(batch, 'identifier', identifier)
+  add_token(batch, 'string', string)
   add_token(batch, 'variable', variable)
   add_token(batch, 'label', label)
   add_token(batch, 'operator', operator)
