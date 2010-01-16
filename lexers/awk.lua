@@ -45,18 +45,18 @@ local identifier = token('identifier', word)
 local variable = token('variable', '$' * digit^1)
 
 -- operators
-local operator = token('operator', S('=!<>+-/*%&|^~,:;(){}'))
+local operator = token('operator', S('=!<>+-/*%&|^~,:;()[]{}'))
 
 function LoadTokens()
   local awk = awk
   add_token(awk, 'whitespace', ws)
-  add_token(awk, 'comment', comment)
-  add_token(awk, 'string', string)
-  add_token(awk, 'number', number)
   add_token(awk, 'keyword', keyword)
   add_token(awk, 'function', func)
   add_token(awk, 'constant', constant)
   add_token(awk, 'identifier', identifier)
+  add_token(awk, 'string', string)
+  add_token(awk, 'comment', comment)
+  add_token(awk, 'number', number)
   add_token(awk, 'variable', variable)
   add_token(awk, 'operator', operator)
   add_token(awk, 'any_char', any_char)
