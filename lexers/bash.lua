@@ -51,13 +51,13 @@ local variable = token('variable', '$' * (S('!#?*@$') +
 local operator = token('operator', S('=!<>+-/*^~.,:;?()[]{}'))
 
 function LoadTokens()
-  local shell = shellscript
+  local shell = bash
   add_token(shell, 'whitespace', ws)
-  add_token(shell, 'comment', comment)
-  add_token(shell, 'string', string)
-  add_token(shell, 'number', number)
   add_token(shell, 'keyword', keyword)
   add_token(shell, 'identifier', identifier)
+  add_token(shell, 'string', string)
+  add_token(shell, 'comment', comment)
+  add_token(shell, 'number', number)
   add_token(shell, 'variable', variable)
   add_token(shell, 'operator', operator)
   add_token(shell, 'any_char', any_char)
