@@ -7,14 +7,15 @@ local P, R, S = lpeg.P, lpeg.R, lpeg.S
 local ws = token('whitespace', space^1)
 
 -- comments
-local line_comment = '--' * nonnewline^0
-local block_comment = '/*' * (any - '*/') * P('*/')^-1
+local line_comment = (P('--') + '#') * nonnewline^0
+local block_comment = '/*' * (any - '*/')^0 * P('*/')^-1
 local comment = token('comment', line_comment + block_comment)
 
 -- strings
 local sq_str = delimited_range("'", '\\', true)
 local dq_str = delimited_range('"', '\\', true)
-local string = token('string', sq_str + dq_str)
+local bt_str = delimited_range('`', '\\', true)
+local string = token('string', sq_str + dq_str + bt_str)
 
 -- numbers
 local number = token('number', float + integer)
@@ -47,12 +48,12 @@ local keyword = token('keyword', word_match(word_list{
   'select', 'sensitive', 'separator', 'set', 'show', 'smallint', 'soname',
   'spatial', 'specific', 'sql', 'sqlexception', 'sqlstate', 'sqlwarning',
   'sql_big_result', 'sql_calc_found_rows', 'sql_small_result', 'ssl',
-  'starting', 'straight_join', 'table', 'terminated', 'then', 'tinyblob',
-  'tinyint', 'tinytext', 'to', 'trailing', 'trigger', 'true', 'undo', 'union',
-  'unique', 'unlock', 'unsigned', 'update', 'usage', 'use', 'using', 'utc_date',
-  'utc_time', 'utc_timestamp', 'values', 'varbinary', 'varchar', 'varcharacter',
-  'varying', 'when', 'where', 'while', 'with', 'write', 'xor', 'year_month',
-  'zerofill'
+  'starting', 'straight_join', 'table', 'terminated', 'text', 'then',
+  'tinyblob', 'tinyint', 'tinytext', 'to', 'trailing', 'trigger', 'true',
+  'undo', 'union', 'unique', 'unlock', 'unsigned', 'update', 'usage', 'use',
+  'using', 'utc_date', 'utc_time', 'utc_timestamp', 'values', 'varbinary',
+  'varchar', 'varcharacter', 'varying', 'when', 'where', 'while', 'with',
+  'write', 'xor', 'year_month', 'zerofill'
 }, nil, true))
 
 -- identifiers
@@ -64,11 +65,11 @@ local operator = token('operator', S(',()'))
 function LoadTokens()
   local sql = sql
   add_token(sql, 'whitespace', ws)
-  add_token(sql, 'comment', comment)
-  add_token(sql, 'string', string)
-  add_token(sql, 'number', number)
   add_token(sql, 'keyword', keyword)
   add_token(sql, 'identifier', identifier)
+  add_token(sql, 'string', string)
+  add_token(sql, 'comment', comment)
+  add_token(sql, 'number', number)
   add_token(sql, 'operator', operator)
   add_token(sql, 'any_char', any_char)
 end
