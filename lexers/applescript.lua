@@ -8,7 +8,7 @@ local ws = token('whitespace', space^1)
 
 -- comments
 local line_comment = '--' * nonnewline^0
-local block_comment = '(*' * (any - '*)')^0 * '*)'
+local block_comment = '(*' * (any - '*)')^0 * P('*)')^-1
 local comment = token('comment', line_comment + block_comment)
 
 -- strings
@@ -69,12 +69,12 @@ local operator = token('operator', S('+-^*/&<>=:,(){}'))
 function LoadTokens()
   local as = applescript
   add_token(as, 'whitespace', ws)
-  add_token(as, 'comment', comment)
-  add_token(as, 'string', string)
-  add_token(as, 'number', number)
   add_token(as, 'keyword', keyword)
   add_token(as, 'constant', constant)
   add_token(as, 'identifier', identifier)
+  add_token(as, 'string', string)
+  add_token(as, 'comment', comment)
+  add_token(as, 'number', number)
   add_token(as, 'operator', operator)
   add_token(as, 'any_char', any_char)
 end
