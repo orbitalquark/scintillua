@@ -39,7 +39,7 @@ local variable = token('variable', '%' * (digit + '%' * alpha) +
   delimited_range('%', nil, false, false, '\n'))
 
 -- labels
-local label = token('constant', ':' * word)
+local label = token('label', ':' * word)
 
 -- operators
 local operator = token('operator', S('+|&!<>='))
@@ -56,6 +56,10 @@ function LoadTokens()
   add_token(batch, 'label', label)
   add_token(batch, 'operator', operator)
   add_token(batch, 'any_char', any_char)
+end
+
+function LoadStyles()
+  add_style('label', style_constant)
 end
 
 -- line by line lexer
