@@ -26,7 +26,7 @@ local preproc = token('preprocessor', #P('#') * starts_line('#' * nonnewline^0))
 local keyword = token('keyword', word_match(word_list{
   'address', 'arg', 'by', 'call', 'class', 'do', 'drop', 'else', 'end', 'exit',
   'expose', 'forever', 'forward', 'guard', 'if', 'interpret', 'iterate',
-  'leave', 'method', 'nop', 'numeric', 'otherwise, ''parse', 'procedure',
+  'leave', 'method', 'nop', 'numeric', 'otherwise', 'parse', 'procedure',
   'pull', 'push', 'queue', 'raise', 'reply', 'requires', 'return', 'routine',
   'result', 'rc', 'say', 'select', 'self', 'sigl', 'signal', 'super', 'then',
   'to', 'trace', 'use', 'when', 'while', 'until'
@@ -72,13 +72,13 @@ local operator = token('operator', S('=!<>+-/\\*%&|^~.,:;(){}'))
 function LoadTokens()
   local rexx = rexx
   add_token(rexx, 'whitespace', ws)
-  add_token(rexx, 'comment', comment)
-  add_token(rexx, 'string', string)
-  add_token(rexx, 'number', number)
-  add_token(rexx, 'preproc', preproc)
   add_token(rexx, 'keyword', keyword)
   add_token(rexx, 'function', func)
   add_token(rexx, 'identifier', identifier)
+  add_token(rexx, 'string', string)
+  add_token(rexx, 'comment', comment)
+  add_token(rexx, 'number', number)
+  add_token(rexx, 'preproc', preproc)
   add_token(rexx, 'operator', operator)
   add_token(rexx, 'any_char', any_char)
 end
