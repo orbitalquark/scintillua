@@ -10,7 +10,9 @@ local ws = token('whitespace', space^1)
 local comment = token('comment', nested_pair('(*', '*)'), true)
 
 -- strings
-local string = token('string', delimited_range('"', '\\', true, false, '\n'))
+local sq_str = token('string', delimited_range("'", '\\', true, false, '\n'))
+local dq_str = token('string', delimited_range('"', '\\', true, false, '\n'))
+local string = sq_str + dq_str
 
 -- numbers
 local number = token('number', float + integer)
@@ -65,13 +67,13 @@ local operator = token('operator', S('=<>+-*/.,:;~!#%^&|?[](){}'))
 function LoadTokens()
   local ocaml = ocaml
   add_token(ocaml, 'whitespace', ws)
-  add_token(ocaml, 'comment', comment)
-  add_token(ocaml, 'string', string)
-  add_token(ocaml, 'number', number)
   add_token(ocaml, 'keyword', keyword)
   add_token(ocaml, 'type', type)
   add_token(ocaml, 'function', func)
   add_token(ocaml, 'identifier', identifier)
+  add_token(ocaml, 'string', string)
+  add_token(ocaml, 'comment', comment)
+  add_token(ocaml, 'number', number)
   add_token(ocaml, 'operator', operator)
   add_token(ocaml, 'any_char', any_char)
 end
