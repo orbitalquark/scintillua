@@ -68,7 +68,7 @@ local identifier = token('identifier', word)
 local func = token('function', delimited_range('%', nil, false, false, '\n'))
 
 -- labels
-local label = token('label', #P(':') * starts_line(':' * word))
+local label = token('constant', #P(':') * starts_line(':' * word))
 
 -- operators
 local operator = token('operator', S('+-*/$=,;()'))
@@ -76,13 +76,13 @@ local operator = token('operator', S('+-*/$=,;()'))
 function LoadTokens()
   local apdl = apdl
   add_token(apdl, 'whitespace', ws)
-  add_token(apdl, 'comment', comment)
-  add_token(apdl, 'string', string)
-  add_token(apdl, 'number', number)
   add_token(apdl, 'keyword', keyword)
   add_token(apdl, 'identifier', identifier)
+  add_token(apdl, 'string', string)
+  add_token(apdl, 'number', number)
   add_token(apdl, 'function', func)
   add_token(apdl, 'label', label)
+  add_token(apdl, 'comment', comment)
   add_token(apdl, 'operator', operator)
   add_token(apdl, 'any_char', any_char)
 end
