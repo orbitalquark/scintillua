@@ -110,9 +110,9 @@ function LoadTokens()
   local rebol = rebol
   add_token(rebol, 'whitespace', ws)
   add_token(rebol, 'comment', comment)
-  add_token(rebol, 'string', string)
   add_token(rebol, 'keyword', keyword)
   add_token(rebol, 'identifier', identifier)
+  add_token(rebol, 'string', string)
   add_token(rebol, 'operator', operator)
   add_token(rebol, 'any_char', any_char)
 end
