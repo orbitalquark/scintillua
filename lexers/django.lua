@@ -45,10 +45,10 @@ function LoadTokens()
   html.LoadTokens()
   local django = django
   add_token(django, 'django_whitespace', ws)
-  add_token(django, 'string', string)
   add_token(django, 'keyword', keyword)
   add_token(django, 'function', func)
   add_token(django, 'identifier', identifier)
+  add_token(django, 'string', string)
   add_token(django, 'operator', operator)
   add_token(django, 'any_char', token('django_default', any - S('%}') * '}'))
 
