@@ -40,14 +40,14 @@ local identifier = token('identifier', word)
 local operator = token('operator', S('`~@$%^&*-+/=\\<>?.,:;()[]{}'))
 
 function LoadTokens()
-  local io = io
+  local io = Io
   add_token(io, 'whitespace', ws)
-  add_token(io, 'comment', comment)
-  add_token(io, 'string', string)
-  add_token(io, 'number', number)
   add_token(io, 'keyword', keyword)
   add_token(io, 'type', type)
   add_token(io, 'identifier', identifier)
+  add_token(io, 'string', string)
+  add_token(io, 'comment', comment)
+  add_token(io, 'number', number)
   add_token(io, 'operator', operator)
   add_token(io, 'any_char', any_char)
 end
