@@ -263,10 +263,10 @@ local operator = token('operator', S(':=<>&+-*/.()'))
 function LoadTokens()
   local ac = apacheconf
   add_token(ac, 'whitespace', ws)
-  add_token(ac, 'comment', comment)
-  add_token(ac, 'string', string)
   add_token(ac, 'keyword', main_keyword)
   add_token(ac, 'identifier', identifier)
+  add_token(ac, 'string', string)
+  add_token(ac, 'comment', comment)
   add_token(ac, 'operator', operator)
   add_token(ac, 'any_char', any_char)
 end
