@@ -4,8 +4,8 @@
 module(..., package.seeall)
 local P, S = lpeg.P, lpeg.S
 
-local html = require 'html'
-local vb = require 'visualbasic'
+local html = require 'hypertext'
+local vb = require 'vb'
 
 function LoadTokens()
   html.LoadTokens()

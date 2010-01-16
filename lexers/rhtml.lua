@@ -4,7 +4,7 @@
 module(..., package.seeall)
 local P, S = lpeg.P, lpeg.S
 
-local html = require 'html'
+local html = require 'hypertext'
 local ruby = require 'ruby'
 
 function LoadTokens()

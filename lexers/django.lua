@@ -39,7 +39,7 @@ local identifier = token('identifier', word)
 -- operators
 local operator = token('operator', S(':,.|'))
 
-local html = require 'html'
+local html = require 'hypertext'
 
 function LoadTokens()
   html.LoadTokens()

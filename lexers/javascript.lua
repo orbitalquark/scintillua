@@ -56,7 +56,8 @@ function LoadTokens()
   add_token(javascript, 'any_char', any_char)
 
   -- embedding JS in another language
-  if html then
+  if hypertext then
+    local html = hypertext
     local tag = html.TokenPatterns.tag
     local case_insensitive = html.case_insensitive_tags
     -- search for something of the form <script type="text/javascript">
@@ -74,7 +75,7 @@ function LoadTokens()
 end
 
 function LoadStyles()
-  if html then -- embedded in HTML
+  if hypertext then -- embedded in HTML
     add_style('js_whitespace', style_nothing)
     add_style('js_default', style_nothing)
   end

@@ -178,7 +178,8 @@ function LoadTokens()
   add_token(css, 'any_char', any_char)
 
   -- embedding CSS in another language
-  if html then
+  if hypertext then
+    local html = hypertext
     local tag = html.TokenPatterns.tag
     local case_insensitive = html.case_insensitive_tags
     -- search for something of the form <style type="text/css">

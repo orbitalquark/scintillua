@@ -78,7 +78,7 @@ local css = require 'css'
 local js  = require 'javascript'
 
 function LoadTokens()
-  local html = html
+  local html = hypertext
   add_token(html, 'whitespace', ws)
   add_token(html, 'default', word)
   add_token(html, 'comment', comment)

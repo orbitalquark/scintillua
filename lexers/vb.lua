@@ -45,7 +45,7 @@ local identifier = token('identifier', word)
 local operator = token('operator', S('=><+-*^&:.,_()'))
 
 function LoadTokens()
-  local vb = visualbasic
+  local vb = vb
   add_token(vb, 'whitespace', ws)
   add_token(vb, 'comment', comment)
   add_token(vb, 'string', string)
@@ -57,7 +57,8 @@ function LoadTokens()
   add_token(vb, 'any_char', any_char)
 
   -- embedding VB in another language
-  if html then
+  if hypertext then
+    local html = hypertext
     local tag = html.TokenPatterns.tag
     local case_insensitive = html.case_insensitive_tags
     -- search for something of the form <script language="vbscript">
