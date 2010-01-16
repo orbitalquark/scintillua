@@ -11,6 +11,8 @@ local line_comment = ';' * nonnewline^0
 local block_comment = '#| ' * (any - ' |#')^0 * ' |#'
 local comment = token('comment', line_comment + block_comment)
 
+local word = alpha * (alnum + '_' + '-')^0
+
 -- strings
 local literal = "'" * word
 local dq_str = delimited_range('"', '\\', true)
@@ -55,11 +57,11 @@ local entity = token('entity', '&' * word)
 function LoadTokens()
   local lisp = lisp
   add_token(lisp, 'whitespace', ws)
-  add_token(lisp, 'comment', comment)
-  add_token(lisp, 'string', string)
-  add_token(lisp, 'number', number)
   add_token(lisp, 'keyword', keyword)
   add_token(lisp, 'identifier', identifier)
+  add_token(lisp, 'string', string)
+  add_token(lisp, 'comment', comment)
+  add_token(lisp, 'number', number)
   add_token(lisp, 'operator', operator)
   add_token(lisp, 'entity', entity)
   add_token(lisp, 'any_char', any_char)
