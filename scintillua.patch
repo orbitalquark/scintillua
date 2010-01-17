@@ -4493,23 +4493,34 @@
    ../include/Scintilla.h ../src/XPM.h ../src/LineMarker.h
  PropSet.o: ../src/PropSet.cxx ../include/Platform.h ../include/PropSet.h
 --- scite-latest/scintilla/win32/makefile	2009-08-19 23:09:46.000000000 +0000
-+++ scintillua/scintilla/win32/makefile	2010-01-12 22:50:07.000000000 +0000
-@@ -7,9 +7,11 @@
++++ scintillua/scintilla/win32/makefile	2010-01-17 18:18:19.000000000 +0000
+@@ -7,9 +7,25 @@
  # safely if using a newer version which may display warning messages.
  
  .SUFFIXES: .cxx
--CC = g++
--DLLWRAP = dllwrap
--DEL = del /q
-+# modified by Mitchell
++# added by Mitchell
++ifdef LINUX
 +CC = i486-mingw32-g++
 +DLLWRAP = i486-mingw32-dllwrap
 +DEL = rm
-+# end modified by Mitchell
++GCC = i486-mingw32-gcc
++RANLIB = i486-mingw32-ranlib
++WINDRES = i486-mingw32-windres
++else
++# end added by Mitchell
+ CC = g++
+ DLLWRAP = dllwrap
+ DEL = del /q
++# added by Mitchell
++GCC = gcc
++RANLIB = ranlib
++WINDRES = windres
++endif
++# end added by Mitchell
  
  COMPONENT = ../bin/Scintilla.dll
  LEXCOMPONENT = ../bin/SciLexer.dll
-@@ -24,11 +26,12 @@
+@@ -24,11 +40,12 @@
  
  vpath %.h ../src ../include
  vpath %.cxx ../src
@@ -4523,7 +4534,7 @@
  CXXBASEFLAGS=-Wall -Wno-missing-braces -Wno-char-subscripts -pedantic $(INCLUDEDIRS) $(THUNKFLAGS) -fno-rtti -mno-cygwin
  
  ifdef DEBUG
-@@ -38,9 +41,27 @@
+@@ -38,9 +55,27 @@
  STRIPFLAG=-s
  endif
  
@@ -4545,13 +4556,13 @@
  
 +# added by Mitchell
 +.c.o:
-+	i486-mingw32-gcc $(INCLUDEDIRS) $(THUNKFLAGS) -mno-cygwin -c $< -o $@
++	$(GCC) $(INCLUDEDIRS) $(THUNKFLAGS) -mno-cygwin -c $< -o $@
 +# end added by Mitchell
 +
  ALL:	$(COMPONENT) $(LEXCOMPONENT) $(LEXLIB) ScintillaWinS.o WindowAccessor.o
  
  clean:
-@@ -49,26 +70,18 @@
+@@ -49,26 +84,18 @@
  deps:
  	$(CC) -MM $(CXXFLAGS) *.cxx ../src/*.cxx >deps.mak
  
@@ -4582,7 +4593,7 @@
  $(COMPONENT): $(SOBJS) Scintilla.def
  	$(DLLWRAP) --add-stdcall-alias --target i386-mingw32 -o $@ $(SOBJS) $(LDFLAGS) $(STRIPFLAG) --relocatable
  
-@@ -76,13 +89,13 @@
+@@ -76,13 +103,13 @@
  	Document.o ContractionState.o CellBuffer.o CallTip.o \
  	ScintRes.o PlatWin.o PositionCache.o KeyMap.o Indicator.o LineMarker.o RESearch.o RunStyles.o \
  	Selection.o Style.o ViewStyle.o AutoComplete.o UniConversion.o KeyWords.o \
@@ -4595,16 +4606,16 @@
 +$(LEXLIB): $(LEXOBJS) $(LUA_OBJS) # modified by Mitchell
  	$(AR) rc $@ $^
 -	ranlib $@
-+	i486-mingw32-ranlib $@ # modified by Mitchell
++	$(RANLIB) $@ # modified by Mitchell
  
  # Automatically generate dependencies for most files with "make deps"
  include deps.mak
-@@ -113,5 +126,5 @@
+@@ -113,5 +140,5 @@
  	$(CC) $(CXXFLAGS) -D SCI_LEXER -c $< -o $@
  
  ScintRes.o:	ScintRes.rc PlatformRes.h
 -	windres ScintRes.rc $@
-+	i486-mingw32-windres ScintRes.rc $@ # modified by Mitchell
++	$(WINDRES) ScintRes.rc $@ # modified by Mitchell
  
 --- scite-latest/scintilla/win32/scintilla.mak	2009-07-21 10:55:11.000000000 +0000
 +++ scintillua/scintilla/win32/scintilla.mak	2010-01-10 22:27:12.000000000 +0000
@@ -9727,7 +9738,7 @@
  	if (CurrentBuffer()->useMonoFont) {
  		sval = props.GetExpanded("font.monospace");
 --- scite-latest/scite/win32/makefile	2009-07-21 11:02:26.000000000 +0000
-+++ scintillua/scite/win32/makefile	2010-01-17 15:42:24.000000000 +0000
++++ scintillua/scite/win32/makefile	2010-01-17 18:14:04.000000000 +0000
 @@ -5,8 +5,20 @@
  # be needed to use other compilers.
  
@@ -9779,7 +9790,7 @@
  
 -LUA_OBJS = LuaExtension.o SingleThreadExtension.o $(LUA_CORE_OBJS) $(LUA_LIB_OBJS)
 +LUA_OBJS = LuaExtension.o SingleThreadExtension.o # modified by Mitchell
-+LUA_LDFLAGS = -L ../../scintilla/bin -lSciLexer
++LUA_LDFLAGS = -L ../../scintilla/bin -lSciLexer --export-all-symbols
  
  vpath %.c ../lua/src ../lua/src/lib
  
