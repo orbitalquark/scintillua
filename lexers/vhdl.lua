@@ -63,7 +63,7 @@ local constant = token('constant', word_match(word_list{
 }))
 
 -- identifiers
-local word = (alpha + "'") * (alnum + "'")^1
+local word = (alpha + "'") * (alnum + "_" + "'")^1
 local identifier = token('identifier', word)
 
 -- operators
@@ -72,14 +72,14 @@ local operator = token('operator', S('=/!:;<>+-/*%&|^~()'))
 function LoadTokens()
   local vhdl = vhdl
   add_token(vhdl, 'whitespace', ws)
-  add_token(vhdl, 'comment', comment)
-  add_token(vhdl, 'string', string)
-  add_token(vhdl, 'number', number)
   add_token(vhdl, 'keyword', keyword)
   add_token(vhdl, 'function', func)
   add_token(vhdl, 'type', type)
   add_token(vhdl, 'constant', constant)
   add_token(vhdl, 'identifier', identifier)
+  add_token(vhdl, 'string', string)
+  add_token(vhdl, 'comment', comment)
+  add_token(vhdl, 'number', number)
   add_token(vhdl, 'operator', operator)
   add_token(vhdl, 'any_char', any_char)
 end
