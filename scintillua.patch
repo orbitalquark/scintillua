@@ -9727,32 +9727,37 @@
  	if (CurrentBuffer()->useMonoFont) {
  		sval = props.GetExpanded("font.monospace");
 --- scite-latest/scite/win32/makefile	2009-07-21 11:02:26.000000000 +0000
-+++ scintillua/scite/win32/makefile	2010-01-12 23:42:13.000000000 +0000
-@@ -5,15 +5,17 @@
++++ scintillua/scite/win32/makefile	2010-01-17 15:42:24.000000000 +0000
+@@ -5,8 +5,20 @@
  # be needed to use other compilers.
  
  .SUFFIXES: .cxx
--CC = g++
-+CC = i486-mingw32-g++ -mms-bitfields # modified by Mitchell
++# added by Mitchell
++ifdef LINUX
++CC = i486-mingw32-g++ -mms-bitfields
++DLLWRAP = dllwrap
++GCC = i486-mingw32-gcc
++WINDRES = i486-mingw32-windres
++else
++# end added by Mitchell
+ CC = g++
  DLLWRAP = dllwrap
--ifndef CYGWIN
--DEL = del /q
--COPY = copy
--else
-+# modified by Mitchell
-+#ifndef CYGWIN
-+#DEL = del /q
-+#COPY = copy
-+#else
++# added by Mitchell
++GCC = gcc
++WINDRES = windres
++# end added by Mitchell
+ ifndef CYGWIN
+ DEL = del /q
+ COPY = copy
+@@ -14,6 +26,7 @@
  DEL = rm
  COPY = cp
--endif
-+#endif
-+# end modified by Mitchell
+ endif
++endif # added by Mitchell
  
  PROG	= ../bin/SciTE.exe
  PROGSTATIC = ../bin/Sc1.exe
-@@ -25,12 +27,12 @@
+@@ -25,12 +38,12 @@
  endif
  endif
  
@@ -9768,7 +9773,7 @@
  LUA_CORE_OBJS = lapi.o lcode.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o \
  		lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o \
  		ltable.o ltm.o lundump.o lvm.o lzio.o
-@@ -38,17 +40,20 @@
+@@ -38,17 +51,20 @@
  LUA_LIB_OBJS =	lauxlib.o lbaselib.o ldblib.o liolib.o lmathlib.o ltablib.o \
  		lstrlib.o loadlib.o loslib.o linit.o
  
@@ -9795,26 +9800,16 @@
  RCINCLUDEDIRS=--include-dir ../../scintilla/win32 --include-dir ../src
  
  CBASEFLAGS = -W -Wall $(INCLUDEDIRS) $(LUA_DEFINES) -mno-cygwin
-@@ -60,15 +65,15 @@
- STRIPFLAG="-Wl,-s"
- endif
- 
--CXXFLAGS = $(CFLAGS) -Wno-char-subscripts -pedantic $(THUNKFLAGS) -fno-rtti -mno-cygwin
-+CXXFLAGS = $(CFLAGS) -Wno-char-subscripts -pedantic $(THUNKFLAGS) -fno-rtti -mno-cygwin -DSCI_LEXER # modified by Mitchell
- 
--LDFLAGS=-mwindows -lcomctl32 -limm32 -lole32 -luuid $(LUA_LDFLAGS) -mno-cygwin
-+LDFLAGS=-mwindows -lcomctl32 -limm32 -lole32 -luuid $(LUA_LDFLAGS) -mno-cygwin -lstdc++ # modified by Mitchell
- 
- .cxx.o:
+@@ -68,7 +84,7 @@
  	$(CC) $(CXXFLAGS) -c $< -o $@
  
  .c.o:
 -	gcc $(CFLAGS) -c $< -o $@
-+	i486-mingw32-gcc $(CFLAGS) -c $< -o $@ # modified by Mitchell
++	$(GCC) $(CFLAGS) -c $< -o $@ # modified by Mitchell
  
  OTHER_OBJS	= FilePath.o SciTEBuffers.o SciTEIO.o Exporters.o PropSetFile.o StringList.o \
  SciTEProps.o SciTEWin.o SciTEWinBar.o SciTEWinDlg.o MultiplexExtension.o \
-@@ -78,38 +83,38 @@
+@@ -78,38 +94,38 @@
  
  OBJS = SciTEBase.o $(OTHER_OBJS)
  
@@ -9879,7 +9874,7 @@
  
  clean:
  	$(DEL) *.exe *.o *.obj *.dll *.res *.map
-@@ -117,152 +122,152 @@
+@@ -117,152 +133,152 @@
  deps:
  	$(CC) -MM $(CXXFLAGS) *.cxx ../src/*.cxx ../lua/src/*.c ../lua/src/lib/*.c >deps.mak
  
@@ -10104,18 +10099,18 @@
  
  $(PROG): $(OBJS)
  	$(CC) $(STRIPFLAG) -Xlinker --subsystem -Xlinker windows -o  $@ $^ $(LDFLAGS)
-@@ -288,12 +293,12 @@
+@@ -288,12 +304,12 @@
  	$(CC) $(CXXFLAGS) -D STATIC_BUILD -c $< -o $@
  
  SciTERes.o:	SciTERes.rc SciTE.h PlatformRes.h
 -	windres $(RCINCLUDEDIRS) SciTERes.rc $@
-+	i486-mingw32-windres $(RCINCLUDEDIRS) SciTERes.rc $@ # modified by Mitchell
++	$(WINDRES) $(RCINCLUDEDIRS) SciTERes.rc $@ # modified by Mitchell
  
  # Also depends on ../src/Embedded.properties but may not want to build everywhere
  # so must explicitly ask to build it.
  Sc1Res.o:	SciTERes.rc SciTE.h PlatformRes.h
 -	windres $(RCINCLUDEDIRS) SciTERes.rc --define STATIC_BUILD $@
-+	i486-mingw32-windres $(RCINCLUDEDIRS) SciTERes.rc --define STATIC_BUILD $@ # modified by Mitchell
++	$(WINDRES) $(RCINCLUDEDIRS) SciTERes.rc --define STATIC_BUILD $@ # modified by Mitchell
  
  # Make sure SciTEBase gets rebuilt (so its about box gets a new
  # date stamp) when any of the other objects are updated.
