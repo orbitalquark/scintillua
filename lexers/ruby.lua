@@ -106,3 +106,7 @@ function LoadTokens()
   add_token(ruby, 'operator', operator)
   add_token(ruby, 'any_char', any_char)
 end
+
+function LoadStyles()
+
+end

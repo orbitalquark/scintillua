@@ -35,6 +35,7 @@ end
 
 function LoadStyles()
   html.LoadStyles()
+  ruby.LoadStyles()
   add_style('rhtml_whitespace', style_nothing)
   add_style('rhtml_default', style_nothing)
   add_style('rhtml_tag', style_embedded)
