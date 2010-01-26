@@ -1,14 +1,544 @@
---- scite-latest/scintilla/gtk/deps.mak	2009-07-24 05:05:52.000000000 -0400
-+++ scintillua/scintilla/gtk/deps.mak	2010-01-18 13:00:36.000000000 -0500
-@@ -58,237 +58,11 @@
+--- scite-latest/scintilla/doc/ScintillaHistory.html	2009-08-19 23:09:46.000000000 +0000
++++ scintillua/scintilla/doc/ScintillaHistory.html	2010-01-21 23:04:11.000000000 +0000
+@@ -339,6 +339,9 @@
+ 	<td>Eric Kidd</td>
+ 	<td>maXmo</td>
+ 	<td>David Severwright</td>
++	<td>Jon Strait</td>
++      </tr><tr>
++	<td>Oliver Kiddle</td>
+     </tr>
+     </table>
+     <p>
+@@ -351,6 +354,168 @@
+       </li>
+     </ul>
+     <h3>
++       <a href="http://prdownloads.sourceforge.net/scintilla/scite202.zip?download">Release 2.02</a>
++    </h3>
++    <ul>
++	<li>
++	Released on 25 January 2010.
++	</li>
++	<li>
++	Markdown lexer added.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=352439&aid=2844081&group_id=2439">Feature #2844081.</a>
++	</li>
++	<li>
++	On GTK+, include code that understands the ranges of lead bytes for code pages 932, 936, and 950
++	so that most Chinese and Japanese text can be used on systems that are not set to the corresponding locale.
++	</li>
++	<li>
++	Allow changing the size of dots in visible whitespace using SCI_SETWHITESPACESIZE.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=352439&aid=2839427&group_id=2439">Feature #2839427.</a>
++	</li>
++	<li>
++	Additional carets can be hidden with SCI_SETADDITIONALCARETSVISIBLE.
++	</li>
++	<li>
++	Can choose anti-aliased, non-anti-aliased or lcd-optimized text using SCI_SETFONTQUALITY.
++	</li>
++	<li>
++	Retrieve the current selected text in the autocompletion list with SCI_AUTOCGETCURRENTTEXT.
++	</li>
++	<li>
++	Retrieve the name of the current lexer with SCI_GETLEXERLANGUAGE.
++	</li>
++	<li>
++	Progress 4GL lexer improves handling of comments in preprocessor declaration.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=352439&aid=2902206&group_id=2439">Feature #2902206.</a>
++	</li>
++	<li>
++	HTML lexer extended to handle Mako template language.
++	</li>
++	<li>
++	SQL folder extended for SQL Anywhere "EXISTS" and "ENDIF" keywords.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=352439&aid=2887524&group_id=2439">Feature #2887524.</a>
++	</li>
++	<li>
++	SciTE adds APIPath and AbbrevPath variables.
++	</li>
++	<li>
++	SciTE on GTK+ uses pipes instead of temporary files for running tools. This should be more secure.
++	</li>
++	<li>
++	Fixed crash when calling SCI_STYLEGETFONT for a style which does not have a font set.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2857425&group_id=2439">Bug #2857425.</a>
++	</li>
++	<li>
++	Fixed crash caused by not having sufficient styles allocated after choosing a lexer.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2881279&group_id=2439">Bug #2881279.</a>
++	</li>
++	<li>
++	Fixed crash in SciTE using autocomplete word when word characters includes space.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2840141&group_id=2439">Bug #2840141.</a>
++	</li>
++	<li>
++	Fixed bug with handling upper-case file extensions SciTE on GTK+.
++	</li>
++	<li>
++	Fixed SciTE loading files from sessions with folded folds where it would not 
++	be scrolled to the correct location.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2882775&group_id=2439">Bug #2882775.</a>
++	</li>
++	<li>
++	Fixed SciTE loading files from sessions when file no longer exists.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2883437&group_id=2439">Bug #2883437.</a>
++	</li>
++	<li>
++	Fixed SciTE export to HTML using the wrong background colour.
++	</li>
++	<li>
++	Fixed crash when adding an annotation and then adding a new line after the annotation.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2929708&group_id=2439">Bug #2929708.</a>
++	</li>
++	<li>
++	Fixed crash in SciTE setting a property to nil from Lua.
++	</li>
++	<li>
++	SCI_GETSELTEXT fixed to return correct length.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2929441&group_id=2439">Bug #2929441.</a>
++	</li>
++	<li>
++	Fixed text positioning problems with selection in some circumstances.
++	</li>
++	<li>
++	Fixed text positioning problems with ligatures on GTK+.
++	</li>
++	<li>
++	Fixed problem pasting into rectangular selection with caret at bottom caused text to go from the caret down
++	rather than replacing the selection.
++	</li>
++	<li>
++	Fixed problem replacing in a rectangular selection where only the final line was changed.
++	</li>
++	<li>
++	Fixed inability to select a rectangular area using Alt+Shift+Click at both corners.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2899746&group_id=2439">Bug #2899746.</a>
++	</li>
++	<li>
++	Fixed problem moving to start/end of a rectangular selection with left/right key.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2871358&group_id=2439">Bug #2871358.</a>
++	</li>
++	<li>
++	Fixed problem with Select All when there's a rectangular selection.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2930488&group_id=2439">Bug #2930488.</a>
++	</li>
++	<li>
++	Fixed SCI_LINEDUPLICATE on a rectangular selection to not produce multiple discontinuous selections.
++	</li>
++	<li>
++	Virtual space removed when performing delete word left or delete line left.
++	Virtual space converted to real space for delete word right.
++	Preserve virtual space when pressing Delete key.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2882566&group_id=2439">Bug #2882566.</a>
++	</li>
++	<li>
++	Fixed problem where Shift+Alt+Down did not move through wrapped lines.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2871749&group_id=2439">Bug #2871749.</a>
++	</li>
++	<li>
++	Fixed incorrect background colour when using coloured lines with virtual space.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2914691&group_id=2439">Bug #2914691.</a>
++	</li>
++	<li>
++	Fixed failure to display wrap symbol for SC_WRAPVISUALFLAGLOC_END_BY_TEXT.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2936108&group_id=2439">Bug #2936108.</a>
++	</li>
++	<li>
++	Fixed blank background colour with EOLFilled style on last line.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2890105&group_id=2439">Bug #2890105.</a>
++	</li>
++	<li>
++	Fixed problem in VB lexer with keyword at end of file.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2901239&group_id=2439">Bug #2901239.</a>
++	</li>
++	<li>
++	Fixed SciTE bug where double clicking on a tab closed the file.
++	</li>
++	<li>
++	Fixed SciTE brace matching commands to only work when the caret is next to the brace, not when 
++	it is in virtual space.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2885560&group_id=2439">Bug #2885560.</a>
++	</li>
++	<li>
++	Fixed SciTE on Windows Vista to access files in the Program Files directory rather than allow Windows
++	to virtualize access.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2916685&group_id=2439">Bug #2916685.</a>
++	</li>
++	<li>
++	Fixed NSIS folder to handle keywords that start with '!'.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2872157&group_id=2439">Bug #2872157.</a>
++	</li>
++	<li>
++	Changed linkage of Scintilla_LinkLexers to "C" so that it can be used by clients written in C.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2844718&group_id=2439">Bug #2844718.</a>
++	</li>
++    </ul>
++    <h3>
+        <a href="http://prdownloads.sourceforge.net/scintilla/scite201.zip?download">Release 2.01</a>
+     </h3>
+     <ul>
+@@ -387,7 +552,7 @@
+ 	Released on 11 August 2009.
+ 	</li>
+ 	<li>
+-	Multiple pieces of text can be selected simultaneously by holding control whil dragging the mouse.
++	Multiple pieces of text can be selected simultaneously by holding control while dragging the mouse.
+ 	Typing, backspace and delete may affect all selections together.
+ 	</li>
+ 	<li>
+@@ -400,37 +565,37 @@
+ 	MagikSF lexer recognises numbers correctly.
+ 	</li>
+ 	<li>
+-	Folding of Python comments and blank lines improved. Bug #210240.
++	Folding of Python comments and blank lines improved. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=210240&group_id=2439">Bug #210240.</a>
+ 	</li>
+ 	<li>
+ 	Bug fixed where background colour of last character in document leaked past that character.
+ 	</li>
+ 	<li>
+-	Crash fixed when adding marker beyond last line in document. Bug #2830307.
++	Crash fixed when adding marker beyond last line in document. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2830307&group_id=2439">Bug #2830307.</a>
+ 	</li>
+ 	<li>
+-	Resource leak fixed in SciTE for Windows when printing fails. Bug #2816524.
++	Resource leak fixed in SciTE for Windows when printing fails. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2816524&group_id=2439">Bug #2816524.</a>
+ 	</li>
+ 	<li>
+ 	Bug fixed on Windows where the system caret was destroyed during destruction when another window 
+-	was using the system caret. Bug #2830223.
++	was using the system caret. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2830223&group_id=2439">Bug #2830223.</a>
+ 	</li>
+ 	<li>
+ 	Bug fixed where indentation guides were drawn over text when the indentation used a style with a different
+ 	space width to the default style.
+ 	</li>
+ 	<li>
+-	SciTE bug fixed where box comment added a bare line feed rather than the chosen line end. Bug #2818104.
++	SciTE bug fixed where box comment added a bare line feed rather than the chosen line end. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2818104&group_id=2439">Bug #2818104.</a>
+ 	</li>
+ 	<li>
+ 	Reverted fix that led to wrapping whole document when displaying the first line of the document.
+ 	</li>
+ 	<li>
+-	Export to LaTeX in SciTE fixed to work in more cases and not use as much space. Bug #1286548.
++	Export to LaTeX in SciTE fixed to work in more cases and not use as much space. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=1286548&group_id=2439">Bug #1286548.</a>
+ 	</li>
+ 	<li>
+ 	Bug fixed where EN_CHANGE notification was sent when performing a paste operation in a
+-	read-only document. Bug #2825485.
++	read-only document. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2825485&group_id=2439">Bug #2825485.</a>
+ 	</li>
+ 	<li>
+ 	Refactored code so that Scintilla exposes less of its internal implementation and uses the C++ standard
+@@ -479,10 +644,10 @@
+ 	</li>
+ 	<li>
+ 	When lines are wrapped, subsequent lines may be indented to match the indent of the initial line,
+-	or one more indentation level. Feature #2796119.
++	or one more indentation level. <a href="https://sourceforge.net/tracker/?func=detail&atid=352439&aid=2796119&group_id=2439">Feature #2796119.</a>
+ 	</li>
+ 	<li>
+-	APIs added for finding the character at a point rather than an inter-character position. Feature #2646738.
++	APIs added for finding the character at a point rather than an inter-character position. <a href="https://sourceforge.net/tracker/?func=detail&atid=352439&aid=2646738&group_id=2439">Feature #2646738.</a>
+ 	</li>
+ 	<li>
+ 	A new marker SC_MARK_BACKGROUND_UNDERLINE is drawn in the text area as an underline 
+@@ -495,27 +660,28 @@
+ 	CAML lexer also supports SML.
+ 	</li>
+ 	<li>
+-	D lexer handles string and numeric literals more accurately. Feature #2793782.
++	D lexer handles string and numeric literals more accurately. <a href="https://sourceforge.net/tracker/?func=detail&atid=352439&aid=2793782&group_id=2439">Feature #2793782.</a>
+ 	</li>
+ 	<li>
+-	Forth lexer is now case-insensitive and better supports numbers like $hex and %binary. Feature #2804894.
++	Forth lexer is now case-insensitive and better supports numbers like $hex and %binary. <a href="https://sourceforge.net/tracker/?func=detail&atid=352439&aid=2804894&group_id=2439">Feature #2804894.</a>
+ 	</li>
+ 	<li>
+-	Lisp lexer treats '[', ']', '{', and '}' as balanced delimiters which is common usage. Feature #2794989.<br />
+-	It treats keyword argument names as being equivalent to symbols. Feature #2794901.
++	Lisp lexer treats '[', ']', '{', and '}' as balanced delimiters which is common usage. <a href="https://sourceforge.net/tracker/?func=detail&atid=352439&aid=2794989&group_id=2439">Feature #2794989.</a>
++	<br />
++	It treats keyword argument names as being equivalent to symbols. <a href="https://sourceforge.net/tracker/?func=detail&atid=352439&aid=2794901&group_id=2439">Feature #2794901.</a>
+ 	</li>
+ 	<li>
+-	Pascal lexer bug fixed to prevent hang when 'interface' near beginning of file. Bug #2802863.
++	Pascal lexer bug fixed to prevent hang when 'interface' near beginning of file. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2802863&group_id=2439">Bug #2802863.</a>
+ 	</li>
+ 	<li>
+ 	Perl lexer bug fixed where previous lexical states persisted causing "/" special case styling and
+-	subroutine prototype styling to not be correct. Bug #2809168.
++	subroutine prototype styling to not be correct. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2809168&group_id=2439">Bug #2809168.</a>
+ 	</li>
+ 	<li>
+-	XML lexer fixes bug where Unicode entities like '&amp;â€”' were broken into fragments. Bug #2804760.
++	XML lexer fixes bug where Unicode entities like '&amp;â€”' were broken into fragments. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2804760&group_id=2439">Bug #2804760.</a>
+ 	</li>
+ 	<li>
+-	SciTE on GTK+ enables scrolling the tab bar on recent versions of GTK+. Feature #2061821.
++	SciTE on GTK+ enables scrolling the tab bar on recent versions of GTK+. <a href="https://sourceforge.net/tracker/?func=detail&atid=352439&aid=2061821&group_id=2439">Feature #2061821.</a>
+ 	</li>
+ 	<li>
+ 	SciTE on Windows allows tab bar tabs to be reordered by drag and drop.
+@@ -530,7 +696,7 @@
+ 	Width of icon column of autocompletion lists on GTK+ made more consistent.
+ 	</li>
+ 	<li>
+-	Bug with slicing UTF-8 text into character fragments when there is a sequence of 100 or more 3 byte characters. Bug #2780566.
++	Bug with slicing UTF-8 text into character fragments when there is a sequence of 100 or more 3 byte characters. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2780566&group_id=2439">Bug #2780566.</a>
+ 	</li>
+ 	<li>
+ 	Folding bugs introduced in 1.78 fixed. Some of the fix was generic and there was also a specific fix for C++.
+@@ -539,7 +705,7 @@
+ 	Bug fixed where a rectangular paste was not padding the line with sufficient spaces to align the pasted text.
+ 	</li>
+ 	<li>
+-	Bug fixed with showing all text on each line of multi-line annotations when styling the whole annotation using SCI_ANNOTATIONSETSTYLE. Bug #2789430.
++	Bug fixed with showing all text on each line of multi-line annotations when styling the whole annotation using SCI_ANNOTATIONSETSTYLE. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2789430&group_id=2439">Bug #2789430.</a>
+ 	</li>
+     </ul>
+     <h3>
+@@ -566,49 +732,49 @@
+ 	Can increase the amount of font ascent and descent.
+ 	</li>
+ 	<li>
+-	COBOL lexer added. Feature #2127406.
++	COBOL lexer added. <a href="https://sourceforge.net/tracker/?func=detail&atid=352439&aid=2127406&group_id=2439">Feature #2127406.</a>
+ 	</li>
+ 	<li>
+-	Nimrod lexer added. Feature #2642620.
++	Nimrod lexer added. <a href="https://sourceforge.net/tracker/?func=detail&atid=352439&aid=2642620&group_id=2439">Feature #2642620.</a>
+ 	</li>
+ 	<li>
+-	PowerPro lexer added. Feature #2195308.
++	PowerPro lexer added. <a href="https://sourceforge.net/tracker/?func=detail&atid=352439&aid=2195308&group_id=2439">Feature #2195308.</a>
+ 	</li>
+ 	<li>
+-	SML lexer added. Feature #2710950.
++	SML lexer added. <a href="https://sourceforge.net/tracker/?func=detail&atid=352439&aid=2710950&group_id=2439">Feature #2710950.</a>
+ 	</li>
+ 	<li>
+-	SORCUS Installation file lexer added. Feature #2343375.
++	SORCUS Installation file lexer added. <a href="https://sourceforge.net/tracker/?func=detail&atid=352439&aid=2343375&group_id=2439">Feature #2343375.</a>
+ 	</li>
+ 	<li>
+-	TACL lexer added. Feature #2127406.
++	TACL lexer added. <a href="https://sourceforge.net/tracker/?func=detail&atid=352439&aid=2127406&group_id=2439">Feature #2127406.</a>
+ 	</li>
+ 	<li>
+-	TAL lexer added. Feature #2127406.
++	TAL lexer added. <a href="https://sourceforge.net/tracker/?func=detail&atid=352439&aid=2127406&group_id=2439">Feature #2127406.</a>
+ 	</li>
+ 	<li>
+-	Rewritten Pascal lexer with improved folding and other fixes. Feature #2190650.
++	Rewritten Pascal lexer with improved folding and other fixes. <a href="https://sourceforge.net/tracker/?func=detail&atid=352439&aid=2190650&group_id=2439">Feature #2190650.</a>
+ 	</li>
+ 	<li>
+-	INDIC_ROUNDBOX translucency level can be modified. Feature #2586290.
++	INDIC_ROUNDBOX translucency level can be modified. <a href="https://sourceforge.net/tracker/?func=detail&atid=352439&aid=2586290&group_id=2439">Feature #2586290.</a>
+ 	</li>
+ 	<li>
+-	C++ lexer treats angle brackets in #include directives as quotes when styling.within.preprocessor. Bug #2551033.
++	C++ lexer treats angle brackets in #include directives as quotes when styling.within.preprocessor. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2551033&group_id=2439">Bug #2551033.</a>
+ 	</li>
+ 	<li>
+-	Inno Setup lexer is sensitive to whether within the [Code] section and handles comments better. Bug #2552973.
++	Inno Setup lexer is sensitive to whether within the [Code] section and handles comments better. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2552973&group_id=2439">Bug #2552973.</a>
+ 	</li>
+ 	<li>
+ 	HTML lexer does not go into script mode when script tag is self-closing.
+ 	</li>
+ 	<li>
+-	HTML folder fixed where confused by comments when fold.html.preprocessor off. Bug #2532774.
++	HTML folder fixed where confused by comments when fold.html.preprocessor off. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2532774&group_id=2439">Bug #2532774.</a>
+ 	</li>
+ 	<li>
+-	Perl lexer fixes problem with string matching caused by line endings. Bug #2648342.
++	Perl lexer fixes problem with string matching caused by line endings. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2648342&group_id=2439">Bug #2648342.</a>
+ 	</li>
+ 	<li>
+-	Progress lexer fixes problem with "last-event:function" phrase. Bug #2483619.
++	Progress lexer fixes problem with "last-event:function" phrase. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2483619&group_id=2439">Bug #2483619.</a>
+ 	</li>
+ 	<li>
+ 	Properties file lexer extended to handle RFC2822 text when lexer.props.allow.initial.spaces on.
+@@ -617,51 +783,53 @@
+ 	Python lexer adds options for Python 3 and Cython.
+ 	</li>
+ 	<li>
+-	Shell lexer fixes heredoc problem caused by line endings. Bug #2635257.
++	Shell lexer fixes heredoc problem caused by line endings. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2635257&group_id=2439">Bug #2635257.</a>
+ 	</li>
+ 	<li>
+-	TeX lexer handles comment at end of line correctly. Bug #2698766.
++	TeX lexer handles comment at end of line correctly. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2698766&group_id=2439">Bug #2698766.</a>
+ 	</li>
+ 	<li>
+-	SciTE retains selection range when performing a replace selection command. Feature #2339160.
++	SciTE retains selection range when performing a replace selection command. <a href="https://sourceforge.net/tracker/?func=detail&atid=352439&aid=2339160&group_id=2439">Feature #2339160.</a>
+ 	</li>
+ 	<li>
+-	SciTE definition of word characters fixed to match documentaiton. Bug #2464531.
++	SciTE definition of word characters fixed to match documentaiton. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2464531&group_id=2439">Bug #2464531.</a>
+ 	</li>
+ 	<li>
+ 	SciTE on GTK+ performing Search or Replace when dialog already shown now brings dialog to foreground.
+-	Bug #2634224.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2634224&group_id=2439">Bug #2634224.</a>
+ 	</li>
+ 	<li>
+ 	Fixed encoding bug with calltips on GTK+.
+ 	</li>
+ 	<li>
+-	Block caret drawn in correct place on wrapped lines. Bug #2126144.
++	Block caret drawn in correct place on wrapped lines. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2126144&group_id=2439">Bug #2126144.</a>
+ 	</li>
+ 	<li>
+-	Compilation for 64 bit Windows works using MinGW. Bug #2515578.
++	Compilation for 64 bit Windows works using MinGW. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2515578&group_id=2439">Bug #2515578.</a>
+ 	</li>
+ 	<li>
+-	Incorrect memory freeing fixed on OS X. Bug #2354098, #2671749.
++	Incorrect memory freeing fixed on OS X.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2354098&group_id=2439">Bug #2354098,</a>
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2671749&group_id=2439">#2671749.</a>
+ 	</li>
+ 	<li>
+ 	SciTE on GTK+ crash fixed on startup when child process exits before initialisation complete.
+-	Bug #2716987.
++	<a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2716987&group_id=2439">Bug #2716987.</a>
+ 	</li>
+ 	<li>
+ 	Crash fixed when AutoCompleteGetCurrent called with no active autocompletion.
+ 	</li>
+ 	<li>
+-	Flickering diminished when pressing Tab. Bug #2723006.
++	Flickering diminished when pressing Tab. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2723006&group_id=2439">Bug #2723006.</a>
+ 	</li>
+ 	<li>
+ 	Namespace compilation issues with GTK+ on OS X fixed.
+ 	</li>
+ 	<li>
+-	Increased maximum length of SciTE's Language menu on GTK+ to 100 items. Bug #2528241.
++	Increased maximum length of SciTE's Language menu on GTK+ to 100 items. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2528241&group_id=2439">Bug #2528241.</a>
+ 	</li>
+ 	<li>
+-	Fixed incorrect Python lexing for multi-line continued strings. Bug #2450963.
++	Fixed incorrect Python lexing for multi-line continued strings. <a href="https://sourceforge.net/tracker/?func=detail&atid=102439&aid=2450963&group_id=2439">Bug #2450963.</a>
+ 	</li>
+     </ul>
+     <h3>
+--- scite-latest/scintilla/gtk/deps.mak	2009-07-24 09:05:52.000000000 +0000
++++ scintillua/scintilla/gtk/deps.mak	2010-01-26 15:49:19.000000000 +0000
+@@ -1,334 +1,108 @@
+ PlatGTK.o: PlatGTK.cxx \
+-  ../include/Scintilla.h ../include/ScintillaWidget.h \
+-  ../src/UniConversion.h ../src/XPM.h Converter.h
++ ../include/Scintilla.h ../include/ScintillaWidget.h \
++ ../src/UniConversion.h ../src/XPM.h Converter.h
+ ScintillaGTK.o: ScintillaGTK.cxx \
+-  ../include/Scintilla.h ../include/ScintillaWidget.h \
+-  ../include/SciLexer.h ../include/PropSet.h ../src/PropSetSimple.h \
+-  ../include/Accessor.h ../include/KeyWords.h ../src/SVector.h \
+-  ../src/SplitVector.h ../src/Partitioning.h ../src/RunStyles.h \
+-  ../src/ContractionState.h ../src/CellBuffer.h ../src/CallTip.h \
+-  ../src/KeyMap.h ../src/Indicator.h ../src/XPM.h ../src/LineMarker.h \
+-  ../src/Style.h ../src/AutoComplete.h ../src/ViewStyle.h \
+-  ../src/Decoration.h ../src/CharClassify.h ../src/Document.h \
+-  ../src/Selection.h ../src/PositionCache.h ../src/Editor.h \
+-  ../src/ScintillaBase.h ../src/UniConversion.h scintilla-marshal.h \
+-  ../src/ExternalLexer.h Converter.h
++ ../include/Scintilla.h ../include/ScintillaWidget.h \
++ ../include/SciLexer.h ../include/PropSet.h ../src/PropSetSimple.h \
++ ../include/Accessor.h ../include/KeyWords.h ../src/SVector.h \
++ ../src/SplitVector.h ../src/Partitioning.h ../src/RunStyles.h \
++ ../src/ContractionState.h ../src/CellBuffer.h ../src/CallTip.h \
++ ../src/KeyMap.h ../src/Indicator.h ../src/XPM.h ../src/LineMarker.h \
++ ../src/Style.h ../src/AutoComplete.h ../src/ViewStyle.h \
++ ../src/Decoration.h ../src/CharClassify.h ../src/Document.h \
++ ../src/Selection.h ../src/PositionCache.h ../src/Editor.h \
++ ../src/ScintillaBase.h ../src/UniConversion.h scintilla-marshal.h \
++ ../src/ExternalLexer.h Converter.h
+ AutoComplete.o: ../src/AutoComplete.cxx ../include/Platform.h \
+-  ../src/CharClassify.h ../src/AutoComplete.h
++ ../src/CharClassify.h ../src/AutoComplete.h
+ CallTip.o: ../src/CallTip.cxx ../include/Platform.h \
+-  ../include/Scintilla.h ../src/CallTip.h
++ ../include/Scintilla.h ../src/CallTip.h
+ CellBuffer.o: ../src/CellBuffer.cxx ../include/Platform.h \
+-  ../include/Scintilla.h ../src/SplitVector.h ../src/Partitioning.h \
+-  ../src/CellBuffer.h
++ ../include/Scintilla.h ../src/SplitVector.h ../src/Partitioning.h \
++ ../src/CellBuffer.h
+ CharClassify.o: ../src/CharClassify.cxx ../src/CharClassify.h
+ ContractionState.o: ../src/ContractionState.cxx ../include/Platform.h \
+-  ../src/SplitVector.h ../src/Partitioning.h ../src/RunStyles.h \
+-  ../src/ContractionState.h
++ ../src/SplitVector.h ../src/Partitioning.h ../src/RunStyles.h \
++ ../src/ContractionState.h
+ Decoration.o: ../src/Decoration.cxx ../include/Platform.h \
+-  ../include/Scintilla.h ../src/SplitVector.h ../src/Partitioning.h \
+-  ../src/RunStyles.h ../src/Decoration.h
++ ../include/Scintilla.h ../src/SplitVector.h ../src/Partitioning.h \
++ ../src/RunStyles.h ../src/Decoration.h
+ DocumentAccessor.o: ../src/DocumentAccessor.cxx ../include/Platform.h \
+-  ../include/PropSet.h ../include/Accessor.h ../src/DocumentAccessor.h \
+-  ../src/SplitVector.h ../src/Partitioning.h ../src/RunStyles.h \
+-  ../src/CellBuffer.h ../include/Scintilla.h ../src/CharClassify.h \
+-  ../src/Decoration.h ../src/Document.h
++ ../include/PropSet.h ../include/Accessor.h ../src/DocumentAccessor.h \
++ ../src/SplitVector.h ../src/Partitioning.h ../src/RunStyles.h \
++ ../src/CellBuffer.h ../include/Scintilla.h ../src/CharClassify.h \
++ ../src/Decoration.h ../src/Document.h
+ Document.o: ../src/Document.cxx ../include/Platform.h \
+-  ../include/Scintilla.h ../src/SplitVector.h ../src/Partitioning.h \
+-  ../src/RunStyles.h ../src/CellBuffer.h ../src/PerLine.h \
+-  ../src/CharClassify.h ../src/Decoration.h ../src/Document.h \
+-  ../src/RESearch.h
++ ../include/Scintilla.h ../src/SplitVector.h ../src/Partitioning.h \
++ ../src/RunStyles.h ../src/CellBuffer.h ../src/PerLine.h \
++ ../src/CharClassify.h ../src/Decoration.h ../src/Document.h \
++ ../src/RESearch.h
+ Editor.o: ../src/Editor.cxx ../include/Platform.h ../include/Scintilla.h \
+-  ../src/SplitVector.h ../src/Partitioning.h ../src/RunStyles.h \
+-  ../src/ContractionState.h ../src/CellBuffer.h ../src/KeyMap.h \
+-  ../src/Indicator.h ../src/XPM.h ../src/LineMarker.h ../src/Style.h \
+-  ../src/ViewStyle.h ../src/CharClassify.h ../src/Decoration.h \
+-  ../src/Document.h ../src/Selection.h ../src/PositionCache.h \
+-  ../src/Editor.h
++ ../src/SplitVector.h ../src/Partitioning.h ../src/RunStyles.h \
++ ../src/ContractionState.h ../src/CellBuffer.h ../src/KeyMap.h \
++ ../src/Indicator.h ../src/XPM.h ../src/LineMarker.h ../src/Style.h \
++ ../src/ViewStyle.h ../src/CharClassify.h ../src/Decoration.h \
++ ../src/Document.h ../src/Selection.h ../src/PositionCache.h \
++ ../src/Editor.h
+ ExternalLexer.o: ../src/ExternalLexer.cxx ../include/Platform.h \
+-  ../include/Scintilla.h ../include/SciLexer.h ../include/PropSet.h \
+-  ../include/Accessor.h ../src/DocumentAccessor.h ../include/KeyWords.h \
+-  ../src/ExternalLexer.h
++ ../include/Scintilla.h ../include/SciLexer.h ../include/PropSet.h \
++ ../include/Accessor.h ../src/DocumentAccessor.h ../include/KeyWords.h \
++ ../src/ExternalLexer.h
+ Indicator.o: ../src/Indicator.cxx ../include/Platform.h \
+-  ../include/Scintilla.h ../src/Indicator.h
++ ../include/Scintilla.h ../src/Indicator.h
+ KeyMap.o: ../src/KeyMap.cxx ../include/Platform.h ../include/Scintilla.h \
+-  ../src/KeyMap.h
++ ../src/KeyMap.h
+ KeyWords.o: ../src/KeyWords.cxx ../include/Platform.h \
+-  ../include/PropSet.h ../include/Accessor.h ../include/KeyWords.h \
+-  ../include/Scintilla.h ../include/SciLexer.h
++ ../include/PropSet.h ../include/Accessor.h ../include/KeyWords.h \
++ ../include/Scintilla.h ../include/SciLexer.h
  LexAbaqus.o: ../src/LexAbaqus.cxx ../include/Platform.h \
-   ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-   ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
+-  ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
+-  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
 -LexAda.o: ../src/LexAda.cxx ../include/Platform.h ../include/Accessor.h \
-+# modified by Mitchell
-+LexLPeg.o: ../src/LexLPeg.cxx ../include/Platform.h ../include/Accessor.h \
-   ../src/StyleContext.h ../include/PropSet.h ../include/KeyWords.h \
-   ../include/SciLexer.h
+-  ../src/StyleContext.h ../include/PropSet.h ../include/KeyWords.h \
+-  ../include/SciLexer.h
 -LexAPDL.o: ../src/LexAPDL.cxx ../include/Platform.h ../include/PropSet.h \
 -  ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
 -  ../include/Scintilla.h ../include/SciLexer.h
@@ -237,12 +767,87 @@
 -LexYAML.o: ../src/LexYAML.cxx ../include/Platform.h ../include/PropSet.h \
 -  ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
 -  ../include/Scintilla.h ../include/SciLexer.h
++ ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
++ ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
++# modified by Mitchell
++LexLPeg.o: ../src/LexLPeg.cxx ../include/Platform.h ../include/Accessor.h \
++ ../src/StyleContext.h ../include/PropSet.h ../include/KeyWords.h \
++ ../include/SciLexer.h
 +# end modified by Mitchell
  LineMarker.o: ../src/LineMarker.cxx ../include/Platform.h \
-   ../include/Scintilla.h ../src/XPM.h ../src/LineMarker.h
+-  ../include/Scintilla.h ../src/XPM.h ../src/LineMarker.h
++ ../include/Scintilla.h ../src/XPM.h ../src/LineMarker.h
  PerLine.o: ../src/PerLine.cxx ../include/Platform.h \
---- scite-latest/scintilla/gtk/makefile	2009-08-12 21:35:23.000000000 -0400
-+++ scintillua/scintilla/gtk/makefile	2010-01-18 13:00:36.000000000 -0500
+-  ../include/Scintilla.h ../src/SplitVector.h ../src/Partitioning.h \
+-  ../src/CellBuffer.h ../src/PerLine.h
++ ../include/Scintilla.h ../src/SplitVector.h ../src/Partitioning.h \
++ ../src/CellBuffer.h ../src/PerLine.h
+ PositionCache.o: ../src/PositionCache.cxx ../include/Platform.h \
+-  ../include/Scintilla.h ../src/SplitVector.h ../src/Partitioning.h \
+-  ../src/RunStyles.h ../src/ContractionState.h ../src/CellBuffer.h \
+-  ../src/KeyMap.h ../src/Indicator.h ../src/XPM.h ../src/LineMarker.h \
+-  ../src/Style.h ../src/ViewStyle.h ../src/CharClassify.h \
+-  ../src/Decoration.h ../src/Document.h ../src/Selection.h \
+-  ../src/PositionCache.h
++ ../include/Scintilla.h ../src/SplitVector.h ../src/Partitioning.h \
++ ../src/RunStyles.h ../src/ContractionState.h ../src/CellBuffer.h \
++ ../src/KeyMap.h ../src/Indicator.h ../src/XPM.h ../src/LineMarker.h \
++ ../src/Style.h ../src/ViewStyle.h ../src/CharClassify.h \
++ ../src/Decoration.h ../src/Document.h ../src/Selection.h \
++ ../src/PositionCache.h
+ PropSet.o: ../src/PropSet.cxx ../include/Platform.h ../include/PropSet.h \
+-  ../src/PropSetSimple.h
++ ../src/PropSetSimple.h
+ RESearch.o: ../src/RESearch.cxx ../src/CharClassify.h ../src/RESearch.h
+ RunStyles.o: ../src/RunStyles.cxx ../include/Platform.h \
+-  ../include/Scintilla.h ../src/SplitVector.h ../src/Partitioning.h \
+-  ../src/RunStyles.h
++ ../include/Scintilla.h ../src/SplitVector.h ../src/Partitioning.h \
++ ../src/RunStyles.h
+ ScintillaBase.o: ../src/ScintillaBase.cxx ../include/Platform.h \
+-  ../include/Scintilla.h ../include/PropSet.h ../src/PropSetSimple.h \
+-  ../include/SciLexer.h ../include/Accessor.h ../src/DocumentAccessor.h \
+-  ../include/KeyWords.h ../src/SplitVector.h ../src/Partitioning.h \
+-  ../src/RunStyles.h ../src/ContractionState.h ../src/CellBuffer.h \
+-  ../src/CallTip.h ../src/KeyMap.h ../src/Indicator.h ../src/XPM.h \
+-  ../src/LineMarker.h ../src/Style.h ../src/ViewStyle.h \
+-  ../src/AutoComplete.h ../src/CharClassify.h ../src/Decoration.h \
+-  ../src/Document.h ../src/Selection.h ../src/PositionCache.h \
+-  ../src/Editor.h ../src/ScintillaBase.h
++ ../include/Scintilla.h ../include/PropSet.h ../src/PropSetSimple.h \
++ ../include/SciLexer.h ../include/Accessor.h ../src/DocumentAccessor.h \
++ ../include/KeyWords.h ../src/SplitVector.h ../src/Partitioning.h \
++ ../src/RunStyles.h ../src/ContractionState.h ../src/CellBuffer.h \
++ ../src/CallTip.h ../src/KeyMap.h ../src/Indicator.h ../src/XPM.h \
++ ../src/LineMarker.h ../src/Style.h ../src/ViewStyle.h \
++ ../src/AutoComplete.h ../src/CharClassify.h ../src/Decoration.h \
++ ../src/Document.h ../src/Selection.h ../src/PositionCache.h \
++ ../src/Editor.h ../src/ScintillaBase.h
+ Selection.o: ../src/Selection.cxx ../include/Platform.h \
+-  ../include/Scintilla.h ../src/Selection.h
++ ../include/Scintilla.h ../src/Selection.h
+ StyleContext.o: ../src/StyleContext.cxx ../include/Platform.h \
+-  ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h
++ ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h
+ Style.o: ../src/Style.cxx ../include/Platform.h ../include/Scintilla.h \
+-  ../src/Style.h
++ ../src/Style.h
+ UniConversion.o: ../src/UniConversion.cxx ../src/UniConversion.h
+ ViewStyle.o: ../src/ViewStyle.cxx ../include/Platform.h \
+-  ../include/Scintilla.h ../src/SplitVector.h ../src/Partitioning.h \
+-  ../src/RunStyles.h ../src/Indicator.h ../src/XPM.h ../src/LineMarker.h \
+-  ../src/Style.h ../src/ViewStyle.h
++ ../include/Scintilla.h ../src/SplitVector.h ../src/Partitioning.h \
++ ../src/RunStyles.h ../src/Indicator.h ../src/XPM.h ../src/LineMarker.h \
++ ../src/Style.h ../src/ViewStyle.h
+ WindowAccessor.o: ../src/WindowAccessor.cxx ../include/Platform.h \
+-  ../include/PropSet.h ../include/Accessor.h ../include/WindowAccessor.h \
+-  ../include/Scintilla.h
++ ../include/PropSet.h ../include/Accessor.h ../include/WindowAccessor.h \
++ ../include/Scintilla.h
+ XPM.o: ../src/XPM.cxx ../include/Platform.h ../src/XPM.h
+--- scite-latest/scintilla/gtk/makefile	2009-08-13 01:35:23.000000000 +0000
++++ scintillua/scintilla/gtk/makefile	2010-01-17 21:38:42.000000000 +0000
 @@ -22,7 +22,7 @@
  vpath %.h ../src ../include
  vpath %.cxx ../src
@@ -277,8 +882,8 @@
  
  all: $(COMPLIB)
  
---- scite-latest/scintilla/gtk/scintilla.mak	2009-07-21 06:55:09.000000000 -0400
-+++ scintillua/scintilla/gtk/scintilla.mak	2010-01-18 13:00:36.000000000 -0500
+--- scite-latest/scintilla/gtk/scintilla.mak	2009-07-21 10:55:09.000000000 +0000
++++ scintillua/scintilla/gtk/scintilla.mak	2010-01-17 21:38:42.000000000 +0000
 @@ -61,7 +61,7 @@
         $(GTK_TOP)/glib/glib-1.3.lib
  !ENDIF
@@ -541,8 +1146,8 @@
  
  
  #--Autogenerated -- end of automatically generated section
---- scite-latest/scintilla/include/KeyWords.h	2009-07-21 06:55:09.000000000 -0400
-+++ scintillua/scintilla/include/KeyWords.h	2010-01-18 13:00:36.000000000 -0500
+--- scite-latest/scintilla/include/KeyWords.h	2009-07-21 10:55:09.000000000 +0000
++++ scintillua/scintilla/include/KeyWords.h	2010-01-17 21:38:42.000000000 +0000
 @@ -5,6 +5,14 @@
  // Copyright 1998-2001 by Neil Hodgson <neilh@scintilla.org>
  // The License.txt file describes the conditions under which this software may be distributed.
@@ -603,8 +1208,8 @@
                    WordList *keywordlists[], Accessor &styler) const;
  	static const LexerModule *Find(int language);
  	static const LexerModule *Find(const char *languageName);
---- scite-latest/scintilla/include/SciLexer.h	2009-07-01 05:56:09.000000000 -0400
-+++ scintillua/scintilla/include/SciLexer.h	2010-01-18 13:00:36.000000000 -0500
+--- scite-latest/scintilla/include/SciLexer.h	2009-07-01 09:56:09.000000000 +0000
++++ scintillua/scintilla/include/SciLexer.h	2010-01-17 21:38:42.000000000 +0000
 @@ -13,1336 +13,13 @@
  
  /* SciLexer features - not in standard Scintilla */
@@ -1945,35 +2550,173 @@
 +// end modified by Mitchell
  
  #endif
---- scite-latest/scintilla/include/Scintilla.h	2009-07-21 06:55:09.000000000 -0400
-+++ scintillua/scintilla/include/Scintilla.h	2010-01-18 13:00:36.000000000 -0500
-@@ -770,6 +770,8 @@
- #define KEYWORDSET_MAX 8
- #define SCI_SETKEYWORDS 4005
- #define SCI_SETLEXERLANGUAGE 4006
-+#define SCI_GETLEXERLANGUAGE 4012 // added by Mitchell
-+#define SCI_GETSTYLENAME 4013 // added by Mitchell
- #define SCI_LOADLEXERLIBRARY 4007
- #define SCI_GETPROPERTY 4008
- #define SCI_GETPROPERTYEXPANDED 4009
---- scite-latest/scintilla/include/Scintilla.iface	2009-07-21 06:55:09.000000000 -0400
-+++ scintillua/scintilla/include/Scintilla.iface	2010-01-18 13:00:36.000000000 -0500
-@@ -2064,6 +2064,14 @@
- # Set the lexing language of the document based on string name.
- set void SetLexerLanguage=4006(, string language)
+--- scite-latest/scintilla/include/Scintilla.h	2009-07-21 10:55:09.000000000 +0000
++++ scintillua/scintilla/include/Scintilla.h	2010-01-26 15:50:57.000000000 +0000
+@@ -15,6 +15,10 @@
+ typedef BOOL bool;
+ #endif
  
-+# added by Mitchell
-+# Retrieve the lexing language string name of the document.
-+get int GetLexerLanguage=4012(, stringresult language)
++#ifdef __cplusplus
++extern "C" {
++#endif
 +
+ #if PLAT_WIN
+ /* Return false on failure: */
+ bool Scintilla_RegisterClasses(void *hInstance);
+@@ -22,6 +26,10 @@
+ #endif
+ int Scintilla_LinkLexers();
+ 
++#ifdef __cplusplus
++}
++#endif
++
+ /* Here should be placed typedefs for uptr_t, an unsigned integer type large enough to
+  * hold a pointer and sptr_t, a signed integer large enough to hold a pointer.
+  * May need to be changed for 64 bit platforms. */
+@@ -254,6 +262,8 @@
+ #define SCI_INDICGETUNDER 2511
+ #define SCI_SETWHITESPACEFORE 2084
+ #define SCI_SETWHITESPACEBACK 2085
++#define SCI_SETWHITESPACESIZE 2086
++#define SCI_GETWHITESPACESIZE 2087
+ #define SCI_SETSTYLEBITS 2090
+ #define SCI_GETSTYLEBITS 2091
+ #define SCI_SETLINESTATE 2092
+@@ -468,6 +478,13 @@
+ #define SCI_APPENDTEXT 2282
+ #define SCI_GETTWOPHASEDRAW 2283
+ #define SCI_SETTWOPHASEDRAW 2284
++#define SC_EFF_QUALITY_MASK 0xF
++#define SC_EFF_QUALITY_DEFAULT 0
++#define SC_EFF_QUALITY_NON_ANTIALIASED 1
++#define SC_EFF_QUALITY_ANTIALIASED 2
++#define SC_EFF_QUALITY_LCD_OPTIMIZED 3
++#define SCI_SETFONTQUALITY 2611
++#define SCI_GETFONTQUALITY 2612
+ #define SCI_TARGETFROMSELECTION 2287
+ #define SCI_LINESJOIN 2288
+ #define SCI_LINESSPLIT 2289
+@@ -642,6 +659,7 @@
+ #define SCI_SETWHITESPACECHARS 2443
+ #define SCI_SETCHARSDEFAULT 2444
+ #define SCI_AUTOCGETCURRENT 2445
++#define SCI_AUTOCGETCURRENTTEXT 2610
+ #define SCI_ALLOCATE 2446
+ #define SCI_TARGETASUTF8 2447
+ #define SCI_SETLENGTHFORENCODE 2448
+@@ -720,6 +738,8 @@
+ #define SCI_GETADDITIONALSELECTIONTYPING 2566
+ #define SCI_SETADDITIONALCARETSBLINK 2567
+ #define SCI_GETADDITIONALCARETSBLINK 2568
++#define SCI_SETADDITIONALCARETSVISIBLE 2608
++#define SCI_GETADDITIONALCARETSVISIBLE 2609
+ #define SCI_GETSELECTIONS 2570
+ #define SCI_CLEARSELECTIONS 2571
+ #define SCI_SETSELECTION 2572
+@@ -775,6 +795,8 @@
+ #define SCI_GETPROPERTYEXPANDED 4009
+ #define SCI_GETPROPERTYINT 4010
+ #define SCI_GETSTYLEBITSNEEDED 4011
++#define SCI_GETLEXERLANGUAGE 4012
++#define SCI_GETSTYLENAME 4013 // added by Mitchell
+ #define SC_MOD_INSERTTEXT 0x1
+ #define SC_MOD_DELETETEXT 0x2
+ #define SC_MOD_CHANGESTYLE 0x4
+--- scite-latest/scintilla/include/Scintilla.iface	2009-07-21 10:55:09.000000000 +0000
++++ scintillua/scintilla/include/Scintilla.iface	2010-01-26 15:51:52.000000000 +0000
+@@ -571,6 +571,12 @@
+ # Set the background colour of all whitespace and whether to use this setting.
+ fun void SetWhitespaceBack=2085(bool useSetting, colour back)
+ 
++# Set the size of the dots used to mark space characters.
++set void SetWhitespaceSize=2086(int size,)
++
++# Get the size of the dots used to mark space characters.
++get int GetWhitespaceSize=2087(,)
++
+ # Divide each styling byte into lexical class bits (default: 5) and indicator
+ # bits (default: 3). If a lexer requires more than 32 lexical states, then this
+ # is used to expand the possible states.
+@@ -1199,6 +1205,21 @@
+ # and then the foreground. This avoids chopping off characters that overlap the next run.
+ set void SetTwoPhaseDraw=2284(bool twoPhase,)
+ 
++# Control font anti-aliasing.
++
++enu FontQuality=SC_EFF_
++val SC_EFF_QUALITY_MASK=0xF
++val SC_EFF_QUALITY_DEFAULT=0
++val SC_EFF_QUALITY_NON_ANTIALIASED=1
++val SC_EFF_QUALITY_ANTIALIASED=2
++val SC_EFF_QUALITY_LCD_OPTIMIZED=3
++
++# Choose the quality level for text from the FontQuality enumeration.
++set void SetFontQuality=2611(int fontQuality,)
++
++# Retrieve the quality level for text.
++get int GetFontQuality=2612(,)
++
+ # Make the target range start and end be the same as the selection range start and end.
+ fun void TargetFromSelection=2287(,)
+ 
+@@ -1718,6 +1739,10 @@
+ # Get currently selected item position in the auto-completion list
+ fun int AutoCGetCurrent=2445(,)
+ 
++# Get currently selected item text in the auto-completion list
++# Returns the length of the item text
++fun int AutoCGetCurrentText=2610(, stringresult s)
++
+ # Enlarge the document to a particular size of text bytes.
+ fun void Allocate=2446(int bytes,)
+ 
+@@ -1945,6 +1970,12 @@
+ # Whether additional carets will blink
+ get bool GetAdditionalCaretsBlink=2568(,)
+ 
++# Set whether additional carets are visible
++set void SetAdditionalCaretsVisible=2608(bool additionalCaretsBlink,)
++
++# Whether additional carets are visible
++get bool GetAdditionalCaretsVisible=2609(,)
++
+ # How many selections are there?
+ get int GetSelections=2570(,)
+ 
+@@ -1976,13 +2007,13 @@
+ set void SetSelectionNStart=2584(int selection, position pos)
+ 
+ # Returns the position at the start of the selection.
+-get position GetSelectionNStart=2585(,)
++get position GetSelectionNStart=2585(int selection,)
+ 
+ # Sets the position that ends the selection - this becomes the currentPosition.
+ set void SetSelectionNEnd=2586(int selection, position pos,)
+ 
+ # Returns the position at the end of the selection.
+-get position GetSelectionNEnd=2587(,)
++get position GetSelectionNEnd=2587(int selection,)
+ 
+ set void SetRectangularSelectionCaret=2588(position pos,)
+ get position GetRectangularSelectionCaret=2589(,)
+@@ -2081,6 +2112,15 @@
+ # Retrieve the number of bits the current lexer needs for styling.
+ get int GetStyleBitsNeeded=4011(,)
+ 
++# Retrieve the name of the lexer.
++# Return the length of the text.
++get int GetLexerLanguage=4012(, stringresult text)
++
++# added by Mitchell
 +# Retrieve the name associated with a style number.
 +get int GetStyleName=4013(int style, stringresult stylename)
 +# end added by Mitchell
 +
- # Load a lexer library (dll / so).
- fun void LoadLexerLibrary=4007(, string path)
- 
-@@ -2153,1510 +2161,13 @@
+ # Notifications
+ # Type of modification and the action which caused the modification.
+ # These are defined as a bit mask to make it easy to specify which notifications are wanted.
+@@ -2153,1510 +2193,13 @@
  enu Lexer=SCLEX_
  val SCLEX_CONTAINER=0
  val SCLEX_NULL=1
@@ -3487,8 +4230,8 @@
  
  # Events
  
---- scite-latest/scintilla/src/ExternalLexer.cxx	2009-07-21 06:55:09.000000000 -0400
-+++ scintillua/scintilla/src/ExternalLexer.cxx	2010-01-18 13:00:36.000000000 -0500
+--- scite-latest/scintilla/src/ExternalLexer.cxx	2009-07-21 10:55:09.000000000 +0000
++++ scintillua/scintilla/src/ExternalLexer.cxx	2010-01-17 21:38:42.000000000 +0000
 @@ -143,7 +143,7 @@
  
  			for (int i = 0; i < nl; i++) {
@@ -3498,8 +4241,8 @@
  
  				// Create a LexerMinder so we don't leak the ExternalLexerModule...
  				lm = new LexerMinder;
---- scite-latest/scintilla/src/ExternalLexer.h	2009-07-21 06:55:09.000000000 -0400
-+++ scintillua/scintilla/src/ExternalLexer.h	2010-01-18 13:00:36.000000000 -0500
+--- scite-latest/scintilla/src/ExternalLexer.h	2009-07-21 10:55:09.000000000 +0000
++++ scintillua/scintilla/src/ExternalLexer.h	2010-01-17 21:38:42.000000000 +0000
 @@ -37,11 +37,13 @@
  	int externalLanguage;
  	char name[100];
@@ -3516,8 +4259,8 @@
  	virtual void Lex(unsigned int startPos, int lengthDoc, int initStyle,
  					WordList *keywordlists[], Accessor &styler) const;
  	virtual void Fold(unsigned int startPos, int lengthDoc, int initStyle,
---- scite-latest/scintilla/src/KeyWords.cxx	2009-07-21 06:55:09.000000000 -0400
-+++ scintillua/scintilla/src/KeyWords.cxx	2010-01-18 13:00:36.000000000 -0500
+--- scite-latest/scintilla/src/KeyWords.cxx	2009-07-21 10:55:09.000000000 +0000
++++ scintillua/scintilla/src/KeyWords.cxx	2010-01-17 21:38:42.000000000 +0000
 @@ -11,6 +11,14 @@
  #include <stdio.h>
  #include <stdarg.h>
@@ -3693,8 +4436,8 @@
  
  	return 1;
  }
---- scite-latest/scintilla/src/LexLPeg.cxx	1969-12-31 19:00:00.000000000 -0500
-+++ scintillua/scintilla/src/LexLPeg.cxx	2010-01-18 13:00:36.000000000 -0500
+--- scite-latest/scintilla/src/LexLPeg.cxx	1970-01-01 00:00:00.000000000 +0000
++++ scintillua/scintilla/src/LexLPeg.cxx	2010-01-17 21:38:42.000000000 +0000
 @@ -0,0 +1,403 @@
 +/*
 +	Mitchell's Lua-powered dynamic lexer
@@ -4099,8 +4842,8 @@
 +
 +LexerModule lmLPeg(SCLEX_LPEG, InitDoc, ColouriseDoc, "llpeg", FoldDoc, 0, 7);
 +LexerModule lmNull(SCLEX_NULL, InitDoc, ColouriseDoc, "null");
---- scite-latest/scintilla/src/ScintillaBase.cxx	2009-07-21 06:55:10.000000000 -0400
-+++ scintillua/scintilla/src/ScintillaBase.cxx	2010-01-18 13:00:36.000000000 -0500
+--- scite-latest/scintilla/src/ScintillaBase.cxx	2009-07-21 10:55:10.000000000 +0000
++++ scintillua/scintilla/src/ScintillaBase.cxx	2010-01-26 16:01:16.000000000 +0000
 @@ -23,6 +23,13 @@
  #include "DocumentAccessor.h"
  #include "KeyWords.h"
@@ -4138,10 +4881,36 @@
  #endif
  }
  
-@@ -464,15 +473,60 @@
+@@ -392,6 +401,23 @@
+ 	return ac.lb->GetSelection();
+ }
+ 
++int ScintillaBase::AutoCompleteGetCurrentText(char *buffer) {
++	if (ac.Active()) {
++		int item = ac.lb->GetSelection();
++		char selected[1000];
++		selected[0] = '\0';
++		if (item != -1) {
++			ac.lb->GetValue(item, selected, sizeof(selected));
++			if (buffer != NULL)
++				strcpy(buffer, selected);
++			return strlen(selected);
++		}
++	}
++	if (buffer != NULL)
++		*buffer = '\0';
++	return 0;
++}
++
+ void ScintillaBase::CallTipShow(Point pt, const char *defn) {
+ 	ac.Cancel();
+ 	pt.y += vs.lineHeight;
+@@ -464,15 +490,64 @@
  	lexCurrent = LexerModule::Find(lexLanguage);
  	if (!lexCurrent)
  		lexCurrent = LexerModule::Find(SCLEX_NULL);
++	int bits = lexCurrent ? lexCurrent->GetStyleBitsNeeded() : 5;
++	vs.EnsureStyle((1 << bits) - 1);
 +	// added by Mitchell
 +	const char *languageName = lexLanguage == SCLEX_CONTAINER ? "container" : "null";
 +	SetLexerLanguage(languageName);
@@ -4156,6 +4925,8 @@
  		lexCurrent = LexerModule::Find(SCLEX_NULL);
  	if (lexCurrent)
  		lexLanguage = lexCurrent->GetLanguage();
++	int bits = lexCurrent ? lexCurrent->GetStyleBitsNeeded() : 5;
++	vs.EnsureStyle((1 << bits) - 1);
 +#endif // added by Mitchell
 +
 +	// added by Mitchell
@@ -4199,7 +4970,7 @@
  }
  
  void ScintillaBase::Colourise(int start, int end) {
-@@ -499,10 +553,10 @@
+@@ -499,10 +574,10 @@
  		styler.SetCodePage(pdoc->dbcsCodePage);
  
  		if (lexCurrent && (len > 0)) {	// Should always succeed as null lexer should always be available
@@ -4212,26 +4983,50 @@
  				styler.Flush();
  			}
  		}
-@@ -741,6 +795,55 @@
+@@ -564,6 +639,9 @@
+ 	case SCI_AUTOCGETCURRENT:
+ 		return AutoCompleteGetCurrent();
+ 
++	case SCI_AUTOCGETCURRENTTEXT:
++		return AutoCompleteGetCurrentText(reinterpret_cast<char *>(lParam));
++
+ 	case SCI_AUTOCSETCANCELATSTART:
+ 		ac.cancelAtStartPos = wParam != 0;
+ 		break;
+@@ -706,15 +784,8 @@
+ 		          reinterpret_cast<const char *>(lParam));
+ 		break;
+ 
+-	case SCI_GETPROPERTY: {
+-			const char *val = props.Get(reinterpret_cast<const char *>(wParam));
+-			const int n = strlen(val);
+-			if (lParam != 0) {
+-				char *ptr = reinterpret_cast<char *>(lParam);
+-				strcpy(ptr, val);
+-			}
+-			return n;	// Not including NUL
+-		}
++	case SCI_GETPROPERTY:
++			return StringResult(lParam, props.Get(reinterpret_cast<const char *>(wParam)));
+ 
+ 	case SCI_GETPROPERTYEXPANDED: {
+ 			char *val = props.Expanded(reinterpret_cast<const char *>(wParam));
+@@ -741,8 +812,46 @@
  		SetLexerLanguage(reinterpret_cast<const char *>(lParam));
  		break;
  
-+	// added by Mitchell
-+	case SCI_GETLEXERLANGUAGE: {
++	case SCI_GETLEXERLANGUAGE: { // modified by Mitchell
++			// added by Mitchell
 +			const char *val = lexLanguage == SCLEX_CONTAINER ? "container" : "null";
 +			if (luaState) {
 +				lua_getfield(luaState, LUA_REGISTRYINDEX, "languageName");
 +				val = lua_tostring(luaState, -1); lua_pop(luaState, 1);
 +			}
-+			const int n = strlen(val);
-+			if (lParam != 0) {
-+				char *ptr = reinterpret_cast<char *>(lParam);
-+				memcpy(ptr, val, n);
-+				ptr[n] = '\0'; // terminate
-+			}
-+			return n;
-+		}
++			// end added by Mitchell
++			return StringResult(lParam, val); // modified by Mitchell
++		} // added by Mitchell
 +
++	// added by Mitchell
 +	case SCI_GETSTYLENAME: {
 +			const char *val = "";
 +			if (luaState) {
@@ -4253,23 +5048,18 @@
 +					}
 +				}
 +			}
-+			if (strlen(val) == 0)
-+				val = "Not Available";
-+			const int n = strlen(val);
-+			if (lParam != 0) {
-+				char *ptr = reinterpret_cast<char *>(lParam);
-+				memcpy(ptr, val, n);
-+				ptr[n] = '\0'; // terminate
-+			}
-+			return n;
++			return StringResult(lParam, strlen(val) ? val : "Not Available");
 +		}
 +	// end added by Mitchell
 +
  	case SCI_GETSTYLEBITSNEEDED:
  		return lexCurrent ? lexCurrent->GetStyleBitsNeeded() : 5;
++
  #endif
---- scite-latest/scintilla/src/ScintillaBase.h	2009-07-21 06:55:10.000000000 -0400
-+++ scintillua/scintilla/src/ScintillaBase.h	2010-01-18 13:00:36.000000000 -0500
+ 
+ 	default:
+--- scite-latest/scintilla/src/ScintillaBase.h	2009-07-21 10:55:10.000000000 +0000
++++ scintillua/scintilla/src/ScintillaBase.h	2010-01-26 16:01:24.000000000 +0000
 @@ -54,6 +54,7 @@
  	void SetLexer(uptr_t wParam);
  	void SetLexerLanguage(const char *languageName);
@@ -4278,8 +5068,16 @@
  #endif
  
  	ScintillaBase();
---- scite-latest/scintilla/win32/deps.mak	2009-07-21 06:55:11.000000000 -0400
-+++ scintillua/scintilla/win32/deps.mak	2010-01-18 13:00:36.000000000 -0500
+@@ -72,6 +73,7 @@
+ 	void AutoCompleteCancel();
+ 	void AutoCompleteMove(int delta);
+ 	int AutoCompleteGetCurrent();
++	int AutoCompleteGetCurrentText(char *buffer);
+ 	void AutoCompleteCharacterAdded(char ch);
+ 	void AutoCompleteCharacterDeleted();
+ 	void AutoCompleteCompleted();
+--- scite-latest/scintilla/win32/deps.mak	2009-07-21 10:55:11.000000000 +0000
++++ scintillua/scintilla/win32/deps.mak	2010-01-17 21:38:42.000000000 +0000
 @@ -49,208 +49,11 @@
  KeyWords.o: ../src/KeyWords.cxx ../include/Platform.h \
    ../include/PropSet.h ../include/Accessor.h \
@@ -4492,8 +5290,8 @@
  LineMarker.o: ../src/LineMarker.cxx ../include/Platform.h \
    ../include/Scintilla.h ../src/XPM.h ../src/LineMarker.h
  PropSet.o: ../src/PropSet.cxx ../include/Platform.h ../include/PropSet.h
---- scite-latest/scintilla/win32/makefile	2009-08-19 19:09:46.000000000 -0400
-+++ scintillua/scintilla/win32/makefile	2010-01-18 13:00:36.000000000 -0500
+--- scite-latest/scintilla/win32/makefile	2009-08-19 23:09:46.000000000 +0000
++++ scintillua/scintilla/win32/makefile	2010-01-17 21:39:47.000000000 +0000
 @@ -7,9 +7,25 @@
  # safely if using a newer version which may display warning messages.
  
@@ -4602,8 +5400,7 @@
  $(LEXCOMPONENT): $(LOBJS) Scintilla.def
  	$(DLLWRAP) --add-stdcall-alias --target i386-mingw32 -o $@ $(LOBJS) $(LDFLAGS) $(STRIPFLAG) --relocatable
  
--$(LEXLIB): $(LEXOBJS)
-+$(LEXLIB): $(LEXOBJS) $(LUA_OBJS) # modified by Mitchell
+ $(LEXLIB): $(LEXOBJS)
  	$(AR) rc $@ $^
 -	ranlib $@
 +	$(RANLIB) $@ # modified by Mitchell
@@ -4617,8 +5414,8 @@
 -	windres ScintRes.rc $@
 +	$(WINDRES) ScintRes.rc $@ # modified by Mitchell
  
---- scite-latest/scintilla/win32/scintilla.mak	2009-07-21 06:55:11.000000000 -0400
-+++ scintillua/scintilla/win32/scintilla.mak	2010-01-18 13:00:36.000000000 -0500
+--- scite-latest/scintilla/win32/scintilla.mak	2009-07-21 10:55:11.000000000 +0000
++++ scintillua/scintilla/win32/scintilla.mak	2010-01-17 21:38:42.000000000 +0000
 @@ -77,7 +77,7 @@
  CXXFLAGS=$(CXXFLAGS) $(CXXNDEBUG)
  !ENDIF
@@ -4882,8 +5679,8 @@
  
  #--Autogenerated -- end of automatically generated section
  
---- scite-latest/scintilla/win32/scintilla_vc6.mak	2009-07-21 06:55:11.000000000 -0400
-+++ scintillua/scintilla/win32/scintilla_vc6.mak	2010-01-18 13:00:36.000000000 -0500
+--- scite-latest/scintilla/win32/scintilla_vc6.mak	2009-07-21 10:55:11.000000000 +0000
++++ scintillua/scintilla/win32/scintilla_vc6.mak	2010-01-17 21:38:42.000000000 +0000
 @@ -79,7 +79,7 @@
  CXXFLAGS=$(CXXFLAGS) $(CXXNDEBUG)
  !ENDIF
@@ -5147,9 +5944,20 @@
  
  #--Autogenerated -- end of automatically generated section
  
---- scite-latest/scintilla/win32/ScintillaWin.cxx	2009-08-06 19:46:51.000000000 -0400
-+++ scintillua/scintilla/win32/ScintillaWin.cxx	2010-01-18 13:00:36.000000000 -0500
-@@ -1486,7 +1486,7 @@
+--- scite-latest/scintilla/win32/ScintillaWin.cxx	2009-08-06 23:46:51.000000000 +0000
++++ scintillua/scintilla/win32/ScintillaWin.cxx	2010-01-26 16:02:41.000000000 +0000
+@@ -1362,7 +1362,9 @@
+ 	UndoGroup ug(pdoc);
+ 	bool isLine = SelectionEmpty() && (::IsClipboardFormatAvailable(cfLineSelect) != 0);
+ 	ClearSelection();
+-	SelectionPosition selStart = sel.Range(sel.Main()).Start();
++	SelectionPosition selStart = sel.IsRectangular() ?
++		sel.Rectangular().Start() :
++		sel.Range(sel.Main()).Start();
+ 	bool isRectangular = ::IsClipboardFormatAvailable(cfColumnSelect) != 0;
+ 
+ 	// Always use CF_UNICODETEXT if available
+@@ -1486,7 +1488,7 @@
  }
  
  void ScintillaWin::SetLexerLanguage(const char *languageName) {
@@ -5158,8 +5966,8 @@
  	lexCurrent = LexerModule::Find(languageName);
  	if (!lexCurrent)
  		lexCurrent = LexerModule::Find(SCLEX_NULL);
---- scite-latest/scite/boundscheck/SciTE.dsp	2009-07-03 01:50:15.000000000 -0400
-+++ scintillua/scite/boundscheck/SciTE.dsp	2010-01-18 13:00:36.000000000 -0500
+--- scite-latest/scite/boundscheck/SciTE.dsp	2009-07-03 05:50:15.000000000 +0000
++++ scintillua/scite/boundscheck/SciTE.dsp	2010-01-17 21:38:42.000000000 +0000
 @@ -195,313 +195,14 @@
  # End Source File
  # Begin Source File
@@ -5478,8 +6286,8 @@
  
  SOURCE=..\lua\src\lfunc.c
  # End Source File
---- scite-latest/scite/boundscheck/SciTE.vcproj	2009-07-03 01:50:15.000000000 -0400
-+++ scintillua/scite/boundscheck/SciTE.vcproj	2010-01-18 13:00:36.000000000 -0500
+--- scite-latest/scite/boundscheck/SciTE.vcproj	2009-07-03 05:50:15.000000000 +0000
++++ scintillua/scite/boundscheck/SciTE.vcproj	2010-01-26 16:03:51.000000000 +0000
 @@ -228,237 +228,14 @@
  			<File
  				RelativePath="..\lua\src\ldump.c">
@@ -5722,8 +6530,17 @@
  
  			<File
  				RelativePath="..\lua\src\lfunc.c">
---- scite-latest/scite/gtk/makefile	2009-08-12 21:39:59.000000000 -0400
-+++ scintillua/scite/gtk/makefile	2010-01-18 13:00:36.000000000 -0500
+@@ -729,7 +506,7 @@
+ 				RelativePath="..\win32\SingleThreadExtension.h">
+ 			</File>
+ 			<File
+-				RelativePath="..\..\scintilla\include\SString.h">
++				RelativePath="..\src\SString.h">
+ 			</File>
+ 			<File
+ 				RelativePath="..\..\scintilla\src\Style.h">
+--- scite-latest/scite/gtk/makefile	2009-08-13 01:39:59.000000000 +0000
++++ scintillua/scite/gtk/makefile	2010-01-17 21:38:42.000000000 +0000
 @@ -70,7 +70,7 @@
  		ltable.o ltm.o lundump.o lvm.o lzio.o
  
@@ -5733,8 +6550,8 @@
  
  LUA_OBJS = LuaExtension.o $(LUA_CORE_OBJS) $(LUA_LIB_OBJS)
  
---- scite-latest/scite/lua/include/lualib.h	2007-06-14 20:37:57.000000000 -0400
-+++ scintillua/scite/lua/include/lualib.h	2010-01-18 13:00:36.000000000 -0500
+--- scite-latest/scite/lua/include/lualib.h	2007-06-15 00:37:57.000000000 +0000
++++ scintillua/scite/lua/include/lualib.h	2010-01-17 21:38:42.000000000 +0000
 @@ -39,6 +39,11 @@
  #define LUA_LOADLIBNAME	"package"
  LUALIB_API int (luaopen_package) (lua_State *L);
@@ -5747,8 +6564,8 @@
  
  /* open all previous libraries */
  LUALIB_API void (luaL_openlibs) (lua_State *L); 
---- scite-latest/scite/lua/src/lpeg.c	1969-12-31 19:00:00.000000000 -0500
-+++ scintillua/scite/lua/src/lpeg.c	2010-01-18 13:00:36.000000000 -0500
+--- scite-latest/scite/lua/src/lpeg.c	1970-01-01 00:00:00.000000000 +0000
++++ scintillua/scite/lua/src/lpeg.c	2010-01-17 21:38:42.000000000 +0000
 @@ -0,0 +1,2260 @@
 +/*
 +** $Id: lpeg.c,v 1.98 2008/10/11 20:20:43 roberto Exp $
@@ -8010,8 +8827,8 @@
 +  return 1;
 +}
 +
---- scite-latest/scite/src/IFaceTable.cxx	2009-08-11 01:48:52.000000000 -0400
-+++ scintillua/scite/src/IFaceTable.cxx	2010-01-18 13:00:36.000000000 -0500
+--- scite-latest/scite/src/IFaceTable.cxx	2009-08-11 05:48:52.000000000 +0000
++++ scintillua/scite/src/IFaceTable.cxx	2010-01-26 16:06:20.000000000 +0000
 @@ -127,6 +127,7 @@
  }
  
@@ -9259,7 +10076,56 @@
  	{"SCFIND_MATCHCASE",4},
  	{"SCFIND_POSIX",0x00400000},
  	{"SCFIND_REGEXP",0x00200000},
-@@ -1749,7 +518,6 @@
+@@ -1572,6 +341,7 @@
+ 	{"SCI_CALLTIPUSESTYLE",2212},
+ 	{"SCI_GETADDITIONALCARETFORE",2605},
+ 	{"SCI_GETADDITIONALCARETSBLINK",2568},
++	{"SCI_GETADDITIONALCARETSVISIBLE",2609},
+ 	{"SCI_GETADDITIONALSELALPHA",2603},
+ 	{"SCI_GETADDITIONALSELECTIONTYPING",2566},
+ 	{"SCI_GETANCHOR",2009},
+@@ -1608,6 +378,7 @@
+ 	{"SCI_GETFOLDEXPANDED",2230},
+ 	{"SCI_GETFOLDLEVEL",2223},
+ 	{"SCI_GETFOLDPARENT",2225},
++	{"SCI_GETFONTQUALITY",2612},
+ 	{"SCI_GETHIGHLIGHTGUIDE",2135},
+ 	{"SCI_GETHOTSPOTACTIVEUNDERLINE",2496},
+ 	{"SCI_GETHOTSPOTSINGLELINE",2497},
+@@ -1662,6 +433,8 @@
+ 	{"SCI_GETSELECTIONNANCHORVIRTUALSPACE",2583},
+ 	{"SCI_GETSELECTIONNCARET",2577},
+ 	{"SCI_GETSELECTIONNCARETVIRTUALSPACE",2581},
++	{"SCI_GETSELECTIONNEND",2587},
++	{"SCI_GETSELECTIONNSTART",2585},
+ 	{"SCI_GETSELECTIONS",2570},
+ 	{"SCI_GETSELECTIONSTART",2143},
+ 	{"SCI_GETSELEOLFILLED",2479},
+@@ -1682,6 +455,7 @@
+ 	{"SCI_GETVIEWWS",2020},
+ 	{"SCI_GETVIRTUALSPACEOPTIONS",2597},
+ 	{"SCI_GETVSCROLLBAR",2281},
++	{"SCI_GETWHITESPACESIZE",2087},
+ 	{"SCI_GETWRAPINDENTMODE",2473},
+ 	{"SCI_GETWRAPMODE",2269},
+ 	{"SCI_GETWRAPSTARTINDENT",2465},
+@@ -1707,6 +481,7 @@
+ 	{"SCI_SELECTIONISRECTANGLE",2372},
+ 	{"SCI_SETADDITIONALCARETFORE",2604},
+ 	{"SCI_SETADDITIONALCARETSBLINK",2567},
++	{"SCI_SETADDITIONALCARETSVISIBLE",2608},
+ 	{"SCI_SETADDITIONALSELALPHA",2602},
+ 	{"SCI_SETADDITIONALSELBACK",2601},
+ 	{"SCI_SETADDITIONALSELECTIONTYPING",2565},
+@@ -1737,6 +512,7 @@
+ 	{"SCI_SETFOCUS",2380},
+ 	{"SCI_SETFOLDEXPANDED",2229},
+ 	{"SCI_SETFOLDLEVEL",2222},
++	{"SCI_SETFONTQUALITY",2611},
+ 	{"SCI_SETHIGHLIGHTGUIDE",2134},
+ 	{"SCI_SETHOTSPOTACTIVEUNDERLINE",2412},
+ 	{"SCI_SETHOTSPOTSINGLELINE",2421},
+@@ -1749,7 +525,6 @@
  	{"SCI_SETKEYWORDS",4005},
  	{"SCI_SETLAYOUTCACHE",2272},
  	{"SCI_SETLEXER",4001},
@@ -9267,7 +10133,24 @@
  	{"SCI_SETLINEINDENTATION",2126},
  	{"SCI_SETLINESTATE",2092},
  	{"SCI_SETMAINSELECTION",2574},
-@@ -1857,103 +625,10 @@
+@@ -1786,6 +561,8 @@
+ 	{"SCI_SETSELECTIONNANCHORVIRTUALSPACE",2582},
+ 	{"SCI_SETSELECTIONNCARET",2576},
+ 	{"SCI_SETSELECTIONNCARETVIRTUALSPACE",2580},
++	{"SCI_SETSELECTIONNEND",2586},
++	{"SCI_SETSELECTIONNSTART",2584},
+ 	{"SCI_SETSELECTIONSTART",2142},
+ 	{"SCI_SETSELEOLFILLED",2480},
+ 	{"SCI_SETSTATUS",2382},
+@@ -1803,6 +580,7 @@
+ 	{"SCI_SETVIRTUALSPACEOPTIONS",2596},
+ 	{"SCI_SETVSCROLLBAR",2280},
+ 	{"SCI_SETWHITESPACECHARS",2443},
++	{"SCI_SETWHITESPACESIZE",2086},
+ 	{"SCI_SETWORDCHARS",2077},
+ 	{"SCI_SETWRAPINDENTMODE",2472},
+ 	{"SCI_SETWRAPMODE",2268},
+@@ -1857,103 +635,10 @@
  	{"SCK_TAB",9},
  	{"SCK_UP",301},
  	{"SCK_WIN",313},
@@ -9372,7 +10255,27 @@
  	{"SCMOD_ALT",4},
  	{"SCMOD_CTRL",2},
  	{"SCMOD_NORM",0},
-@@ -2206,6 +881,7 @@
+@@ -2000,6 +685,11 @@
+ 	{"SC_CP_UTF8",65001},
+ 	{"SC_CURSORNORMAL",-1},
+ 	{"SC_CURSORWAIT",4},
++	{"SC_EFF_QUALITY_ANTIALIASED",2},
++	{"SC_EFF_QUALITY_DEFAULT",0},
++	{"SC_EFF_QUALITY_LCD_OPTIMIZED",3},
++	{"SC_EFF_QUALITY_MASK",0xF},
++	{"SC_EFF_QUALITY_NON_ANTIALIASED",1},
+ 	{"SC_EOL_CR",1},
+ 	{"SC_EOL_CRLF",0},
+ 	{"SC_EOL_LF",2},
+@@ -2138,6 +828,7 @@
+ 	{"AutoCCancel", 2101, iface_void, {iface_void, iface_void}},
+ 	{"AutoCComplete", 2104, iface_void, {iface_void, iface_void}},
+ 	{"AutoCGetCurrent", 2445, iface_int, {iface_void, iface_void}},
++	{"AutoCGetCurrentText", 2610, iface_int, {iface_void, iface_stringresult}},
+ 	{"AutoCPosStart", 2103, iface_position, {iface_void, iface_void}},
+ 	{"AutoCSelect", 2108, iface_void, {iface_void, iface_string}},
+ 	{"AutoCShow", 2100, iface_void, {iface_int, iface_string}},
+@@ -2206,14 +897,14 @@
  	{"GetHotspotActiveBack", 2495, iface_colour, {iface_void, iface_void}},
  	{"GetHotspotActiveFore", 2494, iface_colour, {iface_void, iface_void}},
  	{"GetLastChild", 2224, iface_int, {iface_int, iface_int}},
@@ -9380,15 +10283,16 @@
  	{"GetLine", 2153, iface_int, {iface_int, iface_stringresult}},
  	{"GetLineSelEndPosition", 2425, iface_position, {iface_int, iface_void}},
  	{"GetLineSelStartPosition", 2424, iface_position, {iface_int, iface_void}},
-@@ -2214,6 +890,7 @@
+ 	{"GetProperty", 4008, iface_int, {iface_string, iface_stringresult}},
+ 	{"GetPropertyExpanded", 4009, iface_int, {iface_string, iface_stringresult}},
  	{"GetSelText", 2161, iface_int, {iface_void, iface_stringresult}},
- 	{"GetSelectionNEnd", 2587, iface_position, {iface_void, iface_void}},
- 	{"GetSelectionNStart", 2585, iface_position, {iface_void, iface_void}},
+-	{"GetSelectionNEnd", 2587, iface_position, {iface_void, iface_void}},
+-	{"GetSelectionNStart", 2585, iface_position, {iface_void, iface_void}},
 +	{"GetStyleName", 4013, iface_int, {iface_int, iface_stringresult}},
  	{"GetStyledText", 2015, iface_int, {iface_void, iface_textrange}},
  	{"GetText", 2182, iface_int, {iface_length, iface_stringresult}},
  	{"GetTextRange", 2162, iface_int, {iface_void, iface_textrange}},
-@@ -2325,6 +1002,7 @@
+@@ -2325,13 +1016,12 @@
  	{"SetHotspotActiveBack", 2411, iface_void, {iface_bool, iface_colour}},
  	{"SetHotspotActiveFore", 2410, iface_void, {iface_bool, iface_colour}},
  	{"SetLengthForEncode", 2448, iface_void, {iface_int, iface_void}},
@@ -9396,7 +10300,30 @@
  	{"SetSavePoint", 2014, iface_void, {iface_void, iface_void}},
  	{"SetSel", 2160, iface_void, {iface_position, iface_position}},
  	{"SetSelBack", 2068, iface_void, {iface_bool, iface_colour}},
-@@ -2464,7 +1142,6 @@
+ 	{"SetSelFore", 2067, iface_void, {iface_bool, iface_colour}},
+ 	{"SetSelection", 2572, iface_int, {iface_int, iface_int}},
+-	{"SetSelectionNEnd", 2586, iface_void, {iface_int, iface_position}},
+-	{"SetSelectionNStart", 2584, iface_void, {iface_int, iface_position}},
+ 	{"SetStyling", 2033, iface_void, {iface_length, iface_int}},
+ 	{"SetStylingEx", 2073, iface_void, {iface_length, iface_string}},
+ 	{"SetText", 2181, iface_void, {iface_void, iface_string}},
+@@ -2391,6 +1081,7 @@
+ static IFaceProperty ifaceProperties[] = {
+ 	{"AdditionalCaretFore", 2605, 2604, iface_colour, iface_void},
+ 	{"AdditionalCaretsBlink", 2568, 2567, iface_bool, iface_void},
++	{"AdditionalCaretsVisible", 2609, 2608, iface_bool, iface_void},
+ 	{"AdditionalSelAlpha", 2603, 2602, iface_int, iface_void},
+ 	{"AdditionalSelBack", 0, 2601, iface_colour, iface_void},
+ 	{"AdditionalSelFore", 0, 2600, iface_colour, iface_void},
+@@ -2447,6 +1138,7 @@
+ 	{"FoldExpanded", 2230, 2229, iface_bool, iface_int},
+ 	{"FoldLevel", 2223, 2222, iface_int, iface_int},
+ 	{"FoldParent", 2225, 0, iface_int, iface_int},
++	{"FontQuality", 2612, 2611, iface_int, iface_void},
+ 	{"HScrollBar", 2131, 2130, iface_bool, iface_void},
+ 	{"HighlightGuide", 2135, 2134, iface_int, iface_void},
+ 	{"HotspotActiveUnderline", 2496, 2412, iface_bool, iface_void},
+@@ -2464,7 +1156,6 @@
  	{"LayoutCache", 2273, 2272, iface_int, iface_void},
  	{"Length", 2006, 0, iface_int, iface_void},
  	{"Lexer", 4002, 4001, iface_int, iface_void},
@@ -9404,7 +10331,24 @@
  	{"LineCount", 2154, 0, iface_int, iface_void},
  	{"LineEndPosition", 2136, 0, iface_int, iface_int},
  	{"LineIndentPosition", 2128, 0, iface_position, iface_int},
-@@ -2557,12 +1234,13 @@
+@@ -2513,6 +1204,8 @@
+ 	{"SelectionNAnchorVirtualSpace", 2583, 2582, iface_int, iface_int},
+ 	{"SelectionNCaret", 2577, 2576, iface_position, iface_int},
+ 	{"SelectionNCaretVirtualSpace", 2581, 2580, iface_int, iface_int},
++	{"SelectionNEnd", 2587, 2586, iface_position, iface_int},
++	{"SelectionNStart", 2585, 2584, iface_position, iface_int},
+ 	{"SelectionStart", 2143, 2142, iface_position, iface_void},
+ 	{"Selections", 2570, 0, iface_int, iface_void},
+ 	{"Status", 2383, 2382, iface_int, iface_void},
+@@ -2546,6 +1239,7 @@
+ 	{"ViewWS", 2020, 2021, iface_int, iface_void},
+ 	{"VirtualSpaceOptions", 2597, 2596, iface_int, iface_void},
+ 	{"WhitespaceChars", 0, 2443, iface_string, iface_void},
++	{"WhitespaceSize", 2087, 2086, iface_int, iface_void},
+ 	{"WordChars", 0, 2077, iface_string, iface_void},
+ 	{"WrapIndentMode", 2473, 2472, iface_int, iface_void},
+ 	{"WrapMode", 2269, 2268, iface_int, iface_void},
+@@ -2557,12 +1251,13 @@
  };
  
  enum {
@@ -9421,9 +10365,18 @@
  
  const IFaceFunction * const IFaceTable::functions = ifaceFunctions;
  const int IFaceTable::functionCount = ifaceFunctionCount;
---- scite-latest/scite/src/SciTEBase.cxx	2009-08-19 19:09:47.000000000 -0400
-+++ scintillua/scite/src/SciTEBase.cxx	2010-01-18 13:00:36.000000000 -0500
-@@ -351,8 +351,8 @@
+--- scite-latest/scite/src/SciTEBase.cxx	2009-08-19 23:09:47.000000000 +0000
++++ scintillua/scite/src/SciTEBase.cxx	2010-01-26 16:07:56.000000000 +0000
+@@ -322,6 +322,8 @@
+             "Eric Kidd",
+             "maXmo",
+             "David Severwright",
++            "Jon Strait",
++            "Oliver Kiddle",
+         };
+ 
+ // AddStyledText only called from About so static size buffer is OK
+@@ -351,12 +353,14 @@
  SciTEBase::SciTEBase(Extension *ext) : apis(true), extender(ext) {
  	codePage = 0;
  	characterSet = 0;
@@ -9434,7 +10387,58 @@
  	functionDefinition = 0;
  	indentOpening = true;
  	indentClosing = true;
-@@ -940,11 +940,13 @@
++	indentMaintain = false;
+ 	statementLookback = 10;
++	preprocessorSymbol = '\0';
+ 
+ 	fnEditor = 0;
+ 	ptrEditor = 0;
+@@ -369,6 +373,7 @@
+ 	tabMultiLine = false;
+ 	sbNum = 1;
+ 	visHeightTools = 0;
++	visHeightTab = 0;
+ 	visHeightStatus = 0;
+ 	visHeightEditor = 1;
+ 	heightBar = 7;
+@@ -382,6 +387,7 @@
+ 	fullScreen = false;
+ 
+ 	heightOutput = 0;
++	heightOutputStartDrag = 0;
+ 	previousHeightOutput = 0;
+ 
+ 	allowMenuActions = true;
+@@ -634,14 +640,14 @@
+ 		}
+ #endif
+ 		AddStyledText(wsci, GetTranslationToAbout("Version").c_str(), trsSty);
+-		AddStyledText(wsci, " 2.01\n", 1);
++		AddStyledText(wsci, " 2.02\n", 1);
+ 		AddStyledText(wsci, "    " __DATE__ " " __TIME__ "\n", 1);
+ 		SetAboutStyle(wsci, 2, ColourDesired(0, 0, 0));
+ 		Platform::SendScintilla(wsci, SCI_STYLESETITALIC, 2, 1);
+ 		AddStyledText(wsci, GetTranslationToAbout("by").c_str(), trsSty);
+ 		AddStyledText(wsci, " Neil Hodgson.\n", 2);
+ 		SetAboutStyle(wsci, 3, ColourDesired(0, 0, 0));
+-		AddStyledText(wsci, "December 1998-August 2009.\n", 3);
++		AddStyledText(wsci, "December 1998-January 2010.\n", 3);
+ 		SetAboutStyle(wsci, 4, ColourDesired(0, 0x7f, 0x7f));
+ 		AddStyledText(wsci, "http://www.scintilla.org\n", 4);
+ 		AddStyledText(wsci, "Lua scripting language by TeCGraf, PUC-Rio\n", 3);
+@@ -919,6 +925,11 @@
+ 	int maskStyle = (1 << SendEditor(SCI_GETSTYLEBITSNEEDED)) - 1;
+ 	bool isInside = false;
+ 	Window &win = editor ? wEditor : wOutput;
++
++	int mainSel = Platform::SendScintilla(win.GetID(), SCI_GETMAINSELECTION, 0, 0);
++	if (Platform::SendScintilla(win.GetID(), SCI_GETSELECTIONNCARETVIRTUALSPACE, mainSel, 0) > 0)
++		return false;
++
+ 	int bracesStyleCheck = editor ? bracesStyle : 0;
+ 	int caretPos = Platform::SendScintilla(win.GetID(), SCI_GETCURRENTPOS, 0, 0);
+ 	braceAtCaret = -1;
+@@ -940,11 +951,13 @@
  		braceAtCaret = caretPos - 1;
  	}
  	bool colonMode = false;
@@ -9448,7 +10452,7 @@
  	bool isAfter = true;
  	if (lengthDoc > 0 && sloppy && (braceAtCaret < 0) && (caretPos < lengthDoc)) {
  		// No brace found so check other side
-@@ -956,11 +958,13 @@
+@@ -956,11 +969,13 @@
  				braceAtCaret = caretPos;
  				isAfter = false;
  			}
@@ -9462,7 +10466,130 @@
  		}
  	}
  	if (braceAtCaret >= 0) {
-@@ -3198,10 +3202,16 @@
+@@ -1619,18 +1634,23 @@
+ 	Sci_CharacterRange cr = GetSelection();
+ 	int startPosition = cr.cpMin;
+ 	int endPosition = cr.cpMax;
+-	int selType = SC_SEL_STREAM;
++	int countSelections = SendEditor(SCI_GETSELECTIONS);
+ 	if (inSelection) {
+-		if (startPosition == endPosition) {
+-			return -2;
+-		}
+-		selType = SendEditor(SCI_GETSELECTIONMODE);
++		int selType = SendEditor(SCI_GETSELECTIONMODE);
+ 		if (selType == SC_SEL_LINES) {
+ 			// Take care to replace in whole lines
+ 			int startLine = SendEditor(SCI_LINEFROMPOSITION, startPosition);
+ 			startPosition = SendEditor(SCI_POSITIONFROMLINE, startLine);
+ 			int endLine = SendEditor(SCI_LINEFROMPOSITION, endPosition);
+ 			endPosition = SendEditor(SCI_POSITIONFROMLINE, endLine + 1);
++		} else {
++			for (int i=0; i<countSelections; i++) {
++				startPosition = Platform::Minimum(startPosition, SendEditor(SCI_GETSELECTIONNSTART, i));
++				endPosition = Platform::Maximum(endPosition, SendEditor(SCI_GETSELECTIONNEND, i));
++			}
++		}
++		if (startPosition == endPosition) {
++			return -2;
+ 		}
+ 	} else {
+ 		endPosition = LengthDocument();
+@@ -1662,15 +1682,17 @@
+ 		// Replacement loop
+ 		while (posFind != -1) {
+ 			int lenTarget = SendEditor(SCI_GETTARGETEND) - SendEditor(SCI_GETTARGETSTART);
+-			if (inSelection && selType == SC_SEL_RECTANGLE) {
+-				// We must check that the found target is entirely inside the rectangular selection:
+-				// it must fit in one line, and inside the selection bounds of this line.
+-				int line = SendEditor(SCI_LINEFROMPOSITION, posFind);
+-				int startPos = SendEditor(SCI_GETLINESELSTARTPOSITION, line);
+-				int endPos = SendEditor(SCI_GETLINESELENDPOSITION, line);
+-				if (startPos == INVALID_POSITION ||	// No selection on this line (?)
+-				        posFind < startPos || posFind + lenTarget > endPos) {
+-					// Found target is totally or partly outside the rectangular selection
++			if (inSelection && countSelections > 1) {
++				// We must check that the found target is entirely inside a selection
++				bool insideASelection = false;
++				for (int i=0; i<countSelections && !insideASelection; i++) {
++					int startPos= SendEditor(SCI_GETSELECTIONNSTART, i);
++					int endPos = SendEditor(SCI_GETSELECTIONNEND, i);
++					if (posFind >= startPos && posFind + lenTarget <= endPos)
++						insideASelection = true;
++				}
++				if (!insideASelection) {
++					// Found target is totally or partly outside the selections
+ 					lastMatch = posFind + 1;
+ 					if (lastMatch >= endPosition) {
+ 						// Run off the end of the document/selection with an empty match
+@@ -1711,7 +1733,8 @@
+ 			replacements++;
+ 		}
+ 		if (inSelection) {
+-			SetSelection(startPosition, endPosition);
++			if (countSelections == 1) 
++				SetSelection(startPosition, endPosition);
+ 		} else {
+ 			SetSelection(lastMatch, lastMatch);
+ 		}
+@@ -2157,7 +2180,7 @@
+ 	// at the start and end. This makes it easy to search for words.
+ 	SString wordsNear;
+ 	wordsNear.setsizegrowth(1000);
+-	wordsNear.append(" ");
++	wordsNear.append("\n");
+ 
+ 	int posFind = SendEditorString(SCI_FINDTEXT, flags, reinterpret_cast<char *>(&ft));
+ 	WindowAccessor acc(wEditor.GetID(), props);
+@@ -2169,8 +2192,8 @@
+ 			size_t wordLength = wordEnd - posFind;
+ 			if (wordLength > root.length()) {
+ 				SString word = GetRange(wEditor, posFind, wordEnd);
+-				word.insert(0, " ");
+-				word.append(" ");
++				word.insert(0, "\n");
++				word.append("\n");
+ 				if (!wordsNear.contains(word.c_str())) {	// add a new entry
+ 					wordsNear += word.c_str() + 1;
+ 					if (minWordLength < wordLength)
+@@ -2188,10 +2211,18 @@
+ 	}
+ 	size_t length = wordsNear.length();
+ 	if ((length > 2) && (!onlyOneWord || (minWordLength > root.length()))) {
+-		StringList wl;
++		// Protect spaces by temporrily transforming to \001
++		wordsNear.substitute(' ', '\001');
++		StringList wl(true);
+ 		wl.Set(wordsNear.c_str());
+ 		char *words = wl.GetNearestWords("", 0, autoCompleteIgnoreCase);
+-		SendEditorString(SCI_AUTOCSHOW, root.length(), words);
++		SString acText(words);
++		// Use \n as word separator
++		acText.substitute(' ', '\n');
++		// Return spaces from \001
++		acText.substitute('\001', ' ');
++		SendEditor(SCI_AUTOCSETSEPARATOR, '\n');
++		SendEditorString(SCI_AUTOCSHOW, root.length(), acText.c_str());
+ 		delete []words;
+ 	} else {
+ 		SendEditor(SCI_AUTOCCANCEL);
+@@ -3037,7 +3068,6 @@
+ 	int eolMode = SendEditor(SCI_GETEOLMODE);
+ 	int curLine = GetCurrentLineNumber();
+ 	int lastLine = curLine - 1;
+-	int indentAmount = 0;
+ 
+ 	if (((eolMode == SC_EOL_CRLF || eolMode == SC_EOL_LF) && ch == '\n') ||
+ 	        (eolMode == SC_EOL_CR && ch == '\r')) {
+@@ -3045,6 +3075,7 @@
+ 			while (lastLine >= 0 && GetLineLength(lastLine) == 0)
+ 				lastLine--;
+ 		}
++		int indentAmount = 0;
+ 		if (lastLine >= 0) {
+ 			indentAmount = GetLineIndentation(lastLine);
+ 		}
+@@ -3198,10 +3229,16 @@
  		return false;
  	}
  
@@ -9479,8 +10606,18 @@
  
  	// If the user has turned us off, quit now.
  	// Default is off
---- scite-latest/scite/src/SciTEBuffers.cxx	2009-08-06 19:46:52.000000000 -0400
-+++ scintillua/scite/src/SciTEBuffers.cxx	2010-01-18 13:00:36.000000000 -0500
+@@ -4868,8 +4905,7 @@
+ 	if (*params == '0') {
+ 		// no answer ...
+ 		SendEditor(message, wParam, lParam);
+-		if (string1 != NULL)
+-			delete []string1;
++		delete []string1;
+ 		return;
+ 	}
+ 
+--- scite-latest/scite/src/SciTEBuffers.cxx	2009-08-06 23:46:52.000000000 +0000
++++ scintillua/scite/src/SciTEBuffers.cxx	2010-01-26 16:08:38.000000000 +0000
 @@ -76,6 +76,14 @@
  #include "JobQueue.h"
  #include "SciTEBase.h"
@@ -9496,7 +10633,44 @@
  const char defaultSessionFileName[] = "SciTE.session";
  
  BufferList::BufferList() : current(0), stackcurrent(0), stack(0), buffers(0), size(0), length(0), initialised(false) {}
-@@ -1354,9 +1362,55 @@
+@@ -430,7 +438,8 @@
+ 		propKey = IndexPropKey("buffer", i, "position");
+ 		int pos = propsSession.GetInt(propKey.c_str());
+ 
+-		AddFileToBuffer(propStr.c_str(), pos - 1);
++		if (!AddFileToBuffer(propStr.c_str(), pos - 1))
++			continue;
+ 
+ 		propKey = IndexPropKey("buffer", i, "current");
+ 		if (propsSession.GetInt(propKey.c_str()))
+@@ -469,6 +478,8 @@
+ 				delete [] buf;
+ 			}
+ 		}
++
++		SendEditor(SCI_SCROLLCARET);
+ 	}
+ 
+ 	if (curr != -1)
+@@ -969,11 +980,13 @@
+ 	SetFileStackMenu();
+ }
+ 
+-void SciTEBase::AddFileToBuffer(FilePath file, int pos) {
+-	// file existence test
+-	if (file.Exists()) {                      // for missing files Open() gives an empty buffer - do not want this
+-		Open(file, ofForceLoad);
++bool SciTEBase::AddFileToBuffer(FilePath file, int pos) {
++	// Return whether file loads successfully
++	if (file.Exists() && Open(file, ofForceLoad)) {
+ 		SendEditor(SCI_GOTOPOS, pos);
++		return true;
++	} else {
++		return false;
+ 	}
+ }
+ 
+@@ -1354,9 +1367,55 @@
  	return (ch >= '0') && (ch <= '9');
  }
  
@@ -9553,7 +10727,7 @@
  	switch (format) {
  	case SCE_ERR_PYTHON: {
  			// Python
-@@ -1686,6 +1740,7 @@
+@@ -1686,6 +1745,7 @@
  			break;
  		}
  	}	// switch
@@ -9561,7 +10735,7 @@
  	return -1;
  }
  
-@@ -1707,11 +1762,7 @@
+@@ -1707,11 +1767,7 @@
  		int lineLength = SendOutput(SCI_LINELENGTH, lookLine, 0);
  		//Platform::DebugPrintf("GOMessage %d %d %d of %d linestart = %d\n", selStart, curLine, lookLine, maxLine, startPosLine);
  		char style = acc.StyleAt(startPosLine);
@@ -9574,7 +10748,7 @@
  			//Platform::DebugPrintf("Marker to %d\n", lookLine);
  			SendOutput(SCI_MARKERDELETEALL, static_cast<uptr_t>(-1));
  			SendOutput(SCI_MARKERDEFINE, 0, SC_MARK_SMALLRECT);
-@@ -1724,7 +1775,7 @@
+@@ -1724,7 +1780,7 @@
  			SString message = GetRange(wOutput, startPosLine, startPosLine + lineLength);
  			char source[MAX_PATH];
  			int column;
@@ -9583,7 +10757,7 @@
  			if (sourceLine >= 0) {
  				FilePath sourcePath(source);
  				if (!filePath.Name().SameNameAs(sourcePath)) {
-@@ -1755,6 +1806,7 @@
+@@ -1755,6 +1811,7 @@
  					}
  				}
  
@@ -9591,7 +10765,7 @@
  				// If ctag then get line number after search tag or use ctag line number
  				if (style == SCE_ERR_CTAG) {
  					char cTag[200];
-@@ -1773,6 +1825,7 @@
+@@ -1773,6 +1830,7 @@
  						}
  					}
  				}
@@ -9599,8 +10773,8 @@
  
  				SendEditor(SCI_MARKERDELETEALL, 0);
  				SendEditor(SCI_MARKERDEFINE, 0, SC_MARK_CIRCLE);
---- scite-latest/scite/src/SciTEGlobal.properties	2009-08-11 01:48:52.000000000 -0400
-+++ scintillua/scite/src/SciTEGlobal.properties	2010-01-18 13:00:36.000000000 -0500
+--- scite-latest/scite/src/SciTEGlobal.properties	2009-08-11 05:48:52.000000000 +0000
++++ scintillua/scite/src/SciTEGlobal.properties	2010-01-26 16:08:56.000000000 +0000
 @@ -5,6 +5,13 @@
  
  # Globals
@@ -9615,9 +10789,70 @@
  # Window sizes and visibility
  if PLAT_WIN
  	position.left=0
---- scite-latest/scite/src/SciTEProps.cxx	2009-08-06 19:46:52.000000000 -0400
-+++ scintillua/scite/src/SciTEProps.cxx	2010-01-18 13:00:36.000000000 -0500
-@@ -538,50 +538,12 @@
+@@ -82,7 +89,7 @@
+ # DADADA used as background because it yields standard silver C0C0C0
+ # on low colour displays and a reasonable light grey on higher bit depths
+ if PLAT_WINNT
+-	selection.alpha=30
++	selection.alpha=32
+ 	selection.back=#000000
+ if PLAT_WIN95
+ 	selection.back=#DADADA
+@@ -285,9 +292,9 @@
+ # This is a better set for Russian:
+ #chars.accented=ÀàÁáÂâÃãÄäÅå¨¸ÆæÇçÈèÉéÊêËëÌìÍíÎîÏïÐðÑñÒòÓóÔôÕõÖö×÷ØøÙùÚúÛûÜüÝýÞþßÿ
+ 
+-# The open.filter setting is only used on Windows where the file selector has a menu of filters to apply
++# The open.filter setting is used in the file selector which has a menu of filters to apply
+ # to the types of files seen when opening.
+-# There is a limit (possibly 256 characters) to the length of a filter,
++# There is a limit (possibly 256 characters) to the length of a filter on Windows,
+ # so not all source extensions can be in this setting.
+ source.files=*.asm;*.c;*.cc;*.cpp;*.cxx;*.cs;*.h;*.hh;*.hxx;*.hpp;\
+ *.idl;*.odl;*.rc;*.rc2;*.dlg;*.def;\
+@@ -479,6 +486,7 @@
+ &C / C++|c||\
+ #CMake|cmake||\
+ C&#|cs||\
++#COBOL|cob||\
+ #Csound|orc||\
+ CSS|css||\
+ D|d||\
+@@ -560,6 +568,7 @@
+ #import bullant
+ import caml
+ import conf
++#import cobol
+ import cpp
+ #import cmake
+ import d
+@@ -603,6 +612,8 @@
+ #import spice
+ import sql
+ #import specman
++#import tacl
++#import tal
+ import tcl
+ import tex
+ import vb
+--- scite-latest/scite/src/SciTEProps.cxx	2009-08-06 23:46:52.000000000 +0000
++++ scintillua/scite/src/SciTEProps.cxx	2010-01-26 16:09:41.000000000 +0000
+@@ -443,11 +443,13 @@
+ 		if (name.IsSet()) {
+ 			// Force extension to lower case
+ 			char fileNameWithLowerCaseExtension[MAX_PATH];
+-				strcpy(fileNameWithLowerCaseExtension, name.AsInternal());
++			strcpy(fileNameWithLowerCaseExtension, name.AsInternal());
++#if PLAT_WIN
+ 			char *extension = strrchr(fileNameWithLowerCaseExtension, '.');
+ 			if (extension) {
+ 				LowerCaseString(extension);
+ 			}
++#endif
+ 			return SString(fileNameWithLowerCaseExtension);
+ 		} else {
+ 			return props.Get("default.file.ext");
+@@ -538,50 +540,12 @@
  static const char *propertiesToForward[] = {
  //++Autogenerated -- run src/LexGen.py to regenerate
  //**\(\t"\*",\n\)
@@ -9673,7 +10908,7 @@
  
  //--Autogenerated -- end of automatically generated section
  
-@@ -693,6 +655,7 @@
+@@ -693,6 +657,7 @@
  
  	SString fileNameForExtension = ExtensionFileName();
  
@@ -9681,7 +10916,7 @@
  	SString modulePath = props.GetNewExpand("lexerpath.",
  	    fileNameForExtension.c_str());
  	if (modulePath.length())
-@@ -701,7 +664,7 @@
+@@ -701,7 +666,7 @@
  	if (language.length())
  	    SendEditorString(SCI_SETLEXERLANGUAGE, 0, language.c_str());
  	else
@@ -9690,7 +10925,7 @@
  
  	lexLanguage = SendEditor(SCI_GETLEXER);
  
-@@ -719,6 +682,7 @@
+@@ -719,6 +684,7 @@
  		SString kw = props.GetNewExpand(kwk.c_str(), fileNameForExtension.c_str());
  		SendEditorString(SCI_SETKEYWORDS, wl, kw.c_str());
  	}
@@ -9698,7 +10933,26 @@
  
  	FilePath homepath = GetSciteDefaultHome();
  	props.Set("SciteDefaultHome", homepath.AsFileSystem());
-@@ -1197,12 +1161,13 @@
+@@ -734,6 +700,9 @@
+ 		ReadAPI(fileNameForExtension);
+ 		apisFileNames = props.GetNewExpand("api.", fileNameForExtension.c_str());
+ 	}
++
++	props.Set("APIPath", apisFileNames.c_str());
++
+ 	FilePath fileAbbrev = props.GetNewExpand("abbreviations.", fileNameForExtension.c_str()).c_str();
+ 	if (!fileAbbrev.IsSet())
+ 		fileAbbrev = GetAbbrevPropertiesFileName();
+@@ -744,6 +713,8 @@
+ 
+ 	DiscoverEOLSetting();
+ 
++	props.Set("AbbrevPath", pathAbbreviations.AsFileSystem());
++
+ 	codePage = props.GetInt("code.page");
+ 	if (CurrentBuffer()->unicodeMode != uni8Bit) {
+ 		// Override properties file to ensure Unicode displayed.
+@@ -1197,12 +1168,13 @@
  }
  
  void SciTEBase::ReadFontProperties() {
@@ -9713,7 +10967,7 @@
  	SendEditor(SCI_STYLERESETDEFAULT, 0, 0);
  	SendOutput(SCI_STYLERESETDEFAULT, 0, 0);
  
-@@ -1230,6 +1195,23 @@
+@@ -1230,6 +1202,23 @@
  
  	SetStyleFor(wOutput, "*");
  	SetStyleFor(wOutput, "errorlist");
@@ -9737,8 +10991,8 @@
  
  	if (CurrentBuffer()->useMonoFont) {
  		sval = props.GetExpanded("font.monospace");
---- scite-latest/scite/win32/makefile	2009-07-21 07:02:26.000000000 -0400
-+++ scintillua/scite/win32/makefile	2010-01-18 13:07:14.000000000 -0500
+--- scite-latest/scite/win32/makefile	2009-07-21 11:02:26.000000000 +0000
++++ scintillua/scite/win32/makefile	2010-01-17 22:28:04.000000000 +0000
 @@ -5,8 +5,22 @@
  # be needed to use other compilers.
  
@@ -9779,7 +11033,14 @@
  LUA_CORE_OBJS = lapi.o lcode.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o \
  		lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o \
  		ltable.o ltm.o lundump.o lvm.o lzio.o
-@@ -43,10 +58,12 @@
+@@ -38,17 +53,20 @@
+ LUA_LIB_OBJS =	lauxlib.o lbaselib.o ldblib.o liolib.o lmathlib.o ltablib.o \
+ 		lstrlib.o loadlib.o loslib.o linit.o
+ 
+-LUA_OBJS = LuaExtension.o SingleThreadExtension.o $(LUA_CORE_OBJS) $(LUA_LIB_OBJS)
++LUA_OBJS = LuaExtension.o SingleThreadExtension.o # modified by Mitchell
++LUA_LDFLAGS = -L ../../scintilla/bin -lSciLexer --export-all-symbols
+ 
  vpath %.c ../lua/src ../lua/src/lib
  
  LUA_INCLUDES = -I ../lua/include
@@ -9794,9 +11055,12 @@
 +#endif
 +# end modified by Mitchell
  
- INCLUDEDIRS=-I ../../scintilla/include -I ../../scintilla/win32 -I ../src $(LUA_INCLUDES)
+-INCLUDEDIRS=-I ../../scintilla/include -I ../../scintilla/win32 -I ../src $(LUA_INCLUDES)
++INCLUDEDIRS=-I ../../scintilla/include -I ../../scintilla/src -I ../../scintilla/win32 -I ../src $(LUA_INCLUDES) # modified by Mitchell
  RCINCLUDEDIRS=--include-dir ../../scintilla/win32 --include-dir ../src
-@@ -68,7 +85,7 @@
+ 
+ CBASEFLAGS = -W -Wall $(INCLUDEDIRS) $(LUA_DEFINES) -mno-cygwin
+@@ -68,7 +86,7 @@
  	$(CC) $(CXXFLAGS) -c $< -o $@
  
  .c.o:
@@ -9805,7 +11069,7 @@
  
  OTHER_OBJS	= FilePath.o SciTEBuffers.o SciTEIO.o Exporters.o PropSetFile.o StringList.o \
  SciTEProps.o SciTEWin.o SciTEWinBar.o SciTEWinDlg.o MultiplexExtension.o \
-@@ -78,38 +95,38 @@
+@@ -78,38 +96,38 @@
  
  OBJS = SciTEBase.o $(OTHER_OBJS)
  
@@ -9870,7 +11134,7 @@
  
  clean:
  	$(DEL) *.exe *.o *.obj *.dll *.res *.map
-@@ -117,152 +134,152 @@
+@@ -117,152 +135,152 @@
  deps:
  	$(CC) -MM $(CXXFLAGS) *.cxx ../src/*.cxx ../lua/src/*.c ../lua/src/lib/*.c >deps.mak
  
@@ -10095,7 +11359,7 @@
  
  $(PROG): $(OBJS)
  	$(CC) $(STRIPFLAG) -Xlinker --subsystem -Xlinker windows -o  $@ $^ $(LDFLAGS)
-@@ -288,12 +305,12 @@
+@@ -288,12 +306,12 @@
  	$(CC) $(CXXFLAGS) -D STATIC_BUILD -c $< -o $@
  
  SciTERes.o:	SciTERes.rc SciTE.h PlatformRes.h
@@ -10110,8 +11374,8 @@
  
  # Make sure SciTEBase gets rebuilt (so its about box gets a new
  # date stamp) when any of the other objects are updated.
---- scite-latest/scite/win32/scite.mak	2009-07-21 07:02:26.000000000 -0400
-+++ scintillua/scite/win32/scite.mak	2010-01-18 13:00:36.000000000 -0500
+--- scite-latest/scite/win32/scite.mak	2009-07-21 11:02:26.000000000 +0000
++++ scintillua/scite/win32/scite.mak	2010-01-26 16:11:54.000000000 +0000
 @@ -110,88 +110,14 @@
  	..\..\scintilla\win32\WindowAccessor.obj \
  	..\..\scintilla\win32\XPM.obj
@@ -10204,3 +11468,73 @@
  
  OBJSSTATIC=\
  	SciTEBase.obj \
+@@ -249,16 +175,16 @@
+ $(DIR_BIN)\ave.properties $(DIR_BIN)\baan.properties \
+ $(DIR_BIN)\blitzbasic.properties $(DIR_BIN)\bullant.properties \
+ $(DIR_BIN)\caml.properties $(DIR_BIN)\cmake.properties \
+-$(DIR_BIN)\conf.properties $(DIR_BIN)\cpp.properties \
+-$(DIR_BIN)\csound.properties $(DIR_BIN)\css.properties $(DIR_BIN)\d.properties \
+-$(DIR_BIN)\eiffel.properties $(DIR_BIN)\erlang.properties \
+-$(DIR_BIN)\escript.properties $(DIR_BIN)\flagship.properties \
+-$(DIR_BIN)\forth.properties $(DIR_BIN)\fortran.properties \
+-$(DIR_BIN)\freebasic.properties $(DIR_BIN)\gap.properties \
+-$(DIR_BIN)\html.properties $(DIR_BIN)\inno.properties \
+-$(DIR_BIN)\kix.properties $(DIR_BIN)\latex.properties \
+-$(DIR_BIN)\lisp.properties $(DIR_BIN)\lot.properties \
+-$(DIR_BIN)\lout.properties $(DIR_BIN)\lua.properties \
++$(DIR_BIN)\cobol.properties $(DIR_BIN)\conf.properties \
++$(DIR_BIN)\cpp.properties $(DIR_BIN)\csound.properties \
++$(DIR_BIN)\css.properties $(DIR_BIN)\d.properties $(DIR_BIN)\eiffel.properties \
++$(DIR_BIN)\erlang.properties $(DIR_BIN)\escript.properties \
++$(DIR_BIN)\flagship.properties $(DIR_BIN)\forth.properties \
++$(DIR_BIN)\fortran.properties $(DIR_BIN)\freebasic.properties \
++$(DIR_BIN)\gap.properties $(DIR_BIN)\html.properties \
++$(DIR_BIN)\inno.properties $(DIR_BIN)\kix.properties \
++$(DIR_BIN)\latex.properties $(DIR_BIN)\lisp.properties \
++$(DIR_BIN)\lot.properties $(DIR_BIN)\lout.properties $(DIR_BIN)\lua.properties \
+ $(DIR_BIN)\matlab.properties $(DIR_BIN)\metapost.properties \
+ $(DIR_BIN)\mmixal.properties $(DIR_BIN)\nimrod.properties \
+ $(DIR_BIN)\nncrontab.properties $(DIR_BIN)\nsis.properties \
+@@ -271,7 +197,8 @@
+ $(DIR_BIN)\scriptol.properties $(DIR_BIN)\smalltalk.properties \
+ $(DIR_BIN)\sorcins.properties $(DIR_BIN)\specman.properties \
+ $(DIR_BIN)\spice.properties $(DIR_BIN)\sql.properties \
+-$(DIR_BIN)\tcl.properties $(DIR_BIN)\tex.properties $(DIR_BIN)\vb.properties \
++$(DIR_BIN)\tacl.properties $(DIR_BIN)\tal.properties $(DIR_BIN)\tcl.properties \
++$(DIR_BIN)\tex.properties $(DIR_BIN)\vb.properties \
+ $(DIR_BIN)\verilog.properties $(DIR_BIN)\vhdl.properties \
+ $(DIR_BIN)\yaml.properties
+ #--Autogenerated -- end of automatically generated section
+@@ -340,6 +267,8 @@
+ 	copy ..\src\caml.properties $@
+ $(DIR_BIN)\cmake.properties:	..\src\cmake.properties
+ 	copy ..\src\cmake.properties $@
++$(DIR_BIN)\cobol.properties:	..\src\cobol.properties
++	copy ..\src\cobol.properties $@
+ $(DIR_BIN)\conf.properties:	..\src\conf.properties
+ 	copy ..\src\conf.properties $@
+ $(DIR_BIN)\cpp.properties:	..\src\cpp.properties
+@@ -432,6 +361,10 @@
+ 	copy ..\src\spice.properties $@
+ $(DIR_BIN)\sql.properties:	..\src\sql.properties
+ 	copy ..\src\sql.properties $@
++$(DIR_BIN)\tacl.properties:	..\src\tacl.properties
++	copy ..\src\tacl.properties $@
++$(DIR_BIN)\tal.properties:	..\src\tal.properties
++	copy ..\src\tal.properties $@
+ $(DIR_BIN)\tcl.properties:	..\src\tcl.properties
+ 	copy ..\src\tcl.properties $@
+ $(DIR_BIN)\tex.properties:	..\src\tex.properties
+@@ -457,10 +390,10 @@
+ 	@echo You must run the Scintilla makefile to build $*.obj
+ 	@exit 255
+ 
+-SciTERes.res: SciTERes.rc ..\src\SciTE.h ..\..\scintilla\win32\PlatformRes.h
++SciTERes.res: SciTERes.rc ..\src\SciTE.h ..\..\scintilla\win32\PlatformRes.h SciTE.exe.manifest
+ 	$(RC) $(INCLUDEDIRS) -fo$@ SciTERes.rc
+ 
+-Sc1Res.res: SciTERes.rc ..\src\SciTE.h ..\..\scintilla\win32\PlatformRes.h
++Sc1Res.res: SciTERes.rc ..\src\SciTE.h ..\..\scintilla\win32\PlatformRes.h SciTE.exe.manifest
+ 	$(RC) $(INCLUDEDIRS) -dSTATIC_BUILD -fo$@ SciTERes.rc
+ 
+ !IF "$(VENDOR)"=="MICROSOFT"
