@@ -4,7 +4,6 @@ Overview:
     * Replaced all Lex*.cpp files with LexLPeg.cpp and over 56 dynamic Lua
       lexers.
     * Added the following functions:
-        * SCI_GETLEXERLANGUAGE - returns the string name of the current lexer.
         * SCI_GETSTYLENAME - returns the string style name at the caret
           position.
     * Existing external lexer modules will not work.
@@ -55,8 +54,28 @@ Compiling:
   Notes:
     Use scite/boundscheck/SciTE.vcproj for compiling on Windows.
     Use mingw32 on Linux for compiling for Windows (first change '<Shlobj.h>' to
-      '<shlobj.h>' in scite/win32/SciTEWinDlg.cxx).
+      '<shlobj.h>' in `scite/win32/SciTEWinDlg.cxx`).
 
 Usage:
 
   Use as you would standard Scintilla/SciTE.
+
+  Note that `SciTE` is the Linux executable and `SciTE.exe` is the Win32 one.
+
+Troubleshooting:
+
+  No or incorrect syntax highlighting:
+    1. Make sure your language has a supported lexer (check in the `lexers/`
+       directory.
+    2. Make sure there is a *.properties file that has your language's
+       extension.
+       (e.g. file.patterns.rhtml=*.rhtml)
+    3. Make sure the file pattern's lexer is correct or exists.
+       (e.g. lexer.$(file.patterns.rhtml)=rhtml
+
+    I do not have the time to continuously update *.properties files with
+    extensions and lexers, so please be patient if you have to do it manually.
+
+Further Reading:
+
+  Lexer Documentation: http://caladbolg.net/luadoc/textadept2/modules/lexer.html
