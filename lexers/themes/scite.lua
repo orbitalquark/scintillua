@@ -38,7 +38,7 @@ style_identifier  = style_nothing
 local font_face = '!Monospace'
 local font_size = 11
 if WIN32 then
-  font_face = '!Courier New'
+  font_face = not GTK and 'Courier New' or '!Courier New'
 elseif MAC then
   font_face = '!Monaco'
   font_size = 12
