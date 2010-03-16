@@ -1044,6 +1044,11 @@ function DefaultTypesAndStyles()
     [36] = style_controlchar,
     [37] = style_indentguide,
     [38] = style_calltip,
+
+    -- Annotations.
+    [512] = style_default,
+    [513] = style_comment,
+    [514] = style_error,
   }
   return types, styles
 end
