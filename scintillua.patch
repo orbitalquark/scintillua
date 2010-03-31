@@ -3767,8 +3767,8 @@
  	return 1;
  }
 --- scite-latest/scintilla/src/LexLPeg.cxx	1969-12-31 19:00:00.000000000 -0500
-+++ scintillua/scintilla/src/LexLPeg.cxx	2010-03-30 22:49:18.000000000 -0400
-@@ -0,0 +1,384 @@
++++ scintillua/scintilla/src/LexLPeg.cxx	2010-03-30 23:03:27.000000000 -0400
+@@ -0,0 +1,386 @@
 +/*
 +	Mitchell's Lua-powered dynamic lexer
 +	Copyright (c) 2006-2007 Mitchell. All rights reserved.
@@ -4004,11 +4004,13 @@
 +		} lua_pop(L, 1); // value
 +	} lua_pop(L, 2); // Styles and Lexer
 +
-+	// if the lexer is a child, it will have a parent in its 'EmbeddedIn' field
++	// if the lexer is a child, it will have a parent in its 'EmbeddedIn' table
++	// if the lexer is a parent, it will have children in its 'languages' table
 +	lua_getglobal(L, "Lexer");
-+	lua_getfield(L, -1, "EmbeddedIn");
-+	multilang_lexer = lua_istable(L, -1);
-+	lua_pop(L, 2); // Lexer.EmbeddedIn and Lexer
++	lua_getfield(L, -1, "languages");
++	lua_getfield(L, -2, "EmbeddedIn");
++	if (lua_istable(L, -1) || lua_istable(L, -2)) multilang_lexer = true;
++	lua_pop(L, 3); // Lexer.languages, Lexer.EmbeddedIn, and Lexer
 +
 +	return true;
 +}
@@ -4115,7 +4117,7 @@
 +	if (lua_isfunction(L, -1)) {
 +		int currentLine = styler.GetLine(startPos);
 +		long int p = Platform::SendScintilla(windowID, SCI_GETCHARACTERPOINTER);
-+		lua_pushstring(L, reinterpret_cast<char *>(p) + startPos, length);
++		lua_pushlstring(L, reinterpret_cast<char *>(p) + startPos, length);
 +		lua_pushnumber(L, startPos);
 +		lua_pushnumber(L, currentLine);
 +		lua_pushnumber(L, styler.LevelAt(currentLine) & SC_FOLDLEVELNUMBERMASK);
