@@ -36,9 +36,9 @@ local keyword = token('keyword', word_match(word_list{
   'deprecated', 'do', 'else', 'extern', 'false', 'final', 'finally', 'for',
   'foreach', 'function', 'goto', 'if', 'import', 'immutable', 'in', 'inout',
   'invariant', 'is', 'mixin', 'new', 'null', 'out', 'override', 'pragma',
-  'private', 'protected', 'public', 'return', 'scope', 'shared', 'static',
-  'super', 'switch', 'synchronized', 'this', 'throw','true', 'try', 'typeid',
-  'typeof', 'unittest', 'version', 'volatile', 'while', 'with',
+  'private', 'protected', 'public', 'pure', 'ref', 'return', 'scope', 'shared',
+  'static', 'super', 'switch', 'synchronized', 'this', 'throw','true', 'try',
+  'typeid', 'typeof', 'unittest', 'version', 'volatile', 'while', 'with',
 }))
 
 -- types
@@ -47,7 +47,7 @@ local type = token('type', word_match(word_list{
   'creal', 'dchar', 'double', 'enum', 'export', 'float', 'idouble', 'ifloat',
   'int', 'interface', 'ireal', 'long', 'module', 'package', 'ptrdiff_t', 'real',
   'short', 'size_t', 'struct', 'template', 'typedef', 'ubyte', 'ucent', 'uint',
-  'ulong', 'union', 'ushort', 'void', 'wchar'
+  'ulong', 'union', 'ushort', 'void', 'wchar', 'string', 'wstring', 'dstring'
 }))
 
 -- constants
@@ -55,7 +55,7 @@ local constant = token('constant', word_match(word_list{
   '__FILE__', '__LINE__', '__DATE__', '__TIME__', '__TIMESTAMP__', '__VENDOR__',
   '__VERSION__', 'DigitalMars', 'X86', 'X86_64', 'Windows', 'Win32', 'Win64',
   'linux', 'Posix', 'LittleEndain', 'BigEndain', 'D_Coverage',
-  'D_InlineAsm_X86', 'D_InlineAsm_X86_64', 'D_LP64', 'D_PIC', 'unittest',
+  'D_InlineAsm_X86', 'D_InlineAsm_X86_64', 'D_LP64', 'D_PIC',
   'D_Version2', 'all'
 }))
 
@@ -65,18 +65,13 @@ local class_sequence = token('keyword', P('class')) * ws^1 * token('class', alph
 local identifier = token('identifier', word)
 
 local operator_overloads = token('function', word_match(word_list{
-	'opNeg', 'opPos', 'opCom', 'opStar', 'opPostInc', 'opPostDec', 'opCast',
-	'opAdd', 'opAdd_r', 'opSub', 'opSub_r', 'opMul', 'opMul_r', 'opDiv',
-	'opDiv_r', 'opMod', 'opMod_r', 'opAnd', 'opAnd_r', 'opOr', 'opOr_r',
-	'opXor', 'opXor_r', 'opShl', 'opShl_r', 'opShr', 'opShr_r', 'opUShr',
-	'opUShr_r', 'opCat', 'opCat_r', 'opEquals', 'opCmp', 'opAssign',
-	'opAddAssign', 'opSubAssign', 'opMulAssign', 'opDivAssign', 'opModAssign',
-	'opAndAssign', 'opOrAssign', 'opXorAssign', 'opShlAssign', 'opShrAssign',
-	'opUShrAssign', 'opCatAssign', 'opIn', 'opIn_r'
+	'opAssign', 'opBinary', 'opCall', 'opCmp', 'opDispatch', 'opEquals',
+	'opIndex', 'opIndexAssign', 'opIndexUnary', 'opOpAssign', 'opSlice',
+	'opSliceAssign', 'opSliceOpAssign', 'opSliceUnary', 'opUnary',
 }))
 
 -- operators
-local operator = token('operator', S('=!<>+-*/%&|^~.,;()[]{}'))
+local operator = token('operator', S('=!<>+-*$/%&|^~.,;()[]{}'))
 
 -- properties
 local properties = (type + identifier + operator ) * token('operator', '.') * token('variable', word_match(word_list{
@@ -85,6 +80,9 @@ local properties = (type + identifier + operator ) * token('operator', '.') * to
 	'min_10_exp', 'min_exp', 'nan', 'offsetof', 'ptr', 're', 'rehash',
 	'reverse', 'sizeof', 'sort', 'stringof', 'tupleof', 'values'
 }))
+
+-- preprocs
+local annotation = token('annotation', '@' * word^1)
 
 function LoadTokens()
   local d = d
@@ -101,9 +99,49 @@ function LoadTokens()
   add_token(dmd, 'comment', comment)
   add_token(dmd, 'number', number)
   add_token(dmd, 'operator', operator)
+  add_token(dmd, 'annotation', annotation)
   add_token(dmd, 'any_char', any_char)
 end
 
 function LoadStyles()
   add_style('annotation', style_preproc)
+end
+
+function Fold(text, start_pos, start_line, start_level)
+	local folds = {}
+	local current_line = start_line
+	local current_level = start_level
+	local foldCause = -1 -- 0 = brace, 1 = comment
+	for line in text:gmatch("(.-)\r?\n") do
+		if #line > 0 then
+			if line:find("{%s*$") and current_line ~= 1 then
+				foldCause = 0
+				folds[current_line] = {current_level, SC_FOLDLEVELHEADERFLAG}
+				current_level = current_level + 1
+			elseif line:find("/%*%s*") then
+				foldCause = 1
+				-- I have no idea why it tries to set the fold level header flag
+				-- on lines 0 AND one when you set it on line 0... I also don't
+				-- know why setting it on line -1 works.
+				if current_line == 0 then
+					folds[-1] = {current_level, SC_FOLDLEVELHEADERFLAG}
+				else
+					folds[current_line] = {current_level, SC_FOLDLEVELHEADERFLAG}
+				end
+				current_level = current_level + 1
+			elseif line:find("}") and foldCause == 0 then
+				current_level = current_level - 1
+				folds[current_line] = {current_level}
+			elseif line:find("%*/") and foldCause == 1 then
+				current_level = current_level - 1
+				folds[current_line] = {current_level}
+			else
+				folds[current_line] = {current_level}
+			end
+		else
+			folds[current_line] = {current_level, SC_FOLDLEVELWHITEFLAG}
+		end
+		current_line = current_line + 1
+	end
+	return folds
 end
