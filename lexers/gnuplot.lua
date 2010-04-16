@@ -1,31 +1,34 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- Gnuplot LPeg lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 -- comments
-local comment = token('comment', '#' * nonnewline^0)
+local comment = token('comment', '#' * l.nonnewline^0)
 
 -- strings
-local sq_str = delimited_range("'", '\\', true)
-local dq_str = delimited_range('"', '\\', true)
-local bk_str = delimited_range('[]', '\\', true, false, '\n')
-local bc_str = delimited_range('{}', '\\', true, false, '\n')
+local sq_str = l.delimited_range("'", '\\', true)
+local dq_str = l.delimited_range('"', '\\', true)
+local bk_str = l.delimited_range('[]', '\\', true, false, '\n')
+local bc_str = l.delimited_range('{}', '\\', true, false, '\n')
 local string = token('string', sq_str + dq_str + bk_str + bc_str)
 
 -- keywords
-local keyword = token('keyword', word_match(word_list{
+local keyword = token('keyword', word_match {
   'cd', 'call', 'clear', 'exit', 'fit', 'help', 'history', 'if', 'load',
   'pause', 'plot', 'using', 'with', 'index', 'every', 'smooth', 'thru', 'print',
   'pwd', 'quit', 'replot', 'reread', 'reset', 'save', 'set', 'show', 'unset',
   'shell', 'splot', 'system', 'test', 'unset', 'update'
-}))
+})
 
 -- functions
-local func = token('function', word_match(word_list{
+local func = token('function', word_match {
   'abs', 'acos', 'acosh', 'arg', 'asin', 'asinh', 'atan', 'atan2', 'atanh',
   'besj0', 'besj1', 'besy0', 'besy1', 'ceil', 'cos', 'cosh', 'erf', 'erfc',
   'exp', 'floor', 'gamma', 'ibeta', 'inverf', 'igamma', 'imag', 'invnorm',
@@ -33,10 +36,10 @@ local func = token('function', word_match(word_list{
   'sin', 'sinh', 'sqrt', 'tan', 'tanh', 'column', 'defined', 'tm_hour',
   'tm_mday', 'tm_min', 'tm_mon', 'tm_sec', 'tm_wday', 'tm_yday', 'tm_year',
   'valid'
-}))
+})
 
 -- variables
-local variable = token('variable', word_match(word_list{
+local variable = token('variable', word_match {
   'angles', 'arrow', 'autoscale', 'bars', 'bmargin', 'border', 'boxwidth',
   'clabel', 'clip', 'cntrparam', 'colorbox', 'contour', 'datafile ',
   'decimalsign', 'dgrid3d', 'dummy', 'encoding', 'fit', 'fontpath', 'format',
@@ -54,23 +57,22 @@ local variable = token('variable', word_match(word_list{
   'yrange', 'ytics', 'yzeroaxis', 'zdata', 'zdtics', 'cbdata', 'cbdtics',
   'zero', 'zeroaxis', 'zlabel', 'zmtics', 'zrange', 'ztics', 'cblabel',
   'cbmtics', 'cbrange', 'cbtics'
-}))
+})
 
 -- identifiers
-local identifier = token('identifier', word)
+local identifier = token('identifier', l.word)
 
 -- operators
 local operator = token('operator', S('-+~!$*%=<>&|^?:()'))
 
-function LoadTokens()
-  local gnuplot = gnuplot
-  add_token(gnuplot, 'whitespace', ws)
-  add_token(gnuplot, 'keyword', keyword)
-  add_token(gnuplot, 'function', func)
-  add_token(gnuplot, 'variable', variable)
-  add_token(gnuplot, 'identifier', identifier)
-  add_token(gnuplot, 'string', string)
-  add_token(gnuplot, 'comment', comment)
-  add_token(gnuplot, 'operator', operator)
-  add_token(gnuplot, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'keyword', keyword },
+  { 'function', func },
+  { 'variable', variable },
+  { 'identifier', identifier },
+  { 'string', string },
+  { 'comment', comment },
+  { 'operator', operator },
+  { 'any_char', l.any_char },
+}

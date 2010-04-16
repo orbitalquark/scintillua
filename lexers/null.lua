@@ -2,5 +2,3 @@
 -- Null LPeg lexer
 
 module(..., package.seeall)
-
-function Lex(input) return {} end

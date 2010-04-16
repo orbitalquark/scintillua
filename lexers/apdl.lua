@@ -1,22 +1,25 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- APDL LPeg lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 -- comments
-local comment = token('comment', '!' * nonnewline^0)
+local comment = token('comment', '!' * l.nonnewline^0)
 
 -- strings
-local string = token('string', delimited_range("'", nil, true, false, '\n'))
+local string = token('string', l.delimited_range("'", nil, true, false, '\n'))
 
 -- numbers
-local number = token('number', float + integer)
+local number = token('number', l.float + l.integer)
 
 -- keywords
-local keyword = token('keyword', word_match(word_list{
+local keyword = token('keyword', word_match({
   '*abbr', '*abb', '*afun', '*afu', '*ask', '*cfclos', '*cfc', '*cfopen',
   '*cfo', '*cfwrite', '*cfw', '*create', '*cre', '*cycle', '*cyc', '*del',
   '*dim', '*do', '*elseif', '*else', '*enddo', '*endif', '*end', '*eval',
@@ -62,31 +65,30 @@ local keyword = token('keyword', word_match(word_list{
 }, '*/', true))
 
 -- identifiers
-local identifier = token('identifier', word)
+local identifier = token('identifier', l.word)
 
 -- functions
-local func = token('function', delimited_range('%', nil, false, false, '\n'))
+local func = token('function', l.delimited_range('%', nil, false, false, '\n'))
 
 -- labels
-local label = token('label', #P(':') * starts_line(':' * word))
+local label = token('label', #P(':') * l.starts_line(':' * l.word))
 
 -- operators
 local operator = token('operator', S('+-*/$=,;()'))
 
-function LoadTokens()
-  local apdl = apdl
-  add_token(apdl, 'whitespace', ws)
-  add_token(apdl, 'keyword', keyword)
-  add_token(apdl, 'identifier', identifier)
-  add_token(apdl, 'string', string)
-  add_token(apdl, 'number', number)
-  add_token(apdl, 'function', func)
-  add_token(apdl, 'label', label)
-  add_token(apdl, 'comment', comment)
-  add_token(apdl, 'operator', operator)
-  add_token(apdl, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'keyword', keyword },
+  { 'identifier', identifier },
+  { 'string', string },
+  { 'number', number },
+  { 'function', func },
+  { 'label', label },
+  { 'comment', comment },
+  { 'operator', operator },
+  { 'any_char', l.any_char },
+}
 
-function LoadStyles()
-  add_style('label', style_constant)
-end
+_tokenstyles = {
+  { 'label', l.style_constant },
+}

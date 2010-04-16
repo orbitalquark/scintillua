@@ -1,43 +1,45 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- Props LPeg lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 -- comments
-local comment = token('comment', #P('#') * starts_line('#' * nonnewline^0))
+local comment = token('comment', #P('#') * l.starts_line('#' * l.nonnewline^0))
 
 -- equals
 local equals = token('operator', '=')
 
 -- strings
-local sq_str = delimited_range("'", '\\', true)
-local dq_str = delimited_range('"', '\\', true)
+local sq_str = l.delimited_range("'", '\\', true)
+local dq_str = l.delimited_range('"', '\\', true)
 local string = token('string', sq_str + dq_str)
 
 -- variables
-local variable = token('variable', '$(' * (any - ')')^1 * ')')
+local variable = token('variable', '$(' * (l.any - ')')^1 * ')')
 
 -- colors
+local xdigit = l.xdigit
 local color = token('color', '#' * xdigit * xdigit * xdigit * xdigit * xdigit * xdigit)
 
-function LoadTokens()
-  local props = props
-  add_token(props, 'whitespace', ws)
-  add_token(props, 'comment', comment)
-  add_token(props, 'equals', equals)
-  add_token(props, 'string', string)
-  add_token(props, 'variable', variable)
-  add_token(props, 'color', color)
-  add_token(props, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'comment', comment },
+  { 'equals', equals },
+  { 'string', string },
+  { 'variable', variable },
+  { 'color', color },
+  { 'any_char', l.any_char },
+}
 
-function LoadStyles()
-  add_style('variable', style_keyword)
-  add_style('color', style_number)
-end
+_tokenstyles = {
+  { 'variable', l.style_keyword },
+  { 'color', l.style_number },
+}
 
--- line by line lexer
-LexByLine = true
+_LEXBYLINE = true

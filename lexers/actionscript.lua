@@ -1,27 +1,30 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- Actionscript LPeg lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 -- comments
-local line_comment = '//' * nonnewline^0
-local block_comment = '/*' * (any - '*/')^0 * '*/'
+local line_comment = '//' * l.nonnewline^0
+local block_comment = '/*' * (l.any - '*/')^0 * '*/'
 local comment = token('comment', line_comment + block_comment)
 
 -- strings
-local sq_str = delimited_range("'", '\\', true, false, '\n')
-local dq_str = delimited_range('"', '\\', true, false, '\n')
-local ml_str = '<![CDATA[' * (any - ']]>')^0 * ']]>'
+local sq_str = l.delimited_range("'", '\\', true, false, '\n')
+local dq_str = l.delimited_range('"', '\\', true, false, '\n')
+local ml_str = '<![CDATA[' * (l.any - ']]>')^0 * ']]>'
 local string = token('string', sq_str + dq_str + ml_str)
 
 -- numbers
-local number = token('number', (float + integer) * S('LlUuFf')^-2)
+local number = token('number', (l.float + l.integer) * S('LlUuFf')^-2)
 
 -- keywords
-local keyword = token('keyword', word_match(word_list{
+local keyword = token('keyword', word_match {
   'break', 'continue', 'delete', 'do', 'else', 'for', 'function', 'if', 'in',
   'new', 'on', 'return', 'this', 'typeof', 'var', 'void', 'while', 'with',
   'NaN', 'Infinity', 'false', 'null', 'true', 'undefined',
@@ -31,32 +34,31 @@ local keyword = token('keyword', word_match(word_list{
   'instanceof', 'interface', 'native', 'package', 'private', 'Void',
   'protected', 'public', 'dynamic', 'static', 'super', 'switch', 'synchonized',
   'throw', 'throws', 'transient', 'try', 'volatile'
-}))
+})
 
 -- types
-local type = token('type', word_match(word_list{
+local type = token('type', word_match {
   'Array', 'Boolean', 'Color', 'Date', 'Function', 'Key', 'MovieClip', 'Math',
   'Mouse', 'Number', 'Object', 'Selection', 'Sound', 'String', 'XML', 'XMLNode',
   'XMLSocket',
   -- reserved for future use
   'boolean', 'byte', 'char', 'double', 'enum', 'float', 'int', 'long', 'short'
-}))
+})
 
 -- identifiers
-local identifier = token('identifier', word)
+local identifier = token('identifier', l.word)
 
 -- operators
 local operator = token('operator', S('=!<>+-/*%&|^~.,;?()[]{}'))
 
-function LoadTokens()
-  local as = actionscript
-  add_token(as, 'whitespace', ws)
-  add_token(as, 'keyword', keyword)
-  add_token(as, 'type', type)
-  add_token(as, 'identifier', identifier)
-  add_token(as, 'string', string)
-  add_token(as, 'comment', comment)
-  add_token(as, 'number', number)
-  add_token(as, 'operator', operator)
-  add_token(as, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'keyword', keyword },
+  { 'type', type },
+  { 'identifier', identifier },
+  { 'string', string },
+  { 'comment', comment },
+  { 'number', number },
+  { 'operator', operator },
+  { 'any_char', l.any_char },
+}

@@ -1,28 +1,31 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- HTML LPeg lexer
 
-module(..., package.seeall)
-local P, R, S, V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S, V = l.lpeg.P, l.lpeg.R, l.lpeg.S, l.lpeg.V
+
+module(...)
 
 case_insensitive_tags = true
 
-local ws = token('whitespace', space^1)
+local ws = token('whitespace', l.space^1)
 
 -- comments
-local comment = token('comment', '<!--' * (any - '-->')^0 * P('-->')^-1)
+local comment = token('comment', '<!--' * (l.any - '-->')^0 * P('-->')^-1)
 
-local doctype = token('doctype', '<!DOCTYPE' * (any - '>')^1 * '>')
+local doctype = token('doctype', '<!DOCTYPE' * (l.any - '>')^1 * '>')
 
 -- strings
-local sq_str = delimited_range("'", '\\', true)
-local dq_str = delimited_range('"', '\\', true)
+local sq_str = l.delimited_range("'", '\\', true)
+local dq_str = l.delimited_range('"', '\\', true)
 local string = token('string', sq_str + dq_str)
 
 local equals = token('operator', '=')
-local number = token('number', digit^1 * P('%')^-1)
+local number = token('number', l.digit^1 * P('%')^-1)
 
 -- tags
-local element = token('element', word_match(word_list{
+local element = token('element', word_match({
   'a', 'abbr', 'acronym', 'address', 'applet', 'area', 'b', 'base',
   'basefont', 'bdo', 'big', 'blockquote', 'body', 'br', 'button',
   'caption', 'center', 'cite', 'code', 'col', 'colgroup', 'dd',
@@ -36,7 +39,7 @@ local element = token('element', word_match(word_list{
   's', 'table', 'tbody', 'td', 'textarea', 'tfoot', 'th', 'thead',
   'title', 'tr', 'tt', 'u', 'ul', 'var', 'xml'
 }, nil, case_insensitive_tags))
-local attribute = token('attribute', word_match(word_list{
+local attribute = token('attribute', word_match({
   'abbr', 'accept-charset', 'accept', 'accesskey', 'action',
   'align', 'alink', 'alt', 'archive', 'axis', 'background',
   'bgcolor', 'border', 'cellpadding', 'cellspacing', 'char',
@@ -68,46 +71,61 @@ local tag_end = token('tag', P('/')^-1 * '>')
 local tag = tag_start * (ws * attributes)^0 * ws^0 * tag_end
 
 -- words
-local word = token('default', (any - space - S('<&'))^1)
+local word = token('default', (l.any - l.space - S('<&'))^1)
 
 -- entities
-local entity = token('entity', '&' * (any - space - ';')^1 * ';')
+local entity = token('entity', '&' * (l.any - l.space - ';')^1 * ';')
 
--- embedded languages
-local css = require 'css'
-local js  = require 'javascript'
+_rules = {
+  { 'whitespace', ws },
+  { 'default', word },
+  { 'comment', comment },
+  { 'doctype', doctype },
+  { 'tag', tag },
+  { 'entity', entity },
+  { 'any_char', l.any_char },
+}
 
-function LoadTokens()
-  local html = hypertext
-  add_token(html, 'whitespace', ws)
-  add_token(html, 'default', word)
-  add_token(html, 'comment', comment)
-  add_token(html, 'doctype', doctype)
-  add_token(html, 'tag', tag)
-  add_token(html, 'entity', entity)
-  add_token(html, 'any_char', any_char)
-  css.LoadTokens()
-  js.LoadTokens()
+_tokenstyles = {
+  { 'tag', l.style_tag },
+  { 'element', l.style_tag },
+  { 'attribute', l.style_nothing..{ bold = true } },
+  { 'entity', l.style_nothing..{ bold = true } },
+  { 'doctype', l.style_keyword },
+}
 
-  -- embedded languages in HTML
-  embed_language(html, css)
-  embed_language(html, js)
+-- Embedded lexers.
 
-  -- public access only tokens
-  add_token(html, 'attribute', attribute, true)
-  add_token(html, 'attributes', attributes, true)
-  add_token(html, 'equals', equals, true)
-  add_token(html, 'number', number, true)
-  add_token(html, 'tag_start', tag_start, true)
-  add_token(html, 'tag_end', tag_end, true)
-end
+-- Embedded CSS.
+local css = l.load('css')
 
-function LoadStyles()
-  add_style('tag', style_tag)
-  add_style('element', style_tag)
-  add_style('attribute', style_nothing..{ bold = true })
-  add_style('entity', style_nothing..{ bold = true })
-  add_style('doctype', style_keyword)
-  css.LoadStyles()
-  js.LoadStyles()
-end
+local style_element = word_match({ 'style' }, nil, case_insensitive_tags)
+local css_start_rule = #(P('<') * style_element *
+  P(function(input, index)
+    if input:find('[^>]+type%s*=%s*(["\'])text/css%1') then return index end
+  end)) * tag -- <style type="text/css">
+local css_end_rule = #(P('</') * style_element * ws^0 * P('>')) * tag -- </style>
+css._RULES['any_char'] = token('css_default', l.any - css_end_rule)
+l.embed_lexer(_M, css, css_start_rule, css_end_rule)
+_tokenstyles[#_tokenstyles + 1] = { 'css_default', l.style_nothing }
+
+-- Embedded Javascript.
+local js = l.load('javascript')
+
+local script_element = word_match({ 'script' }, nil, case_insensitive_tags)
+local js_start_rule = #(P('<') * script_element *
+  P(function(input, index)
+    if input:find('[^>]+type%s*=%s*(["\'])text/javascript%1') then return index end
+  end)) * tag -- <script type="text/javascript">
+local js_end_rule = #('</' * script_element * ws^0 * '>') * tag -- </script>
+js._RULES['operator'] = token('operator', S('+-/*%^!=&|?:;.()[]{}>') + '<' * -('/' * script_element))
+js._RULES['any_char'] = token('js_default', l.any - js_end_rule)
+l.embed_lexer(_M, js, js_start_rule, js_end_rule)
+_tokenstyles[#_tokenstyles + 1] = { 'js_default', l.style_nothing }
+
+-- Accessible patterns for preprocessing languages (Django, PHP, etc.)
+_M.equals = equals
+_M.number = number
+_M.attribute = attribute
+_M.tag_start = tag_start
+_M.tag_end = tag_end

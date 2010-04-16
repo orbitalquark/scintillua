@@ -1,42 +1,45 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- Erlang LPeg lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 -- comments
-local comment = token('comment', '%' * nonnewline^0)
+local comment = token('comment', '%' * l.nonnewline^0)
 
 -- strings
-local sq_str = delimited_range("'", '\\', true, false, '\n')
-local dq_str = delimited_range('"', '\\', true)
-local literal = '$' * any * alnum^0
+local sq_str = l.delimited_range("'", '\\', true, false, '\n')
+local dq_str = l.delimited_range('"', '\\', true)
+local literal = '$' * l.any * l.alnum^0
 local string = token('string', sq_str + dq_str + literal)
 
 -- numbers
-local number = token('number', float + integer)
+local number = token('number', l.float + l.integer)
 
 -- directives
-local directive = token('directive', '-' * word_match(word_list{
+local directive = token('directive', '-' * word_match {
   'author', 'compile', 'copyright', 'define', 'doc', 'else', 'endif', 'export',
   'file', 'ifdef', 'ifndef', 'import', 'include_lib', 'include', 'module',
   'record', 'undef'
-}))
+})
 
 -- keywords
-local keyword = token('keyword', word_match(word_list{
+local keyword = token('keyword', word_match {
   'after', 'begin', 'case', 'catch', 'cond', 'end', 'fun', 'if', 'let', 'of',
   'query', 'receive', 'when',
   -- operators
   'div', 'rem', 'or', 'xor', 'bor', 'bxor', 'bsl', 'bsr', 'and', 'band', 'not',
   'bnot',
   'badarg', 'nocookie', 'false', 'true'
-}))
+})
 
 -- functions
-local func = token('function', word_match(word_list{
+local func = token('function', word_match {
   'abs', 'alive', 'apply', 'atom_to_list', 'binary_to_list', 'binary_to_term',
   'concat_binary', 'date', 'disconnect_node', 'element', 'erase', 'exit',
   'float', 'float_to_list', 'get', 'get_keys', 'group_leader', 'halt', 'hd',
@@ -58,28 +61,27 @@ local func = token('function', word_match(word_list{
   -- math
   'acos', 'asin', 'atan', 'atan2', 'cos', 'cosh', 'exp', 'log', 'log10', 'pi',
   'pow', 'power', 'sin', 'sinh', 'sqrt', 'tan', 'tanh'
-}))
+})
 
 -- identifiers
-local identifier = token('identifier', word)
+local identifier = token('identifier', l.word)
 
 -- operators
 local operator = token('operator', S('-<>.;=/|#+*:,?!()[]{}'))
 
-function LoadTokens()
-  local erlang = erlang
-  add_token(erlang, 'whitespace', ws)
-  add_token(erlang, 'keyword', keyword)
-  add_token(erlang, 'function', func)
-  add_token(erlang, 'identifier', identifier)
-  add_token(erlang, 'directive', directive)
-  add_token(erlang, 'string', string)
-  add_token(erlang, 'comment', comment)
-  add_token(erlang, 'number', number)
-  add_token(erlang, 'operator', operator)
-  add_token(erlang, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'keyword', keyword },
+  { 'function', func },
+  { 'identifier', identifier },
+  { 'directive', directive },
+  { 'string', string },
+  { 'comment', comment },
+  { 'number', number },
+  { 'operator', operator },
+  { 'any_char', l.any_char },
+}
 
-function LoadStyles()
-  add_style('directive', style_preproc)
-end
+_tokenstyles = {
+  { 'directive', l.style_preproc },
+}

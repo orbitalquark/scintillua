@@ -24,40 +24,42 @@
 
 -- Based off of lexer code by Mitchell
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 local lit_newline = P('\r')^-1 * P('\n')
 
 -- comments
-local block_comment = '/*' * (any - '*/')^0 * P('*/')^-1
+local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
 local comment = token('comment', block_comment)
 
 -- strings
-local sq_str = P('u')^-1 * delimited_range("'", '\\', true, false, '\n')
-local dq_str = P('U')^-1 * delimited_range('"', '\\', true, false, '\n')
+local sq_str = P('u')^-1 * l.delimited_range("'", '\\', true, false, '\n')
+local dq_str = P('U')^-1 * l.delimited_range('"', '\\', true, false, '\n')
 local string = token('string', sq_str + dq_str)
 
 -- numbers
-local dec = digit^1 * S('Ll')^-1
-local integer = S('+-')^-1 * (dec)
-local number = token('number', float + integer)
+local dec = l.digit^1 * S('Ll')^-1
+local integer = S('+-')^-1 * dec
+local number = token('number', l.float + integer)
 
 -- keywords
-local keyword = token('keyword', word_match(word_list{"true", "false", "null"}))
+local keyword = token('keyword', word_match { "true", "false", "null" })
 
 -- operators
 local operator = token('operator', S('[]{}:,'))
 
-function LoadTokens()
-  local json = json
-  add_token(json, 'whitespace', ws)
-  add_token(json, 'comment', comment)
-  add_token(json, 'string', string)
-  add_token(json, 'number', number)
-  add_token(json, 'keyword', keyword)
-  add_token(json, 'operator', operator)
-  add_token(json, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'comment', comment },
+  { 'string', string },
+  { 'number', number },
+  { 'keyword', keyword },
+  { 'operator', operator },
+  { 'any_char', l.any_char },
+}

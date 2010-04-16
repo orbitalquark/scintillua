@@ -1,57 +1,59 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- Smalltalk LPeg lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 -- comments
-local comment = token('comment', delimited_range('"', nil, true))
+local comment = token('comment', l.delimited_range('"', nil, true))
 
 -- strings
-local sq_str = delimited_range("'", '\\', true)
-local literal = '$' * word
+local sq_str = l.delimited_range("'", '\\', true)
+local literal = '$' * l.word
 local string = token('string', sq_str + literal)
 
 -- numbers
-local number = token('number', float + integer)
+local number = token('number', l.float + l.integer)
 
 -- keywords
-local keyword = token('keyword', word_match(word_list{
+local keyword = token('keyword', word_match {
   'true', 'false', 'nil', 'self', 'super', 'isNil', 'not', 'Smalltalk',
   'Transcript'
-}))
+})
 
 -- types
-local type = token('type', word_match(word_list{
+local type = token('type', word_match {
   'Date', 'Time', 'Boolean', 'True', 'False', 'Character', 'String', 'Array',
   'Symbol', 'Integer', 'Object'
-}))
+})
 
 -- identifiers
-local identifier = token('identifier', word)
+local identifier = token('identifier', l.word)
 
 -- labels
-local label = token('label', '#' * word)
+local label = token('label', '#' * l.word)
 
 -- operators
 local operator = token('operator', S(':=_<>+-/*!()[]'))
 
-function LoadTokens()
-  local smalltalk = smalltalk
-  add_token(smalltalk, 'whitespace', ws)
-  add_token(smalltalk, 'keyword', keyword)
-  add_token(smalltalk, 'type', type)
-  add_token(smalltalk, 'identifier', identifier)
-  add_token(smalltalk, 'string', string)
-  add_token(smalltalk, 'comment', comment)
-  add_token(smalltalk, 'number', number)
-  add_token(smalltalk, 'label', label)
-  add_token(smalltalk, 'operator', operator)
-  add_token(smalltalk, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'keyword', keyword },
+  { 'type', type },
+  { 'identifier', identifier },
+  { 'string', string },
+  { 'comment', comment },
+  { 'number', number },
+  { 'label', label },
+  { 'operator', operator },
+  { 'any_char', l.any_char },
+}
 
-function LoadStyle()
-  add_style('label', style_variable)
-end
+_tokenstyles = {
+  { 'label', l.style_variable },
+}

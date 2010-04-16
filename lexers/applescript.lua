@@ -1,26 +1,29 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- Applescript LPeg lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 -- comments
-local line_comment = '--' * nonnewline^0
-local block_comment = '(*' * (any - '*)')^0 * P('*)')^-1
+local line_comment = '--' * l.nonnewline^0
+local block_comment = '(*' * (l.any - '*)')^0 * P('*)')^-1
 local comment = token('comment', line_comment + block_comment)
 
 -- strings
-local sq_str = delimited_range("'", '\\', true, false, '\n')
-local dq_str = delimited_range('"', '\\', true, false, '\n')
+local sq_str = l.delimited_range("'", '\\', true, false, '\n')
+local dq_str = l.delimited_range('"', '\\', true, false, '\n')
 local string = token('string', sq_str + dq_str)
 
 -- numbers
-local number = token('number', float + integer)
+local number = token('number', l.float + l.integer)
 
 -- keywords
-local keyword = token('keyword', word_match(word_list{
+local keyword = token('keyword', word_match({
   'script', 'property', 'prop', 'end', 'copy', 'to', 'set', 'global', 'local',
   'on', 'to', 'of', 'in', 'given', 'with', 'without', 'return', 'continue',
   'tell', 'if', 'then', 'else', 'repeat', 'times', 'while', 'until', 'from',
@@ -40,7 +43,7 @@ local keyword = token('keyword', word_match(word_list{
 }, "'", true))
 
 -- constants
-local constant = token('constant', word_match(word_list{
+local constant = token('constant', word_match({
   'case', 'diacriticals', 'expansion', 'hyphens', 'punctuation',
   -- predefined variables
   'it', 'me', 'version', 'pi', 'result', 'space', 'tab', 'anything',
@@ -61,20 +64,19 @@ local constant = token('constant', word_match(word_list{
 }, nil, true))
 
 -- identifiers
-local identifier = token('identifier', (alpha + '_') * alnum^0)
+local identifier = token('identifier', (l.alpha + '_') * l.alnum^0)
 
 -- operators
 local operator = token('operator', S('+-^*/&<>=:,(){}'))
 
-function LoadTokens()
-  local as = applescript
-  add_token(as, 'whitespace', ws)
-  add_token(as, 'keyword', keyword)
-  add_token(as, 'constant', constant)
-  add_token(as, 'identifier', identifier)
-  add_token(as, 'string', string)
-  add_token(as, 'comment', comment)
-  add_token(as, 'number', number)
-  add_token(as, 'operator', operator)
-  add_token(as, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'keyword', keyword },
+  { 'constant', constant },
+  { 'identifier', identifier },
+  { 'string', string },
+  { 'comment', comment },
+  { 'number', number },
+  { 'operator', operator },
+  { 'any_char', l.any_char },
+}

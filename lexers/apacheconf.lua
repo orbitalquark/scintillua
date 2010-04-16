@@ -1,19 +1,22 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- ApacheConf LPeg lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 -- comments
-local comment = token('comment', '#' * nonnewline^0)
+local comment = token('comment', '#' * l.nonnewline^0)
 
 -- strings
-local string = token('string', delimited_range('"', '\\', true, false, '\n'))
+local string = token('string', l.delimited_range('"', '\\', true, false, '\n'))
 
 -- keywords
-local main_keyword = token('keyword', word_match(word_list{
+local main_keyword = token('keyword', word_match({
   'AcceptMutex', 'AcceptPathInfo', 'AccessFileName', 'Action', 'AddAlt',
   'AddAltByEncoding', 'AddAltByType', 'AddCharset', 'AddDefaultCharset',
   'AddDescription', 'AddEncoding', 'AddHandler', 'AddIcon', 'AddIconByEncoding',
@@ -88,7 +91,7 @@ local main_keyword = token('keyword', word_match(word_list{
   'VirtualScriptAlias', 'VirtualScriptAliasIP', 'Win32DisableAcceptEx',
   'XBitHack', 'Off', 'On', 'None'
 }, nil, true))
-local directive_keyword = token('keyword', word_match(word_list{
+local directive_keyword = token('keyword', word_match({
   'AcceptMutex', 'AcceptPathInfo', 'AccessFileName', 'Action', 'AddAlt',
   'AddAltByEncoding', 'AddAltByType', 'AddCharset', 'AddDefaultCharset',
   'AddDescription', 'AddEncoding', 'AddHandler', 'AddIcon', 'AddIconByEncoding',
@@ -165,7 +168,7 @@ local directive_keyword = token('keyword', word_match(word_list{
   'All', 'ExecCGI', 'FollowSymLinks', 'Includes', 'IncludesNOEXEC', 'Indexes',
   'MultiViews', 'None', 'Off', 'On', 'SymLinksIfOwnerMatch', 'from'
 }, nil, true))
-local vhost_keyword = token('keyword', word_match(word_list{
+local vhost_keyword = token('keyword', word_match({
   'AcceptMutex', 'AcceptPathInfo', 'AccessFileName', 'Action', 'AddAlt',
   'AddAltByEncoding', 'AddAltByType', 'AddCharset', 'AddDefaultCharset',
   'AddDescription', 'AddEncoding', 'AddHandler', 'AddIcon', 'AddIconByEncoding',
@@ -253,20 +256,19 @@ local vhost_keyword = token('keyword', word_match(word_list{
 }, nil, true))
 
 -- identifiers
-local word = (alpha + '-') * (alnum + '-')^0
+local word = (l.alpha + '-') * (l.alnum + '-')^0
 local identifier = token('identifier', word)
 
 -- operators
 local operator = token('operator', S(':=<>&+-*/.()'))
 
 -- TODO: directive and vhost sections using appropriate keywords
-function LoadTokens()
-  local ac = apacheconf
-  add_token(ac, 'whitespace', ws)
-  add_token(ac, 'keyword', main_keyword)
-  add_token(ac, 'identifier', identifier)
-  add_token(ac, 'string', string)
-  add_token(ac, 'comment', comment)
-  add_token(ac, 'operator', operator)
-  add_token(ac, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'keyword', main_keyword },
+  { 'identifier', identifier },
+  { 'string', string },
+  { 'comment', comment },
+  { 'operator', operator },
+  { 'any_char', l.any_char },
+}

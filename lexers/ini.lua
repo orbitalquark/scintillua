@@ -1,49 +1,50 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- Ini LPeg lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 -- comments
-local comment = token('comment', #S(';#') * starts_line(S(';#') * nonnewline^0))
+local comment = token('comment', #S(';#') * l.starts_line(S(';#') * l.nonnewline^0))
 
 -- strings
-local sq_str = delimited_range("'", '\\', true)
-local dq_str = delimited_range('"', '\\', true)
-local label = delimited_range('[]', nil, true, false, '\n')
+local sq_str = l.delimited_range("'", '\\', true)
+local dq_str = l.delimited_range('"', '\\', true)
+local label = l.delimited_range('[]', nil, true, false, '\n')
 local string = token('string', sq_str + dq_str + label)
 
 -- numbers
-local dec = digit^1 * ('_' * digit^1)^0
+local dec = l.digit^1 * ('_' * l.digit^1)^0
 local oct_num = '0' * S('01234567_')^1
-local integer = S('+-')^-1 * (hex_num + oct_num + dec)
-local number = token('number', (float + integer))
+local integer = S('+-')^-1 * (l.hex_num + oct_num + dec)
+local number = token('number', (l.float + integer))
 
 -- keywords
-local keyword = token('keyword', word_match(word_list{
+local keyword = token('keyword', word_match {
   'true', 'false', 'on', 'off', 'yes', 'no'
-}))
+})
 
 -- identifiers
-local word = (alpha + '_') * (alnum + S('_.'))^0
+local word = (l.alpha + '_') * (l.alnum + S('_.'))^0
 local identifier = token('identifier', word)
 
 -- operators
 local operator = token('operator', '=')
 
-function LoadTokens()
-  local ini = ini
-  add_token(ini, 'whitespace', ws)
-  add_token(ini, 'keyword', keyword)
-  add_token(ini, 'identifier', identifier)
-  add_token(ini, 'string', string)
-  add_token(ini, 'comment', comment)
-  add_token(ini, 'number', number)
-  add_token(ini, 'operator', operator)
-  add_token(ini, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'keyword', keyword },
+  { 'identifier', identifier },
+  { 'string', string },
+  { 'comment', comment },
+  { 'number', number },
+  { 'operator', operator },
+  { 'any_char', l.any_char },
+}
 
--- line by line lexer
-LexByLine = true
+_LEXBYLINE = true

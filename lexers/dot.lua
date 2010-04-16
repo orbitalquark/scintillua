@@ -24,22 +24,25 @@
 
 -- Based off of lexer code by Mitchell
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
 
-local line_comment = '//' * nonnewline_esc^0
-local block_comment = '/*' * (any - '*/')^0 * P('*/')^-1
+local ws = token('whitespace', l.space^1)
+
+local line_comment = '//' * l.nonnewline_esc^0
+local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
 local comment = token('comment', line_comment + block_comment)
 
-local sq_str = delimited_range("'", '\\', true)
-local dq_str = delimited_range('"', '\\', true)
+local sq_str = l.delimited_range("'", '\\', true)
+local dq_str = l.delimited_range('"', '\\', true)
 local string = token('string', sq_str + dq_str)
 
-local number = token('number', digit^1 + float)
+local number = token('number', l.digit^1 + l.float)
 
-local keyword = token('keyword', word_match(word_list{
+local keyword = token('keyword', word_match {
   'graph', 'node', 'edge', 'digraph', 'fontsize', 'rankdir',
   'fontname', 'shape', 'label', 'arrowhead', 'arrowtail', 'arrowsize',
   'color', 'comment', 'constraint', 'decorate', 'dir', 'headlabel', 'headport',
@@ -47,30 +50,29 @@ local keyword = token('keyword', word_match(word_list{
   'labelfontname', 'labelfontsize', 'layer', 'lhead', 'ltail', 'minlen',
   'samehead', 'sametail', 'style', 'taillabel', 'tailport', 'tailURL', 'weight',
   'subgraph'
-}))
+})
 
-local type = token('type', word_match (word_list{
+local type = token('type', word_match {
 	'box', 'polygon', 'ellipse', 'circle', 'point', 'egg', 'triangle',
 	'plaintext', 'diamond', 'trapezium', 'parallelogram', 'house', 'pentagon',
 	'hexagon', 'septagon', 'octagon', 'doublecircle', 'doubleoctagon',
 	'tripleoctagon', 'invtriangle', 'invtrapezium', 'invhouse', 'Mdiamond',
 	'Msquare', 'Mcircle', 'rect', 'rectangle', 'none', 'note', 'tab', 'folder',
 	'box3d', 'record'
-}))
+})
 
 local operator = token('operator', S('->()[]{};'))
 
-local identifier = token('identifier', word)
+local identifier = token('identifier', l.word)
 
-function LoadTokens()
-	local dot = dot
-	add_token(dot, 'whitespace', ws)
-	add_token(dot, 'comment', comment)
-	add_token(dot, 'keyword', keyword)
-	add_token(dot, 'type', type)
-	add_token(dot, 'identifier', identifier)
-	add_token(dot, 'number', number)
-	add_token(dot, 'string', string)
-	add_token(dot, 'operator', operator)
-	add_token(dot, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'comment', comment },
+  { 'keyword', keyword },
+  { 'type', type },
+  { 'identifier', identifier },
+  { 'number', number },
+  { 'string', string },
+  { 'operator', operator },
+  { 'any_char', l.any_char },
+}

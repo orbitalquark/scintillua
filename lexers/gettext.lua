@@ -1,35 +1,37 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- Gettext LPeg lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 -- comments
-local comment = token('comment', '#' * S(': .~') * nonnewline^0)
+local comment = token('comment', '#' * S(': .~') * l.nonnewline^0)
 
 -- strings
-local string = token('string', delimited_range('"', '\\', true, false, '\n'))
+local string = token('string', l.delimited_range('"', '\\', true, false, '\n'))
 
 -- keywords
-local keyword = token('keyword', word_match(word_list{
+local keyword = token('keyword', word_match({
   'msgid', 'msgid_plural', 'msgstr', 'fuzzy', 'c-format', 'no-c-format'
 }, '-', true))
 
 -- identifiers
-local identifier = token('identifier', word)
+local identifier = token('identifier', l.word)
 
 -- variables
-local variable = token('variable', S('%$@') * word)
+local variable = token('variable', S('%$@') * l.word)
 
-function LoadTokens()
-  local gettext = gettext
-  add_token(gettext, 'whitespace', ws)
-  add_token(gettext, 'comment', comment)
-  add_token(gettext, 'string', string)
-  add_token(gettext, 'keyword', keyword)
-  add_token(gettext, 'identifier', identifier)
-  add_token(gettext, 'variable', variable)
-  add_token(gettext, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'comment', comment },
+  { 'string', string },
+  { 'keyword', keyword },
+  { 'identifier', identifier },
+  { 'variable', variable },
+  { 'any_char', l.any_char },
+}

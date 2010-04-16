@@ -1,30 +1,33 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- Fortran LPeg lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 -- comments
-local c_comment = #S('Cc') * starts_line(S('Cc') * nonnewline^0)
-local d_comment = #S('Dd') * starts_line(S('Dd') * nonnewline^0)
-local ex_comment = #P('!') * starts_line('!' * nonnewline^0)
-local ast_comment = #P('*') * starts_line('*' * nonnewline^0)
-local line_comment = '!' * nonnewline^0
+local c_comment = #S('Cc') * l.starts_line(S('Cc') * l.nonnewline^0)
+local d_comment = #S('Dd') * l.starts_line(S('Dd') * l.nonnewline^0)
+local ex_comment = #P('!') * l.starts_line('!' * l.nonnewline^0)
+local ast_comment = #P('*') * l.starts_line('*' * l.nonnewline^0)
+local line_comment = '!' * l.nonnewline^0
 local comment = token('comment', c_comment + d_comment + ex_comment +
   ast_comment + line_comment)
 
 -- strings
-local sq_str = delimited_range("'", nil, true, false, '\n')
-local dq_str = delimited_range('"', nil, true, false, '\n')
+local sq_str = l.delimited_range("'", nil, true, false, '\n')
+local dq_str = l.delimited_range('"', nil, true, false, '\n')
 local string = token('string', sq_str + dq_str)
 
 -- numbers
-local number = token('number', (float + integer) * -alpha)
+local number = token('number', (l.float + l.integer) * -l.alpha)
 
 -- keywords
-local keyword = token('keyword', word_match(word_list{
+local keyword = token('keyword', word_match({
   'include', 'program', 'module', 'subroutine', 'function', 'contains', 'use',
   'call', 'return',
   -- statements
@@ -39,7 +42,7 @@ local keyword = token('keyword', word_match(word_list{
 }, '.', true))
 
 -- functions
-local func = token('function', word_match(word_list{
+local func = token('function', word_match({
   -- i/o
   'backspace', 'close', 'endfile', 'inquire', 'open', 'print', 'read', 'rewind',
   'write', 'format',
@@ -60,28 +63,27 @@ local func = token('function', word_match(word_list{
 }, nil, true))
 
 -- types
-local type = token('type', word_match(word_list{
+local type = token('type', word_match({
   'implicit', 'explicit', 'none', 'data', 'parameter', 'allocate',
   'allocatable', 'allocated', 'deallocate', 'integer', 'real', 'double',
   'precision', 'complex', 'logical', 'character', 'dimension', 'kind',
 }, nil, true))
 
 -- identifiers
-local identifier = token('identifier', alnum^1)
+local identifier = token('identifier', l.alnum^1)
 
 -- operators
 local operator = token('operator', S('<>=&+-/*,()'))
 
-function LoadTokens()
-  local fortran = fortran
-  add_token(fortran, 'whitespace', ws)
-  add_token(fortran, 'comment', comment)
-  add_token(fortran, 'keyword', keyword)
-  add_token(fortran, 'function', func)
-  add_token(fortran, 'type', type)
-  add_token(fortran, 'number', number)
-  add_token(fortran, 'identifier', identifier)
-  add_token(fortran, 'string', string)
-  add_token(fortran, 'operator', operator)
-  add_token(fortran, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'comment', comment },
+  { 'keyword', keyword },
+  { 'function', func },
+  { 'type', type },
+  { 'number', number },
+  { 'identifier', identifier },
+  { 'string', string },
+  { 'operator', operator },
+  { 'any_char', l.any_char },
+}

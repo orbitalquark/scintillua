@@ -1,35 +1,38 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- Scheme LPeg lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
 
-local word = alpha * (alnum + S('_-!?'))^0
+local ws = token('whitespace', l.space^1)
+
+local word = l.alpha * (l.alnum + S('_-!?'))^0
 
 -- comments
-local line_comment = ';' * nonnewline^0
-local block_comment = '#|' * (any - '|#')^0 * '|#'
+local line_comment = ';' * l.nonnewline^0
+local block_comment = '#|' * (l.any - '|#')^0 * '|#'
 local comment = token('comment', line_comment + block_comment)
 
 -- strings
-local literal = (P("'") + '#' * S('\\bdox')) * word
-local dq_str = delimited_range('"', '\\', true)
+local literal = (P("'") + '#' * S('\\bdox')) * l.word
+local dq_str = l.delimited_range('"', '\\', true)
 local string = token('string', literal + dq_str)
 
 -- numbers
-local number = token('number', P('-')^-1 * digit^1 * (S('./') * digit^1)^-1)
+local number = token('number', P('-')^-1 * l.digit^1 * (S('./') * l.digit^1)^-1)
 
 -- keywords
-local keyword = token('keyword', word_match(word_list{
+local keyword = token('keyword', word_match({
   'and', 'begin', 'case', 'cond', 'cond-expand', 'define', 'define-macro',
   'delay', 'do', 'else', 'fluid-let', 'if', 'lambda', 'let', 'let*', 'letrec',
   'or', 'quasiquote', 'quote', 'set!',
 }, '-*!'))
 
 -- functions
-local func = token('function', word_match(word_list{
+local func = token('function', word_match({
   'abs', 'acos', 'angle', 'append', 'apply', 'asin', 'assoc', 'assq', 'assv',
   'atan', 'car', 'cdr', 'caar', 'cadr', 'cdar', 'cddr', 'caaar', 'caadr',
   'cadar', 'caddr', 'cdaar', 'cdadr', 'cddar', 'cdddr',
@@ -67,7 +70,7 @@ local func = token('function', word_match(word_list{
 }, '-/<>!?=#'))
 
 -- identifiers
-local word = (alpha + S('-!?')) * (alnum + S('-!?'))^0
+local word = (l.alpha + S('-!?')) * (l.alnum + S('-!?'))^0
 local identifier = token('identifier', word)
 
 -- operators
@@ -76,19 +79,18 @@ local operator = token('operator', S('<>=*/+-`@%:()'))
 -- entity
 local entity = token('entity', '&' * word)
 
-function LoadTokens()
-  local scheme = scheme
-  add_token(scheme, 'whitespace', ws)
-  add_token(scheme, 'keyword', keyword)
-  add_token(scheme, 'identifier', identifier)
-  add_token(scheme, 'string', string)
-  add_token(scheme, 'comment', comment)
-  add_token(scheme, 'number', number)
-  add_token(scheme, 'operator', operator)
-  add_token(scheme, 'entity', entity)
-  add_token(scheme, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'keyword', keyword },
+  { 'identifier', identifier },
+  { 'string', string },
+  { 'comment', comment },
+  { 'number', number },
+  { 'operator', operator },
+  { 'entity', entity },
+  { 'any_char', l.any_char },
+}
 
-function LoadStyles()
-  add_style('entity', style_variable)
-end
+_tokenstyles = {
+  { 'entity', l.style_variable },
+}

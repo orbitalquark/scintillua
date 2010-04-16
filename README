@@ -1,7 +1,7 @@
 Overview:
 
   Changes to Scintilla:
-    * Replaced all Lex*.cpp files with LexLPeg.cpp and over 56 dynamic Lua
+    * Replaced all Lex*.cpp files with LexLPeg.cpp and over 70 dynamic Lua
       lexers.
     * Added the following functions:
         * SCI_GETSTYLENAME - returns the string style name at the caret

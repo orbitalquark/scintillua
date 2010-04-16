@@ -1,47 +1,49 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- Makefile LPeg Lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 local assign = token('operator', P(':')^-1 * '=')
 local colon = token('operator', ':') * -P('=')
 
 -- comments
-local comment = token('comment', '#' * nonnewline^0)
+local comment = token('comment', '#' * l.nonnewline^0)
 
 -- preprocessor
-local preproc = token('preprocessor', '!' * nonnewline^0)
+local preproc = token('preprocessor', '!' * l.nonnewline^0)
 
 -- targets
-local target = token('target', (any - ':')^1) * colon * (ws * nonnewline^0)^-1
+local target = token('target', (l.any - ':')^1) * colon * (ws * l.nonnewline^0)^-1
 
 -- commands
-local command = #P('\t') * token('command', nonnewline^1)
+local command = #P('\t') * token('command', l.nonnewline^1)
 
 -- lines
-local var_char = any - space - S(':#=')
+local var_char = l.any - l.space - S(':#=')
 local identifier = token('identifier', var_char^1) * ws^0 * assign
-local macro = token('macro', '$' * (delimited_range('()', nil, nil, true) + S('<@')))
-local regular_line = ws + identifier + macro + comment + any_char
+local macro = token('macro', '$' * (l.delimited_range('()', nil, nil, true) + S('<@')))
+local regular_line = ws + identifier + macro + comment + l.any_char
 
-function LoadTokens()
-  local makefile = makefile
-  add_token(makefile, 'comment', comment)
-  add_token(makefile, 'preprocessor', preproc)
-  add_token(makefile, 'target', target)
-  add_token(makefile, 'command', command)
-  add_token(makefile, 'whitespace', ws)
-  add_token(makefile, 'line', regular_line)
-end
+_rules = {
+  { 'comment', comment },
+  { 'preprocessor', preproc },
+  { 'target', target },
+  { 'command', command },
+  { 'whitespace', ws },
+  { 'line', regular_line },
+}
 
-function LoadStyles()
-  add_style('target', style_definition)
-  add_style('command', style_string)
-  add_style('identifier', style_nothing..{ bold = true })
-  add_style('macro', style_keyword)
-end
+_tokenstyles = {
+  { 'target', l.style_definition },
+  { 'command', l.style_string },
+  { 'identifier', l.style_nothing..{ bold = true } },
+  { 'macro', l.style_keyword },
+}
 
-LexByLine = true
+_LEXBYLINE = true

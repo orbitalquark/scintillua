@@ -1,20 +1,23 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- PHP LPeg lexer
 
-module(..., package.seeall)
-local P, R, S, V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S, V = l.lpeg.P, l.lpeg.R, l.lpeg.S, l.lpeg.V
 
-local ws = token('php_whitespace', space^1)
+module(...)
+
+local ws = token('php_whitespace', l.space^1)
 
 -- comments
-local line_comment = (P('//') + '#') * nonnewline^0
-local block_comment = '/*' * (any - '*/')^0 * P('*/')^-1
+local line_comment = (P('//') + '#') * l.nonnewline^0
+local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
 local comment = token('comment', block_comment + line_comment)
 
 -- strings
-local sq_str = delimited_range("'", '\\', true)
-local dq_str = delimited_range('"', '\\', true)
-local bt_str = delimited_range('`', '\\', true)
+local sq_str = l.delimited_range("'", '\\', true)
+local dq_str = l.delimited_range('"', '\\', true)
+local bt_str = l.delimited_range('`', '\\', true)
 local heredoc = '<<<' * P(function(input, index)
   local _, e, delimiter = input:find('([%a_][%w_]*)[\n\r\f]+', index)
   if delimiter then
@@ -26,10 +29,10 @@ local string = token('string', sq_str + dq_str + bt_str + heredoc)
 -- TODO: interpolated code
 
 -- numbers
-local number = token('number', float + integer)
+local number = token('number', l.float + l.integer)
 
 -- keywords
-local keyword = word_match(word_list{
+local keyword = word_match {
   'and', 'array', 'as', 'bool', 'boolean', 'break', 'case',
   'cfunction', 'class', 'const', 'continue', 'declare', 'default',
   'die', 'directory', 'do', 'double', 'echo', 'else', 'elseif',
@@ -42,11 +45,11 @@ local keyword = word_match(word_list{
   'stdclass', 'string', 'switch', 'true', 'unset', 'use', 'var',
   'while', 'xor', '__class__', '__file__', '__function__',
   '__line__', '__sleep', '__wakeup'
-})
+}
 keyword = token('keyword', keyword)
 
 -- variables
-local word = (alpha + '_' + R('\127\255')) * (alnum + '_' + R('\127\255'))^0
+local word = (l.alpha + '_' + R('\127\255')) * (l.alnum + '_' + R('\127\255'))^0
 local variable = token('variable', '$' * word)
 
 -- identifiers
@@ -55,51 +58,44 @@ local identifier = token('identifier', word)
 -- operators
 local operator = token('operator', S('!@%^*&()-+=|/.,;:<>[]{}') + '?' * -P('>'))
 
-local html = require 'hypertext'
+_rules = {
+  { 'php_whitespace', ws },
+  { 'keyword', keyword },
+  { 'identifier', identifier },
+  { 'string', string },
+  { 'variable', variable },
+  { 'comment', comment },
+  { 'number', number },
+  { 'operator', operator },
+  { 'any_char', token('php_default', l.any - '?>') },
+}
 
-function LoadTokens()
-  html.LoadTokens()
-  local php = php
-  add_token(php, 'php_whitespace', ws)
-  add_token(php, 'keyword', keyword)
-  add_token(php, 'identifier', identifier)
-  add_token(php, 'string', string)
-  add_token(php, 'variable', variable)
-  add_token(php, 'comment', comment)
-  add_token(php, 'number', number)
-  add_token(php, 'operator', operator)
-  add_token(php, 'any_char', token('php_default', any - '?>'))
+-- Embedded in HTML.
 
-  -- embedding PHP in HTML
-  local start_token = token('php_tag', '<?' * ('php' * space)^-1)
-  local end_token = token('php_tag', '?>')
-  make_embeddable(php, html, start_token, end_token)
-  embed_language(html, php, true)
+local html = l.load('hypertext')
 
-  -- modify various HTML patterns to accomodate PHP embedding
-  local ephp = start_token * php.Token^0 * end_token^-1
-  -- strings
-  local sq_str = delimited_range_with_embedded("'", '\\', 'string', ephp)
-  local dq_str = delimited_range_with_embedded('"', '\\', 'string', ephp)
-  local string = sq_str + dq_str
-  html.TokenPatterns.string = string
-  -- tags
-  local ht = html.TokenPatterns
-  local attributes = P{ ht.attribute * (ws^0 * ht.equals * ws^0 * (ephp + string + ht.number))^-1 * (ws * V(1))^0 }
-  local tag = ht.tag_start * (ws^0 * (attributes + ephp))^0 * ws^0 * ht.tag_end
-  html.TokenPatterns.tag = tag
-  rebuild_token(html)
-  rebuild_tokens(html)
+_lexer = html
 
-  -- TODO: modify CSS and JS patterns accordingly
+-- Embedded PHP.
+local php_start_rule = token('php_tag', '<?' * ('php' * l.space)^-1)
+local php_end_rule = token('php_tag', '?>')
+l.embed_lexer(html, _M, php_start_rule, php_end_rule, true)
 
-  UseOtherTokens = html.Tokens
-end
+-- Modify HTML patterns to embed PHP.
+local php_rules = _M._EMBEDDEDRULES[html._NAME]
+local php_rule = php_rules.start_rule * php_rules.token_rule^0 * php_rules.end_rule^-1
+html._RULES['comment'] = html._RULES['comment'] + comment
+local embedded_sq_str = l.delimited_range_with_embedded("'", '\\', 'string', php_rule)
+local embedded_dq_str = l.delimited_range_with_embedded('"', '\\', 'string', php_rule)
+html._RULES['string'] = embedded_sq_str + embedded_dq_str
+local attributes = P{ html.attribute * (ws^0 * html.equals * ws^0 * (php_rule + string + html.number))^-1 * (ws * V(1))^0 }
+html._RULES['tag'] = html.tag_start * (ws^0 * (attributes + php_rule))^0 * ws^0 * html.tag_end
 
-function LoadStyles()
-  html.LoadStyles()
-  add_style('php_whitespace', style_nothing)
-  add_style('php_default', style_nothing)
-  add_style('php_tag', style_embedded)
-  add_style('variable', style_variable)
-end
+-- TODO: modify CSS and JS patterns accordingly
+
+_tokenstyles = {
+  { 'php_whitespace', l.style_nothing },
+  { 'php_default', l.style_nothing },
+  { 'php_tag', l.style_embedded },
+  { 'variable', l.style_variable },
+}

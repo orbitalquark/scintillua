@@ -1,11 +1,18 @@
 -- ? LPeg lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-Token = any_char
-Tokens = lpeg.Ct(Token^0)
+module(...)
 
-function LoadStyles()
-  -- add_style('id', style_table)
-end
+local ws = token('whitespace', l.space^1)
+
+_rules = {
+  { 'whitespace', ws },
+  { 'any_char', l.any_char },
+}
+
+_tokenstyles = {
+
+}

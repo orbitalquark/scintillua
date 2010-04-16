@@ -1,29 +1,32 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- Rexx LPeg Lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 -- comments
-local line_comment = '--' * nonnewline_esc^0
-local block_comment = nested_pair('/*', '*/', true)
+local line_comment = '--' * l.nonnewline_esc^0
+local block_comment = l.nested_pair('/*', '*/', true)
 local comment = token('comment', line_comment + block_comment)
 
 -- strings
-local sq_str = delimited_range("'", '\\', true, false, '\n')
-local dq_str = delimited_range('"', '\\', true, false, '\n')
+local sq_str = l.delimited_range("'", '\\', true, false, '\n')
+local dq_str = l.delimited_range('"', '\\', true, false, '\n')
 local string = token('string', sq_str + dq_str)
 
 -- numbers
-local number = token('number', float + integer)
+local number = token('number', l.float + l.integer)
 
 -- preprocessor
-local preproc = token('preprocessor', #P('#') * starts_line('#' * nonnewline^0))
+local preproc = token('preprocessor', #P('#') * l.starts_line('#' * l.nonnewline^0))
 
 -- keywords
-local keyword = token('keyword', word_match(word_list{
+local keyword = token('keyword', word_match({
   'address', 'arg', 'by', 'call', 'class', 'do', 'drop', 'else', 'end', 'exit',
   'expose', 'forever', 'forward', 'guard', 'if', 'interpret', 'iterate',
   'leave', 'method', 'nop', 'numeric', 'otherwise', 'parse', 'procedure',
@@ -33,7 +36,7 @@ local keyword = token('keyword', word_match(word_list{
 }, nil, true))
 
 -- functions
-local func = token('function', word_match(word_list{
+local func = token('function', word_match({
   'abbrev', 'abs', 'address', 'arg', 'beep', 'bitand', 'bitor', 'bitxor', 'b2x',
   'center', 'changestr', 'charin', 'charout', 'chars', 'compare', 'consition',
   'copies', 'countstr', 'c2d', 'c2x', 'datatype', 'date', 'delstr', 'delword',
@@ -63,22 +66,21 @@ local func = token('function', word_match(word_list{
 }, '2', true))
 
 -- identifiers
-local word = alpha * (alnum + S('@#$\\.!?_')^0)
+local word = l.alpha * (l.alnum + S('@#$\\.!?_')^0)
 local identifier = token('identifier', word)
 
 -- operators
 local operator = token('operator', S('=!<>+-/\\*%&|^~.,:;(){}'))
 
-function LoadTokens()
-  local rexx = rexx
-  add_token(rexx, 'whitespace', ws)
-  add_token(rexx, 'keyword', keyword)
-  add_token(rexx, 'function', func)
-  add_token(rexx, 'identifier', identifier)
-  add_token(rexx, 'string', string)
-  add_token(rexx, 'comment', comment)
-  add_token(rexx, 'number', number)
-  add_token(rexx, 'preproc', preproc)
-  add_token(rexx, 'operator', operator)
-  add_token(rexx, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'keyword', keyword },
+  { 'function', func },
+  { 'identifier', identifier },
+  { 'string', string },
+  { 'comment', comment },
+  { 'number', number },
+  { 'preproc', preproc },
+  { 'operator', operator },
+  { 'any_char', l.any_char },
+}

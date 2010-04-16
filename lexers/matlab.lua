@@ -24,27 +24,30 @@
 
 -- Based off of lexer code by Mitchell
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 -- comments
-local line_comment = (P('%') + '#') * nonnewline^0
-local block_comment = '%{' * (any - '%}')^0 * P('%}')^-1
+local line_comment = (P('%') + '#') * l.nonnewline^0
+local block_comment = '%{' * (l.any - '%}')^0 * P('%}')^-1
 local comment = token('comment', block_comment + line_comment)
 
 -- strings
-local sq_str = delimited_range("'", '\\', true)
-local dq_str = delimited_range('"', '\\', true)
-local bt_str = delimited_range('`', '\\', true)
+local sq_str = l.delimited_range("'", '\\', true)
+local dq_str = l.delimited_range('"', '\\', true)
+local bt_str = l.delimited_range('`', '\\', true)
 local string = token('string', sq_str + dq_str + bt_str)
 
 -- numbers
-local number = token('number', float + integer + dec_num + hex_num + oct_num)
+local number = token('number', l.float + l.integer + l.dec_num + l.hex_num + l.oct_num)
 
 -- keywords
-local keyword = token('keyword', word_match(word_list{
+local keyword = token('keyword', word_match({
   'break', 'case', 'catch', 'continue', 'do', 'else', 'elseif',
   'end', 'end_try_catch', 'end_unwind_protect', 'endfor', 'endif',
   'endswitch', 'endwhile', 'for', 'function', 'endfunction',
@@ -54,7 +57,7 @@ local keyword = token('keyword', word_match(word_list{
 }, nil, true))
 
 -- functions
-local func = token('function', word_match(word_list{
+local func = token('function', word_match {
   'abs', 'any', 'argv','atan2', 'axes', 'axis', 'ceil', 'cla', 'clear',
   'clf', 'columns', 'cos', 'delete', 'diff', 'disp', 'doc', 'double',
   'drawnow', 'exp', 'figure', 'find', 'fix', 'floor', 'fprintf',
@@ -66,16 +69,16 @@ local func = token('function', word_match(word_list{
   'sign', 'sin', 'size', 'sizeof', 'size_equal', 'sort', 'sprintf',
   'squeeze', 'sqrt', 'std', 'strcmp', 'subplot', 'sum', 'tan', 'tic',
   'title', 'toc', 'uicontrol', 'who', 'xlabel', 'ylabel', 'zeros'
-}))
+})
 
 -- constants
-local constant = token('constant', word_match(word_list{
+local constant = token('constant', word_match {
   'EDITOR', 'I', 'IMAGEPATH', 'INFO_FILE', 'J', 'LOADPATH',
   'OCTAVE_VERSION', 'PAGER', 'PS1', 'PS2', 'PS4', 'PWD'
-}))
+})
 
 -- variable
-local variable = token('variable', word_match(word_list{
+local variable = token('variable', word_match {
   'ans', 'automatic_replot', 'default_return_value', 'do_fortran_indexing',
   'define_all_return_values', 'empty_list_elements_ok', 'eps', 'false',
   'gnuplot_binary',
@@ -88,29 +91,28 @@ local variable = token('variable', word_match(word_list{
   'treat_neg_dim_as_zero', 'true', 'warn_assign_as_truth_value',
   'warn_comma_in_global_decl', 'warn_divide_by_zero', 'warn_function_name_clash',
   'whitespace_in_literal_matrix'
-}))
+})
 
 -- identifiers
-local identifier = token('identifier', word)
+local identifier = token('identifier', l.word)
 
 -- operators
 local operator = token('operator', S('!%^&*()[]{}-=+/\|:;.,?<>~`´'))
 
-function LoadTokens()
-  local matlab = matlab
-  add_token(matlab, 'whitespace', ws)
-  add_token(matlab, 'keyword', keyword)
-  add_token(matlab, 'function', func)
-  add_token(matlab, 'constant', constant)
-  add_token(matlab, 'variable', variable)
-  add_token(matlab, 'identifier', identifier)
-  add_token(matlab, 'string', string)
-  add_token(matlab, 'comment', comment)
-  add_token(matlab, 'number', number)
-  add_token(matlab, 'operator', operator)
-  add_token(matlab, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'keyword', keyword },
+  { 'function', func },
+  { 'constant', constant },
+  { 'variable', variable },
+  { 'identifier', identifier },
+  { 'string', string },
+  { 'comment', comment },
+  { 'number', number },
+  { 'operator', operator },
+  { 'any_char', l.any_char },
+}
 
-function LoadStyles()
-  add_style('function', style_function..{ fore = colors.red })
-end
+_tokenstyles = {
+  { 'function', l.style_function..{ fore = l.colors.red } },
+}

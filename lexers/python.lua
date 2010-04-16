@@ -1,34 +1,37 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- Python LPeg lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 local lit_newline = P('\r')^-1 * P('\n')
 
 -- comments
-local comment = token('comment', '#' * nonnewline_esc^0)
+local comment = token('comment', '#' * l.nonnewline_esc^0)
 
 -- strings
-local sq_str = P('u')^-1 * delimited_range("'", '\\', true, false, '\n')
-local dq_str = P('U')^-1 * delimited_range('"', '\\', true, false, '\n')
-local triple_sq_str = "'''" * (any - "'''")^0 * P("'''")^-1
-local triple_dq_str = '"""' * (any - '"""')^0 * P('"""')^-1
-local raw_sq_str = P('u')^-1 * 'r' * delimited_range("'", nil, true) -- TODO: cannot end in single \
-local raw_dq_str = P('U')^-1 * 'R' * delimited_range('"', nil, true) -- TODO: cannot end in single \
+local sq_str = P('u')^-1 * l.delimited_range("'", '\\', true, false, '\n')
+local dq_str = P('U')^-1 * l.delimited_range('"', '\\', true, false, '\n')
+local triple_sq_str = "'''" * (l.any - "'''")^0 * P("'''")^-1
+local triple_dq_str = '"""' * (l.any - '"""')^0 * P('"""')^-1
+local raw_sq_str = P('u')^-1 * 'r' * l.delimited_range("'", nil, true) -- TODO: cannot end in single \
+local raw_dq_str = P('U')^-1 * 'R' * l.delimited_range('"', nil, true) -- TODO: cannot end in single \
 local string = token('string', triple_sq_str + triple_dq_str + sq_str + dq_str + raw_sq_str + raw_dq_str)
 
 -- numbers
-local dec = digit^1 * S('Ll')^-1
+local dec = l.digit^1 * S('Ll')^-1
 local bin = '0b' * S('01')^1 * ('_' * S('01')^1)^0
 local oct = '0' * R('07')^1 * S('Ll')^-1
-local integer = S('+-')^-1 * (bin + hex_num + oct + dec)
-local number = token('number', float + integer)
+local integer = S('+-')^-1 * (bin + l.hex_num + oct + dec)
+local number = token('number', l.float + integer)
 
 -- keywords
-local keyword = token('keyword', word_match(word_list{
+local keyword = token('keyword', word_match {
   'and', 'as', 'assert', 'break', 'class', 'continue', 'def', 'del', 'elif',
   'else', 'except', 'exec', 'finally', 'for', 'from', 'global', 'if', 'import',
   'in', 'is', 'lambda', 'not', 'or', 'pass', 'print', 'raise', 'return', 'try',
@@ -60,10 +63,10 @@ local keyword = token('keyword', word_match(word_list{
   '__stdout__', '__stderr__',
   -- other
   '__debug__', '__doc__', '__import__', '__name__'
-}))
+})
 
 -- functions
-local func = token('function', word_match(word_list{
+local func = token('function', word_match {
   'abs', 'all', 'any', 'apply', 'basestring', 'bool', 'buffer', 'callable',
   'chr', 'classmethod', 'cmp', 'coerce', 'compile', 'complex', 'copyright',
   'credits', 'delattr', 'dict', 'dir', 'divmod', 'enumerate', 'eval',
@@ -75,10 +78,10 @@ local func = token('function', word_match(word_list{
   'reversed', 'round', 'set', 'setattr', 'slice', 'sorted', 'staticmethod',
   'str', 'sum', 'super', 'tuple', 'type', 'unichr', 'unicode', 'vars', 'xrange',
   'zip'
-}))
+})
 
 -- constants
-local constant = token('constant', word_match(word_list{
+local constant = token('constant', word_match {
   'ArithmeticError', 'AssertionError', 'AttributeError', 'BaseException',
   'DeprecationWarning', 'EOFError', 'Ellipsis', 'EnvironmentError', 'Exception',
   'False', 'FloatingPointError', 'FutureWarning', 'GeneratorExit', 'IOError',
@@ -91,32 +94,32 @@ local constant = token('constant', word_match(word_list{
   'UnboundLocalError', 'UnicodeDecodeError', 'UnicodeEncodeError',
   'UnicodeError', 'UnicodeTranslateError', 'UnicodeWarning', 'UserWarning',
   'ValueError', 'Warning', 'ZeroDivisionError'
-}))
+})
 
 -- identifiers
-local identifier = token('identifier', word)
+local identifier = token('identifier', l.word)
 
 -- decorators
-local decorator = token('decorator', #P('@') * starts_line('@' * nonnewline^0))
+local decorator = token('decorator', #P('@') * l.starts_line('@' * l.nonnewline^0))
 
 -- operators
 local operator = token('operator', S('!%^&*()[]{}-=+/|:;.,?<>~`'))
 
-function LoadTokens()
-  local python = python
-  add_token(python, 'whitespace', ws)
-  add_token(python, 'keyword', keyword)
-  add_token(python, 'function', func)
-  add_token(python, 'constant', constant)
-  add_token(python, 'identifier', identifier)
-  add_token(python, 'comment', comment)
-  add_token(python, 'string', string)
-  add_token(python, 'number', number)
-  add_token(python, 'decorator', decorator)
-  add_token(python, 'operator', operator)
-  add_token(python, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'keyword', keyword },
+  { 'function', func },
+  { 'constant', constant },
+  { 'identifier', identifier },
+  { 'comment', comment },
+  { 'string', string },
+  { 'number', number },
+  { 'decorator', decorator },
+  { 'operator', operator },
+  { 'any_char', l.any_char },
+}
 
-function LoadStyles()
-  add_style('decorator', style_preproc)
-end
+
+_tokenstyles = {
+  { 'decorator', l.style_preproc },
+}

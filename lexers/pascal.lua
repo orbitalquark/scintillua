@@ -1,26 +1,29 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- Pascal LPeg Lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 -- comments
-local line_comment = '//' * nonnewline_esc^0
-local bblock_comment = '{' * (any - '}')^0 * P('}')^-1
-local pblock_comment = '(*' * (any - '*)')^0 * P('*)')^-1
+local line_comment = '//' * l.nonnewline_esc^0
+local bblock_comment = '{' * (l.any - '}')^0 * P('}')^-1
+local pblock_comment = '(*' * (l.any - '*)')^0 * P('*)')^-1
 local comment = token('comment', line_comment + bblock_comment + pblock_comment)
 
 -- strings
 local string =
-  token('string', S('uUrR')^-1 * delimited_range("'", nil, true, false, '\n'))
+  token('string', S('uUrR')^-1 * l.delimited_range("'", nil, true, false, '\n'))
 
 -- numbers
-local number = token('number', (float + integer) * S('LlDdFf')^-1)
+local number = token('number', (l.float + l.integer) * S('LlDdFf')^-1)
 
 -- keywords
-local keyword = token('keyword', word_match(word_list{
+local keyword = token('keyword', word_match({
   'and', 'array', 'as', 'at', 'asm', 'begin', 'case', 'class', 'const',
   'constructor', 'destructor', 'dispinterface', 'div', 'do', 'downto', 'else',
   'end', 'except', 'exports', 'file', 'final', 'finalization', 'finally', 'for',
@@ -41,34 +44,33 @@ local keyword = token('keyword', word_match(word_list{
 }, nil, true))
 
 -- functions
-local func = token('function', word_match(word_list{
+local func = token('function', word_match({
   'chr', 'ord', 'succ', 'pred', 'abs', 'round', 'trunc', 'sqr', 'sqrt',
   'arctan', 'cos', 'sin', 'exp', 'ln', 'odd', 'eof', 'eoln'
 }, nil, true))
 
 -- types
-local type = token('type', word_match(word_list{
+local type = token('type', word_match({
   'shortint', 'byte', 'char', 'smallint', 'integer', 'word', 'longint',
   'cardinal', 'boolean', 'bytebool', 'wordbool', 'longbool', 'real', 'single',
   'double', 'extended', 'comp', 'currency', 'pointer'
 }, nil, true))
 
 -- identifiers
-local identifier = token('identifier', word)
+local identifier = token('identifier', l.word)
 
 -- operators
 local operator = token('operator', S('.,;^@:=<>+-/*()[]'))
 
-function LoadTokens()
-  local pascal = pascal
-  add_token(pascal, 'whitespace', ws)
-  add_token(pascal, 'keyword', keyword)
-  add_token(pascal, 'function', func)
-  add_token(pascal, 'type', type)
-  add_token(pascal, 'string', string)
-  add_token(pascal, 'identifier', identifier)
-  add_token(pascal, 'comment', comment)
-  add_token(pascal, 'number', number)
-  add_token(pascal, 'operator', operator)
-  add_token(pascal, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'keyword', keyword },
+  { 'function', func },
+  { 'type', type },
+  { 'string', string },
+  { 'identifier', identifier },
+  { 'comment', comment },
+  { 'number', number },
+  { 'operator', operator },
+  { 'any_char', l.any_char },
+}

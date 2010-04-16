@@ -1,25 +1,28 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- TCL LPeg lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 -- comments
-local comment = token('comment', '#' * nonnewline^0)
+local comment = token('comment', '#' * l.nonnewline^0)
 
 -- strings
-local sq_str = delimited_range("'", '\\', true, false, '\n')
-local dq_str = delimited_range('"', '\\', true, false, '\n')
-local regex = delimited_range('/', '\\', false, false, '\n')
+local sq_str = l.delimited_range("'", '\\', true, false, '\n')
+local dq_str = l.delimited_range('"', '\\', true, false, '\n')
+local regex = l.delimited_range('/', '\\', false, false, '\n')
 local string = token('string', sq_str + dq_str + regex)
 
 -- numbers
-local number = token('number', float + integer)
+local number = token('number', l.float + l.integer)
 
 -- keywords
-local keyword = token('keyword', word_match(word_list{
+local keyword = token('keyword', word_match {
   'string', 'subst', 'regexp', 'regsub', 'scan', 'format', 'binary', 'list',
   'split', 'join', 'concat', 'llength', 'lrange', 'lsearch', 'lreplace',
   'lindex', 'lsort', 'linsert', 'lrepeat', 'dict', 'if', 'else', 'elseif',
@@ -32,26 +35,25 @@ local keyword = token('keyword', word_match(word_list{
   'load', 'unload', 'package', 'info', 'interp', 'history', 'bgerror',
   'unknown', 'memory', 'cd', 'pwd', 'clock', 'time', 'exec', 'glob', 'pid',
   'exit'
-}))
+})
 
 -- identifiers
-local identifier = token('identifier', word)
+local identifier = token('identifier', l.word)
 
 -- variables
-local variable = token('variable', S('$@$') * P('$')^-1 * word)
+local variable = token('variable', S('$@') * P('$')^-1 * l.word)
 
 -- operators
 local operator = token('operator', S('<>=+-*/!@|&.,:;?()[]{}'))
 
-function LoadTokens()
-  local tcl = tcl
-  add_token(tcl, 'whitespace', ws)
-  add_token(tcl, 'keyword', keyword)
-  add_token(tcl, 'identifier', identifier)
-  add_token(tcl, 'string', string)
-  add_token(tcl, 'comment', comment)
-  add_token(tcl, 'number', number)
-  add_token(tcl, 'variable', variable)
-  add_token(tcl, 'operator', operator)
-  add_token(tcl, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'keyword', keyword },
+  { 'identifier', identifier },
+  { 'string', string },
+  { 'comment', comment },
+  { 'number', number },
+  { 'variable', variable },
+  { 'operator', operator },
+  { 'any_char', l.any_char },
+}

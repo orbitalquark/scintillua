@@ -1,24 +1,27 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- OCaml LPeg lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 -- comments
-local comment = token('comment', nested_pair('(*', '*)'), true)
+local comment = token('comment', l.nested_pair('(*', '*)'), true)
 
 -- strings
-local sq_str = token('string', delimited_range("'", '\\', true, false, '\n'))
-local dq_str = token('string', delimited_range('"', '\\', true, false, '\n'))
+local sq_str = token('string', l.delimited_range("'", '\\', true, false, '\n'))
+local dq_str = token('string', l.delimited_range('"', '\\', true, false, '\n'))
 local string = sq_str + dq_str
 
 -- numbers
-local number = token('number', float + integer)
+local number = token('number', l.float + l.integer)
 
 -- keywords
-local keyword = token('keyword', word_match(word_list{
+local keyword = token('keyword', word_match {
   'and', 'as', 'asr', 'begin', 'class', 'closed', 'constraint', 'do', 'done',
   'downto', 'else', 'end', 'exception', 'external', 'failwith', 'false',
   'flush', 'for', 'fun', 'function', 'functor', 'if', 'in', 'include',
@@ -27,15 +30,15 @@ local keyword = token('keyword', word_match(word_list{
   'option', 'or', 'parser', 'private', 'ref', 'rec', 'raise', 'regexp', 'sig',
   'struct', 'stdout', 'stdin', 'stderr', 'then', 'to', 'true', 'try', 'type',
   'val', 'virtual', 'when', 'while', 'with'
-}))
+})
 
 -- types
-local type = token('type', word_match(word_list{
+local type = token('type', word_match {
   'int', 'float', 'bool', 'char', 'string', 'unit'
-}))
+})
 
 -- functions
-local func = token('function', word_match(word_list{
+local func = token('function', word_match {
   'raise', 'invalid_arg', 'failwith', 'compare', 'min', 'max', 'succ', 'pred',
   'mod', 'abs', 'max_int', 'min_int', 'sqrt', 'exp', 'log', 'log10', 'cos',
   'sin', 'tan', 'acos', 'asin', 'atan', 'atan2', 'cosh', 'sinh', 'tanh', 'ceil',
@@ -56,24 +59,23 @@ local func = token('function', word_match(word_list{
   'pos_in', 'in_channel_length', 'close_in', 'close_in_noerr',
   'set_binary_mode_in', 'incr', 'decr', 'string_of_format', 'format_of_string',
   'exit', 'at_exit'
-}))
+})
 
 -- identifiers
-local identifier = token('identifier', word)
+local identifier = token('identifier', l.word)
 
 -- operators
 local operator = token('operator', S('=<>+-*/.,:;~!#%^&|?[](){}'))
 
-function LoadTokens()
-  local ocaml = ocaml
-  add_token(ocaml, 'whitespace', ws)
-  add_token(ocaml, 'keyword', keyword)
-  add_token(ocaml, 'type', type)
-  add_token(ocaml, 'function', func)
-  add_token(ocaml, 'identifier', identifier)
-  add_token(ocaml, 'string', string)
-  add_token(ocaml, 'comment', comment)
-  add_token(ocaml, 'number', number)
-  add_token(ocaml, 'operator', operator)
-  add_token(ocaml, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'keyword', keyword },
+  { 'type', type },
+  { 'function', func },
+  { 'identifier', identifier },
+  { 'string', string },
+  { 'comment', comment },
+  { 'number', number },
+  { 'operator', operator },
+  { 'any_char', l.any_char },
+}

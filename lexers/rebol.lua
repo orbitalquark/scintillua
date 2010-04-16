@@ -1,24 +1,27 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- Rebol LPeg lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 -- comments
-local line_comment = ';' * nonnewline^0;
-local block_comment = 'comment' * P(' ')^-1 * delimited_range('{}', nil, true)
+local line_comment = ';' * l.nonnewline^0;
+local block_comment = 'comment' * P(' ')^-1 * l.delimited_range('{}', nil, true)
 local comment = token('comment', line_comment + block_comment)
 
 -- strings
-local sl_string = delimited_range('"', '\\', true, false, '\n')
-local ml_string = delimited_range('{}', '\\', true)
-local lit_string = "'" * word
+local sl_string = l.delimited_range('"', '\\', true, false, '\n')
+local ml_string = l.delimited_range('{}', '\\', true)
+local lit_string = "'" * l.word
 local string = token('string', sl_string + ml_string + lit_string)
 
 -- keywords
-local keyword = token('keyword', word_match(word_list{
+local keyword = token('keyword', word_match({
   'abs', 'absolute', 'add', 'and~', 'at', 'back', 'change', 'clear',
   'complement', 'copy', 'cp', 'divide', 'fifth', 'find', 'first', 'fourth',
   'head', 'insert', 'last', 'make', 'max', 'maximum', 'min', 'minimum',
@@ -100,19 +103,18 @@ local keyword = token('keyword', word_match(word_list{
 }, '~-?!'))
 
 -- identifiers
-local word = (alpha + '-') * (alnum + '-')^0
+local word = (l.alpha + '-') * (l.alnum + '-')^0
 local identifier = token('identifier', word)
 
 -- operators
 local operator = token('operator', S('=<>+/*:()[]'))
 
-function LoadTokens()
-  local rebol = rebol
-  add_token(rebol, 'whitespace', ws)
-  add_token(rebol, 'comment', comment)
-  add_token(rebol, 'keyword', keyword)
-  add_token(rebol, 'identifier', identifier)
-  add_token(rebol, 'string', string)
-  add_token(rebol, 'operator', operator)
-  add_token(rebol, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'comment', comment },
+  { 'keyword', keyword },
+  { 'identifier', identifier },
+  { 'string', string },
+  { 'operator', operator },
+  { 'any_char', l.any_char },
+}

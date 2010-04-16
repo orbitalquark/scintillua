@@ -1,17 +1,20 @@
 -- Archlinux PKGBUILD LPeg Lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 -- comments
-local comment = token('comment', '#' * nonnewline^0)
+local comment = token('comment', '#' * l.nonnewline^0)
 
 -- strings
-local sq_str = delimited_range("'", nil, true)
-local dq_str = delimited_range('"', '\\', true)
-local ex_str = delimited_range('`', '\\', true)
+local sq_str = l.delimited_range("'", nil, true)
+local dq_str = l.delimited_range('"', '\\', true)
+local ex_str = l.delimited_range('`', '\\', true)
 local heredoc = '<<' * P(function(input, index)
   local s, e, _, delimiter = input:find('(["\']?)([%a_][%w_]*)%1[\n\r\f;]+', index)
   if s == index and delimiter then
@@ -22,10 +25,10 @@ end)
 local string = token('string', sq_str + dq_str + ex_str + heredoc)
 
 -- numbers
-local number = token('number', float + integer)
+local number = token('number', l.float + l.integer)
 
 -- keywords
-local keyword = token('keyword', word_match(word_list{
+local keyword = token('keyword', word_match({
   'patch', 'cd', 'make', 'patch', 'mkdir', 'cp', 'sed', 'install', 'rm',
   'if', 'then', 'elif', 'else', 'fi', 'case', 'in', 'esac', 'while', 'for',
   'do', 'done', 'continue', 'local', 'return', 'git', 'svn', 'co', 'clone',
@@ -37,43 +40,40 @@ local keyword = token('keyword', word_match(word_list{
 }, '-'))
 
 -- functions
-local func = token('function', word_match(word_list{
-  'build'
-}))
+local func = token('function', word_match { 'build' })
 
-local constant = token('constant', word_match(word_list{
+local constant = token('constant', word_match {
   'pkgname', 'pkgver', 'pkgrel', 'pkgdesc', 'arch', 'url',
   'license', 'optdepends', 'depends', 'makedepends', 'provides',
   'conflicts', 'replaces', 'install', 'source', 'md5sums',
   'pkgdir', 'srcdir'
-}))
+})
 
 -- identifiers
-local identifier = token('identifier', word)
+local identifier = token('identifier', l.word)
 
 -- variables
 local variable = token('variable', '$' * (S('!#?*@$') +
-  delimited_range('()', nil, true, false, '\n') +
-  delimited_range('[]', nil, true, false, '\n') +
-  delimited_range('{}', nil, true, false, '\n') +
-  delimited_range('`', nil, true, false, '\n') +
-  digit^1 +
-  word))
+  l.delimited_range('()', nil, true, false, '\n') +
+  l.delimited_range('[]', nil, true, false, '\n') +
+  l.delimited_range('{}', nil, true, false, '\n') +
+  l.delimited_range('`', nil, true, false, '\n') +
+  l.digit^1 +
+  l.word))
 
 -- operators
 local operator = token('operator', S('=!<>+-/*^~.,:;?()[]{}'))
 
-function LoadTokens()
-  add_token(pkgbuild, 'whitespace', ws)
-  add_token(pkgbuild, 'comment', comment)
-  add_token(pkgbuild, 'string', string)
-  add_token(pkgbuild, 'number', number)
-  add_token(pkgbuild, 'keyword', keyword)
-  add_token(pkgbuild, 'function', func)
-  add_token(pkgbuild, 'constant', constant)
-  add_token(pkgbuild, 'identifier', identifier)
-  add_token(pkgbuild, 'variable', variable)
-  add_token(pkgbuild, 'operator', operator)
-  add_token(pkgbuild, 'any_char', any_char)
-end
-
+_rules = {
+  { 'whitespace', ws },
+  { 'comment', comment },
+  { 'string', string },
+  { 'number', number },
+  { 'keyword', keyword },
+  { 'function', func },
+  { 'constant', constant },
+  { 'identifier', identifier },
+  { 'variable', variable },
+  { 'operator', operator },
+  { 'any_char', l.any_char },
+}

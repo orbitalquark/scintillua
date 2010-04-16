@@ -1,29 +1,32 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- Verilog LPeg lexer
 
-module(..., package.seeall)
-local P, R, S = lpeg.P, lpeg.R, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local ws = token('whitespace', space^1)
+module(...)
+
+local ws = token('whitespace', l.space^1)
 
 -- comments
-local line_comment = '//' * nonnewline^0
-local block_comment = '/*' * (any - '*/')^0 * P('*/')^-1
+local line_comment = '//' * l.nonnewline^0
+local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
 local comment = token('comment', line_comment + block_comment)
 
 -- strings
-local string = token('string', delimited_range('"', '\\', true))
+local string = token('string', l.delimited_range('"', '\\', true))
 
 -- numbers
 local bin_suffix = S('bB') * S('01_xXzZ')^1
 local oct_suffix = S('oO') * S('01234567_xXzZ')^1
 local dec_suffix = S('dD') * S('0123456789_xXzZ')^1
 local hex_suffix = S('hH') * S('0123456789abcdefABCDEF_xXzZ')^1
-local number = token('number', (digit + '_')^1 + "'" *
+local number = token('number', (l.digit + '_')^1 + "'" *
   (bin_suffix + oct_suffix + dec_suffix + hex_suffix))
 
 -- keywords
-local keyword = token('keyword', word_match(word_list{
+local keyword = token('keyword', word_match({
   'always', 'assign', 'begin', 'case', 'casex', 'casez', 'default', 'deassign',
   'disable', 'else', 'end', 'endcase', 'endfunction', 'endgenerate',
   'endmodule', 'endprimitive', 'endspecify', 'endtable', 'endtask', 'for',
@@ -44,7 +47,7 @@ local keyword = token('keyword', word_match(word_list{
 }, '`01'))
 
 -- function
-local func = token('function', word_match(word_list{
+local func = token('function', word_match({
   '$stop', '$finish', '$time', '$stime', '$realtime', '$settrace',
   '$cleartrace', '$showscopes', '$showvars', '$monitoron', '$monitoroff',
   '$random', '$printtimescale', '$timeformat', '$display',
@@ -55,7 +58,7 @@ local func = token('function', word_match(word_list{
 }, '$01'))
 
 -- types
-local type = token('type', word_match(word_list{
+local type = token('type', word_match({
   'integer', 'reg', 'time', 'realtime', 'defparam', 'parameter', 'event',
   'wire', 'wand', 'wor', 'tri', 'triand', 'trior', 'tri0', 'tri1', 'trireg',
   'vectored', 'scalared', 'input', 'output', 'inout',
@@ -63,21 +66,20 @@ local type = token('type', word_match(word_list{
 }, '01'))
 
 -- identifiers
-local identifier = token('identifier', word)
+local identifier = token('identifier', l.word)
 
 -- operators
 local operator = token('operator', S('=~+-/*<>%&|^~,:;()[]{}'))
 
-function LoadTokens()
-  local verilog = verilog
-  add_token(verilog, 'whitespace', ws)
-  add_token(verilog, 'number', number)
-  add_token(verilog, 'keyword', keyword)
-  add_token(verilog, 'function', func)
-  add_token(verilog, 'type', type)
-  add_token(verilog, 'identifier', identifier)
-  add_token(verilog, 'string', string)
-  add_token(verilog, 'comment', comment)
-  add_token(verilog, 'operator', operator)
-  add_token(verilog, 'any_char', any_char)
-end
+_rules = {
+  { 'whitespace', ws },
+  { 'number', number },
+  { 'keyword', keyword },
+  { 'function', func },
+  { 'type', type },
+  { 'identifier', identifier },
+  { 'string', string },
+  { 'comment', comment },
+  { 'operator', operator },
+  { 'any_char', l.any_char },
+}

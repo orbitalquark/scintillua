@@ -1,42 +1,36 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- RHTML LPeg lexer
 
-module(..., package.seeall)
-local P, S = lpeg.P, lpeg.S
+local l = lexer
+local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local html = require 'hypertext'
-local ruby = require 'ruby'
+module(...)
 
-function LoadTokens()
-  html.LoadTokens()
-  ruby.LoadTokens()
+-- Embedded in HTML.
 
-  local start_token = token('rhtml_tag', '<%' * P('=')^-1)
-  local end_token = token('rhtml_tag', '%>')
-  ruby.TokenPatterns.whitespace = token('rhtml_whitespace', space^1)
-  ruby.TokenPatterns.string = -P('%>') * ruby.TokenPatterns.string
-  ruby.TokenPatterns.operator = token('operator', S('!^&*()[]{}-=+/|:;.,?<>~') +
+local html = l.load('hypertext')
+
+_lexer = html
+
+-- Embedded lexers.
+
+-- Embedded Ruby.
+local ruby = l.load('ruby')
+
+ruby._RULES['whitespace'] = token('rhtml_whitespace', l.space^1)
+local ruby_start_rule = token('rhtml_tag', '<%' * P('=')^-1)
+local ruby_end_rule = token('rhtml_tag', '%>')
+ruby._RULES['string'] = -P('%>') * ruby._RULES['string']
+ruby._RULES['operator'] = token('operator', S('!^&*()[]{}-=+/|:;.,?<>~') +
     '%' * -P('>'))
-  ruby.TokenPatterns.any_char = token('rhtml_default', any - end_token)
-  make_embeddable(ruby, html, start_token, end_token)
-  embed_language(html, ruby, true)
+ruby._RULES['any_char'] = token('rhtml_default', l.any - ruby_end_rule)
+l.embed_lexer(html, ruby, ruby_start_rule, ruby_end_rule, true)
 
-  -- TODO: modify HTML, CSS, and JS patterns accordingly
+-- TODO: modify HTML, CSS, and JS patterns accordingly
 
-  UseOtherTokens = html.Tokens
-
-  -- Since Ruby is being embedded in the HTML lexer, html.EmbeddedIn is a table
-  -- and LexLPeg would recognize it as a multi-language lexer. However, RHTML is
-  -- the lexer in use and it has no EmbeddedIn table so it would be recognized
-  -- as a single language lexer and styling would be very flaky. Fix this by
-  -- adding EmbeddedIn explicitly.
-  EmbeddedIn = {}
-end
-
-function LoadStyles()
-  html.LoadStyles()
-  ruby.LoadStyles()
-  add_style('rhtml_whitespace', style_nothing)
-  add_style('rhtml_default', style_nothing)
-  add_style('rhtml_tag', style_embedded)
-end
+_tokenstyles = {
+  { 'rhtml_whitespace', l.style_nothing },
+  { 'rhtml_default', l.style_nothing },
+  { 'rhtml_tag', l.style_embedded },
+}
