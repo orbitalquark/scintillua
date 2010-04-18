@@ -4149,7 +4149,7 @@
 +LexerModule lmLPeg(SCLEX_LPEG, InitDoc, ColouriseDoc, "llpeg", FoldDoc, 0, 7);
 +LexerModule lmNull(SCLEX_NULL, InitDoc, ColouriseDoc, "null");
 --- scite-latest/scintilla/src/ScintillaBase.cxx	2009-10-26 20:03:30.000000000 -0400
-+++ scintillua/scintilla/src/ScintillaBase.cxx	2010-04-14 14:54:58.000000000 -0400
++++ scintillua/scintilla/src/ScintillaBase.cxx	2010-04-18 13:08:37.000000000 -0400
 @@ -23,6 +23,13 @@
  #include "DocumentAccessor.h"
  #include "KeyWords.h"
@@ -4179,15 +4179,16 @@
  #endif
  }
  
-@@ -66,6 +74,7 @@
+@@ -66,6 +74,8 @@
  #ifdef SCI_LEXER
  	for (int wl = 0;wl < numWordLists;wl++)
  		delete keyWordLists[wl];
 +	if (lua_state) lua_close(lua_state); // added by Mitchell
++	lua_state = NULL; // added by Mitchell
  #endif
  }
  
-@@ -483,9 +492,13 @@
+@@ -483,9 +493,13 @@
  		lexCurrent = LexerModule::Find(SCLEX_NULL);
  	int bits = lexCurrent ? lexCurrent->GetStyleBitsNeeded() : 5;
  	vs.EnsureStyle((1 << bits) - 1);
@@ -4201,7 +4202,7 @@
  	lexLanguage = SCLEX_CONTAINER;
  	lexCurrent = LexerModule::Find(languageName);
  	if (!lexCurrent)
-@@ -494,6 +507,51 @@
+@@ -494,6 +508,54 @@
  		lexLanguage = lexCurrent->GetLanguage();
  	int bits = lexCurrent ? lexCurrent->GetStyleBitsNeeded() : 5;
  	vs.EnsureStyle((1 << bits) - 1);
@@ -4248,12 +4249,15 @@
 +	lua_setglobal(lua_state, "GTK");
 +#endif
 +
-+	lexCurrent->Init(lua_state, languageName, styler);
++	if (!lexCurrent->Init(lua_state, languageName, styler)) {
++		lua_close(lua_state);
++		lua_state = NULL;
++	}
 +	// end added by Mitchell
  }
  
  void ScintillaBase::Colourise(int start, int end) {
-@@ -520,10 +578,10 @@
+@@ -520,10 +582,10 @@
  		styler.SetCodePage(pdoc->dbcsCodePage);
  
  		if (lexCurrent && (len > 0)) {	// Should always succeed as null lexer should always be available
@@ -4266,7 +4270,7 @@
  				styler.Flush();
  			}
  		}
-@@ -758,8 +816,43 @@
+@@ -758,8 +820,43 @@
  		SetLexerLanguage(reinterpret_cast<const char *>(lParam));
  		break;
  
