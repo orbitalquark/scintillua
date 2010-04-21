@@ -995,7 +995,7 @@ function delimited_range(chars, escape, end_optional, balanced, forbidden)
     local invalid = lpeg.S(e..f..b)
     range = any - invalid
   else
-    local invalid = lpeg.S(e..f..escape..b)
+    local invalid = lpeg.S(e..f..b) + escape
     range = any - invalid + escape * any
   end
   if balanced and s ~= e then
@@ -1029,7 +1029,7 @@ function delimited_range_with_embedded(chars, escape, token_name, patt, forbidde
     invalid = patt + lpeg.S(e..f)
     valid = token(id, (any - invalid)^1)
   else
-    invalid = patt + lpeg.S(e..f..escape)
+    invalid = patt + lpeg.S(e..f) + escape
     valid = token(id, (any - invalid + escape * any)^1)
   end
   range = lpeg.P { (patt + valid * lpeg.V(1))^0 }
@@ -1144,14 +1144,11 @@ function embed_lexer(parent, child, start_rule, end_rule, preproc)
 --    for _, child2 in ipairs(children2) do
 --      child2._EMBEDDEDRULES[parent._NAME] = child2._EMBEDDEDRULES[child._NAME]
 --      children[#children + 1] = child2
---      _G.print('Embedded '..child2._NAME..' in '..parent._NAME)
 --    end
 --    for _, child2 in ipairs(children2.preproc) do
 --      children_preproc[#children_preproc + 1] = child2
---      _G.print('Embedded preproc '..child2._NAME..' in '..parent._NAME)
 --    end
 --  end
-  _G.print('Embedded '..child._NAME..' in '..parent._NAME)
 end
 
 -- Registered functions and constants.
