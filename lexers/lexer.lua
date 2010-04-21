@@ -18,6 +18,10 @@ module('lexer', package.seeall)
 --
 -- ## Writing a Dynamic Lexer
 --
+-- Rather than writing a lexer from scratch, first see if your language is
+-- similar to any of the 70+ languages supported. If so, you can copy and modify
+-- that lexer, saving some time and effort.
+--
 -- #### Introduction
 --
 -- All lexers are contained in the `lexers/` directory. To begin, create a Lua
@@ -562,6 +566,17 @@ module('lexer', package.seeall)
 -- and [file\_patterns] is a set of file extensions matched to your lexer.
 --
 -- Please note any styling information in `.properties` files is ignored.
+--
+-- #### Using the Lexer with Textadept
+--
+-- Put your lexer in your [`~/.textadept/`][user]`lexers/` directory. That way
+-- your lexer will not be overwritten when upgrading. Also, lexers in this
+-- directory override default lexers. (A user `lua` lexer would be loaded
+-- instead of the default `lua` lexer. This is convenient if you wish to tweak
+-- a default lexer to your liking.) Do not forget to add a
+-- [mime-type](textadept.mime_types.html) for your lexer.
+--
+-- [user]: http://caladbolg.net/luadoc/textadept2/manual/5_FolderStructure.html
 --
 -- #### Optimization
 --
