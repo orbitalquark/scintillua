@@ -108,7 +108,6 @@ _tokenstyles = {
   { 'annotation', l.style_preproc },
 }
 
---[[
 function _fold(text, start_pos, start_line, start_level)
 	local folds = {}
 	local current_line = start_line
@@ -118,7 +117,7 @@ function _fold(text, start_pos, start_line, start_level)
 		if #line > 0 then
 			if line:find("{%s*$") and current_line ~= 1 then
 				foldCause = 0
-				folds[current_line] = {current_level, SC_FOLDLEVELHEADERFLAG}
+				folds[current_line] = {current_level, l.SC_FOLDLEVELHEADERFLAG}
 				current_level = current_level + 1
 			elseif line:find("/%*%s*") then
 				foldCause = 1
@@ -126,9 +125,9 @@ function _fold(text, start_pos, start_line, start_level)
 				-- on lines 0 AND one when you set it on line 0... I also don't
 				-- know why setting it on line -1 works.
 				if current_line == 0 then
-					folds[-1] = {current_level, SC_FOLDLEVELHEADERFLAG}
+					folds[-1] = {current_level, l.SC_FOLDLEVELHEADERFLAG}
 				else
-					folds[current_line] = {current_level, SC_FOLDLEVELHEADERFLAG}
+					folds[current_line] = {current_level, l.SC_FOLDLEVELHEADERFLAG}
 				end
 				current_level = current_level + 1
 			elseif line:find("}") and foldCause == 0 then
@@ -141,10 +140,9 @@ function _fold(text, start_pos, start_line, start_level)
 				folds[current_line] = {current_level}
 			end
 		else
-			folds[current_line] = {current_level, SC_FOLDLEVELWHITEFLAG}
+			folds[current_line] = {current_level, l.SC_FOLDLEVELWHITEFLAG}
 		end
 		current_line = current_line + 1
 	end
 	return folds
 end
-]]
