@@ -9,7 +9,7 @@ module(...)
 
 local ws = token('whitespace', l.space^1)
 
-local line_comment = '!' * l.nonnewline_esc^0
+local line_comment = '!' * l.nonnewline^0
 local comment = token('comment', line_comment)
 
 local sq_str = l.delimited_range("'")
