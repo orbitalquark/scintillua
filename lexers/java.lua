@@ -42,6 +42,9 @@ local type = token('type', word_match {
 -- identifiers
 local identifier = token('identifier', l.word)
 
+-- annotations
+local annotation = token('annotation', '@' * l.word)
+
 -- operators
 local operator = token('operator', S('+-/*%<>!=^&|?~:;.()[]{}'))
 
@@ -53,6 +56,11 @@ _rules = {
   { 'string', string },
   { 'comment', comment },
   { 'number', number },
+  { 'annotation', annotation },
   { 'operator', operator },
   { 'any_char', l.any_char },
+}
+
+_tokenstyles = {
+  { 'annotation', l.style_preproc },
 }
