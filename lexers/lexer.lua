@@ -948,7 +948,7 @@ any_char = token('default', any)
 function style(style_table)
   setmetatable(style_table, {
     __concat = function(t1, t2)
-      local t = {} -- duplicate t1 so t1 is unmodified
+      local t = setmetatable({}, getmetatable(t1)) -- duplicate t1
       for k,v in pairs(t1) do t[k] = v end
       for k,v in pairs(t2) do t[k] = v end
       return t
