@@ -22,7 +22,13 @@ local comment = token('comment', line_comment + block_comment)
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
 local regex_str = l.delimited_range('/', '\\', nil, nil, '\n') * S('igm')^0
-local string = token('string', sq_str + dq_str) + token('regex', regex_str)
+local string = token('string', sq_str + dq_str) +
+  P(function(input, index)
+    if index == 1 then return index end
+    local i = index
+    while input:sub(i - 1, i - 1):match('[ \t\r\n\f]') do i = i - 1 end
+    return input:sub(i - 1, i - 1):match('[+%-*%%^!=&|?:;,()%[%]{}]') and index or nil
+  end) * token('regex', regex_str)
 
 -- numbers
 local number = token('number', l.float + l.integer)
@@ -45,7 +51,7 @@ local keyword = token('keyword', word_match {
 local identifier = token('identifier', l.word)
 
 -- operators
-local operator = token('operator', S('+-/*%^!=&|?:;.()[]{}<>'))
+local operator = token('operator', S('+-/*%^!=&|?:;,.()[]{}<>'))
 
 _rules = {
   { 'js_whitespace', ws },
