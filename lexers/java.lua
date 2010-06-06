@@ -25,13 +25,12 @@ local number = token('number', (l.float + l.integer) * S('LlFfDd')^-1)
 -- keywords
 local keyword = token('keyword', word_match {
   'abstract', 'assert', 'break', 'case', 'catch', 'class', 'const', 'continue',
-  'default', 'do', 'else', 'extends', 'final', 'finally', 'for', 'future',
-  'generic', 'goto', 'if', 'implements', 'import', 'inner', 'instanceof',
-  'interface', 'native', 'new', 'null', 'outer', 'package', 'private',
-  'protected', 'public', 'rest', 'return', 'static', 'super', 'switch',
-  'synchronized', 'this', 'throw', 'throws', 'transient', 'try', 'var', 'while',
-  'volatile',
-  'true', 'false'
+  'default', 'do', 'else', 'enum', 'extends', 'final', 'finally', 'for',
+  'future', 'generic', 'goto', 'if', 'implements', 'import', 'inner',
+  'instanceof', 'interface', 'native', 'new', 'null', 'outer', 'package',
+  'private', 'protected', 'public', 'rest', 'return', 'static', 'super',
+  'switch', 'synchronized', 'this', 'throw', 'throws', 'transient', 'try',
+  'var', 'while', 'volatile', 'true', 'false'
 })
 
 -- types
