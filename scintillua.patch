@@ -1,5 +1,5 @@
 --- scite-latest/scintilla/gtk/deps.mak	2010-01-20 17:48:36.000000000 -0500
-+++ scintillua/scintilla/gtk/deps.mak	2010-04-20 00:28:26.000000000 -0400
++++ scintillua/scintilla/gtk/deps.mak	2010-06-15 13:43:22.000000000 -0400
 @@ -58,240 +58,11 @@
  LexAbaqus.o: ../src/LexAbaqus.cxx ../include/Platform.h \
   ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
@@ -244,18 +244,18 @@
  LineMarker.o: ../src/LineMarker.cxx ../include/Platform.h \
   ../include/Scintilla.h ../src/XPM.h ../src/LineMarker.h
  PerLine.o: ../src/PerLine.cxx ../include/Platform.h \
---- scite-latest/scintilla/gtk/makefile	2010-04-06 19:42:13.000000000 -0400
-+++ scintillua/scintilla/gtk/makefile	2010-04-26 18:25:37.000000000 -0400
-@@ -23,7 +23,7 @@
+--- scite-latest/scintilla/gtk/makefile	2010-05-31 23:35:35.000000000 -0400
++++ scintillua/scintilla/gtk/makefile	2010-06-15 13:44:02.000000000 -0400
+@@ -28,7 +28,7 @@
  vpath %.h ../src ../include
  vpath %.cxx ../src
  
 -INCLUDEDIRS=-I ../include -I ../src
 +INCLUDEDIRS=-I ../include -I ../src -I ../../scite/lua/include # modified by mitchell
- CXXBASEFLAGS=-Wall -Wno-missing-braces -Wno-char-subscripts -pedantic -Os -DGTK -DSCI_LEXER $(INCLUDEDIRS)
+ CXXBASEFLAGS=-Wall -Wno-missing-braces -Wno-char-subscripts -pedantic -DGTK -DSCI_LEXER $(INCLUDEDIRS)
  
  ifdef NOTHREADS
-@@ -46,22 +46,13 @@
+@@ -51,22 +51,13 @@
  .c.o:
  	$(CCOMP) $(CONFIGFLAGS) $(CXXFLAGS) -w -c $<
  
@@ -282,7 +282,7 @@
  all: $(COMPLIB)
  
 --- scite-latest/scintilla/include/KeyWords.h	2009-07-21 05:05:43.000000000 -0400
-+++ scintillua/scintilla/include/KeyWords.h	2010-04-20 00:28:26.000000000 -0400
++++ scintillua/scintilla/include/KeyWords.h	2010-06-15 13:44:25.000000000 -0400
 @@ -5,6 +5,14 @@
  // Copyright 1998-2001 by Neil Hodgson <neilh@scintilla.org>
  // The License.txt file describes the conditions under which this software may be distributed.
@@ -316,20 +316,14 @@
  	LexerFunction fnLexer;
  	LexerFunction fnFolder;
  	const char * const * wordListDescriptions;
-@@ -54,9 +65,10 @@
- 
+@@ -55,6 +66,7 @@
  public:
  	const char *languageName;
--	LexerModule(int language_, 
--		LexerFunction fnLexer_, 
--		const char *languageName_=0, 
-+	LexerModule(int language_,
+ 	LexerModule(int language_, 
 +		InitFunction fnInit_, // added by Mitchell
-+		LexerFunction fnLexer_,
-+		const char *languageName_=0,
+ 		LexerFunction fnLexer_, 
+ 		const char *languageName_=0, 
  		LexerFunction fnFolder_=0,
- 		const char * const wordListDescriptions_[] = NULL,
- 		int styleBits_=5);
 @@ -70,9 +82,12 @@
  
  	int GetStyleBitsNeeded() const;
@@ -343,9 +337,9 @@
                    WordList *keywordlists[], Accessor &styler) const;
  	static const LexerModule *Find(int language);
  	static const LexerModule *Find(const char *languageName);
---- scite-latest/scintilla/include/SciLexer.h	2010-02-06 19:26:01.000000000 -0500
-+++ scintillua/scintilla/include/SciLexer.h	2010-04-20 00:28:26.000000000 -0400
-@@ -13,1369 +13,13 @@
+--- scite-latest/scintilla/include/SciLexer.h	2010-05-31 23:35:35.000000000 -0400
++++ scintillua/scintilla/include/SciLexer.h	2010-06-15 13:43:23.000000000 -0400
+@@ -13,1378 +13,13 @@
  
  /* SciLexer features - not in standard Scintilla */
  
@@ -975,6 +969,7 @@
 -#define SCE_CSS_EXTENDED_IDENTIFIER 19
 -#define SCE_CSS_EXTENDED_PSEUDOCLASS 20
 -#define SCE_CSS_EXTENDED_PSEUDOELEMENT 21
+-#define SCE_CSS_MEDIA 22
 -#define SCE_POV_DEFAULT 0
 -#define SCE_POV_COMMENT 1
 -#define SCE_POV_COMMENTLINE 2
@@ -1419,11 +1414,19 @@
 -#define SCE_FS_DATE 16
 -#define SCE_FS_STRINGEOL 17
 -#define SCE_FS_CONSTANT 18
--#define SCE_FS_ASM 19
--#define SCE_FS_LABEL 20
--#define SCE_FS_ERROR 21
--#define SCE_FS_HEXNUMBER 22
--#define SCE_FS_BINNUMBER 23
+-#define SCE_FS_WORDOPERATOR 19
+-#define SCE_FS_DISABLEDCODE 20
+-#define SCE_FS_DEFAULT_C 21
+-#define SCE_FS_COMMENTDOC_C 22
+-#define SCE_FS_COMMENTLINEDOC_C 23
+-#define SCE_FS_KEYWORD_C 24
+-#define SCE_FS_KEYWORD2_C 25
+-#define SCE_FS_NUMBER_C 26
+-#define SCE_FS_STRING_C 27
+-#define SCE_FS_PREPROCESSOR_C 28
+-#define SCE_FS_OPERATOR_C 29
+-#define SCE_FS_IDENTIFIER_C 30
+-#define SCE_FS_STRINGEOL_C 31
 -#define SCE_CSOUND_DEFAULT 0
 -#define SCE_CSOUND_COMMENT 1
 -#define SCE_CSOUND_NUMBER 2
@@ -1718,8 +1721,8 @@
 +// end modified by Mitchell
  
  #endif
---- scite-latest/scintilla/include/Scintilla.h	2010-04-07 19:07:40.000000000 -0400
-+++ scintillua/scintilla/include/Scintilla.h	2010-04-26 18:26:19.000000000 -0400
+--- scite-latest/scintilla/include/Scintilla.h	2010-05-31 23:35:35.000000000 -0400
++++ scintillua/scintilla/include/Scintilla.h	2010-06-15 13:43:23.000000000 -0400
 @@ -798,6 +798,7 @@
  #define SCI_GETPROPERTYINT 4010
  #define SCI_GETSTYLEBITSNEEDED 4011
@@ -1728,8 +1731,8 @@
  #define SC_MOD_INSERTTEXT 0x1
  #define SC_MOD_DELETETEXT 0x2
  #define SC_MOD_CHANGESTYLE 0x4
---- scite-latest/scintilla/include/Scintilla.iface	2010-03-26 02:31:57.000000000 -0400
-+++ scintillua/scintilla/include/Scintilla.iface	2010-04-26 18:26:34.000000000 -0400
+--- scite-latest/scintilla/include/Scintilla.iface	2010-05-31 23:35:35.000000000 -0400
++++ scintillua/scintilla/include/Scintilla.iface	2010-06-15 13:43:23.000000000 -0400
 @@ -2132,6 +2132,11 @@
  # Return the length of the text.
  get int GetLexerLanguage=4012(, stringresult text)
@@ -1742,7 +1745,7 @@
  # Notifications
  # Type of modification and the action which caused the modification.
  # These are defined as a bit mask to make it easy to specify which notifications are wanted.
-@@ -2204,1545 +2209,13 @@
+@@ -2204,1554 +2209,13 @@
  enu Lexer=SCLEX_
  val SCLEX_CONTAINER=0
  val SCLEX_NULL=1
@@ -2449,6 +2452,7 @@
 -val SCE_CSS_EXTENDED_IDENTIFIER=19
 -val SCE_CSS_EXTENDED_PSEUDOCLASS=20
 -val SCE_CSS_EXTENDED_PSEUDOELEMENT=21
+-val SCE_CSS_MEDIA=22
 -# Lexical states for SCLEX_POV
 -lex POV=SCLEX_POV SCE_POV_
 -val SCE_POV_DEFAULT=0
@@ -2931,7 +2935,7 @@
 -val SCE_ST_CHARACTER=15
 -val SCE_ST_SPEC_SEL=16
 -# Lexical states for SCLEX_FLAGSHIP (clipper)
--lex FlagShip=SCLEX_FLAGSHIP SCE_B_
+-lex FlagShip=SCLEX_FLAGSHIP SCE_FS_
 -val SCE_FS_DEFAULT=0
 -val SCE_FS_COMMENT=1
 -val SCE_FS_COMMENTLINE=2
@@ -2951,11 +2955,19 @@
 -val SCE_FS_DATE=16
 -val SCE_FS_STRINGEOL=17
 -val SCE_FS_CONSTANT=18
--val SCE_FS_ASM=19
--val SCE_FS_LABEL=20
--val SCE_FS_ERROR=21
--val SCE_FS_HEXNUMBER=22
--val SCE_FS_BINNUMBER=23
+-val SCE_FS_WORDOPERATOR=19
+-val SCE_FS_DISABLEDCODE=20
+-val SCE_FS_DEFAULT_C=21
+-val SCE_FS_COMMENTDOC_C=22
+-val SCE_FS_COMMENTLINEDOC_C=23
+-val SCE_FS_KEYWORD_C=24
+-val SCE_FS_KEYWORD2_C=25
+-val SCE_FS_NUMBER_C=26
+-val SCE_FS_STRING_C=27
+-val SCE_FS_PREPROCESSOR_C=28
+-val SCE_FS_OPERATOR_C=29
+-val SCE_FS_IDENTIFIER_C=30
+-val SCE_FS_STRINGEOL_C=31
 -# Lexical states for SCLEX_CSOUND
 -lex Csound=SCLEX_CSOUND SCE_CSOUND_
 -val SCE_CSOUND_DEFAULT=0
@@ -3291,8 +3303,8 @@
  
  # Events
  
---- scite-latest/scintilla/src/ExternalLexer.cxx	2010-02-16 19:39:46.000000000 -0500
-+++ scintillua/scintilla/src/ExternalLexer.cxx	2010-04-26 19:05:28.000000000 -0400
+--- scite-latest/scintilla/src/ExternalLexer.cxx	2010-05-31 23:35:36.000000000 -0400
++++ scintillua/scintilla/src/ExternalLexer.cxx	2010-06-15 13:45:20.000000000 -0400
 @@ -143,7 +143,7 @@
  
  			for (int i = 0; i < nl; i++) {
@@ -3302,8 +3314,8 @@
  
  				// Create a LexerMinder so we don't leak the ExternalLexerModule...
  				lm = new LexerMinder;
---- scite-latest/scintilla/src/ExternalLexer.h	2010-02-16 19:39:46.000000000 -0500
-+++ scintillua/scintilla/src/ExternalLexer.h	2010-04-26 18:28:34.000000000 -0400
+--- scite-latest/scintilla/src/ExternalLexer.h	2010-05-31 23:35:36.000000000 -0400
++++ scintillua/scintilla/src/ExternalLexer.h	2010-06-15 13:45:38.000000000 -0400
 @@ -37,12 +37,14 @@
  	int externalLanguage;
  	char name[100];
@@ -3312,17 +3324,18 @@
 -		const char *languageName_=0, LexerFunction fnFolder_=0) : LexerModule(language_, fnLexer_, 0, fnFolder_) {
 +	// modified by Mitchell
 +	ExternalLexerModule(int language_, InitFunction fnInit_, LexerFunction fnLexer_,
-+		const char *languageName_=0, LexerFunction fnFolder_=0) : LexerModule(language_, fnInit_, fnLexer_, 0, fnFolder_){
++		const char *languageName_=0, LexerFunction fnFolder_=0) : LexerModule(language_, fnInit_, fnLexer_, 0, fnFolder_) {
  		strncpy(name, languageName_, sizeof(name));
  		name[sizeof(name)-1] = '\0';
  		languageName = name;
- 	};
+-	}
++	};
 +	// end modified by Mitchell
  	virtual void Lex(unsigned int startPos, int lengthDoc, int initStyle,
  					WordList *keywordlists[], Accessor &styler) const;
  	virtual void Fold(unsigned int startPos, int lengthDoc, int initStyle,
 --- scite-latest/scintilla/src/KeyWords.cxx	2010-02-16 19:39:46.000000000 -0500
-+++ scintillua/scintilla/src/KeyWords.cxx	2010-04-26 18:30:29.000000000 -0400
++++ scintillua/scintilla/src/KeyWords.cxx	2010-06-15 13:46:01.000000000 -0400
 @@ -11,6 +11,14 @@
  #include <stdio.h>
  #include <stdarg.h>
@@ -3497,7 +3510,7 @@
  	return 1;
  }
 --- scite-latest/scintilla/src/LexLPeg.cxx	1969-12-31 19:00:00.000000000 -0500
-+++ scintillua/scintilla/src/LexLPeg.cxx	2010-04-20 00:28:26.000000000 -0400
++++ scintillua/scintilla/src/LexLPeg.cxx	2010-06-15 13:43:23.000000000 -0400
 @@ -0,0 +1,379 @@
 +/*
 +	Mitchell's Lua-powered dynamic lexer
@@ -3878,8 +3891,8 @@
 +
 +LexerModule lmLPeg(SCLEX_LPEG, InitDoc, ColouriseDoc, "llpeg", FoldDoc, 0, 7);
 +LexerModule lmNull(SCLEX_NULL, InitDoc, ColouriseDoc, "null");
---- scite-latest/scintilla/src/ScintillaBase.cxx	2010-03-23 01:36:57.000000000 -0400
-+++ scintillua/scintilla/src/ScintillaBase.cxx	2010-04-26 18:31:25.000000000 -0400
+--- scite-latest/scintilla/src/ScintillaBase.cxx	2010-03-23 01:38:01.000000000 -0400
++++ scintillua/scintilla/src/ScintillaBase.cxx	2010-06-15 13:43:23.000000000 -0400
 @@ -24,6 +24,13 @@
  #include "DocumentAccessor.h"
  #include "KeyWords.h"
@@ -4047,7 +4060,7 @@
  	case SCI_GETSTYLEBITSNEEDED:
  		return lexCurrent ? lexCurrent->GetStyleBitsNeeded() : 5;
 --- scite-latest/scintilla/src/ScintillaBase.h	2010-02-16 19:39:46.000000000 -0500
-+++ scintillua/scintilla/src/ScintillaBase.h	2010-04-26 18:31:31.000000000 -0400
++++ scintillua/scintilla/src/ScintillaBase.h	2010-06-15 13:43:23.000000000 -0400
 @@ -53,6 +53,7 @@
  	void SetLexer(uptr_t wParam);
  	void SetLexerLanguage(const char *languageName);
@@ -4057,7 +4070,7 @@
  
  	ScintillaBase();
 --- scite-latest/scintilla/win32/deps.mak	2009-07-21 06:53:02.000000000 -0400
-+++ scintillua/scintilla/win32/deps.mak	2010-04-20 00:28:26.000000000 -0400
++++ scintillua/scintilla/win32/deps.mak	2010-06-15 13:43:23.000000000 -0400
 @@ -49,208 +49,11 @@
  KeyWords.o: ../src/KeyWords.cxx ../include/Platform.h \
    ../include/PropSet.h ../include/Accessor.h \
@@ -4270,10 +4283,10 @@
  LineMarker.o: ../src/LineMarker.cxx ../include/Platform.h \
    ../include/Scintilla.h ../src/XPM.h ../src/LineMarker.h
  PropSet.o: ../src/PropSet.cxx ../include/Platform.h ../include/PropSet.h
---- scite-latest/scintilla/win32/makefile	2010-02-24 00:53:12.000000000 -0500
-+++ scintillua/scintilla/win32/makefile	2010-04-26 18:33:22.000000000 -0400
-@@ -7,9 +7,25 @@
- # safely if using a newer version which may display warning messages.
+--- scite-latest/scintilla/win32/makefile	2010-05-31 23:35:36.000000000 -0400
++++ scintillua/scintilla/win32/makefile	2010-06-15 13:48:00.000000000 -0400
+@@ -5,9 +5,25 @@
+ # be needed to use other compilers.
  
  .SUFFIXES: .cxx
 +# added by Mitchell
@@ -4298,7 +4311,7 @@
  
  COMPONENT = ../bin/Scintilla.dll
  LEXCOMPONENT = ../bin/SciLexer.dll
-@@ -24,11 +40,12 @@
+@@ -15,10 +31,11 @@
  
  vpath %.h ../src ../include
  vpath %.cxx ../src
@@ -4306,13 +4319,12 @@
  
  LDFLAGS=-mwindows -lstdc++ -limm32 -lole32 -luuid -mno-cygwin
  # Add -MMD to get dependencies
- #CXXFLAGS = -g -pg -pedantic -Os -fno-exceptions -fvtable-thunks -fno-rtti
 -INCLUDEDIRS=-I ../include -I ../src
 +INCLUDEDIRS=-I ../include -I ../src -I ../../scite/lua/include # modified by Mitchell
- CXXBASEFLAGS=-Wall -Wno-missing-braces -Wno-char-subscripts -Wno-strict-overflow -pedantic $(INCLUDEDIRS) $(THUNKFLAGS) -fno-rtti -mno-cygwin
+ CXXBASEFLAGS=-Wall -Wno-missing-braces -Wno-char-subscripts -Wno-strict-overflow -pedantic $(INCLUDEDIRS) -fno-rtti -mno-cygwin
  
  ifdef DEBUG
-@@ -38,9 +55,27 @@
+@@ -28,9 +45,27 @@
  STRIPFLAG=-s
  endif
  
@@ -4340,7 +4352,7 @@
  ALL:	$(COMPONENT) $(LEXCOMPONENT) $(LEXLIB) ScintillaWinS.o WindowAccessor.o
  
  clean:
-@@ -49,27 +84,18 @@
+@@ -39,27 +74,18 @@
  deps:
  	$(CC) -MM $(CXXFLAGS) *.cxx ../src/*.cxx >deps.mak
  
@@ -4372,7 +4384,7 @@
  $(COMPONENT): $(SOBJS) Scintilla.def
  	$(DLLWRAP) --add-stdcall-alias --target i386-mingw32 -o $@ $(SOBJS) $(LDFLAGS) $(STRIPFLAG) --relocatable
  
-@@ -77,13 +103,13 @@
+@@ -67,13 +93,13 @@
  	Document.o ContractionState.o CellBuffer.o CallTip.o \
  	ScintRes.o PlatWin.o PositionCache.o KeyMap.o Indicator.o LineMarker.o RESearch.o RunStyles.o \
  	Selection.o Style.o ViewStyle.o AutoComplete.o UniConversion.o KeyWords.o \
@@ -4388,15 +4400,15 @@
  
  # Automatically generate dependencies for most files with "make deps"
  include deps.mak
-@@ -114,5 +140,5 @@
+@@ -104,5 +130,5 @@
  	$(CC) $(CXXFLAGS) -D SCI_LEXER -c $< -o $@
  
  ScintRes.o:	ScintRes.rc PlatformRes.h
 -	windres ScintRes.rc $@
 +	$(WINDRES) ScintRes.rc $@ # modified by Mitchell
  
---- scite-latest/scintilla/win32/scintilla.mak	2009-08-26 21:20:39.000000000 -0400
-+++ scintillua/scintilla/win32/scintilla.mak	2010-04-20 00:28:26.000000000 -0400
+--- scite-latest/scintilla/win32/scintilla.mak	2010-05-31 23:35:36.000000000 -0400
++++ scintillua/scintilla/win32/scintilla.mak	2010-06-15 13:48:10.000000000 -0400
 @@ -77,7 +77,7 @@
  CXXFLAGS=$(CXXFLAGS) $(CXXNDEBUG)
  !ENDIF
@@ -4664,7 +4676,7 @@
  #--Autogenerated -- end of automatically generated section
  
 --- scite-latest/scintilla/win32/scintilla_vc6.mak	2009-08-26 21:20:39.000000000 -0400
-+++ scintillua/scintilla/win32/scintilla_vc6.mak	2010-04-20 00:28:26.000000000 -0400
++++ scintillua/scintilla/win32/scintilla_vc6.mak	2010-06-15 13:43:23.000000000 -0400
 @@ -79,7 +79,7 @@
  CXXFLAGS=$(CXXFLAGS) $(CXXNDEBUG)
  !ENDIF
@@ -4931,8 +4943,8 @@
  
  #--Autogenerated -- end of automatically generated section
  
---- scite-latest/scite/boundscheck/SciTE.dsp	2010-03-25 20:21:14.000000000 -0400
-+++ scintillua/scite/boundscheck/SciTE.dsp	2010-04-26 18:35:33.000000000 -0400
+--- scite-latest/scite/boundscheck/SciTE.dsp	2010-03-27 00:15:23.000000000 -0400
++++ scintillua/scite/boundscheck/SciTE.dsp	2010-06-15 13:43:23.000000000 -0400
 @@ -199,317 +199,14 @@
  # End Source File
  # Begin Source File
@@ -5255,8 +5267,8 @@
  
  SOURCE=..\lua\src\lfunc.c
  # End Source File
---- scite-latest/scite/boundscheck/SciTE.vcproj	2010-03-25 20:21:14.000000000 -0400
-+++ scintillua/scite/boundscheck/SciTE.vcproj	2010-04-26 18:35:44.000000000 -0400
+--- scite-latest/scite/boundscheck/SciTE.vcproj	2010-03-27 00:15:23.000000000 -0400
++++ scintillua/scite/boundscheck/SciTE.vcproj	2010-06-15 13:43:23.000000000 -0400
 @@ -231,240 +231,14 @@
  			<File
  				RelativePath="..\lua\src\ldump.c">
@@ -5502,9 +5514,9 @@
  
  			<File
  				RelativePath="..\lua\src\lfunc.c">
---- scite-latest/scite/gtk/makefile	2010-03-13 20:41:15.000000000 -0500
-+++ scintillua/scite/gtk/makefile	2010-04-26 18:37:43.000000000 -0400
-@@ -70,7 +70,7 @@
+--- scite-latest/scite/gtk/makefile	2010-05-31 23:35:36.000000000 -0400
++++ scintillua/scite/gtk/makefile	2010-06-15 13:49:46.000000000 -0400
+@@ -55,7 +55,7 @@
  		ltable.o ltm.o lundump.o lvm.o lzio.o
  
  LUA_LIB_OBJS =	lauxlib.o lbaselib.o ldblib.o liolib.o lmathlib.o ltablib.o \
@@ -5514,7 +5526,7 @@
  LUA_OBJS = LuaExtension.o $(LUA_CORE_OBJS) $(LUA_LIB_OBJS)
  
 --- scite-latest/scite/lua/include/lualib.h	2007-06-14 20:37:57.000000000 -0400
-+++ scintillua/scite/lua/include/lualib.h	2010-04-20 00:28:26.000000000 -0400
++++ scintillua/scite/lua/include/lualib.h	2010-06-15 13:43:23.000000000 -0400
 @@ -39,6 +39,11 @@
  #define LUA_LOADLIBNAME	"package"
  LUALIB_API int (luaopen_package) (lua_State *L);
@@ -5528,7 +5540,7 @@
  /* open all previous libraries */
  LUALIB_API void (luaL_openlibs) (lua_State *L); 
 --- scite-latest/scite/lua/src/lpeg.c	1969-12-31 19:00:00.000000000 -0500
-+++ scintillua/scite/lua/src/lpeg.c	2010-04-20 00:28:26.000000000 -0400
++++ scintillua/scite/lua/src/lpeg.c	2010-06-15 13:43:23.000000000 -0400
 @@ -0,0 +1,2260 @@
 +/*
 +** $Id: lpeg.c,v 1.98 2008/10/11 20:20:43 roberto Exp $
@@ -7790,8 +7802,8 @@
 +  return 1;
 +}
 +
---- scite-latest/scite/src/IFaceTable.cxx	2010-03-27 20:36:35.000000000 -0400
-+++ scintillua/scite/src/IFaceTable.cxx	2010-04-26 19:07:32.000000000 -0400
+--- scite-latest/scite/src/IFaceTable.cxx	2010-05-31 23:35:37.000000000 -0400
++++ scintillua/scite/src/IFaceTable.cxx	2010-06-15 13:50:45.000000000 -0400
 @@ -127,6 +127,7 @@
  }
  
@@ -7800,7 +7812,7 @@
  //++Autogenerated -- start of section automatically generated from Scintilla.iface
  
  static IFaceConstant ifaceConstants[] = {
-@@ -303,1270 +304,6 @@
+@@ -304,1279 +305,6 @@
  	{"SCEN_CHANGE",768},
  	{"SCEN_KILLFOCUS",256},
  	{"SCEN_SETFOCUS",512},
@@ -8069,6 +8081,7 @@
 -	{"SCE_CSS_IDENTIFIER2",15},
 -	{"SCE_CSS_IDENTIFIER3",17},
 -	{"SCE_CSS_IMPORTANT",11},
+-	{"SCE_CSS_MEDIA",22},
 -	{"SCE_CSS_OPERATOR",5},
 -	{"SCE_CSS_PSEUDOCLASS",3},
 -	{"SCE_CSS_PSEUDOELEMENT",18},
@@ -8209,30 +8222,38 @@
 -	{"SCE_FORTH_PREWORD1",7},
 -	{"SCE_FORTH_PREWORD2",8},
 -	{"SCE_FORTH_STRING",10},
--	{"SCE_FS_ASM",19},
--	{"SCE_FS_BINNUMBER",23},
 -	{"SCE_FS_COMMENT",1},
 -	{"SCE_FS_COMMENTDOC",3},
 -	{"SCE_FS_COMMENTDOCKEYWORD",5},
 -	{"SCE_FS_COMMENTDOCKEYWORDERROR",6},
+-	{"SCE_FS_COMMENTDOC_C",22},
 -	{"SCE_FS_COMMENTLINE",2},
 -	{"SCE_FS_COMMENTLINEDOC",4},
+-	{"SCE_FS_COMMENTLINEDOC_C",23},
 -	{"SCE_FS_CONSTANT",18},
 -	{"SCE_FS_DATE",16},
 -	{"SCE_FS_DEFAULT",0},
--	{"SCE_FS_ERROR",21},
--	{"SCE_FS_HEXNUMBER",22},
+-	{"SCE_FS_DEFAULT_C",21},
+-	{"SCE_FS_DISABLEDCODE",20},
 -	{"SCE_FS_IDENTIFIER",15},
+-	{"SCE_FS_IDENTIFIER_C",30},
 -	{"SCE_FS_KEYWORD",7},
 -	{"SCE_FS_KEYWORD2",8},
+-	{"SCE_FS_KEYWORD2_C",25},
 -	{"SCE_FS_KEYWORD3",9},
 -	{"SCE_FS_KEYWORD4",10},
--	{"SCE_FS_LABEL",20},
+-	{"SCE_FS_KEYWORD_C",24},
 -	{"SCE_FS_NUMBER",11},
+-	{"SCE_FS_NUMBER_C",26},
 -	{"SCE_FS_OPERATOR",14},
+-	{"SCE_FS_OPERATOR_C",29},
 -	{"SCE_FS_PREPROCESSOR",13},
+-	{"SCE_FS_PREPROCESSOR_C",28},
 -	{"SCE_FS_STRING",12},
 -	{"SCE_FS_STRINGEOL",17},
+-	{"SCE_FS_STRINGEOL_C",31},
+-	{"SCE_FS_STRING_C",27},
+-	{"SCE_FS_WORDOPERATOR",19},
 -	{"SCE_F_COMMENT",1},
 -	{"SCE_F_CONTINUATION",14},
 -	{"SCE_F_DEFAULT",0},
@@ -9071,7 +9092,7 @@
  	{"SCFIND_MATCHCASE",4},
  	{"SCFIND_POSIX",0x00400000},
  	{"SCFIND_REGEXP",0x00200000},
-@@ -1901,104 +638,10 @@
+@@ -1911,104 +639,10 @@
  	{"SCK_TAB",9},
  	{"SCK_UP",301},
  	{"SCK_WIN",313},
@@ -9177,7 +9198,7 @@
  	{"SCMOD_ALT",4},
  	{"SCMOD_CTRL",2},
  	{"SCMOD_NORM",0},
-@@ -2266,6 +909,7 @@
+@@ -2276,6 +910,7 @@
  	{"GetProperty", 4008, iface_int, {iface_string, iface_stringresult}},
  	{"GetPropertyExpanded", 4009, iface_int, {iface_string, iface_stringresult}},
  	{"GetSelText", 2161, iface_int, {iface_void, iface_stringresult}},
@@ -9185,14 +9206,14 @@
  	{"GetStyledText", 2015, iface_int, {iface_void, iface_textrange}},
  	{"GetTag", 2616, iface_int, {iface_int, iface_stringresult}},
  	{"GetText", 2182, iface_int, {iface_length, iface_stringresult}},
-@@ -2614,12 +1258,13 @@
+@@ -2624,12 +1259,13 @@
  };
  
  enum {
 -	ifaceFunctionCount = 265,
--	ifaceConstantCount = 2040,
+-	ifaceConstantCount = 2050,
 +	ifaceFunctionCount = 266,
-+	ifaceConstantCount = 682,
++	ifaceConstantCount = 683,
  	ifacePropertyCount = 170
  };
  
@@ -9201,9 +9222,9 @@
  
  const IFaceFunction * const IFaceTable::functions = ifaceFunctions;
  const int IFaceTable::functionCount = ifaceFunctionCount;
---- scite-latest/scite/src/SciTEBase.cxx	2010-04-08 19:23:21.000000000 -0400
-+++ scintillua/scite/src/SciTEBase.cxx	2010-04-26 18:47:21.000000000 -0400
-@@ -352,8 +352,8 @@
+--- scite-latest/scite/src/SciTEBase.cxx	2010-05-31 23:35:37.000000000 -0400
++++ scintillua/scite/src/SciTEBase.cxx	2010-06-15 13:51:32.000000000 -0400
+@@ -354,8 +354,8 @@
  SciTEBase::SciTEBase(Extension *ext) : apis(true), extender(ext) {
  	codePage = 0;
  	characterSet = 0;
@@ -9214,7 +9235,7 @@
  	functionDefinition = 0;
  	indentOpening = true;
  	indentClosing = true;
-@@ -842,11 +842,13 @@
+@@ -844,11 +844,13 @@
  		braceAtCaret = caretPos - 1;
  	}
  	bool colonMode = false;
@@ -9228,7 +9249,7 @@
  	bool isAfter = true;
  	if (lengthDoc > 0 && sloppy && (braceAtCaret < 0) && (caretPos < lengthDoc)) {
  		// No brace found so check other side
-@@ -858,11 +860,13 @@
+@@ -860,11 +862,13 @@
  				braceAtCaret = caretPos;
  				isAfter = false;
  			}
@@ -9242,7 +9263,7 @@
  		}
  	}
  	if (braceAtCaret >= 0) {
-@@ -3107,10 +3111,16 @@
+@@ -3119,10 +3123,16 @@
  		return false;
  	}
  
@@ -9259,8 +9280,8 @@
  
  	// If the user has turned us off, quit now.
  	// Default is off
---- scite-latest/scite/src/SciTEBuffers.cxx	2010-03-30 18:39:59.000000000 -0400
-+++ scintillua/scite/src/SciTEBuffers.cxx	2010-04-26 19:18:21.000000000 -0400
+--- scite-latest/scite/src/SciTEBuffers.cxx	2010-05-31 23:35:37.000000000 -0400
++++ scintillua/scite/src/SciTEBuffers.cxx	2010-06-15 13:52:11.000000000 -0400
 @@ -73,6 +73,14 @@
  #include "JobQueue.h"
  #include "SciTEBase.h"
@@ -9276,7 +9297,7 @@
  const GUI::gui_char defaultSessionFileName[] = GUI_TEXT("SciTE.session");
  
  BufferList::BufferList() : current(0), stackcurrent(0), stack(0), buffers(0), size(0), length(0), initialised(false) {}
-@@ -1358,9 +1366,54 @@
+@@ -1360,9 +1368,54 @@
  	return (ch >= '0') && (ch <= '9');
  }
  
@@ -9378,8 +9399,8 @@
  
  				wEditor.Call(SCI_MARKERDELETEALL, 0);
  				wEditor.Call(SCI_MARKERDEFINE, 0, SC_MARK_CIRCLE);
---- scite-latest/scite/src/SciTEGlobal.properties	2010-03-30 17:50:34.000000000 -0400
-+++ scintillua/scite/src/SciTEGlobal.properties	2010-04-26 18:51:14.000000000 -0400
+--- scite-latest/scite/src/SciTEGlobal.properties	2010-05-31 23:35:37.000000000 -0400
++++ scintillua/scite/src/SciTEGlobal.properties	2010-06-15 13:52:23.000000000 -0400
 @@ -5,6 +5,13 @@
  
  # Globals
@@ -9394,9 +9415,9 @@
  # Window sizes and visibility
  if PLAT_WIN
  	position.left=0
---- scite-latest/scite/src/SciTEProps.cxx	2010-03-30 18:39:59.000000000 -0400
-+++ scintillua/scite/src/SciTEProps.cxx	2010-04-26 18:57:06.000000000 -0400
-@@ -534,54 +534,12 @@
+--- scite-latest/scite/src/SciTEProps.cxx	2010-05-31 23:35:37.000000000 -0400
++++ scintillua/scite/src/SciTEProps.cxx	2010-06-15 13:52:46.000000000 -0400
+@@ -534,55 +534,12 @@
  static const char *propertiesToForward[] = {
  //++Autogenerated -- run src/LexGen.py to regenerate
  //**\(\t"\*",\n\)
@@ -9425,6 +9446,7 @@
 -	"lexer.cpp.allow.dollars",
 -	"lexer.d.fold.at.else",
 -	"lexer.errorlist.value.separate",
+-	"lexer.flagship.styling.within.preprocessor",
 -	"lexer.html.django",
 -	"lexer.html.mako",
 -	"lexer.metapost.comment.process",
@@ -9456,7 +9478,7 @@
  
  //--Autogenerated -- end of automatically generated section
  
-@@ -693,6 +651,7 @@
+@@ -694,6 +651,7 @@
  
  	SString fileNameForExtension = ExtensionFileName();
  
@@ -9464,7 +9486,7 @@
  	SString modulePath = props.GetNewExpand("lexerpath.",
  	    fileNameForExtension.c_str());
  	if (modulePath.length())
-@@ -726,6 +685,7 @@
+@@ -727,6 +685,7 @@
  		SString kw = props.GetNewExpand(kwk.c_str(), fileNameForExtension.c_str());
  		wEditor.CallString(SCI_SETKEYWORDS, wl, kw.c_str());
  	}
@@ -9472,7 +9494,7 @@
  
  	FilePath homepath = GetSciteDefaultHome();
  	props.Set("SciteDefaultHome", homepath.AsUTF8().c_str());
-@@ -954,6 +914,26 @@
+@@ -955,6 +914,26 @@
  
  	ReadFontProperties();
  
@@ -9499,7 +9521,7 @@
  	wEditor.Call(SCI_SETUSEPALETTE, props.GetInt("use.palette"));
  	wEditor.Call(SCI_SETPRINTMAGNIFICATION, props.GetInt("print.magnification"));
  	wEditor.Call(SCI_SETPRINTCOLOURMODE, props.GetInt("print.colour.mode"));
-@@ -1210,12 +1190,13 @@
+@@ -1211,12 +1190,13 @@
  }
  
  void SciTEBase::ReadFontProperties() {
@@ -9514,7 +9536,7 @@
  	wEditor.Call(SCI_STYLERESETDEFAULT, 0, 0);
  	wOutput.Call(SCI_STYLERESETDEFAULT, 0, 0);
  
-@@ -1243,6 +1224,29 @@
+@@ -1244,6 +1224,29 @@
  
  	SetStyleFor(wOutput, "*");
  	SetStyleFor(wOutput, "errorlist");
@@ -9544,8 +9566,8 @@
  
  	if (CurrentBuffer()->useMonoFont) {
  		sval = props.GetExpanded("font.monospace");
---- scite-latest/scite/win32/makefile	2010-03-25 20:21:14.000000000 -0400
-+++ scintillua/scite/win32/makefile	2010-04-26 19:00:26.000000000 -0400
+--- scite-latest/scite/win32/makefile	2010-05-31 23:35:37.000000000 -0400
++++ scintillua/scite/win32/makefile	2010-06-15 13:53:40.000000000 -0400
 @@ -5,8 +5,22 @@
  # be needed to use other compilers.
  
@@ -9577,7 +9599,7 @@
  
  PROG	= ../bin/SciTE.exe
  PROGSTATIC = ../bin/Sc1.exe
-@@ -31,7 +46,7 @@
+@@ -24,7 +39,7 @@
  vpath %.o ../../scintilla/win32
  vpath %.a ../../scintilla/win32
  
@@ -9586,7 +9608,7 @@
  LUA_CORE_OBJS = lapi.o lcode.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o \
  		lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o \
  		ltable.o ltm.o lundump.o lvm.o lzio.o
-@@ -39,17 +54,20 @@
+@@ -32,17 +47,20 @@
  LUA_LIB_OBJS =	lauxlib.o lbaselib.o ldblib.o liolib.o lmathlib.o ltablib.o \
  		lstrlib.o loadlib.o loslib.o linit.o
  
@@ -9613,7 +9635,7 @@
  RCINCLUDEDIRS=--include-dir ../../scintilla/win32 --include-dir ../src
  
  CBASEFLAGS = -W -Wall $(INCLUDEDIRS) $(LUA_DEFINES) $(WIDEFLAGS) -mno-cygwin
-@@ -69,7 +87,7 @@
+@@ -62,7 +80,7 @@
  	$(CC) $(CXXFLAGS) -c $< -o $@
  
  .c.o:
@@ -9622,7 +9644,7 @@
  
  OTHER_OBJS	= FilePath.o SciTEBuffers.o SciTEIO.o Exporters.o PropSetFile.o StringList.o \
  SciTEProps.o SciTEWin.o SciTEWinBar.o SciTEWinDlg.o MultiplexExtension.o \
-@@ -79,38 +97,38 @@
+@@ -72,38 +90,38 @@
  
  OBJS = SciTEBase.o $(OTHER_OBJS)
  
@@ -9687,7 +9709,7 @@
  
  clean:
  	$(DEL) *.exe *.o *.obj *.dll *.res *.map
-@@ -118,158 +136,152 @@
+@@ -111,158 +129,152 @@
  deps:
  	$(CC) -MM $(CXXFLAGS) *.cxx ../src/*.cxx ../lua/src/*.c ../lua/src/lib/*.c >deps.mak
  
@@ -9918,7 +9940,7 @@
  
  $(PROG): $(OBJS)
  	$(CC) $(STRIPFLAG) -Xlinker --subsystem -Xlinker windows -o  $@ $^ $(LDFLAGS)
-@@ -295,12 +307,12 @@
+@@ -288,12 +300,12 @@
  	$(CC) $(CXXFLAGS) -D STATIC_BUILD -c $< -o $@
  
  SciTERes.o:	SciTERes.rc SciTE.h PlatformRes.h SciTE.exe.manifest
@@ -9933,8 +9955,8 @@
  
  # Make sure SciTEBase gets rebuilt (so its about box gets a new
  # date stamp) when any of the other objects are updated.
---- scite-latest/scite/win32/scite.mak	2010-03-25 20:21:14.000000000 -0400
-+++ scintillua/scite/win32/scite.mak	2010-04-26 19:02:20.000000000 -0400
+--- scite-latest/scite/win32/scite.mak	2010-05-31 23:35:37.000000000 -0400
++++ scintillua/scite/win32/scite.mak	2010-06-15 13:53:59.000000000 -0400
 @@ -110,89 +110,14 @@
  	UniqueInstance.obj \
  	WinMutex.obj
