@@ -778,6 +778,7 @@ function load(lexer_name)
   }
   if lexer._lexer then
     local l, _r, _s = lexer._lexer, lexer._rules, lexer._tokenstyles
+    if not l._tokenstyles then l._tokenstyles = {} end
     for _, r in ipairs(_r or {}) do l._rules[#l._rules + 1] = r end
     for _, s in ipairs(_s or {}) do l._tokenstyles[#l._tokenstyles + 1] = s end
     lexer = l
