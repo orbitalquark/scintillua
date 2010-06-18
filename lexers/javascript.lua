@@ -22,29 +22,27 @@ local comment = token('comment', line_comment + block_comment)
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
 local regex_str = l.delimited_range('/', '\\', nil, nil, '\n') * S('igm')^0
-local string = token('string', sq_str + dq_str) +
-  P(function(input, index)
-    if index == 1 then return index end
-    local i = index
-    while input:sub(i - 1, i - 1):match('[ \t\r\n\f]') do i = i - 1 end
-    return input:sub(i - 1, i - 1):match('[+%-*%%^!=&|?:;,()%[%]{}]') and index or nil
-  end) * token('regex', regex_str)
+local string = token('string', sq_str + dq_str) + P(function(input, index)
+  if index == 1 then return index end
+  local i = index
+  while input:sub(i - 1, i - 1):match('[ \t\r\n\f]') do i = i - 1 end
+  return input:sub(i - 1, i - 1):match('[+%-*%%^!=&|?:;,()%[%]{}]') and
+    index or nil
+end) * token('regex', regex_str)
 
 -- numbers
 local number = token('number', l.float + l.integer)
 
 -- keywords
 local keyword = token('keyword', word_match {
-  'abstract', 'boolean', 'break', 'byte', 'case', 'catch', 'char',
-  'class', 'const', 'continue', 'debugger', 'default', 'delete',
-  'do', 'double', 'else', 'enum', 'export', 'extends', 'false',
-  'final', 'finally', 'float', 'for', 'function', 'goto', 'if',
-  'implements', 'import', 'in', 'instanceof', 'int', 'interface',
-  'let', 'long', 'native', 'new', 'null', 'package', 'private',
-  'protected', 'public', 'return', 'short', 'static', 'super',
-  'switch', 'synchronized', 'this', 'throw', 'throws', 'transient',
-  'true', 'try', 'typeof', 'var', 'void', 'volatile', 'while',
-  'with', 'yield'
+  'abstract', 'boolean', 'break', 'byte', 'case', 'catch', 'char', 'class',
+  'const', 'continue', 'debugger', 'default', 'delete', 'do', 'double', 'else',
+  'enum', 'export', 'extends', 'false', 'final', 'finally', 'float', 'for',
+  'function', 'goto', 'if', 'implements', 'import', 'in', 'instanceof', 'int',
+  'interface', 'let', 'long', 'native', 'new', 'null', 'package', 'private',
+  'protected', 'public', 'return', 'short', 'static', 'super', 'switch',
+  'synchronized', 'this', 'throw', 'throws', 'transient', 'true', 'try',
+  'typeof', 'var', 'void', 'volatile', 'while', 'with', 'yield'
 })
 
 -- identifiers

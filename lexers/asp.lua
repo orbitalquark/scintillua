@@ -36,8 +36,10 @@ local vbs_start_rule = #(P('<') * script_element *
   P(function(input, index)
     if input:find('[^>]+language%s*=%s*(["\'])vbscript%1') then return index end
   end)) * html._RULES['tag'] -- <script language="vbscript">
-local vbs_end_rule = #('</' * script_element * l.space^0 * '>') * html._RULES['tag'] -- </script>
-vbs._RULES['operator'] = token('operator', S('=>+-*^&:.,_()')) + '<' * -('/' * script_element)
+local vbs_end_rule =
+  #('</' * script_element * l.space^0 * '>') * html._RULES['tag'] -- </script>
+vbs._RULES['operator'] =
+  token('operator', S('=>+-*^&:.,_()')) + '<' * -('/' * script_element)
 vbs._RULES['any_char'] = token('vb_default', l.any - vbs_end_rule)
 l.embed_lexer(html, vbs, vbs_start_rule, vbs_end_rule)
 

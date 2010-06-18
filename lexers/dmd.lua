@@ -20,14 +20,17 @@ local comment = token('comment', line_comment + block_comment + nested_comment)
 -- strings
 local sq_str = l.delimited_range("'", '\\', true, false, '\n') * S('cwd')^-1
 local dq_str = l.delimited_range('"', '\\', true, false, '\n') * S('cwd')^-1
-local lit_str = 'r' * l.delimited_range('"', nil, true, false, '\n') * S('cwd')^-1
+local lit_str =
+  'r' * l.delimited_range('"', nil, true, false, '\n') * S('cwd')^-1
 local bt_str = l.delimited_range('`', '\\', nil, false, '\n') * S('cwd')^-1
-local hex_str = 'x' * l.delimited_range('"', '\\', nil, false, '\n') * S('cwd')^-1
+local hex_str =
+  'x' * l.delimited_range('"', '\\', nil, false, '\n') * S('cwd')^-1
 local del_str = 'q"' * (l.any - '"')^0 * P('"')^-1
 local tok_str = 'q' * l.nested_pair('{', '}', true)
 local other_hex_str = '\\x' * (l.xdigit * l.xdigit)^1
-local string = token('string', sq_str + dq_str + lit_str + bt_str + hex_str
-	+ del_str + tok_str + other_hex_str)
+local string =
+  token('string', sq_str + dq_str + lit_str + bt_str + hex_str + del_str +
+        tok_str + other_hex_str)
 
 -- numbers
 local dec = l.digit^1 * ('_' * l.digit^1)^0
@@ -68,7 +71,8 @@ local constant = token('constant', word_match {
   'D_Version2', 'all',
 })
 
-local class_sequence = token('type', P('class')) * ws^1 * token('class', l.alpha * l.alnum^0)
+local class_sequence =
+  token('type', P('class')) * ws^1 * token('class', l.alpha * l.alnum^0)
 
 -- identifiers
 local identifier = token('identifier', l.word)
@@ -91,17 +95,19 @@ local operator_overloads = token('function', word_match {
 local operator = token('operator', S('?=!<>+-*$/%&|^~.,;()[]{}'))
 
 -- properties
-local properties = (type + identifier + operator ) * token('operator', '.') * token('variable', word_match {
-	'alignof', 'dig', 'dup', 'epsilon', 'idup', 'im', 'init', 'infinity',
-	'keys', 'length', 'mangleof', 'mant_dig', 'max', 'max_10_exp', 'max_exp',
-	'min', 'min_normal', 'min_10_exp', 'min_exp', 'nan', 'offsetof', 'ptr',
-	're', 'rehash', 'reverse', 'sizeof', 'sort', 'stringof', 'tupleof', 'values'
-})
+local properties =
+  (type + identifier + operator ) * token('operator', '.') *
+    token('variable', word_match {
+      'alignof', 'dig', 'dup', 'epsilon', 'idup', 'im', 'init', 'infinity',
+      'keys', 'length', 'mangleof', 'mant_dig', 'max', 'max_10_exp', 'max_exp',
+      'min', 'min_normal', 'min_10_exp', 'min_exp', 'nan', 'offsetof', 'ptr',
+      're', 'rehash', 'reverse', 'sizeof', 'sort', 'stringof', 'tupleof',
+      'values'
+    })
 
 -- preprocs
 local annotation = token('annotation', '@' * l.word^1)
 local preproc = token('preproc', '#' * l.nonnewline^0)
-
 
 -- Traits
 local traits_list = token('traits', word_match {
@@ -113,8 +119,9 @@ local traits_list = token('traits', word_match {
 	"allMembers", "derivedMembers", "isSame", "compiles"
 })
 
-local traits = token('keyword', '__traits') * l.space^0
-	* token('operator', '(') * l.space^0 * traits_list
+local traits =
+  token('keyword', '__traits') * l.space^0 * token('operator', '(') *
+    l.space^0 * traits_list
 
 _rules = {
 	{ 'whitespace', ws },

@@ -698,8 +698,8 @@ local function build_grammar(lexer)
     else
       for _, child in ipairs(children) do
         local rules = child._EMBEDDEDRULES[lexer._NAME]
-        token_rule = rules.start_rule * rules.token_rule^0 * rules.end_rule^-1 +
-          token_rule
+        token_rule =
+          rules.start_rule * rules.token_rule^0 * rules.end_rule^-1 + token_rule
       end
     end
   end

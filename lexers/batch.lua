@@ -38,8 +38,9 @@ local func = token('function', word_match({
 local identifier = token('identifier', l.word)
 
 -- variables
-local variable = token('variable', '%' * (l.digit + '%' * l.alpha) +
-  l.delimited_range('%', nil, false, false, '\n'))
+local variable =
+  token('variable', '%' * (l.digit + '%' * l.alpha) +
+        l.delimited_range('%', nil, false, false, '\n'))
 
 -- labels
 local label = token('label', ':' * l.word)

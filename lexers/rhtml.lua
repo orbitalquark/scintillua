@@ -22,8 +22,8 @@ ruby._RULES['whitespace'] = token('rhtml_whitespace', l.space^1)
 local ruby_start_rule = token('rhtml_tag', '<%' * P('=')^-1)
 local ruby_end_rule = token('rhtml_tag', '%>')
 ruby._RULES['string'] = -P('%>') * ruby._RULES['string']
-ruby._RULES['operator'] = token('operator', S('!^&*()[]{}-=+/|:;.,?<>~') +
-    '%' * -P('>'))
+ruby._RULES['operator'] =
+  token('operator', S('!^&*()[]{}-=+/|:;.,?<>~') + '%' * -P('>'))
 ruby._RULES['any_char'] = token('rhtml_default', l.any - ruby_end_rule)
 l.embed_lexer(html, ruby, ruby_start_rule, ruby_end_rule, true)
 

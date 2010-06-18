@@ -18,16 +18,19 @@ end
 
 -- text, separators, file headers
 local text = token('comment', line_match('^Index: .*$'))
-local separator = token('separator', ('---' + P('*')^4 + P('=')^1)) * ws^0 * P(-1)
-local header_file = token('header_file', (P('*** ') + '--- ' + '+++ ') * l.any^1)
+local separator =
+  token('separator', ('---' + P('*')^4 + P('=')^1)) * ws^0 * P(-1)
+local header_file =
+  token('header_file', (P('*** ') + '--- ' + '+++ ') * l.any^1)
 
 -- positions
 local number_range = l.digit^1 * (',' * l.digit^1)^-1
 local normal_pos = number_range * S('adc') * number_range
-local context_pos = '*** ' * number_range * ' ****' +
-  '--- ' * number_range * ' ----'
+local context_pos =
+  '*** ' * number_range * ' ****' + '--- ' * number_range * ' ----'
 local unified_pos = P('@@ ') * '-' * number_range * ' +' * number_range * ' @@'
-local position = token('position', normal_pos + context_pos + unified_pos) * l.any^0 * P(-1)
+local position =
+  token('position', normal_pos + context_pos + unified_pos) * l.any^0 * P(-1)
 
 -- additions, deletions, changes
 local addition = token('addition', line_match('^[>+].*$'))

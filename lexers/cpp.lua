@@ -27,9 +27,9 @@ local preproc_word = word_match {
   'define', 'elif', 'else', 'endif', 'error', 'if', 'ifdef', 'ifndef', 'import',
   'include', 'line', 'pragma', 'undef', 'using', 'warning'
 }
-local preproc = token('preprocessor',
-  #P('#') * l.starts_line('#' * S('\t ')^0 * preproc_word *
-  (l.nonnewline_esc^0 + S('\t ') * l.nonnewline_esc^0)))
+local preproc =
+  token('preprocessor', #P('#') * l.starts_line('#' * S('\t ')^0 *
+        preproc_word * (l.nonnewline_esc^0 + S('\t ') * l.nonnewline_esc^0)))
 
 -- keywords
 local keyword = token('keyword', word_match {

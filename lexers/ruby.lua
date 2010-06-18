@@ -11,7 +11,9 @@ local ws = token('whitespace', l.space^1)
 
 -- comments
 local line_comment = '#' * l.nonnewline_esc^0
-local block_comment = #P('=begin') * l.starts_line('=begin' * (l.any - l.newline * '=end')^0 * (l.newline * '=end')^-1)
+local block_comment =
+  #P('=begin') * l.starts_line('=begin' * (l.any - l.newline * '=end')^0 *
+    (l.newline * '=end')^-1)
 local comment = token('comment', block_comment + line_comment)
 
 local delimiter_matches = { ['('] = ')', ['['] = ']', ['{'] = '}' }
@@ -19,7 +21,8 @@ local literal_delimitted = P(function(input, index)
   local delimiter = input:sub(index, index)
   if not delimiter:find('[%w\r\n\f\t ]') then -- only non alpha-numerics
     local match_pos, patt
-    if delimiter_matches[delimiter] then -- handle nested delimiter/matches in strings
+    if delimiter_matches[delimiter] then
+      -- handle nested delimiter/matches in strings
       local s, e = delimiter, delimiter_matches[delimiter]
       patt = l.delimited_range(s..e, '\\', true, true)
     else
@@ -41,15 +44,17 @@ local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
 local lit_str = '%' * S('qQ')^-1 * literal_delimitted
 local heredoc = '<<' * P(function(input, index)
-  local s, e, indented, _, delimiter = input:find('(%-?)(["`]?)([%a_][%w_]*)%2[\n\r\f;]+', index)
+  local s, e, indented, _, delimiter =
+    input:find('(%-?)(["`]?)([%a_][%w_]*)%2[\n\r\f;]+', index)
   if s == index and delimiter then
     local end_heredoc = (#indented > 0 and '[\n\r\f]+ *' or '[\n\r\f]+')
     local _, e = input:find(end_heredoc..delimiter, e)
     return e and e + 1 or #input + 1
   end
 end)
-local string = token('string', sq_str + dq_str + lit_str + heredoc +
-  cmd_str + lit_cmd + regex_str + lit_regex + lit_array)
+local string =
+  token('string', sq_str + dq_str + lit_str + heredoc + cmd_str + lit_cmd +
+        regex_str + lit_regex + lit_array)
 
 local word_char = l.alnum + S('_!?')
 
@@ -57,7 +62,8 @@ local word_char = l.alnum + S('_!?')
 local dec = l.digit^1 * ('_' * l.digit^1)^0
 local bin = '0b' * S('01')^1 * ('_' * S('01')^1)^0
 local integer = S('+-')^-1 * (bin + l.hex_num + l.oct_num + dec)
-local numeric_literal = '?' * (l.any - l.space) * -word_char -- TODO: meta, control, etc.
+-- TODO: meta, control, etc. for numeric_literal
+local numeric_literal = '?' * (l.any - l.space) * -word_char
 local number = token('number', l.float + integer + numeric_literal)
 
 -- keywords
@@ -85,7 +91,8 @@ local word = (l.alpha + '_') * word_char^0
 local identifier = token('identifier', word)
 
 -- variables and symbols
-local global_var = '$' * (word + S('!@L+`\'=~/\\,.;<>_*"$?:') + l.digit + '-' * S('0FadiIKlpvw'))
+local global_var =
+  '$' * (word + S('!@L+`\'=~/\\,.;<>_*"$?:') + l.digit + '-' * S('0FadiIKlpvw'))
 local class_var = '@@' * word
 local inst_var = '@' * word
 local symbol = ':' * P(function(input, index)

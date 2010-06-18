@@ -19,7 +19,8 @@ local string = token('string', l.delimited_range('"', nil, true, false, '\n'))
 local hex_num = 'O' * S('xX') * (l.xdigit + '_')^1
 local integer = l.digit^1 * ('_' * l.digit^1)^0
 local float = integer^1 * ('.' * integer^0)^-1 * S('eE') * S('+-')^-1 * integer
-local number = token('number', hex_num + S('+-')^-1 * (float + integer) * S('LlUuFf')^-3)
+local number =
+  token('number', hex_num + S('+-')^-1 * (float + integer) * S('LlUuFf')^-3)
 
 -- keywords
 local keyword = token('keyword', word_match {

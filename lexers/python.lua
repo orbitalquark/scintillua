@@ -19,9 +19,12 @@ local sq_str = P('u')^-1 * l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = P('U')^-1 * l.delimited_range('"', '\\', true, false, '\n')
 local triple_sq_str = "'''" * (l.any - "'''")^0 * P("'''")^-1
 local triple_dq_str = '"""' * (l.any - '"""')^0 * P('"""')^-1
-local raw_sq_str = P('u')^-1 * 'r' * l.delimited_range("'", nil, true) -- TODO: cannot end in single \
-local raw_dq_str = P('U')^-1 * 'R' * l.delimited_range('"', nil, true) -- TODO: cannot end in single \
-local string = token('string', triple_sq_str + triple_dq_str + sq_str + dq_str + raw_sq_str + raw_dq_str)
+-- TODO: raw_strs cannot end in single \
+local raw_sq_str = P('u')^-1 * 'r' * l.delimited_range("'", nil, true)
+local raw_dq_str = P('U')^-1 * 'R' * l.delimited_range('"', nil, true)
+local string =
+  token('string', triple_sq_str + triple_dq_str + sq_str + dq_str + raw_sq_str +
+        raw_dq_str)
 
 -- numbers
 local dec = l.digit^1 * S('Ll')^-1
@@ -100,7 +103,8 @@ local constant = token('constant', word_match {
 local identifier = token('identifier', l.word)
 
 -- decorators
-local decorator = token('decorator', #P('@') * l.starts_line('@' * l.nonnewline^0))
+local decorator =
+  token('decorator', #P('@') * l.starts_line('@' * l.nonnewline^0))
 
 -- operators
 local operator = token('operator', S('!%^&*()[]{}-=+/|:;.,?<>~`'))

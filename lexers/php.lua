@@ -83,13 +83,20 @@ l.embed_lexer(html, _M, php_start_rule, php_end_rule, true)
 
 -- Modify HTML patterns to embed PHP.
 local php_rules = _M._EMBEDDEDRULES[html._NAME]
-local php_rule = php_rules.start_rule * php_rules.token_rule^0 * php_rules.end_rule^-1
+local php_rule =
+  php_rules.start_rule * php_rules.token_rule^0 * php_rules.end_rule^-1
 html._RULES['comment'] = html._RULES['comment'] + comment
-local embedded_sq_str = l.delimited_range_with_embedded("'", '\\', 'string', php_rule)
-local embedded_dq_str = l.delimited_range_with_embedded('"', '\\', 'string', php_rule)
+local embedded_sq_str =
+  l.delimited_range_with_embedded("'", '\\', 'string', php_rule)
+local embedded_dq_str =
+  l.delimited_range_with_embedded('"', '\\', 'string', php_rule)
 html._RULES['string'] = embedded_sq_str + embedded_dq_str
-local attributes = P{ html.attribute * (ws^0 * html.equals * ws^0 * (php_rule + string + html.number))^-1 * (ws * V(1))^0 }
-html._RULES['tag'] = html.tag_start * (ws^0 * (attributes + php_rule))^0 * ws^0 * html.tag_end
+local attributes = P{
+  html.attribute * (ws^0 * html.equals * ws^0 *
+    (php_rule + string + html.number))^-1 * (ws * V(1))^0
+}
+html._RULES['tag'] =
+  html.tag_start * (ws^0 * (attributes + php_rule))^0 * ws^0 * html.tag_end
 
 -- TODO: modify CSS and JS patterns accordingly
 

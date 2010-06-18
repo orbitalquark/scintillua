@@ -36,9 +36,11 @@ keyword = token('keyword', keyword)
 local identifier = word
 
 -- actions
-local transition = token('ragel_transition', ((S('>@$%') * S('/!^~*')^-1 +
-  '<' * (S('/!^~*')^-1 + '>' * S('/!^~*')^-1)) + S('-=') * '>' * space^0) * identifier^-1)
-local action_def = #P('action') * keyword * ws * token('ragel_action', identifier)
+local transition =
+  token('ragel_transition', ((S('>@$%') * S('/!^~*')^-1 + '<' * (S('/!^~*')^-1 +
+        '>' * S('/!^~*')^-1)) + S('-=') * '>' * space^0) * identifier^-1)
+local action_def =
+  #P('action') * keyword * ws * token('ragel_action', identifier)
 local action = action_def + transition
 
 -- operators
@@ -124,7 +126,8 @@ function LoadTokens()
   -- C/C++, but the fact that C/C++ should be embedded in Ragel is forgotten
   local ecpp = cpp.EmbeddedIn[ragel._NAME]
   local eragel = ragel.EmbeddedIn[cpp._NAME]
-  eragel.token = ecpp.start_token * ecpp.token^0 * ecpp.end_token^-1 + eragel.token
+  eragel.token =
+    ecpp.start_token * ecpp.token^0 * ecpp.end_token^-1 + eragel.token
   embed_language(cpp, ragel)
 
   UseOtherTokens = cpp.Tokens

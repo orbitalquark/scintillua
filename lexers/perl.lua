@@ -11,8 +11,9 @@ local ws = token('whitespace', l.space^1)
 
 -- comments
 local line_comment = '#' * l.nonnewline_esc^0
-local block_comment = #P('=') *
-  l.starts_line('=' * l.alpha * (l.any - l.newline * '=cut')^0 * (l.newline * '=cut')^-1)
+local block_comment =
+  #P('=') * l.starts_line('=' * l.alpha * (l.any - l.newline * '=cut')^0 *
+    (l.newline * '=cut')^-1)
 local comment = token('comment', block_comment + line_comment)
 
 local delimiter_matches = { ['('] = ')', ['['] = ']', ['{'] = '}', ['<'] = '>' }
@@ -20,7 +21,8 @@ local literal_delimitted = P(function(input, index) -- for single delimiter sets
   local delimiter = input:sub(index, index)
   if not delimiter:find('%w') then -- only non alpha-numerics
     local match_pos, patt
-    if delimiter_matches[delimiter] then -- handle nested delimiter/matches in strings
+    if delimiter_matches[delimiter] then
+      -- handle nested delimiter/matches in strings
       local s, e = delimiter, delimiter_matches[delimiter]
       patt = l.delimited_range(s..e, '\\', true, true)
     else
@@ -34,7 +36,8 @@ local literal_delimitted2 = P(function(input, index) -- for 2 delimiter sets
   local delimiter = input:sub(index, index)
   if not delimiter:find('%w') then -- only non alpha-numerics
     local match_pos, patt
-    if delimiter_matches[delimiter] then -- handle nested delimiter/matches in strings
+    if delimiter_matches[delimiter] then
+      -- handle nested delimiter/matches in strings
       local s, e = delimiter, delimiter_matches[delimiter]
       patt = l.delimited_range(s..e, '\\', true, true)
     else
@@ -69,8 +72,9 @@ local lit_cmd = 'qx' * literal_delimitted
 local lit_match = 'm' * literal_delimitted * S('cgimosx')^0
 local lit_sub = 's' * literal_delimitted2 * S('ecgimosx')^0
 local lit_tr = (P('tr') + 'y') * literal_delimitted2 * S('cds')^0
-local string = token('string', sq_str + dq_str + cmd_str + regex + heredoc +
-  lit_str + lit_array + lit_regex + lit_cmd + lit_match + lit_sub + lit_tr)
+local string =
+  token('string', sq_str + dq_str + cmd_str + regex + heredoc + lit_str +
+        lit_array + lit_regex + lit_cmd + lit_match + lit_sub + lit_tr)
 
 -- numbers
 local number = token('number', l.float + l.integer)
@@ -120,8 +124,9 @@ local func = token('function', word_match({
 local identifier = token('identifier', l.word)
 
 -- variables
-local special_var = '$' * ('^' * S('ADEFHILMOPSTWX')^-1 +
-  S('\\"[]\'&`+*.,;=%~?@$<>(|/!-') + ':' * (l.any - ':') + l.digit^1)
+local special_var =
+  '$' * ('^' * S('ADEFHILMOPSTWX')^-1 + S('\\"[]\'&`+*.,;=%~?@$<>(|/!-') + ':' *
+    (l.any - ':') + l.digit^1)
 local plain_var = ('$#' + S('$@%')) * P('$')^0 * l.word
 local variable = token('variable', special_var + plain_var)
 

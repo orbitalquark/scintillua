@@ -10,7 +10,8 @@ module(...)
 local ws = token('whitespace', l.space^1)
 
 -- comments
-local comment = token('comment', #S(';#') * l.starts_line(S(';#') * l.nonnewline^0))
+local comment =
+  token('comment', #S(';#') * l.starts_line(S(';#') * l.nonnewline^0))
 
 -- strings
 local sq_str = l.delimited_range("'", '\\', true)

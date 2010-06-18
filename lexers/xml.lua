@@ -26,17 +26,22 @@ local identifier = (l.alpha + S('_-')) * word_char^0
 
 -- tags
 local namespace = token('namespace', identifier)
-local element = token('element', identifier) * (token('operator', ':') * namespace)^-1
+local element =
+  token('element', identifier) * (token('operator', ':') * namespace)^-1
 local normal_attr = token('attribute', identifier)
-local xmlns_attr = token('attribute', identifier) * token('operator', ':') * namespace
+local xmlns_attr =
+  token('attribute', identifier) * token('operator', ':') * namespace
 local attribute = xmlns_attr + normal_attr
-local attributes = { attribute * ws^0 * equals * ws^0 * (string + number) * (ws * V(1))^0 }
+local attributes =
+  { attribute * ws^0 * equals * ws^0 * (string + number) * (ws * V(1))^0 }
 local tag_start = token('tag', '<' * P('/')^-1) * element
 local tag_end = token('tag', P('/')^-1 * '>')
 local tag = tag_start * (ws * attributes)^0 * ws^0 * tag_end
 
 -- doctypes
-local doctype = token('doctype', '<?xml') * (ws * attributes)^0 * ws^0 * token('doctype', '?>')
+local doctype =
+  token('doctype', '<?xml') * (ws * attributes)^0 * ws^0 *
+    token('doctype', '?>')
 
 -- entities
 local entity = token('entity', '&' * word_match {

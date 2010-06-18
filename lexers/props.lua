@@ -25,7 +25,8 @@ local variable = token('variable', '$(' * (l.any - ')')^1 * ')')
 
 -- colors
 local xdigit = l.xdigit
-local color = token('color', '#' * xdigit * xdigit * xdigit * xdigit * xdigit * xdigit)
+local color =
+  token('color', '#' * xdigit * xdigit * xdigit * xdigit * xdigit * xdigit)
 
 _rules = {
   { 'whitespace', ws },

@@ -17,7 +17,8 @@ local sq_str = l.delimited_range("'", nil, true)
 local dq_str = l.delimited_range('"', '\\', true)
 local ex_str = l.delimited_range('`', '\\', true)
 local heredoc = '<<' * P(function(input, index)
-  local s, e, _, delimiter = input:find('(["\']?)([%a_][%w_]*)%1[\n\r\f;]+', index)
+  local s, e, _, delimiter =
+    input:find('(["\']?)([%a_][%w_]*)%1[\n\r\f;]+', index)
   if s == index and delimiter then
     local _, e = input:find('[\n\r\f]+'..delimiter, e)
     return e and e + 1 or #input + 1

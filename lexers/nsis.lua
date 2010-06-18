@@ -100,9 +100,9 @@ local keyword = token('keyword', word_match({
   'FlushINI', 'ReadEnvStr', 'ReadINIStr', 'ReadRegDWORD', 'ReadRegStr',
   'WriteINIStr', 'WriteRegBin', 'WriteRegDWORD', 'WriteRegStr',
   'WriteRegExpandStr', 'HKCR', 'HKEY_CLASSES_ROOT', 'HKLM', 'HKEY_LOCAL_MACHINE',
-  'HKCU', 'HKEY_CURRENT_USER', 'HKU', 'HKEY_USERS', 'HKCC', 'HKEY_CURRENT_CONFIG',
-  'HKDD', 'HKEY_DYN_DATA', 'HKPD', 'HKEY_PERFORMANCE_DATA', 'SHCTX',
-  'SHELL_CONTEXT',
+  'HKCU', 'HKEY_CURRENT_USER', 'HKU', 'HKEY_USERS', 'HKCC',
+  'HKEY_CURRENT_CONFIG', 'HKDD', 'HKEY_DYN_DATA', 'HKPD',
+  'HKEY_PERFORMANCE_DATA', 'SHCTX', 'SHELL_CONTEXT',
 
 -- General Purpose Instructions (4.9.3)
   'CallInstDLL', 'CopyFiles',
@@ -155,10 +155,10 @@ local keyword = token('keyword', word_match({
 -- Compile time commands (5)
   '!include', '!addincludedir', '!addplugindir', '!appendfile', '!cd',
   '!delfile', '!echo', '!error', '!execute', '!packhdr', '!system', '!tempfile',
-  '!warning', '!verbose', '{__FILE__}', '{__LINE__}', '{__DATE__}', '{__TIME__}',
-  '{__TIMESTAMP__}', '{NSIS_VERSION}', '!define', '!undef', '!ifdef', '!ifndef',
-  '!if', '!ifmacrodef', '!ifmacrondef', '!else', '!endif', '!insertmacro',
-  '!macro', '!macroend', '!searchparse', '!searchreplace',
+  '!warning', '!verbose', '{__FILE__}', '{__LINE__}', '{__DATE__}',
+  '{__TIME__}', '{__TIMESTAMP__}', '{NSIS_VERSION}', '!define', '!undef',
+  '!ifdef', '!ifndef', '!if', '!ifmacrodef', '!ifmacrondef', '!else', '!endif',
+  '!insertmacro', '!macro', '!macroend', '!searchparse', '!searchreplace',
 }, '/!.{}_'))
 
 -- operators

@@ -24,7 +24,8 @@ local string = token('string', sq_str + dq_str + lit_str)
 local number = token('number', (l.float + l.integer) * S('lLdDfF')^-1)
 
 -- preprocessors
-local preproc = token('preprocessor', #P('#') * l.starts_line('#' * l.nonnewline^0))
+local preproc =
+  token('preprocessor', #P('#') * l.starts_line('#' * l.nonnewline^0))
 
 -- keywords
 local keyword = token('keyword', word_match {

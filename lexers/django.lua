@@ -10,7 +10,8 @@ module(...)
 local ws = token('django_whitespace', l.space^1)
 
 -- comments
-local comment = token('comment', '{#' * (l.any - l.newline - '#}')^0 * P('#}')^-1)
+local comment =
+  token('comment', '{#' * (l.any - l.newline - '#}')^0 * P('#}')^-1)
 
 -- strings
 local string = token('string', l.delimited_range('"', nil, true))
@@ -65,13 +66,20 @@ l.embed_lexer(html, _M, django_start_rule, django_end_rule, true)
 
 -- Modify HTML patterns to embed Django.
 local django_rules = _M._EMBEDDEDRULES[html._NAME]
-local django_rule = django_rules.start_rule * django_rules.token_rule^0 * django_rules.end_rule^-1
+local django_rule =
+  django_rules.start_rule * django_rules.token_rule^0 * django_rules.end_rule^-1
 html._RULES['comment'] = html._RULES['comment'] + comment
-local embedded_sq_str = l.delimited_range_with_embedded("'", '\\', 'string', django_rule)
-local embedded_dq_str = l.delimited_range_with_embedded('"', '\\', 'string', django_rule)
+local embedded_sq_str =
+  l.delimited_range_with_embedded("'", '\\', 'string', django_rule)
+local embedded_dq_str =
+  l.delimited_range_with_embedded('"', '\\', 'string', django_rule)
 html._RULES['string'] = embedded_sq_str + embedded_dq_str
-local attributes = P{ html.attribute * (ws^0 * html.equals * ws^0 * (django_rule + string + html.number))^-1 * (ws * V(1))^0 }
-html._RULES['tag'] = html.tag_start * (ws^0 * (attributes + django_rule))^0 * ws^0 * html.tag_end
+local attributes = P{
+  html.attribute * (ws^0 * html.equals * ws^0 *
+    (django_rule + string + html.number))^-1 * (ws * V(1))^0
+}
+html._RULES['tag'] =
+  html.tag_start * (ws^0 * (attributes + django_rule))^0 * ws^0 * html.tag_end
 
 -- TODO: modify CSS and JS patterns accordingly
 
