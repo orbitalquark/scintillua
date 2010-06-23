@@ -12,51 +12,15 @@ local ws = token('css_whitespace', l.space^1)
 -- comments
 local comment = token('comment', '/*' * (l.any - '*/')^0 * P('*/')^-1)
 
-local word_char = l.alnum + S('_-')
-local identifier = l.alpha^1 * word_char^0
-
--- at rules
-local at_rule = word_match {
-  'import', 'media', 'page', 'font-face', 'charset'
-}
-local at_rule_arg = word_match {
-  'all', 'aural', 'braille', 'embossed', 'handheld', 'print',
-  'projection', 'screen', 'tty', 'tv'
-}
-local at_rule = token('at_rule', '@' * at_rule * (l.space * at_rule_arg)^-1)
-
 -- strings
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
 local string = token('string', sq_str + dq_str)
 
-local colon = token('operator', ':')
-local semicolon = token('operator', ';')
-local comma = token('operator', ',')
-local obrace = token('operator', '{')
-local cbrace = token('operator', '}')
+-- numbers
+local number =  token('number', l.digit^1)
 
--- selectors
-local attribute =
-  '[' * word_char^1 * (S('|~')^-1 * '=' * (identifier + sq_str + dq_str))^-1 *
-  ']'
-local class_id_selector = identifier^-1 * S('.#') * identifier
-local selector =
-  '*' * l.space + (class_id_selector + identifier + '*') * attribute^-1
-local pseudoclass = word_match {
-  'first-letter', 'first-line', 'link', 'active', 'visited',
-  'first-child', 'focus', 'hover', 'lang', 'before', 'after',
-  'left', 'right', 'first'
-}
-selector =
-  token('css_selector', selector * (l.space * selector)^0) *
-        (token('css_selector', ':' * pseudoclass) +
-         token('default', ':' * word_char^1))^-1
-selector =
-  selector * (ws^0 * (comma + token('css_selector', S('>+*'))) * ws^0 *
-    selector)^0
-
--- css properties and values
+-- keywords
 local css1_property = word_match({
   'color', 'background-color', 'background-image', 'background-repeat',
   'background-attachment', 'background-position', 'background', 'font-family',
@@ -135,62 +99,61 @@ local css2_value = word_match({
   'digits', 'continous'
 }, '-')
 local property = token('keyword', css1_property + css2_property)
-local value = token('css_value', css1_value + css2_value)
+local value = token('value', css1_value + css2_value)
 local keyword = property + value
 
--- colors, units, numbers, and urls
-local digit, xdigit = l.digit, l.xdigit
-local hexcolor =
-  token('css_color', '#' * xdigit * xdigit * xdigit *
-        (xdigit * xdigit * xdigit)^-1)
-local rgbunit = (digit^1 * P('%')^-1)
-local rgbcolor =
-  token('css_color', 'rgb(' * rgbunit * ',' * rgbunit * ',' * rgbunit * ')')
-local color = hexcolor + rgbcolor
-local unit = word_match {
-  'pt', 'mm', 'cm', 'pc', 'in', 'px', 'em', 'ex', 'deg',
-  'rad', 'grad', 'ms', 's', 'Hz', 'kHz'
+-- identifiers
+local identifier = token('identifier', l.alpha * (l.alnum + S('_-'))^0)
+
+-- operators
+local operator = token('operator', S('~!#*>+=|.,:;()[]{}'))
+
+-- at rule
+local at_rule = token('at_rule', P('@') * word_match {
+  'charset', 'font-face', 'media', 'page', 'import'
+})
+
+-- colors
+local xdigit = l.xdigit
+local hex_color = '#' * xdigit * xdigit * xdigit * (xdigit * xdigit * xdigit)^-1
+local color_name = word_match {
+  'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy',
+  'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow'
 }
-unit = token('css_unit', unit + '%')
-local css_float = digit^0 * '.' * digit^1 + digit^1 * '.' * digit^0 + digit^1
-local number = token('number', S('+-')^-1 * css_float) * unit^-1
-local url =
-  token('css_url', 'url' * ('(' * (sq_str + dq_str) * ')' +
-        l.delimited_range('()', '\\', true)))
+local color = token('color', hex_color + color_name)
 
--- declaration block
-local block_default_char =
-  token('default', (l.any - '}')^0) -- used to keep block colored properly
-local property_value =
-  value + string + number + color + url + token('default', word_char^1)
-local property_values =
-  { property_value * (ws * property_value)^0 * (ws^0 * comma * ws^0 * V(1))^0 }
-local declaration_value =
-  colon * ws^0 * property_values * ws^0 * (semicolon + block_default_char)
-local declaration_property = property * ws^0
-local declaration =
-  (declaration_property * (declaration_value + block_default_char)) + comment +
-    block_default_char
-local declaration_block =
-  obrace * ws^0 * declaration * (ws * declaration)^0 * ws^0 * cbrace^-1
+-- pseudo
+local pseudo = token('constant', word_match({
+  -- pseudo elements
+  'first-line', 'first-letter', 'before', 'after',
+  -- pseudo classes
+  'first-child', 'link', 'visited', 'hover', 'active', 'focus', 'lang',
+}, '-'))
 
-local css_element = selector * ws^0 * declaration_block^-1
+-- units
+local unit = token('unit', word_match {
+  'em', 'ex', 'px', 'pt', 'pc', 'in', 'ft', 'mm', 'cm', 'kHz', 'Hz', 'deg',
+  'rad', 'grad', 'ms', 's'
+} + '%')
 
 _rules = {
   { 'css_whitespace', ws },
-  { 'comment', comment },
-  { 'css_at_rule', at_rule },
+  { 'keyword', keyword },
+  { 'pseudo', pseudo },
+  { 'color', color },
+  { 'identifier', identifier },
   { 'string', string },
-  { 'css_element', css_element },
+  { 'comment', comment },
+  { 'number', number * unit^-1 },
+  { 'operator', operator },
+  { 'at_rule', at_rule },
   { 'any_char', l.any_char },
 }
 
 _tokenstyles = {
   { 'css_whitespace', l.style_nothing },
-  { 'css_at_rule', l.style_predefinition },
-  { 'css_selector', l.style_definition },
-  { 'css_value', l.style_nothing..{ bold = true } },
-  { 'css_unit', l.style_number },
-  { 'css_color', l.style_number },
-  { 'css_url', l.style_string },
+  { 'unit', l.style_number },
+  { 'value', l.style_nothing..{ bold = true } },
+  { 'color', l.style_number },
+  { 'at_rule', l.style_preprocessor },
 }
