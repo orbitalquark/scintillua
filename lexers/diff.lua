@@ -7,42 +7,25 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
-
--- If the pattern matches the start of a line, match the entire line.
-local function line_match(pattern)
-  return P(function(input, idx)
-      if input:match(pattern, idx) then return #input end
-    end)
-end
-
 -- text, separators, file headers
-local text = token('comment', line_match('^Index: .*$'))
-local separator =
-  token('separator', ('---' + P('*')^4 + P('=')^1)) * ws^0 * P(-1)
-local header_file =
-  token('header_file', (P('*** ') + '--- ' + '+++ ') * l.any^1)
+local index = token('comment', 'Index: ' * l.any^0 * P(-1))
+local separator = token('comment',
+  ('---' + P('*')^4 + P('=')^1) * l.space^0 * P(-1))
+local header = token('header', (P('*** ') + '--- ' + '+++ ') * l.any^1 * P(-1))
 
--- positions
-local number_range = l.digit^1 * (',' * l.digit^1)^-1
-local normal_pos = number_range * S('adc') * number_range
-local context_pos =
-  '*** ' * number_range * ' ****' + '--- ' * number_range * ' ----'
-local unified_pos = P('@@ ') * '-' * number_range * ' +' * number_range * ' @@'
-local position =
-  token('position', normal_pos + context_pos + unified_pos) * l.any^0 * P(-1)
+-- location
+local location = token('number', ('@@' + l.digit^1 + '****') * l.any^1 * P(-1))
 
 -- additions, deletions, changes
-local addition = token('addition', line_match('^[>+].*$'))
-local deletion = token('deletion', line_match('^[<-].*$'))
-local change   = token('change', line_match('^! .*$'))
+local addition = token('addition', S('>+') * l.any^0 * P(-1))
+local deletion = token('deletion', S('<-') * l.any^0 * P(-1))
+local change   = token('change', '! ' * l.any^0 * P(-1))
 
 _rules = {
-  { 'whitespace', ws },
-  { 'text', text },
+  { 'index', index },
   { 'separator', separator },
-  { 'header_file', header_file },
-  { 'position', position },
+  { 'header', header },
+  { 'location', location },
   { 'addition', addition },
   { 'deletion', deletion },
   { 'change', change },
@@ -50,12 +33,10 @@ _rules = {
 }
 
 _tokenstyles = {
-  { 'separator', l.style_comment },
-  { 'header_file', l.style_nothing..{ bold = true } },
-  { 'position', l.style_number },
-  { 'addition', l.style_nothing..{ back = l.colors.green, eolfilled = true } },
-  { 'deletion', l.style_nothing..{ back = l.colors.red, eolfilled = true } },
-  { 'change', l.style_nothing..{ back = l.colors.yellow, eolfilled = true } },
+  { 'header', l.style_nothing..{ bold = true } },
+  { 'addition', l.style_nothing..{ fore = l.colors.green } },
+  { 'deletion', l.style_nothing..{ fore = l.colors.red } },
+  { 'change', l.style_nothing..{ fore = l.colors.yellow } },
 }
 
 _LEXBYLINE = true
