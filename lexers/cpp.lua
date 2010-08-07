@@ -29,7 +29,7 @@ local preproc_word = word_match {
 }
 local preproc =
   token('preprocessor', #P('#') * l.starts_line('#' * S('\t ')^0 *
-        preproc_word * (l.nonnewline_esc^0 + S('\t ') * l.nonnewline_esc^0)))
+        preproc_word))
 
 -- keywords
 local keyword = token('keyword', word_match {
