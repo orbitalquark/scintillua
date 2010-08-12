@@ -278,20 +278,20 @@ module('lexer', package.seeall)
 --
 -- Each style consists of a set of attributes:
 --
--- * `font`: The style's font name.
--- * `size`: The style's font size.
--- * `bold`: Flag indicating whether or not the font is boldface.
--- * `italic`: Flag indicating whether or not the font is italic.
--- * `underline`: Flag indicating whether or not the font is underlined.
--- * `fore`: The color of the font face.
--- * `back`: The color of the font background.
--- * `eolfilled`: Flag indicating whether or not to color the end of the line.
--- * `characterset`: The character set of the font.
--- * `case`: The case of the font. 1 for upper case, 2 for lower case, 0 for
+-- + `font`: The style's font name.
+-- + `size`: The style's font size.
+-- + `bold`: Flag indicating whether or not the font is boldface.
+-- + `italic`: Flag indicating whether or not the font is italic.
+-- + `underline`: Flag indicating whether or not the font is underlined.
+-- + `fore`: The color of the font face.
+-- + `back`: The color of the font background.
+-- + `eolfilled`: Flag indicating whether or not to color the end of the line.
+-- + `characterset`: The character set of the font.
+-- + `case`: The case of the font. 1 for upper case, 2 for lower case, 0 for
 --   normal case.
--- * `visible`: Flag indicating whether or not the text is visible.
--- * `changable`: Flag indicating whether or not the text is read-only.
--- * `hotspot`: Flag indicating whether or not the style is clickable.
+-- + `visible`: Flag indicating whether or not the text is visible.
+-- + `changable`: Flag indicating whether or not the text is read-only.
+-- + `hotspot`: Flag indicating whether or not the style is clickable.
 --
 -- Styles are created with [`style()`](#style). For example:
 --
@@ -492,11 +492,11 @@ module('lexer', package.seeall)
 --
 --     end
 --
--- * `input`: The text to fold.
--- * `start_pos`: Current position in the buffer of the text (used for obtaining
+-- + `input`: The text to fold.
+-- + `start_pos`: Current position in the buffer of the text (used for obtaining
 --   style information from the document).
--- * `start_line`: The line number the text starts at.
--- * `start_level`: The fold level of the text at `start_line`.
+-- + `start_line`: The line number the text starts at.
+-- + `start_level`: The fold level of the text at `start_line`.
 --
 -- The function must return a table whose indices are line numbers and whose
 -- values are tables containing the fold level and optionally a fold flag.
@@ -576,7 +576,7 @@ module('lexer', package.seeall)
 -- a default lexer to your liking.) Do not forget to add a
 -- [mime-type](textadept.mime_types.html) for your lexer.
 --
--- [user]: http://caladbolg.net/luadoc/textadept2/manual/5_FolderStructure.html
+-- [user]: http://caladbolg.net/luadoc/textadept3/manual/5_FolderStructure.html
 --
 -- #### Optimization
 --
@@ -622,6 +622,9 @@ module('lexer', package.seeall)
 -- [post]: http://lua-users.org/lists/lua-l/2007-04/msg00116.html
 
 local lpeg = require 'lpeg'
+local lpeg_P, lpeg_R, lpeg_S, lpeg_V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
+local lpeg_Ct, lpeg_Cc, lpeg_Cp = lpeg.Ct, lpeg.Cc, lpeg.Cp
+local lpeg_match = lpeg.match
 
 package.path = _LEXERHOME..'/?.lua'
 
@@ -703,7 +706,7 @@ local function build_grammar(lexer)
       end
     end
   end
-  lexer._GRAMMAR = lpeg.Ct(token_rule^0)
+  lexer._GRAMMAR = lpeg_Ct(token_rule^0)
 end
 
 ---
@@ -804,7 +807,7 @@ function lex(text)
   local lexer = _G._LEXER
   if not lexer._GRAMMAR then return {} end
   if not lexer._LEXBYLINE then
-    return lpeg.match(lexer._GRAMMAR, text)
+    return lpeg_match(lexer._GRAMMAR, text)
   else
     local tokens = {}
     local function append(tokens, line_tokens, offset)
@@ -816,7 +819,7 @@ function lex(text)
     local offset = 0
     local grammar = lexer._GRAMMAR
     for line in text:gmatch('[^\r\n]*[\r\n]*') do
-      local line_tokens = lpeg.match(grammar, line)
+      local line_tokens = lpeg_match(grammar, line)
       if line_tokens then append(tokens, line_tokens, offset) end
       offset = offset + #line
       -- Use the default style to the end of the line if none was specified.
@@ -884,32 +887,32 @@ end
 -- The following are utility functions lexers will have access to.
 
 -- common patterns
-any = lpeg.P(1)
-ascii = lpeg.R('\000\127')
-extend = lpeg.R('\000\255')
-alpha = lpeg.R('AZ', 'az')
-digit = lpeg.R('09')
-alnum = lpeg.R('AZ', 'az', '09')
-lower = lpeg.R('az')
-upper = lpeg.R('AZ')
-xdigit = lpeg.R('09', 'AF', 'af')
-cntrl = lpeg.R('\000\031')
-graph = lpeg.R('!~')
-print = lpeg.R(' ~')
-punct = lpeg.R('!/', ':@', '[\'', '{~')
-space = lpeg.S('\t\v\f\n\r ')
+any = lpeg_P(1)
+ascii = lpeg_R('\000\127')
+extend = lpeg_R('\000\255')
+alpha = lpeg_R('AZ', 'az')
+digit = lpeg_R('09')
+alnum = lpeg_R('AZ', 'az', '09')
+lower = lpeg_R('az')
+upper = lpeg_R('AZ')
+xdigit = lpeg_R('09', 'AF', 'af')
+cntrl = lpeg_R('\000\031')
+graph = lpeg_R('!~')
+print = lpeg_R(' ~')
+punct = lpeg_R('!/', ':@', '[\'', '{~')
+space = lpeg_S('\t\v\f\n\r ')
 
-newline = lpeg.S('\r\n\f')^1
+newline = lpeg_S('\r\n\f')^1
 nonnewline = 1 - newline
 nonnewline_esc = 1 - (newline + '\\') + '\\' * any
 
 dec_num = digit^1
-hex_num = '0' * lpeg.S('xX') * xdigit^1
-oct_num = '0' * lpeg.R('07')^1
-integer = lpeg.S('+-')^-1 * (hex_num + oct_num + dec_num)
-float = lpeg.S('+-')^-1 *
+hex_num = '0' * lpeg_S('xX') * xdigit^1
+oct_num = '0' * lpeg_R('07')^1
+integer = lpeg_S('+-')^-1 * (hex_num + oct_num + dec_num)
+float = lpeg_S('+-')^-1 *
   (digit^0 * '.' * digit^1 + digit^1 * '.' * digit^0 + digit^1) *
-  lpeg.S('eE') * lpeg.S('+-')^-1 * digit^1
+  lpeg_S('eE') * lpeg_S('+-')^-1 * digit^1
 word = (alpha + '_') * (alnum + '_')^0
 
 ---
@@ -920,7 +923,7 @@ word = (alpha + '_') * (alnum + '_')^0
 -- @usage local ws = token('whitespace', l.space^1)
 -- @usage php_start_rule = token('php_tag', '<?' * ('php' * l.space)^-1)
 function token(name, patt)
-  return lpeg.Ct(lpeg.Cc(name) * patt * lpeg.Cp())
+  return lpeg_Ct(lpeg_Cc(name) * patt * lpeg_Cp())
 end
 
 -- common tokens
@@ -993,16 +996,16 @@ function delimited_range(chars, escape, end_optional, balanced, forbidden)
   local b = balanced and s or ''
   local f = forbidden or ''
   if not escape or escape == '' then
-    local invalid = lpeg.S(e..f..b)
+    local invalid = lpeg_S(e..f..b)
     range = any - invalid
   else
-    local invalid = lpeg.S(e..f..b) + escape
+    local invalid = lpeg_S(e..f..b) + escape
     range = any - invalid + escape * any
   end
   if balanced and s ~= e then
-    return lpeg.P{ s * (range + lpeg.V(1))^0 * e }
+    return lpeg_P{ s * (range + lpeg_V(1))^0 * e }
   else
-    if end_optional then e = lpeg.P(e)^-1 end
+    if end_optional then e = lpeg_P(e)^-1 end
     return s * range^0 * e
   end
 end
@@ -1027,13 +1030,13 @@ function delimited_range_with_embedded(chars, escape, token_name, patt, forbidde
   local range, invalid, valid
   local f = forbidden or ''
   if not escape or escape == '' then
-    invalid = patt + lpeg.S(e..f)
+    invalid = patt + lpeg_S(e..f)
     valid = token(id, (any - invalid)^1)
   else
-    invalid = patt + lpeg.S(e..f) + escape
+    invalid = patt + lpeg_S(e..f) + escape
     valid = token(id, (any - invalid + escape * any)^1)
   end
-  range = lpeg.P { (patt + valid * lpeg.V(1))^0 }
+  range = lpeg_P { (patt + valid * lpeg_V(1))^0 }
   return token(id, s) * range^-1 * token(id, e)
 end
 
@@ -1044,7 +1047,7 @@ end
 -- @usage local preproc = token('preprocessor', #P('#') * l.starts_line('#' *
 --   l.nonnewline^0))
 function starts_line(patt)
-  return lpeg.P(function(input, idx)
+  return lpeg_P(function(input, idx)
     if idx == 1 then return idx end
     local char = input:sub(idx - 1, idx - 1)
     if char == '\n' or char == '\r' or char == '\f' then return idx end
@@ -1064,8 +1067,8 @@ end
 --   reached.
 -- @usage local nested_comment = l.nested_pair('/*', '*/', true)
 function nested_pair(start_chars, end_chars, end_optional)
-  local s, e = start_chars, end_optional and lpeg.P(end_chars)^-1 or end_chars
-  return lpeg.P{ s * (any - s - end_chars + lpeg.V(1))^0 * e }
+  local s, e = start_chars, end_optional and lpeg_P(end_chars)^-1 or end_chars
+  return lpeg_P{ s * (any - s - end_chars + lpeg_V(1))^0 * e }
 end
 
 ---
@@ -1085,7 +1088,7 @@ function word_match(words, word_chars, case_insensitive)
   -- escape 'magic' characters
   -- TODO: append chars to the end so ^_ can be passed for not including '_'s
   if word_chars then chars = chars..word_chars:gsub('([%^%]%-])', '%%%1') end
-  return lpeg.P(function(input, index)
+  return lpeg_P(function(input, index)
       local s, e, word = input:find('^(['..chars..']+)', index)
       if word then
         if case_insensitive then word = word:lower() end
