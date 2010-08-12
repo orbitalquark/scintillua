@@ -47,7 +47,7 @@ Compiling:
   Patch:
     1. Download official Scintilla/SciTE and unpack.
     2. Copy `scintillua.patch` to the unpacked directory.
-    3. Run 'patch -p1 < scintillua.patch' (without quotes).
+    3. Run 'patch -p0 < scintillua.patch' (without quotes).
     4. Compile as normal.
 
   Otherwise:
@@ -80,4 +80,4 @@ Troubleshooting:
 
 Further Reading:
 
-  Lexer Documentation: http://caladbolg.net/luadoc/textadept2/modules/lexer.html
+  Lexer Documentation: http://caladbolg.net/luadoc/textadept/modules/lexer.html
