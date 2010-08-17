@@ -1,15 +1,10 @@
-This patch applies to Scintilla/SciTE 2.12.
+This patch applies to Scintilla/SciTE 2.20.
 
 Overview:
 
   Changes to Scintilla:
-    * Replaced all Lex*.cpp files with LexLPeg.cpp and over 70 dynamic Lua
-      lexers.
-    * Added the following functions:
-        * SCI_GETSTYLENAME - returns the string style name at the caret
-          position.
-    * Existing external lexer modules will not work.
-    * No lexer-specific folding (can be added to each lexer).
+    * Utilizes a single LexLPeg.cxx lexer that uses over 70 dynamics Lua lexers.
+    * Most lexers do not have folding support, but it can be added.
     * Everything else is identical. 
 
   Changes to SciTE:
@@ -56,7 +51,8 @@ Compiling:
   Notes:
     Use scite/boundscheck/SciTE.vcproj for compiling on Windows.
     Use mingw32 on Linux for compiling for Windows (first change '<Shlobj.h>' to
-      '<shlobj.h>' in `scite/win32/SciTEWinDlg.cxx`).
+      '<shlobj.h>' in `scite/win32/SciTEWinDlg.cxx` and '<Uxtheme.h' to
+      '<uxtheme.h>' in `scite/win32/SciTEWin.h`).
 
 Usage:
 

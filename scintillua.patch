@@ -1,1757 +1,67 @@
-diff -r f99c7dfc2bff gtk/deps.mak
---- scintilla/gtk/deps.mak	Tue Jun 01 03:43:54 2010 +0000
-+++ scintilla/gtk/deps.mak	Wed Aug 11 22:35:50 2010 -0400
-@@ -58,240 +58,11 @@
- LexAbaqus.o: ../src/LexAbaqus.cxx ../include/Platform.h \
-  ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexAda.o: ../src/LexAda.cxx ../include/Platform.h ../include/Accessor.h \
-+# modified by Mitchell
-+LexLPeg.o: ../src/LexLPeg.cxx ../include/Platform.h ../include/Accessor.h \
-  ../src/StyleContext.h ../include/PropSet.h ../include/KeyWords.h \
-  ../include/SciLexer.h
--LexAPDL.o: ../src/LexAPDL.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexAsm.o: ../src/LexAsm.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexAsn1.o: ../src/LexAsn1.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexASY.o: ../src/LexASY.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h ../src/CharacterSet.h
--LexAU3.o: ../src/LexAU3.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexAVE.o: ../src/LexAVE.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexBaan.o: ../src/LexBaan.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexBash.o: ../src/LexBash.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h ../src/CharacterSet.h
--LexBasic.o: ../src/LexBasic.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexBullant.o: ../src/LexBullant.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexCaml.o: ../src/LexCaml.cxx ../include/Platform.h ../include/PropSet.h \
-- ../src/PropSetSimple.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexCLW.o: ../src/LexCLW.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexCmake.o: ../src/LexCmake.cxx ../include/Platform.h \
-- ../src/CharClassify.h ../include/PropSet.h ../include/Accessor.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexCOBOL.o: ../src/LexCOBOL.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h ../src/StyleContext.h
--LexConf.o: ../src/LexConf.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../include/KeyWords.h ../include/Scintilla.h \
-- ../include/SciLexer.h
--LexCPP.o: ../src/LexCPP.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h ../src/CharacterSet.h
--LexCrontab.o: ../src/LexCrontab.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexCsound.o: ../src/LexCsound.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexCSS.o: ../src/LexCSS.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexD.o: ../src/LexD.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexEiffel.o: ../src/LexEiffel.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexErlang.o: ../src/LexErlang.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexEScript.o: ../src/LexEScript.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexFlagship.o: ../src/LexFlagship.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexForth.o: ../src/LexForth.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexFortran.o: ../src/LexFortran.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexGAP.o: ../src/LexGAP.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexGui4Cli.o: ../src/LexGui4Cli.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexHaskell.o: ../src/LexHaskell.cxx ../include/Platform.h \
-- ../include/PropSet.h ../src/PropSetSimple.h ../include/Accessor.h \
-- ../src/StyleContext.h ../include/KeyWords.h ../include/Scintilla.h \
-- ../include/SciLexer.h
--LexHTML.o: ../src/LexHTML.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h ../src/CharacterSet.h
--LexInno.o: ../src/LexInno.cxx ../include/Platform.h ../src/CharClassify.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexKix.o: ../src/LexKix.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexLisp.o: ../src/LexLisp.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../include/KeyWords.h ../include/Scintilla.h \
-- ../include/SciLexer.h ../src/StyleContext.h
--LexLout.o: ../src/LexLout.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexLua.o: ../src/LexLua.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h ../src/CharacterSet.h
--LexMagik.o: ../src/LexMagik.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexMarkdown.o: ../src/LexMarkdown.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexMatlab.o: ../src/LexMatlab.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexMetapost.o: ../src/LexMetapost.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h ../src/StyleContext.h
--LexMMIXAL.o: ../src/LexMMIXAL.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexMPT.o: ../src/LexMPT.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../include/KeyWords.h ../include/Scintilla.h \
-- ../include/SciLexer.h
--LexMSSQL.o: ../src/LexMSSQL.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexMySQL.o: ../src/LexMySQL.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexNimrod.o: ../src/LexNimrod.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexNsis.o: ../src/LexNsis.cxx ../include/Platform.h ../src/CharClassify.h \
-- ../include/PropSet.h ../include/Accessor.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexOpal.o: ../src/LexOpal.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../include/KeyWords.h ../include/Scintilla.h \
-- ../include/SciLexer.h ../src/StyleContext.h
--LexOthers.o: ../src/LexOthers.cxx ../include/Platform.h \
-- ../src/CharClassify.h ../include/PropSet.h ../include/Accessor.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexPascal.o: ../src/LexPascal.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h ../src/StyleContext.h \
-- ../src/CharacterSet.h
--LexPB.o: ../src/LexPB.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexPerl.o: ../src/LexPerl.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h ../src/CharacterSet.h
--LexPLM.o: ../src/LexPLM.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../include/KeyWords.h ../include/Scintilla.h \
-- ../include/SciLexer.h ../src/StyleContext.h
--LexPOV.o: ../src/LexPOV.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexPowerPro.o: ../src/LexPowerPro.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h \
-- ../src/CharacterSet.h
--LexPowerShell.o: ../src/LexPowerShell.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexProgress.o: ../src/LexProgress.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexPS.o: ../src/LexPS.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexPython.o: ../src/LexPython.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexR.o: ../src/LexR.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexRebol.o: ../src/LexRebol.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h ../src/StyleContext.h
--LexRuby.o: ../src/LexRuby.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../include/KeyWords.h ../include/Scintilla.h \
-- ../include/SciLexer.h
--LexScriptol.o: ../src/LexScriptol.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexSmalltalk.o: ../src/LexSmalltalk.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexSML.o: ../src/LexSML.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexSorcus.o: ../src/LexSorcus.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexSpecman.o: ../src/LexSpecman.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexSpice.o: ../src/LexSpice.cxx ../include/Platform.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/PropSet.h \
-- ../include/KeyWords.h ../include/SciLexer.h
--LexSQL.o: ../src/LexSQL.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexTACL.o: ../src/LexTACL.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../include/KeyWords.h ../include/Scintilla.h \
-- ../include/SciLexer.h ../src/StyleContext.h
--LexTADS3.o: ../src/LexTADS3.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexTAL.o: ../src/LexTAL.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../include/KeyWords.h ../include/Scintilla.h \
-- ../include/SciLexer.h ../src/StyleContext.h
--LexTCL.o: ../src/LexTCL.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexTeX.o: ../src/LexTeX.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../include/KeyWords.h ../include/Scintilla.h \
-- ../include/SciLexer.h ../src/StyleContext.h
--LexVB.o: ../src/LexVB.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexVerilog.o: ../src/LexVerilog.cxx ../include/Platform.h \
-- ../include/PropSet.h ../include/Accessor.h ../src/StyleContext.h \
-- ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexVHDL.o: ../src/LexVHDL.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
--LexYAML.o: ../src/LexYAML.cxx ../include/Platform.h ../include/PropSet.h \
-- ../include/Accessor.h ../src/StyleContext.h ../include/KeyWords.h \
-- ../include/Scintilla.h ../include/SciLexer.h
-+# end modified by Mitchell
- LineMarker.o: ../src/LineMarker.cxx ../include/Platform.h \
-  ../include/Scintilla.h ../src/XPM.h ../src/LineMarker.h
- PerLine.o: ../src/PerLine.cxx ../include/Platform.h \
-diff -r f99c7dfc2bff gtk/makefile
---- scintilla/gtk/makefile	Tue Jun 01 03:43:54 2010 +0000
-+++ scintilla/gtk/makefile	Wed Aug 11 22:35:50 2010 -0400
+diff -r ffde119d297e gtk/makefile
+--- scintilla/gtk/makefile	Wed Jul 28 17:54:24 2010 +1000
++++ scintilla/gtk/makefile	Tue Aug 17 00:13:24 2010 -0400
 @@ -28,7 +28,7 @@
- vpath %.h ../src ../include
- vpath %.cxx ../src
+ vpath %.h ../src ../include ../lexlib
+ vpath %.cxx ../src ../lexlib ../lexers
  
--INCLUDEDIRS=-I ../include -I ../src
-+INCLUDEDIRS=-I ../include -I ../src -I ../../scite/lua/include # modified by mitchell
- CXXBASEFLAGS=-Wall -Wno-missing-braces -Wno-char-subscripts -pedantic -DGTK -DSCI_LEXER $(INCLUDEDIRS)
+-INCLUDEDIRS=-I ../include -I ../src -I ../lexlib
++INCLUDEDIRS=-I ../include -I ../src -I ../lexlib -I ../../scite/lua/include # modified by Mitchell
+ CXXBASEFLAGS=-Wall -Wno-missing-braces -Wno-char-subscripts -Wno-long-long -pedantic -DGTK -DSCI_LEXER $(INCLUDEDIRS)
  
  ifdef NOTHREADS
-@@ -51,22 +51,13 @@
+@@ -51,7 +51,7 @@
  .c.o:
  	$(CCOMP) $(CONFIGFLAGS) $(CXXFLAGS) -w -c $<
  
-+# modified by Mitchell
- #++Autogenerated -- run src/LexGen.py to regenerate
- #**LEXOBJS=\\\n\(\*.o \)
- LEXOBJS=\
--LexAbaqus.o LexAda.o LexAPDL.o LexAsm.o LexAsn1.o LexASY.o LexAU3.o LexAVE.o \
--LexBaan.o LexBash.o LexBasic.o LexBullant.o LexCaml.o LexCLW.o LexCmake.o \
--LexCOBOL.o LexConf.o LexCPP.o LexCrontab.o LexCsound.o LexCSS.o LexD.o \
--LexEiffel.o LexErlang.o LexEScript.o LexFlagship.o LexForth.o LexFortran.o \
--LexGAP.o LexGui4Cli.o LexHaskell.o LexHTML.o LexInno.o LexKix.o LexLisp.o \
--LexLout.o LexLua.o LexMagik.o LexMarkdown.o LexMatlab.o LexMetapost.o \
--LexMMIXAL.o LexMPT.o LexMSSQL.o LexMySQL.o LexNimrod.o LexNsis.o LexOpal.o \
--LexOthers.o LexPascal.o LexPB.o LexPerl.o LexPLM.o LexPOV.o LexPowerPro.o \
--LexPowerShell.o LexProgress.o LexPS.o LexPython.o LexR.o LexRebol.o LexRuby.o \
--LexScriptol.o LexSmalltalk.o LexSML.o LexSorcus.o LexSpecman.o LexSpice.o \
--LexSQL.o LexTACL.o LexTADS3.o LexTAL.o LexTCL.o LexTeX.o LexVB.o LexVerilog.o \
--LexVHDL.o LexYAML.o
-+LexLPeg.o
- #--Autogenerated -- end of automatically generated section
-+# end modified by Mitchell
+-LEXOBJS:=$(addsuffix .o,$(basename $(notdir $(wildcard ../lexers/Lex*.cxx))))
++LEXOBJS:=$(addsuffix .o,$(basename $(notdir $(wildcard ../lexers/LexLPeg.cxx)))) # modified by Mitchell
  
  all: $(COMPLIB)
  
-diff -r f99c7dfc2bff include/KeyWords.h
---- scintilla/include/KeyWords.h	Tue Jun 01 03:43:54 2010 +0000
-+++ scintilla/include/KeyWords.h	Wed Aug 11 22:35:50 2010 -0400
-@@ -5,6 +5,14 @@
- // Copyright 1998-2001 by Neil Hodgson <neilh@scintilla.org>
- // The License.txt file describes the conditions under which this software may be distributed.
- 
-+// added by Mitchell
-+extern "C" {
-+#include <lua.h>
-+#include <lualib.h>
-+#include <lauxlib.h>
-+}
-+// end added by Mitchell
-+
- #ifdef SCI_NAMESPACE
- namespace Scintilla {
- #endif
-@@ -33,7 +41,9 @@
- };
- 
- typedef void (*LexerFunction)(unsigned int startPos, int lengthDoc, int initStyle,
-+                  lua_State *L, // added by Mitchell
-                   WordList *keywordlists[], Accessor &styler);
-+typedef bool (*InitFunction)(lua_State *L, const char *languageName, Accessor &styler); // added by Mitchell
-                   
- /**
-  * A LexerModule is responsible for lexing and folding a particular language.
-@@ -44,6 +54,7 @@
- protected:
- 	const LexerModule *next;
- 	int language;
-+	InitFunction fnInit; // added by Mitchell
- 	LexerFunction fnLexer;
- 	LexerFunction fnFolder;
- 	const char * const * wordListDescriptions;
-@@ -55,6 +66,7 @@
- public:
- 	const char *languageName;
- 	LexerModule(int language_, 
-+		InitFunction fnInit_, // added by Mitchell
- 		LexerFunction fnLexer_, 
- 		const char *languageName_=0, 
- 		LexerFunction fnFolder_=0,
-@@ -70,9 +82,12 @@
- 
- 	int GetStyleBitsNeeded() const;
- 
-+	virtual bool Init(lua_State *L, const char *languageName, Accessor &styler) const; // added by Mitchell
- 	virtual void Lex(unsigned int startPos, int lengthDoc, int initStyle,
-+                  lua_State *L, // added by Mitchell
-                   WordList *keywordlists[], Accessor &styler) const;
- 	virtual void Fold(unsigned int startPos, int lengthDoc, int initStyle,
-+                  lua_State *L, // added by Mitchell
-                   WordList *keywordlists[], Accessor &styler) const;
- 	static const LexerModule *Find(int language);
- 	static const LexerModule *Find(const char *languageName);
-diff -r f99c7dfc2bff include/SciLexer.h
---- scintilla/include/SciLexer.h	Tue Jun 01 03:43:54 2010 +0000
-+++ scintilla/include/SciLexer.h	Wed Aug 11 22:35:50 2010 -0400
-@@ -13,1378 +13,13 @@
- 
- /* SciLexer features - not in standard Scintilla */
- 
-+// modified by Mitchell
+diff -r ffde119d297e include/SciLexer.h
+--- scintilla/include/SciLexer.h	Wed Jul 28 17:54:24 2010 +1000
++++ scintilla/include/SciLexer.h	Tue Aug 17 00:13:24 2010 -0400
+@@ -16,6 +16,8 @@
  /* ++Autogenerated -- start of section automatically generated from Scintilla.iface */
  #define SCLEX_CONTAINER 0
  #define SCLEX_NULL 1
--#define SCLEX_PYTHON 2
--#define SCLEX_CPP 3
--#define SCLEX_HTML 4
--#define SCLEX_XML 5
--#define SCLEX_PERL 6
--#define SCLEX_SQL 7
--#define SCLEX_VB 8
--#define SCLEX_PROPERTIES 9
--#define SCLEX_ERRORLIST 10
--#define SCLEX_MAKEFILE 11
--#define SCLEX_BATCH 12
--#define SCLEX_XCODE 13
--#define SCLEX_LATEX 14
--#define SCLEX_LUA 15
--#define SCLEX_DIFF 16
--#define SCLEX_CONF 17
--#define SCLEX_PASCAL 18
--#define SCLEX_AVE 19
--#define SCLEX_ADA 20
--#define SCLEX_LISP 21
--#define SCLEX_RUBY 22
--#define SCLEX_EIFFEL 23
--#define SCLEX_EIFFELKW 24
--#define SCLEX_TCL 25
--#define SCLEX_NNCRONTAB 26
--#define SCLEX_BULLANT 27
--#define SCLEX_VBSCRIPT 28
--#define SCLEX_BAAN 31
--#define SCLEX_MATLAB 32
--#define SCLEX_SCRIPTOL 33
--#define SCLEX_ASM 34
--#define SCLEX_CPPNOCASE 35
--#define SCLEX_FORTRAN 36
--#define SCLEX_F77 37
--#define SCLEX_CSS 38
--#define SCLEX_POV 39
--#define SCLEX_LOUT 40
--#define SCLEX_ESCRIPT 41
--#define SCLEX_PS 42
--#define SCLEX_NSIS 43
--#define SCLEX_MMIXAL 44
--#define SCLEX_CLW 45
--#define SCLEX_CLWNOCASE 46
--#define SCLEX_LOT 47
--#define SCLEX_YAML 48
--#define SCLEX_TEX 49
--#define SCLEX_METAPOST 50
--#define SCLEX_POWERBASIC 51
--#define SCLEX_FORTH 52
--#define SCLEX_ERLANG 53
--#define SCLEX_OCTAVE 54
--#define SCLEX_MSSQL 55
--#define SCLEX_VERILOG 56
--#define SCLEX_KIX 57
--#define SCLEX_GUI4CLI 58
--#define SCLEX_SPECMAN 59
--#define SCLEX_AU3 60
--#define SCLEX_APDL 61
--#define SCLEX_BASH 62
--#define SCLEX_ASN1 63
--#define SCLEX_VHDL 64
--#define SCLEX_CAML 65
--#define SCLEX_BLITZBASIC 66
--#define SCLEX_PUREBASIC 67
--#define SCLEX_HASKELL 68
--#define SCLEX_PHPSCRIPT 69
--#define SCLEX_TADS3 70
--#define SCLEX_REBOL 71
--#define SCLEX_SMALLTALK 72
--#define SCLEX_FLAGSHIP 73
--#define SCLEX_CSOUND 74
--#define SCLEX_FREEBASIC 75
--#define SCLEX_INNOSETUP 76
--#define SCLEX_OPAL 77
--#define SCLEX_SPICE 78
--#define SCLEX_D 79
--#define SCLEX_CMAKE 80
--#define SCLEX_GAP 81
--#define SCLEX_PLM 82
--#define SCLEX_PROGRESS 83
--#define SCLEX_ABAQUS 84
--#define SCLEX_ASYMPTOTE 85
--#define SCLEX_R 86
--#define SCLEX_MAGIK 87
--#define SCLEX_POWERSHELL 88
--#define SCLEX_MYSQL 89
--#define SCLEX_PO 90
--#define SCLEX_TAL 91
--#define SCLEX_COBOL 92
--#define SCLEX_TACL 93
--#define SCLEX_SORCUS 94
--#define SCLEX_POWERPRO 95
--#define SCLEX_NIMROD 96
--#define SCLEX_SML 97
--#define SCLEX_MARKDOWN 98
 +#define SCLEX_LPEG 2
++#if 0 // added by Mitchell
+ #define SCLEX_PYTHON 2
+ #define SCLEX_CPP 3
+ #define SCLEX_HTML 4
+@@ -112,7 +114,9 @@
+ #define SCLEX_SML 97
+ #define SCLEX_MARKDOWN 98
+ #define SCLEX_TXT2TAGS 99
++#endif // added by Mitchell
  #define SCLEX_AUTOMATIC 1000
--#define SCE_P_DEFAULT 0
--#define SCE_P_COMMENTLINE 1
--#define SCE_P_NUMBER 2
--#define SCE_P_STRING 3
--#define SCE_P_CHARACTER 4
--#define SCE_P_WORD 5
--#define SCE_P_TRIPLE 6
--#define SCE_P_TRIPLEDOUBLE 7
--#define SCE_P_CLASSNAME 8
--#define SCE_P_DEFNAME 9
--#define SCE_P_OPERATOR 10
--#define SCE_P_IDENTIFIER 11
--#define SCE_P_COMMENTBLOCK 12
--#define SCE_P_STRINGEOL 13
--#define SCE_P_WORD2 14
--#define SCE_P_DECORATOR 15
--#define SCE_C_DEFAULT 0
--#define SCE_C_COMMENT 1
--#define SCE_C_COMMENTLINE 2
--#define SCE_C_COMMENTDOC 3
--#define SCE_C_NUMBER 4
--#define SCE_C_WORD 5
--#define SCE_C_STRING 6
--#define SCE_C_CHARACTER 7
--#define SCE_C_UUID 8
--#define SCE_C_PREPROCESSOR 9
--#define SCE_C_OPERATOR 10
--#define SCE_C_IDENTIFIER 11
--#define SCE_C_STRINGEOL 12
--#define SCE_C_VERBATIM 13
--#define SCE_C_REGEX 14
--#define SCE_C_COMMENTLINEDOC 15
--#define SCE_C_WORD2 16
--#define SCE_C_COMMENTDOCKEYWORD 17
--#define SCE_C_COMMENTDOCKEYWORDERROR 18
--#define SCE_C_GLOBALCLASS 19
--#define SCE_D_DEFAULT 0
--#define SCE_D_COMMENT 1
--#define SCE_D_COMMENTLINE 2
--#define SCE_D_COMMENTDOC 3
--#define SCE_D_COMMENTNESTED 4
--#define SCE_D_NUMBER 5
--#define SCE_D_WORD 6
--#define SCE_D_WORD2 7
--#define SCE_D_WORD3 8
--#define SCE_D_TYPEDEF 9
--#define SCE_D_STRING 10
--#define SCE_D_STRINGEOL 11
--#define SCE_D_CHARACTER 12
--#define SCE_D_OPERATOR 13
--#define SCE_D_IDENTIFIER 14
--#define SCE_D_COMMENTLINEDOC 15
--#define SCE_D_COMMENTDOCKEYWORD 16
--#define SCE_D_COMMENTDOCKEYWORDERROR 17
--#define SCE_D_STRINGB 18
--#define SCE_D_STRINGR 19
--#define SCE_D_WORD5 20
--#define SCE_D_WORD6 21
--#define SCE_D_WORD7 22
--#define SCE_TCL_DEFAULT 0
--#define SCE_TCL_COMMENT 1
--#define SCE_TCL_COMMENTLINE 2
--#define SCE_TCL_NUMBER 3
--#define SCE_TCL_WORD_IN_QUOTE 4
--#define SCE_TCL_IN_QUOTE 5
--#define SCE_TCL_OPERATOR 6
--#define SCE_TCL_IDENTIFIER 7
--#define SCE_TCL_SUBSTITUTION 8
--#define SCE_TCL_SUB_BRACE 9
--#define SCE_TCL_MODIFIER 10
--#define SCE_TCL_EXPAND 11
--#define SCE_TCL_WORD 12
--#define SCE_TCL_WORD2 13
--#define SCE_TCL_WORD3 14
--#define SCE_TCL_WORD4 15
--#define SCE_TCL_WORD5 16
--#define SCE_TCL_WORD6 17
--#define SCE_TCL_WORD7 18
--#define SCE_TCL_WORD8 19
--#define SCE_TCL_COMMENT_BOX 20
--#define SCE_TCL_BLOCK_COMMENT 21
--#define SCE_H_DEFAULT 0
--#define SCE_H_TAG 1
--#define SCE_H_TAGUNKNOWN 2
--#define SCE_H_ATTRIBUTE 3
--#define SCE_H_ATTRIBUTEUNKNOWN 4
--#define SCE_H_NUMBER 5
--#define SCE_H_DOUBLESTRING 6
--#define SCE_H_SINGLESTRING 7
--#define SCE_H_OTHER 8
--#define SCE_H_COMMENT 9
--#define SCE_H_ENTITY 10
--#define SCE_H_TAGEND 11
--#define SCE_H_XMLSTART 12
--#define SCE_H_XMLEND 13
--#define SCE_H_SCRIPT 14
--#define SCE_H_ASP 15
--#define SCE_H_ASPAT 16
--#define SCE_H_CDATA 17
--#define SCE_H_QUESTION 18
--#define SCE_H_VALUE 19
--#define SCE_H_XCCOMMENT 20
--#define SCE_H_SGML_DEFAULT 21
--#define SCE_H_SGML_COMMAND 22
--#define SCE_H_SGML_1ST_PARAM 23
--#define SCE_H_SGML_DOUBLESTRING 24
--#define SCE_H_SGML_SIMPLESTRING 25
--#define SCE_H_SGML_ERROR 26
--#define SCE_H_SGML_SPECIAL 27
--#define SCE_H_SGML_ENTITY 28
--#define SCE_H_SGML_COMMENT 29
--#define SCE_H_SGML_1ST_PARAM_COMMENT 30
--#define SCE_H_SGML_BLOCK_DEFAULT 31
--#define SCE_HJ_START 40
--#define SCE_HJ_DEFAULT 41
--#define SCE_HJ_COMMENT 42
--#define SCE_HJ_COMMENTLINE 43
--#define SCE_HJ_COMMENTDOC 44
--#define SCE_HJ_NUMBER 45
--#define SCE_HJ_WORD 46
--#define SCE_HJ_KEYWORD 47
--#define SCE_HJ_DOUBLESTRING 48
--#define SCE_HJ_SINGLESTRING 49
--#define SCE_HJ_SYMBOLS 50
--#define SCE_HJ_STRINGEOL 51
--#define SCE_HJ_REGEX 52
--#define SCE_HJA_START 55
--#define SCE_HJA_DEFAULT 56
--#define SCE_HJA_COMMENT 57
--#define SCE_HJA_COMMENTLINE 58
--#define SCE_HJA_COMMENTDOC 59
--#define SCE_HJA_NUMBER 60
--#define SCE_HJA_WORD 61
--#define SCE_HJA_KEYWORD 62
--#define SCE_HJA_DOUBLESTRING 63
--#define SCE_HJA_SINGLESTRING 64
--#define SCE_HJA_SYMBOLS 65
--#define SCE_HJA_STRINGEOL 66
--#define SCE_HJA_REGEX 67
--#define SCE_HB_START 70
--#define SCE_HB_DEFAULT 71
--#define SCE_HB_COMMENTLINE 72
--#define SCE_HB_NUMBER 73
--#define SCE_HB_WORD 74
--#define SCE_HB_STRING 75
--#define SCE_HB_IDENTIFIER 76
--#define SCE_HB_STRINGEOL 77
--#define SCE_HBA_START 80
--#define SCE_HBA_DEFAULT 81
--#define SCE_HBA_COMMENTLINE 82
--#define SCE_HBA_NUMBER 83
--#define SCE_HBA_WORD 84
--#define SCE_HBA_STRING 85
--#define SCE_HBA_IDENTIFIER 86
--#define SCE_HBA_STRINGEOL 87
--#define SCE_HP_START 90
--#define SCE_HP_DEFAULT 91
--#define SCE_HP_COMMENTLINE 92
--#define SCE_HP_NUMBER 93
--#define SCE_HP_STRING 94
--#define SCE_HP_CHARACTER 95
--#define SCE_HP_WORD 96
--#define SCE_HP_TRIPLE 97
--#define SCE_HP_TRIPLEDOUBLE 98
--#define SCE_HP_CLASSNAME 99
--#define SCE_HP_DEFNAME 100
--#define SCE_HP_OPERATOR 101
--#define SCE_HP_IDENTIFIER 102
--#define SCE_HPHP_COMPLEX_VARIABLE 104
--#define SCE_HPA_START 105
--#define SCE_HPA_DEFAULT 106
--#define SCE_HPA_COMMENTLINE 107
--#define SCE_HPA_NUMBER 108
--#define SCE_HPA_STRING 109
--#define SCE_HPA_CHARACTER 110
--#define SCE_HPA_WORD 111
--#define SCE_HPA_TRIPLE 112
--#define SCE_HPA_TRIPLEDOUBLE 113
--#define SCE_HPA_CLASSNAME 114
--#define SCE_HPA_DEFNAME 115
--#define SCE_HPA_OPERATOR 116
--#define SCE_HPA_IDENTIFIER 117
--#define SCE_HPHP_DEFAULT 118
--#define SCE_HPHP_HSTRING 119
--#define SCE_HPHP_SIMPLESTRING 120
--#define SCE_HPHP_WORD 121
--#define SCE_HPHP_NUMBER 122
--#define SCE_HPHP_VARIABLE 123
--#define SCE_HPHP_COMMENT 124
--#define SCE_HPHP_COMMENTLINE 125
--#define SCE_HPHP_HSTRING_VARIABLE 126
--#define SCE_HPHP_OPERATOR 127
--#define SCE_PL_DEFAULT 0
--#define SCE_PL_ERROR 1
--#define SCE_PL_COMMENTLINE 2
--#define SCE_PL_POD 3
--#define SCE_PL_NUMBER 4
--#define SCE_PL_WORD 5
--#define SCE_PL_STRING 6
--#define SCE_PL_CHARACTER 7
--#define SCE_PL_PUNCTUATION 8
--#define SCE_PL_PREPROCESSOR 9
--#define SCE_PL_OPERATOR 10
--#define SCE_PL_IDENTIFIER 11
--#define SCE_PL_SCALAR 12
--#define SCE_PL_ARRAY 13
--#define SCE_PL_HASH 14
--#define SCE_PL_SYMBOLTABLE 15
--#define SCE_PL_VARIABLE_INDEXER 16
--#define SCE_PL_REGEX 17
--#define SCE_PL_REGSUBST 18
--#define SCE_PL_LONGQUOTE 19
--#define SCE_PL_BACKTICKS 20
--#define SCE_PL_DATASECTION 21
--#define SCE_PL_HERE_DELIM 22
--#define SCE_PL_HERE_Q 23
--#define SCE_PL_HERE_QQ 24
--#define SCE_PL_HERE_QX 25
--#define SCE_PL_STRING_Q 26
--#define SCE_PL_STRING_QQ 27
--#define SCE_PL_STRING_QX 28
--#define SCE_PL_STRING_QR 29
--#define SCE_PL_STRING_QW 30
--#define SCE_PL_POD_VERB 31
--#define SCE_PL_SUB_PROTOTYPE 40
--#define SCE_PL_FORMAT_IDENT 41
--#define SCE_PL_FORMAT 42
--#define SCE_RB_DEFAULT 0
--#define SCE_RB_ERROR 1
--#define SCE_RB_COMMENTLINE 2
--#define SCE_RB_POD 3
--#define SCE_RB_NUMBER 4
--#define SCE_RB_WORD 5
--#define SCE_RB_STRING 6
--#define SCE_RB_CHARACTER 7
--#define SCE_RB_CLASSNAME 8
--#define SCE_RB_DEFNAME 9
--#define SCE_RB_OPERATOR 10
--#define SCE_RB_IDENTIFIER 11
--#define SCE_RB_REGEX 12
--#define SCE_RB_GLOBAL 13
--#define SCE_RB_SYMBOL 14
--#define SCE_RB_MODULE_NAME 15
--#define SCE_RB_INSTANCE_VAR 16
--#define SCE_RB_CLASS_VAR 17
--#define SCE_RB_BACKTICKS 18
--#define SCE_RB_DATASECTION 19
--#define SCE_RB_HERE_DELIM 20
--#define SCE_RB_HERE_Q 21
--#define SCE_RB_HERE_QQ 22
--#define SCE_RB_HERE_QX 23
--#define SCE_RB_STRING_Q 24
--#define SCE_RB_STRING_QQ 25
--#define SCE_RB_STRING_QX 26
--#define SCE_RB_STRING_QR 27
--#define SCE_RB_STRING_QW 28
--#define SCE_RB_WORD_DEMOTED 29
--#define SCE_RB_STDIN 30
--#define SCE_RB_STDOUT 31
--#define SCE_RB_STDERR 40
--#define SCE_RB_UPPER_BOUND 41
--#define SCE_B_DEFAULT 0
--#define SCE_B_COMMENT 1
--#define SCE_B_NUMBER 2
--#define SCE_B_KEYWORD 3
--#define SCE_B_STRING 4
--#define SCE_B_PREPROCESSOR 5
--#define SCE_B_OPERATOR 6
--#define SCE_B_IDENTIFIER 7
--#define SCE_B_DATE 8
--#define SCE_B_STRINGEOL 9
--#define SCE_B_KEYWORD2 10
--#define SCE_B_KEYWORD3 11
--#define SCE_B_KEYWORD4 12
--#define SCE_B_CONSTANT 13
--#define SCE_B_ASM 14
--#define SCE_B_LABEL 15
--#define SCE_B_ERROR 16
--#define SCE_B_HEXNUMBER 17
--#define SCE_B_BINNUMBER 18
--#define SCE_PROPS_DEFAULT 0
--#define SCE_PROPS_COMMENT 1
--#define SCE_PROPS_SECTION 2
--#define SCE_PROPS_ASSIGNMENT 3
--#define SCE_PROPS_DEFVAL 4
--#define SCE_PROPS_KEY 5
--#define SCE_L_DEFAULT 0
--#define SCE_L_COMMAND 1
--#define SCE_L_TAG 2
--#define SCE_L_MATH 3
--#define SCE_L_COMMENT 4
--#define SCE_LUA_DEFAULT 0
--#define SCE_LUA_COMMENT 1
--#define SCE_LUA_COMMENTLINE 2
--#define SCE_LUA_COMMENTDOC 3
--#define SCE_LUA_NUMBER 4
--#define SCE_LUA_WORD 5
--#define SCE_LUA_STRING 6
--#define SCE_LUA_CHARACTER 7
--#define SCE_LUA_LITERALSTRING 8
--#define SCE_LUA_PREPROCESSOR 9
--#define SCE_LUA_OPERATOR 10
--#define SCE_LUA_IDENTIFIER 11
--#define SCE_LUA_STRINGEOL 12
--#define SCE_LUA_WORD2 13
--#define SCE_LUA_WORD3 14
--#define SCE_LUA_WORD4 15
--#define SCE_LUA_WORD5 16
--#define SCE_LUA_WORD6 17
--#define SCE_LUA_WORD7 18
--#define SCE_LUA_WORD8 19
--#define SCE_ERR_DEFAULT 0
--#define SCE_ERR_PYTHON 1
--#define SCE_ERR_GCC 2
--#define SCE_ERR_MS 3
--#define SCE_ERR_CMD 4
--#define SCE_ERR_BORLAND 5
--#define SCE_ERR_PERL 6
--#define SCE_ERR_NET 7
--#define SCE_ERR_LUA 8
--#define SCE_ERR_CTAG 9
--#define SCE_ERR_DIFF_CHANGED 10
--#define SCE_ERR_DIFF_ADDITION 11
--#define SCE_ERR_DIFF_DELETION 12
--#define SCE_ERR_DIFF_MESSAGE 13
--#define SCE_ERR_PHP 14
--#define SCE_ERR_ELF 15
--#define SCE_ERR_IFC 16
--#define SCE_ERR_IFORT 17
--#define SCE_ERR_ABSF 18
--#define SCE_ERR_TIDY 19
--#define SCE_ERR_JAVA_STACK 20
--#define SCE_ERR_VALUE 21
--#define SCE_BAT_DEFAULT 0
--#define SCE_BAT_COMMENT 1
--#define SCE_BAT_WORD 2
--#define SCE_BAT_LABEL 3
--#define SCE_BAT_HIDE 4
--#define SCE_BAT_COMMAND 5
--#define SCE_BAT_IDENTIFIER 6
--#define SCE_BAT_OPERATOR 7
--#define SCE_MAKE_DEFAULT 0
--#define SCE_MAKE_COMMENT 1
--#define SCE_MAKE_PREPROCESSOR 2
--#define SCE_MAKE_IDENTIFIER 3
--#define SCE_MAKE_OPERATOR 4
--#define SCE_MAKE_TARGET 5
--#define SCE_MAKE_IDEOL 9
--#define SCE_DIFF_DEFAULT 0
--#define SCE_DIFF_COMMENT 1
--#define SCE_DIFF_COMMAND 2
--#define SCE_DIFF_HEADER 3
--#define SCE_DIFF_POSITION 4
--#define SCE_DIFF_DELETED 5
--#define SCE_DIFF_ADDED 6
--#define SCE_DIFF_CHANGED 7
--#define SCE_CONF_DEFAULT 0
--#define SCE_CONF_COMMENT 1
--#define SCE_CONF_NUMBER 2
--#define SCE_CONF_IDENTIFIER 3
--#define SCE_CONF_EXTENSION 4
--#define SCE_CONF_PARAMETER 5
--#define SCE_CONF_STRING 6
--#define SCE_CONF_OPERATOR 7
--#define SCE_CONF_IP 8
--#define SCE_CONF_DIRECTIVE 9
--#define SCE_AVE_DEFAULT 0
--#define SCE_AVE_COMMENT 1
--#define SCE_AVE_NUMBER 2
--#define SCE_AVE_WORD 3
--#define SCE_AVE_STRING 6
--#define SCE_AVE_ENUM 7
--#define SCE_AVE_STRINGEOL 8
--#define SCE_AVE_IDENTIFIER 9
--#define SCE_AVE_OPERATOR 10
--#define SCE_AVE_WORD1 11
--#define SCE_AVE_WORD2 12
--#define SCE_AVE_WORD3 13
--#define SCE_AVE_WORD4 14
--#define SCE_AVE_WORD5 15
--#define SCE_AVE_WORD6 16
--#define SCE_ADA_DEFAULT 0
--#define SCE_ADA_WORD 1
--#define SCE_ADA_IDENTIFIER 2
--#define SCE_ADA_NUMBER 3
--#define SCE_ADA_DELIMITER 4
--#define SCE_ADA_CHARACTER 5
--#define SCE_ADA_CHARACTEREOL 6
--#define SCE_ADA_STRING 7
--#define SCE_ADA_STRINGEOL 8
--#define SCE_ADA_LABEL 9
--#define SCE_ADA_COMMENTLINE 10
--#define SCE_ADA_ILLEGAL 11
--#define SCE_BAAN_DEFAULT 0
--#define SCE_BAAN_COMMENT 1
--#define SCE_BAAN_COMMENTDOC 2
--#define SCE_BAAN_NUMBER 3
--#define SCE_BAAN_WORD 4
--#define SCE_BAAN_STRING 5
--#define SCE_BAAN_PREPROCESSOR 6
--#define SCE_BAAN_OPERATOR 7
--#define SCE_BAAN_IDENTIFIER 8
--#define SCE_BAAN_STRINGEOL 9
--#define SCE_BAAN_WORD2 10
--#define SCE_LISP_DEFAULT 0
--#define SCE_LISP_COMMENT 1
--#define SCE_LISP_NUMBER 2
--#define SCE_LISP_KEYWORD 3
--#define SCE_LISP_KEYWORD_KW 4
--#define SCE_LISP_SYMBOL 5
--#define SCE_LISP_STRING 6
--#define SCE_LISP_STRINGEOL 8
--#define SCE_LISP_IDENTIFIER 9
--#define SCE_LISP_OPERATOR 10
--#define SCE_LISP_SPECIAL 11
--#define SCE_LISP_MULTI_COMMENT 12
--#define SCE_EIFFEL_DEFAULT 0
--#define SCE_EIFFEL_COMMENTLINE 1
--#define SCE_EIFFEL_NUMBER 2
--#define SCE_EIFFEL_WORD 3
--#define SCE_EIFFEL_STRING 4
--#define SCE_EIFFEL_CHARACTER 5
--#define SCE_EIFFEL_OPERATOR 6
--#define SCE_EIFFEL_IDENTIFIER 7
--#define SCE_EIFFEL_STRINGEOL 8
--#define SCE_NNCRONTAB_DEFAULT 0
--#define SCE_NNCRONTAB_COMMENT 1
--#define SCE_NNCRONTAB_TASK 2
--#define SCE_NNCRONTAB_SECTION 3
--#define SCE_NNCRONTAB_KEYWORD 4
--#define SCE_NNCRONTAB_MODIFIER 5
--#define SCE_NNCRONTAB_ASTERISK 6
--#define SCE_NNCRONTAB_NUMBER 7
--#define SCE_NNCRONTAB_STRING 8
--#define SCE_NNCRONTAB_ENVIRONMENT 9
--#define SCE_NNCRONTAB_IDENTIFIER 10
--#define SCE_FORTH_DEFAULT 0
--#define SCE_FORTH_COMMENT 1
--#define SCE_FORTH_COMMENT_ML 2
--#define SCE_FORTH_IDENTIFIER 3
--#define SCE_FORTH_CONTROL 4
--#define SCE_FORTH_KEYWORD 5
--#define SCE_FORTH_DEFWORD 6
--#define SCE_FORTH_PREWORD1 7
--#define SCE_FORTH_PREWORD2 8
--#define SCE_FORTH_NUMBER 9
--#define SCE_FORTH_STRING 10
--#define SCE_FORTH_LOCALE 11
--#define SCE_MATLAB_DEFAULT 0
--#define SCE_MATLAB_COMMENT 1
--#define SCE_MATLAB_COMMAND 2
--#define SCE_MATLAB_NUMBER 3
--#define SCE_MATLAB_KEYWORD 4
--#define SCE_MATLAB_STRING 5
--#define SCE_MATLAB_OPERATOR 6
--#define SCE_MATLAB_IDENTIFIER 7
--#define SCE_MATLAB_DOUBLEQUOTESTRING 8
--#define SCE_SCRIPTOL_DEFAULT 0
--#define SCE_SCRIPTOL_WHITE 1
--#define SCE_SCRIPTOL_COMMENTLINE 2
--#define SCE_SCRIPTOL_PERSISTENT 3
--#define SCE_SCRIPTOL_CSTYLE 4
--#define SCE_SCRIPTOL_COMMENTBLOCK 5
--#define SCE_SCRIPTOL_NUMBER 6
--#define SCE_SCRIPTOL_STRING 7
--#define SCE_SCRIPTOL_CHARACTER 8
--#define SCE_SCRIPTOL_STRINGEOL 9
--#define SCE_SCRIPTOL_KEYWORD 10
--#define SCE_SCRIPTOL_OPERATOR 11
--#define SCE_SCRIPTOL_IDENTIFIER 12
--#define SCE_SCRIPTOL_TRIPLE 13
--#define SCE_SCRIPTOL_CLASSNAME 14
--#define SCE_SCRIPTOL_PREPROCESSOR 15
--#define SCE_ASM_DEFAULT 0
--#define SCE_ASM_COMMENT 1
--#define SCE_ASM_NUMBER 2
--#define SCE_ASM_STRING 3
--#define SCE_ASM_OPERATOR 4
--#define SCE_ASM_IDENTIFIER 5
--#define SCE_ASM_CPUINSTRUCTION 6
--#define SCE_ASM_MATHINSTRUCTION 7
--#define SCE_ASM_REGISTER 8
--#define SCE_ASM_DIRECTIVE 9
--#define SCE_ASM_DIRECTIVEOPERAND 10
--#define SCE_ASM_COMMENTBLOCK 11
--#define SCE_ASM_CHARACTER 12
--#define SCE_ASM_STRINGEOL 13
--#define SCE_ASM_EXTINSTRUCTION 14
--#define SCE_F_DEFAULT 0
--#define SCE_F_COMMENT 1
--#define SCE_F_NUMBER 2
--#define SCE_F_STRING1 3
--#define SCE_F_STRING2 4
--#define SCE_F_STRINGEOL 5
--#define SCE_F_OPERATOR 6
--#define SCE_F_IDENTIFIER 7
--#define SCE_F_WORD 8
--#define SCE_F_WORD2 9
--#define SCE_F_WORD3 10
--#define SCE_F_PREPROCESSOR 11
--#define SCE_F_OPERATOR2 12
--#define SCE_F_LABEL 13
--#define SCE_F_CONTINUATION 14
--#define SCE_CSS_DEFAULT 0
--#define SCE_CSS_TAG 1
--#define SCE_CSS_CLASS 2
--#define SCE_CSS_PSEUDOCLASS 3
--#define SCE_CSS_UNKNOWN_PSEUDOCLASS 4
--#define SCE_CSS_OPERATOR 5
--#define SCE_CSS_IDENTIFIER 6
--#define SCE_CSS_UNKNOWN_IDENTIFIER 7
--#define SCE_CSS_VALUE 8
--#define SCE_CSS_COMMENT 9
--#define SCE_CSS_ID 10
--#define SCE_CSS_IMPORTANT 11
--#define SCE_CSS_DIRECTIVE 12
--#define SCE_CSS_DOUBLESTRING 13
--#define SCE_CSS_SINGLESTRING 14
--#define SCE_CSS_IDENTIFIER2 15
--#define SCE_CSS_ATTRIBUTE 16
--#define SCE_CSS_IDENTIFIER3 17
--#define SCE_CSS_PSEUDOELEMENT 18
--#define SCE_CSS_EXTENDED_IDENTIFIER 19
--#define SCE_CSS_EXTENDED_PSEUDOCLASS 20
--#define SCE_CSS_EXTENDED_PSEUDOELEMENT 21
--#define SCE_CSS_MEDIA 22
--#define SCE_POV_DEFAULT 0
--#define SCE_POV_COMMENT 1
--#define SCE_POV_COMMENTLINE 2
--#define SCE_POV_NUMBER 3
--#define SCE_POV_OPERATOR 4
--#define SCE_POV_IDENTIFIER 5
--#define SCE_POV_STRING 6
--#define SCE_POV_STRINGEOL 7
--#define SCE_POV_DIRECTIVE 8
--#define SCE_POV_BADDIRECTIVE 9
--#define SCE_POV_WORD2 10
--#define SCE_POV_WORD3 11
--#define SCE_POV_WORD4 12
--#define SCE_POV_WORD5 13
--#define SCE_POV_WORD6 14
--#define SCE_POV_WORD7 15
--#define SCE_POV_WORD8 16
--#define SCE_LOUT_DEFAULT 0
--#define SCE_LOUT_COMMENT 1
--#define SCE_LOUT_NUMBER 2
--#define SCE_LOUT_WORD 3
--#define SCE_LOUT_WORD2 4
--#define SCE_LOUT_WORD3 5
--#define SCE_LOUT_WORD4 6
--#define SCE_LOUT_STRING 7
--#define SCE_LOUT_OPERATOR 8
--#define SCE_LOUT_IDENTIFIER 9
--#define SCE_LOUT_STRINGEOL 10
--#define SCE_ESCRIPT_DEFAULT 0
--#define SCE_ESCRIPT_COMMENT 1
--#define SCE_ESCRIPT_COMMENTLINE 2
--#define SCE_ESCRIPT_COMMENTDOC 3
--#define SCE_ESCRIPT_NUMBER 4
--#define SCE_ESCRIPT_WORD 5
--#define SCE_ESCRIPT_STRING 6
--#define SCE_ESCRIPT_OPERATOR 7
--#define SCE_ESCRIPT_IDENTIFIER 8
--#define SCE_ESCRIPT_BRACE 9
--#define SCE_ESCRIPT_WORD2 10
--#define SCE_ESCRIPT_WORD3 11
--#define SCE_PS_DEFAULT 0
--#define SCE_PS_COMMENT 1
--#define SCE_PS_DSC_COMMENT 2
--#define SCE_PS_DSC_VALUE 3
--#define SCE_PS_NUMBER 4
--#define SCE_PS_NAME 5
--#define SCE_PS_KEYWORD 6
--#define SCE_PS_LITERAL 7
--#define SCE_PS_IMMEVAL 8
--#define SCE_PS_PAREN_ARRAY 9
--#define SCE_PS_PAREN_DICT 10
--#define SCE_PS_PAREN_PROC 11
--#define SCE_PS_TEXT 12
--#define SCE_PS_HEXSTRING 13
--#define SCE_PS_BASE85STRING 14
--#define SCE_PS_BADSTRINGCHAR 15
--#define SCE_NSIS_DEFAULT 0
--#define SCE_NSIS_COMMENT 1
--#define SCE_NSIS_STRINGDQ 2
--#define SCE_NSIS_STRINGLQ 3
--#define SCE_NSIS_STRINGRQ 4
--#define SCE_NSIS_FUNCTION 5
--#define SCE_NSIS_VARIABLE 6
--#define SCE_NSIS_LABEL 7
--#define SCE_NSIS_USERDEFINED 8
--#define SCE_NSIS_SECTIONDEF 9
--#define SCE_NSIS_SUBSECTIONDEF 10
--#define SCE_NSIS_IFDEFINEDEF 11
--#define SCE_NSIS_MACRODEF 12
--#define SCE_NSIS_STRINGVAR 13
--#define SCE_NSIS_NUMBER 14
--#define SCE_NSIS_SECTIONGROUP 15
--#define SCE_NSIS_PAGEEX 16
--#define SCE_NSIS_FUNCTIONDEF 17
--#define SCE_NSIS_COMMENTBOX 18
--#define SCE_MMIXAL_LEADWS 0
--#define SCE_MMIXAL_COMMENT 1
--#define SCE_MMIXAL_LABEL 2
--#define SCE_MMIXAL_OPCODE 3
--#define SCE_MMIXAL_OPCODE_PRE 4
--#define SCE_MMIXAL_OPCODE_VALID 5
--#define SCE_MMIXAL_OPCODE_UNKNOWN 6
--#define SCE_MMIXAL_OPCODE_POST 7
--#define SCE_MMIXAL_OPERANDS 8
--#define SCE_MMIXAL_NUMBER 9
--#define SCE_MMIXAL_REF 10
--#define SCE_MMIXAL_CHAR 11
--#define SCE_MMIXAL_STRING 12
--#define SCE_MMIXAL_REGISTER 13
--#define SCE_MMIXAL_HEX 14
--#define SCE_MMIXAL_OPERATOR 15
--#define SCE_MMIXAL_SYMBOL 16
--#define SCE_MMIXAL_INCLUDE 17
--#define SCE_CLW_DEFAULT 0
--#define SCE_CLW_LABEL 1
--#define SCE_CLW_COMMENT 2
--#define SCE_CLW_STRING 3
--#define SCE_CLW_USER_IDENTIFIER 4
--#define SCE_CLW_INTEGER_CONSTANT 5
--#define SCE_CLW_REAL_CONSTANT 6
--#define SCE_CLW_PICTURE_STRING 7
--#define SCE_CLW_KEYWORD 8
--#define SCE_CLW_COMPILER_DIRECTIVE 9
--#define SCE_CLW_RUNTIME_EXPRESSIONS 10
--#define SCE_CLW_BUILTIN_PROCEDURES_FUNCTION 11
--#define SCE_CLW_STRUCTURE_DATA_TYPE 12
--#define SCE_CLW_ATTRIBUTE 13
--#define SCE_CLW_STANDARD_EQUATE 14
--#define SCE_CLW_ERROR 15
--#define SCE_CLW_DEPRECATED 16
--#define SCE_LOT_DEFAULT 0
--#define SCE_LOT_HEADER 1
--#define SCE_LOT_BREAK 2
--#define SCE_LOT_SET 3
--#define SCE_LOT_PASS 4
--#define SCE_LOT_FAIL 5
--#define SCE_LOT_ABORT 6
--#define SCE_YAML_DEFAULT 0
--#define SCE_YAML_COMMENT 1
--#define SCE_YAML_IDENTIFIER 2
--#define SCE_YAML_KEYWORD 3
--#define SCE_YAML_NUMBER 4
--#define SCE_YAML_REFERENCE 5
--#define SCE_YAML_DOCUMENT 6
--#define SCE_YAML_TEXT 7
--#define SCE_YAML_ERROR 8
--#define SCE_YAML_OPERATOR 9
--#define SCE_TEX_DEFAULT 0
--#define SCE_TEX_SPECIAL 1
--#define SCE_TEX_GROUP 2
--#define SCE_TEX_SYMBOL 3
--#define SCE_TEX_COMMAND 4
--#define SCE_TEX_TEXT 5
--#define SCE_METAPOST_DEFAULT 0
--#define SCE_METAPOST_SPECIAL 1
--#define SCE_METAPOST_GROUP 2
--#define SCE_METAPOST_SYMBOL 3
--#define SCE_METAPOST_COMMAND 4
--#define SCE_METAPOST_TEXT 5
--#define SCE_METAPOST_EXTRA 6
--#define SCE_ERLANG_DEFAULT 0
--#define SCE_ERLANG_COMMENT 1
--#define SCE_ERLANG_VARIABLE 2
--#define SCE_ERLANG_NUMBER 3
--#define SCE_ERLANG_KEYWORD 4
--#define SCE_ERLANG_STRING 5
--#define SCE_ERLANG_OPERATOR 6
--#define SCE_ERLANG_ATOM 7
--#define SCE_ERLANG_FUNCTION_NAME 8
--#define SCE_ERLANG_CHARACTER 9
--#define SCE_ERLANG_MACRO 10
--#define SCE_ERLANG_RECORD 11
--#define SCE_ERLANG_PREPROC 12
--#define SCE_ERLANG_NODE_NAME 13
--#define SCE_ERLANG_COMMENT_FUNCTION 14
--#define SCE_ERLANG_COMMENT_MODULE 15
--#define SCE_ERLANG_COMMENT_DOC 16
--#define SCE_ERLANG_COMMENT_DOC_MACRO 17
--#define SCE_ERLANG_ATOM_QUOTED 18
--#define SCE_ERLANG_MACRO_QUOTED 19
--#define SCE_ERLANG_RECORD_QUOTED 20
--#define SCE_ERLANG_NODE_NAME_QUOTED 21
--#define SCE_ERLANG_BIFS 22
--#define SCE_ERLANG_MODULES 23
--#define SCE_ERLANG_MODULES_ATT 24
--#define SCE_ERLANG_UNKNOWN 31
--#define SCE_MSSQL_DEFAULT 0
--#define SCE_MSSQL_COMMENT 1
--#define SCE_MSSQL_LINE_COMMENT 2
--#define SCE_MSSQL_NUMBER 3
--#define SCE_MSSQL_STRING 4
--#define SCE_MSSQL_OPERATOR 5
--#define SCE_MSSQL_IDENTIFIER 6
--#define SCE_MSSQL_VARIABLE 7
--#define SCE_MSSQL_COLUMN_NAME 8
--#define SCE_MSSQL_STATEMENT 9
--#define SCE_MSSQL_DATATYPE 10
--#define SCE_MSSQL_SYSTABLE 11
--#define SCE_MSSQL_GLOBAL_VARIABLE 12
--#define SCE_MSSQL_FUNCTION 13
--#define SCE_MSSQL_STORED_PROCEDURE 14
--#define SCE_MSSQL_DEFAULT_PREF_DATATYPE 15
--#define SCE_MSSQL_COLUMN_NAME_2 16
--#define SCE_V_DEFAULT 0
--#define SCE_V_COMMENT 1
--#define SCE_V_COMMENTLINE 2
--#define SCE_V_COMMENTLINEBANG 3
--#define SCE_V_NUMBER 4
--#define SCE_V_WORD 5
--#define SCE_V_STRING 6
--#define SCE_V_WORD2 7
--#define SCE_V_WORD3 8
--#define SCE_V_PREPROCESSOR 9
--#define SCE_V_OPERATOR 10
--#define SCE_V_IDENTIFIER 11
--#define SCE_V_STRINGEOL 12
--#define SCE_V_USER 19
--#define SCE_KIX_DEFAULT 0
--#define SCE_KIX_COMMENT 1
--#define SCE_KIX_STRING1 2
--#define SCE_KIX_STRING2 3
--#define SCE_KIX_NUMBER 4
--#define SCE_KIX_VAR 5
--#define SCE_KIX_MACRO 6
--#define SCE_KIX_KEYWORD 7
--#define SCE_KIX_FUNCTIONS 8
--#define SCE_KIX_OPERATOR 9
--#define SCE_KIX_IDENTIFIER 31
--#define SCE_GC_DEFAULT 0
--#define SCE_GC_COMMENTLINE 1
--#define SCE_GC_COMMENTBLOCK 2
--#define SCE_GC_GLOBAL 3
--#define SCE_GC_EVENT 4
--#define SCE_GC_ATTRIBUTE 5
--#define SCE_GC_CONTROL 6
--#define SCE_GC_COMMAND 7
--#define SCE_GC_STRING 8
--#define SCE_GC_OPERATOR 9
--#define SCE_SN_DEFAULT 0
--#define SCE_SN_CODE 1
--#define SCE_SN_COMMENTLINE 2
--#define SCE_SN_COMMENTLINEBANG 3
--#define SCE_SN_NUMBER 4
--#define SCE_SN_WORD 5
--#define SCE_SN_STRING 6
--#define SCE_SN_WORD2 7
--#define SCE_SN_WORD3 8
--#define SCE_SN_PREPROCESSOR 9
--#define SCE_SN_OPERATOR 10
--#define SCE_SN_IDENTIFIER 11
--#define SCE_SN_STRINGEOL 12
--#define SCE_SN_REGEXTAG 13
--#define SCE_SN_SIGNAL 14
--#define SCE_SN_USER 19
--#define SCE_AU3_DEFAULT 0
--#define SCE_AU3_COMMENT 1
--#define SCE_AU3_COMMENTBLOCK 2
--#define SCE_AU3_NUMBER 3
--#define SCE_AU3_FUNCTION 4
--#define SCE_AU3_KEYWORD 5
--#define SCE_AU3_MACRO 6
--#define SCE_AU3_STRING 7
--#define SCE_AU3_OPERATOR 8
--#define SCE_AU3_VARIABLE 9
--#define SCE_AU3_SENT 10
--#define SCE_AU3_PREPROCESSOR 11
--#define SCE_AU3_SPECIAL 12
--#define SCE_AU3_EXPAND 13
--#define SCE_AU3_COMOBJ 14
--#define SCE_AU3_UDF 15
--#define SCE_APDL_DEFAULT 0
--#define SCE_APDL_COMMENT 1
--#define SCE_APDL_COMMENTBLOCK 2
--#define SCE_APDL_NUMBER 3
--#define SCE_APDL_STRING 4
--#define SCE_APDL_OPERATOR 5
--#define SCE_APDL_WORD 6
--#define SCE_APDL_PROCESSOR 7
--#define SCE_APDL_COMMAND 8
--#define SCE_APDL_SLASHCOMMAND 9
--#define SCE_APDL_STARCOMMAND 10
--#define SCE_APDL_ARGUMENT 11
--#define SCE_APDL_FUNCTION 12
--#define SCE_SH_DEFAULT 0
--#define SCE_SH_ERROR 1
--#define SCE_SH_COMMENTLINE 2
--#define SCE_SH_NUMBER 3
--#define SCE_SH_WORD 4
--#define SCE_SH_STRING 5
--#define SCE_SH_CHARACTER 6
--#define SCE_SH_OPERATOR 7
--#define SCE_SH_IDENTIFIER 8
--#define SCE_SH_SCALAR 9
--#define SCE_SH_PARAM 10
--#define SCE_SH_BACKTICKS 11
--#define SCE_SH_HERE_DELIM 12
--#define SCE_SH_HERE_Q 13
--#define SCE_ASN1_DEFAULT 0
--#define SCE_ASN1_COMMENT 1
--#define SCE_ASN1_IDENTIFIER 2
--#define SCE_ASN1_STRING 3
--#define SCE_ASN1_OID 4
--#define SCE_ASN1_SCALAR 5
--#define SCE_ASN1_KEYWORD 6
--#define SCE_ASN1_ATTRIBUTE 7
--#define SCE_ASN1_DESCRIPTOR 8
--#define SCE_ASN1_TYPE 9
--#define SCE_ASN1_OPERATOR 10
--#define SCE_VHDL_DEFAULT 0
--#define SCE_VHDL_COMMENT 1
--#define SCE_VHDL_COMMENTLINEBANG 2
--#define SCE_VHDL_NUMBER 3
--#define SCE_VHDL_STRING 4
--#define SCE_VHDL_OPERATOR 5
--#define SCE_VHDL_IDENTIFIER 6
--#define SCE_VHDL_STRINGEOL 7
--#define SCE_VHDL_KEYWORD 8
--#define SCE_VHDL_STDOPERATOR 9
--#define SCE_VHDL_ATTRIBUTE 10
--#define SCE_VHDL_STDFUNCTION 11
--#define SCE_VHDL_STDPACKAGE 12
--#define SCE_VHDL_STDTYPE 13
--#define SCE_VHDL_USERWORD 14
--#define SCE_CAML_DEFAULT 0
--#define SCE_CAML_IDENTIFIER 1
--#define SCE_CAML_TAGNAME 2
--#define SCE_CAML_KEYWORD 3
--#define SCE_CAML_KEYWORD2 4
--#define SCE_CAML_KEYWORD3 5
--#define SCE_CAML_LINENUM 6
--#define SCE_CAML_OPERATOR 7
--#define SCE_CAML_NUMBER 8
--#define SCE_CAML_CHAR 9
--#define SCE_CAML_WHITE 10
--#define SCE_CAML_STRING 11
--#define SCE_CAML_COMMENT 12
--#define SCE_CAML_COMMENT1 13
--#define SCE_CAML_COMMENT2 14
--#define SCE_CAML_COMMENT3 15
--#define SCE_HA_DEFAULT 0
--#define SCE_HA_IDENTIFIER 1
--#define SCE_HA_KEYWORD 2
--#define SCE_HA_NUMBER 3
--#define SCE_HA_STRING 4
--#define SCE_HA_CHARACTER 5
--#define SCE_HA_CLASS 6
--#define SCE_HA_MODULE 7
--#define SCE_HA_CAPITAL 8
--#define SCE_HA_DATA 9
--#define SCE_HA_IMPORT 10
--#define SCE_HA_OPERATOR 11
--#define SCE_HA_INSTANCE 12
--#define SCE_HA_COMMENTLINE 13
--#define SCE_HA_COMMENTBLOCK 14
--#define SCE_HA_COMMENTBLOCK2 15
--#define SCE_HA_COMMENTBLOCK3 16
--#define SCE_T3_DEFAULT 0
--#define SCE_T3_X_DEFAULT 1
--#define SCE_T3_PREPROCESSOR 2
--#define SCE_T3_BLOCK_COMMENT 3
--#define SCE_T3_LINE_COMMENT 4
--#define SCE_T3_OPERATOR 5
--#define SCE_T3_KEYWORD 6
--#define SCE_T3_NUMBER 7
--#define SCE_T3_IDENTIFIER 8
--#define SCE_T3_S_STRING 9
--#define SCE_T3_D_STRING 10
--#define SCE_T3_X_STRING 11
--#define SCE_T3_LIB_DIRECTIVE 12
--#define SCE_T3_MSG_PARAM 13
--#define SCE_T3_HTML_TAG 14
--#define SCE_T3_HTML_DEFAULT 15
--#define SCE_T3_HTML_STRING 16
--#define SCE_T3_USER1 17
--#define SCE_T3_USER2 18
--#define SCE_T3_USER3 19
--#define SCE_T3_BRACE 20
--#define SCE_REBOL_DEFAULT 0
--#define SCE_REBOL_COMMENTLINE 1
--#define SCE_REBOL_COMMENTBLOCK 2
--#define SCE_REBOL_PREFACE 3
--#define SCE_REBOL_OPERATOR 4
--#define SCE_REBOL_CHARACTER 5
--#define SCE_REBOL_QUOTEDSTRING 6
--#define SCE_REBOL_BRACEDSTRING 7
--#define SCE_REBOL_NUMBER 8
--#define SCE_REBOL_PAIR 9
--#define SCE_REBOL_TUPLE 10
--#define SCE_REBOL_BINARY 11
--#define SCE_REBOL_MONEY 12
--#define SCE_REBOL_ISSUE 13
--#define SCE_REBOL_TAG 14
--#define SCE_REBOL_FILE 15
--#define SCE_REBOL_EMAIL 16
--#define SCE_REBOL_URL 17
--#define SCE_REBOL_DATE 18
--#define SCE_REBOL_TIME 19
--#define SCE_REBOL_IDENTIFIER 20
--#define SCE_REBOL_WORD 21
--#define SCE_REBOL_WORD2 22
--#define SCE_REBOL_WORD3 23
--#define SCE_REBOL_WORD4 24
--#define SCE_REBOL_WORD5 25
--#define SCE_REBOL_WORD6 26
--#define SCE_REBOL_WORD7 27
--#define SCE_REBOL_WORD8 28
--#define SCE_SQL_DEFAULT 0
--#define SCE_SQL_COMMENT 1
--#define SCE_SQL_COMMENTLINE 2
--#define SCE_SQL_COMMENTDOC 3
--#define SCE_SQL_NUMBER 4
--#define SCE_SQL_WORD 5
--#define SCE_SQL_STRING 6
--#define SCE_SQL_CHARACTER 7
--#define SCE_SQL_SQLPLUS 8
--#define SCE_SQL_SQLPLUS_PROMPT 9
--#define SCE_SQL_OPERATOR 10
--#define SCE_SQL_IDENTIFIER 11
--#define SCE_SQL_SQLPLUS_COMMENT 13
--#define SCE_SQL_COMMENTLINEDOC 15
--#define SCE_SQL_WORD2 16
--#define SCE_SQL_COMMENTDOCKEYWORD 17
--#define SCE_SQL_COMMENTDOCKEYWORDERROR 18
--#define SCE_SQL_USER1 19
--#define SCE_SQL_USER2 20
--#define SCE_SQL_USER3 21
--#define SCE_SQL_USER4 22
--#define SCE_SQL_QUOTEDIDENTIFIER 23
--#define SCE_ST_DEFAULT 0
--#define SCE_ST_STRING 1
--#define SCE_ST_NUMBER 2
--#define SCE_ST_COMMENT 3
--#define SCE_ST_SYMBOL 4
--#define SCE_ST_BINARY 5
--#define SCE_ST_BOOL 6
--#define SCE_ST_SELF 7
--#define SCE_ST_SUPER 8
--#define SCE_ST_NIL 9
--#define SCE_ST_GLOBAL 10
--#define SCE_ST_RETURN 11
--#define SCE_ST_SPECIAL 12
--#define SCE_ST_KWSEND 13
--#define SCE_ST_ASSIGN 14
--#define SCE_ST_CHARACTER 15
--#define SCE_ST_SPEC_SEL 16
--#define SCE_FS_DEFAULT 0
--#define SCE_FS_COMMENT 1
--#define SCE_FS_COMMENTLINE 2
--#define SCE_FS_COMMENTDOC 3
--#define SCE_FS_COMMENTLINEDOC 4
--#define SCE_FS_COMMENTDOCKEYWORD 5
--#define SCE_FS_COMMENTDOCKEYWORDERROR 6
--#define SCE_FS_KEYWORD 7
--#define SCE_FS_KEYWORD2 8
--#define SCE_FS_KEYWORD3 9
--#define SCE_FS_KEYWORD4 10
--#define SCE_FS_NUMBER 11
--#define SCE_FS_STRING 12
--#define SCE_FS_PREPROCESSOR 13
--#define SCE_FS_OPERATOR 14
--#define SCE_FS_IDENTIFIER 15
--#define SCE_FS_DATE 16
--#define SCE_FS_STRINGEOL 17
--#define SCE_FS_CONSTANT 18
--#define SCE_FS_WORDOPERATOR 19
--#define SCE_FS_DISABLEDCODE 20
--#define SCE_FS_DEFAULT_C 21
--#define SCE_FS_COMMENTDOC_C 22
--#define SCE_FS_COMMENTLINEDOC_C 23
--#define SCE_FS_KEYWORD_C 24
--#define SCE_FS_KEYWORD2_C 25
--#define SCE_FS_NUMBER_C 26
--#define SCE_FS_STRING_C 27
--#define SCE_FS_PREPROCESSOR_C 28
--#define SCE_FS_OPERATOR_C 29
--#define SCE_FS_IDENTIFIER_C 30
--#define SCE_FS_STRINGEOL_C 31
--#define SCE_CSOUND_DEFAULT 0
--#define SCE_CSOUND_COMMENT 1
--#define SCE_CSOUND_NUMBER 2
--#define SCE_CSOUND_OPERATOR 3
--#define SCE_CSOUND_INSTR 4
--#define SCE_CSOUND_IDENTIFIER 5
--#define SCE_CSOUND_OPCODE 6
--#define SCE_CSOUND_HEADERSTMT 7
--#define SCE_CSOUND_USERKEYWORD 8
--#define SCE_CSOUND_COMMENTBLOCK 9
--#define SCE_CSOUND_PARAM 10
--#define SCE_CSOUND_ARATE_VAR 11
--#define SCE_CSOUND_KRATE_VAR 12
--#define SCE_CSOUND_IRATE_VAR 13
--#define SCE_CSOUND_GLOBAL_VAR 14
--#define SCE_CSOUND_STRINGEOL 15
--#define SCE_INNO_DEFAULT 0
--#define SCE_INNO_COMMENT 1
--#define SCE_INNO_KEYWORD 2
--#define SCE_INNO_PARAMETER 3
--#define SCE_INNO_SECTION 4
--#define SCE_INNO_PREPROC 5
--#define SCE_INNO_INLINE_EXPANSION 6
--#define SCE_INNO_COMMENT_PASCAL 7
--#define SCE_INNO_KEYWORD_PASCAL 8
--#define SCE_INNO_KEYWORD_USER 9
--#define SCE_INNO_STRING_DOUBLE 10
--#define SCE_INNO_STRING_SINGLE 11
--#define SCE_INNO_IDENTIFIER 12
--#define SCE_OPAL_SPACE 0
--#define SCE_OPAL_COMMENT_BLOCK 1
--#define SCE_OPAL_COMMENT_LINE 2
--#define SCE_OPAL_INTEGER 3
--#define SCE_OPAL_KEYWORD 4
--#define SCE_OPAL_SORT 5
--#define SCE_OPAL_STRING 6
--#define SCE_OPAL_PAR 7
--#define SCE_OPAL_BOOL_CONST 8
--#define SCE_OPAL_DEFAULT 32
--#define SCE_SPICE_DEFAULT 0
--#define SCE_SPICE_IDENTIFIER 1
--#define SCE_SPICE_KEYWORD 2
--#define SCE_SPICE_KEYWORD2 3
--#define SCE_SPICE_KEYWORD3 4
--#define SCE_SPICE_NUMBER 5
--#define SCE_SPICE_DELIMITER 6
--#define SCE_SPICE_VALUE 7
--#define SCE_SPICE_COMMENTLINE 8
--#define SCE_CMAKE_DEFAULT 0
--#define SCE_CMAKE_COMMENT 1
--#define SCE_CMAKE_STRINGDQ 2
--#define SCE_CMAKE_STRINGLQ 3
--#define SCE_CMAKE_STRINGRQ 4
--#define SCE_CMAKE_COMMANDS 5
--#define SCE_CMAKE_PARAMETERS 6
--#define SCE_CMAKE_VARIABLE 7
--#define SCE_CMAKE_USERDEFINED 8
--#define SCE_CMAKE_WHILEDEF 9
--#define SCE_CMAKE_FOREACHDEF 10
--#define SCE_CMAKE_IFDEFINEDEF 11
--#define SCE_CMAKE_MACRODEF 12
--#define SCE_CMAKE_STRINGVAR 13
--#define SCE_CMAKE_NUMBER 14
--#define SCE_GAP_DEFAULT 0
--#define SCE_GAP_IDENTIFIER 1
--#define SCE_GAP_KEYWORD 2
--#define SCE_GAP_KEYWORD2 3
--#define SCE_GAP_KEYWORD3 4
--#define SCE_GAP_KEYWORD4 5
--#define SCE_GAP_STRING 6
--#define SCE_GAP_CHAR 7
--#define SCE_GAP_OPERATOR 8
--#define SCE_GAP_COMMENT 9
--#define SCE_GAP_NUMBER 10
--#define SCE_GAP_STRINGEOL 11
--#define SCE_PLM_DEFAULT 0
--#define SCE_PLM_COMMENT 1
--#define SCE_PLM_STRING 2
--#define SCE_PLM_NUMBER 3
--#define SCE_PLM_IDENTIFIER 4
--#define SCE_PLM_OPERATOR 5
--#define SCE_PLM_CONTROL 6
--#define SCE_PLM_KEYWORD 7
--#define SCE_4GL_DEFAULT 0
--#define SCE_4GL_NUMBER 1
--#define SCE_4GL_WORD 2
--#define SCE_4GL_STRING 3
--#define SCE_4GL_CHARACTER 4
--#define SCE_4GL_PREPROCESSOR 5
--#define SCE_4GL_OPERATOR 6
--#define SCE_4GL_IDENTIFIER 7
--#define SCE_4GL_BLOCK 8
--#define SCE_4GL_END 9
--#define SCE_4GL_COMMENT1 10
--#define SCE_4GL_COMMENT2 11
--#define SCE_4GL_COMMENT3 12
--#define SCE_4GL_COMMENT4 13
--#define SCE_4GL_COMMENT5 14
--#define SCE_4GL_COMMENT6 15
--#define SCE_4GL_DEFAULT_ 16
--#define SCE_4GL_NUMBER_ 17
--#define SCE_4GL_WORD_ 18
--#define SCE_4GL_STRING_ 19
--#define SCE_4GL_CHARACTER_ 20
--#define SCE_4GL_PREPROCESSOR_ 21
--#define SCE_4GL_OPERATOR_ 22
--#define SCE_4GL_IDENTIFIER_ 23
--#define SCE_4GL_BLOCK_ 24
--#define SCE_4GL_END_ 25
--#define SCE_4GL_COMMENT1_ 26
--#define SCE_4GL_COMMENT2_ 27
--#define SCE_4GL_COMMENT3_ 28
--#define SCE_4GL_COMMENT4_ 29
--#define SCE_4GL_COMMENT5_ 30
--#define SCE_4GL_COMMENT6_ 31
--#define SCE_ABAQUS_DEFAULT 0
--#define SCE_ABAQUS_COMMENT 1
--#define SCE_ABAQUS_COMMENTBLOCK 2
--#define SCE_ABAQUS_NUMBER 3
--#define SCE_ABAQUS_STRING 4
--#define SCE_ABAQUS_OPERATOR 5
--#define SCE_ABAQUS_WORD 6
--#define SCE_ABAQUS_PROCESSOR 7
--#define SCE_ABAQUS_COMMAND 8
--#define SCE_ABAQUS_SLASHCOMMAND 9
--#define SCE_ABAQUS_STARCOMMAND 10
--#define SCE_ABAQUS_ARGUMENT 11
--#define SCE_ABAQUS_FUNCTION 12
--#define SCE_ASY_DEFAULT 0
--#define SCE_ASY_COMMENT 1
--#define SCE_ASY_COMMENTLINE 2
--#define SCE_ASY_NUMBER 3
--#define SCE_ASY_WORD 4
--#define SCE_ASY_STRING 5
--#define SCE_ASY_CHARACTER 6
--#define SCE_ASY_OPERATOR 7
--#define SCE_ASY_IDENTIFIER 8
--#define SCE_ASY_STRINGEOL 9
--#define SCE_ASY_COMMENTLINEDOC 10
--#define SCE_ASY_WORD2 11
--#define SCE_R_DEFAULT 0
--#define SCE_R_COMMENT 1
--#define SCE_R_KWORD 2
--#define SCE_R_BASEKWORD 3
--#define SCE_R_OTHERKWORD 4
--#define SCE_R_NUMBER 5
--#define SCE_R_STRING 6
--#define SCE_R_STRING2 7
--#define SCE_R_OPERATOR 8
--#define SCE_R_IDENTIFIER 9
--#define SCE_R_INFIX 10
--#define SCE_R_INFIXEOL 11
--#define SCE_MAGIK_DEFAULT 0
--#define SCE_MAGIK_COMMENT 1
--#define SCE_MAGIK_HYPER_COMMENT 16
--#define SCE_MAGIK_STRING 2
--#define SCE_MAGIK_CHARACTER 3
--#define SCE_MAGIK_NUMBER 4
--#define SCE_MAGIK_IDENTIFIER 5
--#define SCE_MAGIK_OPERATOR 6
--#define SCE_MAGIK_FLOW 7
--#define SCE_MAGIK_CONTAINER 8
--#define SCE_MAGIK_BRACKET_BLOCK 9
--#define SCE_MAGIK_BRACE_BLOCK 10
--#define SCE_MAGIK_SQBRACKET_BLOCK 11
--#define SCE_MAGIK_UNKNOWN_KEYWORD 12
--#define SCE_MAGIK_KEYWORD 13
--#define SCE_MAGIK_PRAGMA 14
--#define SCE_MAGIK_SYMBOL 15
--#define SCE_POWERSHELL_DEFAULT 0
--#define SCE_POWERSHELL_COMMENT 1
--#define SCE_POWERSHELL_STRING 2
--#define SCE_POWERSHELL_CHARACTER 3
--#define SCE_POWERSHELL_NUMBER 4
--#define SCE_POWERSHELL_VARIABLE 5
--#define SCE_POWERSHELL_OPERATOR 6
--#define SCE_POWERSHELL_IDENTIFIER 7
--#define SCE_POWERSHELL_KEYWORD 8
--#define SCE_POWERSHELL_CMDLET 9
--#define SCE_POWERSHELL_ALIAS 10
--#define SCE_MYSQL_DEFAULT 0
--#define SCE_MYSQL_COMMENT 1
--#define SCE_MYSQL_COMMENTLINE 2
--#define SCE_MYSQL_VARIABLE 3
--#define SCE_MYSQL_SYSTEMVARIABLE 4
--#define SCE_MYSQL_KNOWNSYSTEMVARIABLE 5
--#define SCE_MYSQL_NUMBER 6
--#define SCE_MYSQL_MAJORKEYWORD 7
--#define SCE_MYSQL_KEYWORD 8
--#define SCE_MYSQL_DATABASEOBJECT 9
--#define SCE_MYSQL_PROCEDUREKEYWORD 10
--#define SCE_MYSQL_STRING 11
--#define SCE_MYSQL_SQSTRING 12
--#define SCE_MYSQL_DQSTRING 13
--#define SCE_MYSQL_OPERATOR 14
--#define SCE_MYSQL_FUNCTION 15
--#define SCE_MYSQL_IDENTIFIER 16
--#define SCE_MYSQL_QUOTEDIDENTIFIER 17
--#define SCE_MYSQL_USER1 18
--#define SCE_MYSQL_USER2 19
--#define SCE_MYSQL_USER3 20
--#define SCE_MYSQL_HIDDENCOMMAND 21
--#define SCE_PO_DEFAULT 0
--#define SCE_PO_COMMENT 1
--#define SCE_PO_MSGID 2
--#define SCE_PO_MSGID_TEXT 3
--#define SCE_PO_MSGSTR 4
--#define SCE_PO_MSGSTR_TEXT 5
--#define SCE_PO_MSGCTXT 6
--#define SCE_PO_MSGCTXT_TEXT 7
--#define SCE_PO_FUZZY 8
--#define SCE_PAS_DEFAULT 0
--#define SCE_PAS_IDENTIFIER 1
--#define SCE_PAS_COMMENT 2
--#define SCE_PAS_COMMENT2 3
--#define SCE_PAS_COMMENTLINE 4
--#define SCE_PAS_PREPROCESSOR 5
--#define SCE_PAS_PREPROCESSOR2 6
--#define SCE_PAS_NUMBER 7
--#define SCE_PAS_HEXNUMBER 8
--#define SCE_PAS_WORD 9
--#define SCE_PAS_STRING 10
--#define SCE_PAS_STRINGEOL 11
--#define SCE_PAS_CHARACTER 12
--#define SCE_PAS_OPERATOR 13
--#define SCE_PAS_ASM 14
--#define SCE_SORCUS_DEFAULT 0
--#define SCE_SORCUS_COMMAND 1
--#define SCE_SORCUS_PARAMETER 2
--#define SCE_SORCUS_COMMENTLINE 3
--#define SCE_SORCUS_STRING 4
--#define SCE_SORCUS_STRINGEOL 5
--#define SCE_SORCUS_IDENTIFIER 6
--#define SCE_SORCUS_OPERATOR 7
--#define SCE_SORCUS_NUMBER 8
--#define SCE_SORCUS_CONSTANT 9
--#define SCE_POWERPRO_DEFAULT 0
--#define SCE_POWERPRO_COMMENTBLOCK 1
--#define SCE_POWERPRO_COMMENTLINE 2
--#define SCE_POWERPRO_NUMBER 3
--#define SCE_POWERPRO_WORD 4
--#define SCE_POWERPRO_WORD2 5
--#define SCE_POWERPRO_WORD3 6
--#define SCE_POWERPRO_WORD4 7
--#define SCE_POWERPRO_DOUBLEQUOTEDSTRING 8
--#define SCE_POWERPRO_SINGLEQUOTEDSTRING 9
--#define SCE_POWERPRO_LINECONTINUE 10
--#define SCE_POWERPRO_OPERATOR 11
--#define SCE_POWERPRO_IDENTIFIER 12
--#define SCE_POWERPRO_STRINGEOL 13
--#define SCE_POWERPRO_VERBATIM 14
--#define SCE_POWERPRO_ALTQUOTE 15
--#define SCE_POWERPRO_FUNCTION 16
--#define SCE_SML_DEFAULT 0
--#define SCE_SML_IDENTIFIER 1
--#define SCE_SML_TAGNAME 2
--#define SCE_SML_KEYWORD 3
--#define SCE_SML_KEYWORD2 4
--#define SCE_SML_KEYWORD3 5
--#define SCE_SML_LINENUM 6
--#define SCE_SML_OPERATOR 7
--#define SCE_SML_NUMBER 8
--#define SCE_SML_CHAR 9
--#define SCE_SML_STRING 11
--#define SCE_SML_COMMENT 12
--#define SCE_SML_COMMENT1 13
--#define SCE_SML_COMMENT2 14
--#define SCE_SML_COMMENT3 15
--#define SCE_MARKDOWN_DEFAULT 0
--#define SCE_MARKDOWN_LINE_BEGIN 1
--#define SCE_MARKDOWN_STRONG1 2
--#define SCE_MARKDOWN_STRONG2 3
--#define SCE_MARKDOWN_EM1 4
--#define SCE_MARKDOWN_EM2 5
--#define SCE_MARKDOWN_HEADER1 6
--#define SCE_MARKDOWN_HEADER2 7
--#define SCE_MARKDOWN_HEADER3 8
--#define SCE_MARKDOWN_HEADER4 9
--#define SCE_MARKDOWN_HEADER5 10
--#define SCE_MARKDOWN_HEADER6 11
--#define SCE_MARKDOWN_PRECHAR 12
--#define SCE_MARKDOWN_ULIST_ITEM 13
--#define SCE_MARKDOWN_OLIST_ITEM 14
--#define SCE_MARKDOWN_BLOCKQUOTE 15
--#define SCE_MARKDOWN_STRIKEOUT 16
--#define SCE_MARKDOWN_HRULE 17
--#define SCE_MARKDOWN_LINK 18
--#define SCE_MARKDOWN_CODE 19
--#define SCE_MARKDOWN_CODE2 20
--#define SCE_MARKDOWN_CODEBK 21
++#if 0 // added by Mitchell
+ #define SCE_P_DEFAULT 0
+ #define SCE_P_COMMENTLINE 1
+ #define SCE_P_NUMBER 2
+@@ -1415,6 +1419,7 @@
+ #define SCE_TXT2TAGS_OPTION 23
+ #define SCE_TXT2TAGS_PREPROC 24
+ #define SCE_TXT2TAGS_POSTPROC 25
++#endif // added by Mitchell
  /* --Autogenerated -- end of section automatically generated from Scintilla.iface */
-+// end modified by Mitchell
  
  #endif
-diff -r f99c7dfc2bff include/Scintilla.h
---- scintilla/include/Scintilla.h	Tue Jun 01 03:43:54 2010 +0000
-+++ scintilla/include/Scintilla.h	Wed Aug 11 22:35:50 2010 -0400
-@@ -798,6 +798,7 @@
- #define SCI_GETPROPERTYINT 4010
- #define SCI_GETSTYLEBITSNEEDED 4011
- #define SCI_GETLEXERLANGUAGE 4012
-+#define SCI_GETSTYLENAME 4013 // added by Mitchell
- #define SC_MOD_INSERTTEXT 0x1
- #define SC_MOD_DELETETEXT 0x2
- #define SC_MOD_CHANGESTYLE 0x4
-diff -r f99c7dfc2bff include/Scintilla.iface
---- scintilla/include/Scintilla.iface	Tue Jun 01 03:43:54 2010 +0000
-+++ scintilla/include/Scintilla.iface	Wed Aug 11 22:35:50 2010 -0400
-@@ -2132,6 +2132,11 @@
- # Return the length of the text.
+diff -r ffde119d297e include/Scintilla.iface
+--- scintilla/include/Scintilla.iface	Wed Jul 28 17:54:24 2010 +1000
++++ scintilla/include/Scintilla.iface	Tue Aug 17 00:13:24 2010 -0400
+@@ -2142,7 +2142,7 @@
  get int GetLexerLanguage=4012(, stringresult text)
  
-+# added by Mitchell
-+# Retrieve the name associated with a style number.
-+get int GetStyleName=4013(int style, stringresult stylename)
-+# end added by Mitchell
-+
- # Notifications
- # Type of modification and the action which caused the modification.
- # These are defined as a bit mask to make it easy to specify which notifications are wanted.
-@@ -2204,1554 +2209,13 @@
+ # For private communication between an application and a known lexer.
+-fun int PrivateLexerCall=4013(int operation, int pointer)
++fun int PrivateLexerCall=4013(int operation, stringresult val) # modified by Mitchell
+ 
+ # Retrieve a '\n' separated list of properties understood by the current lexer.
+ fun int PropertyNames=4014(, stringresult names)
+@@ -2234,1586 +2234,13 @@
  enu Lexer=SCLEX_
  val SCLEX_CONTAINER=0
  val SCLEX_NULL=1
@@ -1850,6 +160,7 @@ diff -r f99c7dfc2bff include/Scintilla.iface
 -val SCLEX_NIMROD=96
 -val SCLEX_SML=97
 -val SCLEX_MARKDOWN=98
+-val SCLEX_TXT2TAGS=99
 +val SCLEX_LPEG=2
  
  # When a lexer specifies its language as SCLEX_AUTOMATIC it receives a
@@ -3180,6 +1491,9 @@ diff -r f99c7dfc2bff include/Scintilla.iface
 -val SCE_POWERSHELL_KEYWORD=8
 -val SCE_POWERSHELL_CMDLET=9
 -val SCE_POWERSHELL_ALIAS=10
+-val SCE_POWERSHELL_FUNCTION=11
+-val SCE_POWERSHELL_USER1=12
+-val SCE_POWERSHELL_COMMENTSTREAM=13
 -# Lexical state for SCLEX_MYSQL
 -lex MySQL=SCLEX_MYSQL SCE_MYSQL_
 -val SCE_MYSQL_DEFAULT=0
@@ -3304,224 +1618,43 @@ diff -r f99c7dfc2bff include/Scintilla.iface
 -val SCE_MARKDOWN_CODE=19
 -val SCE_MARKDOWN_CODE2=20
 -val SCE_MARKDOWN_CODEBK=21
+-# Lexical state for SCLEX_TXT2TAGS
+-lex Txt2tags=SCLEX_TXT2TAGS SCE_TXT2TAGS_
+-val SCE_TXT2TAGS_DEFAULT=0
+-val SCE_TXT2TAGS_LINE_BEGIN=1
+-val SCE_TXT2TAGS_STRONG1=2
+-val SCE_TXT2TAGS_STRONG2=3
+-val SCE_TXT2TAGS_EM1=4
+-val SCE_TXT2TAGS_EM2=5
+-val SCE_TXT2TAGS_HEADER1=6
+-val SCE_TXT2TAGS_HEADER2=7
+-val SCE_TXT2TAGS_HEADER3=8
+-val SCE_TXT2TAGS_HEADER4=9
+-val SCE_TXT2TAGS_HEADER5=10
+-val SCE_TXT2TAGS_HEADER6=11
+-val SCE_TXT2TAGS_PRECHAR=12
+-val SCE_TXT2TAGS_ULIST_ITEM=13
+-val SCE_TXT2TAGS_OLIST_ITEM=14
+-val SCE_TXT2TAGS_BLOCKQUOTE=15
+-val SCE_TXT2TAGS_STRIKEOUT=16
+-val SCE_TXT2TAGS_HRULE=17
+-val SCE_TXT2TAGS_LINK=18
+-val SCE_TXT2TAGS_CODE=19
+-val SCE_TXT2TAGS_CODE2=20
+-val SCE_TXT2TAGS_CODEBK=21
+-val SCE_TXT2TAGS_COMMENT=22
+-val SCE_TXT2TAGS_OPTION=23
+-val SCE_TXT2TAGS_PREPROC=24
+-val SCE_TXT2TAGS_POSTPROC=25
 +# Lexical states for SCLEX_LPEG
 +lex LPEG=SCLEX_LPEG SCE_LPEG_
  
  # Events
  
-diff -r f99c7dfc2bff src/ExternalLexer.cxx
---- scintilla/src/ExternalLexer.cxx	Tue Jun 01 03:43:54 2010 +0000
-+++ scintilla/src/ExternalLexer.cxx	Wed Aug 11 22:35:50 2010 -0400
-@@ -143,7 +143,7 @@
- 
- 			for (int i = 0; i < nl; i++) {
- 				GetLexerName(i, lexname, 100);
--				lex = new ExternalLexerModule(SCLEX_AUTOMATIC, NULL, lexname, NULL);
-+				lex = new ExternalLexerModule(SCLEX_AUTOMATIC, NULL, NULL, lexname, NULL); // modified by Mitchell
- 
- 				// Create a LexerMinder so we don't leak the ExternalLexerModule...
- 				lm = new LexerMinder;
-diff -r f99c7dfc2bff src/ExternalLexer.h
---- scintilla/src/ExternalLexer.h	Tue Jun 01 03:43:54 2010 +0000
-+++ scintilla/src/ExternalLexer.h	Wed Aug 11 22:35:50 2010 -0400
-@@ -37,12 +37,14 @@
- 	int externalLanguage;
- 	char name[100];
- public:
--	ExternalLexerModule(int language_, LexerFunction fnLexer_,
--		const char *languageName_=0, LexerFunction fnFolder_=0) : LexerModule(language_, fnLexer_, 0, fnFolder_) {
-+	// modified by Mitchell
-+	ExternalLexerModule(int language_, InitFunction fnInit_, LexerFunction fnLexer_,
-+		const char *languageName_=0, LexerFunction fnFolder_=0) : LexerModule(language_, fnInit_, fnLexer_, 0, fnFolder_) {
- 		strncpy(name, languageName_, sizeof(name));
- 		name[sizeof(name)-1] = '\0';
- 		languageName = name;
--	}
-+	};
-+	// end modified by Mitchell
- 	virtual void Lex(unsigned int startPos, int lengthDoc, int initStyle,
- 					WordList *keywordlists[], Accessor &styler) const;
- 	virtual void Fold(unsigned int startPos, int lengthDoc, int initStyle,
-diff -r f99c7dfc2bff src/KeyWords.cxx
---- scintilla/src/KeyWords.cxx	Tue Jun 01 03:43:54 2010 +0000
-+++ scintilla/src/KeyWords.cxx	Wed Aug 11 22:35:50 2010 -0400
-@@ -11,6 +11,14 @@
- #include <stdio.h>
- #include <stdarg.h>
- 
-+// added by Mitchell
-+extern "C" {
-+#include <lua.h>
-+#include <lualib.h>
-+#include <lauxlib.h>
-+}
-+// end added by Mitchell
-+
- #include "Platform.h"
- 
- #include "PropSet.h"
-@@ -213,12 +221,14 @@
- int LexerModule::nextLanguage = SCLEX_AUTOMATIC+1;
- 
- LexerModule::LexerModule(int language_,
-+	InitFunction fnInit_, // added by Mitchell
- 	LexerFunction fnLexer_,
- 	const char *languageName_,
- 	LexerFunction fnFolder_,
-         const char *const wordListDescriptions_[],
- 	int styleBits_) :
- 	language(language_),
-+	fnInit(fnInit_), // added by Mitchell
- 	fnLexer(fnLexer_),
- 	fnFolder(fnFolder_),
- 	wordListDescriptions(wordListDescriptions_),
-@@ -285,13 +295,23 @@
- 	return 0;
- }
- 
-+// added by Mitchell
-+bool LexerModule::Init(lua_State *L, const char *languageName, Accessor &styler) const {
-+	if (fnInit)
-+		return fnInit(L, languageName, styler);
-+	return false;
-+}
-+// end added by Mitchell
-+
- void LexerModule::Lex(unsigned int startPos, int lengthDoc, int initStyle,
-+	lua_State *L, // added by Mitchell
- 	  WordList *keywordlists[], Accessor &styler) const {
- 	if (fnLexer)
--		fnLexer(startPos, lengthDoc, initStyle, keywordlists, styler);
-+		fnLexer(startPos, lengthDoc, initStyle, L, keywordlists, styler); // modified by Mitchell
- }
- 
- void LexerModule::Fold(unsigned int startPos, int lengthDoc, int initStyle,
-+	lua_State *L, // added by Mitchell
- 	  WordList *keywordlists[], Accessor &styler) const {
- 	if (fnFolder) {
- 		int lineCurrent = styler.GetLine(startPos);
-@@ -306,7 +326,7 @@
- 				initStyle = styler.StyleAt(startPos - 1);
- 			}
- 		}
--		fnFolder(startPos, lengthDoc, initStyle, keywordlists, styler);
-+		fnFolder(startPos, lengthDoc, initStyle, L, keywordlists, styler); // modified by Mitchell
- 	}
- }
- 
-@@ -325,105 +345,14 @@
- // Shorten the code that declares a lexer and ensures it is linked in by calling a method.
- #define LINK_LEXER(lexer) extern LexerModule lexer; forcer += lexer.GetLanguage();
- 
-+// modified by Mitchell
- //++Autogenerated -- run src/LexGen.py to regenerate
- //**\(\tLINK_LEXER(\*);\n\)
--	LINK_LEXER(lmAbaqus);
--	LINK_LEXER(lmAda);
--	LINK_LEXER(lmAns1);
--	LINK_LEXER(lmAPDL);
--	LINK_LEXER(lmAsm);
--	LINK_LEXER(lmASY);
--	LINK_LEXER(lmAU3);
--	LINK_LEXER(lmAVE);
--	LINK_LEXER(lmBaan);
--	LINK_LEXER(lmBash);
--	LINK_LEXER(lmBatch);
--	LINK_LEXER(lmBlitzBasic);
--	LINK_LEXER(lmBullant);
--	LINK_LEXER(lmCaml);
--	LINK_LEXER(lmClw);
--	LINK_LEXER(lmClwNoCase);
--	LINK_LEXER(lmCmake);
--	LINK_LEXER(lmCOBOL);
--	LINK_LEXER(lmConf);
--	LINK_LEXER(lmCPP);
--	LINK_LEXER(lmCPPNoCase);
--	LINK_LEXER(lmCsound);
--	LINK_LEXER(lmCss);
--	LINK_LEXER(lmD);
--	LINK_LEXER(lmDiff);
--	LINK_LEXER(lmEiffel);
--	LINK_LEXER(lmEiffelkw);
--	LINK_LEXER(lmErlang);
--	LINK_LEXER(lmErrorList);
--	LINK_LEXER(lmESCRIPT);
--	LINK_LEXER(lmF77);
--	LINK_LEXER(lmFlagShip);
--	LINK_LEXER(lmForth);
--	LINK_LEXER(lmFortran);
--	LINK_LEXER(lmFreeBasic);
--	LINK_LEXER(lmGAP);
--	LINK_LEXER(lmGui4Cli);
--	LINK_LEXER(lmHaskell);
--	LINK_LEXER(lmHTML);
--	LINK_LEXER(lmInno);
--	LINK_LEXER(lmKix);
--	LINK_LEXER(lmLatex);
--	LINK_LEXER(lmLISP);
--	LINK_LEXER(lmLot);
--	LINK_LEXER(lmLout);
--	LINK_LEXER(lmLua);
--	LINK_LEXER(lmMagikSF);
--	LINK_LEXER(lmMake);
--	LINK_LEXER(lmMarkdown);
--	LINK_LEXER(lmMatlab);
--	LINK_LEXER(lmMETAPOST);
--	LINK_LEXER(lmMMIXAL);
--	LINK_LEXER(lmMSSQL);
--	LINK_LEXER(lmMySQL);
--	LINK_LEXER(lmNimrod);
--	LINK_LEXER(lmNncrontab);
--	LINK_LEXER(lmNsis);
-+	LINK_LEXER(lmLPeg);
- 	LINK_LEXER(lmNull);
--	LINK_LEXER(lmOctave);
--	LINK_LEXER(lmOpal);
--	LINK_LEXER(lmPascal);
--	LINK_LEXER(lmPB);
--	LINK_LEXER(lmPerl);
--	LINK_LEXER(lmPHPSCRIPT);
--	LINK_LEXER(lmPLM);
--	LINK_LEXER(lmPo);
--	LINK_LEXER(lmPOV);
--	LINK_LEXER(lmPowerPro);
--	LINK_LEXER(lmPowerShell);
--	LINK_LEXER(lmProgress);
--	LINK_LEXER(lmProps);
--	LINK_LEXER(lmPS);
--	LINK_LEXER(lmPureBasic);
--	LINK_LEXER(lmPython);
--	LINK_LEXER(lmR);
--	LINK_LEXER(lmREBOL);
--	LINK_LEXER(lmRuby);
--	LINK_LEXER(lmScriptol);
--	LINK_LEXER(lmSmalltalk);
--	LINK_LEXER(lmSML);
--	LINK_LEXER(lmSorc);
--	LINK_LEXER(lmSpecman);
--	LINK_LEXER(lmSpice);
--	LINK_LEXER(lmSQL);
--	LINK_LEXER(lmTACL);
--	LINK_LEXER(lmTADS3);
--	LINK_LEXER(lmTAL);
--	LINK_LEXER(lmTCL);
--	LINK_LEXER(lmTeX);
--	LINK_LEXER(lmVB);
--	LINK_LEXER(lmVBScript);
--	LINK_LEXER(lmVerilog);
--	LINK_LEXER(lmVHDL);
--	LINK_LEXER(lmXML);
--	LINK_LEXER(lmYAML);
- 
- //--Autogenerated -- end of automatically generated section
-+// end modified by Mitchell
- 
- 	return 1;
- }
-diff -r f99c7dfc2bff src/LexLPeg.cxx
+diff -r ffde119d297e lexers/LexLPeg.cxx
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ scintilla/src/LexLPeg.cxx	Wed Aug 11 22:35:50 2010 -0400
-@@ -0,0 +1,376 @@
++++ scintilla/lexers/LexLPeg.cxx	Tue Aug 17 00:13:24 2010 -0400
+@@ -0,0 +1,469 @@
 +/*
 +	Mitchell's Lua-powered dynamic lexer
 +	Copyright (c) 2006-2010 Mitchell mitchell<att>caladbolg.net.
@@ -3539,18 +1672,22 @@ diff -r f99c7dfc2bff src/LexLPeg.cxx
 +	Lexer documentation can be read in /lexers/lexer.lua
 +*/
 +
++#include <assert.h> // for Accessor.h
++#include <ctype.h>
++#include <stdio.h>
 +#include <stdlib.h>
 +#include <string.h>
-+#include <ctype.h>
 +
 +#include "Platform.h"
 +
-+#include "PropSet.h"
-+#include "Accessor.h"
-+#include "DocumentAccessor.h"
-+#include "KeyWords.h"
++#include "ILexer.h"
 +#include "Scintilla.h"
 +#include "SciLexer.h"
++
++#include "PropSetSimple.h"
++#include "LexAccessor.h"
++#include "Accessor.h"
++#include "LexerModule.h"
 +
 +extern "C" {
 +#include <lua.h>
@@ -3567,10 +1704,6 @@ diff -r f99c7dfc2bff src/LexLPeg.cxx
 +#ifdef SCI_NAMESPACE
 +using namespace Scintilla;
 +#endif
-+
-+static WindowID windowID;
-+static DocumentAccessor *accessor;
-+static bool multilang_lexer = false;
 +
 +/**
 + * Prints a Lua error message.
@@ -3590,7 +1723,9 @@ diff -r f99c7dfc2bff src/LexLPeg.cxx
 + * @param pos The position to get the style for.
 + */
 +static int lua_style_at(lua_State *L) {
-+	lua_pushnumber(L, accessor->StyleAt(luaL_checkinteger(L, 1) - 1));
++	lua_getfield(L, LUA_REGISTRYINDEX, "styler");
++	LexAccessor *styler = static_cast<LexAccessor *>(lua_touserdata(L, -1));
++	lua_pushnumber(L, styler->StyleAt(luaL_checkinteger(L, 1) - 1));
 +	return 1;
 +}
 +
@@ -3602,8 +1737,10 @@ diff -r f99c7dfc2bff src/LexLPeg.cxx
 + * @return integer value of the property.
 + */
 +static int lua_get_property(lua_State *L) {
-+	lua_pushnumber(L, accessor->GetPropertyInt(luaL_checkstring(L, 1),
-+	               (lua_gettop(L) > 1) ? luaL_checkinteger(L, 2) : 0));
++	lua_getfield(L, LUA_REGISTRYINDEX, "props");
++	PropSetSimple *props = static_cast<PropSetSimple *>(lua_touserdata(L, -1));
++	lua_pushnumber(L, props->GetInt(luaL_checkstring(L, 1),
++								 (lua_gettop(L) > 1) ? luaL_checkinteger(L, 2) : 0));
 +	return 1;
 +}
 +
@@ -3614,7 +1751,9 @@ diff -r f99c7dfc2bff src/LexLPeg.cxx
 + * @return the integer fold level.
 + */
 +static int lua_get_fold_level(lua_State *L) {
-+	lua_pushnumber(L, accessor->LevelAt(luaL_checkinteger(L, 1)));
++	lua_getfield(L, LUA_REGISTRYINDEX, "styler");
++	LexAccessor *styler = static_cast<LexAccessor *>(lua_touserdata(L, -1));
++	lua_pushnumber(L, styler->LevelAt(luaL_checkinteger(L, 1)));
 +	return 1;
 +}
 +
@@ -3625,7 +1764,9 @@ diff -r f99c7dfc2bff src/LexLPeg.cxx
 + */
 +static int lua_get_indent_amount(lua_State *L) {
 +	int f = 0;
-+	lua_pushnumber(L, accessor->IndentAmount(luaL_checkinteger(L, 1), &f,	NULL));
++	lua_getfield(L, LUA_REGISTRYINDEX, "styler");
++	Accessor *styler = static_cast<Accessor *>(lua_touserdata(L, -1));
++	lua_pushnumber(L, styler->IndentAmount(luaL_checkinteger(L, 1), &f, NULL));
 +	return 1;
 +}
 +
@@ -3633,669 +1774,467 @@ diff -r f99c7dfc2bff src/LexLPeg.cxx
 +	{ lua_pushcfunction(L, f); lua_pushstring(L, s); lua_call(L, 1, 0); }
 +#define l_setconst(c, s) \
 +	{ lua_pushnumber(L, c); lua_setfield(L, LUA_GLOBALSINDEX, s); }
-+#define SS(m, l) Platform::SendScintilla(windowID, m, style_num, l)
++#define SS(m, l) Platform::SendScintilla(wid, m, style_num, l)
 +
-+/**
-+ * Initializes the document for styling.
-+ * Part of the Lexer interface.
-+ * ScintillaBase.cxx opens a new Lua state and passes it here to finish loading,
-+ * Then the lexer.lua script is loaded, and Scintilla styles set up.
-+ * The path to lexer.lua is the value of 'lexer_script' in LUA_REGISTRYINDEX
-+ * (previously set in ScintillaBase.cxx). lexer.lua's 'InitLexer' is called with
-+ * lexer as a parameter which then calls 'LoadStyles', populating a 'Styles'
-+ * table with the Scintilla styles to use for each style number. That table is
-+ * iterated over here, setting the styles in Scintilla. Style properties are
-+ * case insensitive.
-+ * e.g.
-+ *   Styles = {
-+ *     [1] = { fore = color, back = other_color, ... },
-+ *     [2] = { bold = true, EOLFilled = true, ... }
-+ *   }
-+ * @param lua The newly created Lua state.
-+ * @param lexer The name of the lexer to load.
-+ * @param styler The document accessor used to style the document, get
-+ *   properties from it, etc.
-+ * @return true if successful.
-+ */
-+static bool InitDoc(lua_State *L, const char *lexer, Accessor &styler) {
-+	if (!lexer) return false;
-+	DocumentAccessor &da = static_cast<DocumentAccessor &>(styler);
-+	windowID = da.GetWindow();
++class LexerLPeg : public ILexer {
++	lua_State *L;
++	PropSetSimple props;
++	WindowID wid;
++	bool reinit;
++	bool multilang;
++private:
++	bool Init() {
++		char p1[50], p2[FILENAME_MAX], p3[FILENAME_MAX], p4[FILENAME_MAX];
++		props.GetExpanded("lexer.name", p1);
++		props.GetExpanded("lexer.lua.home", p2);
++		props.GetExpanded("lexer.lua.color.theme", p3);
++		props.GetExpanded("lexer.lua.script", p4);
++		if (*p1 == 0 || *p2 == 0 || *p3 == 0 || *p4 == 0) return false;
 +
-+	l_openlib(luaopen_base, "");
-+	l_openlib(luaopen_table, LUA_TABLIBNAME);
-+	l_openlib(luaopen_string, LUA_STRLIBNAME);
-+	l_openlib(luaopen_package, LUA_LOADLIBNAME);
-+	l_openlib(luaopen_lpeg, LUA_LPEGNAME);
++		// Initialize or reinitialize Lua.
++		if (L) lua_close(L);
++		L = lua_open();
++		if (!L) {
++			Platform::DebugPrintf("Lua failed to initialize.\n");
++			return false;
++		}
 +
-+	// register functions
-+	lua_register(L, "GetStyleAt", lua_style_at);
-+	lua_register(L, "GetProperty", lua_get_property);
-+	lua_register(L, "GetFoldLevel", lua_get_fold_level);
-+	lua_register(L, "GetIndentAmount", lua_get_indent_amount);
++		// Set variables from properties.
++		lua_pushstring(L, p1);
++		lua_setfield(L, LUA_REGISTRYINDEX, "lexer_name");
++		lua_pushstring(L, p2);
++		lua_setglobal(L, "_LEXERHOME");
++		lua_pushstring(L, p3);
++		lua_setglobal(L, "_THEME");
++		lua_pushstring(L, p4);
++		lua_setfield(L, LUA_REGISTRYINDEX, "lexer_lua");
 +
-+	// register constants
-+	l_setconst(SC_FOLDLEVELBASE, "SC_FOLDLEVELBASE");
-+	l_setconst(SC_FOLDLEVELWHITEFLAG, "SC_FOLDLEVELWHITEFLAG");
-+	l_setconst(SC_FOLDLEVELHEADERFLAG, "SC_FOLDLEVELHEADERFLAG");
-+	l_setconst(SC_FOLDLEVELNUMBERMASK, "SC_FOLDLEVELNUMBERMASK");
-+
-+	// used by SCI_GETLEXERLANGUAGE
-+	lua_pushstring(L, lexer);
-+	lua_setfield(L, LUA_REGISTRYINDEX, "language_name");
-+
-+	lua_getfield(L, LUA_REGISTRYINDEX, "lexer_lua");
-+	const char *lexer_lua = lua_tostring(L, -1);
-+	lua_pop(L, 1); // lexer_script
-+	if (strlen(lexer_lua) == 0) return false;
-+	if (luaL_dofile(L, lexer_lua) != 0) return l_error(L);
-+
-+	// load language lexer tokens, styles, etc.
-+	lua_getglobal(L, "lexer");
-+	lua_getfield(L, -1, "load");
-+	if (lua_isfunction(L, -1)) {
-+		lua_pushstring(L, lexer);
-+		if (lua_pcall(L, 1, 0, 0) != 0) return l_error(L);
-+	} else return l_error(L, "lexer.load not found");
-+	lua_pop(L, 1); // lexer
-+
-+	// setup Scintilla styles from lexer styles
-+	Platform::SendScintilla(windowID, SCI_STYLECLEARALL);
-+	lua_getglobal(L, "_LEXER");
-+	if (!lua_istable(L, -1)) return l_error(L, "'_LEXER' table not found");
-+	lua_getfield(L, -1, "_STYLES");
-+	if (!lua_istable(L, -1)) return l_error(L, "'_LEXER._STYLES' table not found");
-+	lua_pushnil(L);
-+	while (lua_next(L, -2)) { // _STYLES table
-+		if (lua_isnumber(L, -2) && lua_istable(L, -1)) {
-+			int style_num = lua_tointeger(L, -2); // [num] = { properties }
-+			lua_pushnil(L);
-+			while (lua_next(L, -2)) { // properties table
-+				const char *prop = lua_tostring(L, -2);
-+				if (streq(prop, "font"))
-+					SS(SCI_STYLESETFONT, reinterpret_cast<long>(lua_tostring(L, -1)));
-+				else if (streq(prop, "size"))
-+					SS(SCI_STYLESETSIZE, static_cast<int>(lua_tointeger(L, -1)));
-+				else if (streq(prop, "bold"))
-+					SS(SCI_STYLESETBOLD, lua_toboolean(L, -1));
-+				else if (streq(prop, "italic"))
-+					SS(SCI_STYLESETITALIC, lua_toboolean(L, -1));
-+				else if (streq(prop, "underline"))
-+					SS(SCI_STYLESETUNDERLINE, lua_toboolean(L, -1));
-+				else if (streq(prop, "fore"))
-+					SS(SCI_STYLESETFORE, static_cast<int>(lua_tointeger(L, -1)));
-+				else if (streq(prop, "back"))
-+					SS(SCI_STYLESETBACK, static_cast<int>(lua_tointeger(L, -1)));
-+				else if (streq(prop, "eolfilled"))
-+					SS(SCI_STYLESETEOLFILLED, lua_toboolean(L, -1));
-+				else if (streq(prop, "characterset"))
-+					SS(SCI_STYLESETCHARACTERSET, static_cast<int>(lua_tointeger(L, -1)));
-+				else if (streq(prop, "case"))
-+					SS(SCI_STYLESETCASE, static_cast<int>(lua_tointeger(L, -1)));
-+				else if (streq(prop, "visible"))
-+					SS(SCI_STYLESETVISIBLE, lua_toboolean(L, -1));
-+				else if (streq(prop, "changeable"))
-+					SS(SCI_STYLESETCHANGEABLE, lua_toboolean(L, -1));
-+				else if (streq(prop, "hotspot"))
-+					SS(SCI_STYLESETHOTSPOT, lua_toboolean(L, -1));
-+				lua_pop(L, 1); // value
-+			}
-+		} lua_pop(L, 1); // value
-+	} lua_pop(L, 2); // _LEXER._STYLES and _LEXER
-+
-+	// if the lexer is a parent, it will have children in its '_CHILDREN' table
-+	// if the lexer is a child, it will have a parent in its '_TOKENRULES' table
-+	lua_getglobal(L, "_LEXER");
-+	lua_getfield(L, -1, "_CHILDREN");
-+	lua_getfield(L, -2, "_TOKENRULES");
-+	if (lua_istable(L, -1) || lua_istable(L, -2)) multilang_lexer = true;
-+	lua_pop(L, 3); // _LEXER._TOKENRULES, _LEXER._CHILDREN, and _LEXER
-+
-+	return true;
-+}
-+
-+/**
-+ * Styles the document.
-+ * Part of the Lexer interface.
-+ * When Scintilla requires the document to be styled, this function does it.
-+ * It calls lexer.lua's 'RunLexer' function which returns a table of styling
-+ * information. That table is iterated over, styling the document.
-+ * @param startPos The beginning position of the region needing to be styled.
-+ * @param length The length of the region needing to be styled.
-+ * @param initstyle The initial style of the region needing to be styled.
-+ * @param L The Lua state associated with this document.
-+ * @param keywordLists [Unused].
-+ * @param styler The document accessor used to style the document, get
-+ *   properties from it, etc.
-+ */
-+static void ColouriseDoc(unsigned int startPos, int length, int initStyle,
-+                         lua_State *L, WordList**, Accessor &styler) {
-+	if (!L) return;
-+	DocumentAccessor &da = static_cast<DocumentAccessor &>(styler);
-+	windowID = da.GetWindow();
-+	accessor = &da;
-+
-+	// start from the beginning of the current style so it is matched by the LPeg
-+	// lexer; applies only to single-language lexers
-+	if (!multilang_lexer && startPos > 0) {
-+		int i = startPos;
-+		while (i > 0 && da.StyleAt(i - 1) == initStyle) i--;
-+		length += startPos - i;
-+		startPos = i;
-+	}
-+
-+	unsigned int startSeg = startPos, endSeg = startPos + length;
-+	int style = 0;
-+	accessor->StartAt(startPos, static_cast<char>(STYLE_MAX)); // all 8 style bits
-+	accessor->StartSegment(startPos);
-+	lua_getglobal(L, "lexer");
-+	lua_getfield(L, -1, "lex");
-+	if (lua_isfunction(L, -1)) {
-+		long int p = Platform::SendScintilla(windowID, SCI_GETCHARACTERPOINTER);
-+		char *buf = reinterpret_cast<char *>(p);
-+		if (!multilang_lexer) buf += startPos;
-+		lua_pushlstring(L, buf, multilang_lexer ? da.Length() : length);
-+		if (lua_pcall(L, 1, 1, 0) != 0) l_error(L);
-+		// style the text from the token table returned
-+		if (lua_istable(L, -1)) {
-+			lua_getglobal(L, "_LEXER");
-+			lua_pushstring(L, "_TOKENS");
-+			lua_rawget(L, -2);
-+			lua_remove(L, lua_gettop(L) - 1); // _LEXER
-+			lua_pushnil(L);
-+			while (lua_next(L, -3)) { // token (tokens[i])
-+				if (!lua_istable(L, -1)) {
-+					l_error(L, "Table of tokens expected from lexer.lex");
-+					break;
-+				}
-+				lua_rawgeti(L, -1, 1); // token[1]
-+				lua_rawget(L, -4); // _LEXER._TOKENS[token[1]]
-+				style = 32;
-+				if (!lua_isnil(L, -1)) style = lua_tointeger(L, -1);
-+				lua_pop(L, 1); // _LEXER._TOKENS[token[1]]
-+				lua_rawgeti(L, -1, 2); // token[2]
-+				unsigned int position = lua_tointeger(L, -1) - 1;
-+				lua_pop(L, 1); // token[2]
-+				lua_pop(L, 1); // token (tokens[i])
-+				if (style >= 0 && style <= STYLE_MAX) {
-+					if (multilang_lexer) {
-+						if (position > startSeg && position <= endSeg)
-+							accessor->ColourTo(position - 1, style);
-+						else if (position > endSeg && accessor->GetStartSegment() < endSeg)
-+							accessor->ColourTo(endSeg - 1, style); // style remaining length
-+					} else accessor->ColourTo(startSeg + position - 1, style);
-+				} else l_error(L, "Bad style number");
-+				if (position > endSeg) break;
-+			}
-+			lua_pop(L, 2); // _LEXER._TOKENS and token table returned
-+		} else l_error(L, "Table of tokens expected from lexer.lex");
-+	} else l_error(L, "lexer.lex not found");
-+	lua_pop(L, 1); // lexer
-+	accessor->ColourTo(endSeg - 1, style);
-+}
-+
-+/** Folds the document.
-+ *  Part of the Lexer interface.
-+ *  When Scintilla requires the document to be folded, this function does it.
-+ *  It calls lexer.lua's 'RunFolder' function which performs the folding via
-+ *  the 'SetFoldLevel' Lua interface.
-+ *  @param startPos The beginning position of the region needing to be folded.
-+ *  @param length The length of the region needing to be folded.
-+ *  @param initstyle [Unused].
-+ *  @param L The Lua state associated with this document.
-+ *  @param keywordLists [Unused].
-+ *  @param styler The document accessor used to style the document, get
-+ *    properties from it, etc.
-+ */
-+static void FoldDoc(unsigned int startPos, int length, int, lua_State *L,
-+                    WordList *[], Accessor &styler) {
-+	if (!L) return;
-+	DocumentAccessor &da = static_cast<DocumentAccessor &>(styler);
-+	windowID = da.GetWindow();
-+
-+	lua_getglobal(L, "lexer");
-+	lua_getfield(L, -1, "fold");
-+	if (lua_isfunction(L, -1)) {
-+		int currentLine = styler.GetLine(startPos);
-+		long int p = Platform::SendScintilla(windowID, SCI_GETCHARACTERPOINTER);
-+		char *buf = reinterpret_cast<char *>(p);
-+		lua_pushlstring(L, buf + startPos, length);
-+		lua_pushnumber(L, startPos);
-+		lua_pushnumber(L, currentLine);
-+		lua_pushnumber(L, styler.LevelAt(currentLine) & SC_FOLDLEVELNUMBERMASK);
-+		if (lua_pcall(L, 4, 1, 0) != 0) l_error(L);
-+		// fold the text from the fold table returned
-+		if (lua_istable(L, -1)) {
-+			lua_pushnil(L);
-+			int line = 0, level = 0;
-+			while (lua_next(L, -2)) { // fold (folds[i])
-+				if (!lua_istable(L, -1)) {
-+					l_error(L, "Table of folds expected from lexer.fold");
-+					break;
-+				}
-+				line = lua_tointeger(L, -2);
-+				lua_rawgeti(L, -1, 1); // fold[1]
-+				level = lua_tointeger(L, -1);
-+				lua_pop(L, 1); // fold[1]
-+				if (lua_objlen(L, -1) > 1) {
-+					lua_rawgeti(L, -1, 2); // fold[2]
-+					int flag = lua_tointeger(L, -1);
-+					level |= flag;
-+					lua_pop(L, 1); // fold[2]
-+				}
-+				styler.SetLevel(line, level);
-+				lua_pop(L, 1); // fold
-+			}
-+			lua_pop(L, 1); // fold table returned
-+			// Mask off the level number, leaving only the previous flags.
-+			int flagsNext = styler.LevelAt(line + 1);
-+			flagsNext &= ~SC_FOLDLEVELNUMBERMASK;
-+			styler.SetLevel(line + 1, level | flagsNext);
-+		} else l_error(L, "Table of folds expected from lexer.fold");
-+	} else l_error(L, "lexer.fold function not found");
-+	lua_pop(L, 1); // lexer
-+}
-+
-+LexerModule lmLPeg(SCLEX_LPEG, InitDoc, ColouriseDoc, "llpeg", FoldDoc, 0, 7);
-+LexerModule lmNull(SCLEX_NULL, InitDoc, ColouriseDoc, "null");
-diff -r f99c7dfc2bff src/ScintillaBase.cxx
---- scintilla/src/ScintillaBase.cxx	Tue Jun 01 03:43:54 2010 +0000
-+++ scintilla/src/ScintillaBase.cxx	Wed Aug 11 22:35:50 2010 -0400
-@@ -24,6 +24,13 @@
- #include "DocumentAccessor.h"
- #include "KeyWords.h"
- #endif
-+// added by Mitchell
-+extern "C" {
-+#include <lua.h>
-+#include <lualib.h>
-+#include <lauxlib.h>
-+}
-+// end added by Mitchell
- #include "SplitVector.h"
- #include "Partitioning.h"
- #include "RunStyles.h"
-@@ -54,12 +61,13 @@
- 	listType = 0;
- 	maxListWidth = 0;
- #ifdef SCI_LEXER
--	lexLanguage = SCLEX_CONTAINER;
-+	lexLanguage = SCLEX_LPEG; // modified by Mitchell
- 	performingStyle = false;
- 	lexCurrent = 0;
- 	for (int wl = 0; wl < numWordLists; wl++)
- 		keyWordLists[wl] = new WordList;
- 	keyWordLists[numWordLists] = 0;
-+	lua_state = NULL; // added by Mitchell
- #endif
- }
- 
-@@ -67,6 +75,8 @@
- #ifdef SCI_LEXER
- 	for (int wl = 0; wl < numWordLists; wl++)
- 		delete keyWordLists[wl];
-+	if (lua_state) lua_close(lua_state); // added by Mitchell
-+	lua_state = NULL; // added by Mitchell
- #endif
- }
- 
-@@ -484,9 +494,13 @@
- 		lexCurrent = LexerModule::Find(SCLEX_NULL);
- 	int bits = lexCurrent ? lexCurrent->GetStyleBitsNeeded() : 5;
- 	vs.EnsureStyle((1 << bits) - 1);
-+	// added by Mitchell
-+	SetLexerLanguage(NULL);
-+	// end added by Mitchell
- }
- 
- void ScintillaBase::SetLexerLanguage(const char *languageName) {
-+#if 0 // added by Mitchell
- 	lexLanguage = SCLEX_CONTAINER;
- 	lexCurrent = LexerModule::Find(languageName);
- 	if (!lexCurrent)
-@@ -495,6 +509,54 @@
- 		lexLanguage = lexCurrent->GetLanguage();
- 	int bits = lexCurrent ? lexCurrent->GetStyleBitsNeeded() : 5;
- 	vs.EnsureStyle((1 << bits) - 1);
-+#endif // added by Mitchell
-+
-+	// added by Mitchell
-+	lexCurrent = LexerModule::Find(SCLEX_LPEG);
-+	lexLanguage = lexCurrent->GetLanguage();
-+	DocumentAccessor styler(pdoc, props, wMain.GetID());
-+	if (lua_state) lua_close(lua_state);
-+	lua_state = lua_open();
-+	if (!lua_state) {
-+		Platform::DebugPrintf("Lua failed to initialize.\n");
-+		return;
-+	}
-+
-+	// set useful variables
-+	char lexer_home[FILENAME_MAX];
-+	WndProc(SCI_GETPROPERTYEXPANDED, reinterpret_cast<long>("lexer.lua.home"),
-+	        reinterpret_cast<long>(lexer_home));
-+	lua_pushstring(lua_state, lexer_home);
-+	lua_setglobal(lua_state, "_LEXERHOME");
-+	char color_theme[FILENAME_MAX];
-+	WndProc(SCI_GETPROPERTYEXPANDED,
-+	        reinterpret_cast<long>("lexer.lua.color.theme"),
-+	        reinterpret_cast<long>(color_theme));
-+	lua_pushstring(lua_state, color_theme);
-+	lua_setglobal(lua_state, "_THEME");
-+	char lexer_lua[FILENAME_MAX];
-+	WndProc(SCI_GETPROPERTYEXPANDED, reinterpret_cast<long>("lexer.lua.script"),
-+	        reinterpret_cast<long>(lexer_lua));
-+	lua_pushstring(lua_state, lexer_lua);
-+	lua_setfield(lua_state, LUA_REGISTRYINDEX, "lexer_lua");
++		// Set variables from platform.
 +#if PLAT_WIN || PLAT_GTK_WIN32
-+	lua_pushboolean(lua_state, 1);
-+	lua_setglobal(lua_state, "WIN32");
++		lua_pushboolean(L, 1);
++		lua_setglobal(L, "WIN32");
 +#endif
 +#ifdef MAC
-+	lua_pushboolean(lua_state, 1);
-+	lua_setglobal(lua_state, "MAC");
++		lua_pushboolean(L, 1);
++		lua_setglobal(L, "MAC");
 +#endif
 +#if PLAT_GTK || PLAT_GTK_WIN32
-+	lua_pushboolean(lua_state, 1);
-+	lua_setglobal(lua_state, "GTK");
++		lua_pushboolean(L, 1);
++		lua_setglobal(L, "GTK");
 +#endif
 +
-+	if (!lexCurrent->Init(lua_state, languageName, styler)) {
-+		lua_close(lua_state);
-+		lua_state = NULL;
-+	}
-+	// end added by Mitchell
- }
- 
- void ScintillaBase::Colourise(int start, int end) {
-@@ -521,10 +583,10 @@
- 		styler.SetCodePage(pdoc->dbcsCodePage);
- 
- 		if (lexCurrent && (len > 0)) {	// Should always succeed as null lexer should always be available
--			lexCurrent->Lex(start, len, styleStart, keyWordLists, styler);
-+			lexCurrent->Lex(start, len, styleStart, lua_state, keyWordLists, styler); // modified by Mitchell
- 			styler.Flush();
- 			if (styler.GetPropertyInt("fold")) {
--				lexCurrent->Fold(start, len, styleStart, keyWordLists, styler);
-+				lexCurrent->Fold(start, len, styleStart, lua_state, keyWordLists, styler); // modified by Mitchell
- 				styler.Flush();
- 			}
- 		}
-@@ -759,8 +821,43 @@
- 		SetLexerLanguage(reinterpret_cast<const char *>(lParam));
- 		break;
- 
--	case SCI_GETLEXERLANGUAGE:
--		return StringResult(lParam, lexCurrent ? lexCurrent->languageName : "");
-+	case SCI_GETLEXERLANGUAGE: { // modified by Mitchell
-+			// added by Mitchell
-+			const char *val = "null";
-+			if (lua_state) {
-+				lua_getfield(lua_state, LUA_REGISTRYINDEX, "language_name");
-+				val = lua_tostring(lua_state, -1);
-+				lua_pop(lua_state, 1); // language_name
-+			}
-+			// end added by Mitchell
-+			return StringResult(lParam, val); // modified by Mitchell
-+		} // added by Mitchell
++		// Load Lua libraries.
++		l_openlib(luaopen_base, "");
++		l_openlib(luaopen_table, LUA_TABLIBNAME);
++		l_openlib(luaopen_string, LUA_STRLIBNAME);
++		l_openlib(luaopen_package, LUA_LOADLIBNAME);
++		l_openlib(luaopen_lpeg, LUA_LPEGNAME);
 +
-+	// added by Mitchell
-+	case SCI_GETSTYLENAME: {
-+			const char *val = "";
-+			if (lua_state) {
-+				lua_getglobal(lua_state, "_LEXER");
-+				if (lua_istable(lua_state, -1)) {
-+					lua_getfield(lua_state, -1, "_TOKENS");
-+					if (lua_istable(lua_state, -1)) {
-+						lua_pushnil(lua_state);
-+						while (lua_next(lua_state, -2)) {
++		// Register functions.
++		lua_register(L, "GetStyleAt", lua_style_at);
++		lua_register(L, "GetProperty", lua_get_property);
++		lua_register(L, "GetFoldLevel", lua_get_fold_level);
++		lua_register(L, "GetIndentAmount", lua_get_indent_amount);
++
++		// Register constants.
++		l_setconst(SC_FOLDLEVELBASE, "SC_FOLDLEVELBASE");
++		l_setconst(SC_FOLDLEVELWHITEFLAG, "SC_FOLDLEVELWHITEFLAG");
++		l_setconst(SC_FOLDLEVELHEADERFLAG, "SC_FOLDLEVELHEADERFLAG");
++		l_setconst(SC_FOLDLEVELNUMBERMASK, "SC_FOLDLEVELNUMBERMASK");
++
++		// Load lexer.lua.
++		lua_getfield(L, LUA_REGISTRYINDEX, "lexer_lua");
++		const char *lexer_lua = lua_tostring(L, -1);
++		lua_pop(L, 1); // lexer_lua
++		if (strlen(lexer_lua) == 0) return false;
++		if (luaL_dofile(L, lexer_lua) != 0) return l_error(L);
++
++		// Load lexer tokens, styles, etc.
++		lua_getglobal(L, "lexer");
++		lua_getfield(L, -1, "load");
++		if (lua_isfunction(L, -1)) {
++			lua_getfield(L, LUA_REGISTRYINDEX, "lexer_name");
++			if (lua_pcall(L, 1, 0, 0) != 0) return l_error(L);
++		} else return l_error(L, "lexer.load not found");
++		lua_pop(L, 1); // lexer
++
++		// Setup Scintilla styles from loaded lexer styles.
++		lua_getglobal(L, "_LEXER");
++		if (!lua_istable(L, -1)) return l_error(L, "'_LEXER' table not found");
++		lua_getfield(L, -1, "_STYLES");
++		if (!lua_istable(L, -1))
++			return l_error(L, "'_LEXER._STYLES' table not found");
++		bool cleared = false;
++		lua_pushinteger(L, 32); // style_default
++		lua_rawgeti(L, -2, 32);
++		do {
++			if (lua_isnumber(L, -2) && lua_istable(L, -1)) {
++				int style_num = lua_tointeger(L, -2); // [num] = { properties }
++				lua_pushnil(L);
++				while (lua_next(L, -2)) { // properties table
++					const char *prop = lua_tostring(L, -2);
++					if (streq(prop, "font"))
++						SS(SCI_STYLESETFONT, reinterpret_cast<long>(lua_tostring(L, -1)));
++					else if (streq(prop, "size"))
++						SS(SCI_STYLESETSIZE, static_cast<int>(lua_tointeger(L, -1)));
++					else if (streq(prop, "bold"))
++						SS(SCI_STYLESETBOLD, lua_toboolean(L, -1));
++					else if (streq(prop, "italic"))
++						SS(SCI_STYLESETITALIC, lua_toboolean(L, -1));
++					else if (streq(prop, "underline"))
++						SS(SCI_STYLESETUNDERLINE, lua_toboolean(L, -1));
++					else if (streq(prop, "fore"))
++						SS(SCI_STYLESETFORE, static_cast<int>(lua_tointeger(L, -1)));
++					else if (streq(prop, "back"))
++						SS(SCI_STYLESETBACK, static_cast<int>(lua_tointeger(L, -1)));
++					else if (streq(prop, "eolfilled"))
++						SS(SCI_STYLESETEOLFILLED, lua_toboolean(L, -1));
++					else if (streq(prop, "characterset"))
++						SS(SCI_STYLESETCHARACTERSET,
++						   static_cast<int>(lua_tointeger(L, -1)));
++					else if (streq(prop, "case"))
++						SS(SCI_STYLESETCASE, static_cast<int>(lua_tointeger(L, -1)));
++					else if (streq(prop, "visible"))
++						SS(SCI_STYLESETVISIBLE, lua_toboolean(L, -1));
++					else if (streq(prop, "changeable"))
++						SS(SCI_STYLESETCHANGEABLE, lua_toboolean(L, -1));
++					else if (streq(prop, "hotspot"))
++						SS(SCI_STYLESETHOTSPOT, lua_toboolean(L, -1));
++					lua_pop(L, 1); // value
++				}
++				if (style_num == 32 && !cleared) {
++					// Set all styles to style_default before loading individual ones.
++					Platform::SendScintilla(wid, SCI_STYLECLEARALL);
++					cleared = true;
++					lua_pushnil(L);
++					lua_replace(L, -3);
++				}
++			} lua_pop(L, 1); // value
++		} while (lua_next(L, -2)); // _STYLES table
++		lua_pop(L, 2); // _LEXER._STYLES and _LEXER
++
++		// If the lexer is a parent, it will have children in its _CHILDREN table.
++		// If the lexer is a child, it will have a parent in its _TOKENRULES table.
++		lua_getglobal(L, "_LEXER");
++		lua_getfield(L, -1, "_CHILDREN");
++		lua_getfield(L, -2, "_TOKENRULES");
++		if (lua_istable(L, -1) || lua_istable(L, -2)) multilang = true;
++		lua_pop(L, 3); // _LEXER._TOKENRULES, _LEXER._CHILDREN, and _LEXER
++
++		reinit = false;
++		return true;
++	}
++
++	void * StringResult(long lParam, const char *val) {
++		const int n = strlen(val);
++		if (lParam != 0) {
++			char *ptr = reinterpret_cast<char *>(lParam);
++			strcpy(ptr, val);
++		}
++		return reinterpret_cast<void *>(n); // Not including NUL
++	}
++
++public:
++	LexerLPeg() : reinit(true), multilang(false) { L = NULL; wid = NULL; }
++	~LexerLPeg() {}
++
++	void SCI_METHOD Release() {
++		lua_close(L);
++		L = 0;
++		delete this;
++	}
++
++	void SCI_METHOD Lex(unsigned int startPos, int lengthDoc, int initStyle,
++	                    IDocument *pAccess) {
++		if (reinit) Init();
++		if (!L) return;
++		LexAccessor styler(pAccess);
++		lua_pushlightuserdata(L, reinterpret_cast<void *>(&styler));
++		lua_setfield(L, LUA_REGISTRYINDEX, "styler");
++
++		// Start from the beginning of the current style so LPeg matches it.
++		// (Applies only to non-multilang lexers.)
++		if (!multilang && startPos > 0) {
++			int i = startPos;
++			while (i > 0 && styler.StyleAt(i - 1) == initStyle) i--;
++			lengthDoc += startPos - i;
++			startPos = i;
++		}
++
++		unsigned int startSeg = startPos, endSeg = startPos + lengthDoc;
++		int style = 0;
++		styler.StartAt(startPos, static_cast<char>(STYLE_MAX));
++		styler.StartSegment(startPos);
++		lua_getglobal(L, "lexer");
++		lua_getfield(L, -1, "lex");
++		if (lua_isfunction(L, -1)) {
++			char *buf = multilang ? styler.GetCharRange(0, styler.Length())
++			                      : styler.GetCharRange(startPos, lengthDoc);
++			lua_pushstring(L, buf);
++			delete []buf;
++			if (lua_pcall(L, 1, 1, 0) != 0) l_error(L);
++			// Style the text from the token table returned.
++			if (lua_istable(L, -1)) {
++				lua_getglobal(L, "_LEXER");
++				lua_pushstring(L, "_TOKENS");
++				lua_rawget(L, -2);
++				lua_remove(L, lua_gettop(L) - 1); // _LEXER
++				lua_pushnil(L);
++				while (lua_next(L, -3)) { // token (tokens[i])
++					if (!lua_istable(L, -1)) {
++						l_error(L, "Table of tokens expected from lexer.lex");
++						break;
++					}
++					lua_rawgeti(L, -1, 1); // token[1]
++					lua_rawget(L, -4); // _LEXER._TOKENS[token[1]]
++					style = 32;
++					if (!lua_isnil(L, -1)) style = lua_tointeger(L, -1);
++					lua_pop(L, 1); // _LEXER._TOKENS[token[1]]
++					lua_rawgeti(L, -1, 2); // token[2]
++					unsigned int position = lua_tointeger(L, -1) - 1;
++					lua_pop(L, 1); // token[2]
++					lua_pop(L, 1); // token (tokens[i])
++					if (style >= 0 && style <= STYLE_MAX) {
++						if (multilang) {
++							if (position > startSeg && position <= endSeg)
++								styler.ColourTo(position - 1, style);
++							else if (position > endSeg && styler.GetStartSegment() < endSeg)
++								styler.ColourTo(endSeg - 1, style); // style remaining length
++						} else styler.ColourTo(startSeg + position - 1, style);
++					} else l_error(L, "Bad style number");
++					if (position > endSeg) break;
++				}
++				lua_pop(L, 2); // _LEXER._TOKENS and token table returned
++			} else l_error(L, "Table of tokens expected from lexer.lex");
++		} else l_error(L, "lexer.lex not found");
++		lua_pop(L, 1); // lexer
++		styler.ColourTo(endSeg - 1, style);
++		styler.Flush();
++	}
++
++	void SCI_METHOD Fold(unsigned int startPos, int lengthDoc, int initStyle,
++	                     IDocument *pAccess) {
++		if (reinit) Init();
++		if (!L) return;
++		LexAccessor styler(pAccess);
++		lua_pushlightuserdata(L, reinterpret_cast<void *>(&styler));
++		lua_setfield(L, LUA_REGISTRYINDEX, "styler");
++		lua_pushlightuserdata(L, reinterpret_cast<void *>(&props));
++		lua_setfield(L, LUA_REGISTRYINDEX, "props");
++
++		lua_getglobal(L, "lexer");
++		lua_getfield(L, -1, "fold");
++		if (lua_isfunction(L, -1)) {
++			int currentLine = styler.GetLine(startPos);
++			char *buf = styler.GetCharRange(startPos, lengthDoc);
++			lua_pushstring(L, buf);
++			delete []buf;
++			lua_pushnumber(L, startPos);
++			lua_pushnumber(L, currentLine);
++			lua_pushnumber(L, styler.LevelAt(currentLine) & SC_FOLDLEVELNUMBERMASK);
++			if (lua_pcall(L, 4, 1, 0) != 0) l_error(L);
++			// Fold the text from the fold table returned.
++			if (lua_istable(L, -1)) {
++				lua_pushnil(L);
++				int line = 0, level = 0;
++				while (lua_next(L, -2)) { // fold (folds[i])
++					if (!lua_istable(L, -1)) {
++						l_error(L, "Table of folds expected from lexer.fold");
++						break;
++					}
++					line = lua_tointeger(L, -2);
++					lua_rawgeti(L, -1, 1); // fold[1]
++					level = lua_tointeger(L, -1);
++					lua_pop(L, 1); // fold[1]
++					if (lua_objlen(L, -1) > 1) {
++						lua_rawgeti(L, -1, 2); // fold[2]
++						int flag = lua_tointeger(L, -1);
++						level |= flag;
++						lua_pop(L, 1); // fold[2]
++					}
++					styler.SetLevel(line, level);
++					lua_pop(L, 1); // fold
++				}
++				lua_pop(L, 1); // fold table returned
++				// Mask off the level number, leaving only the previous flags.
++				int flagsNext = styler.LevelAt(line + 1);
++				flagsNext &= ~SC_FOLDLEVELNUMBERMASK;
++				styler.SetLevel(line + 1, level | flagsNext);
++			} else l_error(L, "Table of folds expected from lexer.fold");
++		} else l_error(L, "lexer.fold function not found");
++		lua_pop(L, 1); // lexer
++	}
++
++	int SCI_METHOD Version() const { return 0; }
++	const char * SCI_METHOD PropertyNames() { return ""; }
++	int SCI_METHOD PropertyType(const char *name) { return 0; }
++	const char * SCI_METHOD DescribeProperty(const char *name) { return ""; }
++	int SCI_METHOD PropertySet(const char *key, const char *val) {
++		props.Set(key, val);
++		if (reinit) Init();
++		return -1; // no need to re-lex
++	}
++	const char * SCI_METHOD DescribeWordListSets() { return ""; }
++	int SCI_METHOD WordListSet(int n, const char *wl) { return -1; }
++
++	void * SCI_METHOD PrivateCall(int code, void *arg) {
++		long lParam = reinterpret_cast<long>(arg);
++		const char *val = 0;
++		switch(code) {
++		case -2: // setting lexer language; reinit with wid
++			wid = reinterpret_cast<WindowID>(arg);
++			reinit = true;
++			return NULL;
++		case -1: // acts like SCI_GETLEXERLANGUAGE
++			val = "null";
++			if (L) {
++				lua_getfield(L, LUA_REGISTRYINDEX, "lexer_name");
++				val = lua_tostring(L, -1);
++				lua_pop(L, 1); // lexer_name
++			}
++			return StringResult(lParam, val);
++		default:  // get style name
++			val = "";
++			if (L) {
++				lua_getglobal(L, "_LEXER");
++				if (lua_istable(L, -1)) {
++					lua_getfield(L, -1, "_TOKENS");
++					if (lua_istable(L, -1)) {
++						lua_pushnil(L);
++						while (lua_next(L, -2)) {
 +							// stylename = num
-+							if (luaL_checkinteger(lua_state, -1) == static_cast<int>(wParam)) {
-+								val = lua_tostring(lua_state, -2);
-+								lua_pop(lua_state, 2); // value and key
++							if (luaL_checkinteger(L, -1) == static_cast<int>(code)) {
++								val = lua_tostring(L, -2);
++								lua_pop(L, 2); // value and key
 +								break;
 +							}
-+							lua_pop(lua_state, 1); // value
++							lua_pop(L, 1); // value
 +						}
-+						lua_pop(lua_state, 2); // _LEXER._TOKENS and _LEXER
++						lua_pop(L, 2); // _LEXER._TOKENS and _LEXER
 +					}
 +				}
 +			}
 +			return StringResult(lParam, strlen(val) ? val : "Not Available");
 +		}
++	}
++
++	static ILexer *LexerFactoryLPeg() {
++		return new LexerLPeg();
++	}
++};
++
++LexerModule lmLPeg(SCLEX_LPEG, LexerLPeg::LexerFactoryLPeg, "llpeg");
+diff -r ffde119d297e lexlib/LexAccessor.h
+--- scintilla/lexlib/LexAccessor.h	Wed Jul 28 17:54:24 2010 +1000
++++ scintilla/lexlib/LexAccessor.h	Tue Aug 17 00:13:24 2010 -0400
+@@ -166,6 +166,15 @@
+ 	void ChangeLexerState(int start, int end) {
+ 		pAccess->ChangeLexerState(start, end);
+ 	}
++
++	// added by Mitchell
++	char *GetCharRange(int position, int lengthRetrieve) {
++		char *buffer = static_cast<char *>(malloc(lengthRetrieve + 1));
++		pAccess->GetCharRange(buffer, position, lengthRetrieve);
++		buffer[lengthRetrieve] = '\0';
++		return buffer;
++	}
 +	// end added by Mitchell
+ };
  
- 	case SCI_GETSTYLEBITSNEEDED:
- 		return lexCurrent ? lexCurrent->GetStyleBitsNeeded() : 5;
-diff -r f99c7dfc2bff src/ScintillaBase.h
---- scintilla/src/ScintillaBase.h	Tue Jun 01 03:43:54 2010 +0000
-+++ scintilla/src/ScintillaBase.h	Wed Aug 11 22:35:50 2010 -0400
-@@ -53,6 +53,7 @@
- 	void SetLexer(uptr_t wParam);
- 	void SetLexerLanguage(const char *languageName);
- 	void Colourise(int start, int end);
-+	lua_State *lua_state; // added by Mitchell
- #endif
+ #ifdef SCI_NAMESPACE
+diff -r ffde119d297e src/Catalogue.cxx
+--- scintilla/src/Catalogue.cxx	Wed Jul 28 17:54:24 2010 +1000
++++ scintilla/src/Catalogue.cxx	Tue Aug 17 00:13:24 2010 -0400
+@@ -79,6 +79,8 @@
  
- 	ScintillaBase();
-diff -r f99c7dfc2bff win32/deps.mak
---- scintilla/win32/deps.mak	Tue Jun 01 03:43:54 2010 +0000
-+++ scintilla/win32/deps.mak	Wed Aug 11 22:35:50 2010 -0400
-@@ -49,208 +49,11 @@
- KeyWords.o: ../src/KeyWords.cxx ../include/Platform.h \
-   ../include/PropSet.h ../include/Accessor.h \
-   ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexAda.o: ../src/LexAda.cxx ../include/Platform.h ../include/Accessor.h \
-+# modified by Mitchell
-+LexLPeg.o: ../src/LexLPeg.cxx ../include/Platform.h ../include/Accessor.h \
-   ../src/StyleContext.h ../include/PropSet.h \
-   ../include/KeyWords.h ../include/SciLexer.h
--LexAPDL.o: ../src/LexAPDL.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexAsm.o: ../src/LexAsm.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexAsn1.o: ../src/LexAsn1.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexAU3.o: ../src/LexAU3.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexAVE.o: ../src/LexAVE.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexBaan.o: ../src/LexBaan.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexBash.o: ../src/LexBash.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../include/KeyWords.h \
--  ../include/Scintilla.h ../include/SciLexer.h
--LexBasic.o: ../src/LexBasic.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../src/StyleContext.h ../include/KeyWords.h ../include/Scintilla.h \
--  ../include/SciLexer.h
--LexBullant.o: ../src/LexBullant.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexCaml.o: ../src/LexCaml.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexCLW.o: ../src/LexCLW.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexCmake.o: ../src/LexCmake.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexConf.o: ../src/LexConf.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../include/KeyWords.h \
--  ../include/Scintilla.h ../include/SciLexer.h
--LexCPP.o: ../src/LexCPP.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexCrontab.o: ../src/LexCrontab.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexCsound.o: ../src/LexCsound.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../src/StyleContext.h ../include/KeyWords.h ../include/Scintilla.h \
--  ../include/SciLexer.h
--LexCSS.o: ../src/LexCSS.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexD.o: ../src/LexD.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexEiffel.o: ../src/LexEiffel.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../src/StyleContext.h ../include/KeyWords.h ../include/Scintilla.h \
--  ../include/SciLexer.h
--LexErlang.o: ../src/LexErlang.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../src/StyleContext.h ../include/KeyWords.h ../include/Scintilla.h \
--  ../include/SciLexer.h
--LexEScript.o: ../src/LexEScript.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../src/StyleContext.h ../include/KeyWords.h ../include/Scintilla.h \
--  ../include/SciLexer.h
--LexFlagship.o: ../src/LexFlagship.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../src/StyleContext.h ../include/KeyWords.h ../include/Scintilla.h \
--  ../include/SciLexer.h
--LexForth.o: ../src/LexForth.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexFortran.o: ../src/LexFortran.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../src/StyleContext.h ../include/KeyWords.h ../include/Scintilla.h \
--  ../include/SciLexer.h
--LexGui4Cli.o: ../src/LexGui4Cli.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../src/StyleContext.h ../include/KeyWords.h ../include/Scintilla.h \
--  ../include/SciLexer.h
--LexHaskell.o: ../src/LexHaskell.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../src/StyleContext.h ../include/KeyWords.h ../include/Scintilla.h \
--  ../include/SciLexer.h
--LexHTML.o: ../src/LexHTML.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexInno.o: ../src/LexInno.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexKix.o: ../src/LexKix.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexLisp.o: ../src/LexLisp.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../include/KeyWords.h \
--  ../include/Scintilla.h ../include/SciLexer.h ../src/StyleContext.h
--LexLout.o: ../src/LexLout.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexLua.o: ../src/LexLua.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexMatlab.o: ../src/LexMatlab.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../src/StyleContext.h ../include/KeyWords.h ../include/Scintilla.h \
--  ../include/SciLexer.h
--LexMetapost.o: ../src/LexMetapost.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h \
--  ../src/StyleContext.h
--LexMMIXAL.o: ../src/LexMMIXAL.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../src/StyleContext.h ../include/KeyWords.h ../include/Scintilla.h \
--  ../include/SciLexer.h
--LexMPT.o: ../src/LexMPT.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../include/KeyWords.h \
--  ../include/Scintilla.h ../include/SciLexer.h
--LexMSSQL.o: ../src/LexMSSQL.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexNsis.o: ../src/LexNsis.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../include/KeyWords.h \
--  ../include/Scintilla.h ../include/SciLexer.h
--LexOpal.o: ../src/LexOpal.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../include/KeyWords.h \
--  ../include/Scintilla.h ../include/SciLexer.h ../src/StyleContext.h
--LexOthers.o: ../src/LexOthers.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexPascal.o: ../src/LexPascal.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h \
--  ../src/StyleContext.h
--LexPB.o: ../src/LexPB.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexPerl.o: ../src/LexPerl.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../include/KeyWords.h \
--  ../include/Scintilla.h ../include/SciLexer.h
--LexPOV.o: ../src/LexPOV.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexPS.o: ../src/LexPS.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexPython.o: ../src/LexPython.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../src/StyleContext.h ../include/KeyWords.h ../include/Scintilla.h \
--  ../include/SciLexer.h
--LexRebol.o: ../src/LexRebol.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h \
--  ../src/StyleContext.h
--LexRuby.o: ../src/LexRuby.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../include/KeyWords.h \
--  ../include/Scintilla.h ../include/SciLexer.h
--LexScriptol.o: ../src/LexScriptol.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexSmalltalk.o: ../src/LexSmalltalk.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../src/StyleContext.h ../include/KeyWords.h ../include/Scintilla.h \
--  ../include/SciLexer.h
--LexSpecman.o: ../src/LexSpecman.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../src/StyleContext.h ../include/KeyWords.h ../include/Scintilla.h \
--  ../include/SciLexer.h
--LexSpice.o: ../src/LexSpice.cxx ../include/Platform.h \
--  ../include/Accessor.h ../src/StyleContext.h ../include/PropSet.h \
--  ../include/KeyWords.h ../include/SciLexer.h
--LexSQL.o: ../src/LexSQL.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexTADS3.o: ../src/LexTADS3.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../src/StyleContext.h ../include/KeyWords.h ../include/Scintilla.h \
--  ../include/SciLexer.h
--LexTCL.o: ../src/LexTCL.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexTeX.o: ../src/LexTeX.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../include/KeyWords.h \
--  ../include/Scintilla.h ../include/SciLexer.h ../src/StyleContext.h
--LexVB.o: ../src/LexVB.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexVerilog.o: ../src/LexVerilog.cxx ../include/Platform.h \
--  ../include/PropSet.h ../include/Accessor.h \
--  ../src/StyleContext.h ../include/KeyWords.h ../include/Scintilla.h \
--  ../include/SciLexer.h
--LexVHDL.o: ../src/LexVHDL.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
--LexYAML.o: ../src/LexYAML.cxx ../include/Platform.h ../include/PropSet.h \
--  ../include/Accessor.h ../src/StyleContext.h \
--  ../include/KeyWords.h ../include/Scintilla.h ../include/SciLexer.h
-+# end modified by Mitchell
- LineMarker.o: ../src/LineMarker.cxx ../include/Platform.h \
-   ../include/Scintilla.h ../src/XPM.h ../src/LineMarker.h
- PropSet.o: ../src/PropSet.cxx ../include/Platform.h ../include/PropSet.h
-diff -r f99c7dfc2bff win32/makefile
---- scintilla/win32/makefile	Tue Jun 01 03:43:54 2010 +0000
-+++ scintilla/win32/makefile	Wed Aug 11 22:35:50 2010 -0400
+ //++Autogenerated -- run src/LexGen.py to regenerate
+ //**\(\tLINK_LEXER(\*);\n\)
++	LINK_LEXER(lmLPeg);
++#if 0 // added by Mitchell
+ 	LINK_LEXER(lmAbaqus);
+ 	LINK_LEXER(lmAda);
+ 	LINK_LEXER(lmAns1);
+@@ -175,6 +177,7 @@
+ 	LINK_LEXER(lmVHDL);
+ 	LINK_LEXER(lmXML);
+ 	LINK_LEXER(lmYAML);
++#endif // added by Mitchell
+ 
+ //--Autogenerated -- end of automatically generated section
+ 
+diff -r ffde119d297e src/ScintillaBase.cxx
+--- scintilla/src/ScintillaBase.cxx	Wed Jul 28 17:54:24 2010 +1000
++++ scintilla/src/ScintillaBase.cxx	Tue Aug 17 00:13:24 2010 -0400
+@@ -477,6 +477,7 @@
+ 	PropSetSimple props;
+ public:
+ 	int lexLanguage;
++	WindowID wid; // added by Mitchell
+ 
+ 	LexState(Document *pdoc_);
+ 	virtual ~LexState();
+@@ -517,7 +518,11 @@
+ 	if (!pdoc->pli) {
+ 		pdoc->pli = new LexState(pdoc);
+ 	}
+-	return static_cast<LexState *>(pdoc->pli);
++	// modified by Mitchell
++	LexState *state = static_cast<LexState *>(pdoc->pli);
++	state->wid = wMain.GetID();
++	return state;
++	// end modified by Mitchell
+ }
+ 
+ void LexState::SetLexerModule(const LexerModule *lex) {
+@@ -534,6 +539,7 @@
+ }
+ 
+ void LexState::SetLexer(uptr_t wParam) {
++#if 0 // added by Mitchell
+ 	lexLanguage = wParam;
+ 	if (lexLanguage == SCLEX_CONTAINER) {
+ 		SetLexerModule(0);
+@@ -543,15 +549,20 @@
+ 			lex = Catalogue::Find(SCLEX_NULL);
+ 		SetLexerModule(lex);
+ 	}
++#endif // added by Mitchell
+ }
+ 
+ void LexState::SetLexerLanguage(const char *languageName) {
+-	const LexerModule *lex = Catalogue::Find(languageName);
++	const LexerModule *lex = Catalogue::Find(SCLEX_LPEG); // modified by Mitchell
+ 	if (!lex)
+ 		lex = Catalogue::Find(SCLEX_NULL);
+ 	if (lex)
+ 		lexLanguage = lex->GetLanguage();
+ 	SetLexerModule(lex);
++	// added by Mitchell
++	instance->PropertySet("lexer.name", languageName);
++	instance->PrivateCall(-2, wid); // need to reinit
++	// end added by Mitchell
+ }
+ 
+ const char *LexState::DescribeWordListSets() {
+diff -r ffde119d297e win32/deps.mak
+--- scintilla/win32/deps.mak	Wed Jul 28 17:54:24 2010 +1000
++++ scintilla/win32/deps.mak	Tue Aug 17 00:13:24 2010 -0400
+@@ -103,6 +103,11 @@
+ StyleContext.o: ../lexlib/StyleContext.cxx ../include/ILexer.h \
+  ../lexlib/LexAccessor.h ../lexlib/Accessor.h ../lexlib/StyleContext.h
+ WordList.o: ../lexlib/WordList.cxx ../lexlib/WordList.h
++LexLPeg.o: ../lexers/LexLPeg.cxx ../include/ILexer.h \
++ ../include/Scintilla.h ../include/SciLexer.h ../lexlib/PropSetSimple.h \
++ ../lexlib/WordList.h ../lexlib/LexAccessor.h ../lexlib/Accessor.h \
++ ../lexlib/StyleContext.h ../lexlib/CharacterSet.h \
++ ../lexlib/LexerModule.h
+ LexAbaqus.o: ../lexers/LexAbaqus.cxx ../include/ILexer.h \
+  ../include/Scintilla.h ../include/SciLexer.h ../lexlib/PropSetSimple.h \
+  ../lexlib/WordList.h ../lexlib/LexAccessor.h ../lexlib/Accessor.h \
+diff -r ffde119d297e win32/makefile
+--- scintilla/win32/makefile	Wed Jul 28 17:54:24 2010 +1000
++++ scintilla/win32/makefile	Tue Aug 17 00:13:24 2010 -0400
 @@ -5,9 +5,25 @@
  # be needed to use other compilers.
  
@@ -4311,7 +2250,7 @@ diff -r f99c7dfc2bff win32/makefile
 +else
 +# end added by Mitchell
  CC = g++
- DLLWRAP = dllwrap
+ DLLWRAP = g++ -shared -Wl,--kill-at
  DEL = del /q
 +# added by Mitchell
 +GCC = gcc
@@ -4324,14 +2263,14 @@ diff -r f99c7dfc2bff win32/makefile
  LEXCOMPONENT = ../bin/SciLexer.dll
 @@ -15,10 +31,11 @@
  
- vpath %.h ../src ../include
- vpath %.cxx ../src
+ vpath %.h ../src ../include ../lexlib
+ vpath %.cxx ../src ../lexlib ../lexers
 +vpath %.c ../../scite/lua/src ../../scite/lua/src/lib # added by Mitchell
  
  LDFLAGS=-mwindows -lstdc++ -limm32 -lole32 -luuid -mno-cygwin
  # Add -MMD to get dependencies
--INCLUDEDIRS=-I ../include -I ../src
-+INCLUDEDIRS=-I ../include -I ../src -I ../../scite/lua/include # modified by Mitchell
+-INCLUDEDIRS=-I ../include -I ../src -I../lexlib
++INCLUDEDIRS=-I ../include -I ../src -I../lexlib -I ../../scite/lua/include # modified by Mitchell
  CXXBASEFLAGS=-Wall -Wno-missing-braces -Wno-char-subscripts -Wno-strict-overflow -pedantic $(INCLUDEDIRS) -fno-rtti -mno-cygwin
  
  ifdef DEBUG
@@ -4360,49 +2299,35 @@ diff -r f99c7dfc2bff win32/makefile
 +	$(GCC) $(INCLUDEDIRS) $(THUNKFLAGS) -mno-cygwin -c $< -o $@
 +# end added by Mitchell
 +
- ALL:	$(COMPONENT) $(LEXCOMPONENT) $(LEXLIB) ScintillaWinS.o WindowAccessor.o
+ ALL:	$(COMPONENT) $(LEXCOMPONENT) $(LEXLIB) ScintillaWinS.o
  
  clean:
-@@ -39,27 +74,18 @@
+@@ -39,7 +74,7 @@
  deps:
- 	$(CC) -MM $(CXXFLAGS) *.cxx ../src/*.cxx >deps.mak
+ 	$(CC) -MM $(CXXFLAGS) *.cxx ../src/*.cxx ../lexlib/*.cxx ../lexers/*.cxx >deps.mak
  
-+# modified by Mitchell
- #++Autogenerated -- run src/LexGen.py to regenerate
- #**LEXOBJS=\\\n\(\*.o \)
- LEXOBJS=\
--LexAbaqus.o LexAda.o LexAPDL.o LexAsm.o LexAsn1.o LexASY.o LexAU3.o LexAVE.o \
--LexBaan.o LexBash.o LexBasic.o LexBullant.o LexCaml.o LexCLW.o LexCmake.o \
--LexCOBOL.o LexConf.o LexCPP.o LexCrontab.o LexCsound.o LexCSS.o LexD.o \
--LexEiffel.o LexErlang.o LexEScript.o LexFlagship.o LexForth.o LexFortran.o \
--LexGAP.o LexGui4Cli.o LexHaskell.o LexHTML.o LexInno.o LexKix.o LexLisp.o \
--LexLout.o LexLua.o LexMagik.o LexMarkdown.o LexMatlab.o LexMetapost.o \
--LexMMIXAL.o LexMPT.o LexMSSQL.o LexMySQL.o LexNimrod.o LexNsis.o LexOpal.o \
--LexOthers.o LexPascal.o LexPB.o LexPerl.o LexPLM.o LexPOV.o LexPowerPro.o \
--LexPowerShell.o LexProgress.o LexPS.o LexPython.o LexR.o LexRebol.o LexRuby.o \
--LexScriptol.o LexSmalltalk.o LexSML.o LexSorcus.o LexSpecman.o LexSpice.o \
--LexSQL.o LexTACL.o LexTADS3.o LexTAL.o LexTCL.o LexTeX.o LexVB.o LexVerilog.o \
--LexVHDL.o LexYAML.o
-+LexLPeg.o
- #--Autogenerated -- end of automatically generated section
-+# end modified by Mitchell
+-LEXOBJS:=$(addsuffix .o,$(basename $(notdir $(wildcard ../lexers/Lex*.cxx))))
++LEXOBJS:=$(addsuffix .o,$(basename $(notdir $(wildcard ../lexers/LexLPeg.cxx)))) # modified by Mitchell
  
- SOBJS	= ScintillaWin.o ScintillaBase.o Editor.o CharClassify.o Decoration.o \
- 	Document.o ContractionState.o CellBuffer.o CallTip.o \
- 	ScintRes.o PlatWin.o PositionCache.o KeyMap.o Indicator.o LineMarker.o RESearch.o RunStyles.o \
--	Selection.o Style.o ViewStyle.o AutoComplete.o UniConversion.o PropSet.o XPM.o PerLine.o
-+	Selection.o Style.o ViewStyle.o AutoComplete.o UniConversion.o PropSet.o XPM.o PerLine.o $(LUA_OBJS) # modified by Mitchell
+ 
+ BASEOBJS = \
+@@ -68,7 +103,7 @@
+ 	ViewStyle.o \
+ 	XPM.o
+ 
+-SOBJS = ScintillaWin.o ScintillaBase.o $(BASEOBJS)
++SOBJS = ScintillaWin.o ScintillaBase.o $(BASEOBJS) $(LUAOBJS) # modified by Mitchell
+ 
  $(COMPONENT): $(SOBJS) Scintilla.def
- 	$(DLLWRAP) --add-stdcall-alias --target i386-mingw32 -o $@ $(SOBJS) $(LDFLAGS) $(STRIPFLAG) --relocatable
- 
-@@ -67,13 +93,13 @@
- 	Document.o ContractionState.o CellBuffer.o CallTip.o \
- 	ScintRes.o PlatWin.o PositionCache.o KeyMap.o Indicator.o LineMarker.o RESearch.o RunStyles.o \
- 	Selection.o Style.o ViewStyle.o AutoComplete.o UniConversion.o KeyWords.o \
--	DocumentAccessor.o PropSet.o ExternalLexer.o StyleContext.o XPM.o PerLine.o $(LEXOBJS)
-+	DocumentAccessor.o PropSet.o ExternalLexer.o StyleContext.o XPM.o PerLine.o $(LEXOBJS) $(LUA_OBJS) # modified by Mitchell
+ 	$(DLLWRAP) --add-stdcall-alias --target=i386-mingw32 -o $@ $(SOBJS) $(LDFLAGS) $(STRIPFLAG) --relocatable
+@@ -85,13 +120,13 @@
+ 	StyleContext.o \
+ 	WordList.o \
+ 	$(BASEOBJS) \
+-	$(LEXOBJS)
++	$(LEXOBJS) $(LUAOBJS) # modified by Mitchell
  $(LEXCOMPONENT): $(LOBJS) Scintilla.def
- 	$(DLLWRAP) --add-stdcall-alias --target i386-mingw32 -o $@ $(LOBJS) $(LDFLAGS) $(STRIPFLAG) --relocatable
+ 	$(DLLWRAP) --add-stdcall-alias --target=i386-mingw32 -o $@ $(LOBJS) $(LDFLAGS) $(STRIPFLAG) --relocatable
  
  $(LEXLIB): $(LEXOBJS)
  	$(AR) rc $@ $^
@@ -4411,28 +2336,28 @@ diff -r f99c7dfc2bff win32/makefile
  
  # Automatically generate dependencies for most files with "make deps"
  include deps.mak
-@@ -104,5 +130,5 @@
+@@ -139,5 +174,5 @@
  	$(CC) $(CXXFLAGS) -D SCI_LEXER -c $< -o $@
  
  ScintRes.o:	ScintRes.rc PlatformRes.h
 -	windres ScintRes.rc $@
 +	$(WINDRES) ScintRes.rc $@ # modified by Mitchell
  
-diff -r f99c7dfc2bff win32/scintilla.mak
---- scintilla/win32/scintilla.mak	Tue Jun 01 03:43:54 2010 +0000
-+++ scintilla/win32/scintilla.mak	Wed Aug 11 22:35:50 2010 -0400
+diff -r ffde119d297e win32/scintilla.mak
+--- scintilla/win32/scintilla.mak	Wed Jul 28 17:54:24 2010 +1000
++++ scintilla/win32/scintilla.mak	Tue Aug 17 00:13:24 2010 -0400
 @@ -77,7 +77,7 @@
  CXXFLAGS=$(CXXFLAGS) $(CXXNDEBUG)
  !ENDIF
  
--INCLUDEDIRS=-I../include -I../src
-+INCLUDEDIRS=-I../include -I../src -I../../scite/lua/include # modified by Mitchell
+-INCLUDEDIRS=-I../include -I../src -I../lexlib
++INCLUDEDIRS=-I../include -I../src -I../lexlib -I../../scite/lua/include # modified by Mitchell
  CXXFLAGS=$(CXXFLAGS) $(INCLUDEDIRS)
  
- ALL:	$(COMPONENT) $(LEXCOMPONENT) $(DIR_O)\ScintillaWinS.obj $(DIR_O)\WindowAccessor.obj
-@@ -112,89 +112,14 @@
- 	$(DIR_O)\XPM.obj \
- 	$(DIR_O)\PerLine.obj
+ ALL:	$(COMPONENT) $(LEXCOMPONENT) $(DIR_O)\ScintillaWinS.obj
+@@ -113,90 +113,14 @@
+ 	$(DIR_O)\ViewStyle.obj \
+ 	$(DIR_O)\XPM.obj
  
 +# modified by Mitchell
  #++Autogenerated -- run src/LexGen.py to regenerate
@@ -4512,6 +2437,7 @@ diff -r f99c7dfc2bff win32/scintilla.mak
 -	$(DIR_O)\LexTAL.obj \
 -	$(DIR_O)\LexTCL.obj \
 -	$(DIR_O)\LexTeX.obj \
+-	$(DIR_O)\LexTxt2tags.obj \
 -	$(DIR_O)\LexVB.obj \
 -	$(DIR_O)\LexVerilog.obj \
 -	$(DIR_O)\LexVHDL.obj \
@@ -4522,186 +2448,31 @@ diff -r f99c7dfc2bff win32/scintilla.mak
 +# end modified by Mitchell
  
  LOBJS=\
- 	$(DIR_O)\AutoComplete.obj \
-@@ -318,162 +243,7 @@
+ 	$(DIR_O)\Accessor.obj \
+@@ -320,6 +244,8 @@
  #++Autogenerated -- run src/LexGen.py to regenerate
- #**\n\($(DIR_O)\\\*.obj: ..\\src\\\*.cxx $(LEX_HEADERS)\n\n\)
+ #**\n\($(DIR_O)\\\*.obj: ..\\lexers\\\*.cxx $(LEX_HEADERS)\n\n\)
  
--$(DIR_O)\LexAbaqus.obj: ..\src\LexAbaqus.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexAda.obj: ..\src\LexAda.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexAPDL.obj: ..\src\LexAPDL.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexAsm.obj: ..\src\LexAsm.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexAsn1.obj: ..\src\LexAsn1.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexASY.obj: ..\src\LexASY.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexAU3.obj: ..\src\LexAU3.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexAVE.obj: ..\src\LexAVE.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexBaan.obj: ..\src\LexBaan.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexBash.obj: ..\src\LexBash.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexBasic.obj: ..\src\LexBasic.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexBullant.obj: ..\src\LexBullant.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexCaml.obj: ..\src\LexCaml.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexCLW.obj: ..\src\LexCLW.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexCmake.obj: ..\src\LexCmake.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexCOBOL.obj: ..\src\LexCOBOL.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexConf.obj: ..\src\LexConf.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexCPP.obj: ..\src\LexCPP.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexCrontab.obj: ..\src\LexCrontab.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexCsound.obj: ..\src\LexCsound.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexCSS.obj: ..\src\LexCSS.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexD.obj: ..\src\LexD.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexEiffel.obj: ..\src\LexEiffel.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexErlang.obj: ..\src\LexErlang.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexEScript.obj: ..\src\LexEScript.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexFlagship.obj: ..\src\LexFlagship.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexForth.obj: ..\src\LexForth.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexFortran.obj: ..\src\LexFortran.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexGAP.obj: ..\src\LexGAP.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexGui4Cli.obj: ..\src\LexGui4Cli.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexHaskell.obj: ..\src\LexHaskell.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexHTML.obj: ..\src\LexHTML.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexInno.obj: ..\src\LexInno.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexKix.obj: ..\src\LexKix.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexLisp.obj: ..\src\LexLisp.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexLout.obj: ..\src\LexLout.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexLua.obj: ..\src\LexLua.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexMagik.obj: ..\src\LexMagik.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexMarkdown.obj: ..\src\LexMarkdown.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexMatlab.obj: ..\src\LexMatlab.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexMetapost.obj: ..\src\LexMetapost.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexMMIXAL.obj: ..\src\LexMMIXAL.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexMPT.obj: ..\src\LexMPT.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexMSSQL.obj: ..\src\LexMSSQL.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexMySQL.obj: ..\src\LexMySQL.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexNimrod.obj: ..\src\LexNimrod.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexNsis.obj: ..\src\LexNsis.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexOpal.obj: ..\src\LexOpal.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexOthers.obj: ..\src\LexOthers.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexPascal.obj: ..\src\LexPascal.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexPB.obj: ..\src\LexPB.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexPerl.obj: ..\src\LexPerl.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexPLM.obj: ..\src\LexPLM.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexPOV.obj: ..\src\LexPOV.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexPowerPro.obj: ..\src\LexPowerPro.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexPowerShell.obj: ..\src\LexPowerShell.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexProgress.obj: ..\src\LexProgress.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexPS.obj: ..\src\LexPS.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexPython.obj: ..\src\LexPython.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexR.obj: ..\src\LexR.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexRebol.obj: ..\src\LexRebol.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexRuby.obj: ..\src\LexRuby.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexScriptol.obj: ..\src\LexScriptol.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexSmalltalk.obj: ..\src\LexSmalltalk.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexSML.obj: ..\src\LexSML.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexSorcus.obj: ..\src\LexSorcus.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexSpecman.obj: ..\src\LexSpecman.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexSpice.obj: ..\src\LexSpice.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexSQL.obj: ..\src\LexSQL.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexTACL.obj: ..\src\LexTACL.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexTADS3.obj: ..\src\LexTADS3.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexTAL.obj: ..\src\LexTAL.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexTCL.obj: ..\src\LexTCL.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexTeX.obj: ..\src\LexTeX.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexVB.obj: ..\src\LexVB.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexVerilog.obj: ..\src\LexVerilog.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexVHDL.obj: ..\src\LexVHDL.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexYAML.obj: ..\src\LexYAML.cxx $(LEX_HEADERS)
--
-+$(DIR_O)\LexLPeg.obj: ..\src\LexLPeg.cxx $(LEX_HEADERS)
++$(DIR_O)\LexLPeg.obj: ..\lexers\LexLPeg.cxx $(LEX_HEADERS) # added by Mitchell
++
+ $(DIR_O)\LexAbaqus.obj: ..\lexers\LexAbaqus.cxx $(LEX_HEADERS)
  
- #--Autogenerated -- end of automatically generated section
- 
-diff -r f99c7dfc2bff win32/scintilla_vc6.mak
---- scintilla/win32/scintilla_vc6.mak	Tue Jun 01 03:43:54 2010 +0000
-+++ scintilla/win32/scintilla_vc6.mak	Wed Aug 11 22:35:50 2010 -0400
+ $(DIR_O)\LexAda.obj: ..\lexers\LexAda.cxx $(LEX_HEADERS)
+diff -r ffde119d297e win32/scintilla_vc6.mak
+--- scintilla/win32/scintilla_vc6.mak	Wed Jul 28 17:54:24 2010 +1000
++++ scintilla/win32/scintilla_vc6.mak	Tue Aug 17 00:13:24 2010 -0400
 @@ -79,7 +79,7 @@
  CXXFLAGS=$(CXXFLAGS) $(CXXNDEBUG)
  !ENDIF
  
--INCLUDEDIRS=-I../include -I../src
-+INCLUDEDIRS=-I../include -I../src -I../../scite/lua/include # modified by Mitchell
+-INCLUDEDIRS=-I../include -I../src -I../lexlib
++INCLUDEDIRS=-I../include -I../src -I../lexlib -I../../scite/lua/include # modified by Mitchell
  CXXFLAGS=$(CXXFLAGS) $(INCLUDEDIRS)
  
- ALL:	$(COMPONENT) $(LEXCOMPONENT) $(DIR_O)\ScintillaWinS.obj $(DIR_O)\WindowAccessor.obj
-@@ -114,89 +114,14 @@
- 	$(DIR_O)\XPM.obj \
- 	$(DIR_O)\PerLine.obj
+ ALL:	$(COMPONENT) $(LEXCOMPONENT) $(DIR_O)\ScintillaWinS.obj
+@@ -115,90 +115,14 @@
+ 	$(DIR_O)\ViewStyle.obj \
+ 	$(DIR_O)\XPM.obj
  
 +# modified by Mitchell
  #++Autogenerated -- run src/LexGen.py to regenerate
@@ -4781,6 +2552,7 @@ diff -r f99c7dfc2bff win32/scintilla_vc6.mak
 -	$(DIR_O)\LexTAL.obj \
 -	$(DIR_O)\LexTCL.obj \
 -	$(DIR_O)\LexTeX.obj \
+-	$(DIR_O)\LexTxt2tags.obj \
 -	$(DIR_O)\LexVB.obj \
 -	$(DIR_O)\LexVerilog.obj \
 -	$(DIR_O)\LexVHDL.obj \
@@ -4791,747 +2563,600 @@ diff -r f99c7dfc2bff win32/scintilla_vc6.mak
 +# end modified by Mitchell
  
  LOBJS=\
- 	$(DIR_O)\AutoComplete.obj \
-@@ -320,162 +245,7 @@
+ 	$(DIR_O)\Accessor.obj \
+@@ -322,6 +246,8 @@
  #++Autogenerated -- run src/LexGen.py to regenerate
- #**\n\($(DIR_O)\\\*.obj: ..\\src\\\*.cxx $(LEX_HEADERS)\n\n\)
+ #**\n\($(DIR_O)\\\*.obj: ..\\lexers\\\*.cxx $(LEX_HEADERS)\n\n\)
  
--$(DIR_O)\LexAbaqus.obj: ..\src\LexAbaqus.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexAda.obj: ..\src\LexAda.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexAPDL.obj: ..\src\LexAPDL.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexAsm.obj: ..\src\LexAsm.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexAsn1.obj: ..\src\LexAsn1.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexASY.obj: ..\src\LexASY.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexAU3.obj: ..\src\LexAU3.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexAVE.obj: ..\src\LexAVE.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexBaan.obj: ..\src\LexBaan.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexBash.obj: ..\src\LexBash.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexBasic.obj: ..\src\LexBasic.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexBullant.obj: ..\src\LexBullant.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexCaml.obj: ..\src\LexCaml.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexCLW.obj: ..\src\LexCLW.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexCmake.obj: ..\src\LexCmake.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexCOBOL.obj: ..\src\LexCOBOL.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexConf.obj: ..\src\LexConf.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexCPP.obj: ..\src\LexCPP.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexCrontab.obj: ..\src\LexCrontab.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexCsound.obj: ..\src\LexCsound.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexCSS.obj: ..\src\LexCSS.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexD.obj: ..\src\LexD.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexEiffel.obj: ..\src\LexEiffel.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexErlang.obj: ..\src\LexErlang.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexEScript.obj: ..\src\LexEScript.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexFlagship.obj: ..\src\LexFlagship.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexForth.obj: ..\src\LexForth.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexFortran.obj: ..\src\LexFortran.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexGAP.obj: ..\src\LexGAP.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexGui4Cli.obj: ..\src\LexGui4Cli.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexHaskell.obj: ..\src\LexHaskell.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexHTML.obj: ..\src\LexHTML.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexInno.obj: ..\src\LexInno.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexKix.obj: ..\src\LexKix.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexLisp.obj: ..\src\LexLisp.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexLout.obj: ..\src\LexLout.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexLua.obj: ..\src\LexLua.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexMagik.obj: ..\src\LexMagik.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexMarkdown.obj: ..\src\LexMarkdown.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexMatlab.obj: ..\src\LexMatlab.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexMetapost.obj: ..\src\LexMetapost.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexMMIXAL.obj: ..\src\LexMMIXAL.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexMPT.obj: ..\src\LexMPT.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexMSSQL.obj: ..\src\LexMSSQL.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexMySQL.obj: ..\src\LexMySQL.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexNimrod.obj: ..\src\LexNimrod.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexNsis.obj: ..\src\LexNsis.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexOpal.obj: ..\src\LexOpal.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexOthers.obj: ..\src\LexOthers.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexPascal.obj: ..\src\LexPascal.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexPB.obj: ..\src\LexPB.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexPerl.obj: ..\src\LexPerl.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexPLM.obj: ..\src\LexPLM.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexPOV.obj: ..\src\LexPOV.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexPowerPro.obj: ..\src\LexPowerPro.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexPowerShell.obj: ..\src\LexPowerShell.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexProgress.obj: ..\src\LexProgress.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexPS.obj: ..\src\LexPS.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexPython.obj: ..\src\LexPython.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexR.obj: ..\src\LexR.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexRebol.obj: ..\src\LexRebol.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexRuby.obj: ..\src\LexRuby.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexScriptol.obj: ..\src\LexScriptol.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexSmalltalk.obj: ..\src\LexSmalltalk.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexSML.obj: ..\src\LexSML.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexSorcus.obj: ..\src\LexSorcus.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexSpecman.obj: ..\src\LexSpecman.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexSpice.obj: ..\src\LexSpice.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexSQL.obj: ..\src\LexSQL.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexTACL.obj: ..\src\LexTACL.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexTADS3.obj: ..\src\LexTADS3.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexTAL.obj: ..\src\LexTAL.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexTCL.obj: ..\src\LexTCL.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexTeX.obj: ..\src\LexTeX.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexVB.obj: ..\src\LexVB.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexVerilog.obj: ..\src\LexVerilog.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexVHDL.obj: ..\src\LexVHDL.cxx $(LEX_HEADERS)
--
--$(DIR_O)\LexYAML.obj: ..\src\LexYAML.cxx $(LEX_HEADERS)
--
-+$(DIR_O)\LexLPeg.obj: ..\src\LexLPeg.cxx $(LEX_HEADERS)
++$(DIR_O)\LexLPeg.obj: ..\lexers\LexLPeg.cxx $(LEX_HEADERS) # added by Mitchell
++
+ $(DIR_O)\LexAbaqus.obj: ..\lexers\LexAbaqus.cxx $(LEX_HEADERS)
  
- #--Autogenerated -- end of automatically generated section
- 
-diff -r ba29d6366abf boundscheck/SciTE.dsp
---- scite/boundscheck/SciTE.dsp	Tue Jun 01 03:43:54 2010 +0000
-+++ scite/boundscheck/SciTE.dsp	Wed Aug 11 22:35:50 2010 -0400
-@@ -199,317 +199,14 @@
+ $(DIR_O)\LexAda.obj: ..\lexers\LexAda.cxx $(LEX_HEADERS)
+diff -r 77399602f8dc boundscheck/SciTE.dsp
+--- scite/boundscheck/SciTE.dsp	Wed Jul 28 10:38:18 2010 +1000
++++ scite/boundscheck/SciTE.dsp	Tue Aug 17 00:13:24 2010 -0400
+@@ -219,321 +219,15 @@
  # End Source File
  # Begin Source File
  
--SOURCE=..\..\scintilla\src\LexAbaqus.cxx
+-SOURCE=..\..\scintilla\lexers\LexAbaqus.cxx
 +# modified by Mitchell
-+SOURCE=..\..\scintilla\src\LexLPeg.cxx
++SOURCE=..\..\scintilla\lexers\LexLPeg.cxx
  # End Source File
  # Begin Source File
--
--SOURCE=..\..\scintilla\src\LexAda.cxx
+ 
+-SOURCE=..\..\scintilla\lexers\LexAda.cxx
 +SOURCE=..\lua\src\lpeg.c
  # End Source File
  # Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexAPDL.cxx
+-SOURCE=..\..\scintilla\lexers\LexAPDL.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexAsm.cxx
+-SOURCE=..\..\scintilla\lexers\LexAsm.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexAsn1.cxx
+-SOURCE=..\..\scintilla\lexers\LexAsn1.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexASY.cxx
+-SOURCE=..\..\scintilla\lexers\LexASY.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexAU3.cxx
+-SOURCE=..\..\scintilla\lexers\LexAU3.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexAVE.cxx
+-SOURCE=..\..\scintilla\lexers\LexAVE.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexBaan.cxx
+-SOURCE=..\..\scintilla\lexers\LexBaan.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexBash.cxx
+-SOURCE=..\..\scintilla\lexers\LexBash.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexBasic.cxx
+-SOURCE=..\..\scintilla\lexers\LexBasic.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexBullant.cxx
+-SOURCE=..\..\scintilla\lexers\LexBullant.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexCaml.cxx
+-SOURCE=..\..\scintilla\lexers\LexCaml.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexCLW.cxx
+-SOURCE=..\..\scintilla\lexers\LexCLW.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexCmake.cxx
+-SOURCE=..\..\scintilla\lexers\LexCmake.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexCOBOL.cxx
+-SOURCE=..\..\scintilla\lexers\LexCOBOL.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexConf.cxx
+-SOURCE=..\..\scintilla\lexers\LexConf.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexCPP.cxx
+-SOURCE=..\..\scintilla\lexers\LexCPP.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexCrontab.cxx
+-SOURCE=..\..\scintilla\lexers\LexCrontab.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexCsound.cxx
+-SOURCE=..\..\scintilla\lexers\LexCsound.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexCSS.cxx
+-SOURCE=..\..\scintilla\lexers\LexCSS.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexD.cxx
+-SOURCE=..\..\scintilla\lexers\LexD.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexEiffel.cxx
+-SOURCE=..\..\scintilla\lexers\LexEiffel.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexErlang.cxx
+-SOURCE=..\..\scintilla\lexers\LexErlang.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexEScript.cxx
+-SOURCE=..\..\scintilla\lexers\LexEScript.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexFlagship.cxx
+-SOURCE=..\..\scintilla\lexers\LexFlagship.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexForth.cxx
+-SOURCE=..\..\scintilla\lexers\LexForth.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexFortran.cxx
+-SOURCE=..\..\scintilla\lexers\LexFortran.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexGAP.cxx
+-SOURCE=..\..\scintilla\lexers\LexGAP.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexGui4Cli.cxx
+-SOURCE=..\..\scintilla\lexers\LexGui4Cli.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexHaskell.cxx
+-SOURCE=..\..\scintilla\lexers\LexHaskell.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexHTML.cxx
+-SOURCE=..\..\scintilla\lexers\LexHTML.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexInno.cxx
+-SOURCE=..\..\scintilla\lexers\LexInno.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexKix.cxx
+-SOURCE=..\..\scintilla\lexers\LexKix.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexLisp.cxx
+-SOURCE=..\..\scintilla\lexers\LexLisp.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexLout.cxx
+-SOURCE=..\..\scintilla\lexers\LexLout.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexLua.cxx
+-SOURCE=..\..\scintilla\lexers\LexLua.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexMagik.cxx
+-SOURCE=..\..\scintilla\lexers\LexMagik.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexMarkdown.cxx
+-SOURCE=..\..\scintilla\lexers\LexMarkdown.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexMatlab.cxx
+-SOURCE=..\..\scintilla\lexers\LexMatlab.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexMetapost.cxx
+-SOURCE=..\..\scintilla\lexers\LexMetapost.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexMMIXAL.cxx
+-SOURCE=..\..\scintilla\lexers\LexMMIXAL.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexMPT.cxx
+-SOURCE=..\..\scintilla\lexers\LexMPT.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexMSSQL.cxx
+-SOURCE=..\..\scintilla\lexers\LexMSSQL.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexMySQL.cxx
+-SOURCE=..\..\scintilla\lexers\LexMySQL.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexNimrod.cxx
+-SOURCE=..\..\scintilla\lexers\LexNimrod.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexNsis.cxx
+-SOURCE=..\..\scintilla\lexers\LexNsis.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexOpal.cxx
+-SOURCE=..\..\scintilla\lexers\LexOpal.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexOthers.cxx
+-SOURCE=..\..\scintilla\lexers\LexOthers.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexPascal.cxx
+-SOURCE=..\..\scintilla\lexers\LexPascal.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexPB.cxx
+-SOURCE=..\..\scintilla\lexers\LexPB.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexPerl.cxx
+-SOURCE=..\..\scintilla\lexers\LexPerl.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexPLM.cxx
+-SOURCE=..\..\scintilla\lexers\LexPLM.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexPOV.cxx
+-SOURCE=..\..\scintilla\lexers\LexPOV.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexPowerPro.cxx
+-SOURCE=..\..\scintilla\lexers\LexPowerPro.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexPowerShell.cxx
+-SOURCE=..\..\scintilla\lexers\LexPowerShell.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexProgress.cxx
+-SOURCE=..\..\scintilla\lexers\LexProgress.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexPS.cxx
+-SOURCE=..\..\scintilla\lexers\LexPS.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexPython.cxx
+-SOURCE=..\..\scintilla\lexers\LexPython.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexR.cxx
+-SOURCE=..\..\scintilla\lexers\LexR.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexRebol.cxx
+-SOURCE=..\..\scintilla\lexers\LexRebol.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexRuby.cxx
+-SOURCE=..\..\scintilla\lexers\LexRuby.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexScriptol.cxx
+-SOURCE=..\..\scintilla\lexers\LexScriptol.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexSmalltalk.cxx
+-SOURCE=..\..\scintilla\lexers\LexSmalltalk.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexSML.cxx
+-SOURCE=..\..\scintilla\lexers\LexSML.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexSorcus.cxx
+-SOURCE=..\..\scintilla\lexers\LexSorcus.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexSpecman.cxx
+-SOURCE=..\..\scintilla\lexers\LexSpecman.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexSpice.cxx
+-SOURCE=..\..\scintilla\lexers\LexSpice.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexSQL.cxx
+-SOURCE=..\..\scintilla\lexers\LexSQL.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexTACL.cxx
+-SOURCE=..\..\scintilla\lexers\LexTACL.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexTADS3.cxx
+-SOURCE=..\..\scintilla\lexers\LexTADS3.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexTAL.cxx
+-SOURCE=..\..\scintilla\lexers\LexTAL.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexTCL.cxx
+-SOURCE=..\..\scintilla\lexers\LexTCL.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexTeX.cxx
+-SOURCE=..\..\scintilla\lexers\LexTeX.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexVB.cxx
+-SOURCE=..\..\scintilla\lexers\LexTxt2tags.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexVerilog.cxx
+-SOURCE=..\..\scintilla\lexers\LexVB.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexVHDL.cxx
+-SOURCE=..\..\scintilla\lexers\LexVerilog.cxx
 -# End Source File
 -# Begin Source File
 -
--SOURCE=..\..\scintilla\src\LexYAML.cxx
+-SOURCE=..\..\scintilla\lexers\LexVHDL.cxx
+-# End Source File
+-# Begin Source File
+-
+-SOURCE=..\..\scintilla\lexers\LexYAML.cxx
 -# End Source File
 -# Begin Source File
 +# end modified by Mitchell
  
  SOURCE=..\lua\src\lfunc.c
  # End Source File
-diff -r ba29d6366abf boundscheck/SciTE.vcproj
---- scite/boundscheck/SciTE.vcproj	Tue Jun 01 03:43:54 2010 +0000
-+++ scite/boundscheck/SciTE.vcproj	Wed Aug 11 22:35:50 2010 -0400
-@@ -231,240 +231,14 @@
+diff -r 77399602f8dc boundscheck/SciTE.vcproj
+--- scite/boundscheck/SciTE.vcproj	Wed Jul 28 10:38:18 2010 +1000
++++ scite/boundscheck/SciTE.vcproj	Tue Aug 17 00:13:24 2010 -0400
+@@ -243,244 +243,14 @@
  			<File
  				RelativePath="..\lua\src\ldump.c">
  			</File>
 +			<!-- modified by Mitchell -->
  			<File
--				RelativePath="..\..\scintilla\src\LexAbaqus.cxx">
-+				RelativePath="..\..\scintilla\src\LexLPeg.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexAbaqus.cxx">
++				RelativePath="..\..\scintilla\lexers\LexLPeg.cxx">
  			</File>
  			<File
--				RelativePath="..\..\scintilla\src\LexAda.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexAda.cxx">
 +				RelativePath="..\lua\src\lpeg.c">
  			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexAPDL.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexAPDL.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexAsm.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexAsm.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexAsn1.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexAsn1.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexASY.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexASY.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexAU3.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexAU3.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexAVE.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexAVE.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexBaan.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexBaan.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexBash.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexBash.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexBasic.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexBasic.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexBullant.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexBullant.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexCaml.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexCaml.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexCLW.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexCLW.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexCmake.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexCmake.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexCOBOL.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexCOBOL.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexConf.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexConf.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexCPP.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexCPP.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexCrontab.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexCrontab.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexCsound.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexCsound.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexCSS.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexCSS.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexD.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexD.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexEiffel.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexEiffel.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexErlang.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexErlang.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexEScript.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexEScript.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexFlagship.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexFlagship.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexForth.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexForth.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexFortran.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexFortran.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexGAP.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexGAP.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexGui4Cli.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexGui4Cli.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexHaskell.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexHaskell.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexHTML.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexHTML.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexInno.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexInno.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexKix.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexKix.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexLisp.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexLisp.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexLout.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexLout.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexLua.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexLua.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexMagik.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexMagik.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexMarkdown.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexMarkdown.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexMatlab.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexMatlab.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexMetapost.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexMetapost.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexMMIXAL.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexMMIXAL.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexMPT.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexMPT.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexMSSQL.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexMSSQL.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexMySQL.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexMySQL.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexNimrod.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexNimrod.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexNsis.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexNsis.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexOpal.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexOpal.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexOthers.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexOthers.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexPascal.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexPascal.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexPB.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexPB.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexPerl.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexPerl.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexPLM.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexPLM.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexPOV.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexPOV.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexPowerPro.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexPowerPro.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexPowerShell.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexPowerShell.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexProgress.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexProgress.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexPS.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexPS.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexPython.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexPython.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexR.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexR.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexRebol.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexRebol.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexRuby.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexRuby.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexScriptol.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexScriptol.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexSmalltalk.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexSmalltalk.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexSML.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexSML.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexSorcus.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexSorcus.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexSpecman.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexSpecman.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexSpice.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexSpice.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexSQL.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexSQL.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexTACL.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexTACL.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexTADS3.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexTADS3.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexTAL.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexTAL.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexTCL.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexTCL.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexTeX.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexTeX.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexVB.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexTxt2tags.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexVerilog.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexVB.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexVHDL.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexVerilog.cxx">
 -			</File>
 -			<File
--				RelativePath="..\..\scintilla\src\LexYAML.cxx">
+-				RelativePath="..\..\scintilla\lexers\LexVHDL.cxx">
 -			</File>
+-			<File
+-				RelativePath="..\..\scintilla\lexers\LexYAML.cxx">
+-			</File>
+-
 +			<!-- end modified by Mitchell -->
- 
  			<File
  				RelativePath="..\lua\src\lfunc.c">
-diff -r ba29d6366abf gtk/makefile
---- scite/gtk/makefile	Tue Jun 01 03:43:54 2010 +0000
-+++ scite/gtk/makefile	Wed Aug 11 22:35:50 2010 -0400
+ 			</File>
+diff -r 77399602f8dc gtk/makefile
+--- scite/gtk/makefile	Wed Jul 28 10:38:18 2010 +1000
++++ scite/gtk/makefile	Tue Aug 17 00:13:24 2010 -0400
 @@ -55,7 +55,7 @@
  		ltable.o ltm.o lundump.o lvm.o lzio.o
  
@@ -5541,9 +3166,9 @@ diff -r ba29d6366abf gtk/makefile
  
  LUA_OBJS = LuaExtension.o $(LUA_CORE_OBJS) $(LUA_LIB_OBJS)
  
-diff -r ba29d6366abf lua/include/lualib.h
---- scite/lua/include/lualib.h	Tue Jun 01 03:43:54 2010 +0000
-+++ scite/lua/include/lualib.h	Wed Aug 11 22:35:50 2010 -0400
+diff -r 77399602f8dc lua/include/lualib.h
+--- scite/lua/include/lualib.h	Wed Jul 28 10:38:18 2010 +1000
++++ scite/lua/include/lualib.h	Tue Aug 17 00:13:24 2010 -0400
 @@ -39,6 +39,11 @@
  #define LUA_LOADLIBNAME	"package"
  LUALIB_API int (luaopen_package) (lua_State *L);
@@ -5556,9 +3181,9 @@ diff -r ba29d6366abf lua/include/lualib.h
  
  /* open all previous libraries */
  LUALIB_API void (luaL_openlibs) (lua_State *L); 
-diff -r ba29d6366abf lua/src/lpeg.c
+diff -r 77399602f8dc lua/src/lpeg.c
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ scite/lua/src/lpeg.c	Wed Aug 11 22:35:50 2010 -0400
++++ scite/lua/src/lpeg.c	Tue Aug 17 00:13:24 2010 -0400
 @@ -0,0 +1,2260 @@
 +/*
 +** $Id: lpeg.c,v 1.98 2008/10/11 20:20:43 roberto Exp $
@@ -7820,18 +5445,10 @@ diff -r ba29d6366abf lua/src/lpeg.c
 +  return 1;
 +}
 +
-diff -r ba29d6366abf src/IFaceTable.cxx
---- scite/src/IFaceTable.cxx	Tue Jun 01 03:43:54 2010 +0000
-+++ scite/src/IFaceTable.cxx	Wed Aug 11 22:35:50 2010 -0400
-@@ -127,6 +127,7 @@
- }
- 
- 
-+// modified by Mitchell
- //++Autogenerated -- start of section automatically generated from Scintilla.iface
- 
- static IFaceConstant ifaceConstants[] = {
-@@ -304,1279 +305,6 @@
+diff -r 77399602f8dc src/IFaceTable.cxx
+--- scite/src/IFaceTable.cxx	Wed Jul 28 10:38:18 2010 +1000
++++ scite/src/IFaceTable.cxx	Tue Aug 17 00:13:24 2010 -0400
+@@ -311,1308 +311,6 @@
  	{"SCEN_CHANGE",768},
  	{"SCEN_KILLFOCUS",256},
  	{"SCEN_SETFOCUS",512},
@@ -8772,12 +6389,15 @@ diff -r ba29d6366abf src/IFaceTable.cxx
 -	{"SCE_POWERSHELL_CHARACTER",3},
 -	{"SCE_POWERSHELL_CMDLET",9},
 -	{"SCE_POWERSHELL_COMMENT",1},
+-	{"SCE_POWERSHELL_COMMENTSTREAM",13},
 -	{"SCE_POWERSHELL_DEFAULT",0},
+-	{"SCE_POWERSHELL_FUNCTION",11},
 -	{"SCE_POWERSHELL_IDENTIFIER",7},
 -	{"SCE_POWERSHELL_KEYWORD",8},
 -	{"SCE_POWERSHELL_NUMBER",4},
 -	{"SCE_POWERSHELL_OPERATOR",6},
 -	{"SCE_POWERSHELL_STRING",2},
+-	{"SCE_POWERSHELL_USER1",12},
 -	{"SCE_POWERSHELL_VARIABLE",5},
 -	{"SCE_PO_COMMENT",1},
 -	{"SCE_PO_DEFAULT",0},
@@ -9069,6 +6689,32 @@ diff -r ba29d6366abf src/IFaceTable.cxx
 -	{"SCE_TEX_SPECIAL",1},
 -	{"SCE_TEX_SYMBOL",3},
 -	{"SCE_TEX_TEXT",5},
+-	{"SCE_TXT2TAGS_BLOCKQUOTE",15},
+-	{"SCE_TXT2TAGS_CODE",19},
+-	{"SCE_TXT2TAGS_CODE2",20},
+-	{"SCE_TXT2TAGS_CODEBK",21},
+-	{"SCE_TXT2TAGS_COMMENT",22},
+-	{"SCE_TXT2TAGS_DEFAULT",0},
+-	{"SCE_TXT2TAGS_EM1",4},
+-	{"SCE_TXT2TAGS_EM2",5},
+-	{"SCE_TXT2TAGS_HEADER1",6},
+-	{"SCE_TXT2TAGS_HEADER2",7},
+-	{"SCE_TXT2TAGS_HEADER3",8},
+-	{"SCE_TXT2TAGS_HEADER4",9},
+-	{"SCE_TXT2TAGS_HEADER5",10},
+-	{"SCE_TXT2TAGS_HEADER6",11},
+-	{"SCE_TXT2TAGS_HRULE",17},
+-	{"SCE_TXT2TAGS_LINE_BEGIN",1},
+-	{"SCE_TXT2TAGS_LINK",18},
+-	{"SCE_TXT2TAGS_OLIST_ITEM",14},
+-	{"SCE_TXT2TAGS_OPTION",23},
+-	{"SCE_TXT2TAGS_POSTPROC",25},
+-	{"SCE_TXT2TAGS_PRECHAR",12},
+-	{"SCE_TXT2TAGS_PREPROC",24},
+-	{"SCE_TXT2TAGS_STRIKEOUT",16},
+-	{"SCE_TXT2TAGS_STRONG1",2},
+-	{"SCE_TXT2TAGS_STRONG2",3},
+-	{"SCE_TXT2TAGS_ULIST_ITEM",13},
 -	{"SCE_VHDL_ATTRIBUTE",10},
 -	{"SCE_VHDL_COMMENT",1},
 -	{"SCE_VHDL_COMMENTLINEBANG",2},
@@ -9111,7 +6757,7 @@ diff -r ba29d6366abf src/IFaceTable.cxx
  	{"SCFIND_MATCHCASE",4},
  	{"SCFIND_POSIX",0x00400000},
  	{"SCFIND_REGEXP",0x00200000},
-@@ -1911,104 +639,10 @@
+@@ -1947,105 +645,10 @@
  	{"SCK_TAB",9},
  	{"SCK_UP",301},
  	{"SCK_WIN",313},
@@ -9207,6 +6853,7 @@ diff -r ba29d6366abf src/IFaceTable.cxx
 -	{"SCLEX_TAL",91},
 -	{"SCLEX_TCL",25},
 -	{"SCLEX_TEX",49},
+-	{"SCLEX_TXT2TAGS",99},
 -	{"SCLEX_VB",8},
 -	{"SCLEX_VBSCRIPT",28},
 -	{"SCLEX_VERILOG",56},
@@ -9217,34 +6864,28 @@ diff -r ba29d6366abf src/IFaceTable.cxx
  	{"SCMOD_ALT",4},
  	{"SCMOD_CTRL",2},
  	{"SCMOD_NORM",0},
-@@ -2276,6 +910,7 @@
- 	{"GetProperty", 4008, iface_int, {iface_string, iface_stringresult}},
- 	{"GetPropertyExpanded", 4009, iface_int, {iface_string, iface_stringresult}},
- 	{"GetSelText", 2161, iface_int, {iface_void, iface_stringresult}},
-+	{"GetStyleName", 4013, iface_int, {iface_int, iface_stringresult}},
- 	{"GetStyledText", 2015, iface_int, {iface_void, iface_textrange}},
- 	{"GetTag", 2616, iface_int, {iface_int, iface_stringresult}},
- 	{"GetText", 2182, iface_int, {iface_length, iface_stringresult}},
-@@ -2624,12 +1259,13 @@
- };
+@@ -2414,7 +1017,7 @@
+ 	{"PositionFromLine", 2167, iface_position, {iface_int, iface_void}},
+ 	{"PositionFromPoint", 2022, iface_position, {iface_int, iface_int}},
+ 	{"PositionFromPointClose", 2023, iface_position, {iface_int, iface_int}},
+-	{"PrivateLexerCall", 4013, iface_int, {iface_int, iface_int}},
++	{"PrivateLexerCall", 4013, iface_int, {iface_int, iface_stringresult}},
+ 	{"PropertyNames", 4014, iface_int, {iface_void, iface_stringresult}},
+ 	{"PropertyType", 4015, iface_int, {iface_string, iface_void}},
+ 	{"Redo", 2011, iface_void, {iface_void, iface_void}},
+@@ -2675,7 +1278,7 @@
  
  enum {
--	ifaceFunctionCount = 265,
--	ifaceConstantCount = 2050,
-+	ifaceFunctionCount = 266,
-+	ifaceConstantCount = 683,
+ 	ifaceFunctionCount = 271,
+-	ifaceConstantCount = 2094,
++	ifaceConstantCount = 697,
  	ifacePropertyCount = 170
  };
  
- //--Autogenerated
-+// end modified by Mitchell
- 
- const IFaceFunction * const IFaceTable::functions = ifaceFunctions;
- const int IFaceTable::functionCount = ifaceFunctionCount;
-diff -r ba29d6366abf src/SciTEBase.cxx
---- scite/src/SciTEBase.cxx	Tue Jun 01 03:43:54 2010 +0000
-+++ scite/src/SciTEBase.cxx	Wed Aug 11 22:35:50 2010 -0400
-@@ -354,8 +354,8 @@
+diff -r 77399602f8dc src/SciTEBase.cxx
+--- scite/src/SciTEBase.cxx	Wed Jul 28 10:38:18 2010 +1000
++++ scite/src/SciTEBase.cxx	Tue Aug 17 00:13:24 2010 -0400
+@@ -350,8 +350,8 @@
  SciTEBase::SciTEBase(Extension *ext) : apis(true), extender(ext) {
  	codePage = 0;
  	characterSet = 0;
@@ -9255,7 +6896,7 @@ diff -r ba29d6366abf src/SciTEBase.cxx
  	functionDefinition = 0;
  	indentOpening = true;
  	indentClosing = true;
-@@ -844,11 +844,13 @@
+@@ -840,11 +840,13 @@
  		braceAtCaret = caretPos - 1;
  	}
  	bool colonMode = false;
@@ -9269,7 +6910,7 @@ diff -r ba29d6366abf src/SciTEBase.cxx
  	bool isAfter = true;
  	if (lengthDoc > 0 && sloppy && (braceAtCaret < 0) && (caretPos < lengthDoc)) {
  		// No brace found so check other side
-@@ -860,11 +862,13 @@
+@@ -856,11 +858,13 @@
  				braceAtCaret = caretPos;
  				isAfter = false;
  			}
@@ -9283,7 +6924,7 @@ diff -r ba29d6366abf src/SciTEBase.cxx
  		}
  	}
  	if (braceAtCaret >= 0) {
-@@ -3119,10 +3123,16 @@
+@@ -3115,10 +3119,16 @@
  		return false;
  	}
  
@@ -9300,10 +6941,10 @@ diff -r ba29d6366abf src/SciTEBase.cxx
  
  	// If the user has turned us off, quit now.
  	// Default is off
-diff -r ba29d6366abf src/SciTEBuffers.cxx
---- scite/src/SciTEBuffers.cxx	Tue Jun 01 03:43:54 2010 +0000
-+++ scite/src/SciTEBuffers.cxx	Wed Aug 11 22:35:50 2010 -0400
-@@ -73,6 +73,14 @@
+diff -r 77399602f8dc src/SciTEBuffers.cxx
+--- scite/src/SciTEBuffers.cxx	Wed Jul 28 10:38:18 2010 +1000
++++ scite/src/SciTEBuffers.cxx	Tue Aug 17 00:13:24 2010 -0400
+@@ -67,6 +67,14 @@
  #include "JobQueue.h"
  #include "SciTEBase.h"
  
@@ -9318,7 +6959,7 @@ diff -r ba29d6366abf src/SciTEBuffers.cxx
  const GUI::gui_char defaultSessionFileName[] = GUI_TEXT("SciTE.session");
  
  BufferList::BufferList() : current(0), stackcurrent(0), stack(0), buffers(0), size(0), length(0), initialised(false) {}
-@@ -1360,9 +1368,54 @@
+@@ -1350,9 +1358,54 @@
  	return (ch >= '0') && (ch <= '9');
  }
  
@@ -9374,7 +7015,7 @@ diff -r ba29d6366abf src/SciTEBuffers.cxx
  	switch (format) {
  	case SCE_ERR_PYTHON: {
  			// Python
-@@ -1695,6 +1748,7 @@
+@@ -1685,6 +1738,7 @@
  			break;
  		}
  	}	// switch
@@ -9382,7 +7023,7 @@ diff -r ba29d6366abf src/SciTEBuffers.cxx
  	return -1;
  }
  
-@@ -1715,11 +1769,7 @@
+@@ -1705,11 +1759,7 @@
  		int startPosLine = wOutput.Call(SCI_POSITIONFROMLINE, lookLine, 0);
  		int lineLength = wOutput.Call(SCI_LINELENGTH, lookLine, 0);
  		char style = acc.StyleAt(startPosLine);
@@ -9395,7 +7036,7 @@ diff -r ba29d6366abf src/SciTEBuffers.cxx
  			wOutput.Call(SCI_MARKERDELETEALL, static_cast<uptr_t>(-1));
  			wOutput.Call(SCI_MARKERDEFINE, 0, SC_MARK_SMALLRECT);
  			wOutput.Call(SCI_MARKERSETFORE, 0, ColourOfProperty(props,
-@@ -1731,7 +1781,7 @@
+@@ -1721,7 +1771,7 @@
  			SString message = GetRange(wOutput, startPosLine, startPosLine + lineLength);
  			char source[MAX_PATH];
  			int column;
@@ -9404,7 +7045,7 @@ diff -r ba29d6366abf src/SciTEBuffers.cxx
  			if (sourceLine >= 0) {
  				GUI::gui_string sourceString = GUI::StringFromUTF8(source);
  				FilePath sourcePath(sourceString);
-@@ -1763,6 +1813,7 @@
+@@ -1753,6 +1803,7 @@
  					}
  				}
  
@@ -9412,7 +7053,7 @@ diff -r ba29d6366abf src/SciTEBuffers.cxx
  				// If ctag then get line number after search tag or use ctag line number
  				if (style == SCE_ERR_CTAG) {
  					char cTag[200];
-@@ -1781,6 +1832,7 @@
+@@ -1771,6 +1822,7 @@
  						}
  					}
  				}
@@ -9420,9 +7061,9 @@ diff -r ba29d6366abf src/SciTEBuffers.cxx
  
  				wEditor.Call(SCI_MARKERDELETEALL, 0);
  				wEditor.Call(SCI_MARKERDEFINE, 0, SC_MARK_CIRCLE);
-diff -r ba29d6366abf src/SciTEGlobal.properties
---- scite/src/SciTEGlobal.properties	Tue Jun 01 03:43:54 2010 +0000
-+++ scite/src/SciTEGlobal.properties	Wed Aug 11 22:35:50 2010 -0400
+diff -r 77399602f8dc src/SciTEGlobal.properties
+--- scite/src/SciTEGlobal.properties	Wed Jul 28 10:38:18 2010 +1000
++++ scite/src/SciTEGlobal.properties	Tue Aug 17 00:13:24 2010 -0400
 @@ -5,6 +5,13 @@
  
  # Globals
@@ -9437,10 +7078,10 @@ diff -r ba29d6366abf src/SciTEGlobal.properties
  # Window sizes and visibility
  if PLAT_WIN
  	position.left=0
-diff -r ba29d6366abf src/SciTEProps.cxx
---- scite/src/SciTEProps.cxx	Tue Jun 01 03:43:54 2010 +0000
-+++ scite/src/SciTEProps.cxx	Wed Aug 11 22:35:50 2010 -0400
-@@ -534,55 +534,12 @@
+diff -r 77399602f8dc src/SciTEProps.cxx
+--- scite/src/SciTEProps.cxx	Wed Jul 28 10:38:18 2010 +1000
++++ scite/src/SciTEProps.cxx	Tue Aug 17 00:13:24 2010 -0400
+@@ -528,58 +528,12 @@
  static const char *propertiesToForward[] = {
  //++Autogenerated -- run src/LexGen.py to regenerate
  //**\(\t"\*",\n\)
@@ -9451,6 +7092,7 @@ diff -r ba29d6366abf src/SciTEProps.cxx
 -	"fold.comment.nimrod",
 -	"fold.comment.yaml",
 -	"fold.compact",
+-	"fold.cpp.comment.explicit",
 -	"fold.directive",
 -	"fold.html",
 -	"fold.html.preprocessor",
@@ -9467,6 +7109,8 @@ diff -r ba29d6366abf src/SciTEProps.cxx
 -	"html.tags.case.sensitive",
 -	"lexer.caml.magic",
 -	"lexer.cpp.allow.dollars",
+-	"lexer.cpp.track.preprocessor",
+-	"lexer.cpp.update.preprocessor",
 -	"lexer.d.fold.at.else",
 -	"lexer.errorlist.value.separate",
 -	"lexer.flagship.styling.within.preprocessor",
@@ -9501,50 +7145,31 @@ diff -r ba29d6366abf src/SciTEProps.cxx
  
  //--Autogenerated -- end of automatically generated section
  
-@@ -694,6 +651,7 @@
- 
- 	SString fileNameForExtension = ExtensionFileName();
- 
-+#if 0 // added by Mitchell
- 	SString modulePath = props.GetNewExpand("lexerpath.",
- 	    fileNameForExtension.c_str());
- 	if (modulePath.length())
-@@ -727,6 +685,7 @@
- 		SString kw = props.GetNewExpand(kwk.c_str(), fileNameForExtension.c_str());
- 		wEditor.CallString(SCI_SETKEYWORDS, wl, kw.c_str());
+@@ -698,12 +652,12 @@
+ 	language = props.GetNewExpand("lexer.", fileNameForExtension.c_str());
+ 	if (language.length()) {
+ 		if (language.startswith("script_")) {
+-			wEditor.Call(SCI_SETLEXER, SCLEX_CONTAINER);
++			wEditor.CallString(SCI_SETLEXERLANGUAGE, 0, "container"); // modified by Mitchell
+ 		} else {
+ 			wEditor.CallString(SCI_SETLEXERLANGUAGE, 0, language.c_str());
+ 		}
+ 	} else {
+-		wEditor.Call(SCI_SETLEXER, SCLEX_NULL);
++		wEditor.CallString(SCI_SETLEXERLANGUAGE, 0, "null"); // modified by Mitchell
  	}
-+#endif // added by Mitchell
  
- 	FilePath homepath = GetSciteDefaultHome();
- 	props.Set("SciteDefaultHome", homepath.AsUTF8().c_str());
-@@ -955,6 +914,26 @@
+ 	props.Set("Language", language.c_str());
+@@ -712,7 +666,7 @@
  
- 	ReadFontProperties();
+ 	wEditor.Call(SCI_SETSTYLEBITS, wEditor.Call(SCI_GETSTYLEBITSNEEDED));
  
-+	// added by Mitchell
-+	SString modulePath = props.GetNewExpand("lexerpath.",
-+	    fileNameForExtension.c_str());
-+	if (modulePath.length())
-+	    wEditor.CallString(SCI_LOADLEXERLIBRARY, 0, modulePath.c_str());
-+	language = props.GetNewExpand("lexer.", fileNameForExtension.c_str());
-+	if (language.length() && !language.startswith("script_"))
-+	    wEditor.CallString(SCI_SETLEXERLANGUAGE, 0, language.c_str());
-+	else
-+	    wEditor.CallString(SCI_SETLEXERLANGUAGE, 0, "container");
-+
-+	props.Set("Language", language.c_str());
-+
-+	lexLanguage = wEditor.Call(SCI_GETLEXER);
-+
-+	wEditor.Call(SCI_SETSTYLEBITS, wEditor.Call(SCI_GETSTYLEBITSNEEDED));
-+
-+	wOutput.CallString(SCI_SETLEXERLANGUAGE, 0, "errorlist");
-+	// end added by Mitchell
-+
- 	wEditor.Call(SCI_SETUSEPALETTE, props.GetInt("use.palette"));
- 	wEditor.Call(SCI_SETPRINTMAGNIFICATION, props.GetInt("print.magnification"));
- 	wEditor.Call(SCI_SETPRINTCOLOURMODE, props.GetInt("print.colour.mode"));
-@@ -1211,12 +1190,13 @@
+-	wOutput.Call(SCI_SETLEXER, SCLEX_ERRORLIST);
++	wOutput.CallString(SCI_SETLEXERLANGUAGE, 0, "errorlist"); // modified by Mitchell
+ 
+ 	SString kw0 = props.GetNewExpand("keywords.", fileNameForExtension.c_str());
+ 	wEditor.CallString(SCI_SETKEYWORDS, 0, kw0.c_str());
+@@ -1208,12 +1162,13 @@
  }
  
  void SciTEBase::ReadFontProperties() {
@@ -9559,43 +7184,21 @@ diff -r ba29d6366abf src/SciTEProps.cxx
  	wEditor.Call(SCI_STYLERESETDEFAULT, 0, 0);
  	wOutput.Call(SCI_STYLERESETDEFAULT, 0, 0);
  
-@@ -1244,6 +1224,29 @@
+@@ -1241,6 +1196,7 @@
  
  	SetStyleFor(wOutput, "*");
  	SetStyleFor(wOutput, "errorlist");
 +#endif // added by Mitchell
-+
-+	// added by Mitchell from ReadProperties()
-+	SString fileNameForExtension = ExtensionFileName();
-+
-+	SString modulePath = props.GetNewExpand("lexerpath.",
-+	    fileNameForExtension.c_str());
-+	if (modulePath.length())
-+	    wEditor.CallString(SCI_LOADLEXERLIBRARY, 0, modulePath.c_str());
-+	language = props.GetNewExpand("lexer.", fileNameForExtension.c_str());
-+	if (language.length() && !language.startswith("script_"))
-+	    wEditor.CallString(SCI_SETLEXERLANGUAGE, 0, language.c_str());
-+	else
-+	    wEditor.CallString(SCI_SETLEXERLANGUAGE, 0, "container");
-+
-+	props.Set("Language", language.c_str());
-+
-+	lexLanguage = wEditor.Call(SCI_GETLEXER);
-+
-+	wEditor.Call(SCI_SETSTYLEBITS, wEditor.Call(SCI_GETSTYLEBITSNEEDED));
-+
-+	wOutput.CallString(SCI_SETLEXERLANGUAGE, 0, "errorlist");
-+	// end added by Mitchell
  
  	if (CurrentBuffer()->useMonoFont) {
  		sval = props.GetExpanded("font.monospace");
-diff -r ba29d6366abf win32/makefile
---- scite/win32/makefile	Tue Jun 01 03:43:54 2010 +0000
-+++ scite/win32/makefile	Wed Aug 11 22:35:50 2010 -0400
-@@ -5,8 +5,22 @@
+diff -r 77399602f8dc win32/makefile
+--- scite/win32/makefile	Wed Jul 28 10:38:18 2010 +1000
++++ scite/win32/makefile	Tue Aug 17 00:13:24 2010 -0400
+@@ -5,7 +5,22 @@
  # be needed to use other compilers.
  
- .SUFFIXES: .cxx
+ .SUFFIXES: .cxx .properties
 +# added by Mitchell
 +ifdef LINUX
 +CC = i486-mingw32-g++ -mms-bitfields
@@ -9607,15 +7210,15 @@ diff -r ba29d6366abf win32/makefile
 +else
 +# end added by Mitchell
  CC = g++
- DLLWRAP = dllwrap
 +# added by Mitchell
++DLLWRAP = dllwrap
 +GCC = gcc
 +WINDRES = windres
 +# end added by Mitchell
  ifndef CYGWIN
  DEL = del /q
  COPY = copy
-@@ -14,6 +28,7 @@
+@@ -13,6 +28,7 @@
  DEL = rm
  COPY = cp
  endif
@@ -9623,7 +7226,7 @@ diff -r ba29d6366abf win32/makefile
  
  PROG	= ../bin/SciTE.exe
  PROGSTATIC = ../bin/Sc1.exe
-@@ -24,7 +39,7 @@
+@@ -23,7 +39,7 @@
  vpath %.o ../../scintilla/win32
  vpath %.a ../../scintilla/win32
  
@@ -9632,22 +7235,24 @@ diff -r ba29d6366abf win32/makefile
  LUA_CORE_OBJS = lapi.o lcode.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o \
  		lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o \
  		ltable.o ltm.o lundump.o lvm.o lzio.o
-@@ -32,17 +47,20 @@
+@@ -31,18 +47,23 @@
  LUA_LIB_OBJS =	lauxlib.o lbaselib.o ldblib.o liolib.o lmathlib.o ltablib.o \
  		lstrlib.o loadlib.o loslib.o linit.o
  
 -LUA_OBJS = LuaExtension.o SingleThreadExtension.o $(LUA_CORE_OBJS) $(LUA_LIB_OBJS)
 +LUA_OBJS = LuaExtension.o SingleThreadExtension.o # modified by Mitchell
++#added by Mitchell
 +LUA_LDFLAGS = -L ../../scintilla/bin -lSciLexer --export-all-symbols
++#end added by Mitchell
  
  vpath %.c ../lua/src ../lua/src/lib
  
  LUA_INCLUDES = -I ../lua/include
--#LUA_SCRIPTS = ..\bin\SciTEExtension.lua ..\bin\SciTEStartup.lua
+ #LUA_SCRIPTS = ..\bin\SciTEExtension.lua ..\bin\SciTEStartup.lua
+ LUA_DEFINES = -DLUA_USER_H=\"scite_lua_win.h\"
 -else
 -LUA_DEFINES = -DNO_LUA
 -endif
-+#LUA_SCRIPTS = ../bin/SciTEExtension.lua ../bin/SciTEStartup.lua
 +# modified by Mitchell
 +#else
 +#LUA_DEFINES = -DNO_LUA
@@ -9655,11 +7260,11 @@ diff -r ba29d6366abf win32/makefile
 +# end modified by Mitchell
  
 -INCLUDEDIRS=-I ../../scintilla/include -I ../../scintilla/win32 -I ../src $(LUA_INCLUDES)
-+INCLUDEDIRS=-I ../../scintilla/include -I ../../scintilla/src -I ../../scintilla/win32 -I ../src $(LUA_INCLUDES) # modified by Mitchell
++INCLUDEDIRS=-I ../../scintilla/include -I ../../scintilla/lexers -I ../../scintilla/win32 -I ../src $(LUA_INCLUDES) # modified by Mitchell
  RCINCLUDEDIRS=--include-dir ../../scintilla/win32 --include-dir ../src
  
  CBASEFLAGS = -W -Wall $(INCLUDEDIRS) $(LUA_DEFINES) $(WIDEFLAGS) -mno-cygwin
-@@ -62,7 +80,7 @@
+@@ -62,7 +83,7 @@
  	$(CC) $(CXXFLAGS) -c $< -o $@
  
  .c.o:
@@ -9668,7 +7273,7 @@ diff -r ba29d6366abf win32/makefile
  
  OTHER_OBJS	= FilePath.o SciTEBuffers.o SciTEIO.o Exporters.o PropSetFile.o StringList.o \
  SciTEProps.o SciTEWin.o SciTEWinBar.o SciTEWinDlg.o MultiplexExtension.o \
-@@ -72,38 +90,38 @@
+@@ -72,7 +93,7 @@
  
  OBJS = SciTEBase.o $(OTHER_OBJS)
  
@@ -9676,64 +7281,17 @@ diff -r ba29d6366abf win32/makefile
 +DLLS=../bin/Scintilla.dll ../bin/SciLexer.dll
  
  #++Autogenerated -- run scintilla/src/LexGen.py to regenerate
--#**1:LEXPROPS=\\\n\(..\\bin\\\* \)
-+#**1:LEXPROPS=///n/(..//bin///* /)
- LEXPROPS=\
--..\bin\abaqus.properties ..\bin\ada.properties ..\bin\asm.properties \
--..\bin\asn1.properties ..\bin\au3.properties ..\bin\ave.properties \
--..\bin\baan.properties ..\bin\blitzbasic.properties ..\bin\bullant.properties \
--..\bin\caml.properties ..\bin\cmake.properties ..\bin\cobol.properties \
--..\bin\conf.properties ..\bin\cpp.properties ..\bin\csound.properties \
--..\bin\css.properties ..\bin\d.properties ..\bin\eiffel.properties \
--..\bin\erlang.properties ..\bin\escript.properties ..\bin\flagship.properties \
--..\bin\forth.properties ..\bin\fortran.properties ..\bin\freebasic.properties \
--..\bin\gap.properties ..\bin\html.properties ..\bin\inno.properties \
--..\bin\kix.properties ..\bin\latex.properties ..\bin\lisp.properties \
--..\bin\lot.properties ..\bin\lout.properties ..\bin\lua.properties \
--..\bin\matlab.properties ..\bin\metapost.properties ..\bin\mmixal.properties \
--..\bin\nimrod.properties ..\bin\nncrontab.properties ..\bin\nsis.properties \
--..\bin\opal.properties ..\bin\others.properties ..\bin\pascal.properties \
--..\bin\perl.properties ..\bin\pov.properties ..\bin\powerpro.properties \
--..\bin\powershell.properties ..\bin\ps.properties ..\bin\purebasic.properties \
--..\bin\python.properties ..\bin\r.properties ..\bin\rebol.properties \
--..\bin\ruby.properties ..\bin\scriptol.properties ..\bin\smalltalk.properties \
--..\bin\sorcins.properties ..\bin\specman.properties ..\bin\spice.properties \
--..\bin\sql.properties ..\bin\tacl.properties ..\bin\tal.properties \
--..\bin\tcl.properties ..\bin\tex.properties ..\bin\vb.properties \
--..\bin\verilog.properties ..\bin\vhdl.properties ..\bin\yaml.properties
-+../bin/abaqus.properties ../bin/ada.properties ../bin/asm.properties \
-+../bin/asn1.properties ../bin/au3.properties ../bin/ave.properties \
-+../bin/baan.properties ../bin/blitzbasic.properties ../bin/bullant.properties \
-+../bin/caml.properties ../bin/cmake.properties ../bin/conf.properties \
-+../bin/cpp.properties ../bin/csound.properties ../bin/css.properties \
-+../bin/d.properties ../bin/eiffel.properties ../bin/erlang.properties \
-+../bin/escript.properties ../bin/flagship.properties ../bin/forth.properties \
-+../bin/fortran.properties ../bin/freebasic.properties ../bin/gap.properties \
-+../bin/html.properties ../bin/inno.properties ../bin/kix.properties \
-+../bin/latex.properties ../bin/lisp.properties ../bin/lot.properties \
-+../bin/lout.properties ../bin/lua.properties ../bin/matlab.properties \
-+../bin/metapost.properties ../bin/mmixal.properties ../bin/nimrod.properties \
-+../bin/nncrontab.properties ../bin/nsis.properties ../bin/opal.properties \
-+../bin/others.properties ../bin/pascal.properties ../bin/perl.properties \
-+../bin/pov.properties ../bin/powerpro.properties ../bin/powershell.properties \
-+../bin/ps.properties ../bin/purebasic.properties ../bin/python.properties \
-+../bin/r.properties ../bin/rebol.properties ../bin/ruby.properties \
-+../bin/scriptol.properties ../bin/smalltalk.properties \
-+../bin/sorcins.properties ../bin/specman.properties ../bin/spice.properties \
-+../bin/sql.properties ../bin/tcl.properties ../bin/tex.properties \
-+../bin/vb.properties ../bin/verilog.properties ../bin/vhdl.properties \
-+../bin/yaml.properties
- #--Autogenerated -- end of automatically generated section
+ #**1:LEXPROPS=\\\n\(../bin/\* \)
+@@ -104,7 +125,7 @@
  
--PROPS=..\bin\SciTEGlobal.properties ..\bin\abbrev.properties $(LEXPROPS)
-+PROPS=../bin/SciTEGlobal.properties ../bin/abbrev.properties $(LEXPROPS)
+ PROPS=../bin/SciTEGlobal.properties ../bin/abbrev.properties $(LEXPROPS)
  
 -ALL:	$(PROG) $(PROGSTATIC) $(DLLS) $(PROPS) $(LUA_SCRIPTS)
 +ALL:	$(PROG) $(DLLS) $(PROPS) $(LUA_SCRIPTS) # modified by Mitchell
  
  clean:
  	$(DEL) *.exe *.o *.obj *.dll *.res *.map
-@@ -111,158 +129,152 @@
+@@ -112,20 +133,20 @@
  deps:
  	$(CC) -MM $(CXXFLAGS) *.cxx ../src/*.cxx ../lua/src/*.c ../lua/src/lib/*.c >deps.mak
  
@@ -9747,213 +7305,10 @@ diff -r ba29d6366abf win32/makefile
 +../bin/SciLexer.dll:	../../scintilla/bin/SciLexer.dll
 +	$(COPY) ../../scintilla/bin/SciLexer.dll $@
  
--..\bin\SciTEGlobal.properties:	..\src\SciTEGlobal.properties
-+../bin/SciTEGlobal.properties:	../src/SciTEGlobal.properties
- 	$(COPY) $^ $@
--..\bin\abbrev.properties:	..\src\abbrev.properties
-+../bin/abbrev.properties:	../src/abbrev.properties
- 	$(COPY) $^ $@
- 
- #++Autogenerated -- run scintilla/src/LexGen.py to regenerate
--#**1:\(..\\bin\\\*:\t..\\src\\\*\n\t$(COPY) $^ $@\n\)
--..\bin\abaqus.properties:	..\src\abaqus.properties
-+#**1:/(..//bin///*:/t..//src///*/n/t$(COPY) $^ $@/n/)
-+../bin/abaqus.properties:	../src/abaqus.properties
- 	$(COPY) $^ $@
--..\bin\ada.properties:	..\src\ada.properties
-+../bin/ada.properties:	../src/ada.properties
- 	$(COPY) $^ $@
--..\bin\asm.properties:	..\src\asm.properties
-+../bin/asm.properties:	../src/asm.properties
- 	$(COPY) $^ $@
--..\bin\asn1.properties:	..\src\asn1.properties
-+../bin/asn1.properties:	../src/asn1.properties
- 	$(COPY) $^ $@
--..\bin\au3.properties:	..\src\au3.properties
-+../bin/au3.properties:	../src/au3.properties
- 	$(COPY) $^ $@
--..\bin\ave.properties:	..\src\ave.properties
-+../bin/ave.properties:	../src/ave.properties
- 	$(COPY) $^ $@
--..\bin\baan.properties:	..\src\baan.properties
-+../bin/baan.properties:	../src/baan.properties
- 	$(COPY) $^ $@
--..\bin\blitzbasic.properties:	..\src\blitzbasic.properties
-+../bin/blitzbasic.properties:	../src/blitzbasic.properties
- 	$(COPY) $^ $@
--..\bin\bullant.properties:	..\src\bullant.properties
-+../bin/bullant.properties:	../src/bullant.properties
- 	$(COPY) $^ $@
--..\bin\caml.properties:	..\src\caml.properties
-+../bin/caml.properties:	../src/caml.properties
- 	$(COPY) $^ $@
--..\bin\cmake.properties:	..\src\cmake.properties
-+../bin/cmake.properties:	../src/cmake.properties
- 	$(COPY) $^ $@
--..\bin\cobol.properties:	..\src\cobol.properties
-+../bin/conf.properties:	../src/conf.properties
- 	$(COPY) $^ $@
--..\bin\conf.properties:	..\src\conf.properties
-+../bin/cpp.properties:	../src/cpp.properties
- 	$(COPY) $^ $@
--..\bin\cpp.properties:	..\src\cpp.properties
-+../bin/csound.properties:	../src/csound.properties
- 	$(COPY) $^ $@
--..\bin\csound.properties:	..\src\csound.properties
-+../bin/css.properties:	../src/css.properties
- 	$(COPY) $^ $@
--..\bin\css.properties:	..\src\css.properties
-+../bin/d.properties:	../src/d.properties
- 	$(COPY) $^ $@
--..\bin\d.properties:	..\src\d.properties
-+../bin/eiffel.properties:	../src/eiffel.properties
- 	$(COPY) $^ $@
--..\bin\eiffel.properties:	..\src\eiffel.properties
-+../bin/erlang.properties:	../src/erlang.properties
- 	$(COPY) $^ $@
--..\bin\erlang.properties:	..\src\erlang.properties
-+../bin/escript.properties:	../src/escript.properties
- 	$(COPY) $^ $@
--..\bin\escript.properties:	..\src\escript.properties
-+../bin/flagship.properties:	../src/flagship.properties
- 	$(COPY) $^ $@
--..\bin\flagship.properties:	..\src\flagship.properties
-+../bin/forth.properties:	../src/forth.properties
- 	$(COPY) $^ $@
--..\bin\forth.properties:	..\src\forth.properties
-+../bin/fortran.properties:	../src/fortran.properties
- 	$(COPY) $^ $@
--..\bin\fortran.properties:	..\src\fortran.properties
-+../bin/freebasic.properties:	../src/freebasic.properties
- 	$(COPY) $^ $@
--..\bin\freebasic.properties:	..\src\freebasic.properties
-+../bin/gap.properties:	../src/gap.properties
- 	$(COPY) $^ $@
--..\bin\gap.properties:	..\src\gap.properties
-+../bin/html.properties:	../src/html.properties
- 	$(COPY) $^ $@
--..\bin\html.properties:	..\src\html.properties
-+../bin/inno.properties:	../src/inno.properties
- 	$(COPY) $^ $@
--..\bin\inno.properties:	..\src\inno.properties
-+../bin/kix.properties:	../src/kix.properties
- 	$(COPY) $^ $@
--..\bin\kix.properties:	..\src\kix.properties
-+../bin/latex.properties:	../src/latex.properties
- 	$(COPY) $^ $@
--..\bin\latex.properties:	..\src\latex.properties
-+../bin/lisp.properties:	../src/lisp.properties
- 	$(COPY) $^ $@
--..\bin\lisp.properties:	..\src\lisp.properties
-+../bin/lot.properties:	../src/lot.properties
- 	$(COPY) $^ $@
--..\bin\lot.properties:	..\src\lot.properties
-+../bin/lout.properties:	../src/lout.properties
- 	$(COPY) $^ $@
--..\bin\lout.properties:	..\src\lout.properties
-+../bin/lua.properties:	../src/lua.properties
- 	$(COPY) $^ $@
--..\bin\lua.properties:	..\src\lua.properties
-+../bin/matlab.properties:	../src/matlab.properties
- 	$(COPY) $^ $@
--..\bin\matlab.properties:	..\src\matlab.properties
-+../bin/metapost.properties:	../src/metapost.properties
- 	$(COPY) $^ $@
--..\bin\metapost.properties:	..\src\metapost.properties
-+../bin/mmixal.properties:	../src/mmixal.properties
- 	$(COPY) $^ $@
--..\bin\mmixal.properties:	..\src\mmixal.properties
-+../bin/nimrod.properties:	../src/nimrod.properties
- 	$(COPY) $^ $@
--..\bin\nimrod.properties:	..\src\nimrod.properties
-+../bin/nncrontab.properties:	../src/nncrontab.properties
- 	$(COPY) $^ $@
--..\bin\nncrontab.properties:	..\src\nncrontab.properties
-+../bin/nsis.properties:	../src/nsis.properties
- 	$(COPY) $^ $@
--..\bin\nsis.properties:	..\src\nsis.properties
-+../bin/opal.properties:	../src/opal.properties
- 	$(COPY) $^ $@
--..\bin\opal.properties:	..\src\opal.properties
-+../bin/others.properties:	../src/others.properties
- 	$(COPY) $^ $@
--..\bin\others.properties:	..\src\others.properties
-+../bin/pascal.properties:	../src/pascal.properties
- 	$(COPY) $^ $@
--..\bin\pascal.properties:	..\src\pascal.properties
-+../bin/perl.properties:	../src/perl.properties
- 	$(COPY) $^ $@
--..\bin\perl.properties:	..\src\perl.properties
-+../bin/pov.properties:	../src/pov.properties
- 	$(COPY) $^ $@
--..\bin\pov.properties:	..\src\pov.properties
-+../bin/powerpro.properties:	../src/powerpro.properties
- 	$(COPY) $^ $@
--..\bin\powerpro.properties:	..\src\powerpro.properties
-+../bin/powershell.properties:	../src/powershell.properties
- 	$(COPY) $^ $@
--..\bin\powershell.properties:	..\src\powershell.properties
-+../bin/ps.properties:	../src/ps.properties
- 	$(COPY) $^ $@
--..\bin\ps.properties:	..\src\ps.properties
-+../bin/purebasic.properties:	../src/purebasic.properties
- 	$(COPY) $^ $@
--..\bin\purebasic.properties:	..\src\purebasic.properties
-+../bin/python.properties:	../src/python.properties
- 	$(COPY) $^ $@
--..\bin\python.properties:	..\src\python.properties
-+../bin/r.properties:	../src/r.properties
- 	$(COPY) $^ $@
--..\bin\r.properties:	..\src\r.properties
-+../bin/rebol.properties:	../src/rebol.properties
- 	$(COPY) $^ $@
--..\bin\rebol.properties:	..\src\rebol.properties
-+../bin/ruby.properties:	../src/ruby.properties
- 	$(COPY) $^ $@
--..\bin\ruby.properties:	..\src\ruby.properties
-+../bin/scriptol.properties:	../src/scriptol.properties
- 	$(COPY) $^ $@
--..\bin\scriptol.properties:	..\src\scriptol.properties
-+../bin/smalltalk.properties:	../src/smalltalk.properties
- 	$(COPY) $^ $@
--..\bin\smalltalk.properties:	..\src\smalltalk.properties
-+../bin/sorcins.properties:	../src/sorcins.properties
- 	$(COPY) $^ $@
--..\bin\sorcins.properties:	..\src\sorcins.properties
-+../bin/specman.properties:	../src/specman.properties
- 	$(COPY) $^ $@
--..\bin\specman.properties:	..\src\specman.properties
-+../bin/spice.properties:	../src/spice.properties
- 	$(COPY) $^ $@
--..\bin\spice.properties:	..\src\spice.properties
-+../bin/sql.properties:	../src/sql.properties
- 	$(COPY) $^ $@
--..\bin\sql.properties:	..\src\sql.properties
-+../bin/tcl.properties:	../src/tcl.properties
- 	$(COPY) $^ $@
--..\bin\tacl.properties:	..\src\tacl.properties
-+../bin/tex.properties:	../src/tex.properties
- 	$(COPY) $^ $@
--..\bin\tal.properties:	..\src\tal.properties
-+../bin/vb.properties:	../src/vb.properties
- 	$(COPY) $^ $@
--..\bin\tcl.properties:	..\src\tcl.properties
-+../bin/verilog.properties:	../src/verilog.properties
- 	$(COPY) $^ $@
--..\bin\tex.properties:	..\src\tex.properties
-+../bin/vhdl.properties:	../src/vhdl.properties
- 	$(COPY) $^ $@
--..\bin\vb.properties:	..\src\vb.properties
--	$(COPY) $^ $@
--..\bin\verilog.properties:	..\src\verilog.properties
--	$(COPY) $^ $@
--..\bin\vhdl.properties:	..\src\vhdl.properties
--	$(COPY) $^ $@
--..\bin\yaml.properties:	..\src\yaml.properties
-+../bin/yaml.properties:	../src/yaml.properties
- 	$(COPY) $^ $@
- 
- #--Autogenerated -- end of automatically generated section
+ # Using '/' rather than '\' as that allows make to match the next rule
+ ../bin/%.properties:	../src/%.properties
+-	$(COPY) $(subst /,\,$^) $(subst /,\,$@)
++	$(COPY) $(subst /,/,$^) $(subst /,/,$@)
  
  # Normally distributed rather than built as may not have grep on all machines
  # Copy all non-comment lines from all the properties files into one combined file
@@ -9964,7 +7319,7 @@ diff -r ba29d6366abf win32/makefile
  
  $(PROG): $(OBJS)
  	$(CC) $(STRIPFLAG) -Xlinker --subsystem -Xlinker windows -o  $@ $^ $(LDFLAGS)
-@@ -288,12 +300,12 @@
+@@ -152,12 +173,12 @@
  	$(CC) $(CXXFLAGS) -D STATIC_BUILD -c $< -o $@
  
  SciTERes.o:	SciTERes.rc SciTE.h PlatformRes.h SciTE.exe.manifest
@@ -9979,10 +7334,10 @@ diff -r ba29d6366abf win32/makefile
  
  # Make sure SciTEBase gets rebuilt (so its about box gets a new
  # date stamp) when any of the other objects are updated.
-diff -r ba29d6366abf win32/scite.mak
---- scite/win32/scite.mak	Tue Jun 01 03:43:54 2010 +0000
-+++ scite/win32/scite.mak	Wed Aug 11 22:35:50 2010 -0400
-@@ -110,89 +110,14 @@
+diff -r 77399602f8dc win32/scite.mak
+--- scite/win32/scite.mak	Wed Jul 28 10:38:18 2010 +1000
++++ scite/win32/scite.mak	Tue Aug 17 00:13:24 2010 -0400
+@@ -110,90 +110,14 @@
  	UniqueInstance.obj \
  	WinMutex.obj
  
@@ -10064,6 +7419,7 @@ diff -r ba29d6366abf win32/scite.mak
 -	..\..\scintilla\win32\LexTAL.obj \
 -	..\..\scintilla\win32\LexTCL.obj \
 -	..\..\scintilla\win32\LexTeX.obj \
+-	..\..\scintilla\win32\LexTxt2tags.obj \
 -	..\..\scintilla\win32\LexVB.obj \
 -	..\..\scintilla\win32\LexVerilog.obj \
 -	..\..\scintilla\win32\LexVHDL.obj \
