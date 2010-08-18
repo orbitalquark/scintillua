@@ -109,10 +109,10 @@ module('lexer', package.seeall)
 --
 --     local longstring = #('[[' + ('[' * P('=')^0 * '[')) *
 --       P(function(input, index)
---       local level = input:match('^%[(=*)%[', index)
---        if level then
---          local _, stop = input:find(']'..level..']', index, true)
---          return stop and stop + 1 or #input + 1
+--         local level = input:match('^%[(=*)%[', index)
+--         if level then
+--           local _, stop = input:find(']'..level..']', index, true)
+--           return stop and stop + 1 or #input + 1
 --         end
 --       end)
 --     local block_comment = '--' * longstring
