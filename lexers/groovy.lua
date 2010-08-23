@@ -17,14 +17,11 @@ local comment = token('comment', line_comment + block_comment)
 -- strings
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
-local heredoc = '<<<' * P(function(input, index)
-  local _, e, delimiter = input:find('([%a_][%w_]*)[\n\r\f]+', index)
-  if delimiter then
-    local _, e = input:find('[\n\r\f]+'..delimiter, e)
-    return e and e + 1
-  end
-end)
-local string = token('string', sq_str + dq_str + heredoc)
+local triple_sq_str = "'''" * (l.any - "'''")^0 * P("'''")^-1
+local triple_dq_str = '"""' * (l.any - '"""')^0 * P('"""')^-1
+local regex_str = l.delimited_range('/', '\\', nil, nil, '\n')
+local string =
+  token('string', triple_sq_str + triple_dq_str + sq_str + dq_str + regex_str)
 
 -- numbers
 local number = token('number', l.float + l.integer)
