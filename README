@@ -1,79 +1,152 @@
-This patch applies to Scintilla/SciTE 2.20.
+This package applies to Scintilla/SciTE 2.20.
 
-Overview:
+## Topics covered in this README
 
-  Changes to Scintilla:
-    * Utilizes a single LexLPeg.cxx lexer that uses over 70 dynamics Lua lexers.
-    * Most lexers do not have folding support, but it can be added.
-    * Everything else is identical. 
+* Overview.
+* Changes to SciTE.
+* Compiling with SciTE.
+* Using with SciTE.
+* Lexer API.
+* Using with your App.
+* Creating Lexers.
 
-  Changes to SciTE:
-    * Added Lua lpeg.c file.
-    * Added the following properties (to be put in SciTEGlobal.properties or
-      SciTEUser.properties):
-        * lexer.lua.home - directory containing dynamic Lua lexers.
-        * lexer.lua.script - path of lexer.lua file.
-        * lexer.lua.color.theme - universal color theme to use.
-        * fold.by.indentation - fold code by indentation level.
-        * decoder.lua.script - path of Lua script to interpret double-clicking
-          error messages in the output pane. 
-    * Lexer-specific features do not work anymore:
-        * Python colon matching.
-        * HTML/XML tag auto-completion.
-        * Double-clicking on error messages in the output pane (can add a Lua
-          script to restore this functionality).
-        * Style, keyword, and folding properties in *.properties files. 
-    * Everything else is identical. 
+## Overview
 
-  Speed:
-    * Single-language dynamic lexers parse the same amount of text as
-      Scintilla's original lexers. Any differences in speed should be
-      negligible.
-    * Multi-language dynamic lexers must parse the entire document and can be
-      noticibly slower on large files. 
+Scintillua adds support for Lua LPeg lexers in Scintilla and SciTE. The LPeg
+lexer is an external lexer so no modifications to Scintilla are necessary.
+However, due of nature of the lexer implementation, slight changes to SciTE are
+required.
 
-Compiling:
+## Changes to SciTE
 
-  Two compile methods:
-    * Patch official Scintilla/SciTE with provided `scintillua.patch` and
-      compile.
-    * Compile provided Scintilla/SciTE.
+1. Added the following properties (to be put in SciTEGlobal.properties or
+   SciTEUser.properties):
+       * lexer.lua.home - directory containing dynamic Lua lexers.
+       * lexer.lua.script - path of lexer.lua file.
+       * lexer.lua.color.theme - universal color theme to use.
+       * fold.by.indentation - fold code by indentation level.
+2. SciTE lexer-specific features do not work in LPeg lexers; features like:
+       * Python colon matching.
+       * HTML/XML tag auto-completion.
+       * Style, keyword, and folding properties in *.properties files.
 
-  Patch:
-    1. Download official Scintilla/SciTE and unpack.
-    2. Copy `scintillua.patch` to the unpacked directory.
-    3. Run 'patch -p0 < scintillua.patch' (without quotes).
-    4. Compile as normal.
+With regards to speed, single-language dynamic lexers parse the same amount of
+text as Scintilla's lexers; any differences in speed should be negligible. On
+the other hand, multi-language dynamic lexers must parse the entire document
+to ensure accuracy and can be noticibly slower on large files.
 
-  Otherwise:
-    1. Compile as normal.
+## Compiling with SciTE
 
-  Notes:
-    Use scite/boundscheck/SciTE.vcproj for compiling on Windows.
-    Use mingw32 on Linux for compiling for Windows (first change '<Shlobj.h>' to
-      '<shlobj.h>' in `scite/win32/SciTEWinDlg.cxx` and '<Uxtheme.h' to
-      '<uxtheme.h>' in `scite/win32/SciTEWin.h`).
+You will need the official SciTE release source tgz or zip with the version
+mentioned at the top of this document.
 
-Usage:
+1. Unpack the SciTE package to this directory. You should have two more folders
+   `scintilla` and `scite`.
+2. Run 'patch -p0 < scintillua.patch' (without quotes) to patch SciTE with LPeg
+   lexer support.
+3. Run 'make' in the current directory to build the external Lua LPeg lexer. It
+   will be placed in the `lexers/` directory.
+   Note: to build a Win32 dll, you will need mingw and change the environment
+   variables in `Makefile` to reflect your setup. Then run 'make WIN32=1'.
+4. Build Scintilla/SciTE as you normally would.
 
-  Use as you would standard Scintilla/SciTE.
+## Using with SciTE
 
-  Note that `SciTE` is the Linux executable and `SciTE.exe` is the Win32 one.
+By default, SciTE will use its normal Scintilla lexers. In order to use LPeg
+ones, select 'Languages->LPeg' from the menu. This initializes the external
+lexer. Now select any language in the Languages menu to load that lexer. Please
+note that some languages are not yet supported. To uninitialize the external
+lexer, select 'Languages->Text' from the menu. Now any selection from the menu
+loads the normal Scintilla lexer.
 
-Troubleshooting:
+If you get incorrect or no syntax highlighting, please do the following:
 
-  No or incorrect syntax highlighting:
-    1. Make sure your language has a supported lexer (check in the `lexers/`
-       directory.
-    2. Make sure there is a *.properties file that has your language's
-       extension.
-       (e.g. file.patterns.rhtml=*.rhtml)
-    3. Make sure the file pattern's lexer is correct or exists.
-       (e.g. lexer.$(file.patterns.rhtml)=rhtml
+1. Make sure the language has a lexer in the `lexers/` directory.
+2. Make sure there is a .properties file that has the language's extension.
+   e.g. file.patterns.rhtml=*.rhtml
+3. Make sure the file pattern's lexer is correct or exists.
+   e.g. lexer.$(file.patterns.rhtml)=rhtml
+        lexer.$(file.patterns.java)=java
 
-    I do not have the time to continuously update *.properties files with
-    extensions and lexers, so please be patient if you have to do it manually.
+I do not have the time to continuously update *.properties files with extensions
+and lexers, so please be patient if you have to do it manually.
 
-Further Reading:
+## Lexer API
 
-  Lexer Documentation: http://caladbolg.net/luadoc/textadept/modules/lexer.html
+The Lua LPeg lexer is responsible for managing multiple lexers and the styling
+information associated with them. Doing this using the Scintilla API without
+modifying Scintilla itself is impossible. For example, SCI_SETLEXERLANGUAGE
+causes Scintilla to look within its own lexer catalog for the desired lexer
+rather than consulting the Lua LPeg lexer. To solve these problems, a lexer API
+was created and is available via SCI_PRIVATELEXERCALL.
+
+Please note the names of API calls may not make perfect sense. The idea behind
+them was to use existing Scintilla names to maximize portability.
+
+The following notation is used: 'code(arg)' expands to
+'SendScintilla(sci, SCI_PRIVATELEXERCALL, code, arg)'.
+
+**SCI_GETDIRECTFUNCTION(SciFnDirect)**
+**SCI_SETDOCPOINTER(sci)**
+SciFnDirect is the result of calling Scintilla's SCI_GETDIRECTFUNCTION.
+sci is the result of calling Scintilla's SCI_GETDIRECTPOINTER.
+Call these if you would like to have the Lua LPeg lexer set all styles
+automatically. SCI_GETDIRECTFUNCTION only has to be called once for each
+Scintilla buffer created with SCI_CREATEDOCUMENT. SCI_SETDOCPOINTER must be
+called before each call to SCI_SETLEXERLANGUAGE(languageName).
+
+**SCI_SETLEXERLANGUAGE(languageName)**
+Sets the current lexer to `languageName`. If you are having the Lua LPeg lexer
+set the styles automatically, make sure you call SCI_SETDOCPOINTER(sci) first.
+
+**SCI_GETLEXERLANGUAGE**
+Returns the string name of the current lexer.
+
+**-STYLE_MAX to -1**
+If the Lua LPeg lexer was not compiled with the NO_SCITE flag, calling
+SCI_PRIVATELEXERCALL with a negative integer in this range returns a SciTE style
+property string for the nth style offset by STYLE_MAX. -STYLE_MAX equates to the
+0th style number, -1 the (STYLE_MAX - 1)th style number. You can parse these
+strings to set the lexer styles manually if you chose not to have the Lua LPeg
+lexer set them for you via SCI_GETDIRECTFUNCTION(SciFnDirect) and
+SCI_SETDOCPOINTER(sci).
+Please see the SciTE documentation (http://www.scintilla.org/SciTEDoc.html) for
+how these strings are formatted.
+
+**0 to STYLE_MAX**
+The integer in this range is the result of calling Scintilla's SCI_GETSTYLEAT.
+Returns the string name of token associated with this style number.
+
+## Using with your App
+
+Here is a pseudo-code example:
+
+    init_app() {
+      lib = "/home/mitchell/app/lexers/liblexlpeg.so"
+      SendScintilla(sci, SCI_LOADLEXERLIBRARY, 0, lib)
+    }
+
+    create_doc() {
+      doc = SendScintilla(sci, SCI_CREATEDOCUMENT)
+      SendScintilla(sci, SCI_SETDOCPOINTER, 0, doc)
+      SendScintilla(sci, SCI_SETLEXERLANGUAGE, 0, "llpeg")
+      home = "/home/mitchell/app/lexers"
+      SendScintilla(sci, SCI_SETPROPERTY, "lexer.lua.home", home)
+      script = "/home/mitchell/app/lexers/lexer.lua"
+      SendScintilla(sci, SCI_SETPROPERTY, "lexer.lua.script", script)
+      SendScintilla(sci, SCI_SETPROPERTY, "lexer.lua.color.theme", "light")
+      fn = SendScintilla(sci, SCI_GETDIRECTFUNCTION)
+      SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_GETDIRECTFUNCTION, fn)
+      SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETDOCPOINTER, sci)
+      SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETLEXERLANGUAGE, "lua")
+    }
+
+    set_lexer(lang) {
+      SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETDOCPOINTER, sci)
+      SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETLEXERLANGUAGE, lang)
+    }
+
+## Creating Lexers
+
+Please see http://caladbolg.net/luadoc/textadept/modules/lexer.html.
+
