@@ -10,7 +10,8 @@ DLLWRAP = $(CPP) -shared
 PLAT_FLAGS =
 LUA_CFLAGS = -D_WIN32 -DWIN32
 LEXLPEG = lexers/LexLPeg.dll
-SO_FLAGS = -static -mwindows --relocatable -s LexLPeg.def
+SO_FLAGS = -static -mwindows --relocatable -s LexLPeg.def \
+  -Wl,--enable-stdcall-fixup
 else
 CC = gcc -fPIC
 CPP = g++ -fPIC
@@ -36,7 +37,8 @@ LUA_OBJS = lapi.o lcode.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o \
 SCI_CXXFLAGS = -g -pedantic $(PLAT_FLAGS) $(INCLUDEDIRS) -DSCI_LEXER \
   -Wall -Wno-missing-braces -Wno-char-subscripts
 vpath %.cxx scintilla/lexlib
-LEX_OBJS = PropSetSimple.o WordList.o LexerModule.o LexerSimple.o LexerBase.o
+LEX_OBJS = PropSetSimple.o WordList.o LexerModule.o LexerSimple.o LexerBase.o \
+  Accessor.o
 
 all: $(LEXLPEG)
 

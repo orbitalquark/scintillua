@@ -228,7 +228,8 @@ private:
 					} else if (streq(prop, "size")) {
 						SSS(SCI_STYLESETSIZE, static_cast<int>(lua_tointeger(L, -1)));
 #ifndef NO_SCITE
-						sprintf(prop_part, "size:%i,", lua_tointeger(L, -1));
+						sprintf(prop_part, "size:%i,",
+                    static_cast<int>(lua_tointeger(L, -1)));
 #endif
 					} else if (streq(prop, "bold")) {
 						SSS(SCI_STYLESETBOLD, lua_toboolean(L, -1));
@@ -248,12 +249,14 @@ private:
 					} else if (streq(prop, "fore")) {
 						SSS(SCI_STYLESETFORE, static_cast<int>(lua_tointeger(L, -1)));
 #ifndef NO_SCITE
-						sprintf(prop_part, "fore:#%06X,", RGB(lua_tointeger(L, -1)));
+						sprintf(prop_part, "fore:#%06X,",
+                    RGB(static_cast<int>(lua_tointeger(L, -1))));
 #endif
 					} else if (streq(prop, "back")) {
 						SSS(SCI_STYLESETBACK, static_cast<int>(lua_tointeger(L, -1)));
 #ifndef NO_SCITE
-						sprintf(prop_part, "back:#%06X,", RGB(lua_tointeger(L, -1)));
+						sprintf(prop_part, "back:#%06X,",
+                    RGB(static_cast<int>(lua_tointeger(L, -1))));
 #endif
 					} else if (streq(prop, "eolfilled")) {
 						SSS(SCI_STYLESETEOLFILLED, lua_toboolean(L, -1));
@@ -469,7 +472,7 @@ public:
 		const char *val = 0;
 		switch(code) {
 		case SCI_GETDIRECTFUNCTION:
-			SS = reinterpret_cast<SciFnDirect>(arg);
+			SS = reinterpret_cast<SciFnDirect>(reinterpret_cast<sptr_t>(arg));
 			return NULL;
 		case SCI_SETDOCPOINTER:
 			sci = reinterpret_cast<sptr_t>(arg);
