@@ -628,8 +628,7 @@ local lpeg_match = lpeg.match
 
 package.path = _LEXERHOME..'/?.lua'
 
----
--- [Local function] Adds a rule to a lexer's current ordered list of rules.
+-- Adds a rule to a lexer's current ordered list of rules.
 -- @param lexer The lexer to add the given rule to.
 -- @param name The name associated with this rule. It is used for other lexers
 --   to access this particular rule from the lexer's `_RULES` table. It does not
@@ -651,8 +650,7 @@ local function add_rule(lexer, id, rule)
   lexer._RULEORDER[#lexer._RULEORDER + 1] = id
 end
 
----
--- [Local function] Adds a new Scintilla style to Scintilla.
+-- Adds a new Scintilla style to Scintilla.
 -- @param lexer The lexer to add the given style to.
 -- @param token_name The name of the token associated with this style.
 -- @param style A Scintilla style created from style().
@@ -666,8 +664,7 @@ local function add_style(lexer, token_name, style)
   lexer._STYLES.len = len + 1
 end
 
----
--- [Local function] (Re)constructs lexer._TOKENRULE.
+-- (Re)constructs lexer._TOKENRULE.
 -- @param parent The parent lexer.
 local function join_tokens(lexer)
   local patterns, order = lexer._RULES, lexer._RULEORDER
@@ -677,8 +674,7 @@ local function join_tokens(lexer)
   return lexer._TOKENRULE
 end
 
----
--- [Local function] (Re)constructs lexer._GRAMMAR.
+-- (Re)constructs lexer._GRAMMAR.
 -- @param lexer The parent lexer.
 local function build_grammar(lexer)
   local token_rule = join_tokens(lexer)
