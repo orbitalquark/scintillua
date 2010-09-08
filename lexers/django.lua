@@ -50,7 +50,7 @@ _rules = {
   { 'identifier', identifier },
   { 'string', string },
   { 'operator', operator },
-  { 'any_char', token('django_default', l.any - S('%}') * '}') },
+  { 'any_char', l.any_char },
 }
 
 -- Embedded in HTML.
@@ -85,6 +85,5 @@ html._RULES['tag'] =
 
 _tokenstyles = {
   { 'django_whitespace', l.style_nothing },
-  { 'django_default', l.style_nothing },
   { 'django_tag', l.style_embedded },
 }

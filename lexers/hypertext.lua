@@ -100,9 +100,7 @@ local css_start_rule = #(P('<') * style_element * P(function(input, index)
 end)) * tag -- <style type="text/css">
 local css_end_rule =
   #(P('</') * style_element * ws^0 * P('>')) * tag -- </style>
-css._RULES['any_char'] = token('css_default', l.any - css_end_rule)
 l.embed_lexer(_M, css, css_start_rule, css_end_rule)
-_tokenstyles[#_tokenstyles + 1] = { 'css_default', l.style_nothing }
 
 -- Embedded Javascript.
 local js = l.load('javascript')
@@ -114,11 +112,7 @@ local js_start_rule = #(P('<') * script_element * P(function(input, index)
   end
 end)) * tag -- <script type="text/javascript">
 local js_end_rule = #('</' * script_element * ws^0 * '>') * tag -- </script>
-js._RULES['operator'] =
-  token('operator', S('+-/*%^!=&|?:;.()[]{}>') + '<' * -('/' * script_element))
-js._RULES['any_char'] = token('js_default', l.any - js_end_rule)
 l.embed_lexer(_M, js, js_start_rule, js_end_rule)
-_tokenstyles[#_tokenstyles + 1] = { 'js_default', l.style_nothing }
 
 -- Accessible patterns for preprocessing languages (Django, PHP, etc.)
 _M.equals = equals

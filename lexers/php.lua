@@ -67,7 +67,7 @@ _rules = {
   { 'comment', comment },
   { 'number', number },
   { 'operator', operator },
-  { 'any_char', token('php_default', l.any - '?>') },
+  { 'any_char', l.any_char },
 }
 
 -- Embedded in HTML.
@@ -102,7 +102,6 @@ html._RULES['tag'] =
 
 _tokenstyles = {
   { 'php_whitespace', l.style_nothing },
-  { 'php_default', l.style_nothing },
   { 'php_tag', l.style_embedded },
   { 'variable', l.style_variable },
 }

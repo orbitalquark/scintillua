@@ -389,14 +389,7 @@ module('lexer', package.seeall)
 --       end)) * tag
 --     local css_end_rule = #(P('</') * P('style') * ws^0 * P('>')) * tag
 --
--- where `tag` and `ws` have been previously defined in the HTML lexer. Recall
--- that an `any_char` rule matches anything not matched previously in a lexer.
--- This rule exists in the CSS lexer, but we want it to stop matching when it
--- encounters `</style>` (otherwise the rest of the input would be counted as
--- CSS) without modifying the lexer file itself. The solution is to edit the
--- `any_char` rule from within the `css.`[`_RULES`](#_RULES) table:
---
---     css._RULES['any_char'] = token('css_default', l.any - css_end_rule)
+-- where `tag` and `ws` have been previously defined in the HTML lexer.
 --
 -- Now the CSS lexer can be embedded using [`embed_lexer()`](#embed_lexer):
 --
@@ -405,10 +398,7 @@ module('lexer', package.seeall)
 -- What is `_M`? It is the parent HTML lexer object, not the string `...` or
 -- `'html'`. The lexer object is needed by [`embed_lexer()`](#embed_lexer).
 --
--- The same procedure can be done for Javascript, but with there is a wrinkle:
--- the child to parent transition (`</script>`) starts with a `<`, which is an
--- operator in Javascript. Therefore the `operator` rule must be edited in
--- addition to `any_char`.
+-- The same procedure can be done for Javascript.
 --
 --     local js = l.load('javascript')
 --
@@ -419,17 +409,7 @@ module('lexer', package.seeall)
 --         end
 --       end)) * tag
 --     local js_end_rule = #('</' * P('script') * ws^0 * '>') * tag
---     js._RULES['operator'] = token('operator', S('+-/*%^!=&|?:;.()[]{}>') +
---                                               '<' * -('/' * P('script')))
---     js._RULES['any_char'] = token('js_default', l.any - js_end_rule)
 --     l.embed_lexer(_M, js, js_start_rule, js_end_rule)
---
--- Note the tokens `css_default` and `js_default` that were added. Since they
--- are not standard tokens, styles must be added for them. If `_tokenstyles` has
--- already been defined in the parent lexer, styles are added this way:
---
---     _tokenstyles[#_tokenstyles + 1] = { 'css_default', l.style_nothing }
---     _tokenstyles[#_tokenstyles + 1] = { 'js_default', l.style_nothing }
 --
 -- #### Child Lexer Within Parent
 --
@@ -683,13 +663,16 @@ local function build_grammar(lexer)
     if #children.preproc > 0 then
       for _, preproc in ipairs(children.preproc) do
         local rules = preproc._EMBEDDEDRULES[lexer._NAME]
-        local rule = rules.start_rule * rules.token_rule^0 * rules.end_rule^-1
+        local rule =
+          rules.start_rule * (-rules.end_rule * rules.token_rule)^0 *
+            rules.end_rule^-1
         -- Add preproc's tokens before tokens of all other embedded languages.
         for _, child in ipairs(children) do
           if child ~= preproc then
             local rules = child._EMBEDDEDRULES[lexer._NAME]
-            token_rule = rules.start_rule * (rule + rules.token_rule)^0 *
-              rules.end_rule^-1 + token_rule
+            token_rule =
+              rules.start_rule * (-rules.end_rule *
+                (rule + rules.token_rule))^0 * rules.end_rule^-1 + token_rule
           end
         end
         token_rule = rule + token_rule
@@ -698,7 +681,8 @@ local function build_grammar(lexer)
       for _, child in ipairs(children) do
         local rules = child._EMBEDDEDRULES[lexer._NAME]
         token_rule =
-          rules.start_rule * rules.token_rule^0 * rules.end_rule^-1 + token_rule
+          rules.start_rule * (-rules.end_rule * rules.token_rule)^0 *
+            rules.end_rule^-1 + token_rule
       end
     end
   end
@@ -778,7 +762,10 @@ function load(lexer_name)
   if lexer._lexer then
     local l, _r, _s = lexer._lexer, lexer._rules, lexer._tokenstyles
     if not l._tokenstyles then l._tokenstyles = {} end
-    for _, r in ipairs(_r or {}) do l._rules[#l._rules + 1] = r end
+    for _, r in ipairs(_r or {}) do
+      -- Prevent rule id clashes.
+      l._rules[#l._rules + 1] = { lexer._NAME..'_'..r[1], r[2] }
+    end
     for _, s in ipairs(_s or {}) do l._tokenstyles[#l._tokenstyles + 1] = s end
     lexer = l
   end

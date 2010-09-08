@@ -21,16 +21,11 @@ local ruby = l.load('ruby')
 ruby._RULES['whitespace'] = token('rhtml_whitespace', l.space^1)
 local ruby_start_rule = token('rhtml_tag', '<%' * P('=')^-1)
 local ruby_end_rule = token('rhtml_tag', '%>')
-ruby._RULES['string'] = -P('%>') * ruby._RULES['string']
-ruby._RULES['operator'] =
-  token('operator', S('!^&*()[]{}-=+/|:;.,?<>~') + '%' * -P('>'))
-ruby._RULES['any_char'] = token('rhtml_default', l.any - ruby_end_rule)
 l.embed_lexer(html, ruby, ruby_start_rule, ruby_end_rule, true)
 
 -- TODO: modify HTML, CSS, and JS patterns accordingly
 
 _tokenstyles = {
   { 'rhtml_whitespace', l.style_nothing },
-  { 'rhtml_default', l.style_nothing },
   { 'rhtml_tag', l.style_embedded },
 }
