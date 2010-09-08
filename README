@@ -1,56 +1,57 @@
-This package applies to Scintilla/SciTE 2.20.
+This package requires Scintilla/SciTE >= 2.22.
 
-## Topics covered in this README
+### Topics covered in this README
 
 * Overview.
-* Changes to SciTE.
-* Compiling with SciTE.
+* Package Contents.
 * Using with SciTE.
+* Using with Scintilla.
 * Lexer API.
 * Using with your App.
 * Creating Lexers.
 
-## Overview
+### Overview
 
 Scintillua adds support for Lua LPeg lexers in Scintilla and SciTE. The LPeg
 lexer is an external lexer so no modifications to Scintilla are necessary.
-However, due of nature of the lexer implementation, slight changes to SciTE are
-required.
-
-## Changes to SciTE
-
-1. Added the following properties (to be put in SciTEGlobal.properties or
-   SciTEUser.properties):
-       * lexer.lua.home - directory containing dynamic Lua lexers.
-       * lexer.lua.script - path of lexer.lua file.
-       * lexer.lua.color.theme - universal color theme to use.
-       * fold.by.indentation - fold code by indentation level.
-2. SciTE lexer-specific features do not work in LPeg lexers; features like:
-       * Python colon matching.
-       * HTML/XML tag auto-completion.
-       * Style, keyword, and folding properties in *.properties files.
 
 With regards to speed, single-language dynamic lexers parse the same amount of
 text as Scintilla's lexers; any differences in speed should be negligible. On
 the other hand, multi-language dynamic lexers must parse the entire document
 to ensure accuracy and can be noticibly slower on large files.
 
-## Compiling with SciTE
+### Package Contents
 
-You will need the official SciTE release source tgz or zip with the version
-mentioned at the top of this document.
+This package contains the following:
 
-1. Unpack the SciTE package to this directory. You should have two more folders
-   `scintilla` and `scite`.
-2. Run 'patch -p0 < scintillua.patch' (without quotes) to patch SciTE with LPeg
-   lexer support.
-3. Run 'make' in the current directory to build the external Lua LPeg lexer. It
-   will be placed in the `lexers/` directory.
-   Note: to build a Win32 dll, you will need mingw and change the environment
-   variables in `Makefile` to reflect your setup. Then run 'make WIN32=1'.
-4. Build Scintilla/SciTE as you normally would.
+1. The external lexer LexLPeg.cxx and its associated Makefile and LexLPeg.def.
+2. A `lexers/` folder containing a set of Lua LPeg lexers.
 
-## Using with SciTE
+### Using with SciTE
+
+First, unpack the package to a temporary directory.
+
+If you have direct access to your SciTE installation:
+
+1. Move the `lexers/` folder to SciteDefaultHome.
+   e.g. `C:\Program Files\SciTE` on Windows.
+        `/usr/share/scite/` on Linux.
+2. Add 'import lexers/lpeg' to your SciTEGlobal.properties (no quotes).
+3. Add 'LPeg|lpeg||\' where appropriate to menu.language.
+
+If you do not have direct access to your SciTE installation:
+
+1. Move the `lexers/` folder to your home directory.
+   e.g. `C:\Documents and Settings\mitchell` on Windows.
+        `/home/mitchell/` on Linux.
+2. Add 'import lexers/lpeg' to your SciTEUser.properties (Windows) or
+   .SciTEUser.properties (Linux).
+3. Copy the `menu.language` property from SciTEGlobal.properties to your user
+   properties and add 'LPeg|lpeg||\' where appropriate.
+4. Modify the 'lexer.lpeg.home' property in `lexers/lpeg.properties` to reflect
+   where you put the `lexers/` folder.
+   e.g lexer.lpeg.home=$(SciteUserHome)\lexers
+       lexer.lpeg.home=$(SciteUserHome)/.lexers
 
 By default, SciTE will use its normal Scintilla lexers. In order to use LPeg
 ones, select 'Languages->LPeg' from the menu. This initializes the external
@@ -71,7 +72,27 @@ If you get incorrect or no syntax highlighting, please do the following:
 I do not have the time to continuously update *.properties files with extensions
 and lexers, so please be patient if you have to do it manually.
 
-## Lexer API
+Please also note that SciTE lexer-specific features do not work in LPeg lexers;
+features like:
+
+  * Python colon matching.
+  * HTML/XML tag auto-completion.
+  * Style, keyword, and folding properties in *.properties files.
+
+### Using with Scintilla
+
+If you wish to use the external lexer with an instance of Scintilla, you must
+set the following properties after calling SCI_SETLEXERLANGUAGE:
+
+  * lexer.lpeg.home - directory containing dynamic Lua lexers.
+  * lexer.lpeg.script - path of lexer.lua file.
+  * lexer.lpeg.color.theme - universal color theme to use.
+
+Optionally, you may set:
+
+  * fold.by.indentation - fold code by indentation level.
+
+### Lexer API
 
 The Lua LPeg lexer is responsible for managing multiple lexers and the styling
 information associated with them. Doing this using the Scintilla API without
@@ -117,11 +138,12 @@ how these strings are formatted.
 The integer in this range is the result of calling Scintilla's SCI_GETSTYLEAT.
 Returns the string name of token associated with this style number.
 
-## Using with your App
+### Using with your App
 
 Here is a pseudo-code example:
 
     init_app() {
+      sci = scintilla_new()
       lib = "/home/mitchell/app/lexers/liblexlpeg.so"
       SendScintilla(sci, SCI_LOADLEXERLIBRARY, 0, lib)
     }
@@ -129,12 +151,12 @@ Here is a pseudo-code example:
     create_doc() {
       doc = SendScintilla(sci, SCI_CREATEDOCUMENT)
       SendScintilla(sci, SCI_SETDOCPOINTER, 0, doc)
-      SendScintilla(sci, SCI_SETLEXERLANGUAGE, 0, "llpeg")
+      SendScintilla(sci, SCI_SETLEXERLANGUAGE, 0, "lpeg")
       home = "/home/mitchell/app/lexers"
-      SendScintilla(sci, SCI_SETPROPERTY, "lexer.lua.home", home)
+      SendScintilla(sci, SCI_SETPROPERTY, "lexer.lpeg.home", home)
       script = "/home/mitchell/app/lexers/lexer.lua"
-      SendScintilla(sci, SCI_SETPROPERTY, "lexer.lua.script", script)
-      SendScintilla(sci, SCI_SETPROPERTY, "lexer.lua.color.theme", "light")
+      SendScintilla(sci, SCI_SETPROPERTY, "lexer.lpeg.script", script)
+      SendScintilla(sci, SCI_SETPROPERTY, "lexer.lpeg.color.theme", "light")
       fn = SendScintilla(sci, SCI_GETDIRECTFUNCTION)
       SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_GETDIRECTFUNCTION, fn)
       SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETDOCPOINTER, sci)
@@ -146,7 +168,7 @@ Here is a pseudo-code example:
       SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETLEXERLANGUAGE, lang)
     }
 
-## Creating Lexers
+### Creating Lexers
 
 Please see http://caladbolg.net/luadoc/textadept/modules/lexer.html.
 

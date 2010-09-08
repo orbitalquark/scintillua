@@ -129,9 +129,9 @@ private:
 	bool Init() {
 		char p1[50], p2[FILENAME_MAX], p3[FILENAME_MAX], p4[FILENAME_MAX];
 		props.GetExpanded("lexer.name", p1);
-		props.GetExpanded("lexer.lua.home", p2);
-		props.GetExpanded("lexer.lua.color.theme", p3);
-		props.GetExpanded("lexer.lua.script", p4);
+		props.GetExpanded("lexer.lpeg.home", p2);
+		props.GetExpanded("lexer.lpeg.color.theme", p3);
+		props.GetExpanded("lexer.lpeg.script", p4);
 		if (*p1 == 0 || *p2 == 0 || *p3 == 0 || *p4 == 0) return false;
 
 		// Initialize or reinitialize Lua.
@@ -298,7 +298,7 @@ private:
 					lua_replace(L, -3);
 				}
 #ifndef NO_SCITE
-				sprintf(prop_name, "style.llpeg.%0d", style_num);
+				sprintf(prop_name, "style.lpeg.%0d", style_num);
 				*p = '\0';
 				props.Set(prop_name, prop_str);
 #endif
@@ -493,7 +493,7 @@ public:
 			if (code >= -STYLE_MAX && code < 0) { // retrieve SciTE style strings
 #ifndef NO_SCITE
 				char prop_str[PROPLEN];
-				sprintf(prop_str, "style.llpeg.%0d", code + STYLE_MAX);
+				sprintf(prop_str, "style.lpeg.%0d", code + STYLE_MAX);
 				return StringResult(lParam, props.Get(prop_str));
 #else
 				return NULL;
@@ -535,7 +535,7 @@ public:
 #else
 #define EXT_LEXER_DECL
 #endif // __WIN32__
-static const char *lexerName = "llpeg";
+static const char *lexerName = "lpeg";
 extern "C" {
 int EXT_LEXER_DECL GetLexerCount() { return 1; }
 void EXT_LEXER_DECL GetLexerName(unsigned int index, char *name, int len) {
@@ -553,13 +553,13 @@ LexerFactoryFunction EXT_LEXER_DECL GetLexerFactory(unsigned int index) {
 }
 /*
 Forward the following properties from SciTE.
-GetProperty "lexer.lua.home"
-GetProperty "lexer.lua.color.theme"
-GetProperty "lexer.lua.script"
+GetProperty "lexer.lpeg.home"
+GetProperty "lexer.lpeg.color.theme"
+GetProperty "lexer.lpeg.script"
 GetProperty "fold.by.indentation"
 */
 #else
-LexerModule lmLPeg(SCLEX_AUTOMATIC - 1, LexerLPeg::LexerFactoryLPeg, "llpeg");
+LexerModule lmLPeg(SCLEX_AUTOMATIC - 1, LexerLPeg::LexerFactoryLPeg, "lpeg");
 #endif // LPEG_LEXER_EXTERNAL
 
 #endif // LPEG_LEXER || LPEG_LEXER_EXTERNAL
