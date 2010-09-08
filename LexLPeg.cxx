@@ -339,7 +339,7 @@ public:
 
 	void SCI_METHOD Lex(unsigned int startPos, int lengthDoc, int initStyle,
 	                    IDocument *pAccess) {
-		if (reinit) Init();
+		if (reinit && !Init()) return;
 		if (!L) return;
 		lua_pushlightuserdata(L, reinterpret_cast<void *>(pAccess));
 		lua_setfield(L, LUA_REGISTRYINDEX, "pAccess");
@@ -406,7 +406,7 @@ public:
 
 	void SCI_METHOD Fold(unsigned int startPos, int lengthDoc, int initStyle,
 	                     IDocument *pAccess) {
-		if (reinit) Init();
+		if (reinit && !Init()) return;
 		if (!L) return;
 		lua_pushlightuserdata(L, reinterpret_cast<void *>(pAccess));
 		lua_setfield(L, LUA_REGISTRYINDEX, "pAccess");
