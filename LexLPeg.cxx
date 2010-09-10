@@ -229,7 +229,7 @@ private:
 						SSS(SCI_STYLESETSIZE, static_cast<int>(lua_tointeger(L, -1)));
 #ifndef NO_SCITE
 						sprintf(prop_part, "size:%i,",
-                    static_cast<int>(lua_tointeger(L, -1)));
+						        static_cast<int>(lua_tointeger(L, -1)));
 #endif
 					} else if (streq(prop, "bold")) {
 						SSS(SCI_STYLESETBOLD, lua_toboolean(L, -1));
@@ -250,13 +250,13 @@ private:
 						SSS(SCI_STYLESETFORE, static_cast<int>(lua_tointeger(L, -1)));
 #ifndef NO_SCITE
 						sprintf(prop_part, "fore:#%06X,",
-                    RGB(static_cast<int>(lua_tointeger(L, -1))));
+						        RGB(static_cast<int>(lua_tointeger(L, -1))));
 #endif
 					} else if (streq(prop, "back")) {
 						SSS(SCI_STYLESETBACK, static_cast<int>(lua_tointeger(L, -1)));
 #ifndef NO_SCITE
 						sprintf(prop_part, "back:#%06X,",
-                    RGB(static_cast<int>(lua_tointeger(L, -1))));
+						        RGB(static_cast<int>(lua_tointeger(L, -1))));
 #endif
 					} else if (streq(prop, "eolfilled")) {
 						SSS(SCI_STYLESETEOLFILLED, lua_toboolean(L, -1));

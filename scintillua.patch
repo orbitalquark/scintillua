@@ -5,7 +5,7 @@ diff -r 2f2ce452fac6 src/SciTEGlobal.properties
  #Lot|lot||\
  #Lout|lt||\
  Lu&a|lua||\
-+LPeg|llpeg||\
++LPeg|lpeg||\
  Matlab|m.matlab||\
  &Makefile|mak|Ctrl+Shift+F11|\
  #MetaPost|mp||\
@@ -15,7 +15,7 @@ diff -r 2f2ce452fac6 src/SciTEProps.cxx
 @@ -524,10 +524,17 @@
  	return ret;
  }
- 
+
 +static int lexLPeg = -1;
 +
  /**
@@ -64,23 +64,23 @@ diff -r 2f2ce452fac6 src/SciTEProps.cxx
 +		}
 +		language_name = "llpeg";
 +	}
- 
+
  	// Set styles
  	// For each window set the global default style, then the language default style, then the other global styles, then the other language styles
 @@ -1224,14 +1252,14 @@
  	SetOneStyle(wEditor, STYLE_DEFAULT, sval.c_str());
  	SetOneStyle(wOutput, STYLE_DEFAULT, sval.c_str());
- 
+
 -	sprintf(key, "style.%s.%0d", language.c_str(), STYLE_DEFAULT);
 +	sprintf(key, "style.%s.%0d", language_name, STYLE_DEFAULT);
  	sval = props.GetNewExpand(key);
  	SetOneStyle(wEditor, STYLE_DEFAULT, sval.c_str());
- 
+
  	wEditor.Call(SCI_STYLECLEARALL, 0, 0);
- 
+
  	SetStyleFor(wEditor, "*");
 -	SetStyleFor(wEditor, language.c_str());
 +	SetStyleFor(wEditor, language_name);
- 
+
  	wOutput.Call(SCI_STYLECLEARALL, 0, 0);
 
