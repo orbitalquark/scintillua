@@ -37,7 +37,6 @@ If you have direct access to your SciTE installation:
    e.g. `C:\Program Files\SciTE` on Windows.
         `/usr/share/scite/` on Linux.
 2. Add 'import lexers/lpeg' to your SciTEGlobal.properties (no quotes).
-3. Add 'LPeg|lpeg||\' where appropriate to menu.language.
 
 If you do not have direct access to your SciTE installation:
 
@@ -46,9 +45,7 @@ If you do not have direct access to your SciTE installation:
         `/home/mitchell/` on Linux.
 2. Add 'import lexers/lpeg' to your SciTEUser.properties (Windows) or
    .SciTEUser.properties (Linux).
-3. Copy the `menu.language` property from SciTEGlobal.properties to your user
-   properties and add 'LPeg|lpeg||\' where appropriate.
-4. Modify the 'lexer.lpeg.home' property in `lexers/lpeg.properties` to reflect
+3. Modify the 'lexer.lpeg.home' property in `lexers/lpeg.properties` to reflect
    where you put the `lexers/` folder.
    e.g lexer.lpeg.home=$(SciteUserHome)\lexers
        lexer.lpeg.home=$(SciteUserHome)/.lexers
