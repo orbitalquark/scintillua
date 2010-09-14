@@ -10,7 +10,7 @@ DLLWRAP = $(CPP) -shared
 PLAT_FLAGS =
 LUA_CFLAGS = -D_WIN32 -DWIN32
 LEXLPEG = lexers/LexLPeg.dll
-SO_FLAGS = -static -mwindows --relocatable -s LexLPeg.def \
+SO_FLAGS = -g -static -mwindows --relocatable -s LexLPeg.def \
   -Wl,--enable-stdcall-fixup
 else
 CC = gcc -fPIC
@@ -40,10 +40,12 @@ vpath %.cxx scintilla/lexlib
 LEX_OBJS = PropSetSimple.o WordList.o LexerModule.o LexerSimple.o LexerBase.o \
   Accessor.o
 
+# Build
+
 all: $(LEXLPEG)
 
 $(LEXLPEG): LexLPeg.o $(LUA_OBJS) $(LEX_OBJS)
-	$(DLLWRAP) $(SO_FLAGS) LexLPeg.o $(LUA_OBJS) $(LEX_OBJS) -o $(LEXLPEG)
+	$(DLLWRAP) $(SO_FLAGS) -o $@ $^
 LexLPeg.o: LexLPeg.cxx
 	$(CPP) $(SCI_CXXFLAGS) $(LUA_CFLAGS) -DLPEG_LEXER_EXTERNAL -c $<
 .c.o:
@@ -52,3 +54,17 @@ LexLPeg.o: LexLPeg.cxx
 	$(CPP) $(SCI_CXXFLAGS) -c $<
 clean:
 	rm *.o $(LEXLPEG)
+
+# Package
+# Pass 'VERSION=[release version]' to 'make'. e.g. 'VERSION=2.22-1'
+
+RELEASEDIR = scintillua$(value VERSION)
+PACKAGE = releases/$(RELEASEDIR).zip
+
+release: lexers/LexLPeg.dll lexers/liblexlpeg.so
+	hg archive $(RELEASEDIR)
+	rm $(RELEASEDIR)/.hg*
+	cp -r lexers/{LexLPeg.dll,liblexlpeg.so} $(RELEASEDIR)/lexers/
+	cp lpeg.c $(RELEASEDIR)
+	zip -r $(PACKAGE) $(RELEASEDIR)
+	rm -r $(RELEASEDIR)
