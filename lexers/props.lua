@@ -10,7 +10,7 @@ module(...)
 local ws = token('whitespace', l.space^1)
 
 -- comments
-local comment = token('comment', #P('#') * l.starts_line('#' * l.nonnewline^0))
+local comment = token('comment', '#' * l.nonnewline^0)
 
 -- equals
 local equals = token('operator', '=')
