@@ -556,7 +556,7 @@ module('lexer', package.seeall)
 -- a default lexer to your liking.) Do not forget to add a
 -- [mime-type](textadept.mime_types.html) for your lexer.
 --
--- [user]: http://caladbolg.net/luadoc/textadept3/manual/5_FolderStructure.html
+-- [user]: http://caladbolg.net/luadoc/textadept/manual/5_FolderStructure.html
 --
 -- #### Optimization
 --
