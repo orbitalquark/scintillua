@@ -1,6 +1,8 @@
 -- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- Java LPeg Lexer
 
+-- Modified by Brian Schott
+
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
@@ -44,13 +46,20 @@ local identifier = token('identifier', l.word)
 -- annotations
 local annotation = token('annotation', '@' * l.word)
 
+local func = token('function', l.word) * #P('(')
+
+local class_sequence =
+  token('keyword', P('class')) * ws^1 * token('class', l.word)
+
 -- operators
 local operator = token('operator', S('+-/*%<>!=^&|?~:;.()[]{}'))
 
 _rules = {
   { 'whitespace', ws },
+  { 'class', class_sequence },
   { 'keyword', keyword },
   { 'type', type },
+  { 'function', func},
   { 'identifier', identifier },
   { 'string', string },
   { 'comment', comment },
