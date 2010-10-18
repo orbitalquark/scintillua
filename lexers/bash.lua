@@ -7,10 +7,10 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
-local comment = token('comment', '#' * l.nonnewline^0)
+local comment = token(l.COMMENT, '#' * l.nonnewline^0)
 
 -- strings
 local sq_str = l.delimited_range("'", nil, true)
@@ -24,13 +24,13 @@ local heredoc = '<<' * P(function(input, index)
     return e and e + 1 or #input + 1
   end
 end)
-local string = token('string', sq_str + dq_str + ex_str + heredoc)
+local string = token(l.STRING, sq_str + dq_str + ex_str + heredoc)
 
 -- numbers
-local number = token('number', l.float + l.integer)
+local number = token(l.NUMBER, l.float + l.integer)
 
 -- keywords
-local keyword = token('keyword', word_match({
+local keyword = token(l.KEYWORD, word_match({
   'if', 'then', 'elif', 'else', 'fi', 'case', 'in', 'esac', 'while', 'for',
   'do', 'done', 'continue', 'local', 'return',
   -- operators
@@ -40,10 +40,10 @@ local keyword = token('keyword', word_match({
 }, '-'))
 
 -- identifiers
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
 -- variables
-local variable = token('variable', '$' * (S('!#?*@$') +
+local variable = token(l.VARIABLE, '$' * (S('!#?*@$') +
   l.delimited_range('()', nil, true, false, '\n') +
   l.delimited_range('[]', nil, true, false, '\n') +
   l.delimited_range('{}', nil, true, false, '\n') +
@@ -52,7 +52,7 @@ local variable = token('variable', '$' * (S('!#?*@$') +
   l.word))
 
 -- operators
-local operator = token('operator', S('=!<>+-/*^~.,:;?()[]{}'))
+local operator = token(l.OPERATOR, S('=!<>+-/*^~.,:;?()[]{}'))
 
 _rules = {
   { 'whitespace', ws },

@@ -7,24 +7,24 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
 local line_comment = '//' * l.nonnewline^0
 local block_comment = '/*' * (l.any - '*/')^0 * '*/'
-local comment = token('comment', line_comment + block_comment)
+local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- strings
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true, false, '\n')
 local ml_str = '<![CDATA[' * (l.any - ']]>')^0 * ']]>'
-local string = token('string', sq_str + dq_str + ml_str)
+local string = token(l.STRING, sq_str + dq_str + ml_str)
 
 -- numbers
-local number = token('number', (l.float + l.integer) * S('LlUuFf')^-2)
+local number = token(l.NUMBER, (l.float + l.integer) * S('LlUuFf')^-2)
 
 -- keywords
-local keyword = token('keyword', word_match {
+local keyword = token(l.KEYWORD, word_match {
   'break', 'continue', 'delete', 'do', 'else', 'for', 'function', 'if', 'in',
   'new', 'on', 'return', 'this', 'typeof', 'var', 'void', 'while', 'with',
   'NaN', 'Infinity', 'false', 'null', 'true', 'undefined',
@@ -37,7 +37,7 @@ local keyword = token('keyword', word_match {
 })
 
 -- types
-local type = token('type', word_match {
+local type = token(l.TYPE, word_match {
   'Array', 'Boolean', 'Color', 'Date', 'Function', 'Key', 'MovieClip', 'Math',
   'Mouse', 'Number', 'Object', 'Selection', 'Sound', 'String', 'XML', 'XMLNode',
   'XMLSocket',
@@ -46,10 +46,10 @@ local type = token('type', word_match {
 })
 
 -- identifiers
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
 -- operators
-local operator = token('operator', S('=!<>+-/*%&|^~.,;?()[]{}'))
+local operator = token(l.OPERATOR, S('=!<>+-/*%&|^~.,;?()[]{}'))
 
 _rules = {
   { 'whitespace', ws },

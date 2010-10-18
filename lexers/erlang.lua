@@ -7,19 +7,19 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
-local comment = token('comment', '%' * l.nonnewline^0)
+local comment = token(l.COMMENT, '%' * l.nonnewline^0)
 
 -- strings
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true)
 local literal = '$' * l.any * l.alnum^0
-local string = token('string', sq_str + dq_str + literal)
+local string = token(l.STRING, sq_str + dq_str + literal)
 
 -- numbers
-local number = token('number', l.float + l.integer)
+local number = token(l.NUMBER, l.float + l.integer)
 
 -- directives
 local directive = token('directive', '-' * word_match {
@@ -29,7 +29,7 @@ local directive = token('directive', '-' * word_match {
 })
 
 -- keywords
-local keyword = token('keyword', word_match {
+local keyword = token(l.KEYWORD, word_match {
   'after', 'begin', 'case', 'catch', 'cond', 'end', 'fun', 'if', 'let', 'of',
   'query', 'receive', 'when',
   -- operators
@@ -39,7 +39,7 @@ local keyword = token('keyword', word_match {
 })
 
 -- functions
-local func = token('function', word_match {
+local func = token(l.FUNCTION, word_match {
   'abs', 'alive', 'apply', 'atom_to_list', 'binary_to_list', 'binary_to_term',
   'concat_binary', 'date', 'disconnect_node', 'element', 'erase', 'exit',
   'float', 'float_to_list', 'get', 'get_keys', 'group_leader', 'halt', 'hd',
@@ -64,10 +64,10 @@ local func = token('function', word_match {
 })
 
 -- identifiers
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
 -- operators
-local operator = token('operator', S('-<>.;=/|#+*:,?!()[]{}'))
+local operator = token(l.OPERATOR, S('-<>.;=/|#+*:,?!()[]{}'))
 
 _rules = {
   { 'whitespace', ws },

@@ -7,18 +7,18 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
 local line_comment = '//' * l.nonnewline^0;
 local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
-local comment = token('comment', line_comment + block_comment)
+local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- strings
-local string = token('string', l.delimited_range("'", '\\', true, false, '\n'))
+local string = token(l.STRING, l.delimited_range("'", '\\', true, false, '\n'))
 
 -- keywords
-local keyword = token('keyword', word_match {
+local keyword = token(l.KEYWORD, word_match {
   'abstract', 'break', 'case', 'catch', 'continue', 'default', 'do', 'else',
   'extends', 'final', 'finally', 'for', 'if', 'implements', 'instanceof',
   'native', 'new', 'private', 'protected', 'public', 'return', 'static',
@@ -28,19 +28,19 @@ local keyword = token('keyword', word_match {
 })
 
 -- types
-local type = token('type', word_match {
+local type = token(l.TYPE, word_match {
   'boolean', 'byte', 'char', 'class', 'double', 'float', 'int', 'interface',
   'long', 'short', 'void'
 })
 
 -- functions
-local func = token('function', 'assert')
+local func = token(l.FUNCTION, 'assert')
 
 -- identifiers
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
 -- operators
-local operator = token('operator', S('$@:;|.=+*?~!^>-()[]{}'))
+local operator = token(l.OPERATOR, S('$@:;|.=+*?~!^>-()[]{}'))
 
 _rules = {
   { 'whitespace', ws },

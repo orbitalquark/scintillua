@@ -7,24 +7,24 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
-local comment = token('comment', '#' * S(': .~') * l.nonnewline^0)
+local comment = token(l.COMMENT, '#' * S(': .~') * l.nonnewline^0)
 
 -- strings
-local string = token('string', l.delimited_range('"', '\\', true, false, '\n'))
+local string = token(l.STRING, l.delimited_range('"', '\\', true, false, '\n'))
 
 -- keywords
-local keyword = token('keyword', word_match({
+local keyword = token(l.KEYWORD, word_match({
   'msgid', 'msgid_plural', 'msgstr', 'fuzzy', 'c-format', 'no-c-format'
 }, '-', true))
 
 -- identifiers
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
 -- variables
-local variable = token('variable', S('%$@') * l.word)
+local variable = token(l.VARIABLE, S('%$@') * l.word)
 
 _rules = {
   { 'whitespace', ws },

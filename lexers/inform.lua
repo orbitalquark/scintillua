@@ -7,20 +7,20 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 local line_comment = '!' * l.nonnewline^0
-local comment = token('comment', line_comment)
+local comment = token(l.COMMENT, line_comment)
 
 local sq_str = l.delimited_range("'")
 local dq_str = l.delimited_range('"')
-local string = token('string', sq_str + dq_str)
+local string = token(l.STRING, sq_str + dq_str)
 
 local inform_hex = '$' * l.xdigit^1
 local inform_bin = '$$' * S('01')^1
-local number = token('number', l.integer + inform_hex + inform_bin)
+local number = token(l.NUMBER, l.integer + inform_hex + inform_bin)
 
-local keyword = token('keyword', word_match {
+local keyword = token(l.KEYWORD, word_match {
   'Abbreviate', 'Array', 'Attribute', 'Class', 'Constant', 'Default', 'End',
   'Endif', 'Extend', 'Global', 'Ifdef', 'Iffalse', 'Ifndef', 'Ifnot', 'Iftrue',
   'Import', 'Include', 'Link', 'Lowstring', 'Message', 'Object', 'Property',
@@ -68,9 +68,9 @@ local action = token('action', word_match {
   'WakeOther', 'Wait', 'Wave', 'WaveHands', 'Wear', 'Yes'
 })
 
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
-local operator = token('operator', S('@~=+-*/%^#=<>;:,.{}[]()&|?'))
+local operator = token(l.OPERATOR, S('@~=+-*/%^#=<>;:,.{}[]()&|?'))
 
 _rules = {
   { 'whitespace', ws },

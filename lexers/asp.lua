@@ -18,17 +18,15 @@ _lexer = html
 -- Embedded VB
 local vb = l.load('vb')
 
-vb._RULES['whitespace'] = token('vb_whitespace', l.space^1)
 local vb_start_rule = token('asp_tag', '<%' * P('=')^-1)
 local vb_end_rule = token('asp_tag', '%>')
-l.embed_lexer(html, vb, vb_start_rule, vb_end_rule, true)
+l.embed_lexer(html, vb, vb_start_rule, vb_end_rule)
 
 -- TODO: modify HTML, CSS, and JS patterns accordingly
 
 -- Embedded VBScript
 local vbs = l.load('vbscript')
 
-vbs._RULES['whitespace'] = token('vbscript_whitespace', l.space^1)
 local script_element = word_match({ 'script' }, nil, html.case_insensitive_tags)
 local vbs_start_rule = #(P('<') * script_element *
   P(function(input, index)
@@ -40,7 +38,4 @@ l.embed_lexer(html, vbs, vbs_start_rule, vbs_end_rule)
 
 _tokenstyles = {
   { 'asp_tag', l.style_embedded },
-  { 'vb_whitespace', l.style_nothing },
-  { 'vbscript_whitespace', l.style_nothing },
-  { 'vbscript_default', l.style_nothing },
 }

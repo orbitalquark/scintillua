@@ -9,23 +9,23 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
 local line_comment = '%' * l.nonnewline^0
 -- TODO block comment
-local comment = token('comment', line_comment )
+local comment = token(l.COMMENT, line_comment )
 
 -- strings
-local string = token('string', l.delimited_range('"'))
+local string = token(l.STRING, l.delimited_range('"'))
 
 -- keywordscommands
-local keyword = token('keyword', '\\' * l.word)
+local keyword = token(l.KEYWORD, '\\' * l.word)
 
 -- operators
-local operator = token('operator', S("{}'~<>|"))
+local operator = token(l.OPERATOR, S("{}'~<>|"))
 
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
 _rules = {
   { 'whitespace', ws },

@@ -13,13 +13,13 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
 local line_comment = '%' * l.nonnewline^0
 local block_comment = '\\begin{comment}' * (l.any - '\\end{comment}')^0 *
   '\\end{comment}'
-local comment = token('comment', line_comment + block_comment)
+local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- environment
 -- LaTeX environments
@@ -38,10 +38,10 @@ local environment = token('environment',  env_latex + env_latex_math +
 
 -- commands
 local escapes = S('$%_{}&#')
-local command = token('keyword', '\\' * (l.alpha^1 + escapes))
+local command = token(l.KEYWORD, '\\' * (l.alpha^1 + escapes))
 
 -- operators
-local operator = token('operator', S('$&%#{}[]'))
+local operator = token(l.OPERATOR, S('$&%#{}[]'))
 
 _rules = {
   { 'whitespace', ws },

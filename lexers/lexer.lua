@@ -57,13 +57,35 @@ module('lexer', package.seeall)
 -- #### Tokens
 --
 -- In a lexer, tokens are comprised of a token type followed by an LPeg pattern.
--- They are created using the [`token()`](#token) function. A whitespace token
--- typically looks like:
+-- They are created using the [`token()`](#token) function. The `lexer` (`l`)
+-- module provides a number of default token types:
 --
---     local ws = token('whitespace', S('\t\v\f\n\r ')^1)
+-- * `DEFAULT`
+-- * `WHITESPACE`
+-- * `COMMENT`
+-- * `STRING`
+-- * `NUMBER`
+-- * `KEYWORD`
+-- * `IDENTIFIER`
+-- * `OPERATOR`
+-- * `ERROR`
+-- * `PREPROCESSOR`
+-- * `CONSTANT`
+-- * `VARIABLE`
+-- * `FUNCTION`
+-- * `CLASS`
+-- * `TYPE`
+--
+-- Please note you are not limited to just these token types; you can create
+-- your own. If you create your own, you will have to specify how they are
+-- colored. The procedure is discussed later.
+--
+-- A whitespace token typically looks like:
+--
+--     local ws = token(l.WHITESPACE, S('\t\v\f\n\r ')^1)
 --
 -- It is difficult to remember that a space character is either a `\t`, `\v`,
--- `\f`, `\n`, `\r`, or ` `. The `lexer` (`l`) module provides you with a
+-- `\f`, `\n`, `\r`, or ` `. The `lexer` module also provides you with a
 -- shortcut for this and many other character sequences. They are:
 --
 -- * `any`: Matches any single character.
@@ -96,7 +118,7 @@ module('lexer', package.seeall)
 --
 -- The above whitespace token can be rewritten more simply as:
 --
---     local ws = token('whitespace', l.space^1)
+--     local ws = token(l.WHITESPACE, l.space^1)
 --
 -- The next Lua token is a comment. Short comments beginning with `--` are easy
 -- to express with LPeg:
@@ -119,7 +141,7 @@ module('lexer', package.seeall)
 --
 -- The token for a comment is then:
 --
---     local comment = token('comment', line_comment + block_comment)
+--     local comment = token(l.COMMENT, line_comment + block_comment)
 --
 -- [lexical_conventions]: http://www.lua.org/manual/5.1/manual.html#2.1
 --
@@ -141,12 +163,12 @@ module('lexer', package.seeall)
 -- Lua also has multi-line strings, but they have the same format as block
 -- comments. All strings can all be combined into a token:
 --
---     local string = token('string', sq_str + dq_str + longstring)
+--     local string = token(l.STRING, sq_str + dq_str + longstring)
 --
 -- Numbers are easy in Lua using `lexer`'s predefined patterns.
 --
 --     local lua_integer = P('-')^-1 * (l.hex_num + l.dec_num)
---     local number = token('number', l.float + lua_integer)
+--     local number = token(l.NUMBER, l.float + lua_integer)
 --
 -- Keep in mind that the predefined patterns may not be completely accurate for
 -- your language, so you may have to create your own variants. In the above
@@ -159,7 +181,7 @@ module('lexer', package.seeall)
 -- sensitive, additional complexity arises, so a better approach is necessary.
 -- Once again, `lexer` has a shortcut function: [`word_match()`](#word_match).
 --
---     local keyword = token('keyword', word_match {
+--     local keyword = token(l.KEYWORD, word_match {
 --       'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for',
 --       'function', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat',
 --       'return', 'then', 'true', 'until', 'while'
@@ -170,7 +192,7 @@ module('lexer', package.seeall)
 --
 -- Lua functions and constants are specified like keywords:
 --
---     local func = token('function', word_match {
+--     local func = token(l.FUNCTION, word_match {
 --       'assert', 'collectgarbage', 'dofile', 'error', 'getfenv',
 --       'getmetatable', 'gcinfo', 'ipairs', 'loadfile', 'loadlib',
 --       'loadstring', 'next', 'pairs', 'pcall', 'print', 'rawequal',
@@ -178,7 +200,7 @@ module('lexer', package.seeall)
 --       'tonumber', 'tostring', 'type', 'unpack', 'xpcall'
 --     })
 --
---     local constant = token('constant', word_match {
+--     local constant = token(l.CONSTANT, word_match {
 --       '_G', '_VERSION', 'LUA_PATH', '_LOADED', '_REQUIREDNAME', '_ALERT',
 --       '_ERRORMESSAGE', '_PROMPT'
 --     })
@@ -188,11 +210,11 @@ module('lexer', package.seeall)
 -- the usual `l.word` cannot be used. Instead, identifiers are represented by:
 --
 --     local word = (R('AZ', 'az', '\127\255') + '_') * (l.alnum + '_')^0
---     local identifier = token('identifier', word)
+--     local identifier = token(l.IDENTIFIER, word)
 --
 -- Finally, an operator character is one of the following:
 --
---     local operator = token('operator', '~=' + S('+-*/%^#=<>;:,.{}[]()'))
+--     local operator = token(l.OPERATOR, '~=' + S('+-*/%^#=<>;:,.{}[]()'))
 --
 -- #### Rules
 --
@@ -246,7 +268,7 @@ module('lexer', package.seeall)
 -- constructing a working lexer quickly and efficiently. In most cases, the
 -- amount of knowledge of LPeg required to write a lexer is minimal.
 --
--- As long as you used token names listed in [`tokens`](#tokens), you do not
+-- As long as you used the default token types provided by `lexer`, you do not
 -- have to specify any coloring (or styling) information in the lexer; it is
 -- taken care of by the user's color theme.
 --
@@ -334,7 +356,7 @@ module('lexer', package.seeall)
 -- It is recommended to use them to stay consistant with a user's color theme.
 --
 -- Finally, styles are assigned to tokens via a `_tokenstyles` table in the
--- lexer. Styles do not have to be assigned to standard tokens; it is done
+-- lexer. Styles do not have to be assigned to the default tokens; it is done
 -- automatically. You only have to assign styles for tokens you create. For
 -- example:
 --
@@ -429,35 +451,9 @@ module('lexer', package.seeall)
 --     local php_start_rule = token('php_tag', '<?' * ('php' * l.space)^-1)
 --     local php_end_rule = token('php_tag', '?>')
 --
--- And PHP is embedded as a preprocessing language:
+-- And PHP is embedded:
 --
---     l.embed_lexer(html, _M, php_start_rule, php_end_rule, true)
---
--- If PHP were not a preprocessing language, the lexer would be finished.
--- However, PHP can appear *anywhere* within an HTML document, so the HTML lexer
--- needs to have this indicated in its rules -- for example within strings.
--- First, it is necessary to obtain the PHP rule (`<?php ... ?>` sequence).
---
---     local php_rules = _M._EMBEDDEDRULES[html._NAME]
---     local php_rule = php_rules.start_rule * php_rules.token_rule^0 *
---                      php_rules.end_rule^-1
---
--- Now, string patterns with embedded PHP need to be created. The explanation on
--- how to do so is beyond the scope of this tutorial. Sufficed to say a shortcut
--- function [`delimited_range_with_embedded()`](#delimited_range_with_embedded)
--- is available:
---
---     local embedded_sq_str =
---       l.delimited_range_with_embedded("'", '\\', 'string', php_rule)
---     local embedded_dq_str =
---       l.delimited_range_with_embedded('"', '\\', 'string', php_rule)
---
--- The HTML `string` rule can now be modified:
---
---     html._RULES['string'] = embedded_sq_str + embedded_dq_str
---
--- This procedure should be repeated for other rules, but is not shown here. You
--- can look at `lexers/php.lua` for more information.
+--     l.embed_lexer(html, _M, php_start_rule, php_end_rule)
 --
 -- #### Code Folding (Optional)
 --
@@ -567,14 +563,21 @@ module('lexer', package.seeall)
 --
 -- #### Troubleshooting
 --
--- Errors in lexers can be tricky to debug. Lua errors and `_G.print()`
--- statements in lexers are printed to STDOUT.
+-- Errors in lexers can be tricky to debug. Lua errors are printed to STDERR
+-- and `_G.print()` statements in lexers are printed to STDOUT.
 --
 -- #### Limitations
 --
--- Lexers can have up to 32757 elements in them. So unless the lexer is written
--- very poorly, or has a dozen embedded languages, this limitation is not a
--- problem.
+-- True embedded preprocessor language highlighting is not available. For most
+-- cases this will not be noticed, but code like
+--
+--     <div id="<?php echo $id; ?>">
+--
+-- or
+--
+--     <div <?php if ($odd) { echo 'class="odd"'; } ?>>
+--
+-- will not highlight correctly.
 --
 -- #### Performance
 --
@@ -582,9 +585,7 @@ module('lexer', package.seeall)
 -- file from disk into Scintilla is usually more expensive.
 --
 -- On modern computer systems, I see no difference in speed between LPeg lexers
--- and Scintilla's C++ ones for single language lexers. There may be differences
--- for multiple language lexers though, depending on the size of the file since
--- the entire document must be lexed to ensure accuracy.
+-- and Scintilla's C++ ones.
 --
 -- #### Risks
 --
@@ -656,41 +657,35 @@ end
 
 -- (Re)constructs lexer._GRAMMAR.
 -- @param lexer The parent lexer.
-local function build_grammar(lexer)
+-- @param initial_rule The name of the rule to start lexing with. Defaults to
+--   lexer._NAME. Multilang lexers use this to start with a child rule if
+--   necessary.
+local function build_grammar(lexer, initial_rule)
   local token_rule = join_tokens(lexer)
   local children = lexer._CHILDREN
   if children then
-    if #children.preproc > 0 then
-      for _, preproc in ipairs(children.preproc) do
-        local rules = preproc._EMBEDDEDRULES[lexer._NAME]
-        local rule =
-          rules.start_rule * (-rules.end_rule * rules.token_rule)^0 *
-            rules.end_rule^-1
-        -- Add preproc's tokens before tokens of all other embedded languages.
-        for _, child in ipairs(children) do
-          if child ~= preproc then
-            local rules = child._EMBEDDEDRULES[lexer._NAME]
-            token_rule =
-              rules.start_rule * (-rules.end_rule *
-                (rule + rules.token_rule))^0 * rules.end_rule^-1 + token_rule
-          end
-        end
-        token_rule = rule + token_rule
-      end
-    else
-      for _, child in ipairs(children) do
-        local rules = child._EMBEDDEDRULES[lexer._NAME]
-        token_rule =
-          rules.start_rule * (-rules.end_rule * rules.token_rule)^0 *
-            rules.end_rule^-1 + token_rule
-      end
+    local lexer_name = lexer._NAME
+    if not initial_rule then initial_rule = lexer_name end
+    local grammar = { initial_rule, [lexer_name] = token_rule^0 }
+    for _, child in ipairs(children) do
+      local child_name = child._NAME
+      local embedded_child = '_'..child_name
+      local rules = child._EMBEDDEDRULES[lexer_name]
+      grammar[embedded_child] = rules.start_rule * (-rules.end_rule *
+                                rules.token_rule)^0 * rules.end_rule^-1
+      token_rule = lpeg_V(embedded_child) + token_rule
+      grammar[child_name] = (-rules.end_rule * rules.token_rule)^0 *
+                            rules.end_rule^-1 * lpeg_V(lexer_name)
     end
+    grammar[lexer_name] = token_rule^0
+    lexer._INITIALRULE = initial_rule
+    lexer._GRAMMAR = lpeg_Ct(lpeg_P(grammar))
+  else
+    lexer._GRAMMAR = lpeg_Ct(token_rule^0)
   end
-  lexer._GRAMMAR = lpeg_Ct(token_rule^0)
 end
 
----
--- [Local table] Default tokens.
+-- Default tokens.
 -- Contains token identifiers and associated style numbers.
 -- @class table
 -- @name tokens
@@ -725,11 +720,14 @@ local tokens = {
   class        = 13,
   type         = 14,
 }
+local string_upper = string.upper
+for k, v in pairs(tokens) do _M[string_upper(k)] = k end
 
 ---
 -- Initializes the specified lexer.
 -- @param lexer_name The name of the lexing language.
 function load(lexer_name)
+  _M.WHITESPACE = lexer_name..'_whitespace'
   local lexer = require(lexer_name or 'null')
   if not lexer then error('Lexer '..lexer_name..' does not exist') end
   lexer._TOKENS = tokens
@@ -767,6 +765,16 @@ function load(lexer_name)
       l._rules[#l._rules + 1] = { lexer._NAME..'_'..r[1], r[2] }
     end
     for _, s in ipairs(_s or {}) do l._tokenstyles[#l._tokenstyles + 1] = s end
+    -- Each lexer that is loaded with l.load() has its _STYLES modified through
+    -- add_style(). Reset _lexer's _STYLES accordingly.
+    -- For example: RHTML load's HTML (which loads CSS and Javascript). CSS's
+    -- styles are added to css._STYLES and JS's styles are added to js._STYLES.
+    -- HTML adds its styles to html._STYLES as well as CSS's and JS's styles.
+    -- RHTML adds its styles, HTML's styles, CSS's styles, and JS's styles to
+    -- rhtml._STYLES. The problem is that rhtml == _lexer == html. Therefore
+    -- html._STYLES would contain duplicate styles. Compensate by setting
+    -- html._STYLES to rhtml._STYLES.
+    l._STYLES = lexer._STYLES
     lexer = l
   end
   if lexer._rules then
@@ -776,6 +784,7 @@ function load(lexer_name)
     for _, r in ipairs(lexer._rules) do add_rule(lexer, r[1], r[2]) end
     build_grammar(lexer)
   end
+  add_style(lexer, lexer._NAME..'_whitespace', style_whitespace)
   _G._LEXER = lexer
   return lexer
 end
@@ -786,10 +795,25 @@ end
 -- If the lexer has a _LEXBYLINE flag set, the text is lexed one line at a time.
 -- Otherwise the text is lexed as a whole.
 -- @param text The text to lex.
-function lex(text)
+-- @param init_style The current style. Multilang lexers use this to determine
+--   which language to start lexing in.
+function lex(text, init_style)
   local lexer = _G._LEXER
   if not lexer._GRAMMAR then return {} end
   if not lexer._LEXBYLINE then
+    -- For multilang lexers, build a new grammar whose initial_rule is the
+    -- current language.
+    if lexer._CHILDREN then
+      for style, style_num in pairs(lexer._TOKENS) do
+        if style_num == init_style then
+          local lexer_name = style:match('^(.+)_whitespace') or lexer._NAME
+          if lexer._INITIALRULE ~= lexer_name then
+            build_grammar(lexer, lexer_name)
+          end
+          break
+        end
+      end
+    end
     return lpeg_match(lexer._GRAMMAR, text)
   else
     local tokens = {}
@@ -869,7 +893,7 @@ end
 
 -- The following are utility functions lexers will have access to.
 
--- common patterns
+-- Common patterns.
 any = lpeg_P(1)
 ascii = lpeg_R('\000\127')
 extend = lpeg_R('\000\255')
@@ -903,9 +927,10 @@ word = (alpha + '_') * (alnum + '_')^0
 -- @param name The name of token. If this name is not in `l.tokens` then you
 --   will have to specify a style for it in `lexer._tokenstyles`.
 -- @param patt The LPeg pattern associated with the token.
--- @usage local ws = token('whitespace', l.space^1)
+-- @usage local ws = token(l.WHITESPACE, l.space^1)
 -- @usage php_start_rule = token('php_tag', '<?' * ('php' * l.space)^-1)
 function token(name, patt)
+  if not name then _G.print('noname') end
   return lpeg_Ct(lpeg_Cc(name) * patt * lpeg_Cp())
 end
 
@@ -994,40 +1019,10 @@ function delimited_range(chars, escape, end_optional, balanced, forbidden)
 end
 
 ---
--- Similar to `delimited_range()`, but includes embedded patterns.
--- This is useful for embedding additional lexers inside strings. Do not enclose
--- this range with `token()`. Instead specify the token name in the `token_name`
--- parameter.
--- @param chars The character(s) that bound the matched range.
--- @param escape Escape character or nil.
--- @param token_name Token name for the characters in the range excluding the
---   embedded pattern. Use this instead of `token()`.
--- @param patt Pattern embedded in the range.
--- @param forbidden Optional string of characters forbidden in a delimited
---   range. Each character is part of the set.
--- @usage local embedded_sq_str = l.delimited_range_with_embedded("'", '\\',
---   'string', php_rule)
-function delimited_range_with_embedded(chars, escape, token_name, patt, forbidden)
-  local s = chars:sub(1, 1)
-  local e = #chars == 2 and chars:sub(2, 2) or s
-  local range, invalid, valid
-  local f = forbidden or ''
-  if not escape or escape == '' then
-    invalid = patt + lpeg_S(e..f)
-    valid = token(id, (any - invalid)^1)
-  else
-    invalid = patt + lpeg_S(e..f) + escape
-    valid = token(id, (any - invalid + escape * any)^1)
-  end
-  range = lpeg_P { (patt + valid * lpeg_V(1))^0 }
-  return token(id, s) * range^-1 * token(id, e)
-end
-
----
 -- Creates an LPeg pattern from a given pattern that matches the beginning of a
 -- line and returns it.
 -- @param patt The LPeg pattern to match at the beginning of a line.
--- @usage local preproc = token('preprocessor', #P('#') * l.starts_line('#' *
+-- @usage local preproc = token(l.PREPROCESSOR, #P('#') * l.starts_line('#' *
 --   l.nonnewline^0))
 function starts_line(patt)
   return lpeg_P(function(input, idx)
@@ -1061,8 +1056,8 @@ end
 --   part of a word (default is `%w_`).
 -- @param case_insensitive Optional boolean flag indicating whether the word
 --   match is case-insensitive.
--- @usage local keyword = token('keyword', word_match { 'foo', 'bar', 'baz' })
--- @usage local keyword = token('keyword', word_match({ 'foo-bar', 'foo-baz',
+-- @usage local keyword = token(l.KEYWORD, word_match { 'foo', 'bar', 'baz' })
+-- @usage local keyword = token(l.KEYWORD, word_match({ 'foo-bar', 'foo-baz',
 --   'bar-foo', 'bar-baz', 'baz-foo', 'baz-bar' }, '-', true))
 function word_match(words, word_chars, case_insensitive)
   local word_list = {}
@@ -1087,12 +1082,10 @@ end
 -- @param start_rule The token that signals the beginning of the embedded
 --   lexer.
 -- @param end_rule The token that signals the end of the embedded lexer.
--- @param preproc Boolean flag specifying if the child lexer is a preprocessor
---   language.
 -- @usage embed_lexer(_M, css, css_start_rule, css_end_rule)
--- @usage embed_lexer(html, _M, php_start_rule, php_end_rule, true)
--- @usage embed_lexer(html, ruby, ruby_start_rule, rule_end_rule, true)
-function embed_lexer(parent, child, start_rule, end_rule, preproc)
+-- @usage embed_lexer(html, _M, php_start_rule, php_end_rule)
+-- @usage embed_lexer(html, ruby, ruby_start_rule, rule_end_rule)
+function embed_lexer(parent, child, start_rule, end_rule)
   -- Add child rules.
   if not child._EMBEDDEDRULES then
 ---
@@ -1112,16 +1105,13 @@ function embed_lexer(parent, child, start_rule, end_rule, preproc)
     token_rule = join_tokens(child),
     ['end_rule'] = end_rule
   }
-  if not parent._CHILDREN then
-    parent._CHILDREN = {}
-    parent._CHILDREN.preproc = {}
-  end
+  if not parent._CHILDREN then parent._CHILDREN = {} end
   local children = parent._CHILDREN
   children[#children + 1] = child
-  local children_preproc = children.preproc
-  if preproc then children_preproc[#children_preproc + 1] = child end
   -- Add child styles.
   local tokenstyles = parent._tokenstyles
+  tokenstyles[#tokenstyles + 1] =
+    { child._NAME..'_whitespace', style_whitespace }
   for _, style in ipairs(child._tokenstyles or {}) do
     tokenstyles[#tokenstyles + 1] = style
   end
@@ -1131,9 +1121,6 @@ function embed_lexer(parent, child, start_rule, end_rule, preproc)
 --    for _, child2 in ipairs(children2) do
 --      child2._EMBEDDEDRULES[parent._NAME] = child2._EMBEDDEDRULES[child._NAME]
 --      children[#children + 1] = child2
---    end
---    for _, child2 in ipairs(children2.preproc) do
---      children_preproc[#children_preproc + 1] = child2
 --    end
 --  end
 end

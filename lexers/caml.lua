@@ -7,21 +7,21 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
-local comment = token('comment', l.nested_pair('(*', '*)'), true)
+local comment = token(l.COMMENT, l.nested_pair('(*', '*)'), true)
 
 -- strings
-local sq_str = token('string', l.delimited_range("'", '\\', true, false, '\n'))
-local dq_str = token('string', l.delimited_range('"', '\\', true, false, '\n'))
+local sq_str = token(l.STRING, l.delimited_range("'", '\\', true, false, '\n'))
+local dq_str = token(l.STRING, l.delimited_range('"', '\\', true, false, '\n'))
 local string = sq_str + dq_str
 
 -- numbers
-local number = token('number', l.float + l.integer)
+local number = token(l.NUMBER, l.float + l.integer)
 
 -- keywords
-local keyword = token('keyword', word_match {
+local keyword = token(l.KEYWORD, word_match {
   'and', 'as', 'asr', 'begin', 'class', 'closed', 'constraint', 'do', 'done',
   'downto', 'else', 'end', 'exception', 'external', 'failwith', 'false',
   'flush', 'for', 'fun', 'function', 'functor', 'if', 'in', 'include',
@@ -33,12 +33,12 @@ local keyword = token('keyword', word_match {
 })
 
 -- types
-local type = token('type', word_match {
+local type = token(l.TYPE, word_match {
   'int', 'float', 'bool', 'char', 'string', 'unit'
 })
 
 -- functions
-local func = token('function', word_match {
+local func = token(l.FUNCTION, word_match {
   'raise', 'invalid_arg', 'failwith', 'compare', 'min', 'max', 'succ', 'pred',
   'mod', 'abs', 'max_int', 'min_int', 'sqrt', 'exp', 'log', 'log10', 'cos',
   'sin', 'tan', 'acos', 'asin', 'atan', 'atan2', 'cosh', 'sinh', 'tanh', 'ceil',
@@ -62,10 +62,10 @@ local func = token('function', word_match {
 })
 
 -- identifiers
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
 -- operators
-local operator = token('operator', S('=<>+-*/.,:;~!#%^&|?[](){}'))
+local operator = token(l.OPERATOR, S('=<>+-*/.,:;~!#%^&|?[](){}'))
 
 _rules = {
   { 'whitespace', ws },

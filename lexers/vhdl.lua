@@ -7,21 +7,21 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
-local comment = token('comment', '--' * l.nonnewline^0)
+local comment = token(l.COMMENT, '--' * l.nonnewline^0)
 
 -- strings
 local sq_str = l.delimited_range("'", nil, true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true, false, '\n')
-local string = token('string', sq_str + dq_str)
+local string = token(l.STRING, sq_str + dq_str)
 
 -- numbers
-local number = token('number', l.float + l.integer)
+local number = token(l.NUMBER, l.float + l.integer)
 
 -- keywords
-local keyword = token('keyword', word_match {
+local keyword = token(l.KEYWORD, word_match {
   'access', 'after', 'alias', 'all', 'architecture', 'array', 'assert',
   'attribute', 'begin', 'block', 'body', 'buffer', 'bus', 'case', 'component',
   'configuration', 'constant', 'disconnect', 'downto', 'else', 'elsif', 'end',
@@ -39,7 +39,7 @@ local keyword = token('keyword', word_match {
 })
 
 -- functions
-local func = token('function', word_match {
+local func = token(l.FUNCTION, word_match {
   'rising_edge', 'shift_left', 'shift_right', 'rotate_left', 'rotate_right',
   'resize', 'std_match', 'to_integer', 'to_unsigned', 'to_signed', 'unsigned',
   'signed', 'to_bit', 'to_bitvector', 'to_stdulogic', 'to_stdlogicvector',
@@ -47,7 +47,7 @@ local func = token('function', word_match {
 })
 
 -- types
-local type = token('type', word_match {
+local type = token(l.TYPE, word_match {
   'bit', 'bit_vector', 'character', 'boolean', 'integer', 'real', 'time',
   'string', 'severity_level', 'positive', 'natural', 'signed', 'unsigned',
   'line', 'text', 'std_logic', 'std_logic_vector', 'std_ulogic',
@@ -57,7 +57,7 @@ local type = token('type', word_match {
 })
 
 -- constants
-local constant = token('constant', word_match {
+local constant = token(l.CONSTANT, word_match {
   'EVENT', 'BASE', 'LEFT', 'RIGHT', 'LOW', 'HIGH', 'ASCENDING', 'IMAGE',
   'VALUE', 'POS', 'VAL', 'SUCC', 'VAL', 'POS', 'PRED', 'VAL', 'POS', 'LEFTOF',
   'RIGHTOF', 'LEFT', 'RIGHT', 'LOW', 'HIGH', 'RANGE', 'REVERSE', 'LENGTH',
@@ -67,10 +67,10 @@ local constant = token('constant', word_match {
 
 -- identifiers
 local word = (l.alpha + "'") * (l.alnum + "_" + "'")^1
-local identifier = token('identifier', word)
+local identifier = token(l.IDENTIFIER, word)
 
 -- operators
-local operator = token('operator', S('=/!:;<>+-/*%&|^~()'))
+local operator = token(l.OPERATOR, S('=/!:;<>+-/*%&|^~()'))
 
 _rules = {
   { 'whitespace', ws },

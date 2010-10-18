@@ -7,16 +7,16 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
-local comment = token('comment', '#' * l.nonnewline^0)
+local comment = token(l.COMMENT, '#' * l.nonnewline^0)
 
 -- strings
-local string = token('string', l.delimited_range('"', '\\', true, false, '\n'))
+local string = token(l.STRING, l.delimited_range('"', '\\', true, false, '\n'))
 
 -- keywords
-local main_keyword = token('keyword', word_match({
+local main_keyword = token(l.KEYWORD, word_match({
   'AcceptMutex', 'AcceptPathInfo', 'AccessFileName', 'Action', 'AddAlt',
   'AddAltByEncoding', 'AddAltByType', 'AddCharset', 'AddDefaultCharset',
   'AddDescription', 'AddEncoding', 'AddHandler', 'AddIcon', 'AddIconByEncoding',
@@ -91,7 +91,7 @@ local main_keyword = token('keyword', word_match({
   'VirtualScriptAlias', 'VirtualScriptAliasIP', 'Win32DisableAcceptEx',
   'XBitHack', 'Off', 'On', 'None'
 }, nil, true))
-local directive_keyword = token('keyword', word_match({
+local directive_keyword = token(l.KEYWORD, word_match({
   'AcceptMutex', 'AcceptPathInfo', 'AccessFileName', 'Action', 'AddAlt',
   'AddAltByEncoding', 'AddAltByType', 'AddCharset', 'AddDefaultCharset',
   'AddDescription', 'AddEncoding', 'AddHandler', 'AddIcon', 'AddIconByEncoding',
@@ -168,7 +168,7 @@ local directive_keyword = token('keyword', word_match({
   'All', 'ExecCGI', 'FollowSymLinks', 'Includes', 'IncludesNOEXEC', 'Indexes',
   'MultiViews', 'None', 'Off', 'On', 'SymLinksIfOwnerMatch', 'from'
 }, nil, true))
-local vhost_keyword = token('keyword', word_match({
+local vhost_keyword = token(l.KEYWORD, word_match({
   'AcceptMutex', 'AcceptPathInfo', 'AccessFileName', 'Action', 'AddAlt',
   'AddAltByEncoding', 'AddAltByType', 'AddCharset', 'AddDefaultCharset',
   'AddDescription', 'AddEncoding', 'AddHandler', 'AddIcon', 'AddIconByEncoding',
@@ -257,10 +257,10 @@ local vhost_keyword = token('keyword', word_match({
 
 -- identifiers
 local word = (l.alpha + '-') * (l.alnum + '-')^0
-local identifier = token('identifier', word)
+local identifier = token(l.IDENTIFIER, word)
 
 -- operators
-local operator = token('operator', S(':=<>&+-*/.()'))
+local operator = token(l.OPERATOR, S(':=<>&+-*/.()'))
 
 -- TODO: directive and vhost sections using appropriate keywords
 _rules = {

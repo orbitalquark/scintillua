@@ -4,7 +4,7 @@
 module(..., package.seeall)
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local ws = token('whitespace', whitespace^1)
+local ws = token(l.WHITESPACE, whitespace^1)
 
 function LoadTokens()
   local maxima = maxima

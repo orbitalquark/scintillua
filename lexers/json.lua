@@ -30,29 +30,29 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 local lit_newline = P('\r')^-1 * P('\n')
 
 -- comments
 local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
-local comment = token('comment', block_comment)
+local comment = token(l.COMMENT, block_comment)
 
 -- strings
 local sq_str = P('u')^-1 * l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = P('U')^-1 * l.delimited_range('"', '\\', true, false, '\n')
-local string = token('string', sq_str + dq_str)
+local string = token(l.STRING, sq_str + dq_str)
 
 -- numbers
 local dec = l.digit^1 * S('Ll')^-1
 local integer = S('+-')^-1 * dec
-local number = token('number', l.float + integer)
+local number = token(l.NUMBER, l.float + integer)
 
 -- keywords
-local keyword = token('keyword', word_match { "true", "false", "null" })
+local keyword = token(l.KEYWORD, word_match { "true", "false", "null" })
 
 -- operators
-local operator = token('operator', S('[]{}:,'))
+local operator = token(l.OPERATOR, S('[]{}:,'))
 
 _rules = {
   { 'whitespace', ws },

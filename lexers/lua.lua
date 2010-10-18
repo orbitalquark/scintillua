@@ -9,7 +9,7 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 local longstring = #('[[' + ('[' * P('=')^0 * '['))
 local longstring = longstring * P(function(input, index)
@@ -23,26 +23,26 @@ end)
 -- comments
 local line_comment = '--' * l.nonnewline^0
 local block_comment = '--' * longstring
-local comment = token('comment', block_comment + line_comment)
+local comment = token(l.COMMENT, block_comment + line_comment)
 
 -- strings
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
-local string = token('string', sq_str + dq_str + longstring)
+local string = token(l.STRING, sq_str + dq_str + longstring)
 
 -- numbers
 local lua_integer = P('-')^-1 * (l.hex_num + l.dec_num)
-local number = token('number', l.float + lua_integer)
+local number = token(l.NUMBER, l.float + lua_integer)
 
 -- keywords
-local keyword = token('keyword', word_match {
+local keyword = token(l.KEYWORD, word_match {
   'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for',
   'function', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat',
   'return', 'then', 'true', 'until', 'while'
 })
 
 -- functions
-local func = token('function', word_match {
+local func = token(l.FUNCTION, word_match {
   'assert', 'collectgarbage', 'dofile', 'error', 'getfenv', 'getmetatable',
   'gcinfo', 'ipairs', 'loadfile', 'loadlib', 'loadstring', 'next', 'pairs',
   'pcall', 'print', 'rawequal', 'rawget', 'rawset', 'require', 'setfenv',
@@ -50,17 +50,17 @@ local func = token('function', word_match {
 })
 
 -- constants
-local constant = token('constant', word_match {
+local constant = token(l.CONSTANT, word_match {
   '_G', '_VERSION', 'LUA_PATH', '_LOADED', '_REQUIREDNAME', '_ALERT',
   '_ERRORMESSAGE', '_PROMPT'
 })
 
 -- identifiers
 local word = (R('AZ', 'az', '\127\255') + '_') * (l.alnum + '_')^0
-local identifier = token('identifier', word)
+local identifier = token(l.IDENTIFIER, word)
 
 -- operators
-local operator = token('operator', '~=' + S('+-*/%^#=<>;:,.{}[]()'))
+local operator = token(l.OPERATOR, '~=' + S('+-*/%^#=<>;:,.{}[]()'))
 
 _rules = {
   { 'whitespace', ws },

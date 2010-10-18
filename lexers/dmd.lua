@@ -9,13 +9,13 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
 local line_comment = '//' * l.nonnewline_esc^0
 local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
 local nested_comment = l.nested_pair('/+', '+/', true)
-local comment = token('comment', line_comment + block_comment + nested_comment)
+local comment = token(l.COMMENT, line_comment + block_comment + nested_comment)
 
 -- strings
 local sq_str = l.delimited_range("'", '\\', true, false, '\n') * S('cwd')^-1
@@ -28,7 +28,7 @@ local hex_str =
 local del_str = 'q"' * (l.any - '"')^0 * P('"')^-1
 local tok_str = 'q' * l.nested_pair('{', '}', true)
 local other_hex_str = '\\x' * (l.xdigit * l.xdigit)^1
-local string = token('string', sq_str + dq_str + lit_str + bt_str + hex_str + del_str +
+local string = token(l.STRING, sq_str + dq_str + lit_str + bt_str + hex_str + del_str +
 	tok_str + other_hex_str)
 
 -- numbers
@@ -36,10 +36,10 @@ local dec = l.digit^1 * ('_' * l.digit^1)^0
 local bin_num = '0' * S('bB') * S('01_')^1
 local oct_num = '0' * S('01234567_')^1
 local integer = S('+-')^-1 * (l.hex_num + oct_num + bin_num + dec)
-local number = token('number', (l.float + integer) * S('uUlLdDfFi')^-1)
+local number = token(l.NUMBER, (l.float + integer) * S('uUlLdDfFi')^-1)
 
 -- keywords
-local keyword = token('keyword', word_match {
+local keyword = token(l.KEYWORD, word_match {
   'abstract', 'align', 'asm', 'assert', 'auto', 'body', 'break', 'case', 'cast',
   'catch', 'const', 'continue', 'debug', 'default', 'delete',
   'deprecated', 'do', 'else', 'extern', 'export', 'false', 'final', 'finally',
@@ -52,7 +52,7 @@ local keyword = token('keyword', word_match {
 })
 
 -- types
-local type = token('type', word_match {
+local type = token(l.TYPE, word_match {
   'alias', 'bool', 'byte', 'cdouble', 'cent', 'cfloat', 'char', 'class',
   'creal', 'dchar', 'delegate', 'double', 'enum', 'float', 'function',
   'idouble', 'ifloat', 'int', 'interface', 'ireal', 'long', 'module', 'package',
@@ -62,7 +62,7 @@ local type = token('type', word_match {
 })
 
 -- constants
-local constant = token('constant', word_match {
+local constant = token(l.CONSTANT, word_match {
   '__FILE__', '__LINE__', '__DATE__', '__EOF__', '__TIME__', '__TIMESTAMP__',
   '__VENDOR__', '__VERSION__', 'DigitalMars', 'X86', 'X86_64', 'Windows',
   'Win32', 'Win64', 'linux', 'Posix', 'LittleEndian', 'BigEndian', 'D_Coverage',
@@ -71,18 +71,18 @@ local constant = token('constant', word_match {
 })
 
 local class_sequence =
-  token('type', P('class') + P('struct')) * ws^1 * token('class', l.word)
+  token(l.TYPE, P('class') + P('struct')) * ws^1 * token(l.CLASS, l.word)
 
 -- identifiers
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
 -- operators
-local operator = token('operator', S('?=!<>+-*$/%&|^~.,;()[]{}'))
+local operator = token(l.OPERATOR, S('?=!<>+-*$/%&|^~.,;()[]{}'))
 
 -- properties
 local properties =
-  (type + identifier + operator ) * token('operator', '.') *
-    token('variable', word_match {
+  (type + identifier + operator ) * token(l.OPERATOR, '.') *
+    token(l.VARIABLE, word_match {
       'alignof', 'dig', 'dup', 'epsilon', 'idup', 'im', 'init', 'infinity',
       'keys', 'length', 'mangleof', 'mant_dig', 'max', 'max_10_exp', 'max_exp',
       'min', 'min_normal', 'min_10_exp', 'min_exp', 'nan', 'offsetof', 'ptr',
@@ -105,10 +105,10 @@ local traits_list = token('traits', word_match {
 })
 
 local traits =
-  token('keyword', '__traits') * l.space^0 * token('operator', '(') *
+  token(l.KEYWORD, '__traits') * l.space^0 * token(l.OPERATOR, '(') *
     l.space^0 * traits_list
 
-local func = token('function', l.word)
+local func = token(l.FUNCTION, l.word)
 	* #(l.space^0 * (P('!') * l.word^-1 * l.space^-1)^-1 * P('('))
 
 _rules = {

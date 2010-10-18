@@ -8,13 +8,13 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 module(...)
 
 -- text, separators, file headers
-local index = token('comment', 'Index: ' * l.any^0 * P(-1))
-local separator = token('comment',
+local index = token(l.COMMENT, 'Index: ' * l.any^0 * P(-1))
+local separator = token(l.COMMENT,
   ('---' + P('*')^4 + P('=')^1) * l.space^0 * P(-1))
 local header = token('header', (P('*** ') + '--- ' + '+++ ') * l.any^1 * P(-1))
 
 -- location
-local location = token('number', ('@@' + l.digit^1 + '****') * l.any^1 * P(-1))
+local location = token(l.NUMBER, ('@@' + l.digit^1 + '****') * l.any^1 * P(-1))
 
 -- additions, deletions, changes
 local addition = token('addition', S('>+') * l.any^0 * P(-1))

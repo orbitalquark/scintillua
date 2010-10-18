@@ -7,14 +7,14 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
 local line_comment = '#' * l.nonnewline_esc^0
 local block_comment =
   #P('=begin') * l.starts_line('=begin' * (l.any - l.newline * '=end')^0 *
     (l.newline * '=end')^-1)
-local comment = token('comment', block_comment + line_comment)
+local comment = token(l.COMMENT, block_comment + line_comment)
 
 local delimiter_matches = { ['('] = ')', ['['] = ']', ['{'] = '}' }
 local literal_delimitted = P(function(input, index)
@@ -53,7 +53,7 @@ local heredoc = '<<' * P(function(input, index)
   end
 end)
 local string =
-  token('string', sq_str + dq_str + lit_str + heredoc + cmd_str + lit_cmd +
+  token(l.STRING, sq_str + dq_str + lit_str + heredoc + cmd_str + lit_cmd +
         regex_str + lit_regex + lit_array)
 
 local word_char = l.alnum + S('_!?')
@@ -64,10 +64,10 @@ local bin = '0b' * S('01')^1 * ('_' * S('01')^1)^0
 local integer = S('+-')^-1 * (bin + l.hex_num + l.oct_num + dec)
 -- TODO: meta, control, etc. for numeric_literal
 local numeric_literal = '?' * (l.any - l.space) * -word_char
-local number = token('number', l.float + integer + numeric_literal)
+local number = token(l.NUMBER, l.float + integer + numeric_literal)
 
 -- keywords
-local keyword = token('keyword', word_match({
+local keyword = token(l.KEYWORD, word_match({
   'BEGIN', 'END', 'alias', 'and', 'begin', 'break', 'case', 'class', 'def',
   'defined?', 'do', 'else', 'elsif', 'end', 'ensure', 'false', 'for', 'if',
   'in', 'module', 'next', 'nil', 'not', 'or', 'redo', 'rescue', 'retry',
@@ -76,7 +76,7 @@ local keyword = token('keyword', word_match({
 }, '?!'))
 
 -- functions
-local func = token('function', word_match({
+local func = token(l.FUNCTION, word_match({
   'at_exit', 'autoload', 'binding', 'caller', 'catch', 'chop', 'chop!', 'chomp',
   'chomp!', 'eval', 'exec', 'exit', 'exit!', 'fail', 'fork', 'format', 'gets',
   'global_variables', 'gsub', 'gsub!', 'iterator?', 'lambda', 'load',
@@ -88,7 +88,7 @@ local func = token('function', word_match({
 
 -- identifiers
 local word = (l.alpha + '_') * word_char^0
-local identifier = token('identifier', word)
+local identifier = token(l.IDENTIFIER, word)
 
 -- variables and symbols
 local global_var =
@@ -98,10 +98,10 @@ local inst_var = '@' * word
 local symbol = ':' * P(function(input, index)
   if input:sub(index - 2, index - 2) ~= ':' then return index end
 end) * (word_char^1 + sq_str + dq_str)
-local variable = token('variable', global_var + class_var + inst_var + symbol)
+local variable = token(l.VARIABLE, global_var + class_var + inst_var + symbol)
 
 -- operators
-local operator = token('operator', S('!%^&*()[]{}-=+/|:;.,?<>~'))
+local operator = token(l.OPERATOR, S('!%^&*()[]{}-=+/|:;.,?<>~'))
 
 _rules = {
   { 'whitespace', ws },

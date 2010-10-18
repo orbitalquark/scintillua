@@ -9,21 +9,21 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments (4.1)
 local line_comment = (';' * l.nonnewline^0) + ('#' * l.nonnewline^0)
 local block_comment = '/*' * (l.any - '*/')^0 * '*/'
-local comment = token('comment', line_comment + block_comment)
+local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- numbers
-local number = token('number', l.integer)
+local number = token(l.NUMBER, l.integer)
 
 -- strings
 local sq_str = l.delimited_range("'", '$\\')
 local dq_str = l.delimited_range('"', '$\\')
 local ex_str = l.delimited_range('`', '$\\')
-local string = token('string', sq_str + dq_str + ex_str)
+local string = token(l.STRING, sq_str + dq_str + ex_str)
 
 -- variables (4.2)
 local vars = word_match({
@@ -32,10 +32,10 @@ local vars = word_match({
   '$INSTDIR', '$OUTDIR', '$CMDLINE', '$LANGUAGE',
   'Var', '/GLOBAL'
 }, '$/')
-local variable = token('variable', vars + ('$' * l.word))
+local variable = token(l.VARIABLE, vars + ('$' * l.word))
 
 -- constants (4.2.3)
-local constant = token('constant', word_match({
+local constant = token(l.CONSTANT, word_match({
   '$PROGRAMFILES', '$PROGRAMFILES32', '$PROGRAMFILES64',
   '$COMMONFILES', '$COMMONFILES32', '$COMMONFILES64',
   '$DESKTOP', '$EXEDIR', '$EXEFILE', '$EXEPATH', '${NSISDIR}', '$WINDIR',
@@ -52,7 +52,7 @@ local constant = token('constant', word_match({
 local label = token('label', l.word * ':')
 
 -- keywords
-local keyword = token('keyword', word_match({
+local keyword = token(l.KEYWORD, word_match({
 -- Pages (4.5)
   'Page', 'UninstPage', 'PageEx', 'PageEnd', 'PageExEnd',
 -- Section commands (4.6)
@@ -162,13 +162,13 @@ local keyword = token('keyword', word_match({
 }, '/!.{}_'))
 
 -- operators
-local operator = token('operator', S('+-*/%|&^~!<>'))
+local operator = token(l.OPERATOR, S('+-*/%|&^~!<>'))
 
 -- labels
 local label = token('label', l.word * ":")
 
 -- identifiers
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
 _rules = {
   { 'whitespace', ws },

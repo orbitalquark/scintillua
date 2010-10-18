@@ -7,19 +7,19 @@ local P, R, S, V = l.lpeg.P, l.lpeg.R, l.lpeg.S, l.lpeg.V
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments and CDATA
-local comment = token('comment', '<!--' * (l.any - '-->')^0 * P('-->')^-1)
+local comment = token(l.COMMENT, '<!--' * (l.any - '-->')^0 * P('-->')^-1)
 local cdata = token('cdata', '<![CDATA' * (l.any - ']]>')^0 * P(']]>')^-1)
 
 -- strings
 local sq_str = l.delimited_range("'", nil, true)
 local dq_str = l.delimited_range('"', nil, true)
-local string = token('string', sq_str + dq_str)
+local string = token(l.STRING, sq_str + dq_str)
 
-local equals = token('operator', '=')
-local number = token('number', l.digit^1 * P('%')^-1)
+local equals = token(l.OPERATOR, '=')
+local number = token(l.NUMBER, l.digit^1 * P('%')^-1)
 local alpha = R('az', 'AZ', '\127\255')
 local word_char = l.alnum + S('_-')
 local identifier = (l.alpha + S('_-')) * word_char^0
@@ -27,10 +27,10 @@ local identifier = (l.alpha + S('_-')) * word_char^0
 -- tags
 local namespace = token('namespace', identifier)
 local element =
-  token('element', identifier) * (token('operator', ':') * namespace)^-1
+  token('element', identifier) * (token(l.OPERATOR, ':') * namespace)^-1
 local normal_attr = token('attribute', identifier)
 local xmlns_attr =
-  token('attribute', identifier) * token('operator', ':') * namespace
+  token('attribute', identifier) * token(l.OPERATOR, ':') * namespace
 local attribute = xmlns_attr + normal_attr
 local attributes =
   { attribute * ws^0 * equals * ws^0 * (string + number) * (ws * V(1))^0 }

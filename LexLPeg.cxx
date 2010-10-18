@@ -49,7 +49,7 @@ using namespace Scintilla;
  * @return false
  */
 static bool l_error(lua_State *L, const char *str=NULL) {
-	//Platform::DebugPrintf("Lua Error: %s.\n", str ? str : lua_tostring(L, -1));
+	fprintf(stderr, "Lua Error: %s.\n", str ? str : lua_tostring(L, -1));
 	lua_settop(L, 0);
 	return false;
 }
@@ -125,6 +125,7 @@ class LexerLPeg : public ILexer {
 	sptr_t sci;
 	bool reinit;
 	bool multilang;
+	int ws[STYLE_MAX + 1];
 private:
 	bool Init() {
 		char p1[50], p2[FILENAME_MAX], p3[FILENAME_MAX], p4[FILENAME_MAX];
@@ -138,7 +139,7 @@ private:
 		if (L) lua_close(L);
 		L = lua_open();
 		if (!L) {
-			//Platform::DebugPrintf("Lua failed to initialize.\n");
+			fprintf(stderr, "Lua failed to initialize.\n");
 			return false;
 		}
 
@@ -311,7 +312,17 @@ private:
 		lua_getglobal(L, "_LEXER");
 		lua_getfield(L, -1, "_CHILDREN");
 		lua_getfield(L, -2, "_TOKENRULES");
-		if (lua_istable(L, -1) || lua_istable(L, -2)) multilang = true;
+		if (lua_istable(L, -1) || lua_istable(L, -2)) {
+			multilang = true;
+			// Determine which styles are language whitespace styles
+			// ([lang]_whitespace). This is necessary for determining which language
+			// to start lexing with.
+			char style_name[50];
+			for (int i = 1; i <= STYLE_MAX; i++) {
+				PrivateCall(i, reinterpret_cast<void *>(style_name));
+				ws[i] = strstr(style_name, "whitespace") ? 1 : 0;
+			}
+		}
 		lua_pop(L, 3); // _LEXER._TOKENRULES, _LEXER._CHILDREN, and _LEXER
 
 		reinit = false;
@@ -346,10 +357,13 @@ public:
 		LexAccessor styler(pAccess);
 
 		// Start from the beginning of the current style so LPeg matches it.
-		// (Applies only to non-multilang lexers.)
-		if (!multilang && startPos > 0) {
+		// For multilang lexers, start at whitespace since embedded languages have
+		// [lang]_whitespace styles. This is so LPeg can start matching child
+		// languages instead of parent ones if necessary.
+		if (startPos > 0) {
 			int i = startPos;
 			while (i > 0 && styler.StyleAt(i - 1) == initStyle) i--;
+			if (multilang) while (i > 0 && !ws[styler.StyleAt(i)]) i--;
 			lengthDoc += startPos - i;
 			startPos = i;
 		}
@@ -362,9 +376,10 @@ public:
 		lua_getfield(L, -1, "lex");
 		if (lua_isfunction(L, -1)) {
 			char *buf = const_cast<char *>(pAccess->BufferPointer());
-			if (!multilang) buf += startPos;
-			lua_pushlstring(L, buf, multilang ? styler.Length() : lengthDoc);
-			if (lua_pcall(L, 1, 1, 0) != 0) l_error(L);
+			buf += startPos;
+			lua_pushlstring(L, buf, lengthDoc);
+			lua_pushinteger(L, styler.StyleAt(startPos));
+			if (lua_pcall(L, 2, 1, 0) != 0) l_error(L);
 			// Style the text from the token table returned.
 			if (lua_istable(L, -1)) {
 				lua_getglobal(L, "_LEXER");
@@ -386,14 +401,10 @@ public:
 					unsigned int position = lua_tointeger(L, -1) - 1;
 					lua_pop(L, 1); // token[2]
 					lua_pop(L, 1); // token (tokens[i])
-					if (style >= 0 && style <= STYLE_MAX) {
-						if (multilang) {
-							if (position > startSeg && position <= endSeg)
-								styler.ColourTo(position - 1, style);
-							else if (position > endSeg && styler.GetStartSegment() < endSeg)
-								styler.ColourTo(endSeg - 1, style); // style remaining length
-						} else styler.ColourTo(startSeg + position - 1, style);
-					} else l_error(L, "Bad style number");
+					if (style >= 0 && style <= STYLE_MAX)
+						styler.ColourTo(startSeg + position - 1, style);
+					else
+						l_error(L, "Bad style number");
 					if (position > endSeg) break;
 				}
 				lua_pop(L, 2); // _LEXER._TOKENS and token table returned
@@ -478,8 +489,12 @@ public:
 			sci = reinterpret_cast<sptr_t>(arg);
 			return NULL;
 		case SCI_SETLEXERLANGUAGE:
-			PropertySet("lexer.name", reinterpret_cast<const char *>(arg));
-			reinit = true;
+			char lexer_name[50];
+			props.GetExpanded("lexer.name", lexer_name);
+			if (strcmp(lexer_name, reinterpret_cast<const char *>(arg)) != 0) {
+				PropertySet("lexer.name", reinterpret_cast<const char *>(arg));
+				reinit = true;
+			}
 			return NULL;
 		case SCI_GETLEXERLANGUAGE:
 			val = "null";

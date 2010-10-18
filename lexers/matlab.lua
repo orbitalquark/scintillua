@@ -30,25 +30,25 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
 local line_comment = (P('%') + '#') * l.nonnewline^0
 local block_comment = '%{' * (l.any - '%}')^0 * P('%}')^-1
-local comment = token('comment', block_comment + line_comment)
+local comment = token(l.COMMENT, block_comment + line_comment)
 
 -- strings
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
 local bt_str = l.delimited_range('`', '\\', true)
-local string = token('string', sq_str + dq_str + bt_str)
+local string = token(l.STRING, sq_str + dq_str + bt_str)
 
 -- numbers
 local number =
-  token('number', l.float + l.integer + l.dec_num + l.hex_num + l.oct_num)
+  token(l.NUMBER, l.float + l.integer + l.dec_num + l.hex_num + l.oct_num)
 
 -- keywords
-local keyword = token('keyword', word_match({
+local keyword = token(l.KEYWORD, word_match({
   'break', 'case', 'catch', 'continue', 'do', 'else', 'elseif', 'end',
   'end_try_catch', 'end_unwind_protect', 'endfor', 'endif', 'endswitch',
   'endwhile', 'for', 'function', 'endfunction', 'global', 'if', 'otherwise',
@@ -57,7 +57,7 @@ local keyword = token('keyword', word_match({
 }, nil, true))
 
 -- functions
-local func = token('function', word_match {
+local func = token(l.FUNCTION, word_match {
   'abs', 'any', 'argv','atan2', 'axes', 'axis', 'ceil', 'cla', 'clear', 'clf',
   'columns', 'cos', 'delete', 'diff', 'disp', 'doc', 'double', 'drawnow', 'exp',
   'figure', 'find', 'fix', 'floor', 'fprintf', 'gca', 'gcf', 'get', 'grid',
@@ -71,13 +71,13 @@ local func = token('function', word_match {
 })
 
 -- constants
-local constant = token('constant', word_match {
+local constant = token(l.CONSTANT, word_match {
   'EDITOR', 'I', 'IMAGEPATH', 'INFO_FILE', 'J', 'LOADPATH', 'OCTAVE_VERSION',
   'PAGER', 'PS1', 'PS2', 'PS4', 'PWD'
 })
 
 -- variable
-local variable = token('variable', word_match {
+local variable = token(l.VARIABLE, word_match {
   'ans', 'automatic_replot', 'default_return_value', 'do_fortran_indexing',
   'define_all_return_values', 'empty_list_elements_ok', 'eps', 'false',
   'gnuplot_binary', 'ignore_function_time_stamp', 'implicit_str_to_num_ok',
@@ -93,10 +93,10 @@ local variable = token('variable', word_match {
 })
 
 -- identifiers
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
 -- operators
-local operator = token('operator', S('!%^&*()[]{}-=+/\|:;.,?<>~`´'))
+local operator = token(l.OPERATOR, S('!%^&*()[]{}-=+/\|:;.,?<>~`´'))
 
 _rules = {
   { 'whitespace', ws },

@@ -7,25 +7,25 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
 local line_comment = S('|\\') * l.nonnewline^0
 local block_comment = '(*' * (l.any - '*)')^0 * P('*)')^-1
-local comment = token('comment', line_comment + block_comment)
+local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- strings
 local s_str = 's' * l.delimited_range('"', nil, true, false, '\n')
 local dot_str = '.' * l.delimited_range('"', nil, true, false, '\n')
 local f_str = 'f' * l.delimited_range('"', nil, true, false, '\n')
 local dq_str = l.delimited_range('"', nil, true, false, '\n')
-local string = token('string', s_str + dot_str + f_str + dq_str)
+local string = token(l.STRING, s_str + dot_str + f_str + dq_str)
 
 -- numbers
-local number = token('number', P('-')^-1 * l.digit^1 * (S('./') * l.digit^1)^-1)
+local number = token(l.NUMBER, P('-')^-1 * l.digit^1 * (S('./') * l.digit^1)^-1)
 
 -- keywords
-local keyword = token('keyword', word_match({
+local keyword = token(l.KEYWORD, word_match({
   'swap', 'drop', 'dup', 'nip', 'over', 'rot', '-rot', '2dup', '2drop', '2over',
   '2swap', '>r', 'r>',
   'and', 'or', 'xor', '>>', '<<', 'not', 'negate', 'mod', '/mod', '1+', '1-',
@@ -39,10 +39,10 @@ local keyword = token('keyword', word_match({
 
 -- identifiers
 local word = (l.alnum + S('+-*=<>.?/\'%,_$'))^1
-local identifier = token('identifier', word)
+local identifier = token(l.IDENTIFIER, word)
 
 -- operators
-local operator = token('operator', S(':;<>+*-/()[]'))
+local operator = token(l.OPERATOR, S(':;<>+*-/()[]'))
 
 _rules = {
   { 'whitespace', ws },

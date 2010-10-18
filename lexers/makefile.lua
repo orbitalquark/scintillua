@@ -7,16 +7,16 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
-local assign = token('operator', P(':')^-1 * '=')
-local colon = token('operator', ':') * -P('=')
+local assign = token(l.OPERATOR, P(':')^-1 * '=')
+local colon = token(l.OPERATOR, ':') * -P('=')
 
 -- comments
-local comment = token('comment', '#' * l.nonnewline^0)
+local comment = token(l.COMMENT, '#' * l.nonnewline^0)
 
 -- preprocessor
-local preproc = token('preprocessor', '!' * l.nonnewline^0)
+local preproc = token(l.PREPROCESSOR, '!' * l.nonnewline^0)
 
 -- targets
 local target =
@@ -27,7 +27,7 @@ local command = #P('\t') * token('command', l.nonnewline^1)
 
 -- lines
 local var_char = l.any - l.space - S(':#=')
-local identifier = token('identifier', var_char^1) * ws^0 * assign
+local identifier = token(l.IDENTIFIER, var_char^1) * ws^0 * assign
 local macro =
   token('macro', '$' * (l.delimited_range('()', nil, nil, true) + S('<@')))
 local regular_line = ws + identifier + macro + comment + l.any_char

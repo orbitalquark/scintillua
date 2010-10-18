@@ -18,14 +18,12 @@ _lexer = html
 -- Embedded Ruby.
 local ruby = l.load('ruby')
 
-ruby._RULES['whitespace'] = token('rhtml_whitespace', l.space^1)
 local ruby_start_rule = token('rhtml_tag', '<%' * P('=')^-1)
 local ruby_end_rule = token('rhtml_tag', '%>')
 l.embed_lexer(html, ruby, ruby_start_rule, ruby_end_rule, true)
 
--- TODO: modify HTML, CSS, and JS patterns accordingly
+-- TODO: embed in CSS, and JS
 
 _tokenstyles = {
-  { 'rhtml_whitespace', l.style_nothing },
   { 'rhtml_tag', l.style_embedded },
 }

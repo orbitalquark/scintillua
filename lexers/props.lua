@@ -7,21 +7,21 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
-local comment = token('comment', '#' * l.nonnewline^0)
+local comment = token(l.COMMENT, '#' * l.nonnewline^0)
 
 -- equals
-local equals = token('operator', '=')
+local equals = token(l.OPERATOR, '=')
 
 -- strings
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
-local string = token('string', sq_str + dq_str)
+local string = token(l.STRING, sq_str + dq_str)
 
 -- variables
-local variable = token('variable', '$(' * (l.any - ')')^1 * ')')
+local variable = token(l.VARIABLE, '$(' * (l.any - ')')^1 * ')')
 
 -- colors
 local xdigit = l.xdigit

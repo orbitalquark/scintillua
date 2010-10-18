@@ -7,25 +7,25 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
 local line_comment = '//' * l.nonnewline_esc^0
 local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
-local comment = token('comment', line_comment + block_comment)
+local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- strings
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true, false, '\n')
 local tq_str = '"""' * (l.any - '"""')^0 * P('"""')^-1
 local ml_str = '@' * l.delimited_range('"', nil, true)
-local string = token('string', tq_str + sq_str + dq_str + ml_str)
+local string = token(l.STRING, tq_str + sq_str + dq_str + ml_str)
 
 -- numbers
-local number = token('number', (l.float + l.integer) * S('uUlLfFdDmM')^-1)
+local number = token(l.NUMBER, (l.float + l.integer) * S('uUlLfFdDmM')^-1)
 
 -- keywords
-local keyword = token('keyword', word_match {
+local keyword = token(l.KEYWORD, word_match {
   'class', 'delegate', 'enum', 'errordomain', 'interface', 'namespace',
   'signal', 'struct', 'using',
   -- modifiers
@@ -42,17 +42,17 @@ local keyword = token('keyword', word_match {
 })
 
 -- types
-local type = token('type', word_match {
+local type = token(l.TYPE, word_match {
   'bool', 'char', 'double', 'float', 'int', 'int8', 'int16', 'int32', 'int64',
   'long', 'short', 'size_t', 'ssize_t', 'string', 'uchar', 'uint', 'uint8',
   'uint16', 'uint32', 'uint64', 'ulong', 'unichar', 'ushort'
 })
 
 -- identifiers
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
 -- operators
-local operator = token('operator', S('+-/*%<>!=^&|?~:;.()[]{}'))
+local operator = token(l.OPERATOR, S('+-/*%<>!=^&|?~:;.()[]{}'))
 
 _rules = {
   { 'whitespace', ws },

@@ -9,20 +9,20 @@ module(...)
 
 case_insensitive_tags = true
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
-local comment = token('comment', '<!--' * (l.any - '-->')^0 * P('-->')^-1)
+local comment = token(l.COMMENT, '<!--' * (l.any - '-->')^0 * P('-->')^-1)
 
 local doctype = token('doctype', '<!DOCTYPE' * (l.any - '>')^1 * '>')
 
 -- strings
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
-local string = token('string', sq_str + dq_str)
+local string = token(l.STRING, sq_str + dq_str)
 
-local equals = token('operator', '=')
-local number = token('number', l.digit^1 * P('%')^-1)
+local equals = token(l.OPERATOR, '=')
+local number = token(l.NUMBER, l.digit^1 * P('%')^-1)
 
 -- tags
 local element = token('element', word_match({
@@ -66,7 +66,7 @@ local tag_end = token('tag', P('/')^-1 * '>')
 local tag = tag_start * (ws * attributes)^0 * ws^0 * tag_end
 
 -- words
-local word = token('default', (l.any - l.space - S('<&'))^1)
+local word = token(l.DEFAULT, (l.any - l.space - S('<&'))^1)
 
 -- entities
 local entity = token('entity', '&' * (l.any - l.space - ';')^1 * ';')
@@ -113,10 +113,3 @@ local js_start_rule = #(P('<') * script_element * P(function(input, index)
 end)) * tag -- <script type="text/javascript">
 local js_end_rule = #('</' * script_element * ws^0 * '>') * tag -- </script>
 l.embed_lexer(_M, js, js_start_rule, js_end_rule)
-
--- Accessible patterns for preprocessing languages (Django, PHP, etc.)
-_M.equals = equals
-_M.number = number
-_M.attribute = attribute
-_M.tag_start = tag_start
-_M.tag_end = tag_end

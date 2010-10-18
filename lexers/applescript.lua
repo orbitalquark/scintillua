@@ -7,23 +7,23 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
 local line_comment = '--' * l.nonnewline^0
 local block_comment = '(*' * (l.any - '*)')^0 * P('*)')^-1
-local comment = token('comment', line_comment + block_comment)
+local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- strings
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true, false, '\n')
-local string = token('string', sq_str + dq_str)
+local string = token(l.STRING, sq_str + dq_str)
 
 -- numbers
-local number = token('number', l.float + l.integer)
+local number = token(l.NUMBER, l.float + l.integer)
 
 -- keywords
-local keyword = token('keyword', word_match({
+local keyword = token(l.KEYWORD, word_match({
   'script', 'property', 'prop', 'end', 'copy', 'to', 'set', 'global', 'local',
   'on', 'to', 'of', 'in', 'given', 'with', 'without', 'return', 'continue',
   'tell', 'if', 'then', 'else', 'repeat', 'times', 'while', 'until', 'from',
@@ -43,7 +43,7 @@ local keyword = token('keyword', word_match({
 }, "'", true))
 
 -- constants
-local constant = token('constant', word_match({
+local constant = token(l.CONSTANT, word_match({
   'case', 'diacriticals', 'expansion', 'hyphens', 'punctuation',
   -- predefined variables
   'it', 'me', 'version', 'pi', 'result', 'space', 'tab', 'anything',
@@ -64,10 +64,10 @@ local constant = token('constant', word_match({
 }, nil, true))
 
 -- identifiers
-local identifier = token('identifier', (l.alpha + '_') * l.alnum^0)
+local identifier = token(l.IDENTIFIER, (l.alpha + '_') * l.alnum^0)
 
 -- operators
-local operator = token('operator', S('+-^*/&<>=:,(){}'))
+local operator = token(l.OPERATOR, S('+-^*/&<>=:,(){}'))
 
 _rules = {
   { 'whitespace', ws },

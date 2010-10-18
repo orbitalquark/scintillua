@@ -7,18 +7,18 @@ local P, R, S, V = l.lpeg.P, l.lpeg.R, l.lpeg.S, l.lpeg.V
 
 module(...)
 
-local ws = token('css_whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
-local comment = token('comment', '/*' * (l.any - '*/')^0 * P('*/')^-1)
+local comment = token(l.COMMENT, '/*' * (l.any - '*/')^0 * P('*/')^-1)
 
 -- strings
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
-local string = token('string', sq_str + dq_str)
+local string = token(l.STRING, sq_str + dq_str)
 
 -- numbers
-local number =  token('number', l.digit^1)
+local number = token(l.NUMBER, l.digit^1)
 
 -- keywords
 local css1_property = word_match({
@@ -98,15 +98,15 @@ local css2_value = word_match({
   'slower', 'male', 'female', 'child', 'x-low', 'low', 'high', 'x-high', 'code',
   'digits', 'continous'
 }, '-')
-local property = token('keyword', css1_property + css2_property)
+local property = token(l.KEYWORD, css1_property + css2_property)
 local value = token('value', css1_value + css2_value)
 local keyword = property + value
 
 -- identifiers
-local identifier = token('identifier', l.alpha * (l.alnum + S('_-'))^0)
+local identifier = token(l.IDENTIFIER, l.alpha * (l.alnum + S('_-'))^0)
 
 -- operators
-local operator = token('operator', S('~!#*>+=|.,:;()[]{}'))
+local operator = token(l.OPERATOR, S('~!#*>+=|.,:;()[]{}'))
 
 -- at rule
 local at_rule = token('at_rule', P('@') * word_match {
@@ -123,7 +123,7 @@ local color_name = word_match {
 local color = token('color', hex_color + color_name)
 
 -- pseudo
-local pseudo = token('constant', word_match({
+local pseudo = token(l.CONSTANT, word_match({
   -- pseudo elements
   'first-line', 'first-letter', 'before', 'after',
   -- pseudo classes
@@ -137,7 +137,7 @@ local unit = token('unit', word_match {
 } + '%')
 
 _rules = {
-  { 'css_whitespace', ws },
+  { 'whitespace', ws },
   { 'keyword', keyword },
   { 'pseudo', pseudo },
   { 'color', color },
@@ -151,7 +151,6 @@ _rules = {
 }
 
 _tokenstyles = {
-  { 'css_whitespace', l.style_nothing },
   { 'unit', l.style_number },
   { 'value', l.style_nothing..{ bold = true } },
   { 'color', l.style_number },

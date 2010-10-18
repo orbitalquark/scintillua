@@ -7,14 +7,14 @@ local P, R, S, V = l.lpeg.P, l.lpeg.R, l.lpeg.S, l.lpeg.V
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
 local line_comment = '#' * l.nonnewline_esc^0
 local block_comment =
   #P('=') * l.starts_line('=' * l.alpha * (l.any - l.newline * '=cut')^0 *
     (l.newline * '=cut')^-1)
-local comment = token('comment', block_comment + line_comment)
+local comment = token(l.COMMENT, block_comment + line_comment)
 
 local delimiter_matches = { ['('] = ')', ['['] = ']', ['{'] = '}', ['<'] = '>' }
 local literal_delimitted = P(function(input, index) -- for single delimiter sets
@@ -73,14 +73,14 @@ local lit_match = 'm' * literal_delimitted * S('cgimosx')^0
 local lit_sub = 's' * literal_delimitted2 * S('ecgimosx')^0
 local lit_tr = (P('tr') + 'y') * literal_delimitted2 * S('cds')^0
 local string =
-  token('string', sq_str + dq_str + cmd_str + regex + heredoc + lit_str +
+  token(l.STRING, sq_str + dq_str + cmd_str + regex + heredoc + lit_str +
         lit_array + lit_regex + lit_cmd + lit_match + lit_sub + lit_tr)
 
 -- numbers
-local number = token('number', l.float + l.integer)
+local number = token(l.NUMBER, l.float + l.integer)
 
 -- keywords
-local keyword = token('keyword', word_match {
+local keyword = token(l.KEYWORD, word_match {
   'STDIN', 'STDOUT', 'STDERR', 'BEGIN', 'END', 'CHECK', 'INIT',
   'require', 'use',
   'break', 'continue', 'do', 'each', 'else', 'elsif', 'foreach', 'for', 'if',
@@ -90,7 +90,7 @@ local keyword = token('keyword', word_match {
 })
 
 -- functions
-local func = token('function', word_match({
+local func = token(l.FUNCTION, word_match({
   'abs', 'accept', 'alarm', 'atan2', 'bind', 'binmode', 'bless', 'caller',
   'chdir', 'chmod', 'chomp', 'chop', 'chown', 'chr', 'chroot', 'closedir',
   'close', 'connect', 'cos', 'crypt', 'dbmclose', 'dbmopen', 'defined',
@@ -121,17 +121,17 @@ local func = token('function', word_match({
 }, '2'))
 
 -- identifiers
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
 -- variables
 local special_var =
   '$' * ('^' * S('ADEFHILMOPSTWX')^-1 + S('\\"[]\'&`+*.,;=%~?@$<>(|/!-') + ':' *
     (l.any - ':') + l.digit^1)
 local plain_var = ('$#' + S('$@%')) * P('$')^0 * l.word
-local variable = token('variable', special_var + plain_var)
+local variable = token(l.VARIABLE, special_var + plain_var)
 
 -- operators
-local operator = token('operator', S('-<>+*!~\\=/%&|^&.?:;()[]{}'))
+local operator = token(l.OPERATOR, S('-<>+*!~\\=/%&|^&.?:;()[]{}'))
 
 _rules = {
   { 'whitespace', ws },

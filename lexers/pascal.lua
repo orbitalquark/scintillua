@@ -7,23 +7,23 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
 local line_comment = '//' * l.nonnewline_esc^0
 local bblock_comment = '{' * (l.any - '}')^0 * P('}')^-1
 local pblock_comment = '(*' * (l.any - '*)')^0 * P('*)')^-1
-local comment = token('comment', line_comment + bblock_comment + pblock_comment)
+local comment = token(l.COMMENT, line_comment + bblock_comment + pblock_comment)
 
 -- strings
 local string =
-  token('string', S('uUrR')^-1 * l.delimited_range("'", nil, true, false, '\n'))
+  token(l.STRING, S('uUrR')^-1 * l.delimited_range("'", nil, true, false, '\n'))
 
 -- numbers
-local number = token('number', (l.float + l.integer) * S('LlDdFf')^-1)
+local number = token(l.NUMBER, (l.float + l.integer) * S('LlDdFf')^-1)
 
 -- keywords
-local keyword = token('keyword', word_match({
+local keyword = token(l.KEYWORD, word_match({
   'and', 'array', 'as', 'at', 'asm', 'begin', 'case', 'class', 'const',
   'constructor', 'destructor', 'dispinterface', 'div', 'do', 'downto', 'else',
   'end', 'except', 'exports', 'file', 'final', 'finalization', 'finally', 'for',
@@ -44,23 +44,23 @@ local keyword = token('keyword', word_match({
 }, nil, true))
 
 -- functions
-local func = token('function', word_match({
+local func = token(l.FUNCTION, word_match({
   'chr', 'ord', 'succ', 'pred', 'abs', 'round', 'trunc', 'sqr', 'sqrt',
   'arctan', 'cos', 'sin', 'exp', 'ln', 'odd', 'eof', 'eoln'
 }, nil, true))
 
 -- types
-local type = token('type', word_match({
+local type = token(l.TYPE, word_match({
   'shortint', 'byte', 'char', 'smallint', 'integer', 'word', 'longint',
   'cardinal', 'boolean', 'bytebool', 'wordbool', 'longbool', 'real', 'single',
   'double', 'extended', 'comp', 'currency', 'pointer'
 }, nil, true))
 
 -- identifiers
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
 -- operators
-local operator = token('operator', S('.,;^@:=<>+-/*()[]'))
+local operator = token(l.OPERATOR, S('.,;^@:=<>+-/*()[]'))
 
 _rules = {
   { 'whitespace', ws },

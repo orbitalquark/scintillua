@@ -7,12 +7,12 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 local lit_newline = P('\r')^-1 * P('\n')
 
 -- comments
-local comment = token('comment', '#' * l.nonnewline_esc^0)
+local comment = token(l.COMMENT, '#' * l.nonnewline_esc^0)
 
 -- strings
 local sq_str = P('u')^-1 * l.delimited_range("'", '\\', true, false, '\n')
@@ -23,7 +23,7 @@ local triple_dq_str = '"""' * (l.any - '"""')^0 * P('"""')^-1
 local raw_sq_str = P('u')^-1 * 'r' * l.delimited_range("'", nil, true)
 local raw_dq_str = P('U')^-1 * 'R' * l.delimited_range('"', nil, true)
 local string =
-  token('string', triple_sq_str + triple_dq_str + sq_str + dq_str + raw_sq_str +
+  token(l.STRING, triple_sq_str + triple_dq_str + sq_str + dq_str + raw_sq_str +
         raw_dq_str)
 
 -- numbers
@@ -31,10 +31,10 @@ local dec = l.digit^1 * S('Ll')^-1
 local bin = '0b' * S('01')^1 * ('_' * S('01')^1)^0
 local oct = '0' * R('07')^1 * S('Ll')^-1
 local integer = S('+-')^-1 * (bin + l.hex_num + oct + dec)
-local number = token('number', l.float + integer)
+local number = token(l.NUMBER, l.float + integer)
 
 -- keywords
-local keyword = token('keyword', word_match {
+local keyword = token(l.KEYWORD, word_match {
   'and', 'as', 'assert', 'break', 'class', 'continue', 'def', 'del', 'elif',
   'else', 'except', 'exec', 'finally', 'for', 'from', 'global', 'if', 'import',
   'in', 'is', 'lambda', 'not', 'or', 'pass', 'print', 'raise', 'return', 'try',
@@ -69,7 +69,7 @@ local keyword = token('keyword', word_match {
 })
 
 -- functions
-local func = token('function', word_match {
+local func = token(l.FUNCTION, word_match {
   'abs', 'all', 'any', 'apply', 'basestring', 'bool', 'buffer', 'callable',
   'chr', 'classmethod', 'cmp', 'coerce', 'compile', 'complex', 'copyright',
   'credits', 'delattr', 'dict', 'dir', 'divmod', 'enumerate', 'eval',
@@ -84,7 +84,7 @@ local func = token('function', word_match {
 })
 
 -- constants
-local constant = token('constant', word_match {
+local constant = token(l.CONSTANT, word_match {
   'ArithmeticError', 'AssertionError', 'AttributeError', 'BaseException',
   'DeprecationWarning', 'EOFError', 'Ellipsis', 'EnvironmentError', 'Exception',
   'False', 'FloatingPointError', 'FutureWarning', 'GeneratorExit', 'IOError',
@@ -100,14 +100,14 @@ local constant = token('constant', word_match {
 })
 
 -- identifiers
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
 -- decorators
 local decorator =
   token('decorator', #P('@') * l.starts_line('@' * l.nonnewline^0))
 
 -- operators
-local operator = token('operator', S('!%^&*()[]{}-=+/|:;.,?<>~`'))
+local operator = token(l.OPERATOR, S('!%^&*()[]{}-=+/|:;.,?<>~`'))
 
 _rules = {
   { 'whitespace', ws },

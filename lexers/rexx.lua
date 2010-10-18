@@ -7,27 +7,27 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
 local line_comment = '--' * l.nonnewline_esc^0
 local block_comment = l.nested_pair('/*', '*/', true)
-local comment = token('comment', line_comment + block_comment)
+local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- strings
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true, false, '\n')
-local string = token('string', sq_str + dq_str)
+local string = token(l.STRING, sq_str + dq_str)
 
 -- numbers
-local number = token('number', l.float + l.integer)
+local number = token(l.NUMBER, l.float + l.integer)
 
 -- preprocessor
 local preproc =
-  token('preprocessor', #P('#') * l.starts_line('#' * l.nonnewline^0))
+  token(l.PREPROCESSOR, #P('#') * l.starts_line('#' * l.nonnewline^0))
 
 -- keywords
-local keyword = token('keyword', word_match({
+local keyword = token(l.KEYWORD, word_match({
   'address', 'arg', 'by', 'call', 'class', 'do', 'drop', 'else', 'end', 'exit',
   'expose', 'forever', 'forward', 'guard', 'if', 'interpret', 'iterate',
   'leave', 'method', 'nop', 'numeric', 'otherwise', 'parse', 'procedure',
@@ -37,7 +37,7 @@ local keyword = token('keyword', word_match({
 }, nil, true))
 
 -- functions
-local func = token('function', word_match({
+local func = token(l.FUNCTION, word_match({
   'abbrev', 'abs', 'address', 'arg', 'beep', 'bitand', 'bitor', 'bitxor', 'b2x',
   'center', 'changestr', 'charin', 'charout', 'chars', 'compare', 'consition',
   'copies', 'countstr', 'c2d', 'c2x', 'datatype', 'date', 'delstr', 'delword',
@@ -68,10 +68,10 @@ local func = token('function', word_match({
 
 -- identifiers
 local word = l.alpha * (l.alnum + S('@#$\\.!?_')^0)
-local identifier = token('identifier', word)
+local identifier = token(l.IDENTIFIER, word)
 
 -- operators
-local operator = token('operator', S('=!<>+-/\\*%&|^~.,:;(){}'))
+local operator = token(l.OPERATOR, S('=!<>+-/\\*%&|^~.,:;(){}'))
 
 _rules = {
   { 'whitespace', ws },

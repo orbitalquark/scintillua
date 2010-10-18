@@ -7,21 +7,21 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
 local line_comment = ';' * l.nonnewline^0;
 local block_comment = 'comment' * P(' ')^-1 * l.delimited_range('{}', nil, true)
-local comment = token('comment', line_comment + block_comment)
+local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- strings
 local sl_string = l.delimited_range('"', '\\', true, false, '\n')
 local ml_string = l.delimited_range('{}', '\\', true)
 local lit_string = "'" * l.word
-local string = token('string', sl_string + ml_string + lit_string)
+local string = token(l.STRING, sl_string + ml_string + lit_string)
 
 -- keywords
-local keyword = token('keyword', word_match({
+local keyword = token(l.KEYWORD, word_match({
   'abs', 'absolute', 'add', 'and~', 'at', 'back', 'change', 'clear',
   'complement', 'copy', 'cp', 'divide', 'fifth', 'find', 'first', 'fourth',
   'head', 'insert', 'last', 'make', 'max', 'maximum', 'min', 'minimum',
@@ -104,10 +104,10 @@ local keyword = token('keyword', word_match({
 
 -- identifiers
 local word = (l.alpha + '-') * (l.alnum + '-')^0
-local identifier = token('identifier', word)
+local identifier = token(l.IDENTIFIER, word)
 
 -- operators
-local operator = token('operator', S('=<>+/*:()[]'))
+local operator = token(l.OPERATOR, S('=<>+/*:()[]'))
 
 _rules = {
   { 'whitespace', ws },

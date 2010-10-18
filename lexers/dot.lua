@@ -30,19 +30,19 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 local line_comment = '//' * l.nonnewline_esc^0
 local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
-local comment = token('comment', line_comment + block_comment)
+local comment = token(l.COMMENT, line_comment + block_comment)
 
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
-local string = token('string', sq_str + dq_str)
+local string = token(l.STRING, sq_str + dq_str)
 
-local number = token('number', l.digit^1 + l.float)
+local number = token(l.NUMBER, l.digit^1 + l.float)
 
-local keyword = token('keyword', word_match {
+local keyword = token(l.KEYWORD, word_match {
   'graph', 'node', 'edge', 'digraph', 'fontsize', 'rankdir',
   'fontname', 'shape', 'label', 'arrowhead', 'arrowtail', 'arrowsize',
   'color', 'comment', 'constraint', 'decorate', 'dir', 'headlabel', 'headport',
@@ -52,7 +52,7 @@ local keyword = token('keyword', word_match {
   'subgraph'
 })
 
-local type = token('type', word_match {
+local type = token(l.TYPE, word_match {
 	'box', 'polygon', 'ellipse', 'circle', 'point', 'egg', 'triangle',
 	'plaintext', 'diamond', 'trapezium', 'parallelogram', 'house', 'pentagon',
 	'hexagon', 'septagon', 'octagon', 'doublecircle', 'doubleoctagon',
@@ -61,9 +61,9 @@ local type = token('type', word_match {
 	'box3d', 'record'
 })
 
-local operator = token('operator', S('->()[]{};'))
+local operator = token(l.OPERATOR, S('->()[]{};'))
 
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
 _rules = {
   { 'whitespace', ws },

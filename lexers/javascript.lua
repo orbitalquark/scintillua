@@ -7,7 +7,7 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('js_whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 local newline = #S('\r\n\f') * P(function(input, idx)
   if input:sub(idx - 1, idx - 1) ~= '\\' then return idx end
@@ -16,13 +16,13 @@ end) * S('\r\n\f')^1
 -- comments
 local line_comment = '//' * l.nonnewline_esc^0
 local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
-local comment = token('comment', line_comment + block_comment)
+local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- strings
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
 local regex_str = l.delimited_range('/', '\\', nil, nil, '\n') * S('igm')^0
-local string = token('string', sq_str + dq_str) + P(function(input, index)
+local string = token(l.STRING, sq_str + dq_str) + P(function(input, index)
   if index == 1 then return index end
   local i = index
   while input:sub(i - 1, i - 1):match('[ \t\r\n\f]') do i = i - 1 end
@@ -31,10 +31,10 @@ local string = token('string', sq_str + dq_str) + P(function(input, index)
 end) * token('regex', regex_str)
 
 -- numbers
-local number = token('number', l.float + l.integer)
+local number = token(l.NUMBER, l.float + l.integer)
 
 -- keywords
-local keyword = token('keyword', word_match {
+local keyword = token(l.KEYWORD, word_match {
   'abstract', 'boolean', 'break', 'byte', 'case', 'catch', 'char', 'class',
   'const', 'continue', 'debugger', 'default', 'delete', 'do', 'double', 'else',
   'enum', 'export', 'extends', 'false', 'final', 'finally', 'float', 'for',
@@ -46,13 +46,13 @@ local keyword = token('keyword', word_match {
 })
 
 -- identifiers
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
 -- operators
-local operator = token('operator', S('+-/*%^!=&|?:;,.()[]{}<>'))
+local operator = token(l.OPERATOR, S('+-/*%^!=&|?:;,.()[]{}<>'))
 
 _rules = {
-  { 'js_whitespace', ws },
+  { 'whitespace', ws },
   { 'keyword', keyword },
   { 'identifier', identifier },
   { 'comment', comment },
@@ -63,6 +63,5 @@ _rules = {
 }
 
 _tokenstyles = {
-  { 'js_whitespace', l.style_nothing },
   { 'regex', l.style_string..{ back = color('44', '44', '44')} },
 }

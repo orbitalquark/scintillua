@@ -7,17 +7,17 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
 local rem = (P('REM') + 'rem') * l.space
-local comment = token('comment', (rem + ':') * l.nonnewline^0)
+local comment = token(l.COMMENT, (rem + ':') * l.nonnewline^0)
 
 -- strings
-local string = token('string', l.delimited_range('"', '\\', true, false, '\n'))
+local string = token(l.STRING, l.delimited_range('"', '\\', true, false, '\n'))
 
 -- keywords
-local keyword = token('keyword', word_match({
+local keyword = token(l.KEYWORD, word_match({
   'cd', 'chdir', 'md', 'mkdir', 'cls', 'for', 'if', 'echo', 'echo.', 'move',
   'copy', 'move', 'ren', 'del', 'set', 'call', 'exit', 'setlocal', 'shift',
   'endlocal', 'pause', 'defined', 'exist', 'errorlevel', 'else', 'in', 'do',
@@ -25,7 +25,7 @@ local keyword = token('keyword', word_match({
 }, nil, true))
 
 -- functions
-local func = token('function', word_match({
+local func = token(l.FUNCTION, word_match({
   'APPEND', 'ATTRIB', 'CHKDSK', 'CHOICE', 'DEBUG', 'DEFRAG', 'DELTREE',
   'DISKCOMP', 'DISKCOPY', 'DOSKEY', 'DRVSPACE', 'EMM386', 'EXPAND', 'FASTOPEN',
   'FC', 'FDISK', 'FIND', 'FORMAT', 'GRAPHICS', 'KEYB', 'LABEL', 'LOADFIX',
@@ -35,18 +35,18 @@ local func = token('function', word_match({
 }, nil, true))
 
 -- identifiers
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
 -- variables
 local variable =
-  token('variable', '%' * (l.digit + '%' * l.alpha) +
+  token(l.VARIABLE, '%' * (l.digit + '%' * l.alpha) +
         l.delimited_range('%', nil, false, false, '\n'))
 
 -- labels
 local label = token('label', ':' * l.word)
 
 -- operators
-local operator = token('operator', S('+|&!<>='))
+local operator = token(l.OPERATOR, S('+|&!<>='))
 
 _rules = {
   { 'whitespace', ws },

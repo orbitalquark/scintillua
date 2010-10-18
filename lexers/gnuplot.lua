@@ -7,20 +7,20 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
-local comment = token('comment', '#' * l.nonnewline^0)
+local comment = token(l.COMMENT, '#' * l.nonnewline^0)
 
 -- strings
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
 local bk_str = l.delimited_range('[]', '\\', true, false, '\n')
 local bc_str = l.delimited_range('{}', '\\', true, false, '\n')
-local string = token('string', sq_str + dq_str + bk_str + bc_str)
+local string = token(l.STRING, sq_str + dq_str + bk_str + bc_str)
 
 -- keywords
-local keyword = token('keyword', word_match {
+local keyword = token(l.KEYWORD, word_match {
   'cd', 'call', 'clear', 'exit', 'fit', 'help', 'history', 'if', 'load',
   'pause', 'plot', 'using', 'with', 'index', 'every', 'smooth', 'thru', 'print',
   'pwd', 'quit', 'replot', 'reread', 'reset', 'save', 'set', 'show', 'unset',
@@ -28,7 +28,7 @@ local keyword = token('keyword', word_match {
 })
 
 -- functions
-local func = token('function', word_match {
+local func = token(l.FUNCTION, word_match {
   'abs', 'acos', 'acosh', 'arg', 'asin', 'asinh', 'atan', 'atan2', 'atanh',
   'besj0', 'besj1', 'besy0', 'besy1', 'ceil', 'cos', 'cosh', 'erf', 'erfc',
   'exp', 'floor', 'gamma', 'ibeta', 'inverf', 'igamma', 'imag', 'invnorm',
@@ -39,7 +39,7 @@ local func = token('function', word_match {
 })
 
 -- variables
-local variable = token('variable', word_match {
+local variable = token(l.VARIABLE, word_match {
   'angles', 'arrow', 'autoscale', 'bars', 'bmargin', 'border', 'boxwidth',
   'clabel', 'clip', 'cntrparam', 'colorbox', 'contour', 'datafile ',
   'decimalsign', 'dgrid3d', 'dummy', 'encoding', 'fit', 'fontpath', 'format',
@@ -60,10 +60,10 @@ local variable = token('variable', word_match {
 })
 
 -- identifiers
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
 -- operators
-local operator = token('operator', S('-+~!$*%=<>&|^?:()'))
+local operator = token(l.OPERATOR, S('-+~!$*%=<>&|^?:()'))
 
 _rules = {
   { 'whitespace', ws },

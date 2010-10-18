@@ -7,46 +7,46 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
-local comment = token('comment', '#' * l.nonnewline^0)
+local comment = token(l.COMMENT, '#' * l.nonnewline^0)
 
 -- strings
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true, false, '\n')
-local string = token('string', sq_str + dq_str)
+local string = token(l.STRING, sq_str + dq_str)
 
 -- numbers
-local number = token('number', l.digit^1 * ('.' * l.digit^1)^-1)
+local number = token(l.NUMBER, l.digit^1 * ('.' * l.digit^1)^-1)
 
 -- keywords
-local keyword = token('keyword', word_match {
+local keyword = token(l.KEYWORD, word_match {
   'binding', 'class', 'include', 'module_path', 'pixmap_path', 'im_module_file',
   'style', 'widget', 'widget_class'
 })
 
 -- variables
-local variable = token('variable', word_match {
+local variable = token(l.VARIABLE, word_match {
   'bg', 'fg', 'base', 'text', 'xthickness', 'ythickness', 'bg_pixmap', 'font',
   'fontset', 'font_name', 'stock', 'color', 'engine'
 })
 
 -- states
-local state = token('constant', word_match {
+local state = token(l.CONSTANT, word_match {
   'ACTIVE', 'SELECTED', 'NORMAL', 'PRELIGHT', 'INSENSITIVE', 'TRUE', 'FALSE'
 })
 
 -- functions
-local func = token('function', word_match {
+local func = token(l.FUNCTION, word_match {
   'mix', 'shade', 'lighter', 'darker'
 })
 
 -- identifiers
-local identifier = token('identifier', l.alpha * (l.alnum + S('_-'))^0)
+local identifier = token(l.IDENTIFIER, l.alpha * (l.alnum + S('_-'))^0)
 
 -- operators
-local operator = token('operator', S(':=,*()[]{}'))
+local operator = token(l.OPERATOR, S(':=,*()[]{}'))
 
 _rules = {
   { 'whitespace', ws },

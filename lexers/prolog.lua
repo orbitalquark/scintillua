@@ -7,23 +7,23 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
 local line_comment = '%' * l.nonnewline^0
 local block_comment = '/*' * (l.any - '*/')^0 * '*/'
-local comment = token('comment', line_comment + block_comment)
+local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- strings
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true, false, '\n')
-local string = token('string', sq_str + dq_str)
+local string = token(l.STRING, sq_str + dq_str)
 
 -- numbers
-local number = token('number', l.digit^1 * ('.' * l.digit^1)^-1)
+local number = token(l.NUMBER, l.digit^1 * ('.' * l.digit^1)^-1)
 
 -- keywords
-local keyword = token('keyword', word_match {
+local keyword = token(l.KEYWORD, word_match {
   'module', 'meta_predicate', 'multifile', 'dynamic', 'abolish',
   'current_output', 'peek_code', 'append', 'current_predicate', 'put_byte',
   'arg', 'current_prolog_flag', 'put_char', 'asserta', 'assert', 'fail',
@@ -45,10 +45,10 @@ local keyword = token('keyword', word_match {
 })
 
 -- identifiers
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
 -- operators
-local operator = token('operator', S('-!+\\|=:;&<>()[]{}'))
+local operator = token(l.OPERATOR, S('-!+\\|=:;&<>()[]{}'))
 
 _rules = {
   { 'whitespace', ws },

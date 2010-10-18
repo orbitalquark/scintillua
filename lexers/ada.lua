@@ -7,23 +7,23 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
-local comment = token('comment', '--' * l.nonnewline^0)
+local comment = token(l.COMMENT, '--' * l.nonnewline^0)
 
 -- strings
-local string = token('string', l.delimited_range('"', nil, true, false, '\n'))
+local string = token(l.STRING, l.delimited_range('"', nil, true, false, '\n'))
 
 -- numbers
 local hex_num = 'O' * S('xX') * (l.xdigit + '_')^1
 local integer = l.digit^1 * ('_' * l.digit^1)^0
 local float = integer^1 * ('.' * integer^0)^-1 * S('eE') * S('+-')^-1 * integer
 local number =
-  token('number', hex_num + S('+-')^-1 * (float + integer) * S('LlUuFf')^-3)
+  token(l.NUMBER, hex_num + S('+-')^-1 * (float + integer) * S('LlUuFf')^-3)
 
 -- keywords
-local keyword = token('keyword', word_match {
+local keyword = token(l.KEYWORD, word_match {
   'abort', 'abs', 'accept', 'all', 'and', 'begin', 'body', 'case', 'declare',
   'delay', 'do', 'else', 'elsif', 'end', 'entry', 'exception', 'exit', 'for',
   'generic', 'goto', 'if', 'in', 'is', 'loop', 'mod', 'new', 'not', 'null',
@@ -42,16 +42,16 @@ local keyword = token('keyword', word_match {
 })
 
 -- types
-local type = token('type', word_match {
+local type = token(l.TYPE, word_match {
   'boolean', 'character', 'count', 'duration', 'float', 'integer', 'long_float',
   'long_integer', 'priority', 'short_float', 'short_integer', 'string'
 })
 
 -- identifiers
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
 -- operators
-local operator = token('operator', S(':;=<>&+-*/.()'))
+local operator = token(l.OPERATOR, S(':;=<>&+-*/.()'))
 
 _rules = {
   { 'whitespace', ws },

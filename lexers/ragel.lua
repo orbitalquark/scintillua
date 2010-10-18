@@ -7,17 +7,17 @@ local P, R, S = lpeg.P, lpeg.R, lpeg.S
 local ws = token('ragel_whitespace', space^1)
 
 -- comment
-local comment = token('comment', '#' * nonnewline^0)
+local comment = token(l.COMMENT, '#' * nonnewline^0)
 
 -- strings
 local sq_str = delimited_range("'", '\\', true)
 local dq_str = delimited_range('"', '\\', true)
 local set = delimited_range('[]', '\\', true)
 local regex = delimited_range('/', '\\', true) * P('i')^-1
-local string = token('string', sq_str + dq_str + set + regex)
+local string = token(l.STRING, sq_str + dq_str + set + regex)
 
 -- numbers
-local number = token('number', digit^1)
+local number = token(l.NUMBER, digit^1)
 
 -- built-in machines
 local builtin_machine = word_match(word_list{
@@ -31,7 +31,7 @@ local keyword = word_match(word_list{
   'machine', 'include', 'import', 'action', 'getkey', 'access', 'variable',
   'prepush', 'postpop', 'write', 'data', 'init', 'exec', 'exports', 'export'
 })
-keyword = token('keyword', keyword)
+keyword = token(l.KEYWORD, keyword)
 
 local identifier = word
 
@@ -44,7 +44,7 @@ local action_def =
 local action = action_def + transition
 
 -- operators
-local operator = token('operator', S(',|&-.<:>*?+!^();'))
+local operator = token(l.OPERATOR, S(',|&-.<:>*?+!^();'))
 
 local cpp = require 'cpp'
 
@@ -64,7 +64,7 @@ function LoadTokens()
 
   -- embedding C/C++ in Ragel
   ragel.in_cpp = false
-  cpp.TokenPatterns.operator = token('operator', S('+-/*%<>!=&|?:;.()[]') +
+  cpp.TokenPatterns.operator = token(l.OPERATOR, S('+-/*%<>!=&|?:;.()[]') +
     '{' * P(function(input, index)
       -- if we're in embedded C/C++ in Ragel, increment the brace_count
       if cpp.in_ragel then cpp.brace_count = cpp.brace_count + 1 end
@@ -84,7 +84,7 @@ function LoadTokens()
   -- don't match a closing bracket so cpp.EmbeddedIn[ragel._NAME].end_token can
   -- be matched
   cpp.TokenPatterns.any_char = token('any_char', any - '}')
-  local start_token = token('operator', '{' * P(function(input, index)
+  local start_token = token(l.OPERATOR, '{' * P(function(input, index)
     -- if we're in embedded Ragel in C/C++, and this is the first {, we have
     -- embedded C/C++ in Ragel; set the flag
     if cpp.in_ragel and not ragel.in_cpp then
@@ -92,7 +92,7 @@ function LoadTokens()
       return index
     end
   end))
-  local end_token = token('operator', '}' * P(function(input, index)
+  local end_token = token(l.OPERATOR, '}' * P(function(input, index)
     -- if we're in embedded C/C++ in Ragel and the brace_count is zero, this
     -- is the end of embedded C/C++; unset the flag
     if cpp.in_ragel and cpp.brace_count == 0 then

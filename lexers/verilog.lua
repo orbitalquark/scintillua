@@ -7,15 +7,15 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
 local line_comment = '//' * l.nonnewline^0
 local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
-local comment = token('comment', line_comment + block_comment)
+local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- strings
-local string = token('string', l.delimited_range('"', '\\', true))
+local string = token(l.STRING, l.delimited_range('"', '\\', true))
 
 -- numbers
 local bin_suffix = S('bB') * S('01_xXzZ')^1
@@ -23,11 +23,11 @@ local oct_suffix = S('oO') * S('01234567_xXzZ')^1
 local dec_suffix = S('dD') * S('0123456789_xXzZ')^1
 local hex_suffix = S('hH') * S('0123456789abcdefABCDEF_xXzZ')^1
 local number =
-  token('number', (l.digit + '_')^1 + "'" * (bin_suffix + oct_suffix +
+  token(l.NUMBER, (l.digit + '_')^1 + "'" * (bin_suffix + oct_suffix +
         dec_suffix + hex_suffix))
 
 -- keywords
-local keyword = token('keyword', word_match({
+local keyword = token(l.KEYWORD, word_match({
   'always', 'assign', 'begin', 'case', 'casex', 'casez', 'default', 'deassign',
   'disable', 'else', 'end', 'endcase', 'endfunction', 'endgenerate',
   'endmodule', 'endprimitive', 'endspecify', 'endtable', 'endtask', 'for',
@@ -48,7 +48,7 @@ local keyword = token('keyword', word_match({
 }, '`01'))
 
 -- function
-local func = token('function', word_match({
+local func = token(l.FUNCTION, word_match({
   '$stop', '$finish', '$time', '$stime', '$realtime', '$settrace',
   '$cleartrace', '$showscopes', '$showvars', '$monitoron', '$monitoroff',
   '$random', '$printtimescale', '$timeformat', '$display',
@@ -59,7 +59,7 @@ local func = token('function', word_match({
 }, '$01'))
 
 -- types
-local type = token('type', word_match({
+local type = token(l.TYPE, word_match({
   'integer', 'reg', 'time', 'realtime', 'defparam', 'parameter', 'event',
   'wire', 'wand', 'wor', 'tri', 'triand', 'trior', 'tri0', 'tri1', 'trireg',
   'vectored', 'scalared', 'input', 'output', 'inout',
@@ -67,10 +67,10 @@ local type = token('type', word_match({
 }, '01'))
 
 -- identifiers
-local identifier = token('identifier', l.word)
+local identifier = token(l.IDENTIFIER, l.word)
 
 -- operators
-local operator = token('operator', S('=~+-/*<>%&|^~,:;()[]{}'))
+local operator = token(l.OPERATOR, S('=~+-/*<>%&|^~,:;()[]{}'))
 
 _rules = {
   { 'whitespace', ws },

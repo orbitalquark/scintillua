@@ -7,32 +7,32 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 local word = l.alpha * (l.alnum + S('_-!?'))^0
 
 -- comments
 local line_comment = ';' * l.nonnewline^0
 local block_comment = '#|' * (l.any - '|#')^0 * '|#'
-local comment = token('comment', line_comment + block_comment)
+local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- strings
 local literal = (P("'") + '#' * S('\\bdox')) * l.word
 local dq_str = l.delimited_range('"', '\\', true)
-local string = token('string', literal + dq_str)
+local string = token(l.STRING, literal + dq_str)
 
 -- numbers
-local number = token('number', P('-')^-1 * l.digit^1 * (S('./') * l.digit^1)^-1)
+local number = token(l.NUMBER, P('-')^-1 * l.digit^1 * (S('./') * l.digit^1)^-1)
 
 -- keywords
-local keyword = token('keyword', word_match({
+local keyword = token(l.KEYWORD, word_match({
   'and', 'begin', 'case', 'cond', 'cond-expand', 'define', 'define-macro',
   'delay', 'do', 'else', 'fluid-let', 'if', 'lambda', 'let', 'let*', 'letrec',
   'or', 'quasiquote', 'quote', 'set!',
 }, '-*!'))
 
 -- functions
-local func = token('function', word_match({
+local func = token(l.FUNCTION, word_match({
   'abs', 'acos', 'angle', 'append', 'apply', 'asin', 'assoc', 'assq', 'assv',
   'atan', 'car', 'cdr', 'caar', 'cadr', 'cdar', 'cddr', 'caaar', 'caadr',
   'cadar', 'caddr', 'cdaar', 'cdadr', 'cddar', 'cdddr',
@@ -71,10 +71,10 @@ local func = token('function', word_match({
 
 -- identifiers
 local word = (l.alpha + S('-!?')) * (l.alnum + S('-!?'))^0
-local identifier = token('identifier', word)
+local identifier = token(l.IDENTIFIER, word)
 
 -- operators
-local operator = token('operator', S('<>=*/+-`@%:()'))
+local operator = token(l.OPERATOR, S('<>=*/+-`@%:()'))
 
 -- entity
 local entity = token('entity', '&' * word)

@@ -7,7 +7,7 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
 local c_comment = #S('Cc') * l.starts_line(S('Cc') * l.nonnewline^0)
@@ -16,19 +16,19 @@ local ex_comment = #P('!') * l.starts_line('!' * l.nonnewline^0)
 local ast_comment = #P('*') * l.starts_line('*' * l.nonnewline^0)
 local line_comment = '!' * l.nonnewline^0
 local comment =
-  token('comment', c_comment + d_comment + ex_comment + ast_comment +
+  token(l.COMMENT, c_comment + d_comment + ex_comment + ast_comment +
         line_comment)
 
 -- strings
 local sq_str = l.delimited_range("'", nil, true, false, '\n')
 local dq_str = l.delimited_range('"', nil, true, false, '\n')
-local string = token('string', sq_str + dq_str)
+local string = token(l.STRING, sq_str + dq_str)
 
 -- numbers
-local number = token('number', (l.float + l.integer) * -l.alpha)
+local number = token(l.NUMBER, (l.float + l.integer) * -l.alpha)
 
 -- keywords
-local keyword = token('keyword', word_match({
+local keyword = token(l.KEYWORD, word_match({
   'include', 'program', 'module', 'subroutine', 'function', 'contains', 'use',
   'call', 'return',
   -- statements
@@ -43,7 +43,7 @@ local keyword = token('keyword', word_match({
 }, '.', true))
 
 -- functions
-local func = token('function', word_match({
+local func = token(l.FUNCTION, word_match({
   -- i/o
   'backspace', 'close', 'endfile', 'inquire', 'open', 'print', 'read', 'rewind',
   'write', 'format',
@@ -64,17 +64,17 @@ local func = token('function', word_match({
 }, nil, true))
 
 -- types
-local type = token('type', word_match({
+local type = token(l.TYPE, word_match({
   'implicit', 'explicit', 'none', 'data', 'parameter', 'allocate',
   'allocatable', 'allocated', 'deallocate', 'integer', 'real', 'double',
   'precision', 'complex', 'logical', 'character', 'dimension', 'kind',
 }, nil, true))
 
 -- identifiers
-local identifier = token('identifier', l.alnum^1)
+local identifier = token(l.IDENTIFIER, l.alnum^1)
 
 -- operators
-local operator = token('operator', S('<>=&+-/*,()'))
+local operator = token(l.OPERATOR, S('<>=&+-/*,()'))
 
 _rules = {
   { 'whitespace', ws },
