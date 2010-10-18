@@ -9,8 +9,8 @@ module(...)
 
 -- text, separators, file headers
 local index = token(l.COMMENT, 'Index: ' * l.any^0 * P(-1))
-local separator = token(l.COMMENT,
-  ('---' + P('*')^4 + P('=')^1) * l.space^0 * P(-1))
+local separator = token(l.COMMENT, ('---' + P('*')^4 + P('=')^1) * l.space^0 *
+                        P(-1))
 local header = token('header', (P('*** ') + '--- ' + '+++ ') * l.any^1 * P(-1))
 
 -- location

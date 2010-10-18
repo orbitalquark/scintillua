@@ -6,7 +6,7 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
-local ws = token('whitespace', l.space^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 _rules = {
   { 'whitespace', ws },

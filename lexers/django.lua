@@ -10,8 +10,8 @@ module(...)
 local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
-local comment =
-  token(l.COMMENT, '{#' * (l.any - l.newline - '#}')^0 * P('#}')^-1)
+local comment = token(l.COMMENT, '{#' * (l.any - l.newline - '#}')^0 *
+                      P('#}')^-1)
 
 -- strings
 local string = token(l.STRING, l.delimited_range('"', nil, true))

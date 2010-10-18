@@ -11,9 +11,8 @@ local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
 local line_comment = '#' * l.nonnewline_esc^0
-local block_comment =
-  #P('=') * l.starts_line('=' * l.alpha * (l.any - l.newline * '=cut')^0 *
-    (l.newline * '=cut')^-1)
+local block_comment = #P('=') * l.starts_line('=' * l.alpha *
+                     (l.any - l.newline * '=cut')^0 * (l.newline * '=cut')^-1)
 local comment = token(l.COMMENT, block_comment + line_comment)
 
 local delimiter_matches = { ['('] = ')', ['['] = ']', ['{'] = '}', ['<'] = '>' }
@@ -72,9 +71,9 @@ local lit_cmd = 'qx' * literal_delimitted
 local lit_match = 'm' * literal_delimitted * S('cgimosx')^0
 local lit_sub = 's' * literal_delimitted2 * S('ecgimosx')^0
 local lit_tr = (P('tr') + 'y') * literal_delimitted2 * S('cds')^0
-local string =
-  token(l.STRING, sq_str + dq_str + cmd_str + regex + heredoc + lit_str +
-        lit_array + lit_regex + lit_cmd + lit_match + lit_sub + lit_tr)
+local string = token(l.STRING, sq_str + dq_str + cmd_str + regex + heredoc +
+                     lit_str + lit_array + lit_regex + lit_cmd + lit_match +
+                     lit_sub + lit_tr)
 
 -- numbers
 local number = token(l.NUMBER, l.float + l.integer)
@@ -124,9 +123,9 @@ local func = token(l.FUNCTION, word_match({
 local identifier = token(l.IDENTIFIER, l.word)
 
 -- variables
-local special_var =
-  '$' * ('^' * S('ADEFHILMOPSTWX')^-1 + S('\\"[]\'&`+*.,;=%~?@$<>(|/!-') + ':' *
-    (l.any - ':') + l.digit^1)
+local special_var = '$' * ('^' * S('ADEFHILMOPSTWX')^-1 +
+                    S('\\"[]\'&`+*.,;=%~?@$<>(|/!-') + ':' * (l.any - ':') +
+                    l.digit^1)
 local plain_var = ('$#' + S('$@%')) * P('$')^0 * l.word
 local variable = token(l.VARIABLE, special_var + plain_var)
 

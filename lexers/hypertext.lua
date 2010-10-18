@@ -59,8 +59,8 @@ local attribute = token('attribute', word_match({
   'width', 'text', 'password', 'checkbox', 'radio', 'submit', 'reset', 'file',
   'hidden', 'image', 'xml', 'xmlns', 'xml:lang'
 }, '-:', case_insensitive_tags))
-local attributes =
-  P{ attribute * (ws^0 * equals * ws^0 * (string + number))^-1 * (ws * V(1))^0 }
+local attributes = P{ attribute * (ws^0 * equals * ws^0 *
+                      (string + number))^-1 * (ws * V(1))^0 }
 local tag_start = token('tag', '<' * P('/')^-1) * element
 local tag_end = token('tag', P('/')^-1 * '>')
 local tag = tag_start * (ws * attributes)^0 * ws^0 * tag_end
@@ -98,8 +98,7 @@ local style_element = word_match({ 'style' }, nil, case_insensitive_tags)
 local css_start_rule = #(P('<') * style_element * P(function(input, index)
   if input:find('[^>]+type%s*=%s*(["\'])text/css%1') then return index end
 end)) * tag -- <style type="text/css">
-local css_end_rule =
-  #(P('</') * style_element * ws^0 * P('>')) * tag -- </style>
+local css_end_rule = #('</' * style_element * ws^0 * '>') * tag -- </style>
 l.embed_lexer(_M, css, css_start_rule, css_end_rule)
 
 -- Embedded Javascript.

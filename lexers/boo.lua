@@ -24,8 +24,8 @@ local regex = l.delimited_range('/', '\\', false, false, '\n')
 local string = token(l.STRING, triple_dq_str + sq_str + dq_str + regex)
 
 -- numbers
-local number =
-  token(l.NUMBER, (l.float + l.integer) * (S('msdhsfFlL') + 'ms')^-1)
+local number = token(l.NUMBER, (l.float + l.integer) *
+                     (S('msdhsfFlL') + 'ms')^-1)
 
 -- keywords
 local keyword = token(l.KEYWORD, word_match {

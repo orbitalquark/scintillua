@@ -48,8 +48,8 @@ local annotation = token('annotation', '@' * l.word)
 
 local func = token(l.FUNCTION, l.word) * #P('(')
 
-local class_sequence =
-  token(l.KEYWORD, P('class')) * ws^1 * token(l.CLASS, l.word)
+local class_sequence = token(l.KEYWORD, P('class')) * ws^1 *
+                       token(l.CLASS, l.word)
 
 -- operators
 local operator = token(l.OPERATOR, S('+-/*%<>!=^&|?~:;.()[]{}'))

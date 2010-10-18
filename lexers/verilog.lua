@@ -22,9 +22,8 @@ local bin_suffix = S('bB') * S('01_xXzZ')^1
 local oct_suffix = S('oO') * S('01234567_xXzZ')^1
 local dec_suffix = S('dD') * S('0123456789_xXzZ')^1
 local hex_suffix = S('hH') * S('0123456789abcdefABCDEF_xXzZ')^1
-local number =
-  token(l.NUMBER, (l.digit + '_')^1 + "'" * (bin_suffix + oct_suffix +
-        dec_suffix + hex_suffix))
+local number = token(l.NUMBER, (l.digit + '_')^1 + "'" *
+                     (bin_suffix + oct_suffix + dec_suffix + hex_suffix))
 
 -- keywords
 local keyword = token(l.KEYWORD, word_match({

@@ -32,8 +32,8 @@ local vbs_start_rule = #(P('<') * script_element *
   P(function(input, index)
     if input:find('[^>]+language%s*=%s*(["\'])vbscript%1') then return index end
   end)) * html._RULES['tag'] -- <script language="vbscript">
-local vbs_end_rule =
-  #('</' * script_element * l.space^0 * '>') * html._RULES['tag'] -- </script>
+local vbs_end_rule = #('</' * script_element * l.space^0 * '>') *
+                     html._RULES['tag'] -- </script>
 l.embed_lexer(html, vbs, vbs_start_rule, vbs_end_rule)
 
 _tokenstyles = {

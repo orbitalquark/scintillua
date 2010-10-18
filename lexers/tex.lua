@@ -18,7 +18,7 @@ local ws = token(l.WHITESPACE, l.space^1)
 -- comments
 local line_comment = '%' * l.nonnewline^0
 local block_comment = '\\begin{comment}' * (l.any - '\\end{comment}')^0 *
-  '\\end{comment}'
+                      '\\end{comment}'
 local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- environment
@@ -33,8 +33,8 @@ local env_latex = '\\' * (P('begin') + 'end') * '{' *  word_match({
 local env_latex_math = '\\' * S('[]()') + '$' -- covers '$$' as well
 -- ConTeXt environments
 local env_context = '\\' * (P('start') * l.word + 'stop' * l.word)
-local environment = token('environment',  env_latex + env_latex_math +
-                                          env_context)
+local environment = token('environment', env_latex + env_latex_math +
+                          env_context)
 
 -- commands
 local escapes = S('$%_{}&#')

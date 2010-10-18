@@ -44,12 +44,12 @@ local identifier = token(l.IDENTIFIER, l.word)
 
 -- variables
 local variable = token(l.VARIABLE, '$' * (S('!#?*@$') +
-  l.delimited_range('()', nil, true, false, '\n') +
-  l.delimited_range('[]', nil, true, false, '\n') +
-  l.delimited_range('{}', nil, true, false, '\n') +
-  l.delimited_range('`', nil, true, false, '\n') +
-  l.digit^1 +
-  l.word))
+                       l.delimited_range('()', nil, true, false, '\n') +
+                       l.delimited_range('[]', nil, true, false, '\n') +
+                       l.delimited_range('{}', nil, true, false, '\n') +
+                       l.delimited_range('`', nil, true, false, '\n') +
+                       l.digit^1 +
+                       l.word))
 
 -- operators
 local operator = token(l.OPERATOR, S('=!<>+-/*^~.,:;?()[]{}'))

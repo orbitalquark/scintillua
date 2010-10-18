@@ -16,8 +16,8 @@ local pblock_comment = '(*' * (l.any - '*)')^0 * P('*)')^-1
 local comment = token(l.COMMENT, line_comment + bblock_comment + pblock_comment)
 
 -- strings
-local string =
-  token(l.STRING, S('uUrR')^-1 * l.delimited_range("'", nil, true, false, '\n'))
+local string = token(l.STRING, S('uUrR')^-1 *
+                     l.delimited_range("'", nil, true, false, '\n'))
 
 -- numbers
 local number = token(l.NUMBER, (l.float + l.integer) * S('LlDdFf')^-1)

@@ -11,9 +11,8 @@ local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
 local line_comment = '#' * l.nonnewline_esc^0
-local block_comment =
-  #P('=begin') * l.starts_line('=begin' * (l.any - l.newline * '=end')^0 *
-    (l.newline * '=end')^-1)
+local block_comment = #P('=begin') * l.starts_line('=begin' *
+                      (l.any - l.newline * '=end')^0 * (l.newline * '=end')^-1)
 local comment = token(l.COMMENT, block_comment + line_comment)
 
 local delimiter_matches = { ['('] = ')', ['['] = ']', ['{'] = '}' }
@@ -52,9 +51,8 @@ local heredoc = '<<' * P(function(input, index)
     return e and e + 1 or #input + 1
   end
 end)
-local string =
-  token(l.STRING, sq_str + dq_str + lit_str + heredoc + cmd_str + lit_cmd +
-        regex_str + lit_regex + lit_array)
+local string = token(l.STRING, sq_str + dq_str + lit_str + heredoc + cmd_str +
+                     lit_cmd + regex_str + lit_regex + lit_array)
 
 local word_char = l.alnum + S('_!?')
 
@@ -91,8 +89,8 @@ local word = (l.alpha + '_') * word_char^0
 local identifier = token(l.IDENTIFIER, word)
 
 -- variables and symbols
-local global_var =
-  '$' * (word + S('!@L+`\'=~/\\,.;<>_*"$?:') + l.digit + '-' * S('0FadiIKlpvw'))
+local global_var = '$' * (word + S('!@L+`\'=~/\\,.;<>_*"$?:') + l.digit + '-' *
+                   S('0FadiIKlpvw'))
 local class_var = '@@' * word
 local inst_var = '@' * word
 local symbol = ':' * P(function(input, index)

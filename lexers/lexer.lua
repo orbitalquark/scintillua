@@ -488,9 +488,9 @@ module('lexer', package.seeall)
 -- Have your fold function interate over each line, setting fold levels. You can
 -- use the [`get_style_at()`](#get_style_at), [`get_property()`](#get_property),
 -- [`get_fold_level()`](#get_fold_level), and
--- [`get_indent_amount()`](#get_indent_amount) functions as necessary to determine
--- the fold level for each line. The following example sets fold points by
--- changes in indentation.
+-- [`get_indent_amount()`](#get_indent_amount) functions as necessary to
+-- determine the fold level for each line. The following example sets fold
+-- points by changes in indentation.
 --
 --     function _fold(input, start_pos, start_line, start_level)
 --       local folds = {}
@@ -918,8 +918,8 @@ hex_num = '0' * lpeg_S('xX') * xdigit^1
 oct_num = '0' * lpeg_R('07')^1
 integer = lpeg_S('+-')^-1 * (hex_num + oct_num + dec_num)
 float = lpeg_S('+-')^-1 *
-  (digit^0 * '.' * digit^1 + digit^1 * '.' * digit^0 + digit^1) *
-  lpeg_S('eE') * lpeg_S('+-')^-1 * digit^1
+        (digit^0 * '.' * digit^1 + digit^1 * '.' * digit^0 + digit^1) *
+        lpeg_S('eE') * lpeg_S('+-')^-1 * digit^1
 word = (alpha + '_') * (alnum + '_')^0
 
 ---
@@ -1110,8 +1110,8 @@ function embed_lexer(parent, child, start_rule, end_rule)
   children[#children + 1] = child
   -- Add child styles.
   local tokenstyles = parent._tokenstyles
-  tokenstyles[#tokenstyles + 1] =
-    { child._NAME..'_whitespace', style_whitespace }
+  tokenstyles[#tokenstyles + 1] = { child._NAME..'_whitespace',
+                                    style_whitespace }
   for _, style in ipairs(child._tokenstyles or {}) do
     tokenstyles[#tokenstyles + 1] = style
   end

@@ -44,8 +44,8 @@ local bt_str = l.delimited_range('`', '\\', true)
 local string = token(l.STRING, sq_str + dq_str + bt_str)
 
 -- numbers
-local number =
-  token(l.NUMBER, l.float + l.integer + l.dec_num + l.hex_num + l.oct_num)
+local number = token(l.NUMBER, l.float + l.integer + l.dec_num + l.hex_num +
+                     l.oct_num)
 
 -- keywords
 local keyword = token(l.KEYWORD, word_match({
