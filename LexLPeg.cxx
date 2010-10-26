@@ -127,82 +127,7 @@ class LexerLPeg : public ILexer {
 	bool multilang;
 	int ws[STYLE_MAX + 1];
 private:
-	bool Init() {
-		char p1[50], p2[FILENAME_MAX], p3[FILENAME_MAX], p4[FILENAME_MAX];
-		props.GetExpanded("lexer.name", p1);
-		props.GetExpanded("lexer.lpeg.home", p2);
-		props.GetExpanded("lexer.lpeg.color.theme", p3);
-		props.GetExpanded("lexer.lpeg.script", p4);
-		if (*p1 == 0 || *p2 == 0 || *p3 == 0 || *p4 == 0) return false;
-
-		// Initialize or reinitialize Lua.
-		if (L) lua_close(L);
-		L = lua_open();
-		if (!L) {
-			fprintf(stderr, "Lua failed to initialize.\n");
-			return false;
-		}
-
-		// Set variables from properties.
-		lua_pushstring(L, p1);
-		lua_setfield(L, LUA_REGISTRYINDEX, "lexer_name");
-		lua_pushstring(L, p2);
-		lua_setglobal(L, "_LEXERHOME");
-		lua_pushstring(L, p3);
-		lua_setglobal(L, "_THEME");
-		lua_pushstring(L, p4);
-		lua_setfield(L, LUA_REGISTRYINDEX, "lexer_lua");
-
-		// Set variables from platform.
-#ifdef __WIN32__
-		lua_pushboolean(L, 1);
-		lua_setglobal(L, "WIN32");
-#endif
-#ifdef MAC
-		lua_pushboolean(L, 1);
-		lua_setglobal(L, "MAC");
-#endif
-#ifdef GTK
-		lua_pushboolean(L, 1);
-		lua_setglobal(L, "GTK");
-#endif
-
-		// Load Lua libraries.
-		l_openlib(luaopen_base, "");
-		l_openlib(luaopen_table, LUA_TABLIBNAME);
-		l_openlib(luaopen_string, LUA_STRLIBNAME);
-		l_openlib(luaopen_package, LUA_LOADLIBNAME);
-		l_openlib(luaopen_lpeg, "lpeg");
-
-		// Register functions.
-		lua_register(L, "GetStyleAt", lua_style_at);
-		lua_register(L, "GetProperty", lua_get_property);
-		lua_register(L, "GetFoldLevel", lua_get_fold_level);
-		lua_register(L, "GetIndentAmount", lua_get_indent_amount);
-
-		// Register constants.
-		l_setconst(SC_FOLDLEVELBASE, "SC_FOLDLEVELBASE");
-		l_setconst(SC_FOLDLEVELWHITEFLAG, "SC_FOLDLEVELWHITEFLAG");
-		l_setconst(SC_FOLDLEVELHEADERFLAG, "SC_FOLDLEVELHEADERFLAG");
-		l_setconst(SC_FOLDLEVELNUMBERMASK, "SC_FOLDLEVELNUMBERMASK");
-
-		// Load lexer.lua.
-		lua_getfield(L, LUA_REGISTRYINDEX, "lexer_lua");
-		const char *lexer_lua = lua_tostring(L, -1);
-		lua_pop(L, 1); // lexer_lua
-		if (strlen(lexer_lua) == 0) return false;
-		if (luaL_dofile(L, lexer_lua) != 0) return l_error(L);
-
-		// Load lexer tokens, styles, etc.
-		lua_getglobal(L, "lexer");
-		lua_getfield(L, -1, "load");
-		if (lua_isfunction(L, -1)) {
-			lua_getfield(L, LUA_REGISTRYINDEX, "lexer_name");
-			if (lua_pcall(L, 1, 0, 0) != 0) return l_error(L);
-		} else return l_error(L, "lexer.load not found");
-		lua_pop(L, 1); // lexer
-
-		// Setup Scintilla styles from loaded lexer styles.
+	bool SetStyles() {
 		lua_getglobal(L, "_LEXER");
 		if (!lua_istable(L, -1)) return l_error(L, "'_LEXER' table not found");
 		lua_getfield(L, -1, "_STYLES");
@@ -306,6 +231,87 @@ private:
 			} lua_pop(L, 1); // value
 		} while (lua_next(L, -2)); // _STYLES table
 		lua_pop(L, 2); // _LEXER._STYLES and _LEXER
+		return true;
+	}
+
+	bool Init() {
+		char p1[50], p2[FILENAME_MAX], p3[FILENAME_MAX], p4[FILENAME_MAX];
+		props.GetExpanded("lexer.name", p1);
+		props.GetExpanded("lexer.lpeg.home", p2);
+		props.GetExpanded("lexer.lpeg.color.theme", p3);
+		props.GetExpanded("lexer.lpeg.script", p4);
+		if (*p1 == 0 || *p2 == 0 || *p3 == 0 || *p4 == 0) return false;
+
+		// Initialize or reinitialize Lua.
+		if (L) lua_close(L);
+		L = lua_open();
+		if (!L) {
+			fprintf(stderr, "Lua failed to initialize.\n");
+			return false;
+		}
+
+		// Set variables from properties.
+		lua_pushstring(L, p1);
+		lua_setfield(L, LUA_REGISTRYINDEX, "lexer_name");
+		lua_pushstring(L, p2);
+		lua_setglobal(L, "_LEXERHOME");
+		lua_pushstring(L, p3);
+		lua_setglobal(L, "_THEME");
+		lua_pushstring(L, p4);
+		lua_setfield(L, LUA_REGISTRYINDEX, "lexer_lua");
+
+		// Set variables from platform.
+#ifdef __WIN32__
+		lua_pushboolean(L, 1);
+		lua_setglobal(L, "WIN32");
+#endif
+#ifdef MAC
+		lua_pushboolean(L, 1);
+		lua_setglobal(L, "MAC");
+#endif
+#ifdef GTK
+		lua_pushboolean(L, 1);
+		lua_setglobal(L, "GTK");
+#endif
+
+		// Load Lua libraries.
+		l_openlib(luaopen_base, "");
+		l_openlib(luaopen_table, LUA_TABLIBNAME);
+		l_openlib(luaopen_string, LUA_STRLIBNAME);
+		l_openlib(luaopen_package, LUA_LOADLIBNAME);
+		l_openlib(luaopen_lpeg, "lpeg");
+
+		// Register functions.
+		lua_register(L, "GetStyleAt", lua_style_at);
+		lua_register(L, "GetProperty", lua_get_property);
+		lua_register(L, "GetFoldLevel", lua_get_fold_level);
+		lua_register(L, "GetIndentAmount", lua_get_indent_amount);
+
+		// Register constants.
+		l_setconst(SC_FOLDLEVELBASE, "SC_FOLDLEVELBASE");
+		l_setconst(SC_FOLDLEVELWHITEFLAG, "SC_FOLDLEVELWHITEFLAG");
+		l_setconst(SC_FOLDLEVELHEADERFLAG, "SC_FOLDLEVELHEADERFLAG");
+		l_setconst(SC_FOLDLEVELNUMBERMASK, "SC_FOLDLEVELNUMBERMASK");
+
+		// Load lexer.lua.
+		lua_getfield(L, LUA_REGISTRYINDEX, "lexer_lua");
+		const char *lexer_lua = lua_tostring(L, -1);
+		lua_pop(L, 1); // lexer_lua
+		if (strlen(lexer_lua) == 0) return false;
+		if (luaL_dofile(L, lexer_lua) != 0) return l_error(L);
+
+		// Load lexer tokens, styles, etc.
+		lua_getglobal(L, "lexer");
+		lua_getfield(L, -1, "load");
+		if (lua_isfunction(L, -1)) {
+			lua_getfield(L, LUA_REGISTRYINDEX, "lexer_name");
+			if (lua_pcall(L, 1, 0, 0) != 0) return l_error(L);
+		} else return l_error(L, "lexer.load not found");
+		lua_pop(L, 1); // lexer
+
+		// Setup Scintilla styles from loaded lexer styles.
+		bool ok = SetStyles();
+		if (!ok) return false;
 
 		// If the lexer is a parent, it will have children in its _CHILDREN table.
 		// If the lexer is a child, it will have a parent in its _TOKENRULES table.
@@ -494,7 +500,7 @@ public:
 			if (strcmp(lexer_name, reinterpret_cast<const char *>(arg)) != 0) {
 				PropertySet("lexer.name", reinterpret_cast<const char *>(arg));
 				reinit = true;
-			}
+			} else SetStyles(); // load styling information
 			return NULL;
 		case SCI_GETLEXERLANGUAGE:
 			val = "null";
