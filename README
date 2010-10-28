@@ -15,10 +15,8 @@ This package requires Scintilla/SciTE >= 2.22.
 Scintillua adds support for Lua LPeg lexers in Scintilla and SciTE. The LPeg
 lexer is an external lexer so no modifications to Scintilla are necessary.
 
-With regards to speed, single-language dynamic lexers parse the same amount of
-text as Scintilla's lexers; any differences in speed should be negligible. On
-the other hand, multi-language dynamic lexers must parse the entire document
-to ensure accuracy and can be noticibly slower on large files.
+With regards to speed, dynamic lexers parse the same amount of text as
+Scintilla's lexers; any differences in speed should be negligible.
 
 ### Package Contents
 
