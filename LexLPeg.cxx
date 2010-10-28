@@ -265,9 +265,9 @@ private:
 		lua_pushboolean(L, 1);
 		lua_setglobal(L, "WIN32");
 #endif
-#ifdef MAC
+#ifdef __OSX__
 		lua_pushboolean(L, 1);
-		lua_setglobal(L, "MAC");
+		lua_setglobal(L, "OSX");
 #endif
 #ifdef GTK
 		lua_pushboolean(L, 1);
