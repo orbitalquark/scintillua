@@ -50,6 +50,9 @@ If you do not have direct access to your SciTE installation:
    e.g lexer.lpeg.home=$(SciteUserHome)\lexers
        lexer.lpeg.home=$(SciteUserHome)/.lexers
 
+Additionally for 64-bit Linux machines, you will have to rename
+lexers/liblexlpeg.x86_64.so to lexers/liblexlpeg.so.
+
 By default, SciTE will use its normal Scintilla lexers. In order to use LPeg
 ones, select 'Languages->LPeg' from the menu. This initializes the external
 lexer. Now select any language in the Languages menu to load that lexer. Please
