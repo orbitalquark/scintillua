@@ -21,8 +21,8 @@ local string = token(l.STRING, sq_str + dq_str)
 local equals = token(l.OPERATOR, '=')
 local number = token(l.NUMBER, l.digit^1 * P('%')^-1)
 local alpha = R('az', 'AZ', '\127\255')
-local word_char = l.alnum + S('_-')
-local identifier = (l.alpha + S('_-')) * word_char^0
+local word_char = l.alnum + S('_-:.??')
+local identifier = (l.alpha + S('_-:.??')) * word_char^0
 
 -- tags
 local namespace = token('namespace', identifier)
