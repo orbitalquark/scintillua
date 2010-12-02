@@ -10,7 +10,11 @@ module(...)
 local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
-local comment = token(l.COMMENT, '#' * l.nonnewline^0)
+local comment = token(l.COMMENT, '#' * P(function(input, index)
+  local i = index - 2
+  while i > 0 and input:find('^[ \t]', i) do i = i - 1 end
+  if i < 1 or input:find('^[\r\n;]', i) then return index end
+end) * l.nonnewline^0)
 
 -- strings
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')
