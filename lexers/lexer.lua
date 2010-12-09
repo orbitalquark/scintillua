@@ -825,7 +825,7 @@ function lex(text, init_style)
     end
     local offset = 0
     local grammar = lexer._GRAMMAR
-    for line in text:gmatch('[^\r\n]*[\r\n]*') do
+    for line in text:gmatch('[^\r\n]*\r?\n?') do
       local line_tokens = lpeg_match(grammar, line)
       if line_tokens then append(tokens, line_tokens, offset) end
       offset = offset + #line
@@ -1109,6 +1109,7 @@ function embed_lexer(parent, child, start_rule, end_rule)
   local children = parent._CHILDREN
   children[#children + 1] = child
   -- Add child styles.
+  if not parent._tokenstyles then parent._tokenstyles = {} end
   local tokenstyles = parent._tokenstyles
   tokenstyles[#tokenstyles + 1] = { child._NAME..'_whitespace',
                                     style_whitespace }
