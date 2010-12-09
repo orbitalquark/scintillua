@@ -14,8 +14,8 @@ local ws = token(l.WHITESPACE, l.space^1)
 -- comments
 local line_comment = '%' * l.nonnewline^0
 local block_comment = '\\begin{comment}' * (l.any - '\\end{comment}')^0 *
-                      '\\end{comment}'
-local comment = token(l.COMMENT, line_comment + block_comment)
+                      P('\\end{comment}')^-1
+local comment = token(l.COMMENT, block_comment + line_comment)
 
 -- strings
 local math_string = '$$' * (l.any - '$$')^0 * '$$' +
