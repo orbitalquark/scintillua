@@ -1061,7 +1061,9 @@ end
 --   'bar-foo', 'bar-baz', 'baz-foo', 'baz-bar' }, '-', true))
 function word_match(words, word_chars, case_insensitive)
   local word_list = {}
-  for _, word in ipairs(words) do word_list[word] = true end
+  for _, word in ipairs(words) do
+    word_list[case_insensitive and word:lower() or word] = true
+  end
   local chars = '%w_'
   -- escape 'magic' characters
   -- TODO: append chars to the end so ^_ can be passed for not including '_'s
