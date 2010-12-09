@@ -10,7 +10,7 @@ module(...)
 local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
-local comment = token(l.COMMENT, l.nested_pair('(*', '*)'), true)
+local comment = token(l.COMMENT, l.nested_pair('(*', '*)', true))
 
 -- strings
 local sq_str = token(l.STRING, l.delimited_range("'", '\\', true, false, '\n'))
