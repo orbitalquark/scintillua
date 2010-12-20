@@ -21,7 +21,7 @@ local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
 local string = token(l.STRING, sq_str + dq_str)
 
-local equals = token(l.OPERATOR, '=')
+-- numbers
 local number = token(l.NUMBER, l.digit^1 * P('%')^-1)
 
 -- tags
@@ -36,8 +36,8 @@ local element = token('element', word_match({
   'pre', 'q', 'samp', 'script', 'select', 'small', 'span', 'strike', 'strong',
   'style', 'sub', 'sup', 's', 'table', 'tbody', 'td', 'textarea', 'tfoot', 'th',
   'thead', 'title', 'tr', 'tt', 'u', 'ul', 'var', 'xml'
-}, nil, case_insensitive_tags))
-local attribute = token('attribute', word_match({
+}, nil, case_insensitive_tags)) + token('unknown_element', l.word)
+local attribute = (token('attribute', word_match({
   'abbr', 'accept-charset', 'accept', 'accesskey', 'action', 'align', 'alink',
   'alt', 'archive', 'axis', 'background', 'bgcolor', 'border', 'cellpadding',
   'cellspacing', 'char', 'charoff', 'charset', 'checked', 'cite', 'class',
@@ -58,12 +58,12 @@ local attribute = token('attribute', word_match({
   'usemap', 'valign', 'value', 'valuetype', 'version', 'vlink', 'vspace',
   'width', 'text', 'password', 'checkbox', 'radio', 'submit', 'reset', 'file',
   'hidden', 'image', 'xml', 'xmlns', 'xml:lang'
-}, '-:', case_insensitive_tags))
-local attributes = P{ attribute * (ws^0 * equals * ws^0 *
-                      (string + number))^-1 * (ws * V(1))^0 }
+}, '-:', case_insensitive_tags)) + token('unknown_attribute', l.word)) *
+  (ws^0 * token(l.OPERATOR, '=') * ws^0 * (string + number))^-1
+local attributes = P{ attribute * (ws * V(1))^0 }
 local tag_start = token('tag', '<' * P('/')^-1) * element
 local tag_end = token('tag', P('/')^-1 * '>')
-local tag = tag_start * (ws * attributes)^0 * ws^0 * tag_end
+local tag = tag_start * (ws * attributes)^0 * ws^0 * tag_end^-1
 
 -- words
 local word = token(l.DEFAULT, (l.any - l.space - S('<&'))^1)
@@ -84,7 +84,9 @@ _rules = {
 _tokenstyles = {
   { 'tag', l.style_tag },
   { 'element', l.style_tag },
+  { 'unknown_element', l.style_tag..{ italic = true } },
   { 'attribute', l.style_nothing..{ bold = true } },
+  { 'unknown_attribute', l.style_nothing..{ italic = true } },
   { 'entity', l.style_nothing..{ bold = true } },
   { 'doctype', l.style_keyword },
 }
