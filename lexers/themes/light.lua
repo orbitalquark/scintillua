@@ -1,4 +1,4 @@
--- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
+-- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- Light lexer theme for Scintillua.
 
 module('lexer', package.seeall)

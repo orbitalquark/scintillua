@@ -2,7 +2,7 @@
  * Lua-powered dynamic language lexer for Scintillua.
  * http://scintillua.googlecode.com
  *
- * Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net.
+ * Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net.
  * This file is distributed under Scintilla's license.
  *
  * Documentation can be found in the README, /lexers/lexer.lua, and

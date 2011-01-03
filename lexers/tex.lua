@@ -1,4 +1,4 @@
--- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
+-- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- April 2010 Robert Gieseke, combined LaTeX and ConTeXt lexing
 -- TeX LPeg lexer
 

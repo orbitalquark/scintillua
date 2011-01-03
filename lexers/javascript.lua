@@ -1,4 +1,4 @@
--- Copyright 2006-2010 Mitchell mitchell<att>caladbolg.net. See LICENSE.
+-- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- JavaScript LPeg Lexer
 
 local l = lexer
