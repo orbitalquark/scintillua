@@ -10,7 +10,8 @@ module(...)
 local ws = token(l.WHITESPACE, l.space^1)
 
 -- strings
-local string = token(l.STRING, l.delimited_range('"', '\\', true))
+local string = token(l.STRING, l.delimited_range('"', '\\', true) +
+                               l.delimited_range('{}', nil, true, true))
 
 -- fields
 local field = token('field', word_match {
