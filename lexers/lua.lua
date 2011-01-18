@@ -36,23 +36,22 @@ local number = token(l.NUMBER, l.float + lua_integer)
 
 -- keywords
 local keyword = token(l.KEYWORD, word_match {
-  'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for',
-  'function', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat',
-  'return', 'then', 'true', 'until', 'while'
+  'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for', 'function',
+  'if', 'in', 'local', 'nil', 'not', 'or', 'repeat', 'return', 'then', 'true',
+  'until', 'while'
 })
 
 -- functions
 local func = token(l.FUNCTION, word_match {
   'assert', 'collectgarbage', 'dofile', 'error', 'getfenv', 'getmetatable',
-  'gcinfo', 'ipairs', 'loadfile', 'loadlib', 'loadstring', 'next', 'pairs',
+  'ipairs', 'load', 'loadfile', 'loadstring', 'module', 'next', 'pairs',
   'pcall', 'print', 'rawequal', 'rawget', 'rawset', 'require', 'setfenv',
   'setmetatable', 'tonumber', 'tostring', 'type', 'unpack', 'xpcall'
 })
 
 -- constants
 local constant = token(l.CONSTANT, word_match {
-  '_G', '_VERSION', 'LUA_PATH', '_LOADED', '_REQUIREDNAME', '_ALERT',
-  '_ERRORMESSAGE', '_PROMPT'
+  '_G', '_VERSION'
 })
 
 -- identifiers
