@@ -1,4 +1,4 @@
-This package requires Scintilla/SciTE >= 2.22.
+This package requires Scintilla/SciTE >= 2.25.
 
 ### Topics covered in this README
 
@@ -51,12 +51,10 @@ If you do not have direct access to your SciTE installation:
 Additionally for 64-bit Linux machines, you will have to rename
 lexers/liblexlpeg.x86_64.so to lexers/liblexlpeg.so.
 
-By default, SciTE will use its normal Scintilla lexers. In order to use LPeg
-ones, select 'Languages->LPeg' from the menu. This initializes the external
-lexer. Now select any language in the Languages menu to load that lexer. Please
-note that some languages are not yet supported. To uninitialize the external
-lexer, select 'Languages->Text' from the menu. Now any selection from the menu
-loads the normal Scintilla lexer.
+By default, SciTE will use the LPeg lexers wherever possible, falling back to
+the Scintilla ones if necessary. To disable a particular LPeg lexer, open the
+`lexers/lpeg.properties` file and comment out its `file.pattern.lexer` and
+`lexer.$(file.pattern.lexer)` property lines.
 
 If you get incorrect or no syntax highlighting, please do the following:
 
@@ -169,4 +167,3 @@ Here is a pseudo-code example:
 ### Creating Lexers
 
 Please see http://caladbolg.net/luadoc/textadept/modules/lexer.html.
-
