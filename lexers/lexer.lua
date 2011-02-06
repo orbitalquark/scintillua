@@ -655,33 +655,44 @@ local function join_tokens(lexer)
   return lexer._TOKENRULE
 end
 
+-- Adds a given lexer and any of its embedded lexers to a given grammar.
+-- @param grammar The grammar to add the lexer to.
+-- @param lexer The lexer to add.
+local function add_lexer(grammar, lexer, token_rule)
+  local token_rule = join_tokens(lexer)
+  local lexer_name = lexer._NAME
+  for _, child in ipairs(lexer._CHILDREN) do
+    if child._CHILDREN then add_lexer(grammar, child) end
+    local child_name = child._NAME
+    local rules = child._EMBEDDEDRULES[lexer_name]
+    local rules_token_rule = grammar['__'..child_name] or rules.token_rule
+    grammar[child_name] = (-rules.end_rule * rules_token_rule)^0 *
+                          rules.end_rule^-1 * lpeg_V(lexer_name)
+    local embedded_child = '_'..child_name
+    grammar[embedded_child] = rules.start_rule * (-rules.end_rule *
+                              rules_token_rule)^0 * rules.end_rule^-1
+    token_rule = lpeg_V(embedded_child) + token_rule
+  end
+  grammar['__'..lexer_name] = token_rule -- cn contain embedded lexer rules
+  grammar[lexer_name] = token_rule^0
+end
+
 -- (Re)constructs lexer._GRAMMAR.
 -- @param lexer The parent lexer.
 -- @param initial_rule The name of the rule to start lexing with. Defaults to
 --   lexer._NAME. Multilang lexers use this to start with a child rule if
 --   necessary.
 local function build_grammar(lexer, initial_rule)
-  local token_rule = join_tokens(lexer)
   local children = lexer._CHILDREN
   if children then
     local lexer_name = lexer._NAME
     if not initial_rule then initial_rule = lexer_name end
-    local grammar = { initial_rule, [lexer_name] = token_rule^0 }
-    for _, child in ipairs(children) do
-      local child_name = child._NAME
-      local embedded_child = '_'..child_name
-      local rules = child._EMBEDDEDRULES[lexer_name]
-      grammar[embedded_child] = rules.start_rule * (-rules.end_rule *
-                                rules.token_rule)^0 * rules.end_rule^-1
-      token_rule = lpeg_V(embedded_child) + token_rule
-      grammar[child_name] = (-rules.end_rule * rules.token_rule)^0 *
-                            rules.end_rule^-1 * lpeg_V(lexer_name)
-    end
-    grammar[lexer_name] = token_rule^0
+    local grammar = { initial_rule }
+    add_lexer(grammar, lexer)
     lexer._INITIALRULE = initial_rule
     lexer._GRAMMAR = lpeg_Ct(lpeg_P(grammar))
   else
-    lexer._GRAMMAR = lpeg_Ct(token_rule^0)
+    lexer._GRAMMAR = lpeg_Ct(join_tokens(lexer)^0)
   end
 end
 
@@ -1118,14 +1129,6 @@ function embed_lexer(parent, child, start_rule, end_rule)
   for _, style in ipairs(child._tokenstyles or {}) do
     tokenstyles[#tokenstyles + 1] = style
   end
-  -- Add child's embedded lexers.
---  local children2 = child._CHILDREN
---  if children2 then
---    for _, child2 in ipairs(children2) do
---      child2._EMBEDDEDRULES[parent._NAME] = child2._EMBEDDEDRULES[child._NAME]
---      children[#children + 1] = child2
---    end
---  end
 end
 
 -- Registered functions and constants.
