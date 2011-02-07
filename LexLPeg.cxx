@@ -498,8 +498,8 @@ public:
 			char lexer_name[50];
 			props.GetExpanded("lexer.name", lexer_name);
 			if (strcmp(lexer_name, reinterpret_cast<const char *>(arg)) != 0) {
-				PropertySet("lexer.name", reinterpret_cast<const char *>(arg));
 				reinit = true;
+				PropertySet("lexer.name", reinterpret_cast<const char *>(arg));
 			} else SetStyles(); // load styling information
 			return NULL;
 		case SCI_GETLEXERLANGUAGE:
