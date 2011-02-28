@@ -18,7 +18,8 @@ local field = token('field', word_match {
   'author', 'title', 'journal', 'year', 'volume', 'number', 'pages', 'month',
   'note', 'key', 'publisher', 'editor', 'series', 'address', 'edition',
   'howpublished', 'booktitle', 'organization', 'chapter', 'school',
-  'institution', 'type'
+  'institution', 'type', 'isbn', 'issn', 'affiliation', 'issue', 'keyword',
+  'url'
 })
 
 -- identifiers
@@ -37,11 +38,11 @@ _rules = {
 }
 
 -- entries
-local entry = token('entry', P('@') * word_match {
+local entry = token('entry', P('@') * word_match({
   'book', 'article', 'booklet', 'conference', 'inbook', 'incollection',
   'inproceedings', 'manual', 'mastersthesis', 'lambda', 'misc', 'phdthesis',
   'proceedings', 'techreport', 'unpublished'
-})
+}, nil, true))
 
 -- Embedded in Latex.
 
