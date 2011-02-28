@@ -37,7 +37,9 @@ local keyword = token(l.KEYWORD, word_match {
 
 -- types
 local type = token(l.TYPE, word_match {
-  'boolean', 'byte', 'char', 'double', 'float', 'int', 'long', 'short', 'void'
+  'boolean', 'byte', 'char', 'double', 'float', 'int', 'long', 'short', 'void',
+  'Boolean', 'Byte', 'Character', 'Double', 'Float', 'Integer', 'Long', 'Short',
+  'String'
 })
 
 -- identifiers
