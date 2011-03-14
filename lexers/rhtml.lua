@@ -16,7 +16,7 @@ _lexer = html
 -- Embedded lexers.
 
 -- Embedded Ruby.
-local ruby = l.load('ruby')
+local ruby = l.load('rails')
 
 local ruby_start_rule = token('rhtml_tag', '<%' * P('=')^-1)
 local ruby_end_rule = token('rhtml_tag', '%>')
