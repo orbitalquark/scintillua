@@ -12,6 +12,15 @@ local noglobs = {
   ['Rout.fail'] = true,
 }
 
+local alt_name = {
+  actionscript = 'flash',
+  dmd = 'd',
+  hypertext = 'html',
+  javascript = 'js',
+  rstats = 'r',
+  ruby = 'rb',
+}
+
 -- Process file patterns and lexer definitions from Textadept.
 local output = { '# Lexer definitions (' }
 local lexer, ext
@@ -19,9 +28,10 @@ local exts = {}
 for line in io.lines('../textadept/modules/textadept/mime_types.conf') do
   if line:match('^%%') then
     if #exts > 0 then
-      output[#output + 1] = format('file.patterns.%s=%s', lexer,
+      local name = alt_name[lexer] or lexer
+      output[#output + 1] = format('file.patterns.%s=%s', name,
                                    concat(exts, ';'))
-      output[#output + 1] = format('lexer.$(file.patterns.%s)=lpeg_%s', lexer,
+      output[#output + 1] = format('lexer.$(file.patterns.%s)=lpeg_%s', name,
                                    lexer)
       exts = {}
     end

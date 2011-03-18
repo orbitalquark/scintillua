@@ -62,7 +62,7 @@ RELEASEDIR = scintillua$(value VERSION)
 PACKAGE = releases/$(RELEASEDIR).zip
 
 release: #lexers/LexLPeg.dll lexers/liblexlpeg.so
-  ./gen_lexer_props.lua
+	./gen_lexer_props.lua
 	hg archive $(RELEASEDIR)
 	rm $(RELEASEDIR)/.hg*
 	cp -r lexers/{LexLPeg.dll,liblexlpeg.so} $(RELEASEDIR)/lexers/
