@@ -898,8 +898,15 @@ function fold(text, start_pos, start_line, start_level)
       end
       current_line = current_line + 1
     end
-    return folds
+  else
+    -- No folding, reset fold levels if necessary.
+    local current_line = start_line
+    for _ in text:gmatch(".-\r?\n") do
+      folds[current_line] = { start_level }
+      current_line = current_line + 1
+    end
   end
+  return folds
 end
 
 -- The following are utility functions lexers will have access to.
