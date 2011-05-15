@@ -63,8 +63,18 @@ static int lua_style_at(lua_State *L) {
 	lua_getfield(L, LUA_REGISTRYINDEX, "pAccess");
 	IDocument *pAccess = static_cast<IDocument *>(lua_touserdata(L, -1));
 	LexAccessor styler(pAccess);
-	lua_pushnumber(L, styler.StyleAt(luaL_checkinteger(L, 1) - 1));
-	return 1;
+	int style = styler.StyleAt(luaL_checkinteger(L, 1) - 1);
+	lua_getglobal(L, "_LEXER");
+	lua_getfield(L, -1, "_TOKENS");
+	lua_pushnil(L);
+	while (lua_next(L, -2)) {
+		// stylename = num
+		if (luaL_checkinteger(L, -1) == style)
+			break;
+		else
+			lua_pop(L, 1); // value
+	}
+	return 2;
 }
 
 /**
@@ -443,7 +453,7 @@ public:
 			// Fold the text from the fold table returned.
 			if (lua_istable(L, -1)) {
 				lua_pushnil(L);
-				int line = 0, level = 0;
+				int line = 0, level = 0, maxline = 0, maxlevel = 0;
 				while (lua_next(L, -2)) { // fold (folds[i])
 					if (!lua_istable(L, -1)) {
 						l_error(L, "Table of folds expected from lexer.fold");
@@ -460,13 +470,16 @@ public:
 						lua_pop(L, 1); // fold[2]
 					}
 					styler.SetLevel(line, level);
+					if (line > maxline) {
+						maxline = line;
+						maxlevel = level;
+					}
 					lua_pop(L, 1); // fold
 				}
 				lua_pop(L, 1); // fold table returned
 				// Mask off the level number, leaving only the previous flags.
-				int flagsNext = styler.LevelAt(line + 1);
-				flagsNext &= ~SC_FOLDLEVELNUMBERMASK;
-				styler.SetLevel(line + 1, level | flagsNext);
+				int flagsNext = styler.LevelAt(maxline + 1) & ~SC_FOLDLEVELNUMBERMASK;
+				styler.SetLevel(maxline + 1, maxlevel | flagsNext);
 			} else l_error(L, "Table of folds expected from lexer.fold");
 		} else l_error(L, "lexer.fold function not found");
 		lua_pop(L, 1); // lexer

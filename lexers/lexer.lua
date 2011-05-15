@@ -1141,7 +1141,7 @@ end
 -- Registered functions and constants.
 
 ---
--- Returns the integer style number at a given position.
+-- Returns the string style name and style number at a given position.
 -- @param pos The position to get the style for.
 function get_style_at(pos) end
 get_style_at = GetStyleAt
