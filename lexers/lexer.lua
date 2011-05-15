@@ -391,7 +391,7 @@ module('lexer', package.seeall)
 -- other child lexers in it, and a child lexer that embeds itself within a
 -- parent lexer.
 --
--- #### Parent Lexer with Children
+-- ##### Parent Lexer with Children
 --
 -- An example of this kind of lexer is HTML with embedded CSS and Javascript.
 -- After creating the parent lexer, load the children lexers in it using
@@ -433,7 +433,7 @@ module('lexer', package.seeall)
 --     local js_end_rule = #('</' * P('script') * ws^0 * '>') * tag
 --     l.embed_lexer(_M, js, js_start_rule, js_end_rule)
 --
--- #### Child Lexer Within Parent
+-- ##### Child Lexer Within Parent
 --
 -- An example of this kind of lexer is PHP embedded in HTML. After creating the
 -- child lexer, load the parent lexer. As an example:
@@ -462,7 +462,50 @@ module('lexer', package.seeall)
 -- line of input text and assigns a fold level to it. Certain lines can be
 -- specified as fold points that fold subsequent lines with a higher fold level.
 --
--- In order to implement a folder, define the following function in your lexer:
+-- ##### Simple Code Folding
+--
+-- To specify the fold points of your lexer's language, create a `_foldsymbols`
+-- table of the following form:
+--
+--     _foldsymbols = {
+--       _patterns = { 'patt1', 'patt2', ... },
+--       token1 = { ['fold_on'] = 1, ['stop_on'] = -1 },
+--       token2 = { ['fold_on'] = 1, ['stop_on'] = -1 },
+--       token3 = { ['fold_on'] = 1, ['stop_on'] = -1 }
+--       ...
+--     }
+--
+-- + `_patterns`: Lua patterns that match a fold or stop point.
+-- + `token`_`N`_: The name of a token a fold or stop point must be part of.
+-- + _`fold_on`_: Text in a token that matches a fold point.
+-- + _`stop_on`_: Text in a token that matches a stop point.
+--
+-- Fold points must have a value of 1 and stop points must have a value of -1.
+--
+-- Lua folding would be implemented as follows:
+--
+--     _foldsymbols = {
+--       _patterns = { '%l+', '[%({%)}%[%]]' },
+--       keyword = {
+--         ['if'] = 1, ['do'] = 1, ['function'] = 1, ['repeat'] = 1,
+--         ['end'] = -1, ['until'] = -1
+--       },
+--       operator = { ['('] = 1, ['{'] = 1, [')'] = -1, ['}'] = -1 },
+--       comment = { ['['] = 1, [']'] = -1 },
+--     }
+--
+-- `_patterns` matches lower-case words and any brace character. These are the
+-- fold and stop points in Lua. If a lower-case word happens to be a `keyword`
+-- token and that word is `if`, `do`, `function`, or `repeat`, the line
+-- containing it is a fold point. If the word is `end` or `until`, the line is a
+-- stop point. Any unmatched parenthesis or braces counted as operators are also
+-- fold points. Finally, unmatched brackets in comments are fold points in order
+-- to fold long (multi-line) comments.
+--
+-- ##### Advanced Code Folding
+--
+-- If you need more granularity than `_foldsymbols`, you can define your own
+-- fold function:
 --
 --     function _fold(input, start_pos, start_line, start_level)
 --
@@ -796,6 +839,10 @@ function load(lexer_name)
     build_grammar(lexer)
   end
   add_style(lexer, lexer._NAME..'_whitespace', style_whitespace)
+  if lexer._foldsymbols and lexer._foldsymbols._patterns then
+    local patterns = lexer._foldsymbols._patterns
+    for i = 1, #patterns do patterns[i] = '()('..patterns[i]..')' end
+  end
   _G._LEXER = lexer
   return lexer
 end
@@ -861,18 +908,49 @@ end
 -- @return Table of fold levels.
 function fold(text, start_pos, start_line, start_level)
   local folds = {}
+  if text == '' then return folds end
   local lexer = _G._LEXER
   if lexer._fold then
     return lexer._fold(text, start_pos, start_line, start_level)
+  elseif lexer._foldsymbols then
+    local lines = {}
+    for p, l in text:gmatch('()(.-)\r?\n') do lines[#lines + 1] = { p, l } end
+    lines[#lines + 1] = { text:match('()([^\r\n]*)$') }
+    local fold_symbols = lexer._foldsymbols
+    local get_style_at = GetStyleAt
+    local SC_FOLDLEVELHEADERFLAG = SC_FOLDLEVELHEADERFLAG
+    local SC_FOLDLEVELWHITEFLAG = SC_FOLDLEVELWHITEFLAG
+    local line_num, prev_level = start_line, start_level
+    local current_level = prev_level
+    for i = 1, #lines do
+      local pos, line = lines[i][1], lines[i][2]
+      if #line > 0 then
+        for _, patt in ipairs(fold_symbols._patterns) do
+          for s, match in line:gmatch(patt) do
+            local style = get_style_at(start_pos + pos + s - 1)
+            if fold_symbols[style] then
+              current_level = current_level + (fold_symbols[style][match] or 0)
+            end
+          end
+        end
+        folds[line_num] = { prev_level }
+        if current_level > prev_level then
+          folds[line_num][2] = SC_FOLDLEVELHEADERFLAG
+        end
+        prev_level = current_level
+      else
+        folds[line_num] = { prev_level, SC_FOLDLEVELWHITEFLAG }
+      end
+      line_num = line_num + 1
+    end
   elseif GetProperty('fold.by.indentation', 1) == 1 then
     local GetIndentAmount, GetFoldLevel, SetFoldLevel =
       GetIndentAmount, GetFoldLevel, SetFoldLevel
-    local SC_FOLDLEVELHEADERFLAG, SC_FOLDLEVELWHITEFLAG =
-      SC_FOLDLEVELHEADERFLAG, SC_FOLDLEVELWHITEFLAG
+    local SC_FOLDLEVELHEADERFLAG = SC_FOLDLEVELHEADERFLAG
+    local SC_FOLDLEVELWHITEFLAG = SC_FOLDLEVELWHITEFLAG
     -- Indentation based folding.
-    local current_line = start_line
-    local prev_level   = start_level
-    for indent, line in text:gmatch('([\t ]*)(.-)\r?\n') do
+    local current_line, prev_level = start_line, start_level
+    for _, line in text:gmatch('([\t ]*)(.-)\r?\n') do
       if #line > 0 then
         local current_level = GetIndentAmount(current_line)
         if current_level > prev_level then -- next level
