@@ -74,3 +74,9 @@ _rules = {
 _tokenstyles = {
   { 'annotation', l.style_preproc },
 }
+
+_foldsymbols = {
+  _patterns = { '[{}]', '/%*', '%*/' },
+  operator = { ['{'] = 1, ['}'] = -1 },
+  comment = { ['/*'] = 1, ['*/'] = -1 }
+}
