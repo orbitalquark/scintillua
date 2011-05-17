@@ -946,13 +946,14 @@ function fold(text, start_pos, start_line, start_level)
   elseif GetProperty('fold.by.indentation', 1) == 1 then
     local GetIndentAmount, GetFoldLevel, SetFoldLevel =
       GetIndentAmount, GetFoldLevel, SetFoldLevel
+    local SC_FOLDLEVELBASE = SC_FOLDLEVELBASE
     local SC_FOLDLEVELHEADERFLAG = SC_FOLDLEVELHEADERFLAG
     local SC_FOLDLEVELWHITEFLAG = SC_FOLDLEVELWHITEFLAG
     -- Indentation based folding.
     local current_line, prev_level = start_line, start_level
     for _, line in text:gmatch('([\t ]*)(.-)\r?\n') do
       if #line > 0 then
-        local current_level = GetIndentAmount(current_line)
+        local current_level = SC_FOLDLEVELBASE + GetIndentAmount(current_line)
         if current_level > prev_level then -- next level
           local i = current_line - 1
           while folds[i] and folds[i][2] == SC_FOLDLEVELWHITEFLAG do
