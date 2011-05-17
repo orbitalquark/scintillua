@@ -113,3 +113,23 @@ _rules = {
   { 'operator', operator },
   { 'any_char', l.any_char },
 }
+
+local function disambiguate(text, pos, line, s)
+  return line:sub(1, s - 1):match('^%s*$') and
+         not text:sub(1, pos - 1):match('\\[ \t]*\r?\n$') and 1 or 0
+end
+
+_foldsymbols = {
+  _patterns = { '%l+', '[%(%)%[%]{}]', '=begin', '=end' },
+  keyword = {
+    begin = 1, class = 1, def = 1, ['do'] = 1, ['for'] = 1, ['module'] = 1,
+    case = 1,
+    ['if'] = disambiguate, ['while'] = disambiguate,
+    ['unless'] = disambiguate, ['until'] = disambiguate,
+    ['end'] = -1
+  },
+  operator = {
+    ['('] = 1, [')'] = -1, ['['] = 1, [']'] = -1, ['{'] = 1, ['}'] = -1
+  },
+  comment = { ['=begin'] = 1, ['=end'] = -1 }
+}
