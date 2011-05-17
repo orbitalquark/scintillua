@@ -480,7 +480,15 @@ module('lexer', package.seeall)
 -- + _`fold_on`_: Text in a token that matches a fold point.
 -- + _`stop_on`_: Text in a token that matches a stop point.
 --
--- Fold points must have a value of 1 and stop points must have a value of -1.
+-- Fold points must ultimately have a value of 1 and stop points must ultimately
+-- have a value of -1 so the value in the table could be a function as long as
+-- it returns 1, -1, or 0. Any functions are passed the following arguments:
+--
+-- + `text`: The text to fold.
+-- + `pos`: The position in `text` of the start of the current line.
+-- + `line`: The actual text of the current line.
+-- + `s`: The position in `line` the matched text starts at.
+-- + `match`: The matched text itself.
 --
 -- Lua folding would be implemented as follows:
 --
@@ -507,11 +515,11 @@ module('lexer', package.seeall)
 -- If you need more granularity than `_foldsymbols`, you can define your own
 -- fold function:
 --
---     function _fold(input, start_pos, start_line, start_level)
+--     function _fold(text, start_pos, start_line, start_level)
 --
 --     end
 --
--- + `input`: The text to fold.
+-- + `text`: The text to fold.
 -- + `start_pos`: Current position in the buffer of the text (used for obtaining
 --   style information from the document).
 -- + `start_line`: The line number the text starts at.
@@ -535,7 +543,7 @@ module('lexer', package.seeall)
 -- determine the fold level for each line. The following example sets fold
 -- points by changes in indentation.
 --
---     function _fold(input, start_pos, start_line, start_level)
+--     function _fold(text, start_pos, start_line, start_level)
 --       local folds = {}
 --       local current_line = start_line
 --       local prev_level = start_level
@@ -927,10 +935,14 @@ function fold(text, start_pos, start_line, start_level)
       if #line > 0 then
         for _, patt in ipairs(fold_symbols._patterns) do
           for s, match in line:gmatch(patt) do
-            local style = get_style_at(start_pos + pos + s - 1)
-            if fold_symbols[style] then
-              current_level = current_level + (fold_symbols[style][match] or 0)
+            local symbols = fold_symbols[get_style_at(start_pos + pos + s - 1)]
+            local l = symbols and symbols[match]
+            if type(l) == 'number' then
+              current_level = current_level + l
+            elseif type(l) == 'function' then
+              current_level = current_level + l(text, pos, line, s, match)
             end
+            if current_level < 0 then current_level = 0 end
           end
         end
         folds[line_num] = { prev_level }
