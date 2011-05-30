@@ -114,3 +114,15 @@ local js_start_rule = #(P('<') * script_element * P(function(input, index)
 end)) * tag -- <script type="text/javascript">
 local js_end_rule = #('</' * script_element * ws^0 * '>') * tag -- </script>
 l.embed_lexer(_M, js, js_start_rule, js_end_rule)
+
+-- Embedded CoffeeScript.
+local cs = l.load('coffeescript')
+
+local script_element = word_match({ 'script' }, nil, case_insensitive_tags)
+local cs_start_rule = #(P('<') * script_element * P(function(input, index)
+  if input:find('[^>]+type%s*=%s*(["\'])text/coffeescript%1') then
+    return index
+  end
+end)) * tag -- <script type="text/coffeescript">
+local cs_end_rule = #('</' * script_element * ws^0 * '>') * tag -- </script>
+l.embed_lexer(_M, cs, cs_start_rule, cs_end_rule)
