@@ -65,3 +65,8 @@ _tokenstyles = {
 }
 
 _LEXBYLINE = true
+
+_foldsymbols = {
+  _patterns = { '[A-Za-z]+' },
+  keyword = { setlocal = 1, endlocal = -1, SETLOCAL = 1, ENDLOCAL = -1 }
+}
