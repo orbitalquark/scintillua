@@ -126,3 +126,9 @@ local cs_start_rule = #(P('<') * script_element * P(function(input, index)
 end)) * tag -- <script type="text/coffeescript">
 local cs_end_rule = #('</' * script_element * ws^0 * '>') * tag -- </script>
 l.embed_lexer(_M, cs, cs_start_rule, cs_end_rule)
+
+_foldsymbols = {
+  _patterns = { '</?', '<!%-%-', '%-%->' },
+  comment = { ['<!--'] = 1, ['-->'] = -1 },
+  tag = { ['<'] = 1, ['</'] = -1 }
+}
