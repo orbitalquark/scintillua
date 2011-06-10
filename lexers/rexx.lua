@@ -85,3 +85,10 @@ _rules = {
   { 'operator', operator },
   { 'any_char', l.any_char },
 }
+
+_foldsymbols = {
+  _patterns = { '[a-z]+', '/%*', '%*/', ':' },
+  comment = { ['/*'] = 1, ['*/'] = -1 },
+  keyword = { ['do'] = 1, select = 1, ['end'] = -1, ['return'] = -1 },
+  operator = { [':'] = 1 }
+}
