@@ -27,3 +27,8 @@ l.embed_lexer(html, ruby, ruby_start_rule, ruby_end_rule, true)
 _tokenstyles = {
   { 'rhtml_tag', l.style_embedded },
 }
+
+local _foldsymbols = html._foldsymbols
+_foldsymbols._patterns[#_foldsymbols._patterns + 1] = '<%%'
+_foldsymbols._patterns[#_foldsymbols._patterns + 1] = '%%>'
+_foldsymbols.rhtml_tag = { ['<%'] = 1, ['%>'] = -1 }
