@@ -11,7 +11,7 @@ local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments
 local line_comment = ';' * l.nonnewline^0
-local block_comment = '#| ' * (l.any - ' |#')^0 * ' |#'
+local block_comment = '#|' * (l.any - '|#')^0 * '|#'
 local comment = token(l.COMMENT, line_comment + block_comment)
 
 local word = l.alpha * (l.alnum + '_' + '-')^0
@@ -71,4 +71,12 @@ _rules = {
 
 _tokenstyles = {
   { 'entity', l.style_variable },
+}
+
+_foldsymbols = {
+  _patterns = { '[%(%)%[%]{}]', '#|', '|#' },
+  comment = { ['#|'] = 1, ['|#'] = -1 },
+  operator = {
+    ['('] = 1, [')'] = -1, ['['] = 1, [']'] = -1, ['{'] = 1, ['}'] = -1
+  }
 }
