@@ -92,3 +92,12 @@ _rules = {
 _tokenstyles = {
   { 'label', l.style_constant },
 }
+
+_foldsymbols = {
+  _patterns = { '%*[A-Za-z]+' },
+  keyword = {
+    ['*if'] = 1, ['*IF'] = 1, ['*do'] = 1, ['*DO'] = 1, ['*dowhile'] = 1,
+    ['*DOWHILE'] = 1,
+    ['*endif'] = -1, ['*ENDIF'] = -1, ['*enddo'] = -1, ['*ENDDO'] = -1
+  }
+}
