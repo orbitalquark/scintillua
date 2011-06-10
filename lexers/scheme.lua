@@ -94,3 +94,11 @@ _rules = {
 _tokenstyles = {
   { 'entity', l.style_variable },
 }
+
+_foldsymbols = {
+  _patterns = { '[%(%)%[%]{}]', '#|', '|#' },
+  comment = { ['#|'] = 1, ['|#'] = -1 },
+  operator = {
+    ['('] = 1, [')'] = -1, ['['] = 1, [']'] = -1, ['{'] = 1, ['}'] = -1
+  }
+}
