@@ -71,3 +71,9 @@ _rules = {
   { 'operator', operator },
   { 'any_char', l.any_char },
 }
+
+_foldsymbols = {
+  _patterns = { '[{}]', '/%*', '%*/' },
+  comment = { ['/*'] = 1, ['*/'] = -1 },
+  operator = { ['{'] = 1, ['}'] = -1 }
+}
