@@ -55,3 +55,10 @@ _rules = {
 _tokenstyles = {
   { 'environment', l.style_tag },
 }
+
+_foldsymbols = {
+  _patterns = { '\\[a-z]+', '[{}]' },
+  comment = { ['\\begin'] = 1, ['\\end'] = -1 },
+  keyword = { ['\\begin'] = 1, ['\\end'] = -1 },
+  operator = { ['{'] = 1, ['}'] = -1 }
+}
