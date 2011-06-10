@@ -42,6 +42,10 @@ local identifier = token(l.IDENTIFIER, l.word)
 -- operators
 local operator = token(l.OPERATOR, S('$@:;|.=+*?~!^>-()[]{}'))
 
+-- actions
+local action = #P('{') * operator * token('action', (1 - P('}'))^0) *
+               (#P('}') * operator)^-1
+
 _rules = {
   { 'whitespace', ws },
   { 'keyword', keyword },
@@ -50,6 +54,19 @@ _rules = {
   { 'identifier', identifier },
   { 'string', string },
   { 'comment', comment },
+  { 'action', action },
   { 'operator', operator },
   { 'any_char', l.any_char },
+}
+
+_tokenstyles = {
+  { 'action', l.style_nothing..{ italic = true } }
+}
+
+_foldsymbols = {
+  _patterns = { '[:;%(%){}]', '/%*', '%*/' },
+  comment = { ['/*'] = 1, ['*/'] = -1 },
+  operator = {
+    [':'] = 1, [';'] = -1, ['('] = 1, [')'] = -1, ['{'] = 1, ['}'] = -1
+  }
 }
