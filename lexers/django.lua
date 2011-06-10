@@ -4,7 +4,7 @@
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S, V = l.lpeg.P, l.lpeg.R, l.lpeg.S, l.lpeg.V
-local _G = _G
+
 module(...)
 
 local ws = token(l.WHITESPACE, l.space^1)
@@ -72,3 +72,8 @@ html._RULES['comment'] = html._RULES['comment'] + comment
 _tokenstyles = {
   { 'django_tag', l.style_embedded },
 }
+
+local _foldsymbols = html._foldsymbols
+_foldsymbols._patterns[#_foldsymbols._patterns + 1] = '{[%%{]'
+_foldsymbols._patterns[#_foldsymbols._patterns + 1] = '[%%}]}'
+_foldsymbols.django_tag = { ['{{'] = 1, ['{%'] = 1, ['}}'] = -1, ['%}'] = -1 }
