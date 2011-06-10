@@ -85,3 +85,4 @@ table.insert(_rules, 2, { 'cuda_keyword', keyword })
 table.insert(_rules, 3, { 'cuda_function', func })
 table.insert(_rules, 4, { 'cuda_type', type })
 table.insert(_rules, 5, { 'cuda_variable', variable })
+_foldsymbols = cpp._foldsymbols
