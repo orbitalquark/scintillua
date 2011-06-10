@@ -123,3 +123,4 @@ table.insert(_rules, 2, { 'glsl_keyword', keyword })
 table.insert(_rules, 3, { 'glsl_function', func })
 table.insert(_rules, 4, { 'glsl_type', type })
 table.insert(_rules, 5, { 'glsl_variable', variable })
+_foldsymbols = cpp._foldsymbols
