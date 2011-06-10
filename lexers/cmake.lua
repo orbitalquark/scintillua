@@ -145,7 +145,7 @@ local operator = token(l.OPERATOR, word_match({
   'AND', 'COMMAND', 'DEFINED', 'DOC', 'EQUAL', 'EXISTS', 'GREATER', 'INTERNAL',
   'LESS', 'MATCHES', 'NAME', 'NAMES', 'NAME_WE', 'NOT', 'OR', 'PATH', 'PATHS',
   'PROGRAM', 'STREQUAL', 'STRGREATER', 'STRINGS', 'STRLESS'
-}) + S('=()'))
+}) + S('=(){}'))
 
 _rules = {
   { 'whitespace', ws },
@@ -158,4 +158,13 @@ _rules = {
   { 'string', string },
   { 'comment', comment },
   { 'any_char', l.any_char },
+}
+
+_foldsymbols = {
+  _patterns = { '[A-Z]+', '[%(%){}]' },
+  keyword = {
+    IF = 1, ENDIF = -1, FOREACH = 1, ENDFOREACH = -1, WHILE = 1, ENDWHILE = -1
+  },
+  ['function'] = { MACRO = 1, ENDMACRO = -1 },
+  operator = { ['('] = 1, [')'] = -1, ['{'] = 1, ['}'] = -1 }
 }
