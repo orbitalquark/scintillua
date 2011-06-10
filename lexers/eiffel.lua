@@ -54,3 +54,15 @@ _rules = {
   { 'operator', operator },
   { 'any_char', l.any_char },
 }
+
+_foldsymbols = {
+  _patterns = { '[a-z]+' },
+  keyword = {
+    check = 1, debug = 1, deferred = 1, ['do'] = 1, from = 1, ['if'] = 1,
+    inspect = 1, once = 1,
+    class = function(text, pos, line, s)
+      return line:find('deferred%s+class') and 0 or 1
+    end,
+    ['end'] = -1
+  }
+}
