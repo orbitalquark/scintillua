@@ -32,7 +32,7 @@ local number = token(l.NUMBER, l.float + l.integer)
 -- keywords
 local keyword = token(l.KEYWORD, word_match({
   'if', 'then', 'elif', 'else', 'fi', 'case', 'in', 'esac', 'while', 'for',
-  'do', 'done', 'continue', 'local', 'return',
+  'do', 'done', 'continue', 'local', 'return', 'select',
   -- operators
   '-a', '-b', '-c', '-d', '-e', '-f', '-g', '-h', '-k', '-p', '-r', '-s', '-t',
   '-u', '-w', '-x', '-O', '-G', '-L', '-S', '-N', '-nt', '-ot', '-ef', '-o',
@@ -64,4 +64,10 @@ _rules = {
   { 'variable', variable },
   { 'operator', operator },
   { 'any_char', l.any_char },
+}
+
+_foldsymbols = {
+  _patterns = { '[a-z]+', '[{}]' },
+  keyword = { ['if'] = 1, fi = -1, case = 1, esac = -1, ['do'] = 1, done = -1 },
+  operator = { ['{'] = 1, ['}'] = -1 }
 }
