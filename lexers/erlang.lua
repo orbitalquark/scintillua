@@ -85,3 +85,13 @@ _rules = {
 _tokenstyles = {
   { 'directive', l.style_preproc },
 }
+
+_foldsymbols = {
+  _patterns = { '[a-z]+', '[%(%)%[%]{}]' },
+  keyword = {
+    case = 1, fun = 1, ['if'] = 1, query = 1, receive = 1, ['end'] = -1
+  },
+  operator = {
+    ['('] = 1, [')'] = -1, ['['] = 1, [']'] = -1, ['{'] = 1, ['}'] = -1
+  }
+}
