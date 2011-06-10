@@ -904,6 +904,10 @@ function lex(text, init_style)
   end
 end
 
+local FOLD_BASE = SC_FOLDLEVELBASE
+local FOLD_HEADER  = SC_FOLDLEVELHEADERFLAG
+local FOLD_BLANK = SC_FOLDLEVELWHITEFLAG
+
 ---
 -- Folds the given text.
 -- Called by LexLPeg.cxx; do not call from Lua.
@@ -926,8 +930,6 @@ function fold(text, start_pos, start_line, start_level)
     lines[#lines + 1] = { text:match('()([^\r\n]*)$') }
     local fold_symbols = lexer._foldsymbols
     local get_style_at = GetStyleAt
-    local SC_FOLDLEVELHEADERFLAG = SC_FOLDLEVELHEADERFLAG
-    local SC_FOLDLEVELWHITEFLAG = SC_FOLDLEVELWHITEFLAG
     local line_num, prev_level = start_line, start_level
     local current_level = prev_level
     for i = 1, #lines do
@@ -942,38 +944,28 @@ function fold(text, start_pos, start_line, start_level)
             elseif type(l) == 'function' then
               current_level = current_level + l(text, pos, line, s, match)
             end
-            if current_level < 0 then current_level = 0 end
+            if current_level < FOLD_BASE then current_level = FOLD_BASE end
           end
         end
         folds[line_num] = { prev_level }
-        if current_level > prev_level then
-          folds[line_num][2] = SC_FOLDLEVELHEADERFLAG
-        end
+        if current_level > prev_level then folds[line_num][2] = FOLD_HEADER end
         prev_level = current_level
       else
-        folds[line_num] = { prev_level, SC_FOLDLEVELWHITEFLAG }
+        folds[line_num] = { prev_level, FOLD_BLANK }
       end
       line_num = line_num + 1
     end
   elseif GetProperty('fold.by.indentation', 1) == 1 then
-    local GetIndentAmount, GetFoldLevel, SetFoldLevel =
-      GetIndentAmount, GetFoldLevel, SetFoldLevel
-    local SC_FOLDLEVELBASE = SC_FOLDLEVELBASE
-    local SC_FOLDLEVELHEADERFLAG = SC_FOLDLEVELHEADERFLAG
-    local SC_FOLDLEVELWHITEFLAG = SC_FOLDLEVELWHITEFLAG
+    local get_indent_amount = GetIndentAmount
     -- Indentation based folding.
     local current_line, prev_level = start_line, start_level
     for _, line in text:gmatch('([\t ]*)(.-)\r?\n') do
       if #line > 0 then
-        local current_level = SC_FOLDLEVELBASE + GetIndentAmount(current_line)
+        local current_level = FOLD_BASE + get_indent_amount(current_line)
         if current_level > prev_level then -- next level
           local i = current_line - 1
-          while folds[i] and folds[i][2] == SC_FOLDLEVELWHITEFLAG do
-            i = i - 1
-          end
-          if folds[i] then
-            folds[i][2] = SC_FOLDLEVELHEADERFLAG -- low indent
-          end
+          while folds[i] and folds[i][2] == FOLD_BLANK do i = i - 1 end
+          if folds[i] then folds[i][2] = FOLD_HEADER end -- low indent
           folds[current_line] = { current_level } -- high indent
         elseif current_level < prev_level then -- prev level
           if folds[current_line - 1] then
@@ -985,7 +977,7 @@ function fold(text, start_pos, start_line, start_level)
         end
         prev_level = current_level
       else
-        folds[current_line] = { prev_level, SC_FOLDLEVELWHITEFLAG }
+        folds[current_line] = { prev_level, FOLD_BLANK }
       end
       current_line = current_line + 1
     end
