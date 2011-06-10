@@ -19,7 +19,7 @@ module('lexer', package.seeall)
 -- ## Writing a Dynamic Lexer
 --
 -- Rather than writing a lexer from scratch, first see if your language is
--- similar to any of the 70+ languages supported. If so, you can copy and modify
+-- similar to any of the 80+ languages supported. If so, you can copy and modify
 -- that lexer, saving some time and effort.
 --
 -- #### Introduction
