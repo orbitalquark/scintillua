@@ -35,3 +35,10 @@ _rules = {
   { 'operator', operator },
   { 'any_char', l.any_char },
 }
+
+_foldsymbols = {
+  _patterns = { '\\[a-z]+', '[{}]' },
+  comment = { ['\\begin'] = 1, ['\\end'] = -1 },
+  keyword = { ['\\begin'] = 1, ['\\end'] = -1 },
+  operator = { ['{'] = 1, ['}'] = -1 }
+}
