@@ -65,3 +65,9 @@ _rules = {
 _tokenstyles = {
   { 'regex', l.style_string..{ back = color('44', '44', '44')} },
 }
+
+_foldsymbols = {
+  _patterns = { '[{}]', '/%*', '%*/' },
+  operator = { ['{'] = 1, ['}'] = -1 },
+  comment = { ['/*'] = 1, ['*/'] = -1 }
+}
