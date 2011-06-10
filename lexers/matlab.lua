@@ -38,7 +38,7 @@ local block_comment = '%{' * (l.any - '%}')^0 * P('%}')^-1
 local comment = token(l.COMMENT, block_comment + line_comment)
 
 -- strings
-local sq_str = l.delimited_range("'", '\\', true)
+local sq_str = l.delimited_range("'", '\\', false, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true)
 local bt_str = l.delimited_range('`', '\\', true)
 local string = token(l.STRING, sq_str + dq_str + bt_str)
@@ -114,4 +114,12 @@ _rules = {
 
 _tokenstyles = {
   { 'function', l.style_function..{ fore = l.colors.red } },
+}
+
+_foldsymbols = {
+  _patterns = { '[a-z]+', '[%(%)%[%]]' },
+  keyword = {
+    ['if'] = 1, ['for'] = 1, ['while'] = 1, switch = 1, ['end'] = -1
+  },
+  operator = { ['('] = 1, [')'] = -1, ['['] = 1, [']'] = -1 }
 }
