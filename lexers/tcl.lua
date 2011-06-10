@@ -61,3 +61,8 @@ _rules = {
   { 'operator', operator },
   { 'any_char', l.any_char },
 }
+
+_foldsymbols = {
+  _patterns = { '[{}]' },
+  operator = { ['{'] = 1, ['}'] = -1 }
+}
