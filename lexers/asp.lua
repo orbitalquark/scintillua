@@ -39,3 +39,8 @@ l.embed_lexer(html, vbs, vbs_start_rule, vbs_end_rule)
 _tokenstyles = {
   { 'asp_tag', l.style_embedded },
 }
+
+local _foldsymbols = html._foldsymbols
+_foldsymbols._patterns[#_foldsymbols._patterns + 1] = '<%%'
+_foldsymbols._patterns[#_foldsymbols._patterns + 1] = '%%>'
+_foldsymbols.asp_tag = { ['<%'] = 1, ['%>'] = -1 }
