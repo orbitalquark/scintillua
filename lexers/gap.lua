@@ -43,3 +43,11 @@ _rules = {
   { 'operator', operator },
   { 'any_char', l.any_char },
 }
+
+_foldsymbols = {
+  _patterns = { '[a-z]+' },
+  keyword = {
+    ['function'] = 1, ['do'] = 1, ['if'] = 1, ['repeat'] = 1,
+    ['end'] = -1, od = -1, fi = -1, ['until'] = -1
+  }
+}
