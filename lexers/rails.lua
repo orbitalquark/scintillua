@@ -58,3 +58,4 @@ table.insert(_rules, 3, { 'actionpack', actionpack })
 table.insert(_rules, 4, { 'view_helpers', view_helpers })
 table.insert(_rules, 5, { 'activerecord', activerecord  })
 table.insert(_rules, 6, { 'active_support', active_support })
+_foldsymbols = ruby._foldsymbols
