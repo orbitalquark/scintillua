@@ -118,8 +118,8 @@ _tokenstyles = {
 
 _foldsymbols = {
   _patterns = { '[a-z]+', '[%(%)%[%]]' },
-  keyword = {
+  [l.KEYWORD] = {
     ['if'] = 1, ['for'] = 1, ['while'] = 1, switch = 1, ['end'] = -1
   },
-  operator = { ['('] = 1, [')'] = -1, ['['] = 1, [']'] = -1 }
+  [l.OPERATOR] = { ['('] = 1, [')'] = -1, ['['] = 1, [']'] = -1 }
 }

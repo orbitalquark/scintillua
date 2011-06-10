@@ -58,7 +58,7 @@ _tokenstyles = {
 
 _foldsymbols = {
   _patterns = { '\\[a-z]+', '[{}]' },
-  comment = { ['\\begin'] = 1, ['\\end'] = -1 },
-  keyword = { ['\\begin'] = 1, ['\\end'] = -1 },
-  operator = { ['{'] = 1, ['}'] = -1 }
+  [l.COMMENT] = { ['\\begin'] = 1, ['\\end'] = -1 },
+  [l.KEYWORD] = { ['\\begin'] = 1, ['\\end'] = -1 },
+  [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 }
 }

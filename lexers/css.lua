@@ -159,6 +159,6 @@ _tokenstyles = {
 
 _foldsymbols = {
   _patterns = { '[{}]', '/%*', '%*/' },
-  operator = { ['{'] = 1, ['}'] = -1 },
-  comment = { ['/*'] = 1, ['*/'] = -1 }
+  [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
+  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1 }
 }

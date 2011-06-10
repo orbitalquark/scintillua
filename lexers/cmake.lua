@@ -162,9 +162,9 @@ _rules = {
 
 _foldsymbols = {
   _patterns = { '[A-Z]+', '[%(%){}]' },
-  keyword = {
+  [l.KEYWORD] = {
     IF = 1, ENDIF = -1, FOREACH = 1, ENDFOREACH = -1, WHILE = 1, ENDWHILE = -1
   },
-  ['function'] = { MACRO = 1, ENDMACRO = -1 },
-  operator = { ['('] = 1, [')'] = -1, ['{'] = 1, ['}'] = -1 }
+  [l.FUNCTION] = { MACRO = 1, ENDMACRO = -1 },
+  [l.OPERATOR] = { ['('] = 1, [')'] = -1, ['{'] = 1, ['}'] = -1 }
 }

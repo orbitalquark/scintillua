@@ -68,6 +68,6 @@ _rules = {
 
 _foldsymbols = {
   _patterns = { '[a-z]+', '[{}]' },
-  keyword = { ['if'] = 1, fi = -1, case = 1, esac = -1, ['do'] = 1, done = -1 },
-  operator = { ['{'] = 1, ['}'] = -1 }
+  [l.KEYWORD] = { ['if'] = 1, fi = -1, case = 1, esac = -1, ['do'] = 1, done = -1 },
+  [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 }
 }

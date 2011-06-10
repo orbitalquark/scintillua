@@ -121,15 +121,15 @@ end
 
 _foldsymbols = {
   _patterns = { '%l+', '[%(%)%[%]{}]', '=begin', '=end' },
-  keyword = {
+  [l.KEYWORD] = {
     begin = 1, class = 1, def = 1, ['do'] = 1, ['for'] = 1, ['module'] = 1,
     case = 1,
     ['if'] = disambiguate, ['while'] = disambiguate,
     ['unless'] = disambiguate, ['until'] = disambiguate,
     ['end'] = -1
   },
-  operator = {
+  [l.OPERATOR] = {
     ['('] = 1, [')'] = -1, ['['] = 1, [']'] = -1, ['{'] = 1, ['}'] = -1
   },
-  comment = { ['=begin'] = 1, ['=end'] = -1 }
+  [l.COMMENT] = { ['=begin'] = 1, ['=end'] = -1 }
 }

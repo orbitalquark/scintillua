@@ -76,10 +76,10 @@ _rules = {
 
 _foldsymbols = {
   _patterns = { '%l+', '[{}]', '/%*', '%*/' },
-  preprocessor = {
+  [l.PREPROCESSOR] = {
     region = 1, endregion = -1,
     ['if'] = 1, ifdef = 1, ifndef = 1, endif = -1
   },
-  operator = { ['{'] = 1, ['}'] = -1 },
-  comment = { ['/*'] = 1, ['*/'] = -1 }
+  [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
+  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1 }
 }

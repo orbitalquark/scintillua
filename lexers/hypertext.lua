@@ -129,6 +129,6 @@ l.embed_lexer(_M, cs, cs_start_rule, cs_end_rule)
 
 _foldsymbols = {
   _patterns = { '</?', '<!%-%-', '%-%->' },
-  comment = { ['<!--'] = 1, ['-->'] = -1 },
+  [l.COMMENT] = { ['<!--'] = 1, ['-->'] = -1 },
   tag = { ['<'] = 1, ['</'] = -1 }
 }

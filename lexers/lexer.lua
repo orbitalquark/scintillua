@@ -494,12 +494,12 @@ module('lexer', package.seeall)
 --
 --     _foldsymbols = {
 --       _patterns = { '%l+', '[%({%)}%[%]]' },
---       keyword = {
+--       [l.COMMENT] = { ['['] = 1, [']'] = -1 },
+--       [l.KEYWORD] = {
 --         ['if'] = 1, ['do'] = 1, ['function'] = 1, ['repeat'] = 1,
 --         ['end'] = -1, ['until'] = -1
 --       },
---       operator = { ['('] = 1, ['{'] = 1, [')'] = -1, ['}'] = -1 },
---       comment = { ['['] = 1, [']'] = -1 },
+--       [l.OPERATOR] = { ['('] = 1, ['{'] = 1, [')'] = -1, ['}'] = -1 },
 --     }
 --
 -- `_patterns` matches lower-case words and any brace character. These are the

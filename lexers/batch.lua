@@ -68,5 +68,5 @@ _LEXBYLINE = true
 
 _foldsymbols = {
   _patterns = { '[A-Za-z]+' },
-  keyword = { setlocal = 1, endlocal = -1, SETLOCAL = 1, ENDLOCAL = -1 }
+  [l.KEYWORD] = { setlocal = 1, endlocal = -1, SETLOCAL = 1, ENDLOCAL = -1 }
 }

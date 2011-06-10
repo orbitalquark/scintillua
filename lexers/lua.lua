@@ -81,11 +81,11 @@ _tokenstyles = {
 
 _foldsymbols = {
   _patterns = { '%l+', '[%({%)}%[%]]' },
-  keyword = {
+  [l.COMMENT] = { ['['] = 1, [']'] = -1 },
+  [l.KEYWORD] = {
     ['if'] = 1, ['do'] = 1, ['function'] = 1, ['repeat'] = 1,
     ['end'] = -1, ['until'] = -1
   },
-  operator = { ['('] = 1, ['{'] = 1, [')'] = -1, ['}'] = -1 },
-  comment = { ['['] = 1, [']'] = -1 },
+  [l.OPERATOR] = { ['('] = 1, ['{'] = 1, [')'] = -1, ['}'] = -1 },
   longstring = { ['['] = 1, [']'] = -1 }
 }

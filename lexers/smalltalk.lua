@@ -60,5 +60,5 @@ _tokenstyles = {
 
 _foldsymbols = {
   _patterns = { '[%[%]]' },
-  operator = { ['['] = 1, [']'] = -1 }
+  [l.OPERATOR] = { ['['] = 1, [']'] = -1 }
 }

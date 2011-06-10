@@ -57,7 +57,7 @@ _rules = {
 
 _foldsymbols = {
   _patterns = { '[a-z]+' },
-  keyword = {
+  [l.KEYWORD] = {
     check = 1, debug = 1, deferred = 1, ['do'] = 1, from = 1, ['if'] = 1,
     inspect = 1, once = 1,
     class = function(text, pos, line, s)

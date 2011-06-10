@@ -86,8 +86,8 @@ _rules = {
 
 _foldsymbols = {
   _patterns = { '[a-z]+', '[%(%){}]', '/%*', '%*/' },
-  comment = { ['/*'] = 1, ['*/'] = -1 },
-  keyword = {
+  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1 },
+  [l.KEYWORD] = {
     case = 1, casex = 1, casez = 1, ['function'] = 1, fork = 1, table = 1,
     task = 1, generate = 1, specify = 1, primitive = 1, ['module'] = 1,
     begin = 1,
@@ -95,5 +95,5 @@ _foldsymbols = {
     endtable = -1, endspecify = -1, endprimitive = -1, endmodule = -1,
     ['end'] = -1
   },
-  operator = { ['('] = 1, [')'] = -1, ['{'] = 1, ['}'] = -1 }
+  [l.OPERATOR] = { ['('] = 1, [')'] = -1, ['{'] = 1, ['}'] = -1 }
 }

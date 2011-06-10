@@ -46,7 +46,7 @@ _rules = {
 
 _foldsymbols = {
   _patterns = { '[a-z]+' },
-  keyword = {
+  [l.KEYWORD] = {
     ['function'] = 1, ['do'] = 1, ['if'] = 1, ['repeat'] = 1,
     ['end'] = -1, od = -1, fi = -1, ['until'] = -1
   }

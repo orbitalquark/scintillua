@@ -88,10 +88,10 @@ _tokenstyles = {
 
 _foldsymbols = {
   _patterns = { '[a-z]+', '[%(%)%[%]{}]' },
-  keyword = {
+  [l.KEYWORD] = {
     case = 1, fun = 1, ['if'] = 1, query = 1, receive = 1, ['end'] = -1
   },
-  operator = {
+  [l.OPERATOR] = {
     ['('] = 1, [')'] = -1, ['['] = 1, [']'] = -1, ['{'] = 1, ['}'] = -1
   }
 }
