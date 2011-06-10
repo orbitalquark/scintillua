@@ -11,7 +11,7 @@ local ws = token(l.WHITESPACE, l.space^1)
 
 -- comments and CDATA
 local comment = token(l.COMMENT, '<!--' * (l.any - '-->')^0 * P('-->')^-1)
-local cdata = token('cdata', '<![CDATA' * (l.any - ']]>')^0 * P(']]>')^-1)
+local cdata = token('cdata', '<![CDATA[' * (l.any - ']]>')^0 * P(']]>')^-1)
 
 -- strings
 local sq_str = l.delimited_range("'", nil, true)
@@ -65,4 +65,11 @@ _tokenstyles = {
   { 'cdata', l.style_comment },
   { 'entity', l.style_nothing },
   { 'doctype', l.style_embedded },
+}
+
+_foldsymbols = {
+  _patterns = { '</?', '<!%-%-', '%-%->', '<!%[CDATA%[', '%]%]>' },
+  comment = { ['<!--'] = 1, ['-->'] = -1 },
+  cdata = { ['<![CDATA['] = 1, [']]>'] = -1 },
+  tag = { ['<'] = 1, ['</'] = -1 }
 }
