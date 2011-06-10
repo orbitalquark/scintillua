@@ -85,3 +85,8 @@ l.embed_lexer(html, _M, php_start_rule, php_end_rule)
 _tokenstyles = {
   { 'php_tag', l.style_embedded },
 }
+
+local _foldsymbols = html._foldsymbols
+_foldsymbols._patterns[#_foldsymbols._patterns + 1] = '<%?'
+_foldsymbols._patterns[#_foldsymbols._patterns + 1] = '%?>'
+_foldsymbols.php_tag = { ['<?'] = 1, ['?>'] = -1 }
