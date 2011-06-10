@@ -57,3 +57,8 @@ _rules = {
 _tokenstyles = {
   { 'label', l.style_variable },
 }
+
+_foldsymbols = {
+  _patterns = { '[%[%]]' },
+  operator = { ['['] = 1, [']'] = -1 }
+}
