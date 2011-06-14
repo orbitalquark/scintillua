@@ -31,11 +31,11 @@ local color = token('color', '#' * xdigit * xdigit * xdigit * xdigit * xdigit *
 
 _rules = {
   { 'whitespace', ws },
+  { 'color', color },
   { 'comment', comment },
   { 'equals', equals },
   { 'string', string },
   { 'variable', variable },
-  { 'color', color },
   { 'any_char', l.any_char },
 }
 
