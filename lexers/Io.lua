@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Io LPeg lexer
+-- Io LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,39 +7,40 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local line_comment = (P('#') + '//') * l.nonnewline^0
 local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
 local comment = token(l.COMMENT, line_comment + block_comment)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
 local tq_str = '"""' * (l.any - '"""')^0 * P('"""')^-1
-local string = token(l.STRING, sq_str + dq_str + tq_str)
+local string = token(l.STRING, tq_str + sq_str + dq_str)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'block', 'method', 'while', 'foreach', 'if', 'else', 'do', 'super', 'self',
   'clone', 'proto', 'setSlot', 'hasSlot', 'type', 'write', 'print', 'forward'
 })
 
--- types
+-- Types.
 local type = token(l.TYPE, word_match {
   'Block', 'Buffer', 'CFunction', 'Date', 'Duration', 'File', 'Future', 'List',
   'LinkedList', 'Map', 'Nop', 'Message', 'Nil', 'Number', 'Object', 'String',
   'WeakLink'
 })
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('`~@$%^&*-+/=\\<>?.,:;()[]{}'))
 
 _rules = {
@@ -56,6 +57,6 @@ _rules = {
 
 _foldsymbols = {
   _patterns = { '[%(%)]', '/%*', '%*/' },
-  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1 },
-  [l.OPERATOR] = { ['('] = 1, [')'] = -1 }
+  [l.OPERATOR] = { ['('] = 1, [')'] = -1 },
+  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1 }
 }

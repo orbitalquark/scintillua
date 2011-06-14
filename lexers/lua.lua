@@ -1,7 +1,6 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Lua LPeg lexer
-
--- Original written by Peter Odding, 2007/04/04
+-- Lua LPeg lexer.
+-- Original written by Peter Odding, 2007/04/04.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -9,6 +8,7 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
 local longstring = #('[[' + ('[' * P('=')^0 * '['))
@@ -20,29 +20,29 @@ local longstring = longstring * P(function(input, index)
   end
 end)
 
--- comments
+-- Comments.
 local line_comment = '--' * l.nonnewline^0
 local block_comment = '--' * longstring
 local comment = token(l.COMMENT, block_comment + line_comment)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
 local string = token(l.STRING, sq_str + dq_str) +
                token('longstring', longstring)
 
--- numbers
+-- Numbers.
 local lua_integer = P('-')^-1 * (l.hex_num + l.dec_num)
 local number = token(l.NUMBER, l.float + lua_integer)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for', 'function',
   'if', 'in', 'local', 'nil', 'not', 'or', 'repeat', 'return', 'then', 'true',
   'until', 'while'
 })
 
--- functions
+-- Functions.
 local func = token(l.FUNCTION, word_match {
   'assert', 'collectgarbage', 'dofile', 'error', 'getfenv', 'getmetatable',
   'ipairs', 'load', 'loadfile', 'loadstring', 'module', 'next', 'pairs',
@@ -50,16 +50,16 @@ local func = token(l.FUNCTION, word_match {
   'setmetatable', 'tonumber', 'tostring', 'type', 'unpack', 'xpcall'
 })
 
--- constants
+-- Constants.
 local constant = token(l.CONSTANT, word_match {
   '_G', '_VERSION'
 })
 
--- identifiers
+-- Identifiers.
 local word = (R('AZ', 'az', '\127\255') + '_') * (l.alnum + '_')^0
 local identifier = token(l.IDENTIFIER, word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, '~=' + S('+-*/%^#=<>;:,.{}[]()'))
 
 _rules = {
@@ -81,11 +81,11 @@ _tokenstyles = {
 
 _foldsymbols = {
   _patterns = { '%l+', '[%({%)}%[%]]' },
-  [l.COMMENT] = { ['['] = 1, [']'] = -1 },
   [l.KEYWORD] = {
-    ['if'] = 1, ['do'] = 1, ['function'] = 1, ['repeat'] = 1,
-    ['end'] = -1, ['until'] = -1
+    ['if'] = 1, ['do'] = 1, ['function'] = 1, ['end'] = -1, ['repeat'] = 1,
+    ['until'] = -1
   },
-  [l.OPERATOR] = { ['('] = 1, ['{'] = 1, [')'] = -1, ['}'] = -1 },
-  longstring = { ['['] = 1, [']'] = -1 }
+  [l.COMMENT] = { ['['] = 1, [']'] = -1 },
+  longstring = { ['['] = 1, [']'] = -1 },
+  [l.OPERATOR] = { ['('] = 1, ['{'] = 1, [')'] = -1, ['}'] = -1 }
 }

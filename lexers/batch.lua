@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Batch LPeg lexer
+-- Batch LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,16 +7,17 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local rem = (P('REM') + 'rem') * l.space
 local comment = token(l.COMMENT, (rem + ':') * l.nonnewline^0)
 
--- strings
+-- Strings.
 local string = token(l.STRING, l.delimited_range('"', '\\', true, false, '\n'))
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match({
   'cd', 'chdir', 'md', 'mkdir', 'cls', 'for', 'if', 'echo', 'echo.', 'move',
   'copy', 'move', 'ren', 'del', 'set', 'call', 'exit', 'setlocal', 'shift',
@@ -24,7 +25,7 @@ local keyword = token(l.KEYWORD, word_match({
   'NUL', 'AUX', 'PRN', 'not', 'goto',
 }, nil, true))
 
--- functions
+-- Functions.
 local func = token(l.FUNCTION, word_match({
   'APPEND', 'ATTRIB', 'CHKDSK', 'CHOICE', 'DEBUG', 'DEFRAG', 'DELTREE',
   'DISKCOMP', 'DISKCOPY', 'DOSKEY', 'DRVSPACE', 'EMM386', 'EXPAND', 'FASTOPEN',
@@ -34,18 +35,18 @@ local func = token(l.FUNCTION, word_match({
   'UNDELETE', 'UNFORMAT', 'VSAFE', 'XCOPY',
 }, nil, true))
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- variables
+-- Variables.
 local variable = token(l.VARIABLE, '%' * (l.digit + '%' * l.alpha) +
                        l.delimited_range('%', nil, false, false, '\n'))
 
--- labels
-local label = token('label', ':' * l.word)
-
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('+|&!<>='))
+
+-- Labels.
+local label = token('label', ':' * l.word)
 
 _rules = {
   { 'whitespace', ws },

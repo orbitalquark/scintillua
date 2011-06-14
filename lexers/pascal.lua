@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Pascal LPeg Lexer
+-- Pascal LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,22 +7,23 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local line_comment = '//' * l.nonnewline_esc^0
 local bblock_comment = '{' * (l.any - '}')^0 * P('}')^-1
 local pblock_comment = '(*' * (l.any - '*)')^0 * P('*)')^-1
 local comment = token(l.COMMENT, line_comment + bblock_comment + pblock_comment)
 
--- strings
+-- Strings.
 local string = token(l.STRING, S('uUrR')^-1 *
                      l.delimited_range("'", nil, true, false, '\n'))
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, (l.float + l.integer) * S('LlDdFf')^-1)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match({
   'and', 'array', 'as', 'at', 'asm', 'begin', 'case', 'class', 'const',
   'constructor', 'destructor', 'dispinterface', 'div', 'do', 'downto', 'else',
@@ -43,23 +44,23 @@ local keyword = token(l.KEYWORD, word_match({
   'false', 'nil', 'self', 'true'
 }, nil, true))
 
--- functions
+-- Functions.
 local func = token(l.FUNCTION, word_match({
   'chr', 'ord', 'succ', 'pred', 'abs', 'round', 'trunc', 'sqr', 'sqrt',
   'arctan', 'cos', 'sin', 'exp', 'ln', 'odd', 'eof', 'eoln'
 }, nil, true))
 
--- types
+-- Types.
 local type = token(l.TYPE, word_match({
   'shortint', 'byte', 'char', 'smallint', 'integer', 'word', 'longint',
   'cardinal', 'boolean', 'bytebool', 'wordbool', 'longbool', 'real', 'single',
   'double', 'extended', 'comp', 'currency', 'pointer'
 }, nil, true))
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('.,;^@:=<>+-/*()[]'))
 
 _rules = {

@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Lisp LPeg lexer
+-- Lisp LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,24 +7,25 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local line_comment = ';' * l.nonnewline^0
-local block_comment = '#|' * (l.any - '|#')^0 * '|#'
+local block_comment = '#|' * (l.any - '|#')^0 * P('|#')^-1
 local comment = token(l.COMMENT, line_comment + block_comment)
 
 local word = l.alpha * (l.alnum + '_' + '-')^0
 
--- strings
+-- Strings.
 local literal = "'" * word
 local dq_str = l.delimited_range('"', '\\', true)
 local string = token(l.STRING, literal + dq_str)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, P('-')^-1 * l.digit^1 * (S('./') * l.digit^1)^-1)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match({
   'defclass', 'defconstant', 'defgeneric', 'define-compiler-macro',
   'define-condition', 'define-method-combination', 'define-modify-macro',
@@ -48,13 +49,13 @@ local keyword = token(l.KEYWORD, word_match({
   't', 'nil'
 }, '-'))
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('<>=*/+-`@%()'))
 
--- entity
+-- Entities.
 local entity = token('entity', '&' * word)
 
 _rules = {
@@ -75,8 +76,8 @@ _tokenstyles = {
 
 _foldsymbols = {
   _patterns = { '[%(%)%[%]{}]', '#|', '|#' },
-  [l.COMMENT] = { ['#|'] = 1, ['|#'] = -1 },
   [l.OPERATOR] = {
     ['('] = 1, [')'] = -1, ['['] = 1, [']'] = -1, ['{'] = 1, ['}'] = -1
-  }
+  },
+  [l.COMMENT] = { ['#|'] = 1, ['|#'] = -1 }
 }

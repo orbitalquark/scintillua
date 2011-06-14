@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- AWK LPeg lexer
+-- AWK LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,47 +7,48 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local comment = token(l.COMMENT, '#' * l.nonnewline^0)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true, false, '\n')
 local regex = l.delimited_range('//', '\\', false, false, '\n')
 local string = token(l.STRING, sq_str + dq_str + regex)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'break', 'continue', 'do', 'delete', 'else', 'exit', 'for', 'function',
   'getline', 'if', 'next', 'nextfile', 'print', 'printf', 'return', 'while'
 })
 
--- functions
+-- Functions.
 local func = token(l.FUNCTION, word_match {
   'atan2', 'cos', 'exp', 'gensub', 'getline', 'gsub', 'index', 'int', 'length',
   'log', 'match', 'rand', 'sin', 'split', 'sprintf', 'sqrt', 'srand', 'sub',
   'substr', 'system', 'tolower', 'toupper',
 })
 
--- constants
+-- Constants.
 local constant = token(l.CONSTANT, word_match {
   'BEGIN', 'END', 'ARGC', 'ARGIND', 'ARGV', 'CONVFMT', 'ENVIRON', 'ERRNO',
   'FIELDSWIDTH', 'FILENAME', 'FNR', 'FS', 'IGNORECASE', 'NF', 'NR', 'OFMT',
   'OFS', 'ORS', 'RLENGTH', 'RS', 'RSTART', 'RT', 'SUBSEP',
 })
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- variables
+-- Variables.
 local variable = token(l.VARIABLE, '$' * l.digit^1)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('=!<>+-/*%&|^~,:;()[]{}'))
 
 _rules = {

@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Gnuplot LPeg lexer
+-- Gnuplot LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,19 +7,20 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local comment = token(l.COMMENT, '#' * l.nonnewline^0)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
 local bk_str = l.delimited_range('[]', '\\', true, false, '\n')
 local bc_str = l.delimited_range('{}', '\\', true, false, '\n')
 local string = token(l.STRING, sq_str + dq_str + bk_str + bc_str)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'cd', 'call', 'clear', 'exit', 'fit', 'help', 'history', 'if', 'load',
   'pause', 'plot', 'using', 'with', 'index', 'every', 'smooth', 'thru', 'print',
@@ -27,7 +28,7 @@ local keyword = token(l.KEYWORD, word_match {
   'shell', 'splot', 'system', 'test', 'unset', 'update'
 })
 
--- functions
+-- Functions.
 local func = token(l.FUNCTION, word_match {
   'abs', 'acos', 'acosh', 'arg', 'asin', 'asinh', 'atan', 'atan2', 'atanh',
   'besj0', 'besj1', 'besy0', 'besy1', 'ceil', 'cos', 'cosh', 'erf', 'erfc',
@@ -38,7 +39,7 @@ local func = token(l.FUNCTION, word_match {
   'valid'
 })
 
--- variables
+-- Variables.
 local variable = token(l.VARIABLE, word_match {
   'angles', 'arrow', 'autoscale', 'bars', 'bmargin', 'border', 'boxwidth',
   'clabel', 'clip', 'cntrparam', 'colorbox', 'contour', 'datafile ',
@@ -59,10 +60,10 @@ local variable = token(l.VARIABLE, word_match {
   'cbmtics', 'cbrange', 'cbtics'
 })
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('-+~!$*%=<>&|^?:()'))
 
 _rules = {

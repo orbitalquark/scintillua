@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Scheme LPeg lexer
+-- Scheme LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,31 +7,30 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
-local word = l.alpha * (l.alnum + S('_-!?'))^0
-
--- comments
+-- Comments.
 local line_comment = ';' * l.nonnewline^0
-local block_comment = '#|' * (l.any - '|#')^0 * '|#'
+local block_comment = '#|' * (l.any - '|#')^0 * P('|#')^-1
 local comment = token(l.COMMENT, line_comment + block_comment)
 
--- strings
+-- Strings.
 local literal = (P("'") + '#' * S('\\bdox')) * l.word
 local dq_str = l.delimited_range('"', '\\', true)
 local string = token(l.STRING, literal + dq_str)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, P('-')^-1 * l.digit^1 * (S('./') * l.digit^1)^-1)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match({
   'and', 'begin', 'case', 'cond', 'cond-expand', 'define', 'define-macro',
   'delay', 'do', 'else', 'fluid-let', 'if', 'lambda', 'let', 'let*', 'letrec',
   'or', 'quasiquote', 'quote', 'set!',
 }, '-*!'))
 
--- functions
+-- Functions.
 local func = token(l.FUNCTION, word_match({
   'abs', 'acos', 'angle', 'append', 'apply', 'asin', 'assoc', 'assq', 'assv',
   'atan', 'car', 'cdr', 'caar', 'cadr', 'cdar', 'cddr', 'caaar', 'caadr',
@@ -69,14 +68,14 @@ local func = token(l.FUNCTION, word_match({
   '#t', '#f'
 }, '-/<>!?=#'))
 
--- identifiers
+-- Identifiers.
 local word = (l.alpha + S('-!?')) * (l.alnum + S('-!?'))^0
 local identifier = token(l.IDENTIFIER, word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('<>=*/+-`@%:()'))
 
--- entity
+-- Entity.
 local entity = token('entity', '&' * word)
 
 _rules = {
@@ -97,8 +96,8 @@ _tokenstyles = {
 
 _foldsymbols = {
   _patterns = { '[%(%)%[%]{}]', '#|', '|#' },
-  [l.COMMENT] = { ['#|'] = 1, ['|#'] = -1 },
   [l.OPERATOR] = {
     ['('] = 1, [')'] = -1, ['['] = 1, [']'] = -1, ['{'] = 1, ['}'] = -1
-  }
+  },
+  [l.COMMENT] = { ['#|'] = 1, ['|#'] = -1 }
 }

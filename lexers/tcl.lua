@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- TCL LPeg lexer
+-- Tcl LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,25 +7,26 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local comment = token(l.COMMENT, '#' * P(function(input, index)
   local i = index - 2
   while i > 0 and input:find('^[ \t]', i) do i = i - 1 end
   if i < 1 or input:find('^[\r\n;]', i) then return index end
 end) * l.nonnewline^0)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true, false, '\n')
 local regex = l.delimited_range('/', '\\', false, false, '\n')
 local string = token(l.STRING, sq_str + dq_str + regex)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'string', 'subst', 'regexp', 'regsub', 'scan', 'format', 'binary', 'list',
   'split', 'join', 'concat', 'llength', 'lrange', 'lsearch', 'lreplace',
@@ -41,13 +42,13 @@ local keyword = token(l.KEYWORD, word_match {
   'exit'
 })
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- variables
+-- Variables.
 local variable = token(l.VARIABLE, S('$@') * P('$')^-1 * l.word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('<>=+-*/!@|&.,:;?()[]{}'))
 
 _rules = {

@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- GLSL LPeg Lexer
+-- GLSL LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -8,18 +8,19 @@ local table = _G.table
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'attribute', 'const', 'in', 'inout', 'out', 'uniform', 'varying', 'invariant',
   'centroid', 'flat', 'smooth', 'noperspective', 'layout', 'patch', 'sample',
   'subroutine', 'lowp', 'mediump', 'highp', 'precision',
-  -- macros
+  -- Macros.
   '__VERSION__', '__LINE__', '__FILE__',
 })
 
--- functions
+-- Functions.
 local func = token(l.FUNCTION, word_match {
   'radians', 'degrees', 'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'sinh',
   'cosh', 'tanh', 'asinh', 'acosh', 'atanh', 'pow', 'exp', 'log', 'exp2',
@@ -50,7 +51,7 @@ local func = token(l.FUNCTION, word_match {
   'EndPrimitive', 'barrier'
 })
 
--- types
+-- Types.
 local type = token(l.TYPE,
   S('bdiu')^-1 * 'vec' * R('24') +
   P('d')^-1 * 'mat' * R('24') * ('x' * R('24')^-1) +
@@ -63,7 +64,7 @@ local type = token(l.TYPE,
     'samplerCubeShadow', 'sampler2DRectShadow', 'samplerCubeArrayShadow'
   })
 
--- variables
+-- Variables.
 local variable = token(l.VARIABLE, word_match {
   'gl_VertexID', 'gl_InstanceID', 'gl_Position', 'gl_PointSize',
   'gl_ClipDistance', 'gl_PrimitiveIDIn', 'gl_InvocationID', 'gl_PrimitiveID',
@@ -78,7 +79,7 @@ local variable = token(l.VARIABLE, word_match {
   'gl_MultiTexCoord5', 'gl_MultiTexCoord6', 'gl_MultiTexCoord7', 'gl_FogCoord'
 })
 
--- constants
+-- Constants.
 local constant = token(l.CONSTANT, word_match {
   'gl_MaxVertexAttribs', 'gl_MaxVertexUniformComponents', 'gl_MaxVaryingFloats',
   'gl_MaxVaryingComponents', 'gl_MaxVertexOutputComponents',

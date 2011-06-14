@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- APDL LPeg lexer
+-- APDL LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,18 +7,19 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local comment = token(l.COMMENT, '!' * l.nonnewline^0)
 
--- strings
+-- Strings.
 local string = token(l.STRING, l.delimited_range("'", nil, true, false, '\n'))
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match({
   '*abbr', '*abb', '*afun', '*afu', '*ask', '*cfclos', '*cfc', '*cfopen',
   '*cfo', '*cfwrite', '*cfw', '*create', '*cre', '*cycle', '*cyc', '*del',
@@ -64,17 +65,17 @@ local keyword = token(l.KEYWORD, word_match({
   '/xra', '/yrange', '/yra', '/zoom', '/zoo'
 }, '*/', true))
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- functions
+-- Functions.
 local func = token(l.FUNCTION, l.delimited_range('%', nil, false, false, '\n'))
 
--- labels
-local label = token('label', #P(':') * l.starts_line(':' * l.word))
-
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('+-*/$=,;()'))
+
+-- Labels.
+local label = token('label', #P(':') * l.starts_line(':' * l.word))
 
 _rules = {
   { 'whitespace', ws },

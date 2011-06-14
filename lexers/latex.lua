@@ -1,7 +1,6 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Latex LPeg lexer
-
--- Modified by Brian Schott
+-- Latex LPeg lexer.
+-- Modified by Brian Schott.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -9,22 +8,24 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local line_comment = '%' * l.nonnewline^0
 local block_comment = '\\begin{comment}' * (l.any - '\\end{comment}')^0 *
                       P('\\end{comment}')^-1
 local comment = token(l.COMMENT, block_comment + line_comment)
 
--- strings
+-- Strings.
 local math_string = '$$' * (l.any - '$$')^0 * '$$' +
                     l.delimited_range('$', '\\', true, false, '\n')
 local string = token(l.STRING, math_string)
 
+-- Commands.
 local command = token(l.KEYWORD, '\\' * l.word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('$&%#{}'))
 
 _rules = {

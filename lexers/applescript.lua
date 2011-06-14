@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Applescript LPeg lexer
+-- Applescript LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,54 +7,55 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local line_comment = '--' * l.nonnewline^0
 local block_comment = '(*' * (l.any - '*)')^0 * P('*)')^-1
 local comment = token(l.COMMENT, line_comment + block_comment)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true, false, '\n')
 local string = token(l.STRING, sq_str + dq_str)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match({
   'script', 'property', 'prop', 'end', 'copy', 'to', 'set', 'global', 'local',
   'on', 'to', 'of', 'in', 'given', 'with', 'without', 'return', 'continue',
   'tell', 'if', 'then', 'else', 'repeat', 'times', 'while', 'until', 'from',
   'exit', 'try', 'error', 'considering', 'ignoring', 'timeout', 'transaction',
   'my', 'get', 'put', 'into', 'is',
-  -- references
+  -- References.
   'each', 'some', 'every', 'whose', 'where', 'id', 'index', 'first', 'second',
   'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth',
   'last', 'front', 'back', 'st', 'nd', 'rd', 'th', 'middle', 'named', 'through',
   'thru', 'before', 'after', 'beginning', 'the',
-  -- commands
+  -- Commands.
   'close', 'copy', 'count', 'delete', 'duplicate', 'exists', 'launch', 'make',
   'move', 'open', 'print', 'quit', 'reopen', 'run', 'save', 'saving',
-  -- operators
+  -- Operators.
   'div', 'mod', 'and', 'not', 'or', 'as', 'contains', 'equal', 'equals',
   'isn\'t',
 }, "'", true))
 
--- constants
+-- Constants.
 local constant = token(l.CONSTANT, word_match({
   'case', 'diacriticals', 'expansion', 'hyphens', 'punctuation',
-  -- predefined variables
+  -- Predefined variables.
   'it', 'me', 'version', 'pi', 'result', 'space', 'tab', 'anything',
-  -- text styles
+  -- Text styles.
   'bold', 'condensed', 'expanded', 'hidden', 'italic', 'outline', 'plain',
   'shadow', 'strikethrough', 'subscript', 'superscript', 'underline',
-  -- save options
+  -- Save options.
   'ask', 'no', 'yes',
-  -- booleans
+  -- Booleans.
   'false', 'true',
-  -- date and time
+  -- Date and time.
   'weekday', 'monday', 'mon', 'tuesday', 'tue', 'wednesday', 'wed', 'thursday',
   'thu', 'friday', 'fri', 'saturday', 'sat', 'sunday', 'sun', 'month',
   'january', 'jan', 'february', 'feb', 'march', 'mar', 'april', 'apr', 'may',
@@ -63,10 +64,10 @@ local constant = token(l.CONSTANT, word_match({
   'weeks'
 }, nil, true))
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, (l.alpha + '_') * l.alnum^0)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('+-^*/&<>=:,(){}'))
 
 _rules = {

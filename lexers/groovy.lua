@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Groovy LPeg Lexer
+-- Groovy LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,14 +7,15 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local line_comment = '//' * l.nonnewline_esc^0
 local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
 local comment = token(l.COMMENT, line_comment + block_comment)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
 local triple_sq_str = "'''" * (l.any - "'''")^0 * P("'''")^-1
@@ -23,10 +24,10 @@ local regex_str = l.delimited_range('/', '\\', nil, nil, '\n')
 local string = token(l.STRING, triple_sq_str + triple_dq_str + sq_str + dq_str +
                      regex_str)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'abstract', 'break', 'case', 'catch', 'continue', 'default', 'do', 'else',
   'extends', 'final', 'finally', 'for', 'if', 'implements', 'instanceof',
@@ -37,7 +38,7 @@ local keyword = token(l.KEYWORD, word_match {
   'false', 'null', 'super', 'this', 'true', 'it'
 })
 
--- functions
+-- Functions.
 local func = token(l.FUNCTION, word_match {
   'abs', 'any', 'append', 'asList', 'asWritable', 'call', 'collect',
   'compareTo', 'count', 'div', 'dump', 'each', 'eachByte', 'eachFile',
@@ -53,16 +54,16 @@ local func = token(l.FUNCTION, word_match {
   'writeLine'
 })
 
--- types
+-- Types.
 local type = token(l.TYPE, word_match {
   'boolean', 'byte', 'char', 'class', 'double', 'float', 'int', 'interface',
   'long', 'short', 'void'
 })
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('=~|!<>+-/*?&.,:;()[]{}'))
 
 _rules = {

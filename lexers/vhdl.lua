@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- VHDL LPeg lexer
+-- VHDL LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,20 +7,21 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local comment = token(l.COMMENT, '--' * l.nonnewline^0)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", nil, true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true, false, '\n')
 local string = token(l.STRING, sq_str + dq_str)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'access', 'after', 'alias', 'all', 'architecture', 'array', 'assert',
   'attribute', 'begin', 'block', 'body', 'buffer', 'bus', 'case', 'component',
@@ -38,7 +39,7 @@ local keyword = token(l.KEYWORD, word_match {
   'false', 'true'
 })
 
--- functions
+-- Functions.
 local func = token(l.FUNCTION, word_match {
   'rising_edge', 'shift_left', 'shift_right', 'rotate_left', 'rotate_right',
   'resize', 'std_match', 'to_integer', 'to_unsigned', 'to_signed', 'unsigned',
@@ -46,7 +47,7 @@ local func = token(l.FUNCTION, word_match {
   'to_stdulogicvector'
 })
 
--- types
+-- Types.
 local type = token(l.TYPE, word_match {
   'bit', 'bit_vector', 'character', 'boolean', 'integer', 'real', 'time',
   'string', 'severity_level', 'positive', 'natural', 'signed', 'unsigned',
@@ -56,7 +57,7 @@ local type = token(l.TYPE, word_match {
   'reg_vector', 'wor_bit', 'wor_vector'
 })
 
--- constants
+-- Constants.
 local constant = token(l.CONSTANT, word_match {
   'EVENT', 'BASE', 'LEFT', 'RIGHT', 'LOW', 'HIGH', 'ASCENDING', 'IMAGE',
   'VALUE', 'POS', 'VAL', 'SUCC', 'VAL', 'POS', 'PRED', 'VAL', 'POS', 'LEFTOF',
@@ -65,11 +66,11 @@ local constant = token(l.CONSTANT, word_match {
   'LAST', 'LAST', 'LAST', 'DRIVING', 'DRIVING', 'SIMPLE', 'INSTANCE', 'PATH'
 })
 
--- identifiers
+-- Identifiers.
 local word = (l.alpha + "'") * (l.alnum + "_" + "'")^1
 local identifier = token(l.IDENTIFIER, word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('=/!:;<>+-/*%&|^~()'))
 
 _rules = {

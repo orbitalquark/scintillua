@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Perl LPeg lexer
+-- Perl LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,9 +7,10 @@ local P, R, S, V = l.lpeg.P, l.lpeg.R, l.lpeg.S, l.lpeg.V
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local line_comment = '#' * l.nonnewline_esc^0
 local block_comment = #P('=') * l.starts_line('=' * l.alpha *
                      (l.any - l.newline * '=cut')^0 * (l.newline * '=cut')^-1)
@@ -21,7 +22,7 @@ local literal_delimitted = P(function(input, index) -- for single delimiter sets
   if not delimiter:find('%w') then -- only non alpha-numerics
     local match_pos, patt
     if delimiter_matches[delimiter] then
-      -- handle nested delimiter/matches in strings
+      -- Handle nested delimiter/matches in strings.
       local s, e = delimiter, delimiter_matches[delimiter]
       patt = l.delimited_range(s..e, '\\', true, true)
     else
@@ -36,7 +37,7 @@ local literal_delimitted2 = P(function(input, index) -- for 2 delimiter sets
   if not delimiter:find('%w') then -- only non alpha-numerics
     local match_pos, patt
     if delimiter_matches[delimiter] then
-      -- handle nested delimiter/matches in strings
+      -- Handle nested delimiter/matches in strings.
       local s, e = delimiter, delimiter_matches[delimiter]
       patt = l.delimited_range(s..e, '\\', true, true)
     else
@@ -51,7 +52,7 @@ local literal_delimitted2 = P(function(input, index) -- for 2 delimiter sets
   end
 end)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
 local cmd_str = l.delimited_range('`', '\\', true)
@@ -75,10 +76,10 @@ local string = token(l.STRING, sq_str + dq_str + cmd_str + regex + heredoc +
                      lit_str + lit_array + lit_regex + lit_cmd + lit_match +
                      lit_sub + lit_tr)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'STDIN', 'STDOUT', 'STDERR', 'BEGIN', 'END', 'CHECK', 'INIT',
   'require', 'use',
@@ -88,7 +89,7 @@ local keyword = token(l.KEYWORD, word_match {
   'and', 'or', 'not', 'eq', 'ne', 'lt', 'gt', 'le', 'ge'
 })
 
--- functions
+-- Functions.
 local func = token(l.FUNCTION, word_match({
   'abs', 'accept', 'alarm', 'atan2', 'bind', 'binmode', 'bless', 'caller',
   'chdir', 'chmod', 'chomp', 'chop', 'chown', 'chr', 'chroot', 'closedir',
@@ -119,17 +120,17 @@ local func = token(l.FUNCTION, word_match({
   'warn', 'write'
 }, '2'))
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- variables
+-- Variables.
 local special_var = '$' * ('^' * S('ADEFHILMOPSTWX')^-1 +
                     S('\\"[]\'&`+*.,;=%~?@$<>(|/!-') + ':' * (l.any - ':') +
                     l.digit^1)
 local plain_var = ('$#' + S('$@%')) * P('$')^0 * l.word
 local variable = token(l.VARIABLE, special_var + plain_var)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('-<>+*!~\\=/%&|^&.?:;()[]{}'))
 
 _rules = {

@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Shell LPeg lexer
+-- Shell LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,12 +7,13 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local comment = token(l.COMMENT, '#' * l.nonnewline^0)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", nil, true)
 local dq_str = l.delimited_range('"', '\\', true)
 local ex_str = l.delimited_range('`', '\\', true)
@@ -26,32 +27,30 @@ local heredoc = '<<' * P(function(input, index)
 end)
 local string = token(l.STRING, sq_str + dq_str + ex_str + heredoc)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match({
   'if', 'then', 'elif', 'else', 'fi', 'case', 'in', 'esac', 'while', 'for',
   'do', 'done', 'continue', 'local', 'return', 'select',
-  -- operators
+  -- Operators.
   '-a', '-b', '-c', '-d', '-e', '-f', '-g', '-h', '-k', '-p', '-r', '-s', '-t',
   '-u', '-w', '-x', '-O', '-G', '-L', '-S', '-N', '-nt', '-ot', '-ef', '-o',
   '-z', '-n', '-eq', '-ne', '-lt', '-le', '-gt', '-ge'
 }, '-'))
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- variables
-local variable = token(l.VARIABLE, '$' * (S('!#?*@$') +
+-- Variables.
+local variable = token(l.VARIABLE, '$' * (S('!#?*@$') + l.digit^1 + l.word +
                        l.delimited_range('()', nil, true, false, '\n') +
                        l.delimited_range('[]', nil, true, false, '\n') +
                        l.delimited_range('{}', nil, true, false, '\n') +
-                       l.delimited_range('`', nil, true, false, '\n') +
-                       l.digit^1 +
-                       l.word))
+                       l.delimited_range('`', nil, true, false, '\n')))
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('=!<>+-/*^~.,:;?()[]{}'))
 
 _rules = {
@@ -68,6 +67,8 @@ _rules = {
 
 _foldsymbols = {
   _patterns = { '[a-z]+', '[{}]' },
-  [l.KEYWORD] = { ['if'] = 1, fi = -1, case = 1, esac = -1, ['do'] = 1, done = -1 },
+  [l.KEYWORD] = {
+    ['if'] = 1, fi = -1, case = 1, esac = -1, ['do'] = 1, done = -1
+  },
   [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 }
 }

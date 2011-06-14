@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- HTML LPeg lexer
+-- HTML LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -9,22 +9,19 @@ module(...)
 
 case_insensitive_tags = true
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local comment = token(l.COMMENT, '<!--' * (l.any - '-->')^0 * P('-->')^-1)
 
-local doctype = token('doctype', '<!DOCTYPE' * (l.any - '>')^1 * '>')
-
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
 local string = token(l.STRING, sq_str + dq_str)
 
--- numbers
+-- Tags.
 local number = token(l.NUMBER, l.digit^1 * P('%')^-1)
-
--- tags
 local element = token('element', word_match({
   'a', 'abbr', 'acronym', 'address', 'applet', 'area', 'b', 'base', 'basefont',
   'bdo', 'big', 'blockquote', 'body', 'br', 'button', 'caption', 'center',
@@ -65,11 +62,14 @@ local tag_start = token('tag', '<' * P('/')^-1) * element
 local tag_end = token('tag', P('/')^-1 * '>')
 local tag = tag_start * (ws * attributes)^0 * ws^0 * tag_end^-1
 
--- words
+-- Words.
 local word = token(l.DEFAULT, (l.any - l.space - S('<&'))^1)
 
--- entities
+-- Entities.
 local entity = token('entity', '&' * (l.any - l.space - ';')^1 * ';')
+
+-- Doctype.
+local doctype = token('doctype', '<!DOCTYPE' * (l.any - '>')^1 * '>')
 
 _rules = {
   { 'whitespace', ws },
@@ -91,11 +91,8 @@ _tokenstyles = {
   { 'doctype', l.style_keyword },
 }
 
--- Embedded lexers.
-
 -- Embedded CSS.
 local css = l.load('css')
-
 local style_element = word_match({ 'style' }, nil, case_insensitive_tags)
 local css_start_rule = #(P('<') * style_element * P(function(input, index)
   if input:find('[^>]+type%s*=%s*(["\'])text/css%1') then return index end
@@ -105,7 +102,6 @@ l.embed_lexer(_M, css, css_start_rule, css_end_rule)
 
 -- Embedded Javascript.
 local js = l.load('javascript')
-
 local script_element = word_match({ 'script' }, nil, case_insensitive_tags)
 local js_start_rule = #(P('<') * script_element * P(function(input, index)
   if input:find('[^>]+type%s*=%s*(["\'])text/javascript%1') then
@@ -117,7 +113,6 @@ l.embed_lexer(_M, js, js_start_rule, js_end_rule)
 
 -- Embedded CoffeeScript.
 local cs = l.load('coffeescript')
-
 local script_element = word_match({ 'script' }, nil, case_insensitive_tags)
 local cs_start_rule = #(P('<') * script_element * P(function(input, index)
   if input:find('[^>]+type%s*=%s*(["\'])text/coffeescript%1') then
@@ -129,6 +124,6 @@ l.embed_lexer(_M, cs, cs_start_rule, cs_end_rule)
 
 _foldsymbols = {
   _patterns = { '</?', '<!%-%-', '%-%->' },
-  [l.COMMENT] = { ['<!--'] = 1, ['-->'] = -1 },
-  tag = { ['<'] = 1, ['</'] = -1 }
+  tag = { ['<'] = 1, ['</'] = -1 },
+  [l.COMMENT] = { ['<!--'] = 1, ['-->'] = -1 }
 }

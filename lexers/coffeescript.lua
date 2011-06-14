@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- CoffeeScript LPeg Lexer
+-- CoffeeScript LPeg lexer.
 
 local l = lexer
 local token, word_match = l.token, l.word_match
@@ -7,13 +7,14 @@ local P, S = l.lpeg.P, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local line_comment = '#' * l.nonnewline_esc^0
 local comment = token(l.COMMENT, line_comment)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
 local regex_str = l.delimited_range('/', '\\', nil, nil, '\n') * S('igm')^0
@@ -24,10 +25,10 @@ local string = token(l.STRING, sq_str + dq_str) + P(function(input, index)
   return input:sub(i - 1, i - 1):match('[+%-*%%^!=&|?:;,()%[%]{}]') and index
 end) * token('regex', regex_str)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'all', 'and', 'bind', 'break', 'by', 'case', 'catch', 'class', 'const',
   'continue', 'default', 'delete', 'do', 'each', 'else', 'enum', 'export',
@@ -38,10 +39,10 @@ local keyword = token(l.KEYWORD, word_match {
   'while', 'yes'
 })
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('+-/*%<>!=^&|?~:;.()[]{}'))
 
 _rules = {

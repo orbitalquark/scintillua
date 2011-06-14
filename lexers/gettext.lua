@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Gettext LPeg lexer
+-- Gettext LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,23 +7,24 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local comment = token(l.COMMENT, '#' * S(': .~') * l.nonnewline^0)
 
--- strings
+-- Strings.
 local string = token(l.STRING, l.delimited_range('"', '\\', true, false, '\n'))
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match({
   'msgid', 'msgid_plural', 'msgstr', 'fuzzy', 'c-format', 'no-c-format'
 }, '-', true))
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- variables
+-- Variables.
 local variable = token(l.VARIABLE, S('%$@') * l.word)
 
 _rules = {

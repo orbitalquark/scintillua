@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Smalltalk LPeg lexer
+-- Smalltalk LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,39 +7,40 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local comment = token(l.COMMENT, l.delimited_range('"', nil, true))
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", '\\', true)
 local literal = '$' * l.word
 local string = token(l.STRING, sq_str + literal)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'true', 'false', 'nil', 'self', 'super', 'isNil', 'not', 'Smalltalk',
   'Transcript'
 })
 
--- types
+-- Types.
 local type = token(l.TYPE, word_match {
   'Date', 'Time', 'Boolean', 'True', 'False', 'Character', 'String', 'Array',
   'Symbol', 'Integer', 'Object'
 })
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- labels
-local label = token('label', '#' * l.word)
-
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S(':=_<>+-/*!()[]'))
+
+-- Labels.
+local label = token('label', '#' * l.word)
 
 _rules = {
   { 'whitespace', ws },

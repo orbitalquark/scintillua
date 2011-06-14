@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Rexx LPeg Lexer
+-- Rexx LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,26 +7,27 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local line_comment = '--' * l.nonnewline_esc^0
 local block_comment = l.nested_pair('/*', '*/', true)
 local comment = token(l.COMMENT, line_comment + block_comment)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true, false, '\n')
 local string = token(l.STRING, sq_str + dq_str)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
 
--- preprocessor
+-- Preprocessor.
 local preproc = token(l.PREPROCESSOR, #P('#') *
                       l.starts_line('#' * l.nonnewline^0))
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match({
   'address', 'arg', 'by', 'call', 'class', 'do', 'drop', 'else', 'end', 'exit',
   'expose', 'forever', 'forward', 'guard', 'if', 'interpret', 'iterate',
@@ -36,7 +37,7 @@ local keyword = token(l.KEYWORD, word_match({
   'to', 'trace', 'use', 'when', 'while', 'until'
 }, nil, true))
 
--- functions
+-- Functions.
 local func = token(l.FUNCTION, word_match({
   'abbrev', 'abs', 'address', 'arg', 'beep', 'bitand', 'bitor', 'bitxor', 'b2x',
   'center', 'changestr', 'charin', 'charout', 'chars', 'compare', 'consition',
@@ -66,11 +67,11 @@ local func = token(l.FUNCTION, word_match({
   'syswinencryptfile', 'syswinver'
 }, '2', true))
 
--- identifiers
+-- Identifiers.
 local word = l.alpha * (l.alnum + S('@#$\\.!?_')^0)
 local identifier = token(l.IDENTIFIER, word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('=!<>+-/\\*%&|^~.,:;(){}'))
 
 _rules = {
@@ -88,7 +89,7 @@ _rules = {
 
 _foldsymbols = {
   _patterns = { '[a-z]+', '/%*', '%*/', ':' },
-  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1 },
   [l.KEYWORD] = { ['do'] = 1, select = 1, ['end'] = -1, ['return'] = -1 },
+  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1 },
   [l.OPERATOR] = { [':'] = 1 }
 }

@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- XML LPeg lexer
+-- XML LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,13 +7,14 @@ local P, R, S, V = l.lpeg.P, l.lpeg.R, l.lpeg.S, l.lpeg.V
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments and CDATA
+-- Comments and CDATA.
 local comment = token(l.COMMENT, '<!--' * (l.any - '-->')^0 * P('-->')^-1)
 local cdata = token('cdata', '<![CDATA[' * (l.any - ']]>')^0 * P(']]>')^-1)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", nil, true)
 local dq_str = l.delimited_range('"', nil, true)
 local string = token(l.STRING, sq_str + dq_str)
@@ -24,7 +25,7 @@ local alpha = R('az', 'AZ', '\127\255')
 local word_char = l.alnum + S('_-:.??')
 local identifier = (l.alpha + S('_-:.??')) * word_char^0
 
--- tags
+-- Tags.
 local namespace = token('namespace', identifier)
 local element = token('element', identifier) *
                 (token(l.OPERATOR, ':') * namespace)^-1
@@ -38,11 +39,11 @@ local tag_start = token('tag', '<' * P('/')^-1) * element
 local tag_end = token('tag', P('/')^-1 * '>')
 local tag = tag_start * (ws * attributes)^0 * ws^0 * tag_end
 
--- doctypes
+-- Doctypes.
 local doctype = token('doctype', '<?xml') * (ws * attributes)^0 * ws^0 *
                 token('doctype', '?>')
 
--- entities
+-- Entities.
 local entity = token('entity', '&' * word_match {
   'lt', 'gt', 'amp', 'apos', 'quot'
 } * ';')
@@ -69,7 +70,7 @@ _tokenstyles = {
 
 _foldsymbols = {
   _patterns = { '</?', '<!%-%-', '%-%->', '<!%[CDATA%[', '%]%]>' },
+  tag = { ['<'] = 1, ['</'] = -1 },
   [l.COMMENT] = { ['<!--'] = 1, ['-->'] = -1 },
-  cdata = { ['<![CDATA['] = 1, [']]>'] = -1 },
-  tag = { ['<'] = 1, ['</'] = -1 }
+  cdata = { ['<![CDATA['] = 1, [']]>'] = -1 }
 }

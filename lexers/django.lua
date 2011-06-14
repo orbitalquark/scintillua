@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Django LPeg lexer
+-- Django LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,16 +7,17 @@ local P, R, S, V = l.lpeg.P, l.lpeg.R, l.lpeg.S, l.lpeg.V
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local comment = token(l.COMMENT, '{#' * (l.any - l.newline - '#}')^0 *
                       P('#}')^-1)
 
--- strings
+-- Strings.
 local string = token(l.STRING, l.delimited_range('"', nil, true))
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'as', 'block', 'blocktrans', 'by', 'endblock', 'endblocktrans', 'comment',
   'endcomment', 'cycle', 'date', 'debug', 'else', 'extends', 'filter',
@@ -25,7 +26,7 @@ local keyword = token(l.KEYWORD, word_match {
   'or', 'parsed', 'regroup', 'ssi', 'trans', 'with', 'widthratio'
 })
 
--- functions
+-- Functions.
 local func = token(l.FUNCTION, word_match {
   'add', 'addslashes', 'capfirst', 'center', 'cut', 'date', 'default',
   'dictsort', 'dictsortreversed', 'divisibleby', 'escape', 'filesizeformat',
@@ -37,10 +38,10 @@ local func = token(l.FUNCTION, word_match {
   'urlizetrunc', 'wordcount', 'wordwrap', 'yesno',
 })
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S(':,.|'))
 
 _rules = {
@@ -54,20 +55,15 @@ _rules = {
 }
 
 -- Embedded in HTML.
-
 local html = l.load('hypertext')
-
 _lexer = html
 
 -- Embedded Django.
 local django_start_rule = token('django_tag', '{' * S('{%'))
 local django_end_rule = token('django_tag', S('%}') * '}')
 l.embed_lexer(html, _M, django_start_rule, django_end_rule)
-
 -- Modify HTML patterns to embed Django.
 html._RULES['comment'] = html._RULES['comment'] + comment
-
--- TODO: embed in CSS and JS
 
 _tokenstyles = {
   { 'django_tag', l.style_embedded },
@@ -76,4 +72,4 @@ _tokenstyles = {
 local _foldsymbols = html._foldsymbols
 _foldsymbols._patterns[#_foldsymbols._patterns + 1] = '{[%%{]'
 _foldsymbols._patterns[#_foldsymbols._patterns + 1] = '[%%}]}'
-_foldsymbols.django_tag = { ['{{'] = 1, ['{%'] = 1, ['}}'] = -1, ['%}'] = -1 }
+_foldsymbols.django_tag = { ['{{'] = 1, ['}}'] = -1, ['{%'] = 1, ['%}'] = -1 }

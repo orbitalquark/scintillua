@@ -1,5 +1,5 @@
--- Inform LPeg lexer for Scintillua
--- JMS 2010-04-25
+-- Inform LPeg lexer for Scintillua.
+-- JMS 2010-04-25.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,19 +7,23 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
-local line_comment = '!' * l.nonnewline^0
-local comment = token(l.COMMENT, line_comment)
+-- Comments.
+local comment = token(l.COMMENT, '!' * l.nonnewline^0)
 
+-- Strings.
 local sq_str = l.delimited_range("'")
 local dq_str = l.delimited_range('"')
 local string = token(l.STRING, sq_str + dq_str)
 
+-- Numbers.
 local inform_hex = '$' * l.xdigit^1
 local inform_bin = '$$' * S('01')^1
 local number = token(l.NUMBER, l.integer + inform_hex + inform_bin)
 
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'Abbreviate', 'Array', 'Attribute', 'Class', 'Constant', 'Default', 'End',
   'Endif', 'Extend', 'Global', 'Ifdef', 'Iffalse', 'Ifndef', 'Ifnot', 'Iftrue',
@@ -51,7 +55,7 @@ local keyword = token(l.KEYWORD, word_match {
   'with_key', 'workflag', 'worn'
 })
 
--- Library actions
+-- Library actions.
 local action = token('action', word_match {
   'Answer', 'Ask', 'AskFor', 'Attack', 'Blow', 'Burn', 'Buy', 'Climb', 'Close',
   'Consult', 'Cut', 'Dig', 'Disrobe', 'Drink', 'Drop', 'Eat', 'Empty', 'EmptyT',
@@ -68,8 +72,10 @@ local action = token('action', word_match {
   'WakeOther', 'Wait', 'Wave', 'WaveHands', 'Wear', 'Yes'
 })
 
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
+-- Operators.
 local operator = token(l.OPERATOR, S('@~=+-*/%^#=<>;:,.{}[]()&|?'))
 
 _rules = {

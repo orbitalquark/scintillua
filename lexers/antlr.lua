@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- ANTLR LPeg lexer
+-- ANTLR LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,17 +7,18 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local line_comment = '//' * l.nonnewline^0;
 local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
 local comment = token(l.COMMENT, line_comment + block_comment)
 
--- strings
+-- Strings.
 local string = token(l.STRING, l.delimited_range("'", '\\', true, false, '\n'))
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'abstract', 'break', 'case', 'catch', 'continue', 'default', 'do', 'else',
   'extends', 'final', 'finally', 'for', 'if', 'implements', 'instanceof',
@@ -27,22 +28,22 @@ local keyword = token(l.KEYWORD, word_match {
   'false', 'null', 'super', 'this', 'true'
 })
 
--- types
+-- Types.
 local type = token(l.TYPE, word_match {
   'boolean', 'byte', 'char', 'class', 'double', 'float', 'int', 'interface',
   'long', 'short', 'void'
 })
 
--- functions
+-- Functions.
 local func = token(l.FUNCTION, 'assert')
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('$@:;|.=+*?~!^>-()[]{}'))
 
--- actions
+-- Actions.
 local action = #P('{') * operator * token('action', (1 - P('}'))^0) *
                (#P('}') * operator)^-1
 
@@ -65,8 +66,8 @@ _tokenstyles = {
 
 _foldsymbols = {
   _patterns = { '[:;%(%){}]', '/%*', '%*/' },
-  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1 },
   [l.OPERATOR] = {
     [':'] = 1, [';'] = -1, ['('] = 1, [')'] = -1, ['{'] = 1, ['}'] = -1
-  }
+  },
+  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1 }
 }

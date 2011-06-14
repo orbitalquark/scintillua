@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- C/C++ LPeg Lexer
+-- C/C++ LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,22 +7,23 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local line_comment = '//' * l.nonnewline_esc^0
 local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
 local comment = token(l.COMMENT, line_comment + block_comment)
 
--- strings
+-- Strings.
 local sq_str = P('L')^-1 * l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = P('L')^-1 * l.delimited_range('"', '\\', true, false, '\n')
 local string = token(l.STRING, sq_str + dq_str)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
 
--- preprocessor
+-- Preprocessor.
 local preproc_word = word_match {
   'define', 'elif', 'else', 'endif', 'error', 'if', 'ifdef', 'ifndef', 'import',
   'include', 'line', 'pragma', 'undef', 'using', 'warning'
@@ -30,14 +31,14 @@ local preproc_word = word_match {
 local preproc = token(l.PREPROCESSOR, #P('#') *
                       l.starts_line('#' * S('\t ')^0 * preproc_word))
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
-  -- C
+  -- C.
   'asm', 'auto', 'break', 'case', 'const', 'continue', 'default', 'do', 'else',
   'extern', 'false', 'for', 'goto', 'if', 'inline', 'register', 'return',
   'sizeof', 'static', 'switch', 'true', 'typedef', 'volatile', 'while',
   'restrict', '_Bool', '_Complex', '_Pragma', '_Imaginary',
-  -- C++
+  -- C++.
   'catch', 'class', 'const_cast', 'delete', 'dynamic_cast', 'explicit',
   'export', 'friend', 'mutable', 'namespace', 'new', 'operator', 'private',
   'protected', 'public', 'signals', 'slots', 'reinterpret_cast',
@@ -45,16 +46,16 @@ local keyword = token(l.KEYWORD, word_match {
   'typename', 'using', 'virtual'
 })
 
--- types
+-- Types.
 local type = token(l.TYPE, word_match {
   'bool', 'char', 'double', 'enum', 'float', 'int', 'long', 'short', 'signed',
   'struct', 'union', 'unsigned', 'void'
 })
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('+-/*%<>!=^&|?~:;.()[]{}'))
 
 _rules = {

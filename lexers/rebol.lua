@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Rebol LPeg lexer
+-- Rebol LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,20 +7,21 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local line_comment = ';' * l.nonnewline^0;
 local block_comment = 'comment' * P(' ')^-1 * l.delimited_range('{}', nil, true)
 local comment = token(l.COMMENT, line_comment + block_comment)
 
--- strings
+-- Strings.
 local sl_string = l.delimited_range('"', '\\', true, false, '\n')
 local ml_string = l.delimited_range('{}', '\\', true)
 local lit_string = "'" * l.word
 local string = token(l.STRING, sl_string + ml_string + lit_string)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match({
   'abs', 'absolute', 'add', 'and~', 'at', 'back', 'change', 'clear',
   'complement', 'copy', 'cp', 'divide', 'fifth', 'find', 'first', 'fourth',
@@ -102,11 +103,11 @@ local keyword = token(l.KEYWORD, word_match({
   'true', 'false', 'self'
 }, '~-?!'))
 
--- identifiers
+-- Identifiers.
 local word = (l.alpha + '-') * (l.alnum + '-')^0
 local identifier = token(l.IDENTIFIER, word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('=<>+/*:()[]'))
 
 _rules = {

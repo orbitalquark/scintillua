@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- CSS LPeg lexer
+-- CSS LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,20 +7,21 @@ local P, R, S, V = l.lpeg.P, l.lpeg.R, l.lpeg.S, l.lpeg.V
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local comment = token(l.COMMENT, '/*' * (l.any - '*/')^0 * P('*/')^-1)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
 local string = token(l.STRING, sq_str + dq_str)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, l.digit^1)
 
--- keywords
+-- Keywords.
 local css1_property = word_match({
   'color', 'background-color', 'background-image', 'background-repeat',
   'background-attachment', 'background-position', 'background', 'font-family',
@@ -102,18 +103,18 @@ local property = token(l.KEYWORD, css1_property + css2_property)
 local value = token('value', css1_value + css2_value)
 local keyword = property + value
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.alpha * (l.alnum + S('_-'))^0)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('~!#*>+=|.,:;()[]{}'))
 
--- at rule
+-- At rule.
 local at_rule = token('at_rule', P('@') * word_match {
   'charset', 'font-face', 'media', 'page', 'import'
 })
 
--- colors
+-- Colors.
 local xdigit = l.xdigit
 local hex_color = '#' * xdigit * xdigit * xdigit * (xdigit * xdigit * xdigit)^-1
 local color_name = word_match {
@@ -122,15 +123,15 @@ local color_name = word_match {
 }
 local color = token('color', hex_color + color_name)
 
--- pseudo
+-- Pseudo.
 local pseudo = token(l.CONSTANT, word_match({
-  -- pseudo elements
+  -- Pseudo elements.
   'first-line', 'first-letter', 'before', 'after',
-  -- pseudo classes
+  -- Pseudo classes.
   'first-child', 'link', 'visited', 'hover', 'active', 'focus', 'lang',
 }, '-'))
 
--- units
+-- Units.
 local unit = token('unit', word_match {
   'em', 'ex', 'px', 'pt', 'pc', 'in', 'ft', 'mm', 'cm', 'kHz', 'Hz', 'deg',
   'rad', 'grad', 'ms', 's'

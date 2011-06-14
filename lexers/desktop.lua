@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Desktop Entry LPeg lexer
+-- Desktop Entry LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,41 +7,42 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local comment = token(l.COMMENT, '#' * l.nonnewline^0)
 
--- strings
+-- Strings.
 local string = token(l.STRING, l.delimited_range('"', '\\', true))
 
--- group headers
+-- Group headers.
 local group_header = l.starts_line(token(l.STRING,
                                          l.delimited_range('[]', nil, true)))
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, (l.float + l.integer))
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match { 'true', 'false' })
 
--- locales
+-- Locales.
 local locale = token(l.CLASS, l.delimited_range('[]', nil, true))
 
--- keys
+-- Keys.
 local key = token(l.VARIABLE, word_match {
   'Type', 'Version', 'Name', 'GenericName', 'NoDisplay', 'Comment', 'Icon',
   'Hidden', 'OnlyShowIn', 'NotShowIn', 'TryExec', 'Exec', 'Exec', 'Path',
   'Terminal', 'MimeType', 'Categories', 'StartupNotify', 'StartupWMClass', 'URL'
 })
 
--- field codes
+-- Field codes.
 local code = l.token(l.CONSTANT, P('%') * S('fFuUdDnNickvm'))
 
--- identifiers
+-- Identifiers.
 local identifier = l.token(l.IDENTIFIER, l.alpha * (l.alnum + '-')^0)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('='))
 
 _rules = {

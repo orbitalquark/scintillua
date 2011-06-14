@@ -1,7 +1,6 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- D LPeg Lexer
-
--- Heavily modified by Brian Schott (SirAlaran)
+-- D LPeg lexer.
+-- Heavily modified by Brian Schott (SirAlaran).
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -9,15 +8,16 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local line_comment = '//' * l.nonnewline_esc^0
 local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
 local nested_comment = l.nested_pair('/+', '+/', true)
 local comment = token(l.COMMENT, line_comment + block_comment + nested_comment)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", '\\', true, false, '\n') * S('cwd')^-1
 local dq_str = l.delimited_range('"', '\\', true, false, '\n') * S('cwd')^-1
 local lit_str = 'r' * l.delimited_range('"', nil, true, false, '\n') *
@@ -31,14 +31,14 @@ local other_hex_str = '\\x' * (l.xdigit * l.xdigit)^1
 local string = token(l.STRING, sq_str + dq_str + lit_str + bt_str + hex_str +
                      del_str + tok_str + other_hex_str)
 
--- numbers
+-- Numbers.
 local dec = l.digit^1 * ('_' * l.digit^1)^0
 local bin_num = '0' * S('bB') * S('01_')^1
 local oct_num = '0' * S('01234567_')^1
 local integer = S('+-')^-1 * (l.hex_num + oct_num + bin_num + dec)
 local number = token(l.NUMBER, (l.float + integer) * S('uUlLdDfFi')^-1)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'abstract', 'align', 'asm', 'assert', 'auto', 'body', 'break', 'case', 'cast',
   'catch', 'const', 'continue', 'debug', 'default', 'delete',
@@ -51,7 +51,7 @@ local keyword = token(l.KEYWORD, word_match {
   'version', 'volatile', 'while', 'with', '__gshared', '__thread', '__traits'
 })
 
--- types
+-- Types.
 local type = token(l.TYPE, word_match {
   'alias', 'bool', 'byte', 'cdouble', 'cent', 'cfloat', 'char', 'class',
   'creal', 'dchar', 'delegate', 'double', 'enum', 'float', 'function',
@@ -61,7 +61,7 @@ local type = token(l.TYPE, word_match {
   'string', 'wstring', 'dstring', 'hash_t', 'equals_t'
 })
 
--- constants
+-- Constants.
 local constant = token(l.CONSTANT, word_match {
   '__FILE__', '__LINE__', '__DATE__', '__EOF__', '__TIME__', '__TIMESTAMP__',
   '__VENDOR__', '__VERSION__', 'DigitalMars', 'X86', 'X86_64', 'Windows',
@@ -73,13 +73,13 @@ local constant = token(l.CONSTANT, word_match {
 local class_sequence = token(l.TYPE, P('class') + P('struct')) * ws^1 *
                              token(l.CLASS, l.word)
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('?=!<>+-*$/%&|^~.,;()[]{}'))
 
--- properties
+-- Properties.
 local properties = (type + identifier + operator) * token(l.OPERATOR, '.') *
   token(l.VARIABLE, word_match {
     'alignof', 'dig', 'dup', 'epsilon', 'idup', 'im', 'init', 'infinity',
@@ -89,11 +89,11 @@ local properties = (type + identifier + operator) * token(l.OPERATOR, '.') *
     'values'
   })
 
--- preprocs
+-- Preprocs.
 local annotation = token('annotation', '@' * l.word^1)
 local preproc = token('preproc', '#' * l.nonnewline^0)
 
--- Traits
+-- Traits.
 local traits_list = token('traits', word_match {
     "isAbstractClass", "isArithmetic", "isAssociativeArray", "isFinalClass",
 	"isFloating", "isIntegral", "isScalar", "isStaticArray", "isUnsigned",
@@ -134,41 +134,8 @@ _tokenstyles = {
 	{ 'traits', l.style_definition },
 }
 
-function _fold(text, start_pos, start_line, start_level)
-	local folds = {}
-	local current_line = start_line
-	local current_level = start_level
-	local foldCause = -1 -- 0 = brace, 1 = comment
-	for line in text:gmatch("(.-)\r?\n") do
-		if #line > 0 then
-			if line:find("{%s*$") and current_line ~= 1 then
-				foldCause = 0
-				folds[current_line] = {current_level, l.SC_FOLDLEVELHEADERFLAG}
-				current_level = current_level + 1
-			elseif line:find("/%*%s*") then
-				foldCause = 1
-				-- I have no idea why it tries to set the fold level header flag
-				-- on lines 0 AND one when you set it on line 0... I also don't
-				-- know why setting it on line -1 works.
-				if current_line == 0 then
-					folds[-1] = {current_level, l.SC_FOLDLEVELHEADERFLAG}
-				else
-					folds[current_line] = {current_level, l.SC_FOLDLEVELHEADERFLAG}
-				end
-				current_level = current_level + 1
-			elseif line:find("}") and foldCause == 0 then
-				current_level = current_level - 1
-				folds[current_line] = {current_level}
-			elseif line:find("%*/") and foldCause == 1 then
-				current_level = current_level - 1
-				folds[current_line] = {current_level}
-			else
-				folds[current_line] = {current_level}
-			end
-		else
-			folds[current_line] = {current_level, l.SC_FOLDLEVELWHITEFLAG}
-		end
-		current_line = current_line + 1
-	end
-	return folds
-end
+_foldsymbols = {
+  _patterns = { '[{}]', '/[*+]', '[*+]/' },
+  [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
+  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1, ['/+'] = 1, ['+/'] = -1 }
+}

@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- ApacheConf LPeg lexer
+-- ApacheConf LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,15 +7,16 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local comment = token(l.COMMENT, '#' * l.nonnewline^0)
 
--- strings
+-- Strings.
 local string = token(l.STRING, l.delimited_range('"', '\\', true, false, '\n'))
 
--- keywords
+-- Keywords.
 local main_keyword = token(l.KEYWORD, word_match({
   'AcceptMutex', 'AcceptPathInfo', 'AccessFileName', 'Action', 'AddAlt',
   'AddAltByEncoding', 'AddAltByType', 'AddCharset', 'AddDefaultCharset',
@@ -255,14 +256,14 @@ local vhost_keyword = token(l.KEYWORD, word_match({
   'VirtualScriptAlias', 'VirtualScriptAliasIP', 'XBitHack', 'Off', 'On', 'None'
 }, nil, true))
 
--- identifiers
+-- Identifiers.
 local word = (l.alpha + '-') * (l.alnum + '-')^0
 local identifier = token(l.IDENTIFIER, word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S(':=<>&+-*/.()'))
 
--- TODO: directive and vhost sections using appropriate keywords
+-- TODO: directive and vhost sections using appropriate keywords.
 _rules = {
   { 'whitespace', ws },
   { 'keyword', main_keyword },

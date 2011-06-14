@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Markdown LPeg lexer
+-- Markdown LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,9 +7,10 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- block elements
+-- Block elements.
 local h6 = token('h6', P('######') * l.any^0)
 local h5 = token('h5', P('#####') * l.any^0)
 local h4 = token('h4', P('####') * l.any^0)
@@ -56,7 +57,7 @@ local blank = token(l.DEFAULT, l.newline^1 * P(function(input, index)
   in_html = false
 end))
 
--- span elements
+-- Span elements.
 local dq_str = token(l.STRING, l.delimited_range('"', nil, true))
 local sq_str = token(l.STRING, l.delimited_range("'", nil, true))
 local paren_str = token(l.STRING, l.delimited_range('()', nil, true))

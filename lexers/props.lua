@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Props LPeg lexer
+-- Props LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,23 +7,24 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local comment = token(l.COMMENT, '#' * l.nonnewline^0)
 
--- equals
+-- Equals.
 local equals = token(l.OPERATOR, '=')
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
 local string = token(l.STRING, sq_str + dq_str)
 
--- variables
+-- Variables.
 local variable = token(l.VARIABLE, '$(' * (l.any - ')')^1 * ')')
 
--- colors
+-- Colors.
 local xdigit = l.xdigit
 local color = token('color', '#' * xdigit * xdigit * xdigit * xdigit * xdigit *
                     xdigit)

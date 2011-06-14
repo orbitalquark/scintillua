@@ -1,4 +1,5 @@
--- Archlinux PKGBUILD LPeg Lexer
+-- Copyright 2006-2011 gwash. See LICENSE.
+-- Archlinux PKGBUILD LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -6,12 +7,13 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local comment = token(l.COMMENT, '#' * l.nonnewline^0)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", nil, true)
 local dq_str = l.delimited_range('"', '\\', true)
 local ex_str = l.delimited_range('`', '\\', true)
@@ -25,22 +27,22 @@ local heredoc = '<<' * P(function(input, index)
 end)
 local string = token(l.STRING, sq_str + dq_str + ex_str + heredoc)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match({
   'patch', 'cd', 'make', 'patch', 'mkdir', 'cp', 'sed', 'install', 'rm',
   'if', 'then', 'elif', 'else', 'fi', 'case', 'in', 'esac', 'while', 'for',
   'do', 'done', 'continue', 'local', 'return', 'git', 'svn', 'co', 'clone',
   'gconf-merge-schema', 'msg', 'echo', 'ln',
-  -- operators
+  -- Operators.
   '-a', '-b', '-c', '-d', '-e', '-f', '-g', '-h', '-k', '-p', '-r', '-s', '-t',
   '-u', '-w', '-x', '-O', '-G', '-L', '-S', '-N', '-nt', '-ot', '-ef', '-o',
   '-z', '-n', '-eq', '-ne', '-lt', '-le', '-gt', '-ge', '-Np', '-i'
 }, '-'))
 
--- functions
+-- Functions.
 local func = token(l.FUNCTION, word_match { 'build' })
 
 local constant = token(l.CONSTANT, word_match {
@@ -50,10 +52,10 @@ local constant = token(l.CONSTANT, word_match {
   'pkgdir', 'srcdir'
 })
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- variables
+-- Variables.
 local variable = token(l.VARIABLE, '$' * (S('!#?*@$') +
                        l.delimited_range('()', nil, true, false, '\n') +
                        l.delimited_range('[]', nil, true, false, '\n') +
@@ -61,7 +63,7 @@ local variable = token(l.VARIABLE, '$' * (S('!#?*@$') +
                        l.delimited_range('`', nil, true, false, '\n') +
                        l.digit^1 + l.word))
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('=!<>+-/*^~.,:;?()[]{}'))
 
 _rules = {

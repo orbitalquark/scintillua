@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Actionscript LPeg lexer
+-- Actionscript LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,28 +7,29 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local line_comment = '//' * l.nonnewline^0
-local block_comment = '/*' * (l.any - '*/')^0 * '*/'
+local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
 local comment = token(l.COMMENT, line_comment + block_comment)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true, false, '\n')
 local ml_str = '<![CDATA[' * (l.any - ']]>')^0 * ']]>'
 local string = token(l.STRING, sq_str + dq_str + ml_str)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, (l.float + l.integer) * S('LlUuFf')^-2)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'break', 'continue', 'delete', 'do', 'else', 'for', 'function', 'if', 'in',
   'new', 'on', 'return', 'this', 'typeof', 'var', 'void', 'while', 'with',
   'NaN', 'Infinity', 'false', 'null', 'true', 'undefined',
-  -- reserved for future use
+  -- Reserved for future use.
   'abstract', 'case', 'catch', 'class', 'const', 'debugger', 'default',
   'export', 'extends', 'final', 'finally', 'goto', 'implements', 'import',
   'instanceof', 'interface', 'native', 'package', 'private', 'Void',
@@ -36,19 +37,19 @@ local keyword = token(l.KEYWORD, word_match {
   'throw', 'throws', 'transient', 'try', 'volatile'
 })
 
--- types
+-- Types.
 local type = token(l.TYPE, word_match {
   'Array', 'Boolean', 'Color', 'Date', 'Function', 'Key', 'MovieClip', 'Math',
   'Mouse', 'Number', 'Object', 'Selection', 'Sound', 'String', 'XML', 'XMLNode',
   'XMLSocket',
-  -- reserved for future use
+  -- Reserved for future use.
   'boolean', 'byte', 'char', 'double', 'enum', 'float', 'int', 'long', 'short'
 })
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('=!<>+-/*%&|^~.,;?()[]{}'))
 
 _rules = {
@@ -65,7 +66,7 @@ _rules = {
 
 _foldsymbols = {
   _patterns = { '[{}]', '/%*', '%*/', '<!%[CDATA%[', '%]%]>' },
+  [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
   [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1 },
-  [l.STRING] = { ['<![CDATA['] = 1, [']]>'] = -1 },
-  [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 }
+  [l.STRING] = { ['<![CDATA['] = 1, [']]>'] = -1 }
 }

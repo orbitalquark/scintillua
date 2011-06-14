@@ -1,6 +1,5 @@
--- Lilypond LPeg lexer
--- April, 2010 Robert Gieseke
-
+-- Copyright 2006-2011 Robert Gieseke. See LICENSE.
+-- Lilypond LPeg lexer.
 -- TODO Embed Scheme; Notes?, Numbers?
 
 local l = lexer
@@ -9,23 +8,25 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local line_comment = '%' * l.nonnewline^0
--- TODO block comment
-local comment = token(l.COMMENT, line_comment )
+-- TODO: block comment.
+local comment = token(l.COMMENT, line_comment)
 
--- strings
+-- Strings.
 local string = token(l.STRING, l.delimited_range('"'))
 
--- keywordscommands
+-- Keywords, commands.
 local keyword = token(l.KEYWORD, '\\' * l.word)
 
--- operators
-local operator = token(l.OPERATOR, S("{}'~<>|"))
-
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
+
+-- Operators.
+local operator = token(l.OPERATOR, S("{}'~<>|"))
 
 _rules = {
   { 'whitespace', ws },

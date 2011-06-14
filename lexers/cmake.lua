@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- CMake LPeg Lexer
+-- CMake LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,20 +7,21 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local comment = token(l.COMMENT, '#' * l.nonnewline^0)
 
--- strings
+-- Strings.
 local string = token(l.STRING, l.delimited_range('"', '\\', true))
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match({
   'IF', 'ENDIF', 'FOREACH', 'ENDFOREACH', 'WHILE', 'ENDWHILE', 'ELSE', 'ELSEIF'
 }, nil, true))
 
--- commands
+-- Commands.
 local command = token(l.FUNCTION, word_match({
   'ADD_CUSTOM_COMMAND', 'ADD_CUSTOM_TARGET', 'ADD_DEFINITIONS',
   'ADD_DEPENDENCIES', 'ADD_EXECUTABLE', 'ADD_LIBRARY', 'ADD_SUBDIRECTORY',
@@ -45,12 +46,12 @@ local command = token(l.FUNCTION, word_match({
   'WRITE_FILE',
 }, nil, true))
 
--- constants
+-- Constants.
 local constant = token(l.CONSTANT, word_match({
   'BOOL', 'CACHE', 'FALSE', 'N', 'NO', 'ON', 'OFF', 'NOTFOUND', 'TRUE'
 }, nil, true))
 
--- variables
+-- Variables.
 local variable = token(l.VARIABLE, word_match {
   'APPLE', 'BORLAND', 'CMAKE_AR', 'CMAKE_BACKWARDS_COMPATIBILITY',
   'CMAKE_BASE_NAME', 'CMAKE_BINARY_DIR', 'CMAKE_BUILD_TOOL', 'CMAKE_BUILD_TYPE',
@@ -137,10 +138,10 @@ local variable = token(l.VARIABLE, word_match {
   'LOCATION', 'TARGET', 'POST_BUILD', 'PRE_BUILD', 'ARGS'
 } + P('$') * l.delimited_range('{}', nil, true))
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, word_match({
   'AND', 'COMMAND', 'DEFINED', 'DOC', 'EQUAL', 'EXISTS', 'GREATER', 'INTERNAL',
   'LESS', 'MATCHES', 'NAME', 'NAMES', 'NAME_WE', 'NOT', 'OR', 'PATH', 'PATHS',

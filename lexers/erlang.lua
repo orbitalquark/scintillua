@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Erlang LPeg lexer
+-- Erlang LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,38 +7,32 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local comment = token(l.COMMENT, '%' * l.nonnewline^0)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true)
 local literal = '$' * l.any * l.alnum^0
 local string = token(l.STRING, sq_str + dq_str + literal)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
 
--- directives
-local directive = token('directive', '-' * word_match {
-  'author', 'compile', 'copyright', 'define', 'doc', 'else', 'endif', 'export',
-  'file', 'ifdef', 'ifndef', 'import', 'include_lib', 'include', 'module',
-  'record', 'undef'
-})
-
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'after', 'begin', 'case', 'catch', 'cond', 'end', 'fun', 'if', 'let', 'of',
   'query', 'receive', 'when',
-  -- operators
+  -- Operators.
   'div', 'rem', 'or', 'xor', 'bor', 'bxor', 'bsl', 'bsr', 'and', 'band', 'not',
   'bnot',
   'badarg', 'nocookie', 'false', 'true'
 })
 
--- functions
+-- Functions.
 local func = token(l.FUNCTION, word_match {
   'abs', 'alive', 'apply', 'atom_to_list', 'binary_to_list', 'binary_to_term',
   'concat_binary', 'date', 'disconnect_node', 'element', 'erase', 'exit',
@@ -51,23 +45,30 @@ local func = token(l.FUNCTION, word_match {
   'spawn', 'spawn_link', 'split_binary', 'statistics', 'term_to_binary',
   'throw', 'time', 'tl', 'trunc', 'tuple_to_list', 'unlink', 'unregister',
   'whereis',
-  -- others
+  -- Others.
   'atom', 'binary', 'constant', 'function', 'integer', 'list', 'number', 'pid',
   'ports', 'port_close', 'port_info', 'reference', 'record',
-  -- erlang:
+  -- Erlang:.
   'check_process_code', 'delete_module', 'get_cookie', 'hash', 'math',
   'module_loaded', 'preloaded', 'processes', 'purge_module', 'set_cookie',
   'set_node',
-  -- math
+  -- Math.
   'acos', 'asin', 'atan', 'atan2', 'cos', 'cosh', 'exp', 'log', 'log10', 'pi',
   'pow', 'power', 'sin', 'sinh', 'sqrt', 'tan', 'tanh'
 })
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('-<>.;=/|#+*:,?!()[]{}'))
+
+-- Directives.
+local directive = token('directive', '-' * word_match {
+  'author', 'compile', 'copyright', 'define', 'doc', 'else', 'endif', 'export',
+  'file', 'ifdef', 'ifndef', 'import', 'include_lib', 'include', 'module',
+  'record', 'undef'
+})
 
 _rules = {
   { 'whitespace', ws },

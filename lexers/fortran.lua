@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Fortran LPeg lexer
+-- Fortran LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,9 +7,10 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local c_comment = #S('Cc') * l.starts_line(S('Cc') * l.nonnewline^0)
 local d_comment = #S('Dd') * l.starts_line(S('Dd') * l.nonnewline^0)
 local ex_comment = #P('!') * l.starts_line('!' * l.nonnewline^0)
@@ -18,35 +19,35 @@ local line_comment = '!' * l.nonnewline^0
 local comment = token(l.COMMENT, c_comment + d_comment + ex_comment +
                       ast_comment + line_comment)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", nil, true, false, '\n')
 local dq_str = l.delimited_range('"', nil, true, false, '\n')
 local string = token(l.STRING, sq_str + dq_str)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, (l.float + l.integer) * -l.alpha)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match({
   'include', 'program', 'module', 'subroutine', 'function', 'contains', 'use',
   'call', 'return',
-  -- statements
+  -- Statements.
   'case', 'select', 'default', 'continue', 'cycle', 'do', 'while', 'else', 'if',
   'elseif', 'then', 'elsewhere', 'end', 'endif', 'enddo', 'forall', 'where',
   'exit', 'goto', 'pause', 'stop',
-  -- operators
+  -- Operators.
   '.not.', '.and.', '.or.', '.xor.', '.eqv.', '.neqv.', '.eq.', '.ne.', '.gt.',
   '.ge.', '.lt.', '.le.',
-  -- logical
+  -- Logical.
   '.false.', '.true.'
 }, '.', true))
 
--- functions
+-- Functions.
 local func = token(l.FUNCTION, word_match({
-  -- i/o
+  -- I/O.
   'backspace', 'close', 'endfile', 'inquire', 'open', 'print', 'read', 'rewind',
   'write', 'format',
-  -- type conversion, utility, math
+  -- Type conversion, utility, and math.
   'aimag', 'aint', 'amax0', 'amin0', 'anint', 'ceiling', 'cmplx', 'conjg',
   'dble', 'dcmplx', 'dfloat', 'dim', 'dprod', 'float', 'floor', 'ifix', 'imag',
   'int', 'logical', 'modulo', 'nint', 'real', 'sign', 'sngl', 'transfer',
@@ -62,17 +63,17 @@ local func = token(l.FUNCTION, word_match({
   'sqrt', 'tan', 'tanh'
 }, nil, true))
 
--- types
+-- Types.
 local type = token(l.TYPE, word_match({
   'implicit', 'explicit', 'none', 'data', 'parameter', 'allocate',
   'allocatable', 'allocated', 'deallocate', 'integer', 'real', 'double',
   'precision', 'complex', 'logical', 'character', 'dimension', 'kind',
 }, nil, true))
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.alnum^1)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('<>=&+-/*,()'))
 
 _rules = {

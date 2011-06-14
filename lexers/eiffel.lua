@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Eiffel LPeg lexer
+-- Eiffel LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,20 +7,21 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local comment = token(l.COMMENT, '--' * l.nonnewline^0)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true, false, '\n')
 local string = token(l.STRING, sq_str + dq_str)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'alias', 'all', 'and', 'as', 'check', 'class', 'creation', 'debug',
   'deferred', 'do', 'else', 'elseif', 'end', 'ensure', 'expanded', 'export',
@@ -32,15 +33,15 @@ local keyword = token(l.KEYWORD, word_match {
   'current', 'false', 'precursor', 'result', 'strip', 'true', 'unique', 'void'
 })
 
--- types
+-- Types.
 local type = token(l.TYPE, word_match {
   'character', 'string', 'bit', 'boolean', 'integer', 'real', 'none', 'any'
 })
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('=!<>+-/*%&|^~.,:;?()[]{}'))
 
 _rules = {
@@ -59,10 +60,8 @@ _foldsymbols = {
   _patterns = { '[a-z]+' },
   [l.KEYWORD] = {
     check = 1, debug = 1, deferred = 1, ['do'] = 1, from = 1, ['if'] = 1,
-    inspect = 1, once = 1,
-    class = function(text, pos, line, s)
+    inspect = 1, once = 1, class = function(text, pos, line, s)
       return line:find('deferred%s+class') and 0 or 1
-    end,
-    ['end'] = -1
+    end, ['end'] = -1
   }
 }

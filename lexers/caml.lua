@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- OCaml LPeg lexer
+-- OCaml LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,20 +7,21 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local comment = token(l.COMMENT, l.nested_pair('(*', '*)', true))
 
--- strings
-local sq_str = token(l.STRING, l.delimited_range("'", '\\', true, false, '\n'))
-local dq_str = token(l.STRING, l.delimited_range('"', '\\', true, false, '\n'))
-local string = sq_str + dq_str
+-- Strings.
+local sq_str = l.delimited_range("'", '\\', true, false, '\n')
+local dq_str = l.delimited_range('"', '\\', true, false, '\n')
+local string = token(l.STRING, sq_str + dq_str)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'and', 'as', 'asr', 'begin', 'class', 'closed', 'constraint', 'do', 'done',
   'downto', 'else', 'end', 'exception', 'external', 'failwith', 'false',
@@ -32,12 +33,12 @@ local keyword = token(l.KEYWORD, word_match {
   'val', 'virtual', 'when', 'while', 'with'
 })
 
--- types
+-- Types.
 local type = token(l.TYPE, word_match {
   'int', 'float', 'bool', 'char', 'string', 'unit'
 })
 
--- functions
+-- Functions.
 local func = token(l.FUNCTION, word_match {
   'raise', 'invalid_arg', 'failwith', 'compare', 'min', 'max', 'succ', 'pred',
   'mod', 'abs', 'max_int', 'min_int', 'sqrt', 'exp', 'log', 'log10', 'cos',
@@ -61,10 +62,10 @@ local func = token(l.FUNCTION, word_match {
   'exit', 'at_exit'
 })
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('=<>+-*/.,:;~!#%^&|?[](){}'))
 
 _rules = {

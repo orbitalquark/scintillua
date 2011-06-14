@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Vala LPeg Lexer
+-- Vala LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,51 +7,52 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local line_comment = '//' * l.nonnewline_esc^0
 local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
 local comment = token(l.COMMENT, line_comment + block_comment)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true, false, '\n')
 local tq_str = '"""' * (l.any - '"""')^0 * P('"""')^-1
 local ml_str = '@' * l.delimited_range('"', nil, true)
 local string = token(l.STRING, tq_str + sq_str + dq_str + ml_str)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, (l.float + l.integer) * S('uUlLfFdDmM')^-1)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'class', 'delegate', 'enum', 'errordomain', 'interface', 'namespace',
   'signal', 'struct', 'using',
-  -- modifiers
+  -- Modifiers.
   'abstract', 'const', 'dynamic', 'extern', 'inline', 'out', 'override',
   'private', 'protected', 'public', 'ref', 'static', 'virtual', 'volatile',
   'weak',
-  -- other
+  -- Other.
   'as', 'base', 'break', 'case', 'catch', 'construct', 'continue', 'default',
   'delete', 'do', 'else', 'ensures', 'finally', 'for', 'foreach', 'get', 'if',
   'in', 'is', 'lock', 'new', 'requires', 'return', 'set', 'sizeof', 'switch',
   'this', 'throw', 'throws', 'try', 'typeof', 'value', 'var', 'void', 'while',
-  -- etc.
+  -- Etc.
   'null', 'true', 'false'
 })
 
--- types
+-- Types.
 local type = token(l.TYPE, word_match {
   'bool', 'char', 'double', 'float', 'int', 'int8', 'int16', 'int32', 'int64',
   'long', 'short', 'size_t', 'ssize_t', 'string', 'uchar', 'uint', 'uint8',
   'uint16', 'uint32', 'uint64', 'ulong', 'unichar', 'ushort'
 })
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('+-/*%<>!=^&|?~:;.()[]{}'))
 
 _rules = {

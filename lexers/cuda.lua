@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- CUDA LPeg Lexer
+-- CUDA LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -8,19 +8,20 @@ local table = _G.table
 
 module(...)
 
+-- Whitespace
 local ws = token(l.WHITESPACE, l.space^1)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   '__global__', '__host__', '__device__', '__constant__', '__shared__'
 })
 
--- functions
+-- Functions.
 local func = token(l.FUNCTION, word_match {
-  -- atom
+  -- Atom.
   'atomicAdd', 'atomicAnd', 'atomicCAS', 'atomicDec', 'atomicExch', 'atomicInc',
   'atomicMax', 'atomicMin', 'atomicOr', 'atomicSub', 'atomicXor',
-  -- dev
+  -- Dev.
   'tex1D', 'tex1Dfetch', 'tex2D', '__float_as_int', '__int_as_float',
   '__float2int_rn', '__float2int_rz', '__float2int_ru', '__float2int_rd',
   '__float2uint_rn', '__float2uint_rz', '__float2uint_ru', '__float2uint_rd',
@@ -31,7 +32,7 @@ local func = token(l.FUNCTION, word_match {
   'umax', 'fmaxf', 'fmax', 'abs', 'fabsf', 'fabs', 'sqrtf', 'sqrt', 'sinf',
   '__sinf', 'sin', 'cosf', '__cosf', 'cos', 'sincosf', '__sincosf', 'expf',
   '__expf', 'exp', 'logf', '__logf', 'log',
-  -- runtime
+  -- Runtime.
   'cudaBindTexture', 'cudaBindTextureToArray', 'cudaChooseDevice',
   'cudaConfigureCall', 'cudaCreateChannelDesc', 'cudaD3D10GetDevice',
   'cudaD3D10MapResources', 'cudaD3D10RegisterResource',
@@ -64,7 +65,7 @@ local func = token(l.FUNCTION, word_match {
   'cudaThreadExit', 'cudaThreadSynchronize', 'cudaUnbindTexture'
 })
 
--- types
+-- Types.
 local type = token(l.TYPE, word_match {
   'uint', 'int1', 'uint1', 'int2', 'uint2', 'int3', 'uint3', 'int4', 'uint4',
   'float1', 'float2', 'float3', 'float4', 'char1', 'char2', 'char3', 'char4',
@@ -72,7 +73,7 @@ local type = token(l.TYPE, word_match {
   'short4', 'dim1', 'dim2', 'dim3', 'dim4'
 })
 
--- variables
+-- Variables.
 local variable = token(l.VARIABLE, word_match {
   'gridDim', 'blockIdx', 'blockDim', 'threadIdx'
 })

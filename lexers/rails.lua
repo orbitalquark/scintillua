@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Ruby on Rails LPeg lexer
+-- Ruby on Rails LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -8,9 +8,10 @@ local table = _G.table
 
 module(...)
 
+-- Whitespace
 local ws = token(l.WHITESPACE, l.space^1)
 
--- functions
+-- Functions.
 
 local actionpack = token(l.FUNCTION, word_match {
   'before_filter', 'skip_before_filter', 'skip_after_filter', 'after_filter',

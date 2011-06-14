@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- VisualBasic LPeg lexer
+-- VisualBasic LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,44 +7,45 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local comment = token(l.COMMENT, (P("'") + 'REM ') * l.nonnewline^0)
 
--- strings
+-- Strings.
 local string = token(l.STRING, l.delimited_range('"', nil, true, false, '\n'))
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, (l.float + l.integer) * S('LlUuFf')^-2)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
-  -- control
+  -- Control.
   'If', 'Then', 'Else', 'ElseIf', 'EndIf', 'While', 'Went', 'For', 'To', 'Each',
   'In', 'Step', 'Case', 'Select', 'EndSelect', 'Return', 'Continue', 'Do',
   'Until', 'Loop', 'Next', 'With', 'Exit',
-  -- operators
+  -- Operators.
   'Mod', 'And', 'Not', 'Or', 'Xor', 'Is',
-  -- storage types
+  -- Storage types.
   'Call', 'Class', 'Const', 'Dim', 'Redim', 'Function', 'Sub', 'Property',
   'End', 'Set', 'Let', 'Get', 'New', 'Randomize',
-  -- storage modifiers
+  -- Storage modifiers.
   'Private', 'Public', 'Default',
-  -- constants
+  -- Constants.
   'Empty', 'False', 'Nothing', 'Null', 'True'
 })
 
--- types
+-- Types.
 local type = token(l.TYPE, word_match {
   'Boolean', 'Byte', 'Char', 'Date', 'Decimal', 'Double', 'Long', 'Object',
   'Short', 'Single', 'String'
 })
 
--- identifier
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('=><+-*^&:.,_()'))
 
 _rules = {

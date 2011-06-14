@@ -1,5 +1,5 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- Prolog LPeg lexer
+-- Prolog LPeg lexer.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -7,22 +7,23 @@ local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
 module(...)
 
+-- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
--- comments
+-- Comments.
 local line_comment = '%' * l.nonnewline^0
-local block_comment = '/*' * (l.any - '*/')^0 * '*/'
+local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
 local comment = token(l.COMMENT, line_comment + block_comment)
 
--- strings
+-- Strings.
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true, false, '\n')
 local string = token(l.STRING, sq_str + dq_str)
 
--- numbers
+-- Numbers.
 local number = token(l.NUMBER, l.digit^1 * ('.' * l.digit^1)^-1)
 
--- keywords
+-- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'module', 'meta_predicate', 'multifile', 'dynamic', 'abolish',
   'current_output', 'peek_code', 'append', 'current_predicate', 'put_byte',
@@ -39,15 +40,15 @@ local keyword = token(l.KEYWORD, word_match {
   'writeq', 'current_char_conversion', 'open', 'current_input', 'peek_byte',
   'current_op', 'peek_char', 'false', 'true', 'consult', 'member', 'memberchk',
   'reverse', 'permutation', 'delete',
-  -- math
+  -- Math.
   'mod', 'div', 'abs', 'exp', 'ln', 'log', 'sqrt', 'round', 'trunc', 'val',
   'cos', 'sin', 'tan', 'arctan', 'random', 'randominit'
 })
 
--- identifiers
+-- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
--- operators
+-- Operators.
 local operator = token(l.OPERATOR, S('-!+\\|=:;&<>()[]{}'))
 
 _rules = {
