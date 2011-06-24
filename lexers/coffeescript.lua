@@ -11,8 +11,9 @@ module(...)
 local ws = token(l.WHITESPACE, l.space^1)
 
 -- Comments.
+local block_comment = '###' * (l.any - '###')^0 * P('###')^-1
 local line_comment = '#' * l.nonnewline_esc^0
-local comment = token(l.COMMENT, line_comment)
+local comment = token(l.COMMENT, block_comment + line_comment)
 
 -- Strings.
 local sq_str = l.delimited_range("'", '\\', true)
@@ -39,6 +40,10 @@ local keyword = token(l.KEYWORD, word_match {
   'while', 'yes'
 })
 
+-- Fields: object properties and methods.
+local field = token(l.FUNCTION, '.' * (S('_$') + l.alpha) *
+                    (S('_$') + l.alnum)^0)
+
 -- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
@@ -48,6 +53,7 @@ local operator = token(l.OPERATOR, S('+-/*%<>!=^&|?~:;.()[]{}'))
 _rules = {
   { 'whitespace', ws },
   { 'keyword', keyword },
+  { 'field', field },
   { 'identifier', identifier },
   { 'comment', comment },
   { 'number', number },
