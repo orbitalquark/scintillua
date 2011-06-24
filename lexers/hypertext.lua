@@ -34,7 +34,7 @@ local element = token('element', word_match({
   'style', 'sub', 'sup', 's', 'table', 'tbody', 'td', 'textarea', 'tfoot', 'th',
   'thead', 'title', 'tr', 'tt', 'u', 'ul', 'var', 'xml'
 }, nil, case_insensitive_tags)) + token('unknown_element', l.word)
-local attribute = (token('attribute', word_match({
+local attribute = (token('attribute', ('data-' * l.alnum^1) + word_match({
   'abbr', 'accept-charset', 'accept', 'accesskey', 'action', 'align', 'alink',
   'alt', 'archive', 'axis', 'background', 'bgcolor', 'border', 'cellpadding',
   'cellspacing', 'char', 'charoff', 'charset', 'checked', 'cite', 'class',
