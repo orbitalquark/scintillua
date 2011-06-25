@@ -65,7 +65,7 @@ release: #lexers/LexLPeg.dll lexers/liblexlpeg.so
 	./gen_lexer_props.lua
 	hg archive $(RELEASEDIR)
 	rm $(RELEASEDIR)/.hg*
-	cp -r lexers/{LexLPeg.dll,liblexlpeg.so} $(RELEASEDIR)/lexers/
+	cp -r lexers/{LexLPeg.dll,liblexlpeg.*} $(RELEASEDIR)/lexers/
 	cp lpeg.c $(RELEASEDIR)
 	zip -r $(PACKAGE) $(RELEASEDIR)
 	rm -r $(RELEASEDIR)
