@@ -95,10 +95,11 @@ _tokenstyles = {
 }
 
 _foldsymbols = {
-  _patterns = { '%*[A-Za-z]+' },
+  _patterns = { '%*[A-Za-z]+', '!' },
   [l.KEYWORD] = {
     ['*if'] = 1, ['*IF'] = 1, ['*do'] = 1, ['*DO'] = 1, ['*dowhile'] = 1,
     ['*DOWHILE'] = 1,
     ['*endif'] = -1, ['*ENDIF'] = -1, ['*enddo'] = -1, ['*ENDDO'] = -1
-  }
+  },
+  [l.COMMENT] = { ['!'] = l.fold_line_comments('!') }
 }

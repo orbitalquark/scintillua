@@ -57,11 +57,12 @@ _rules = {
 }
 
 _foldsymbols = {
-  _patterns = { '[a-z]+' },
+  _patterns = { '[a-z]+', '%-%-' },
   [l.KEYWORD] = {
     check = 1, debug = 1, deferred = 1, ['do'] = 1, from = 1, ['if'] = 1,
     inspect = 1, once = 1, class = function(text, pos, line, s)
       return line:find('deferred%s+class') and 0 or 1
     end, ['end'] = -1
-  }
+  },
+  [l.COMMENT] = { ['--'] = l.fold_line_comments('--') }
 }

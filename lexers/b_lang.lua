@@ -74,7 +74,7 @@ _rules = {
 }
 
 _foldsymbols = {
-  _patterns = { '[{}]', '/%*', '%*/' },
+  _patterns = { '[{}]', '/%*', '%*/', '//' },
   [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
-  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1 }
+  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//') }
 }

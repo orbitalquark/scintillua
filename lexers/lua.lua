@@ -88,12 +88,15 @@ local function fold_longcomment(text, pos, line, s, match)
 end
 
 _foldsymbols = {
-  _patterns = { '%l+', '[%({%)}]', '[%[%]]' },
+  _patterns = { '%l+', '[%({%)}]', '[%[%]]', '%-%-' },
   [l.KEYWORD] = {
     ['if'] = 1, ['do'] = 1, ['function'] = 1, ['end'] = -1, ['repeat'] = 1,
     ['until'] = -1
   },
-  [l.COMMENT] = { ['['] = fold_longcomment, [']'] = fold_longcomment },
+  [l.COMMENT] = {
+    ['['] = fold_longcomment, [']'] = fold_longcomment,
+    ['--'] = l.fold_line_comments('--')
+  },
   longstring = { ['['] = 1, [']'] = -1 },
   [l.OPERATOR] = { ['('] = 1, ['{'] = 1, [')'] = -1, ['}'] = -1 }
 }

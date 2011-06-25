@@ -87,6 +87,7 @@ set the following properties after calling SCI_SETLEXERLANGUAGE:
 Optionally, you may set:
 
   * fold.by.indentation - fold code by indentation level.
+  * fold.line.comments - fold line comments.
 
 ### Lexer API
 

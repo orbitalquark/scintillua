@@ -86,7 +86,7 @@ _rules = {
 }
 
 _foldsymbols = {
-  _patterns = { '[a-z]+', '[%(%){}]', '/%*', '%*/' },
+  _patterns = { '[a-z]+', '[%(%){}]', '/%*', '%*/', '//' },
   [l.KEYWORD] = {
     case = 1, casex = 1, casez = 1, endcase = -1, ['function'] = 1,
     endfunction = -1, fork = 1, join = -1, table = 1, endtable = -1, task = 1,
@@ -95,5 +95,5 @@ _foldsymbols = {
     ['end'] = -1
   },
   [l.OPERATOR] = { ['('] = 1, [')'] = -1, ['{'] = 1, ['}'] = -1 },
-  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1 }
+  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//') }
 }

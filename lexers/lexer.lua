@@ -904,6 +904,7 @@ function lex(text, init_style)
   end
 end
 
+local GetProperty = GetProperty
 local FOLD_BASE = SC_FOLDLEVELBASE
 local FOLD_HEADER  = SC_FOLDLEVELHEADERFLAG
 local FOLD_BLANK = SC_FOLDLEVELWHITEFLAG
@@ -1218,6 +1219,64 @@ function embed_lexer(parent, child, start_rule, end_rule)
                                     style_whitespace }
   for _, style in ipairs(child._tokenstyles or {}) do
     tokenstyles[#tokenstyles + 1] = style
+  end
+end
+
+-- Determines if the previous line is a comment.
+-- This is used for determining if the current comment line is a fold point.
+-- @param prefix The prefix string defining a comment.
+-- @param text The text passed to a fold function.
+-- @param pos The pos passed to a fold function.
+-- @param line The line passed to a fold function.
+-- @param s The s passed to a fold function.
+local function prev_line_is_comment(prefix, text, pos, line, s)
+  if line:sub(1, s - 1):find('%S') then return 0 end
+  local prev_line_is_comment, next_line_is_comment = false, false
+  local p = pos - 1
+  if text:sub(p, p) == '\n' then
+    p = p - 1
+    if text:sub(p, p) == '\r' then p = p - 1 end
+    if text:sub(p, p) ~= '\n' then
+      while p > 1 and text:sub(p - 1, p - 1):find('^[^\n]$') do p = p - 1 end
+      while text:sub(p, p):find('^[\t ]$') do p = p + 1 end
+      return text:sub(p, p + #prefix - 1) == prefix
+    end
+  end
+  return false
+end
+
+-- Determines if the next line is a comment.
+-- This is used for determining if the current comment line is a fold point.
+-- @param prefix The prefix string defining a comment.
+-- @param text The text passed to a fold function.
+-- @param pos The pos passed to a fold function.
+-- @param line The line passed to a fold function.
+-- @param s The s passed to a fold function.
+local function next_line_is_comment(prefix, text, pos, line, s)
+  local p = pos + s
+  while p <= #text and text:sub(p, p):find('^[^\n]$') do p = p + 1 end
+  if text:sub(p, p) == '\n' then
+    p = p + 1
+    while text:sub(p, p):find('^[\t ]$') do p = p + 1 end
+    return text:sub(p, p + #prefix - 1) == prefix
+  end
+  return false
+end
+
+---
+-- Returns a fold function that folds consecutive line comments.
+-- This function should be used inside the lexer's `_foldsymbols` table.
+-- @param prefix The prefix string defining a line comment.
+-- @usage [l.COMMENT] = { ['--'] = l.fold_line_comments('--') }
+-- @usage [l.COMMENT] = { ['//'] = l.fold_line_comments('//') }
+function fold_line_comments(prefix)
+  return function(text, pos, line, s)
+    if GetProperty('fold.line.comments', 0) == 0 then return 0 end
+    local prev_line_comment = prev_line_is_comment(prefix, text, pos, line, s)
+    local next_line_comment = next_line_is_comment(prefix, text, pos, line, s)
+    if not prev_line_comment and next_line_comment then return 1 end
+    if prev_line_comment and not next_line_comment then return -1 end
+    return 0
   end
 end
 

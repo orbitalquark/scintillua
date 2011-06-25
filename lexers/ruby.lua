@@ -121,7 +121,7 @@ local function disambiguate(text, pos, line, s)
 end
 
 _foldsymbols = {
-  _patterns = { '%l+', '[%(%)%[%]{}]', '=begin', '=end' },
+  _patterns = { '%l+', '[%(%)%[%]{}]', '=begin', '=end', '#' },
   [l.KEYWORD] = {
     begin = 1, class = 1, def = 1, ['do'] = 1, ['for'] = 1, ['module'] = 1,
     case = 1,
@@ -132,5 +132,7 @@ _foldsymbols = {
   [l.OPERATOR] = {
     ['('] = 1, [')'] = -1, ['['] = 1, [']'] = -1, ['{'] = 1, ['}'] = -1
   },
-  [l.COMMENT] = { ['=begin'] = 1, ['=end'] = -1 }
+  [l.COMMENT] = {
+    ['=begin'] = 1, ['=end'] = -1, ['#'] = l.fold_line_comments('#')
+  }
 }

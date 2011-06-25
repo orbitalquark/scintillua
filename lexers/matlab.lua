@@ -96,9 +96,13 @@ _tokenstyles = {
 }
 
 _foldsymbols = {
-  _patterns = { '[a-z]+', '[%(%)%[%]]' },
+  _patterns = { '[a-z]+', '[%(%)%[%]]', '%%[{}]?', '#' },
   [l.KEYWORD] = {
     ['if'] = 1, ['for'] = 1, ['while'] = 1, switch = 1, ['end'] = -1
   },
-  [l.OPERATOR] = { ['('] = 1, [')'] = -1, ['['] = 1, [']'] = -1 }
+  [l.OPERATOR] = { ['('] = 1, [')'] = -1, ['['] = 1, [']'] = -1 },
+  [l.COMMENT] = {
+    ['%{'] = 1, ['%}'] = -1, ['%'] = l.fold_line_comments('%'),
+    ['#'] = l.fold_line_comments('#')
+  }
 }

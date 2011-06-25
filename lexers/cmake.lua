@@ -162,10 +162,11 @@ _rules = {
 }
 
 _foldsymbols = {
-  _patterns = { '[A-Z]+', '[%(%){}]' },
+  _patterns = { '[A-Z]+', '[%(%){}]', '#' },
   [l.KEYWORD] = {
     IF = 1, ENDIF = -1, FOREACH = 1, ENDFOREACH = -1, WHILE = 1, ENDWHILE = -1
   },
   [l.FUNCTION] = { MACRO = 1, ENDMACRO = -1 },
-  [l.OPERATOR] = { ['('] = 1, [')'] = -1, ['{'] = 1, ['}'] = -1 }
+  [l.OPERATOR] = { ['('] = 1, [')'] = -1, ['{'] = 1, ['}'] = -1 },
+  [l.COMMENT] = { ['#'] = l.fold_line_comments('#') }
 }

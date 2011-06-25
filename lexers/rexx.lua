@@ -88,8 +88,10 @@ _rules = {
 }
 
 _foldsymbols = {
-  _patterns = { '[a-z]+', '/%*', '%*/', ':' },
+  _patterns = { '[a-z]+', '/%*', '%*/', '%-%-', ':' },
   [l.KEYWORD] = { ['do'] = 1, select = 1, ['end'] = -1, ['return'] = -1 },
-  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1 },
+  [l.COMMENT] = {
+    ['/*'] = 1, ['*/'] = -1, ['--'] = l.fold_line_comments('--')
+  },
   [l.OPERATOR] = { [':'] = 1 }
 }

@@ -46,9 +46,10 @@ _rules = {
 }
 
 _foldsymbols = {
-  _patterns = { '[a-z]+' },
+  _patterns = { '[a-z]+', '#' },
   [l.KEYWORD] = {
     ['function'] = 1, ['end'] = -1, ['do'] = 1, od = -1, ['if'] = 1, fi = -1,
     ['repeat'] = 1, ['until'] = -1
-  }
+  },
+  [l.COMMENT] = { ['#'] = l.fold_line_comments('#') }
 }

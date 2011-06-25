@@ -11,7 +11,7 @@ module(...)
 local ws = token(l.WHITESPACE, l.space^1)
 
 -- Comments.
-local line_comment = '//' * l.nonnewline^0;
+local line_comment = '//' * l.nonnewline^0
 local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
 local comment = token(l.COMMENT, line_comment + block_comment)
 
@@ -65,9 +65,9 @@ _tokenstyles = {
 }
 
 _foldsymbols = {
-  _patterns = { '[:;%(%){}]', '/%*', '%*/' },
+  _patterns = { '[:;%(%){}]', '/%*', '%*/', '//' },
   [l.OPERATOR] = {
     [':'] = 1, [';'] = -1, ['('] = 1, [')'] = -1, ['{'] = 1, ['}'] = -1
   },
-  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1 }
+  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//') }
 }

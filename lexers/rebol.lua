@@ -121,7 +121,7 @@ _rules = {
 }
 
 _foldsymbols = {
-  _patterns = { '[%[%]{}]' },
-  [l.COMMENT] = { ['{'] = 1, ['}'] = -1 },
+  _patterns = { '[%[%]{}]', ';' },
+  [l.COMMENT] = { ['{'] = 1, ['}'] = -1, [';'] = l.fold_line_comments(';') },
   [l.OPERATOR] = { ['['] = 1, [']'] = -1, ['{'] = 1, ['}'] = -1 }
 }

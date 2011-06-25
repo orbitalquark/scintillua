@@ -88,11 +88,12 @@ _tokenstyles = {
 }
 
 _foldsymbols = {
-  _patterns = { '[a-z]+', '[%(%)%[%]{}]' },
+  _patterns = { '[a-z]+', '[%(%)%[%]{}]', '%%' },
   [l.KEYWORD] = {
     case = 1, fun = 1, ['if'] = 1, query = 1, receive = 1, ['end'] = -1
   },
   [l.OPERATOR] = {
     ['('] = 1, [')'] = -1, ['['] = 1, [']'] = -1, ['{'] = 1, ['}'] = -1
-  }
+  },
+  [l.COMMENT] = { ['%'] = l.fold_line_comments('%') }
 }

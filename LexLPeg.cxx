@@ -592,6 +592,7 @@ GetProperty "lexer.lpeg.home"
 GetProperty "lexer.lpeg.color.theme"
 GetProperty "lexer.lpeg.script"
 GetProperty "fold.by.indentation"
+GetProperty "fold.line.comments"
 */
 #else
 LexerModule lmLPeg(SCLEX_AUTOMATIC - 1, LexerLPeg::LexerFactoryLPeg, "lpeg");
