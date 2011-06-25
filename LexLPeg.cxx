@@ -87,8 +87,9 @@ static int lua_style_at(lua_State *L) {
 static int lua_get_property(lua_State *L) {
 	lua_getfield(L, LUA_REGISTRYINDEX, "props");
 	PropSetSimple *props = static_cast<PropSetSimple *>(lua_touserdata(L, -1));
-	lua_pushnumber(L, props->GetInt(luaL_checkstring(L, 1),
-								 (lua_gettop(L) > 1) ? luaL_checkinteger(L, 2) : 0));
+	int value = (lua_gettop(L) > 1) ? luaL_checkinteger(L, 2) : 0;
+	if (props) value = props->GetInt(luaL_checkstring(L, 1), value);
+	lua_pushnumber(L, value);
 	return 1;
 }
 
