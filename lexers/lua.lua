@@ -11,8 +11,7 @@ module(...)
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
-local longstring = #('[[' + ('[' * P('=')^0 * '['))
-local longstring = longstring * P(function(input, index)
+local longstring = #('[[' + ('[' * P('=')^0 * '[')) * P(function(input, index)
   local level = input:match('^%[(=*)%[', index)
   if level then
     local _, stop = input:find(']'..level..']', index, true)
@@ -79,13 +78,22 @@ _tokenstyles = {
   { 'longstring', l.style_string }
 }
 
+local function fold_longcomment(text, pos, line, s, match)
+  if match == '[' then
+    if line:find('^%[=*%[', s) then return 1 end
+  elseif match == ']' then
+    if line:find('^%]=*%]', s) then return -1 end
+  end
+  return 0
+end
+
 _foldsymbols = {
-  _patterns = { '%l+', '[%({%)}%[%]]' },
+  _patterns = { '%l+', '[%({%)}]', '[%[%]]' },
   [l.KEYWORD] = {
     ['if'] = 1, ['do'] = 1, ['function'] = 1, ['end'] = -1, ['repeat'] = 1,
     ['until'] = -1
   },
-  [l.COMMENT] = { ['['] = 1, [']'] = -1 },
+  [l.COMMENT] = { ['['] = fold_longcomment, [']'] = fold_longcomment },
   longstring = { ['['] = 1, [']'] = -1 },
   [l.OPERATOR] = { ['('] = 1, ['{'] = 1, [')'] = -1, ['}'] = -1 }
 }
