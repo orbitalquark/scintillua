@@ -342,16 +342,16 @@ module('lexer', package.seeall)
 --
 -- As you might have guessed, `lexer` has a set of default colors.
 --
--- * `green`
--- * `blue`
--- * `red`
--- * `yellow`
--- * `teal`
--- * `white`
--- * `black`
--- * `grey`
--- * `purple`
--- * `orange`
+-- + `colors.green`
+-- + `colors.blue`
+-- + `colors.red`
+-- + `colors.yellow`
+-- + `colors.teal`
+-- + `colors.white`
+-- + `colors.black`
+-- + `colors.grey`
+-- + `colors.purple`
+-- + `colors.orange`
 --
 -- It is recommended to use them to stay consistant with a user's color theme.
 --
@@ -1038,6 +1038,23 @@ end
 
 -- common tokens
 any_char = token('default', any)
+
+---
+-- Table of common colors for a theme.
+-- This table should be redefined in each theme.
+-- @class table
+-- @name colors
+-- @field green Green.
+-- @field blue Blue.
+-- @field red Red.
+-- @field yellow Yellow.
+-- @field teal Teal.
+-- @field white White.
+-- @field black Black.
+-- @field grey Grey.
+-- @field purple Purple.
+-- @field orange Orange.
+colors = {}
 
 ---
 -- Creates a Scintilla style from a table of style properties.
