@@ -1,11 +1,6 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
--- April 2010 Robert Gieseke, combined LaTeX and ConTeXt lexing.
--- TeX LPeg lexer.
-
--- TODO: Embed LuaTeX
---   ConTeXt: \directlua{...}
---     or \startlua ... \stoplua
---   LaTeX: see pdf 'LuaTEXtra references'
+-- Plain TeX LPeg lexer.
+-- Modified by Robert Gieseke.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -17,32 +12,16 @@ module(...)
 local ws = token(l.WHITESPACE, l.space^1)
 
 -- Comments.
-local line_comment = '%' * l.nonnewline^0
-local block_comment = '\\begin{comment}' * (l.any - '\\end{comment}')^0 *
-                      P('\\end{comment}')^-1
-local comment = token(l.COMMENT, line_comment + block_comment)
+local comment = token(l.COMMENT, '%' * l.nonnewline^0)
 
--- Environments.
--- LaTeX environments.
-local env_latex = '\\' * (P('begin') + 'end') * '{' *  word_match({
-  'abstract', 'array', 'center', 'description', 'displaymath', 'document',
-  'enumerate', 'eqnarray', 'equation', 'figure', 'flushleft', 'flushright',
-  'itemize', 'list', 'math', 'minipage', 'picture', 'quotation', 'quote',
-  'tabbing', 'table', 'tabular', 'thebibliography', 'theorem', 'titlepage',
-  'trivlist', 'verbatim', 'verse'
-}) * '}'
-local env_latex_math = '\\' * S('[]()') + '$' -- covers '$$' as well
--- ConTeXt environments.
-local env_context = '\\' * (P('start') * l.word + 'stop' * l.word)
-local environment = token('environment', env_latex + env_latex_math +
-                          env_context)
+-- TeX environments.
+local environment = token('environment', '\\' * (P('begin') + 'end') * l.word)
 
 -- Commands.
-local escapes = S('$%_{}&#')
-local command = token(l.KEYWORD, '\\' * (l.alpha^1 + escapes))
+local command = token(l.KEYWORD, '\\' * (l.alpha^1 + S('#$&~_^%{}')))
 
 -- Operators.
-local operator = token(l.OPERATOR, S('$&%#{}[]'))
+local operator = token(l.OPERATOR, S('$&#{}[]'))
 
 _rules = {
   { 'whitespace', ws },
@@ -58,10 +37,8 @@ _tokenstyles = {
 }
 
 _foldsymbols = {
-  _patterns = { '\\[a-z]+', '[{}]', '%%' },
-  [l.COMMENT] = {
-    ['\\begin'] = 1, ['\\end'] = -1, ['%'] = l.fold_line_comments('%')
-  },
-  [l.KEYWORD] = { ['\\begin'] = 1, ['\\end'] = -1 },
+  _patterns = { '\\begin', '\\end', '[{}]', '%%' },
+  [l.COMMENT] = { ['%'] = l.fold_line_comments('%') },
+  ['environment'] = { ['\\begin'] = 1, ['\\end'] = -1 },
   [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 }
 }
