@@ -106,7 +106,7 @@ _tokenstyles = {
   { 'h3', hstyle..{ size = font_size + 3 } },
   { 'h2', hstyle..{ size = font_size + 4 } },
   { 'h1', hstyle..{ size = font_size + 5 } },
-  { 'code', l.style_embedded..{ fore = l.colors.black, eolfilled = true } },
+  { 'code', l.style_embedded..{ eolfilled = true } },
   { 'hr', l.style_nothing..{ back = l.colors.black, eolfilled = true } },
   { 'link', l.style_nothing..{ underline = true } },
   { 'link_url', l.style_nothing..{ underline = true } },
