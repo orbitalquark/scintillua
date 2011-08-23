@@ -548,7 +548,7 @@ module('lexer', package.seeall)
 --       local current_line = start_line
 --       local prev_level = start_level
 --       for indent, line in text:gmatch('([\t ]*)(.-)\r?\n') do
---         if #line > 0 then
+--         if line ~= '' then
 --           local current_level = l.get_indent_amount(current_line)
 --           if current_level > prev_level then -- next level
 --             local i = current_line - 1
@@ -935,7 +935,7 @@ function fold(text, start_pos, start_line, start_level)
     local current_level = prev_level
     for i = 1, #lines do
       local pos, line = lines[i][1], lines[i][2]
-      if #line > 0 then
+      if line ~= '' then
         for _, patt in ipairs(fold_symbols._patterns) do
           for s, match in line:gmatch(patt) do
             local symbols = fold_symbols[get_style_at(start_pos + pos + s - 1)]
@@ -945,11 +945,11 @@ function fold(text, start_pos, start_line, start_level)
             elseif type(l) == 'function' then
               current_level = current_level + l(text, pos, line, s, match)
             end
-            if current_level < FOLD_BASE then current_level = FOLD_BASE end
           end
         end
         folds[line_num] = { prev_level }
         if current_level > prev_level then folds[line_num][2] = FOLD_HEADER end
+        if current_level < FOLD_BASE then current_level = FOLD_BASE end
         prev_level = current_level
       else
         folds[line_num] = { prev_level, FOLD_BLANK }
@@ -961,7 +961,7 @@ function fold(text, start_pos, start_line, start_level)
     -- Indentation based folding.
     local current_line, prev_level = start_line, start_level
     for _, line in text:gmatch('([\t ]*)(.-)\r?\n') do
-      if #line > 0 then
+      if line ~= '' then
         local current_level = FOLD_BASE + get_indent_amount(current_line)
         if current_level > prev_level then -- next level
           local i = current_line - 1
@@ -1247,14 +1247,14 @@ end
 -- @param line The line passed to a fold function.
 -- @param s The s passed to a fold function.
 local function prev_line_is_comment(prefix, text, pos, line, s)
-  if line:sub(1, s - 1):find('%S') then return 0 end
-  local prev_line_is_comment, next_line_is_comment = false, false
+  local start = line:find('%S')
+  if start < s and not line:find(prefix, start, true) then return false end
   local p = pos - 1
   if text:sub(p, p) == '\n' then
     p = p - 1
     if text:sub(p, p) == '\r' then p = p - 1 end
     if text:sub(p, p) ~= '\n' then
-      while p > 1 and text:sub(p - 1, p - 1):find('^[^\n]$') do p = p - 1 end
+      while p > 1 and text:sub(p - 1, p - 1) ~= '\n' do p = p - 1 end
       while text:sub(p, p):find('^[\t ]$') do p = p + 1 end
       return text:sub(p, p + #prefix - 1) == prefix
     end
@@ -1270,9 +1270,8 @@ end
 -- @param line The line passed to a fold function.
 -- @param s The s passed to a fold function.
 local function next_line_is_comment(prefix, text, pos, line, s)
-  local p = pos + s
-  while p <= #text and text:sub(p, p):find('^[^\n]$') do p = p + 1 end
-  if text:sub(p, p) == '\n' then
+  local p = text:find('\n', pos + s)
+  if p then
     p = p + 1
     while text:sub(p, p):find('^[\t ]$') do p = p + 1 end
     return text:sub(p, p + #prefix - 1) == prefix
