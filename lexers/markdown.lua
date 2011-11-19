@@ -110,7 +110,7 @@ _tokenstyles = {
   { 'hr', l.style_nothing..{ back = l.colors.black, eolfilled = true } },
   { 'link', l.style_nothing..{ underline = true } },
   { 'link_url', l.style_nothing..{ underline = true } },
-  { 'link_label', l.style_constant },
+  { 'link_label', l.style_label },
   { 'strong', l.style_nothing..{ bold = true } },
   { 'em', l.style_nothing..{ italic = true } },
   { 'list', l.style_constant },

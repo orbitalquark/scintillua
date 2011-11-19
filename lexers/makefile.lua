@@ -28,10 +28,10 @@ local command = #P('\t') * token('command', l.nonnewline^1)
 
 -- Lines.
 local var_char = l.any - l.space - S(':#=')
-local identifier = token(l.IDENTIFIER, var_char^1) * ws^0 * assign
+local variable = token(l.VARIABLE, var_char^1) * ws^0 * assign
 local macro = token('macro', '$' * (l.delimited_range('()', nil, nil, true) +
                              S('<@')))
-local regular_line = ws + identifier + macro + comment + l.any_char
+local regular_line = ws + variable + macro + comment + l.any_char
 
 _rules = {
   { 'comment', comment },
@@ -45,8 +45,7 @@ _rules = {
 _tokenstyles = {
   { 'target', l.style_definition },
   { 'command', l.style_string },
-  { 'identifier', l.style_nothing..{ bold = true } },
-  { 'macro', l.style_keyword },
+  { 'macro', l.style_preproc },
 }
 
 _LEXBYLINE = true

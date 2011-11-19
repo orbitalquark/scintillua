@@ -75,6 +75,8 @@ module('lexer', package.seeall)
 -- * `FUNCTION`
 -- * `CLASS`
 -- * `TYPE`
+-- * `LABEL`
+-- * `REGEX`
 --
 -- Please note you are not limited to just these token types; you can create
 -- your own. If you create your own, you will have to specify how they are

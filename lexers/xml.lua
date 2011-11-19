@@ -61,8 +61,8 @@ _rules = {
 _tokenstyles = {
   { 'tag', l.style_tag },
   { 'element', l.style_tag },
-  { 'namespace', l.style_nothing..{ italic = true } },
-  { 'attribute', l.style_nothing..{ bold = true } },
+  { 'namespace', l.style_label },
+  { 'attribute', l.style_constant },
   { 'cdata', l.style_comment },
   { 'entity', l.style_nothing },
   { 'doctype', l.style_embedded },

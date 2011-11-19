@@ -53,6 +53,6 @@ local bibtex_end_rule = token(l.OPERATOR, P('}'))
 l.embed_lexer(latex, _M, bibtex_start_rule, bibtex_end_rule)
 
 _tokenstyles = {
-  { 'field', l.style_nothing..{ bold = true } },
+  { 'field', l.style_constant },
   { 'entry', l.style_preproc }
 }

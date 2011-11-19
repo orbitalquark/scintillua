@@ -16,7 +16,8 @@ local ws = token(l.WHITESPACE, l.space^1)
 local line_comment = '%' * l.nonnewline^0
 local block_comment = '\\begin{comment}' * (l.any - '\\end{comment}')^0 *
                       P('\\end{comment}')^-1
-local comment = token(l.COMMENT, line_comment + block_comment)
+-- Note: need block_comment before line_comment or LPeg cannot compile rule.
+local comment = token(l.COMMENT, block_comment + line_comment)
 
 -- Sections.
 local section = token('section', '\\' * word_match {

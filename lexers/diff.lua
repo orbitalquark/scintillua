@@ -33,7 +33,7 @@ _rules = {
 }
 
 _tokenstyles = {
-  { 'header', l.style_nothing..{ bold = true } },
+  { 'header', l.style_comment },
   { 'addition', l.style_nothing..{ fore = l.colors.green } },
   { 'deletion', l.style_nothing..{ fore = l.colors.red } },
   { 'change', l.style_nothing..{ fore = l.colors.yellow } },

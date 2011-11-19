@@ -85,9 +85,9 @@ _tokenstyles = {
   { 'tag', l.style_tag },
   { 'element', l.style_tag },
   { 'unknown_element', l.style_tag..{ italic = true } },
-  { 'attribute', l.style_nothing..{ bold = true } },
-  { 'unknown_attribute', l.style_nothing..{ italic = true } },
-  { 'entity', l.style_nothing..{ bold = true } },
+  { 'attribute', l.style_constant },
+  { 'unknown_attribute', l.style_constant..{ italic = true } },
+  { 'entity', l.style_constant },
   { 'doctype', l.style_keyword },
 }
 

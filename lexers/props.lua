@@ -40,7 +40,7 @@ _rules = {
 }
 
 _tokenstyles = {
-  { 'variable', l.style_keyword },
+  { 'variable', l.style_variable },
   { 'color', l.style_number },
 }
 

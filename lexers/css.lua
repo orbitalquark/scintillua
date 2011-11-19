@@ -152,8 +152,8 @@ _rules = {
 }
 
 _tokenstyles = {
-  { 'unit', l.style_number },
-  { 'value', l.style_nothing..{ bold = true } },
+  { 'unit', l.style_label },
+  { 'value', l.style_constant },
   { 'color', l.style_number },
   { 'at_rule', l.style_preprocessor },
 }
