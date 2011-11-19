@@ -33,6 +33,7 @@ style_tag         = style { fore = colors.teal,    bold      = true }
 style_type        = style { fore = colors.green                     }
 style_variable    = style { fore = colors.white,   italic    = true }
 style_label       = style { fore = colors.teal,    bold      = true }
+style_regex       = style_string
 style_embedded    = style_tag..{ back = color('44', '44', '44')     }
 style_identifier  = style_nothing
 

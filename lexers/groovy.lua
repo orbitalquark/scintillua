@@ -20,9 +20,9 @@ local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
 local triple_sq_str = "'''" * (l.any - "'''")^0 * P("'''")^-1
 local triple_dq_str = '"""' * (l.any - '"""')^0 * P('"""')^-1
-local regex_str = l.delimited_range('/', '\\', nil, nil, '\n')
-local string = token(l.STRING, triple_sq_str + triple_dq_str + sq_str + dq_str +
-                     regex_str)
+local string = token(l.STRING, triple_sq_str + triple_dq_str + sq_str +
+                               dq_str) +
+               token(l.REGEX, l.delimited_range('/', '\\', nil, nil, '\n'))
 
 -- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)

@@ -18,13 +18,12 @@ local comment = token(l.COMMENT, block_comment + line_comment)
 -- Strings.
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
-local regex_str = l.delimited_range('/', '\\', nil, nil, '\n') * S('igm')^0
 local string = token(l.STRING, sq_str + dq_str) + P(function(input, index)
   if index == 1 then return index end
   local i = index
   while input:sub(i - 1, i - 1):match('[ \t\r\n\f]') do i = i - 1 end
   return input:sub(i - 1, i - 1):match('[+%-*%%^!=&|?:;,()%[%]{}]') and index
-end) * token('regex', regex_str)
+end) * token(l.REGEX, l.delimited_range('/', '\\', nil, nil, '\n') * S('igm')^0)
 
 -- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
@@ -60,8 +59,4 @@ _rules = {
   { 'string', string },
   { 'operator', operator },
   { 'any_char', l.any_char },
-}
-
-_tokenstyles = {
-  { 'regex', l.style_string..{ back = l.color('44', '44', '44')} },
 }

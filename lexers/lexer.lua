@@ -291,6 +291,7 @@ module('lexer', package.seeall)
 -- * `style_label`: Typically used for labels.
 -- * `style_number`: Typically used for numbers.
 -- * `style_operator`: Typically used for operators.
+-- * `style_regex`: Typically used for regular expression strings.
 -- * `style_string`: Typically used for strings.
 -- * `style_preproc`: Typically used for preprocessor statements.
 -- * `style_tag`: Typically used for markup tags.
@@ -768,6 +769,7 @@ end
 -- @field class The class type (13).
 -- @field type The type type (14).
 -- @field label The label type (15).
+-- @field regex The regex type (16).
 local tokens = {
   default      = 0,
   whitespace   = 1,
@@ -785,6 +787,7 @@ local tokens = {
   class        = 13,
   type         = 14,
   label        = 15,
+  regex        = 16,
 }
 local string_upper = string.upper
 for k, v in pairs(tokens) do _M[string_upper(k)] = k end
@@ -814,7 +817,8 @@ function load(lexer_name)
     [13] = style_class,
     [14] = style_type,
     [15] = style_label,
-    len = 16,
+    [16] = style_regex,
+    len = 17,
     -- Predefined styles.
     [32] = style_default,
     [33] = style_line_number,

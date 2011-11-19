@@ -34,6 +34,7 @@ style_type        = style { fore = colors.blue               }
 style_variable    = style { fore = colors.black              }
 style_embedded    = style { fore = colors.blue               }
 style_label       = style { fore = colors.teal, bold = true  }
+style_regex       = style_string
 style_identifier  = style_nothing
 
 -- Default styles.

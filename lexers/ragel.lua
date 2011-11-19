@@ -13,8 +13,8 @@ local comment = token(l.COMMENT, '#' * nonnewline^0)
 local sq_str = delimited_range("'", '\\', true)
 local dq_str = delimited_range('"', '\\', true)
 local set = delimited_range('[]', '\\', true)
-local regex = delimited_range('/', '\\', true) * P('i')^-1
-local string = token(l.STRING, sq_str + dq_str + set + regex)
+local string = token(l.STRING, sq_str + dq_str + set) +
+               token(l.REGEX, delimited_range('/', '\\', true) * P('i')^-1)
 
 -- Numbers.
 local number = token(l.NUMBER, digit^1)

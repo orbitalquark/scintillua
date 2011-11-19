@@ -36,9 +36,6 @@ end)
 -- Strings.
 local cmd_str = l.delimited_range('`', '\\', true)
 local lit_cmd = '%x' * literal_delimitted
-local regex_op = S('iomx')^0
-local regex_str = l.delimited_range('/', '\\', nil, nil, '\n') * regex_op
-local lit_regex = '%r' * literal_delimitted * regex_op
 local lit_array = '%w' * literal_delimitted
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
@@ -52,8 +49,11 @@ local heredoc = '<<' * P(function(input, index)
     return e and e + 1 or #input + 1
   end
 end)
+local regex_str = l.delimited_range('/', '\\', nil, nil, '\n') * S('iomx')^0
+local lit_regex = '%r' * literal_delimitted * S('iomx')^0
 local string = token(l.STRING, sq_str + dq_str + lit_str + heredoc + cmd_str +
-                     lit_cmd + regex_str + lit_regex + lit_array)
+                               lit_cmd + lit_array) +
+               token(l.REGEX, regex_str + lit_regex)
 
 local word_char = l.alnum + S('_!?')
 

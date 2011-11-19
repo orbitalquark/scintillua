@@ -56,7 +56,6 @@ end)
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
 local cmd_str = l.delimited_range('`', '\\', true)
-local regex = l.delimited_range('/', '\\', false, true, '\n') * S('imosx')^0
 local heredoc = '<<' * P(function(input, index)
   local s, e, delimiter = input:find('([%a_][%w_]*)[\n\r\f;]+', index)
   if s == index and delimiter then
@@ -67,14 +66,16 @@ local heredoc = '<<' * P(function(input, index)
 end)
 local lit_str = 'q' * P('q')^-1 * literal_delimitted
 local lit_array = 'qw' * literal_delimitted
-local lit_regex = 'qr' * literal_delimitted * S('imosx')^0
 local lit_cmd = 'qx' * literal_delimitted
 local lit_match = 'm' * literal_delimitted * S('cgimosx')^0
 local lit_sub = 's' * literal_delimitted2 * S('ecgimosx')^0
 local lit_tr = (P('tr') + 'y') * literal_delimitted2 * S('cds')^0
-local string = token(l.STRING, sq_str + dq_str + cmd_str + regex + heredoc +
-                     lit_str + lit_array + lit_regex + lit_cmd + lit_match +
-                     lit_sub + lit_tr)
+local regex_str = l.delimited_range('/', '\\', false, true, '\n') * S('imosx')^0
+local lit_regex = 'qr' * literal_delimitted * S('imosx')^0
+local string = token(l.STRING, sq_str + dq_str + cmd_str + heredoc + lit_str +
+                               lit_array + lit_cmd + lit_match + lit_sub +
+                               lit_tr) +
+               token(l.REGEX, regex_str + lit_regex)
 
 -- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)

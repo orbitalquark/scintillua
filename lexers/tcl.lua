@@ -21,7 +21,7 @@ end) * l.nonnewline^0)
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true, false, '\n')
 local regex = l.delimited_range('/', '\\', false, false, '\n')
-local string = token(l.STRING, sq_str + dq_str + regex)
+local string = token(l.STRING, sq_str + dq_str) + token(l.REGEX, regex)
 
 -- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
