@@ -75,7 +75,7 @@ local func = token(l.FUNCTION, l.delimited_range('%', nil, false, false, '\n'))
 local operator = token(l.OPERATOR, S('+-*/$=,;()'))
 
 -- Labels.
-local label = token('label', #P(':') * l.starts_line(':' * l.word))
+local label = token(l.LABEL, #P(':') * l.starts_line(':' * l.word))
 
 _rules = {
   { 'whitespace', ws },
@@ -88,10 +88,6 @@ _rules = {
   { 'comment', comment },
   { 'operator', operator },
   { 'any_char', l.any_char },
-}
-
-_tokenstyles = {
-  { 'label', l.style_constant },
 }
 
 _foldsymbols = {

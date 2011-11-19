@@ -44,7 +44,7 @@ local identifier = token(l.IDENTIFIER, word)
 local operator = token(l.OPERATOR, S('[]{}'))
 
 -- Labels.
-local label = token('label', '/' * word)
+local label = token(l.LABEL, '/' * word)
 
 _rules = {
   { 'whitespace', ws },
@@ -57,8 +57,4 @@ _rules = {
   { 'label', label },
   { 'operator', operator },
   { 'any_char', l.any_char },
-}
-
-_tokenstyles = {
-  { 'label', l.style_variable },
 }

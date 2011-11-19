@@ -49,7 +49,7 @@ local constant = token(l.CONSTANT, word_match({
 -- TODO? Constants used in strings: $$ $\r $\n $\t
 
 -- Labels (4.3).
-local label = token('label', l.word * ':')
+local label = token(l.LABEL, l.word * ':')
 
 -- Keywords.
 local keyword = token(l.KEYWORD, word_match({
@@ -164,9 +164,6 @@ local keyword = token(l.KEYWORD, word_match({
 -- Operators.
 local operator = token(l.OPERATOR, S('+-*/%|&^~!<>'))
 
--- Labels.
-local label = token('label', l.word * ":")
-
 -- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
@@ -182,8 +179,4 @@ _rules = {
   { 'label', label },
   { 'identifier', identifier },
   { 'any_char', l.any_char },
-}
-
-_tokenstyles = {
-  { 'label', l.style { bold = true } }
 }

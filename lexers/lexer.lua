@@ -288,6 +288,7 @@ module('lexer', package.seeall)
 -- * `style_error`: Typically used for erroneous syntax.
 -- * `style_function`: Typically used for function definitions.
 -- * `style_keyword`: Typically used for language keywords.
+-- * `style_label`: Typically used for labels.
 -- * `style_number`: Typically used for numbers.
 -- * `style_operator`: Typically used for operators.
 -- * `style_string`: Typically used for strings.
@@ -762,9 +763,11 @@ end
 -- @field error The error type (8).
 -- @field preprocessor The preprocessor type (9).
 -- @field constant The constant type (10).
--- @field function The function type (11).
--- @field class The class type (12).
--- @field type The type type (13).
+-- @field variable The variable type (11).
+-- @field function The function type (12).
+-- @field class The class type (13).
+-- @field type The type type (14).
+-- @field label The label type (15).
 local tokens = {
   default      = 0,
   whitespace   = 1,
@@ -781,6 +784,7 @@ local tokens = {
   ['function'] = 12,
   class        = 13,
   type         = 14,
+  label        = 15,
 }
 local string_upper = string.upper
 for k, v in pairs(tokens) do _M[string_upper(k)] = k end
@@ -809,7 +813,8 @@ function load(lexer_name)
     [12] = style_function,
     [13] = style_class,
     [14] = style_type,
-    len = 15,
+    [15] = style_label,
+    len = 16,
     -- Predefined styles.
     [32] = style_default,
     [33] = style_line_number,

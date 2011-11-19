@@ -61,7 +61,7 @@ _rules = {
 }
 
 _tokenstyles = {
-  { 'action', l.style_nothing..{ italic = true } }
+  { 'action', l.style_nothing }
 }
 
 _foldsymbols = {
