@@ -91,7 +91,7 @@ local properties = (type + identifier + operator) * token(l.OPERATOR, '.') *
 
 -- Preprocs.
 local annotation = token('annotation', '@' * l.word^1)
-local preproc = token('preproc', '#' * l.nonnewline^0)
+local preproc = token(l.PREPROCESSOR, '#' * l.nonnewline^0)
 
 -- Traits.
 local traits_list = token('traits', word_match {
@@ -130,7 +130,6 @@ _rules = {
 
 _tokenstyles = {
 	{ 'annotation', l.style_preproc },
-	{ 'preproc', l.style_preproc },
 	{ 'traits', l.style_definition },
 }
 

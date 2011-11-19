@@ -91,10 +91,6 @@ _rules = {
   { 'any_char', l.any_char },
 }
 
-_tokenstyles = {
-  { 'function', l.style_function..{ fore = l.colors.red } },
-}
-
 _foldsymbols = {
   _patterns = { '[a-z]+', '[%(%)%[%]]', '%%[{}]?', '#' },
   [l.KEYWORD] = {
