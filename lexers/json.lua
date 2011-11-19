@@ -12,8 +12,7 @@ module(...)
 local ws = token(l.WHITESPACE, l.space^1)
 
 -- Comments.
-local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
-local comment = token(l.COMMENT, block_comment)
+local comment = token(l.COMMENT, '/*' * (l.any - '*/')^0 * P('*/')^-1)
 
 -- Strings.
 local sq_str = P('u')^-1 * l.delimited_range("'", '\\', true, false, '\n')

@@ -62,10 +62,10 @@ local dq_str = token(l.STRING, l.delimited_range('"', nil, true))
 local sq_str = token(l.STRING, l.delimited_range("'", nil, true))
 local paren_str = token(l.STRING, l.delimited_range('()', nil, true))
 local link = token('link', P('!')^-1 * l.delimited_range('[]') *
-             (P('(') * (l.any - S(') \t'))^0 *
-             (l.space^1 * l.delimited_range('"', nil, true))^-1 * ')' +
-             l.space^0 * l.delimited_range('[]')) +
-             P('http://') * (l.any - l.space)^1)
+                           (P('(') * (l.any - S(') \t'))^0 *
+                            (l.space^1 * l.delimited_range('"', nil, true))^-1 *
+                            ')' + l.space^0 * l.delimited_range('[]')) +
+                           P('http://') * (l.any - l.space)^1)
 local link_label = ws^0 * token('link_label', l.delimited_range('[]') * ':') *
                    ws * token('link_url', (l.any - l.space)^1) *
                    (ws * (dq_str + sq_str + paren_str))^-1

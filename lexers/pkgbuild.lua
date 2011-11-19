@@ -56,7 +56,8 @@ local constant = token(l.CONSTANT, word_match {
 local identifier = token(l.IDENTIFIER, l.word)
 
 -- Variables.
-local variable = token(l.VARIABLE, '$' * (S('!#?*@$') +
+local variable = token(l.VARIABLE,
+                       '$' * (S('!#?*@$') +
                        l.delimited_range('()', nil, true, false, '\n') +
                        l.delimited_range('[]', nil, true, false, '\n') +
                        l.delimited_range('{}', nil, true, false, '\n') +

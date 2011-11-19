@@ -56,7 +56,7 @@ local attribute = (token('attribute', ('data-' * l.alnum^1) + word_match({
   'width', 'text', 'password', 'checkbox', 'radio', 'submit', 'reset', 'file',
   'hidden', 'image', 'xml', 'xmlns', 'xml:lang'
 }, '-:', case_insensitive_tags)) + token('unknown_attribute', l.word)) *
-  (ws^0 * token(l.OPERATOR, '=') * ws^0 * (string + number))^-1
+         (ws^0 * token(l.OPERATOR, '=') * ws^0 * (string + number))^-1
 local attributes = P{ attribute * (ws * V(1))^0 }
 local tag_start = token('tag', '<' * P('/')^-1) * element
 local tag_end = token('tag', P('/')^-1 * '>')

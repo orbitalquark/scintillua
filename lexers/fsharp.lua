@@ -16,9 +16,9 @@ local block_comment = l.nested_pair('(*', '*)', true)
 local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- Strings.
-local sq_str = token(l.STRING, l.delimited_range("'", '\\', true, false, '\n'))
-local dq_str = token(l.STRING, l.delimited_range('"', '\\', true, false, '\n'))
-local string = sq_str + dq_str
+local sq_str = l.delimited_range("'", '\\', true, false, '\n')
+local dq_str = l.delimited_range('"', '\\', true, false, '\n')
+local string = token(l.STRING, sq_str + dq_str)
 
 -- Numbers.
 local number = token(l.NUMBER, (l.float + l.integer * S('uUlL')^-1))
@@ -27,8 +27,8 @@ local number = token(l.NUMBER, (l.float + l.integer * S('uUlL')^-1))
 local preproc_word = word_match {
   'ifndef', 'ifdef', 'if', 'else', 'endif', 'light', 'region', 'endregion'
 }
-local preproc = token(l.PREPROCESSOR, #P('#') * l.starts_line('#' * S('\t ')^0 *
-                      preproc_word *
+local preproc = token(l.PREPROCESSOR,
+                      #P('#') * l.starts_line('#' * S('\t ')^0 * preproc_word *
                       (l.nonnewline_esc^1 + l.space * l.nonnewline_esc^0)))
 
 -- Keywords.

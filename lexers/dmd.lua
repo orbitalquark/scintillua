@@ -29,7 +29,7 @@ local del_str = 'q"' * (l.any - '"')^0 * P('"')^-1
 local tok_str = 'q' * l.nested_pair('{', '}', true)
 local other_hex_str = '\\x' * (l.xdigit * l.xdigit)^1
 local string = token(l.STRING, sq_str + dq_str + lit_str + bt_str + hex_str +
-                     del_str + tok_str + other_hex_str)
+                               del_str + tok_str + other_hex_str)
 
 -- Numbers.
 local dec = l.digit^1 * ('_' * l.digit^1)^0
@@ -71,7 +71,7 @@ local constant = token(l.CONSTANT, word_match {
 })
 
 local class_sequence = token(l.TYPE, P('class') + P('struct')) * ws^1 *
-                             token(l.CLASS, l.word)
+                                     token(l.CLASS, l.word)
 
 -- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)

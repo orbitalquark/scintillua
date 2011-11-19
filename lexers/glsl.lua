@@ -53,16 +53,18 @@ local func = token(l.FUNCTION, word_match {
 
 -- Types.
 local type = token(l.TYPE,
-  S('bdiu')^-1 * 'vec' * R('24') +
-  P('d')^-1 * 'mat' * R('24') * ('x' * R('24')^-1) +
-  S('iu')^-1 * 'sampler' * R('13') * 'D' +
-  'sampler' * R('12') * 'D' * P('Array')^-1 * 'Shadow' +
-  S('iu')^-1 * 'sampler' * (R('12') * 'DArray' + word_match {
-    'Cube', '2DRect', 'Buffer', '2DMS', '2DMSArray', '2DMSCubeArray'
-  }) +
-  word_match {
-    'samplerCubeShadow', 'sampler2DRectShadow', 'samplerCubeArrayShadow'
-  })
+                   S('bdiu')^-1 * 'vec' * R('24') +
+                   P('d')^-1 * 'mat' * R('24') * ('x' * R('24')^-1) +
+                   S('iu')^-1 * 'sampler' * R('13') * 'D' +
+                   'sampler' * R('12') * 'D' * P('Array')^-1 * 'Shadow' +
+                   S('iu')^-1 * 'sampler' * (R('12') * 'DArray' + word_match {
+                     'Cube', '2DRect', 'Buffer', '2DMS', '2DMSArray',
+                     '2DMSCubeArray'
+                   }) +
+                   word_match {
+                     'samplerCubeShadow', 'sampler2DRectShadow',
+                     'samplerCubeArrayShadow'
+                   })
 
 -- Variables.
 local variable = token(l.VARIABLE, word_match {

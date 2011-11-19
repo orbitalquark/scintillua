@@ -17,11 +17,10 @@ local comment = token(l.COMMENT, '%' * l.nonnewline^0)
 local command = token(l.KEYWORD, '\\' * (l.alpha^1 + S('#$&~_^%{}')))
 
 -- Sections.
-local section_keywords = word_match {
+local section = token('section', '\\' * word_match {
   'part', 'chapter', 'section', 'subsection', 'subsubsection', 'title',
   'subject', 'subsubject', 'subsubsubject'
-}
-local parts = token('parts', '\\' * section_keywords)
+})
 
 -- ConTeXt environments.
 local environment = token('environment', '\\' * (P('start') + 'stop') * l.word)
@@ -33,7 +32,7 @@ _rules = {
   { 'whitespace', ws },
   { 'comment', comment },
   { 'environment', environment },
-  { 'parts', parts},
+  { 'section', section},
   { 'keyword', command },
   { 'operator', operator },
   { 'any_char', l.any_char },
@@ -41,7 +40,7 @@ _rules = {
 
 _tokenstyles = {
   { 'environment', l.style_tag },
-  { 'parts', l.style_class },
+  { 'section', l.style_class },
 }
 
 _foldsymbols = {

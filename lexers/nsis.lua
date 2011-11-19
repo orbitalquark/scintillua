@@ -26,13 +26,12 @@ local string = token(l.STRING, sq_str + dq_str + ex_str)
 local number = token(l.NUMBER, l.integer)
 
 -- Variables (4.2).
-local vars = word_match({
+local variable = token(l.VARIABLE, word_match({
   '$0', '$1', '$2', '$3', '$4', '$5', '$6', '$7', '$8', '$9',
   '$R0', '$R1', '$R2', '$R3', '$R4', '$R5', '$R6', '$R7', '$R8', '$R9',
   '$INSTDIR', '$OUTDIR', '$CMDLINE', '$LANGUAGE',
   'Var', '/GLOBAL'
-}, '$/')
-local variable = token(l.VARIABLE, vars + ('$' * l.word))
+}, '$/') + ('$' * l.word))
 
 -- Constants (4.2.3).
 local constant = token(l.CONSTANT, word_match({

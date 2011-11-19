@@ -12,7 +12,7 @@ local ws = token(l.WHITESPACE, l.space^1)
 
 -- Comments.
 local comment = token(l.COMMENT, '{#' * (l.any - l.newline - '#}')^0 *
-                      P('#}')^-1)
+                                 P('#}')^-1)
 
 -- Strings.
 local string = token(l.STRING, l.delimited_range('"', nil, true))

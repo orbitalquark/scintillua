@@ -22,7 +22,7 @@ local triple_dq_str = '"""' * (l.any - '"""')^0 * P('"""')^-1
 local raw_sq_str = P('u')^-1 * 'r' * l.delimited_range("'", nil, true)
 local raw_dq_str = P('U')^-1 * 'R' * l.delimited_range('"', nil, true)
 local string = token(l.STRING, triple_sq_str + triple_dq_str + sq_str + dq_str +
-                     raw_sq_str + raw_dq_str)
+                               raw_sq_str + raw_dq_str)
 
 -- Numbers.
 local dec = l.digit^1 * S('Ll')^-1
@@ -104,8 +104,8 @@ local identifier = token(l.IDENTIFIER, l.word)
 local operator = token(l.OPERATOR, S('!%^&*()[]{}-=+/|:;.,?<>~`'))
 
 -- Decorators.
-local decorator = token('decorator', #P('@') *
-                        l.starts_line('@' * l.nonnewline^0))
+local decorator = token('decorator',
+                        #P('@') * l.starts_line('@' * l.nonnewline^0))
 
 _rules = {
   { 'whitespace', ws },

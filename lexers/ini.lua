@@ -12,7 +12,7 @@ local ws = token(l.WHITESPACE, l.space^1)
 
 -- Comments.
 local comment = token(l.COMMENT, #S(';#') * l.starts_line(S(';#') *
-                      l.nonnewline^0))
+                                 l.nonnewline^0))
 
 -- Strings.
 local sq_str = l.delimited_range("'", '\\', true)

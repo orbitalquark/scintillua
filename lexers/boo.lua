@@ -24,7 +24,7 @@ local string = token(l.STRING, triple_dq_str + sq_str + dq_str) +
 
 -- Numbers.
 local number = token(l.NUMBER, (l.float + l.integer) *
-                     (S('msdhsfFlL') + 'ms')^-1)
+                               (S('msdhsfFlL') + 'ms')^-1)
 
 -- Keywords.
 local keyword = token(l.KEYWORD, word_match {

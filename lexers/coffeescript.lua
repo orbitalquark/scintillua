@@ -41,7 +41,7 @@ local keyword = token(l.KEYWORD, word_match {
 
 -- Fields: object properties and methods.
 local field = token(l.FUNCTION, '.' * (S('_$') + l.alpha) *
-                    (S('_$') + l.alnum)^0)
+                                (S('_$') + l.alnum)^0)
 
 -- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)

@@ -24,7 +24,7 @@ local string = token(l.STRING, sq_str + dq_str + bt_str)
 
 -- Numbers.
 local number = token(l.NUMBER, l.float + l.integer + l.dec_num + l.hex_num +
-                     l.oct_num)
+                               l.oct_num)
 
 -- Keywords.
 local keyword = token(l.KEYWORD, word_match({

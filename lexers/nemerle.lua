@@ -28,8 +28,8 @@ local preproc_word = word_match {
   'define', 'elif', 'else', 'endif', 'endregion', 'error', 'if', 'ifdef',
   'ifndef', 'line', 'pragma', 'region', 'undef', 'using', 'warning'
 }
-local preproc = token(l.PREPROCESSOR, #P('#') *
-                      l.starts_line('#' * S('\t ')^0 * preproc_word))
+local preproc = token(l.PREPROCESSOR,
+                      #P('#') * l.starts_line('#' * S('\t ')^0 * preproc_word))
 
 -- Keywords.
 local keyword = token(l.KEYWORD, word_match {

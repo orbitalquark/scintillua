@@ -19,7 +19,7 @@ local comment = token(l.COMMENT, line_comment + block_comment)
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true, false, '\n')
 local raw_str = l.delimited_range('`', nil, true)
-local string = token(l.STRING, sq_str + dq_str)
+local string = token(l.STRING, sq_str + dq_str + raw_str)
 
 -- Numbers.
 local number = token(l.NUMBER, (l.float + l.integer) * P('i')^-1)

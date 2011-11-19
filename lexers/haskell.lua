@@ -20,7 +20,7 @@ local comment = token(l.COMMENT, line_comment + block_comment)
 local string = token(l.STRING, l.delimited_range('"', '\\'))
 
 -- Chars.
-local char = token('char', l.delimited_range("'", "\\", false, false, '\n'))
+local char = token(l.STRING, l.delimited_range("'", "\\", false, false, '\n'))
 
 -- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)

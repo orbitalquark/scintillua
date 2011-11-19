@@ -44,7 +44,8 @@ local keyword = token(l.KEYWORD, word_match({
 local identifier = token(l.IDENTIFIER, l.word)
 
 -- Variables.
-local variable = token(l.VARIABLE, '$' * (S('!#?*@$') + l.digit^1 + l.word +
+local variable = token(l.VARIABLE,
+                       '$' * (S('!#?*@$') + l.digit^1 + l.word +
                        l.delimited_range('()', nil, true, false, '\n') +
                        l.delimited_range('[]', nil, true, false, '\n') +
                        l.delimited_range('{}', nil, true, false, '\n') +

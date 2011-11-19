@@ -21,7 +21,7 @@ local preproc = token(l.PREPROCESSOR, '!' * l.nonnewline^0)
 
 -- Targets.
 local target = token('target', (l.any - ':')^1) * colon *
-                     (ws * l.nonnewline^0)^-1
+                               (ws * l.nonnewline^0)^-1
 
 -- Commands.
 local command = #P('\t') * token('command', l.nonnewline^1)
@@ -30,7 +30,7 @@ local command = #P('\t') * token('command', l.nonnewline^1)
 local var_char = l.any - l.space - S(':#=')
 local identifier = token(l.IDENTIFIER, var_char^1) * ws^0 * assign
 local macro = token('macro', '$' * (l.delimited_range('()', nil, nil, true) +
-                    S('<@')))
+                             S('<@')))
 local regular_line = ws + identifier + macro + comment + l.any_char
 
 _rules = {

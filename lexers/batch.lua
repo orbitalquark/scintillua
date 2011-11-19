@@ -39,7 +39,8 @@ local func = token(l.FUNCTION, word_match({
 local identifier = token(l.IDENTIFIER, l.word)
 
 -- Variables.
-local variable = token(l.VARIABLE, '%' * (l.digit + '%' * l.alpha) +
+local variable = token(l.VARIABLE,
+                       '%' * (l.digit + '%' * l.alpha) +
                        l.delimited_range('%', nil, false, false, '\n'))
 
 -- Operators.
