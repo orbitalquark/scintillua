@@ -24,7 +24,6 @@ colors = {
 }
 
 style_nothing    = style {                                        }
-style_char       = style { fore = colors.red,    bold      = true }
 style_class      = style { fore = colors.black,  underline = true }
 style_comment    = style { fore = colors.lblue,  bold      = true }
 style_constant   = style { fore = colors.teal,   bold      = true }

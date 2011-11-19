@@ -282,7 +282,6 @@ module('lexer', package.seeall)
 -- patterns in `lexer`, predefined styles are available.
 --
 -- * `style_nothing`: Typically used for whitespace.
--- * `style_char`: Typically used for character literals.
 -- * `style_class`: Typically used for class definitions.
 -- * `style_comment`: Typically used for code comments.
 -- * `style_constant`: Typically used for constants.

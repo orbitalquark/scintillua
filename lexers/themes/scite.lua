@@ -17,7 +17,6 @@ lexer.colors = {
 }
 
 style_nothing     = style {                                  }
-style_char        = style { fore = colors.purple             }
 style_class       = style { fore = colors.black, bold = true }
 style_comment     = style { fore = colors.green              }
 style_constant    = style { fore = colors.teal, bold = true  }
