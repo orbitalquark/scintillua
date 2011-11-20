@@ -61,11 +61,11 @@ _rules = {
 _tokenstyles = {
   { 'tag', l.style_tag },
   { 'element', l.style_tag },
-  { 'namespace', l.style_label },
-  { 'attribute', l.style_constant },
+  { 'namespace', l.style_class },
+  { 'attribute', l.style_type },
   { 'cdata', l.style_comment },
-  { 'entity', l.style_nothing },
-  { 'doctype', l.style_embedded },
+  { 'entity', l.style_operator },
+  { 'doctype', l.style_comment },
 }
 
 _foldsymbols = {

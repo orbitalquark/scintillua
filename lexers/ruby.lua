@@ -89,15 +89,17 @@ local func = token(l.FUNCTION, word_match({
 local word = (l.alpha + '_') * word_char^0
 local identifier = token(l.IDENTIFIER, word)
 
--- Variables and symbols.
+-- Variables.
 local global_var = '$' * (word + S('!@L+`\'=~/\\,.;<>_*"$?:') + l.digit + '-' *
                    S('0FadiIKlpvw'))
 local class_var = '@@' * word
 local inst_var = '@' * word
-local symbol = ':' * P(function(input, index)
+local variable = token(l.VARIABLE, global_var + class_var + inst_var)
+
+-- Symbols.
+local symbol = token('symbol', ':' * P(function(input, index)
   if input:sub(index - 2, index - 2) ~= ':' then return index end
-end) * (word_char^1 + sq_str + dq_str)
-local variable = token(l.VARIABLE, global_var + class_var + inst_var + symbol)
+end) * (word_char^1 + sq_str + dq_str))
 
 -- Operators.
 local operator = token(l.OPERATOR, S('!%^&*()[]{}-=+/|:;.,?<>~'))
@@ -111,8 +113,13 @@ _rules = {
   { 'string', string },
   { 'number', number },
   { 'variable', variable },
+  { 'symbol', symbol },
   { 'operator', operator },
   { 'any_char', l.any_char },
+}
+
+_tokenstyles = {
+  { 'symbol', l.style_constant },
 }
 
 local function disambiguate(text, pos, line, s)

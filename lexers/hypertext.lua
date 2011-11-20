@@ -85,10 +85,10 @@ _tokenstyles = {
   { 'tag', l.style_tag },
   { 'element', l.style_tag },
   { 'unknown_element', l.style_tag..{ italic = true } },
-  { 'attribute', l.style_constant },
-  { 'unknown_attribute', l.style_constant..{ italic = true } },
-  { 'entity', l.style_constant },
-  { 'doctype', l.style_keyword },
+  { 'attribute', l.style_variable },
+  { 'unknown_attribute', l.style_type..{ italic = true } },
+  { 'entity', l.style_operator },
+  { 'doctype', l.style_comment },
 }
 
 -- Embedded CSS.

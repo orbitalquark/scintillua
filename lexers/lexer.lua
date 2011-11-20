@@ -727,7 +727,7 @@ local function add_lexer(grammar, lexer, token_rule)
                               rules_token_rule)^0 * rules.end_rule^-1
     token_rule = lpeg_V(embedded_child) + token_rule
   end
-  grammar['__'..lexer_name] = token_rule -- cn contain embedded lexer rules
+  grammar['__'..lexer_name] = token_rule -- can contain embedded lexer rules
   grammar[lexer_name] = token_rule^0
 end
 
