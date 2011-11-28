@@ -1276,6 +1276,7 @@ end
 function fold_line_comments(prefix)
   return function(text, pos, line, s)
     if GetProperty('fold.line.comments', 0) == 0 then return 0 end
+    if s > 1 and line:match('^%s*()') < s then return 0 end
     local prev_line_comment = prev_line_is_comment(prefix, text, pos, line, s)
     local next_line_comment = next_line_is_comment(prefix, text, pos, line, s)
     if not prev_line_comment and next_line_comment then return 1 end
