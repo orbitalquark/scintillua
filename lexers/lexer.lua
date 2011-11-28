@@ -150,7 +150,7 @@ module('lexer', package.seeall)
 -- It is worth noting that while token names are arbitrary, you are encouraged
 -- to use the ones listed in the [`tokens`](#tokens) table because a standard
 -- color theme is applied to them. If you wish to create a unique token, no
--- problem. You can specify how it will be colored later on.
+-- problem. You can specify how it will be displayed later on.
 --
 -- Lua strings should be easy to express because they are just characters
 -- surrounded by `'` or `"` characters, right? Not quite. Lua strings contain
@@ -343,20 +343,8 @@ module('lexer', package.seeall)
 --     local green = l.color('00', 'FF', '00')
 --     local blue = l.color('00', '00', 'FF')
 --
--- As you might have guessed, `lexer` has a set of default colors.
---
--- + `colors.green`
--- + `colors.blue`
--- + `colors.red`
--- + `colors.yellow`
--- + `colors.teal`
--- + `colors.white`
--- + `colors.black`
--- + `colors.grey`
--- + `colors.purple`
--- + `colors.orange`
---
--- It is recommended to use them to stay consistant with a user's color theme.
+-- The default set of colors varies depending on the color theme used. Please
+-- see the current theme for more information.
 --
 -- Finally, styles are assigned to tokens via a `_tokenstyles` table in the
 -- lexer. Styles do not have to be assigned to the default tokens; it is done
@@ -1054,16 +1042,6 @@ any_char = token('default', any)
 -- This table should be redefined in each theme.
 -- @class table
 -- @name colors
--- @field green Green.
--- @field blue Blue.
--- @field red Red.
--- @field yellow Yellow.
--- @field teal Teal.
--- @field white White.
--- @field black Black.
--- @field grey Grey.
--- @field purple Purple.
--- @field orange Orange.
 colors = {}
 
 ---
