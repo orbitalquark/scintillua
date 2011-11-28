@@ -4,16 +4,16 @@
 module('lexer', package.seeall)
 
 lexer.colors = {
-  green = color('00', '7F', '00'),
-  blue = color('00', '00', '7F'),
   red = color('7F', '00', '00'),
   yellow = color('7F', '7F', '00'),
+  green = color('00', '7F', '00'),
   teal = color('00', '7F', '7F'),
-  white = color('FF', 'FF', 'FF'),
-  black = color('00', '00', '00'),
-  grey = color('80', '80', '80'),
   purple = color('7F', '00', '7F'),
   orange = color('B0', '7F', '00'),
+  blue = color('00', '00', '7F'),
+  black = color('00', '00', '00'),
+  grey = color('80', '80', '80'),
+  white = color('FF', 'FF', 'FF'),
 }
 
 style_nothing     = style {                                  }
