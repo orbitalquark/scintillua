@@ -25,11 +25,14 @@ local lit_str = 'r' * l.delimited_range('"', nil, true, false, '\n') *
 local bt_str = l.delimited_range('`', '\\', nil, false, '\n') * S('cwd')^-1
 local hex_str = 'x' * l.delimited_range('"', '\\', nil, false, '\n') *
                 S('cwd')^-1
-local del_str = 'q"' * (l.any - '"')^0 * P('"')^-1
-local tok_str = 'q' * l.nested_pair('{', '}', true)
 local other_hex_str = '\\x' * (l.xdigit * l.xdigit)^1
-local string = token(l.STRING, sq_str + dq_str + lit_str + bt_str + hex_str +
-                               del_str + tok_str + other_hex_str)
+local del_str = l.nested_pair('q"[', ']"', true) +
+                l.nested_pair('q"(', ')"', true) +
+                l.nested_pair('q"{', '}"', true) +
+                l.nested_pair('q"<', '>"', true) +
+                P('q') * l.nested_pair('{', '}', true)
+local string = token(l.STRING, del_str + sq_str + dq_str + lit_str + bt_str +
+                               hex_str + other_hex_str)
 
 -- Numbers.
 local dec = l.digit^1 * ('_' * l.digit^1)^0
@@ -118,8 +121,8 @@ _rules = {
 	{ 'type', type },
 	{ 'function', func},
 	{ 'constant', constant },
-	{ 'identifier', identifier },
 	{ 'string', string },
+	{ 'identifier', identifier },
 	{ 'comment', comment },
 	{ 'number', number },
 	{ 'preproc', preproc },
