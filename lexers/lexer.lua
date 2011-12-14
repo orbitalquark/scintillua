@@ -1,8 +1,11 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 
+local M = {}
+
+--[[ This comment is for LuaDoc.
 ---
 -- Performs lexing of Scintilla documents.
-module('lexer', package.seeall)
+module('lexer')]]
 
 -- Markdown:
 -- ## Overview
@@ -36,7 +39,7 @@ module('lexer', package.seeall)
 --
 --     local l = lexer
 --     local token, word_match = l.token, l.word_match
---     local P, R, S, V = l.lpeg.P, l.lpeg.R, l.lpeg.S, l.lpeg.V
+--     local P, R, S, V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
 --
 --     module(...)
 --
@@ -145,7 +148,7 @@ module('lexer', package.seeall)
 --
 --     local comment = token(l.COMMENT, line_comment + block_comment)
 --
--- [lexical_conventions]: http://www.lua.org/manual/5.1/manual.html#2.1
+-- [lexical_conventions]: http://www.lua.org/manual/5.2/manual.html#3.1
 --
 -- It is worth noting that while token names are arbitrary, you are encouraged
 -- to use the ones listed in the [`tokens`](#tokens) table because a standard
@@ -185,7 +188,7 @@ module('lexer', package.seeall)
 --
 --     local keyword = token(l.KEYWORD, word_match {
 --       'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for',
---       'function', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat',
+--       'function', 'goto', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat',
 --       'return', 'then', 'true', 'until', 'while'
 --     })
 --
@@ -195,24 +198,25 @@ module('lexer', package.seeall)
 -- Lua functions and constants are specified like keywords:
 --
 --     local func = token(l.FUNCTION, word_match {
---       'assert', 'collectgarbage', 'dofile', 'error', 'getfenv',
---       'getmetatable', 'gcinfo', 'ipairs', 'loadfile', 'loadlib',
---       'loadstring', 'next', 'pairs', 'pcall', 'print', 'rawequal',
---       'rawget', 'rawset', 'require', 'setfenv', 'setmetatable',
---       'tonumber', 'tostring', 'type', 'unpack', 'xpcall'
+--       'assert', 'collectgarbage', 'dofile', 'error', 'getmetatable',
+--       'ipairs', 'load', 'loadfile', 'next', 'pairs', 'pcall', 'print',
+--       'rawequal', 'rawget', 'rawset', 'require', 'setmetatable', 'tonumber',
+--       'tostring', 'type', 'xpcall'
 --     })
 --
 --     local constant = token(l.CONSTANT, word_match {
---       '_G', '_VERSION', 'LUA_PATH', '_LOADED', '_REQUIREDNAME', '_ALERT',
---       '_ERRORMESSAGE', '_PROMPT'
+--       '_G', '_VERSION'
 --     })
 --
--- Unlike most programming languages, Lua allows an additional range of
--- characters in its identifier names (variables, functions, modules, etc.) so
--- the usual `l.word` cannot be used. Instead, identifiers are represented by:
+-- Like most programming languages, Lua allows the usual characters in
+-- identifier names (variables, functions, etc.) so the usual `l.word` can be
+-- used:
 --
---     local word = (R('AZ', 'az', '\127\255') + '_') * (l.alnum + '_')^0
---     local identifier = token(l.IDENTIFIER, word)
+--     local identifier = token(l.IDENTIFIER, l.word)
+--
+-- Lua has labels too:
+--
+--     local label = token(l.LABEL, '::' * l.word * '::')
 --
 -- Finally, an operator character is one of the following:
 --
@@ -238,6 +242,7 @@ module('lexer', package.seeall)
 --       { 'string', string },
 --       { 'comment', comment },
 --       { 'number', number },
+--       { 'label', label },
 --       { 'operator', operator },
 --       { 'any_char', l.any_char },
 --     }
@@ -649,8 +654,6 @@ local lpeg_P, lpeg_R, lpeg_S, lpeg_V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
 local lpeg_Ct, lpeg_Cc, lpeg_Cp = lpeg.Ct, lpeg.Cc, lpeg.Cp
 local lpeg_match = lpeg.match
 
-package.path = _LEXERHOME..'/?.lua'
-
 -- Adds a rule to a lexer's current ordered list of rules.
 -- @param lexer The lexer to add the given rule to.
 -- @param name The name associated with this rule. It is used for other lexers
@@ -681,7 +684,7 @@ end
 local function add_style(lexer, token_name, style)
   local len = lexer._STYLES.len
   if len == 32 then len = len + 8 end -- skip predefined styles
-  if len >= 128 then _G.print('Too many styles defined (128 MAX)') end
+  if len >= 128 then print('Too many styles defined (128 MAX)') end
   lexer._TOKENS[token_name] = len
   lexer._STYLES[len] = style
   lexer._STYLES.len = len + 1
@@ -779,43 +782,44 @@ local tokens = {
   regex        = 16,
 }
 local string_upper = string.upper
-for k, v in pairs(tokens) do _M[string_upper(k)] = k end
+for k, v in pairs(tokens) do M[string_upper(k)] = k end
 
 ---
 -- Initializes the specified lexer.
 -- @param lexer_name The name of the lexing language.
-function load(lexer_name)
-  _M.WHITESPACE = lexer_name..'_whitespace'
+-- @name load
+function M.load(lexer_name)
+  M.WHITESPACE = lexer_name..'_whitespace'
   local lexer = require(lexer_name or 'null')
   if not lexer then error('Lexer '..lexer_name..' does not exist') end
   lexer._TOKENS = tokens
   lexer._STYLES = {
-    [0] = style_nothing,
-    [1] = style_whitespace,
-    [2] = style_comment,
-    [3] = style_string,
-    [4] = style_number,
-    [5] = style_keyword,
-    [6] = style_identifier,
-    [7] = style_operator,
-    [8] = style_error,
-    [9] = style_preproc,
-    [10] = style_constant,
-    [11] = style_variable,
-    [12] = style_function,
-    [13] = style_class,
-    [14] = style_type,
-    [15] = style_label,
-    [16] = style_regex,
+    [0] = M.style_nothing,
+    [1] = M.style_whitespace,
+    [2] = M.style_comment,
+    [3] = M.style_string,
+    [4] = M.style_number,
+    [5] = M.style_keyword,
+    [6] = M.style_identifier,
+    [7] = M.style_operator,
+    [8] = M.style_error,
+    [9] = M.style_preproc,
+    [10] = M.style_constant,
+    [11] = M.style_variable,
+    [12] = M.style_function,
+    [13] = M.style_class,
+    [14] = M.style_type,
+    [15] = M.style_label,
+    [16] = M.style_regex,
     len = 17,
     -- Predefined styles.
-    [32] = style_default,
-    [33] = style_line_number,
-    [34] = style_bracelight,
-    [35] = style_bracebad,
-    [36] = style_controlchar,
-    [37] = style_indentguide,
-    [38] = style_calltip,
+    [32] = M.style_default,
+    [33] = M.style_line_number,
+    [34] = M.style_bracelight,
+    [35] = M.style_bracebad,
+    [36] = M.style_controlchar,
+    [37] = M.style_indentguide,
+    [38] = M.style_calltip,
   }
   if lexer._lexer then
     local l, _r, _s = lexer._lexer, lexer._rules, lexer._tokenstyles
@@ -844,7 +848,7 @@ function load(lexer_name)
     for _, r in ipairs(lexer._rules) do add_rule(lexer, r[1], r[2]) end
     build_grammar(lexer)
   end
-  add_style(lexer, lexer._NAME..'_whitespace', style_whitespace)
+  add_style(lexer, lexer._NAME..'_whitespace', M.style_whitespace)
   if lexer._foldsymbols and lexer._foldsymbols._patterns then
     local patterns = lexer._foldsymbols._patterns
     for i = 1, #patterns do patterns[i] = '()('..patterns[i]..')' end
@@ -861,7 +865,8 @@ end
 -- @param text The text to lex.
 -- @param init_style The current style. Multilang lexers use this to determine
 --   which language to start lexing in.
-function lex(text, init_style)
+-- @name lex
+function M.lex(text, init_style)
   local lexer = _G._LEXER
   if not lexer._GRAMMAR then return {} end
   if not lexer._LEXBYLINE then
@@ -917,7 +922,8 @@ local FOLD_BLANK = SC_FOLDLEVELWHITEFLAG
 -- @param start_line The line number text starts on.
 -- @param start_level The fold level text starts on.
 -- @return Table of fold levels.
-function fold(text, start_pos, start_line, start_level)
+-- @name fold
+function M.fold(text, start_pos, start_line, start_level)
   local folds = {}
   if text == '' then return folds end
   local lexer = _G._LEXER
@@ -994,33 +1000,34 @@ end
 -- The following are utility functions lexers will have access to.
 
 -- Common patterns.
-any = lpeg_P(1)
-ascii = lpeg_R('\000\127')
-extend = lpeg_R('\000\255')
-alpha = lpeg_R('AZ', 'az')
-digit = lpeg_R('09')
-alnum = lpeg_R('AZ', 'az', '09')
-lower = lpeg_R('az')
-upper = lpeg_R('AZ')
-xdigit = lpeg_R('09', 'AF', 'af')
-cntrl = lpeg_R('\000\031')
-graph = lpeg_R('!~')
-print = lpeg_R(' ~')
-punct = lpeg_R('!/', ':@', '[\'', '{~')
-space = lpeg_S('\t\v\f\n\r ')
+M.any = lpeg_P(1)
+M.ascii = lpeg_R('\000\127')
+M.extend = lpeg_R('\000\255')
+M.alpha = lpeg_R('AZ', 'az')
+M.digit = lpeg_R('09')
+M.alnum = lpeg_R('AZ', 'az', '09')
+M.lower = lpeg_R('az')
+M.upper = lpeg_R('AZ')
+M.xdigit = lpeg_R('09', 'AF', 'af')
+M.cntrl = lpeg_R('\000\031')
+M.graph = lpeg_R('!~')
+M.print = lpeg_R(' ~')
+M.punct = lpeg_R('!/', ':@', '[\'', '{~')
+M.space = lpeg_S('\t\v\f\n\r ')
 
-newline = lpeg_S('\r\n\f')^1
-nonnewline = 1 - newline
-nonnewline_esc = 1 - (newline + '\\') + '\\' * any
+M.newline = lpeg_S('\r\n\f')^1
+M.nonnewline = 1 - M.newline
+M.nonnewline_esc = 1 - (M.newline + '\\') + '\\' * M.any
 
-dec_num = digit^1
-hex_num = '0' * lpeg_S('xX') * xdigit^1
-oct_num = '0' * lpeg_R('07')^1
-integer = lpeg_S('+-')^-1 * (hex_num + oct_num + dec_num)
-float = lpeg_S('+-')^-1 *
-        (digit^0 * '.' * digit^1 + digit^1 * '.' * digit^0 + digit^1) *
-        lpeg_S('eE') * lpeg_S('+-')^-1 * digit^1
-word = (alpha + '_') * (alnum + '_')^0
+M.dec_num = M.digit^1
+M.hex_num = '0' * lpeg_S('xX') * M.xdigit^1
+M.oct_num = '0' * lpeg_R('07')^1
+M.integer = lpeg_S('+-')^-1 * (M.hex_num + M.oct_num + M.dec_num)
+M.float = lpeg_S('+-')^-1 *
+          (M.digit^0 * '.' * M.digit^1 + M.digit^1 * '.' * M.digit^0 +
+           M.digit^1) *
+          lpeg_S('eE') * lpeg_S('+-')^-1 * M.digit^1
+M.word = (M.alpha + '_') * (M.alnum + '_')^0
 
 ---
 -- Creates an LPeg capture table index with the name and position of the token.
@@ -1029,20 +1036,21 @@ word = (alpha + '_') * (alnum + '_')^0
 -- @param patt The LPeg pattern associated with the token.
 -- @usage local ws = token(l.WHITESPACE, l.space^1)
 -- @usage php_start_rule = token('php_tag', '<?' * ('php' * l.space)^-1)
-function token(name, patt)
-  if not name then _G.print('noname') end
+-- @name token
+function M.token(name, patt)
+  if not name then print('noname') end
   return lpeg_Ct(lpeg_Cc(name) * patt * lpeg_Cp())
 end
 
 -- common tokens
-any_char = token('default', any)
+M.any_char = M.token('default', M.any)
 
 ---
 -- Table of common colors for a theme.
 -- This table should be redefined in each theme.
 -- @class table
 -- @name colors
-colors = {}
+M.colors = {}
 
 ---
 -- Creates a Scintilla style from a table of style properties.
@@ -1064,7 +1072,8 @@ colors = {}
 -- * Use the value returned by `color()`.
 -- @usage local bold_italic = style { bold = true, italic = true }
 -- @see color
-function style(style_table)
+-- @name style
+function M.style(style_table)
   setmetatable(style_table, {
     __concat = function(t1, t2)
       local t = setmetatable({}, getmetatable(t1)) -- duplicate t1
@@ -1082,7 +1091,8 @@ end
 -- @param g The string green component of the color.
 -- @param b The string blue component of the color.
 -- @usage local red = color('FF', '00', '00')
-function color(r, g, b) return tonumber(b..g..r, 16) end
+-- @name color
+function M.color(r, g, b) return tonumber(b..g..r, 16) end
 
 ---
 -- Creates an LPeg pattern that matches a range of characters delimitted by a
@@ -1104,7 +1114,8 @@ function color(r, g, b) return tonumber(b..g..r, 16) end
 -- @usage local sq_str_escapes = delimited_range("'", '\\', true)
 -- @usage local unbalanced_parens = delimited_range('()', '\\', true)
 -- @usage local balanced_parens = delimited_range('()', '\\', true, true)
-function delimited_range(chars, escape, end_optional, balanced, forbidden)
+-- @name delimited_range
+function M.delimited_range(chars, escape, end_optional, balanced, forbidden)
   local s = chars:sub(1, 1)
   local e = #chars == 2 and chars:sub(2, 2) or s
   local range
@@ -1112,10 +1123,10 @@ function delimited_range(chars, escape, end_optional, balanced, forbidden)
   local f = forbidden or ''
   if not escape or escape == '' then
     local invalid = lpeg_S(e..f..b)
-    range = any - invalid
+    range = M.any - invalid
   else
     local invalid = lpeg_S(e..f..b) + escape
-    range = any - invalid + escape * any
+    range = M.any - invalid + escape * M.any
   end
   if balanced and s ~= e then
     return lpeg_P{ s * (range + lpeg_V(1))^0 * e }
@@ -1131,7 +1142,8 @@ end
 -- @param patt The LPeg pattern to match at the beginning of a line.
 -- @usage local preproc = token(l.PREPROCESSOR, #P('#') * l.starts_line('#' *
 --   l.nonnewline^0))
-function starts_line(patt)
+-- @name starts_line
+function M.starts_line(patt)
   return lpeg_P(function(input, idx)
     if idx == 1 then return idx end
     local char = input:sub(idx - 1, idx - 1)
@@ -1151,9 +1163,10 @@ end
 --   delimiter matches until an end delimiter or the end of the input is
 --   reached.
 -- @usage local nested_comment = l.nested_pair('/*', '*/', true)
-function nested_pair(start_chars, end_chars, end_optional)
+-- @name nested_pair
+function M.nested_pair(start_chars, end_chars, end_optional)
   local s, e = start_chars, end_optional and lpeg_P(end_chars)^-1 or end_chars
-  return lpeg_P{ s * (any - s - end_chars + lpeg_V(1))^0 * e }
+  return lpeg_P{ s * (M.any - s - end_chars + lpeg_V(1))^0 * e }
 end
 
 ---
@@ -1166,7 +1179,8 @@ end
 -- @usage local keyword = token(l.KEYWORD, word_match { 'foo', 'bar', 'baz' })
 -- @usage local keyword = token(l.KEYWORD, word_match({ 'foo-bar', 'foo-baz',
 --   'bar-foo', 'bar-baz', 'baz-foo', 'baz-bar' }, '-', true))
-function word_match(words, word_chars, case_insensitive)
+-- @name word_match
+function M.word_match(words, word_chars, case_insensitive)
   local word_list = {}
   for _, word in ipairs(words) do
     word_list[case_insensitive and word:lower() or word] = true
@@ -1194,7 +1208,8 @@ end
 -- @usage embed_lexer(_M, css, css_start_rule, css_end_rule)
 -- @usage embed_lexer(html, _M, php_start_rule, php_end_rule)
 -- @usage embed_lexer(html, ruby, ruby_start_rule, rule_end_rule)
-function embed_lexer(parent, child, start_rule, end_rule)
+-- @name embed_lexer
+function M.embed_lexer(parent, child, start_rule, end_rule)
   -- Add child rules.
   if not child._EMBEDDEDRULES then
 ---
@@ -1221,7 +1236,7 @@ function embed_lexer(parent, child, start_rule, end_rule)
   if not parent._tokenstyles then parent._tokenstyles = {} end
   local tokenstyles = parent._tokenstyles
   tokenstyles[#tokenstyles + 1] = { child._NAME..'_whitespace',
-                                    style_whitespace }
+                                    M.style_whitespace }
   for _, style in ipairs(child._tokenstyles or {}) do
     tokenstyles[#tokenstyles + 1] = style
   end
@@ -1273,7 +1288,8 @@ end
 -- @param prefix The prefix string defining a line comment.
 -- @usage [l.COMMENT] = { ['--'] = l.fold_line_comments('--') }
 -- @usage [l.COMMENT] = { ['//'] = l.fold_line_comments('//') }
-function fold_line_comments(prefix)
+-- @name fold_line_comments
+function M.fold_line_comments(prefix)
   return function(text, pos, line, s)
     if GetProperty('fold.line.comments', 0) == 0 then return 0 end
     if s > 1 and line:match('^%s*()') < s then return 0 end
@@ -1290,42 +1306,37 @@ end
 ---
 -- Returns the string style name and style number at a given position.
 -- @param pos The position to get the style for.
-function get_style_at(pos) end
-get_style_at = GetStyleAt
+-- @class function
+-- @name get_style_at
+M.get_style_at = GetStyleAt
 
 ---
 -- Returns an integer property value for a given key.
 -- @param key The property key.
 -- @param default Optional integer value to return if key is not set.
-function get_property(key, default) end
-get_property = GetProperty
+-- @class function
+-- @name get_property
+M.get_property = GetProperty
 
 ---
 -- Returns the fold level for a given line.
 -- This level already has `SC_FOLDLEVELBASE` added to it, so you do not need to
 -- add it yourself.
 -- @param line_number The line number to get the fold level of.
-function get_fold_level(line) end
-get_fold_level = GetFoldLevel
+-- @class function
+-- @name get_fold_level
+M.get_fold_level = GetFoldLevel
 
 ---
 -- Returns the indent amount of text for a given line.
 -- @param line The line number to get the indent amount of.
-function get_indent_amount(line) end
-get_indent_amount = GetIndentAmount
+-- @class function
+-- @name get_indent_amount
+M.get_indent_amount = GetIndentAmount
 
-_M.SC_FOLDLEVELBASE = SC_FOLDLEVELBASE
-_M.SC_FOLDLEVELWHITEFLAG = SC_FOLDLEVELWHITEFLAG
-_M.SC_FOLDLEVELHEADERFLAG = SC_FOLDLEVELHEADERFLAG
-_M.SC_FOLDLEVELNUMBERMASK = SC_FOLDLEVELNUMBERMASK
+M.SC_FOLDLEVELBASE = SC_FOLDLEVELBASE
+M.SC_FOLDLEVELWHITEFLAG = SC_FOLDLEVELWHITEFLAG
+M.SC_FOLDLEVELHEADERFLAG = SC_FOLDLEVELHEADERFLAG
+M.SC_FOLDLEVELNUMBERMASK = SC_FOLDLEVELNUMBERMASK
 
--- Load theme.
-if _THEME and _THEME ~= '' then
-  local ret, errmsg
-  if not _THEME:find('[/\\]') then -- name of stock theme
-    ret, errmsg = pcall(dofile, _LEXERHOME..'/themes/'.._THEME..'.lua')
-  else -- absolute path of a theme
-    ret, errmsg = pcall(dofile, _THEME)
-  end
-  if not ret and errmsg then _G.print(errmsg) end
-end
+return M

@@ -26,9 +26,9 @@
 #include "LexerModule.h"
 
 extern "C" {
-#include <lua.h>
-#include <lualib.h>
-#include <lauxlib.h>
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
 LUALIB_API int (luaopen_lpeg) (lua_State *L);
 }
 
@@ -118,10 +118,19 @@ static int lua_get_indent_amount(lua_State *L) {
 	return 1;
 }
 
+#if LUA_VERSION_NUM < 502
 #define l_openlib(f, s) \
-	{ lua_pushcfunction(L, f); lua_pushstring(L, s); lua_call(L, 1, 0); }
+	(lua_pushcfunction(L, f), lua_pushstring(L, s), lua_call(L, 1, 0))
+#define LUA_BASELIBNAME ""
+#define lua_rawlen lua_objlen
+#define LUA_OK 0
+#else
+#define l_openlib(f, s) \
+	(luaL_requiref(L, s, f, 1), lua_pop(L, 1))
+#define LUA_BASELIBNAME "_G"
+#endif
 #define l_setconst(c, s) \
-	{ lua_pushnumber(L, c); lua_setfield(L, LUA_GLOBALSINDEX, s); }
+	(lua_pushnumber(L, c), lua_setglobal(L, s))
 #define SSS(m, l) if (SS && sci) SS(sci, m, style_num, l)
 
 #ifndef NO_SCITE
@@ -246,16 +255,15 @@ private:
 	}
 
 	bool Init() {
-		char p1[50], p2[FILENAME_MAX], p3[FILENAME_MAX], p4[FILENAME_MAX];
+		char p1[50], p2[FILENAME_MAX], p3[FILENAME_MAX];
 		props.GetExpanded("lexer.name", p1);
 		props.GetExpanded("lexer.lpeg.home", p2);
 		props.GetExpanded("lexer.lpeg.color.theme", p3);
-		props.GetExpanded("lexer.lpeg.script", p4);
-		if (*p1 == 0 || *p2 == 0 || *p3 == 0 || *p4 == 0) return false;
+		if (*p1 == 0 || *p2 == 0 || *p3 == 0) return false;
 
 		// Initialize or reinitialize Lua.
 		if (L) lua_close(L);
-		L = lua_open();
+		L = luaL_newstate();
 		if (!L) {
 			fprintf(stderr, "Lua failed to initialize.\n");
 			return false;
@@ -264,12 +272,6 @@ private:
 		// Set variables from properties.
 		lua_pushstring(L, p1);
 		lua_setfield(L, LUA_REGISTRYINDEX, "lexer_name");
-		lua_pushstring(L, p2);
-		lua_setglobal(L, "_LEXERHOME");
-		lua_pushstring(L, p3);
-		lua_setglobal(L, "_THEME");
-		lua_pushstring(L, p4);
-		lua_setfield(L, LUA_REGISTRYINDEX, "lexer_lua");
 
 		// Set variables from platform.
 #ifdef __WIN32__
@@ -286,7 +288,7 @@ private:
 #endif
 
 		// Load Lua libraries.
-		l_openlib(luaopen_base, "");
+		l_openlib(luaopen_base, LUA_BASELIBNAME);
 		l_openlib(luaopen_table, LUA_TABLIBNAME);
 		l_openlib(luaopen_string, LUA_STRLIBNAME);
 		l_openlib(luaopen_package, LUA_LOADLIBNAME);
@@ -304,19 +306,29 @@ private:
 		l_setconst(SC_FOLDLEVELHEADERFLAG, "SC_FOLDLEVELHEADERFLAG");
 		l_setconst(SC_FOLDLEVELNUMBERMASK, "SC_FOLDLEVELNUMBERMASK");
 
-		// Load lexer.lua.
-		lua_getfield(L, LUA_REGISTRYINDEX, "lexer_lua");
-		const char *lexer_lua = lua_tostring(L, -1);
-		lua_pop(L, 1); // lexer_lua
-		if (strlen(lexer_lua) == 0) return false;
-		if (luaL_dofile(L, lexer_lua) != 0) return l_error(L);
+		// Set package.path, load lexer.lua, and load theme.
+		lua_getglobal(L, "package");
+		lua_pushstring(L, p2), lua_pushstring(L, "/?.lua"), lua_concat(L, 2);
+		lua_setfield(L, -2, "path");
+		if (luaL_dostring(L, "lexer=require'lexer'") != LUA_OK) return l_error(L);
+		if (!(strstr(p3, "/") || strstr(p3, "\\"))) { // name of stock theme
+			lua_pushstring(L, p2);
+			lua_pushstring(L, "/themes/");
+			lua_pushstring(L, p3);
+			lua_pushstring(L, ".lua");
+			lua_concat(L, 4);
+			if (luaL_dofile(L, lua_tostring(L, -1)) != LUA_OK) return l_error(L);
+		} else { // absolute path of a theme
+			if (luaL_dofile(L, p3) != LUA_OK) return l_error(L);
+		}
+		lua_settop(L, 0); // pop package and results from dostring and dofile
 
 		// Load lexer tokens, styles, etc.
 		lua_getglobal(L, "lexer");
 		lua_getfield(L, -1, "load");
 		if (lua_isfunction(L, -1)) {
 			lua_getfield(L, LUA_REGISTRYINDEX, "lexer_name");
-			if (lua_pcall(L, 1, 0, 0) != 0) return l_error(L);
+			if (lua_pcall(L, 1, 0, 0) != LUA_OK) return l_error(L);
 		} else return l_error(L, "lexer.load not found");
 		lua_pop(L, 1); // lexer
 
@@ -396,7 +408,7 @@ public:
 			buf += startPos;
 			lua_pushlstring(L, buf, lengthDoc);
 			lua_pushinteger(L, styler.StyleAt(startPos));
-			if (lua_pcall(L, 2, 1, 0) != 0) l_error(L);
+			if (lua_pcall(L, 2, 1, 0) != LUA_OK) l_error(L);
 			// Style the text from the token table returned.
 			if (lua_istable(L, -1)) {
 				lua_getglobal(L, "_LEXER");
@@ -450,7 +462,7 @@ public:
 			lua_pushnumber(L, startPos);
 			lua_pushnumber(L, currentLine);
 			lua_pushnumber(L, styler.LevelAt(currentLine) & SC_FOLDLEVELNUMBERMASK);
-			if (lua_pcall(L, 4, 1, 0) != 0) l_error(L);
+			if (lua_pcall(L, 4, 1, 0) != LUA_OK) l_error(L);
 			// Fold the text from the fold table returned.
 			if (lua_istable(L, -1)) {
 				lua_pushnil(L);
@@ -464,7 +476,7 @@ public:
 					lua_rawgeti(L, -1, 1); // fold[1]
 					level = lua_tointeger(L, -1);
 					lua_pop(L, 1); // fold[1]
-					if (lua_objlen(L, -1) > 1) {
+					if (lua_rawlen(L, -1) > 1) {
 						lua_rawgeti(L, -1, 2); // fold[2]
 						int flag = lua_tointeger(L, -1);
 						level |= flag;
@@ -590,7 +602,6 @@ LexerFactoryFunction EXT_LEXER_DECL GetLexerFactory(unsigned int index) {
 Forward the following properties from SciTE.
 GetProperty "lexer.lpeg.home"
 GetProperty "lexer.lpeg.color.theme"
-GetProperty "lexer.lpeg.script"
 GetProperty "fold.by.indentation"
 GetProperty "fold.line.comments"
 */

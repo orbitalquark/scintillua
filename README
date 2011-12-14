@@ -46,7 +46,7 @@ If you do not have direct access to your SciTE installation:
 3. Modify the 'lexer.lpeg.home' property in `lexers/lpeg.properties` to reflect
    where you put the `lexers/` folder.
    e.g lexer.lpeg.home=$(SciteUserHome)\lexers
-       lexer.lpeg.home=$(SciteUserHome)/.lexers
+       lexer.lpeg.home=$(SciteUserHome)/lexers
 
 Additionally for 64-bit Linux machines, you will have to rename
 lexers/liblexlpeg.x86_64.so to lexers/liblexlpeg.so.
@@ -81,7 +81,6 @@ If you wish to use the external lexer with an instance of Scintilla, you must
 set the following properties after calling SCI_SETLEXERLANGUAGE:
 
   * lexer.lpeg.home - directory containing dynamic Lua lexers.
-  * lexer.lpeg.script - path of lexer.lua file.
   * lexer.lpeg.color.theme - universal color theme to use.
 
 Optionally, you may set:
@@ -151,8 +150,6 @@ Here is a pseudo-code example:
       SendScintilla(sci, SCI_SETLEXERLANGUAGE, 0, "lpeg")
       home = "/home/mitchell/app/lexers"
       SendScintilla(sci, SCI_SETPROPERTY, "lexer.lpeg.home", home)
-      script = "/home/mitchell/app/lexers/lexer.lua"
-      SendScintilla(sci, SCI_SETPROPERTY, "lexer.lpeg.script", script)
       SendScintilla(sci, SCI_SETPROPERTY, "lexer.lpeg.color.theme", "light")
       fn = SendScintilla(sci, SCI_GETDIRECTFUNCTION)
       SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_GETDIRECTFUNCTION, fn)
