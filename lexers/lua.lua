@@ -3,8 +3,8 @@
 -- Original written by Peter Odding, 2007/04/04.
 
 local l = lexer
-local token, style, color, word_match = l.token, l.style, l.color, l.word_match
-local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
+local token, word_match = l.token, l.word_match
+local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
 module(...)
 
@@ -37,16 +37,15 @@ local number = token(l.NUMBER, l.float + lua_integer)
 -- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for', 'function',
-  'if', 'in', 'local', 'nil', 'not', 'or', 'repeat', 'return', 'then', 'true',
-  'until', 'while'
+  'goto', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat', 'return', 'then',
+  'true', 'until', 'while'
 })
 
 -- Functions.
 local func = token(l.FUNCTION, word_match {
-  'assert', 'collectgarbage', 'dofile', 'error', 'getfenv', 'getmetatable',
-  'ipairs', 'load', 'loadfile', 'loadstring', 'module', 'next', 'pairs',
-  'pcall', 'print', 'rawequal', 'rawget', 'rawset', 'require', 'setfenv',
-  'setmetatable', 'tonumber', 'tostring', 'type', 'unpack', 'xpcall'
+  'assert', 'collectgarbage', 'dofile', 'error', 'getmetatable', 'ipairs',
+  'load', 'loadfile', 'next', 'pairs', 'pcall', 'print', 'rawequal', 'rawget',
+  'rawset', 'require', 'setmetatable', 'tonumber', 'tostring', 'type', 'xpcall'
 })
 
 -- Constants.
@@ -55,8 +54,10 @@ local constant = token(l.CONSTANT, word_match {
 })
 
 -- Identifiers.
-local word = (R('AZ', 'az', '\127\255') + '_') * (l.alnum + '_')^0
-local identifier = token(l.IDENTIFIER, word)
+local identifier = token(l.IDENTIFIER, l.word)
+
+-- Labels.
+local label = token(l.LABEL, '::' * l.word * '::')
 
 -- Operators.
 local operator = token(l.OPERATOR, '~=' + S('+-*/%^#=<>;:,.{}[]()'))
@@ -70,6 +71,7 @@ _rules = {
   { 'string', string },
   { 'comment', comment },
   { 'number', number },
+  { 'label', label },
   { 'operator', operator },
   { 'any_char', l.any_char },
 }
