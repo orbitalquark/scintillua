@@ -3,7 +3,7 @@
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
-local P, R, S, V = l.lpeg.P, l.lpeg.R, l.lpeg.S, l.lpeg.V
+local P, R, S, V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
 
 module(...)
 
@@ -28,7 +28,7 @@ local literal_delimitted = P(function(input, index) -- for single delimiter sets
     else
       patt = l.delimited_range(delimiter, '\\', true)
     end
-    match_pos = l.lpeg.match(patt, input, index)
+    match_pos = lpeg.match(patt, input, index)
     return match_pos or #input + 1
   end
 end)
@@ -43,10 +43,10 @@ local literal_delimitted2 = P(function(input, index) -- for 2 delimiter sets
     else
       patt = l.delimited_range(delimiter, '\\', true)
     end
-    first_match_pos = l.lpeg.match(patt, input, index)
-    final_match_pos = l.lpeg.match(patt, input, first_match_pos - 1)
+    first_match_pos = lpeg.match(patt, input, index)
+    final_match_pos = lpeg.match(patt, input, first_match_pos - 1)
     if not final_match_pos then -- using (), [], {}, or <> notation
-      final_match_pos = l.lpeg.match(l.space^0 * patt, input, first_match_pos)
+      final_match_pos = lpeg.match(l.space^0 * patt, input, first_match_pos)
     end
     return final_match_pos or #input + 1
   end

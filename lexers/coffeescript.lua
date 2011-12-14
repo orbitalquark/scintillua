@@ -3,7 +3,7 @@
 
 local l = lexer
 local token, word_match = l.token, l.word_match
-local P, S = l.lpeg.P, l.lpeg.S
+local P, S = lpeg.P, lpeg.S
 
 module(...)
 
