@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-module(...)
+local M = { _NAME = 'python' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -107,7 +107,7 @@ local operator = token(l.OPERATOR, S('!%^&*()[]{}-=+/|:;.,?<>~`'))
 local decorator = token('decorator',
                         #P('@') * l.starts_line('@' * l.nonnewline^0))
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'keyword', keyword },
   { 'function', func },
@@ -122,6 +122,8 @@ _rules = {
 }
 
 
-_tokenstyles = {
+M._tokenstyles = {
   { 'decorator', l.style_preproc },
 }
+
+return M

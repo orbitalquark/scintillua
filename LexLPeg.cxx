@@ -125,12 +125,10 @@ static int lua_get_indent_amount(lua_State *L) {
 #define lua_rawlen lua_objlen
 #define LUA_OK 0
 #else
-#define l_openlib(f, s) \
-	(luaL_requiref(L, s, f, 1), lua_pop(L, 1))
+#define l_openlib(f, s) (luaL_requiref(L, s, f, 1), lua_pop(L, 1))
 #define LUA_BASELIBNAME "_G"
 #endif
-#define l_setconst(c, s) \
-	(lua_pushnumber(L, c), lua_setglobal(L, s))
+#define l_setconst(c, s) (lua_pushnumber(L, c), lua_setglobal(L, s))
 #define SSS(m, l) if (SS && sci) SS(sci, m, style_num, l)
 
 #ifndef NO_SCITE

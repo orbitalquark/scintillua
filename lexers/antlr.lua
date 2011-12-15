@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-module(...)
+local M = { _NAME = 'antlr' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -47,7 +47,7 @@ local operator = token(l.OPERATOR, S('$@:;|.=+*?~!^>-()[]{}'))
 local action = #P('{') * operator * token('action', (1 - P('}'))^0) *
                (#P('}') * operator)^-1
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'keyword', keyword },
   { 'type', type },
@@ -60,14 +60,16 @@ _rules = {
   { 'any_char', l.any_char },
 }
 
-_tokenstyles = {
+M._tokenstyles = {
   { 'action', l.style_nothing }
 }
 
-_foldsymbols = {
+M._foldsymbols = {
   _patterns = { '[:;%(%){}]', '/%*', '%*/', '//' },
   [l.OPERATOR] = {
     [':'] = 1, [';'] = -1, ['('] = 1, [')'] = -1, ['{'] = 1, ['}'] = -1
   },
   [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//') }
 }
+
+return M

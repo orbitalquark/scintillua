@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-module(...)
+local M = { _NAME = 'csharp' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -59,7 +59,7 @@ local identifier = token(l.IDENTIFIER, l.word)
 -- Operators.
 local operator = token(l.OPERATOR, S('~!.,:;+-*/<>=\\^|&%?()[]{}'))
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'keyword', keyword },
   { 'type', type },
@@ -72,7 +72,7 @@ _rules = {
   { 'any_char', l.any_char },
 }
 
-_foldsymbols = {
+M._foldsymbols = {
   _patterns = { '%l+', '[{}]', '/%*', '%*/', '//' },
   [l.PREPROCESSOR] = {
     region = 1, endregion = -1,
@@ -81,3 +81,5 @@ _foldsymbols = {
   [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
   [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//') }
 }
+
+return M

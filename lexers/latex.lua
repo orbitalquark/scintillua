@@ -7,7 +7,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-module(...)
+local M = { _NAME = 'latex' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -43,7 +43,7 @@ local command = token(l.KEYWORD, '\\' * (l.alpha^1 + S('#$&~_^%{}')))
 -- Operators.
 local operator = token(l.OPERATOR, S('&#{}[]'))
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'comment', comment },
   { 'math', math },
@@ -54,13 +54,13 @@ _rules = {
   { 'any_char', l.any_char },
 }
 
-_tokenstyles = {
+M._tokenstyles = {
   { 'environment', l.style_tag },
   { 'math', l.style_function },
   { 'section', l.style_class },
 }
 
-_foldsymbols = {
+M._foldsymbols = {
   _patterns = { '\\[a-z]+', '[{}]', '%%' },
   [l.COMMENT] = {
     ['\\begin'] = 1, ['\\end'] = -1, ['%'] = l.fold_line_comments('%')
@@ -68,3 +68,5 @@ _foldsymbols = {
   ['environment'] = { ['\\begin'] = 1, ['\\end'] = -1 },
   [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 }
 }
+
+return M

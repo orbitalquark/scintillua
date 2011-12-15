@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-module(...)
+local M = { _NAME = 'gtkrc' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -49,7 +49,7 @@ local identifier = token(l.IDENTIFIER, l.alpha * (l.alnum + S('_-'))^0)
 -- Operators.
 local operator = token(l.OPERATOR, S(':=,*()[]{}'))
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'keyword', keyword },
   { 'variable', variable },
@@ -63,8 +63,10 @@ _rules = {
   { 'any_char', l.any_char },
 }
 
-_foldsymbols = {
+M._foldsymbols = {
   _patterns = { '[{}]', '#' },
   [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
   [l.COMMENT] = { ['#'] = l.fold_line_comments('#') }
 }
+
+return M

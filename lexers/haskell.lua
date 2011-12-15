@@ -6,7 +6,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-module(...)
+local M = { _NAME = 'haskell' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -43,7 +43,7 @@ local operator = token(l.OPERATOR, op)
 -- Types & type constructors.
 local constructor = token(l.TYPE, (l.upper * word) + (P(":") * (op^1 - P(":"))))
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'keyword', keyword },
   { 'type', constructor },
@@ -55,3 +55,5 @@ _rules = {
   { 'operator', operator },
   { 'any_char', l.any_char },
 }
+
+return M

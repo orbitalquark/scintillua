@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-module(...)
+local M = { _NAME = 'apacheconf' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -264,7 +264,7 @@ local identifier = token(l.IDENTIFIER, word)
 local operator = token(l.OPERATOR, S(':=<>&+-*/.()'))
 
 -- TODO: directive and vhost sections using appropriate keywords.
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'keyword', main_keyword },
   { 'identifier', identifier },
@@ -273,3 +273,5 @@ _rules = {
   { 'operator', operator },
   { 'any_char', l.any_char },
 }
+
+return M

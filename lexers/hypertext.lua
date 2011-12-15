@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S, V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
 
-module(...)
+local M = { _NAME = 'hypertext' }
 
 case_insensitive_tags = true
 
@@ -71,7 +71,7 @@ local entity = token('entity', '&' * (l.any - l.space - ';')^1 * ';')
 -- Doctype.
 local doctype = token('doctype', '<!DOCTYPE' * (l.any - '>')^1 * '>')
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'default', word },
   { 'comment', comment },
@@ -81,7 +81,7 @@ _rules = {
   { 'any_char', l.any_char },
 }
 
-_tokenstyles = {
+M._tokenstyles = {
   { 'tag', l.style_tag },
   { 'element', l.style_tag },
   { 'unknown_element', l.style_tag..{ italic = true } },
@@ -98,7 +98,7 @@ local css_start_rule = #(P('<') * style_element * P(function(input, index)
   if input:find('[^>]+type%s*=%s*(["\'])text/css%1') then return index end
 end)) * tag -- <style type="text/css">
 local css_end_rule = #('</' * style_element * ws^0 * '>') * tag -- </style>
-l.embed_lexer(_M, css, css_start_rule, css_end_rule)
+l.embed_lexer(M, css, css_start_rule, css_end_rule)
 
 -- Embedded Javascript.
 local js = l.load('javascript')
@@ -109,7 +109,7 @@ local js_start_rule = #(P('<') * script_element * P(function(input, index)
   end
 end)) * tag -- <script type="text/javascript">
 local js_end_rule = #('</' * script_element * ws^0 * '>') * tag -- </script>
-l.embed_lexer(_M, js, js_start_rule, js_end_rule)
+l.embed_lexer(M, js, js_start_rule, js_end_rule)
 
 -- Embedded CoffeeScript.
 local cs = l.load('coffeescript')
@@ -120,10 +120,12 @@ local cs_start_rule = #(P('<') * script_element * P(function(input, index)
   end
 end)) * tag -- <script type="text/coffeescript">
 local cs_end_rule = #('</' * script_element * ws^0 * '>') * tag -- </script>
-l.embed_lexer(_M, cs, cs_start_rule, cs_end_rule)
+l.embed_lexer(M, cs, cs_start_rule, cs_end_rule)
 
-_foldsymbols = {
+M._foldsymbols = {
   _patterns = { '</?', '/>', '<!%-%-', '%-%->' },
   tag = { ['<'] = 1, ['/>'] = -1, ['</'] = -1 },
   [l.COMMENT] = { ['<!--'] = 1, ['-->'] = -1 }
 }
+
+return M

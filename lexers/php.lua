@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S, V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
 
-module(...)
+local M = { _NAME = 'php' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -58,7 +58,7 @@ local identifier = token(l.IDENTIFIER, word)
 -- Operators.
 local operator = token(l.OPERATOR, S('!@%^*&()-+=|/.,;:<>[]{}') + '?' * -P('>'))
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'keyword', keyword },
   { 'identifier', identifier },
@@ -72,22 +72,24 @@ _rules = {
 
 -- Embedded in HTML.
 local html = l.load('hypertext')
-_lexer = html
+M._lexer = html
 
 -- Embedded PHP.
 local php_start_rule = token('php_tag', '<?' * ('php' * l.space)^-1)
 local php_end_rule = token('php_tag', '?>')
-l.embed_lexer(html, _M, php_start_rule, php_end_rule)
+l.embed_lexer(html, M, php_start_rule, php_end_rule)
 
-_tokenstyles = {
+M._tokenstyles = {
   { 'php_tag', l.style_embedded },
 }
 
 local _foldsymbols = html._foldsymbols
-_foldsymbols._patterns[#_foldsymbols._patterns + 1] = '<%?'
-_foldsymbols._patterns[#_foldsymbols._patterns + 1] = '%?>'
-_foldsymbols._patterns[#_foldsymbols._patterns + 1] = '//'
-_foldsymbols._patterns[#_foldsymbols._patterns + 1] = '#'
-_foldsymbols.php_tag = { ['<?'] = 1, ['?>'] = -1 }
-_foldsymbols[l.COMMENT]['//'] = l.fold_line_comments('//')
-_foldsymbols[l.COMMENT]['#'] = l.fold_line_comments('#')
+M._foldsymbols._patterns[#_foldsymbols._patterns + 1] = '<%?'
+M._foldsymbols._patterns[#_foldsymbols._patterns + 1] = '%?>'
+M._foldsymbols._patterns[#_foldsymbols._patterns + 1] = '//'
+M._foldsymbols._patterns[#_foldsymbols._patterns + 1] = '#'
+M._foldsymbols.php_tag = { ['<?'] = 1, ['?>'] = -1 }
+M._foldsymbols[l.COMMENT]['//'] = l.fold_line_comments('//')
+M._foldsymbols[l.COMMENT]['#'] = l.fold_line_comments('#')
+
+return M

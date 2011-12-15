@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-module(...)
+local M = { _NAME = 'props' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -29,7 +29,7 @@ local xdigit = l.xdigit
 local color = token('color', '#' * xdigit * xdigit * xdigit * xdigit * xdigit *
                              xdigit)
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'color', color },
   { 'comment', comment },
@@ -39,9 +39,11 @@ _rules = {
   { 'any_char', l.any_char },
 }
 
-_tokenstyles = {
+M._tokenstyles = {
   { 'variable', l.style_variable },
   { 'color', l.style_number },
 }
 
-_LEXBYLINE = true
+M._LEXBYLINE = true
+
+return M

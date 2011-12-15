@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-module(...)
+local M = { _NAME = 'ruby' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -104,7 +104,7 @@ end) * (word_char^1 + sq_str + dq_str))
 -- Operators.
 local operator = token(l.OPERATOR, S('!%^&*()[]{}-=+/|:;.,?<>~'))
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'keyword', keyword },
   { 'function', func },
@@ -118,7 +118,7 @@ _rules = {
   { 'any_char', l.any_char },
 }
 
-_tokenstyles = {
+M._tokenstyles = {
   { 'symbol', l.style_constant },
 }
 
@@ -127,7 +127,7 @@ local function disambiguate(text, pos, line, s)
          not text:sub(1, pos - 1):match('\\[ \t]*\r?\n$') and 1 or 0
 end
 
-_foldsymbols = {
+M._foldsymbols = {
   _patterns = { '%l+', '[%(%)%[%]{}]', '=begin', '=end', '#' },
   [l.KEYWORD] = {
     begin = 1, class = 1, def = 1, ['do'] = 1, ['for'] = 1, ['module'] = 1,
@@ -143,3 +143,5 @@ _foldsymbols = {
     ['=begin'] = 1, ['=end'] = -1, ['#'] = l.fold_line_comments('#')
   }
 }
+
+return M

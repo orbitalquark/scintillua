@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-module(...)
+local M = { _NAME = 'erlang' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -70,7 +70,7 @@ local directive = token('directive', '-' * word_match {
   'record', 'undef'
 })
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'keyword', keyword },
   { 'function', func },
@@ -83,11 +83,11 @@ _rules = {
   { 'any_char', l.any_char },
 }
 
-_tokenstyles = {
+M._tokenstyles = {
   { 'directive', l.style_preproc },
 }
 
-_foldsymbols = {
+M._foldsymbols = {
   _patterns = { '[a-z]+', '[%(%)%[%]{}]', '%%' },
   [l.KEYWORD] = {
     case = 1, fun = 1, ['if'] = 1, query = 1, receive = 1, ['end'] = -1
@@ -97,3 +97,5 @@ _foldsymbols = {
   },
   [l.COMMENT] = { ['%'] = l.fold_line_comments('%') }
 }
+
+return M

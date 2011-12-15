@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-module(...)
+local M = { _NAME = 'applescript' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -70,7 +70,7 @@ local identifier = token(l.IDENTIFIER, (l.alpha + '_') * l.alnum^0)
 -- Operators.
 local operator = token(l.OPERATOR, S('+-^*/&<>=:,(){}'))
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'keyword', keyword },
   { 'constant', constant },
@@ -81,3 +81,5 @@ _rules = {
   { 'operator', operator },
   { 'any_char', l.any_char },
 }
+
+return M

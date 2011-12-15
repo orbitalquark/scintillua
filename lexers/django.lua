@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S, V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
 
-module(...)
+local M = { _NAME = 'django' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -44,7 +44,7 @@ local identifier = token(l.IDENTIFIER, l.word)
 -- Operators.
 local operator = token(l.OPERATOR, S(':,.|'))
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'keyword', keyword },
   { 'function', func },
@@ -56,20 +56,22 @@ _rules = {
 
 -- Embedded in HTML.
 local html = l.load('hypertext')
-_lexer = html
+M._lexer = html
 
 -- Embedded Django.
 local django_start_rule = token('django_tag', '{' * S('{%'))
 local django_end_rule = token('django_tag', S('%}') * '}')
-l.embed_lexer(html, _M, django_start_rule, django_end_rule)
+l.embed_lexer(html, M, django_start_rule, django_end_rule)
 -- Modify HTML patterns to embed Django.
 html._RULES['comment'] = html._RULES['comment'] + comment
 
-_tokenstyles = {
+M._tokenstyles = {
   { 'django_tag', l.style_embedded },
 }
 
 local _foldsymbols = html._foldsymbols
-_foldsymbols._patterns[#_foldsymbols._patterns + 1] = '{[%%{]'
-_foldsymbols._patterns[#_foldsymbols._patterns + 1] = '[%%}]}'
-_foldsymbols.django_tag = { ['{{'] = 1, ['}}'] = -1, ['{%'] = 1, ['%}'] = -1 }
+M._foldsymbols._patterns[#_foldsymbols._patterns + 1] = '{[%%{]'
+M._foldsymbols._patterns[#_foldsymbols._patterns + 1] = '[%%}]}'
+M._foldsymbols.django_tag = { ['{{'] = 1, ['}}'] = -1, ['{%'] = 1, ['%}'] = -1 }
+
+return M

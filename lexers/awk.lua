@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-module(...)
+local M = { _NAME = 'awk' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -51,7 +51,7 @@ local variable = token(l.VARIABLE, '$' * l.digit^1)
 -- Operators.
 local operator = token(l.OPERATOR, S('=!<>+-/*%&|^~,:;()[]{}'))
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'keyword', keyword },
   { 'function', func },
@@ -65,8 +65,10 @@ _rules = {
   { 'any_char', l.any_char },
 }
 
-_foldsymbols = {
+M._foldsymbols = {
   _patterns = { '[{}]', '#' },
   [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
   [l.COMMENT] = { ['#'] = l.fold_line_comments('#') }
 }
+
+return M

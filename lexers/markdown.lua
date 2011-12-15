@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-module(...)
+local M = { _NAME = 'markdown' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -83,7 +83,7 @@ local text_line = (ws + escape + link + strong + em + code + l.any_char)^1
 
 local list = token('list', S('*+-') + R('09') * '.') * ws * text_line
 
-_rules = {
+M._rules = {
   { 'blank', blank },
   { 'html', html },
   { 'header', header },
@@ -95,11 +95,11 @@ _rules = {
   { 'text_line', text_line },
 }
 
-_LEXBYLINE = true
+M._LEXBYLINE = true
 
 local font_size = 10
 local hstyle = l.style_nothing..{ fore = l.colors.red }
-_tokenstyles = {
+M._tokenstyles = {
   { 'h6', hstyle },
   { 'h5', hstyle..{ size = font_size + 1 } },
   { 'h4', hstyle..{ size = font_size + 2 } },
@@ -118,4 +118,6 @@ _tokenstyles = {
 }
 
 -- Do not actually embed; just load the styles.
-l.embed_lexer(_M, hypertext, P(false), P(false))
+l.embed_lexer(M, hypertext, P(false), P(false))
+
+return M

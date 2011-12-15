@@ -33,7 +33,7 @@ module('lexer')]]
 --     $> cd lexers
 --     $> textadept lua.lua
 --
--- Inside the lexer, the heading should look like the following:
+-- Inside the file, the lexer should look like the following:
 --
 --     -- Lua LPeg lexer
 --
@@ -41,14 +41,21 @@ module('lexer')]]
 --     local token, word_match = l.token, l.word_match
 --     local P, R, S, V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
 --
---     module(...)
+--     local M = { _NAME = 'lua' }
 --
--- Each lexer is a module so the global namespace is not cluttered with lexer
--- patterns and variables. The `...` is there for a reason! Do not replace it
--- with the name of your lexer. This is done by Lua automatically.
+--     -- Lexer code goes here.
 --
--- The local variables above the module give easy access to the many useful
--- functions available for creating lexers.
+--     return M
+--
+-- where the value of `_NAME` should be replaced with your lexer's name.
+--
+-- Like most Lua modules, the lexer module will store all of its data in a table
+-- `M` so as not to clutter the global namespace with lexer-specific patterns
+-- and variables. Therefore, remember to use the prefix `M` when declaring and
+-- using non-local variables. Also, do not forget the `return M` at the end.
+--
+-- The local variables above give easy access to the many useful functions
+-- available for creating lexers.
 --
 -- #### Lexer Language Structure
 --
@@ -230,10 +237,10 @@ module('lexer')]]
 -- optional set of attribute tokens. This allows each part of the tag to be
 -- colored distinctly.
 --
--- The set of rules that comprises Lua is specified in a `_rules` table for the
--- lexer.
+-- The set of rules that comprises Lua is specified in a `M._rules` table for
+-- the lexer.
 --
---     _rules = {
+--     M._rules = {
 --       { 'whitespace', ws },
 --       { 'keyword', keyword },
 --       { 'function', func },
@@ -258,10 +265,10 @@ module('lexer')]]
 -- the `identifier` rule was before the `keyword` rule. It can be seen that all
 -- keywords satisfy the requirements for being an identifier, so any keywords
 -- would be incorrectly colored as identifiers. This is why `identifier` is
--- where it is in the `_rules` table.
+-- where it is in the `M._rules` table.
 --
 -- You might be wondering what that `any_char` is doing at the bottom of
--- `_rules`. Its purpose is to match anything not accounted for in the above
+-- `M._rules`. Its purpose is to match anything not accounted for in the above
 -- rules. For example, suppose the `!` character is in the input text. It will
 -- not be matched by any of the first 9 rules, so without `any_char`, the text
 -- would not match at all, and no coloring would occur. `any_char` matches one
@@ -351,7 +358,7 @@ module('lexer')]]
 -- The default set of colors varies depending on the color theme used. Please
 -- see the current theme for more information.
 --
--- Finally, styles are assigned to tokens via a `_tokenstyles` table in the
+-- Finally, styles are assigned to tokens via a `M._tokenstyles` table in the
 -- lexer. Styles do not have to be assigned to the default tokens; it is done
 -- automatically. You only have to assign styles for tokens you create. For
 -- example:
@@ -360,12 +367,12 @@ module('lexer')]]
 --
 --     -- ... other patterns and tokens ...
 --
---     _tokenstyles = {
+--     M._tokenstyles = {
 --       { 'lua', l.style_keyword },
 --     }
 --
 -- Each entry is the token name the style is for and the style itself. The order
--- of styles in `_tokenstyles` does not matter.
+-- of styles in `M._tokenstyles` does not matter.
 --
 -- For examples of how styles are created, please see the theme files in the
 -- `lexers/themes/` folder.
@@ -375,7 +382,7 @@ module('lexer')]]
 -- Sometimes it is advantageous to lex input text line by line rather than a
 -- chunk at a time. This occurs particularly in diff, patch, or make files. Put
 --
---     _LEXBYLINE = true
+--     M._LEXBYLINE = true
 --
 -- somewhere in your lexer in order to do this.
 --
@@ -411,10 +418,10 @@ module('lexer')]]
 --
 -- Now the CSS lexer can be embedded using [`embed_lexer()`](#embed_lexer):
 --
---     l.embed_lexer(_M, css, css_start_rule, css_end_rule)
+--     l.embed_lexer(M, css, css_start_rule, css_end_rule)
 --
--- What is `_M`? It is the parent HTML lexer object, not the string `...` or
--- `'html'`. The lexer object is needed by [`embed_lexer()`](#embed_lexer).
+-- Remember `M` is the parent HTML lexer object. The lexer object is needed by
+-- [`embed_lexer()`](#embed_lexer).
 --
 -- The same procedure can be done for Javascript.
 --
@@ -427,7 +434,7 @@ module('lexer')]]
 --         end
 --       end)) * tag
 --     local js_end_rule = #('</' * P('script') * ws^0 * '>') * tag
---     l.embed_lexer(_M, js, js_start_rule, js_end_rule)
+--     l.embed_lexer(M, js, js_start_rule, js_end_rule)
 --
 -- ##### Child Lexer Within Parent
 --
@@ -439,7 +446,7 @@ module('lexer')]]
 -- Since HTML should be the main lexer, (PHP is just a preprocessing language),
 -- the following statement changes the main lexer from PHP to HTML:
 --
---     _lexer = html
+--     M._lexer = html
 --
 -- Like in the previous section, transitions from HTML to PHP and back are
 -- specified:
@@ -449,7 +456,7 @@ module('lexer')]]
 --
 -- And PHP is embedded:
 --
---     l.embed_lexer(html, _M, php_start_rule, php_end_rule)
+--     l.embed_lexer(html, M, php_start_rule, php_end_rule)
 --
 -- #### Code Folding (Optional)
 --
@@ -460,10 +467,10 @@ module('lexer')]]
 --
 -- ##### Simple Code Folding
 --
--- To specify the fold points of your lexer's language, create a `_foldsymbols`
--- table of the following form:
+-- To specify the fold points of your lexer's language, create a
+-- `M._foldsymbols` table of the following form:
 --
---     _foldsymbols = {
+--     M._foldsymbols = {
 --       _patterns = { 'patt1', 'patt2', ... },
 --       token1 = { ['fold_on'] = 1, ['stop_on'] = -1 },
 --       token2 = { ['fold_on'] = 1, ['stop_on'] = -1 },
@@ -488,7 +495,7 @@ module('lexer')]]
 --
 -- Lua folding would be implemented as follows:
 --
---     _foldsymbols = {
+--     M._foldsymbols = {
 --       _patterns = { '%l+', '[%({%)}%[%]]' },
 --       [l.KEYWORD] = {
 --         ['if'] = 1, ['do'] = 1, ['function'] = 1, ['end'] = -1,
@@ -508,10 +515,10 @@ module('lexer')]]
 --
 -- ##### Advanced Code Folding
 --
--- If you need more granularity than `_foldsymbols`, you can define your own
+-- If you need more granularity than `M._foldsymbols`, you can define your own
 -- fold function:
 --
---     function _fold(text, start_pos, start_line, start_level)
+--     function M._fold(text, start_pos, start_line, start_level)
 --
 --     end
 --
@@ -539,7 +546,7 @@ module('lexer')]]
 -- determine the fold level for each line. The following example sets fold
 -- points by changes in indentation.
 --
---     function _fold(text, start_pos, start_line, start_level)
+--     function M._fold(text, start_pos, start_line, start_level)
 --       local folds = {}
 --       local current_line = start_line
 --       local prev_level = start_level
@@ -1205,8 +1212,8 @@ end
 -- @param start_rule The token that signals the beginning of the embedded
 --   lexer.
 -- @param end_rule The token that signals the end of the embedded lexer.
--- @usage embed_lexer(_M, css, css_start_rule, css_end_rule)
--- @usage embed_lexer(html, _M, php_start_rule, php_end_rule)
+-- @usage embed_lexer(M, css, css_start_rule, css_end_rule)
+-- @usage embed_lexer(html, M, php_start_rule, php_end_rule)
 -- @usage embed_lexer(html, ruby, ruby_start_rule, rule_end_rule)
 -- @name embed_lexer
 function M.embed_lexer(parent, child, start_rule, end_rule)

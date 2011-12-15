@@ -5,7 +5,7 @@ local l = lexer
 local token, word_match = l.token, l.word_match
 local P, S = lpeg.P, lpeg.S
 
-module(...)
+local M = { _NAME = 'coffeescript' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -49,7 +49,7 @@ local identifier = token(l.IDENTIFIER, l.word)
 -- Operators.
 local operator = token(l.OPERATOR, S('+-/*%<>!=^&|?~:;.()[]{}'))
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'keyword', keyword },
   { 'field', field },
@@ -60,3 +60,5 @@ _rules = {
   { 'operator', operator },
   { 'any_char', l.any_char },
 }
+
+return M

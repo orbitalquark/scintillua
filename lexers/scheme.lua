@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-module(...)
+local M = { _NAME = 'scheme' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -78,7 +78,7 @@ local operator = token(l.OPERATOR, S('<>=*/+-`@%:()'))
 -- Entity.
 local entity = token('entity', '&' * word)
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'keyword', keyword },
   { 'identifier', identifier },
@@ -90,14 +90,16 @@ _rules = {
   { 'any_char', l.any_char },
 }
 
-_tokenstyles = {
+M._tokenstyles = {
   { 'entity', l.style_variable },
 }
 
-_foldsymbols = {
+M._foldsymbols = {
   _patterns = { '[%(%)%[%]{}]', '#|', '|#', ';' },
   [l.OPERATOR] = {
     ['('] = 1, [')'] = -1, ['['] = 1, [']'] = -1, ['{'] = 1, ['}'] = -1
   },
   [l.COMMENT] = { ['#|'] = 1, ['|#'] = -1, [';'] = l.fold_line_comments(';') }
 }
+
+return M

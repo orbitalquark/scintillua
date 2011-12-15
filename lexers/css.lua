@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S, V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
 
-module(...)
+local M = { _NAME = 'css' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -137,7 +137,7 @@ local unit = token('unit', word_match {
   'rad', 'grad', 'ms', 's'
 } + '%')
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'keyword', keyword },
   { 'pseudo', pseudo },
@@ -151,15 +151,17 @@ _rules = {
   { 'any_char', l.any_char },
 }
 
-_tokenstyles = {
+M._tokenstyles = {
   { 'unit', l.style_label },
   { 'value', l.style_constant },
   { 'color', l.style_number },
   { 'at_rule', l.style_preprocessor },
 }
 
-_foldsymbols = {
+M._foldsymbols = {
   _patterns = { '[{}]', '/%*', '%*/' },
   [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
   [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1 }
 }
+
+return M

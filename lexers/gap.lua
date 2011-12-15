@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-module(...)
+local M = { _NAME = 'gap' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -34,7 +34,7 @@ local identifier = token(l.IDENTIFIER, l.word)
 -- Operators.
 local operator = token(l.OPERATOR, S('*+-,./:;<=>~^#()[]{}'))
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'keyword', keyword },
   { 'identifier', identifier },
@@ -45,7 +45,7 @@ _rules = {
   { 'any_char', l.any_char },
 }
 
-_foldsymbols = {
+M._foldsymbols = {
   _patterns = { '[a-z]+', '#' },
   [l.KEYWORD] = {
     ['function'] = 1, ['end'] = -1, ['do'] = 1, od = -1, ['if'] = 1, fi = -1,
@@ -53,3 +53,5 @@ _foldsymbols = {
   },
   [l.COMMENT] = { ['#'] = l.fold_line_comments('#') }
 }
+
+return M

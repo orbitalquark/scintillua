@@ -6,7 +6,7 @@ local l = lexer
 local token, word_match = l.token, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-module(...)
+local M = { _NAME = 'lua' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -62,7 +62,7 @@ local label = token(l.LABEL, '::' * l.word * '::')
 -- Operators.
 local operator = token(l.OPERATOR, '~=' + S('+-*/%^#=<>;:,.{}[]()'))
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'keyword', keyword },
   { 'function', func },
@@ -76,7 +76,7 @@ _rules = {
   { 'any_char', l.any_char },
 }
 
-_tokenstyles = {
+M._tokenstyles = {
   { 'longstring', l.style_string }
 }
 
@@ -89,7 +89,7 @@ local function fold_longcomment(text, pos, line, s, match)
   return 0
 end
 
-_foldsymbols = {
+M._foldsymbols = {
   _patterns = { '%l+', '[%({%)}]', '[%[%]]', '%-%-' },
   [l.KEYWORD] = {
     ['if'] = 1, ['do'] = 1, ['function'] = 1, ['end'] = -1, ['repeat'] = 1,
@@ -102,3 +102,5 @@ _foldsymbols = {
   longstring = { ['['] = 1, [']'] = -1 },
   [l.OPERATOR] = { ['('] = 1, ['{'] = 1, [')'] = -1, ['}'] = -1 }
 }
+
+return M

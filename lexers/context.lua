@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-module(...)
+local M = { _NAME = 'context' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -28,7 +28,7 @@ local environment = token('environment', '\\' * (P('start') + 'stop') * l.word)
 -- Operators.
 local operator = token(l.OPERATOR, S('$&#{}[]'))
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'comment', comment },
   { 'environment', environment },
@@ -38,12 +38,12 @@ _rules = {
   { 'any_char', l.any_char },
 }
 
-_tokenstyles = {
+M._tokenstyles = {
   { 'environment', l.style_tag },
   { 'section', l.style_class },
 }
 
-_foldsymbols = {
+M._foldsymbols = {
   _patterns = { '\\start', '\\stop', '[{}]', '%%' },
   ['environment'] = { ['\\start'] = 1, ['\\stop'] = -1 },
   [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
@@ -54,5 +54,7 @@ _foldsymbols = {
 local luatex = l.load('lua')
 local luatex_start_rule = #P('\\startluacode') * environment
 local luatex_end_rule = #P('\\stopluacode') * environment
-l.embed_lexer(_M, luatex, luatex_start_rule, luatex_end_rule)
+l.embed_lexer(M, luatex, luatex_start_rule, luatex_end_rule)
 
+
+return M

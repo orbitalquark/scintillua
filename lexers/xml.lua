@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S, V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
 
-module(...)
+local M = { _NAME = 'xml' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -48,7 +48,7 @@ local entity = token('entity', '&' * word_match {
   'lt', 'gt', 'amp', 'apos', 'quot'
 } * ';')
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'comment', comment },
   { 'cdata', cdata },
@@ -58,7 +58,7 @@ _rules = {
   { 'any_char', l.any_char },
 }
 
-_tokenstyles = {
+M._tokenstyles = {
   { 'tag', l.style_tag },
   { 'element', l.style_tag },
   { 'namespace', l.style_class },
@@ -68,9 +68,11 @@ _tokenstyles = {
   { 'doctype', l.style_comment },
 }
 
-_foldsymbols = {
+M._foldsymbols = {
   _patterns = { '</?', '/>', '<!%-%-', '%-%->', '<!%[CDATA%[', '%]%]>' },
   tag = { ['<'] = 1, ['/>'] = -1, ['</'] = -1 },
   [l.COMMENT] = { ['<!--'] = 1, ['-->'] = -1 },
   cdata = { ['<![CDATA['] = 1, [']]>'] = -1 }
 }
+
+return M

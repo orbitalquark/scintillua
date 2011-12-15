@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-module(...)
+local M = { _NAME = 'makefile' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -33,7 +33,7 @@ local macro = token('macro', '$' * (l.delimited_range('()', nil, nil, true) +
                              S('<@')))
 local regular_line = ws + variable + macro + comment + l.any_char
 
-_rules = {
+M._rules = {
   { 'comment', comment },
   { 'preprocessor', preproc },
   { 'target', target },
@@ -42,10 +42,12 @@ _rules = {
   { 'line', regular_line },
 }
 
-_tokenstyles = {
+M._tokenstyles = {
   { 'target', l.style_definition },
   { 'command', l.style_string },
   { 'macro', l.style_preproc },
 }
 
-_LEXBYLINE = true
+M._LEXBYLINE = true
+
+return M

@@ -6,7 +6,7 @@ local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 local table = _G.table
 
-module(...)
+local M = { _NAME = 'cuda' }
 
 -- Whitespace
 local ws = token(l.WHITESPACE, l.space^1)
@@ -80,10 +80,12 @@ local variable = token(l.VARIABLE, word_match {
 
 -- Extend cpp lexer to include CUDA elements.
 local cpp = l.load('cpp')
-_rules = cpp._rules
-_rules[1] = { 'whitespace', ws }
+M._rules = cpp._rules
+M._rules[1] = { 'whitespace', ws }
 table.insert(_rules, 2, { 'cuda_keyword', keyword })
 table.insert(_rules, 3, { 'cuda_function', func })
 table.insert(_rules, 4, { 'cuda_type', type })
 table.insert(_rules, 5, { 'cuda_variable', variable })
-_foldsymbols = cpp._foldsymbols
+M._foldsymbols = cpp._foldsymbols
+
+return M

@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-module(...)
+local M = { _NAME = 'diff' }
 
 -- Text, separators, and file headers.
 local index = token(l.COMMENT, 'Index: ' * l.any^0 * P(-1))
@@ -21,7 +21,7 @@ local addition = token('addition', S('>+') * l.any^0 * P(-1))
 local deletion = token('deletion', S('<-') * l.any^0 * P(-1))
 local change   = token('change', '! ' * l.any^0 * P(-1))
 
-_rules = {
+M._rules = {
   { 'index', index },
   { 'separator', separator },
   { 'header', header },
@@ -32,11 +32,13 @@ _rules = {
   { 'any_line', token('default', l.any^1) },
 }
 
-_tokenstyles = {
+M._tokenstyles = {
   { 'header', l.style_comment },
   { 'addition', l.style_nothing..{ fore = l.colors.green } },
   { 'deletion', l.style_nothing..{ fore = l.colors.red } },
   { 'change', l.style_nothing..{ fore = l.colors.yellow } },
 }
 
-_LEXBYLINE = true
+M._LEXBYLINE = true
+
+return M

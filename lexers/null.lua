@@ -1,4 +1,6 @@
 -- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- Null LPeg lexer.
 
-module(...)
+local M = { _NAME = 'null' }
+
+return M

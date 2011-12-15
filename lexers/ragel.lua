@@ -141,3 +141,5 @@ function LoadStyles()
   add_style('ragel_default', style_nothing)
   add_style('ragel_tag', style_embedded)
 end
+
+return M

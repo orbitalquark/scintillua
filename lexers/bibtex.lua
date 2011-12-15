@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-module(...)
+local M = { _NAME = 'bibtex' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -29,7 +29,7 @@ local identifier = token(l.IDENTIFIER, l.word)
 -- Operators.
 local operator = token(l.OPERATOR, S(',='))
 
-_rules = {
+M._rules = {
   { 'whitespace', ws },
   { 'field', field },
   { 'identifier', identifier },
@@ -40,7 +40,7 @@ _rules = {
 
 -- Embedded in Latex.
 local latex = l.load('latex')
-_lexer = latex
+M._lexer = latex
 
 -- Embedded Bibtex.
 local entry = token('entry', P('@') * word_match({
@@ -50,9 +50,11 @@ local entry = token('entry', P('@') * word_match({
 }, nil, true))
 local bibtex_start_rule = entry * ws^0 * token(l.OPERATOR, P('{'))
 local bibtex_end_rule = token(l.OPERATOR, P('}'))
-l.embed_lexer(latex, _M, bibtex_start_rule, bibtex_end_rule)
+l.embed_lexer(latex, M, bibtex_start_rule, bibtex_end_rule)
 
-_tokenstyles = {
+M._tokenstyles = {
   { 'field', l.style_constant },
   { 'entry', l.style_preproc }
 }
+
+return M

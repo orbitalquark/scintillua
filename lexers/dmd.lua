@@ -6,7 +6,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-module(...)
+local M = { _NAME = 'dmd' }
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -112,7 +112,7 @@ local traits = token(l.KEYWORD, '__traits') * l.space^0 *
 local func = token(l.FUNCTION, l.word) *
              #(l.space^0 * (P('!') * l.word^-1 * l.space^-1)^-1 * P('('))
 
-_rules = {
+M._rules = {
 	{ 'whitespace', ws },
 	{ 'class', class_sequence },
 	{ 'traits', traits },
@@ -131,12 +131,12 @@ _rules = {
 	{ 'any_char', l.any_char },
 }
 
-_tokenstyles = {
+M._tokenstyles = {
 	{ 'annotation', l.style_preproc },
 	{ 'traits', l.style_definition },
 }
 
-_foldsymbols = {
+M._foldsymbols = {
   _patterns = { '[{}]', '/[*+]', '[*+]/', '//' },
   [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
   [l.COMMENT] = {
@@ -144,3 +144,5 @@ _foldsymbols = {
     ['//'] = l.fold_line_comments('//')
   }
 }
+
+return M
