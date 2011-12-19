@@ -207,8 +207,8 @@ module('lexer')]]
 --     local func = token(l.FUNCTION, word_match {
 --       'assert', 'collectgarbage', 'dofile', 'error', 'getmetatable',
 --       'ipairs', 'load', 'loadfile', 'next', 'pairs', 'pcall', 'print',
---       'rawequal', 'rawget', 'rawset', 'require', 'setmetatable', 'tonumber',
---       'tostring', 'type', 'xpcall'
+--       'rawequal', 'rawget', 'rawlen', 'rawset', 'require', 'setmetatable',
+--       'tonumber', 'tostring', 'type', 'xpcall'
 --     })
 --
 --     local constant = token(l.CONSTANT, word_match {

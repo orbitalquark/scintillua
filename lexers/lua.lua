@@ -45,13 +45,57 @@ local keyword = token(l.KEYWORD, word_match {
 local func = token(l.FUNCTION, word_match {
   'assert', 'collectgarbage', 'dofile', 'error', 'getmetatable', 'ipairs',
   'load', 'loadfile', 'next', 'pairs', 'pcall', 'print', 'rawequal', 'rawget',
-  'rawset', 'require', 'setmetatable', 'tonumber', 'tostring', 'type', 'xpcall'
+  'rawlen', 'rawset', 'require', 'setmetatable', 'tonumber', 'tostring', 'type',
+  'xpcall'
 })
 
 -- Constants.
 local constant = token(l.CONSTANT, word_match {
   '_G', '_VERSION'
 })
+
+-- Libraries.
+local library = token('library', word_match({
+  -- Coroutine.
+  'coroutine', 'coroutine.create', 'coroutine.resume', 'coroutine.running',
+  'coroutine.status', 'coroutine.wrap', 'coroutine.yield',
+  -- Module.
+  'package', 'package.config', 'package.cpath', 'package.loaded',
+  'package.loadlib', 'package.path', 'package.preload', 'package.searchers',
+  'package.searchpath',
+  -- String.
+  'string', 'string.byte', 'string.char', 'string.dump', 'string.find',
+  'string.format', 'string.gmatch', 'string.gsub', 'string.len', 'string.lower',
+  'string.match', 'string.rep', 'string.reverse', 'string.sub', 'string.upper',
+  -- Table.
+  'table', 'table.concat', 'table.insert', 'table.pack', 'table.remove',
+  'table.sort', 'table.unpack',
+  -- Math.
+  'math', 'math.abs', 'math.acos', 'math.asin', 'math.atan2', 'math.atan',
+  'math.ceil', 'math.cos', 'math.cosh', 'math.deg', 'math.exp', 'math.floor',
+  'math.fmod', 'math.frexp', 'math.huge', 'math.ldexp', 'math.log', 'math.max',
+  'math.min', 'math.modf', 'math.pi', 'math.pow', 'math.rad', 'math.random',
+  'math.randomseed', 'math.sin', 'math.sinh', 'math.sqrt', 'math.tan',
+  'math.tanh',
+  -- Bit32.
+  'bit32', 'bit32.arshift', 'bit32.band', 'bit32.bnot', 'bit32.bor',
+  'bit32.btest', 'bit32.extract', 'bit32.lrotate', 'bit32.lshift',
+  'bit32.replace', 'bit32.rrotate', 'bit32.rshift', 'bit32.xor',
+  -- IO.
+  'io', 'io.close', 'io.flush', 'io.input', 'io.lines', 'io.open', 'io.output',
+  'io.popen', 'io.read', 'io.stderr', 'io.stdin', 'io.stdout', 'io.tmpfile',
+  'io.type', 'io.write',
+  -- OS.
+  'os', 'os.clock', 'os.date', 'os.difftime', 'os.execute', 'os.exit',
+  'os.getenv', 'os.remove', 'os.rename', 'os.setlocale', 'os.time',
+  'os.tmpname',
+  -- Debug.
+  'debug', 'debug.debug', 'debug.gethook', 'debug.getinfo', 'debug.getlocal',
+  'debug.getmetatable', 'debug.getregistry', 'debug.getupvalue',
+  'debug.getuservalue', 'debug.sethook', 'debug.setlocal', 'debug.setmetatable',
+  'debug.setupvalue', 'debug.setuservalue', 'debug.traceback',
+  'debug.upvalueid', 'debug.upvaluejoin'
+}, '.'))
 
 -- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
@@ -67,6 +111,7 @@ M._rules = {
   { 'keyword', keyword },
   { 'function', func },
   { 'constant', constant },
+  { 'library', library },
   { 'identifier', identifier },
   { 'string', string },
   { 'comment', comment },
@@ -77,7 +122,8 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  { 'longstring', l.style_string }
+  { 'longstring', l.style_string },
+  { 'library', l.style_type }
 }
 
 local function fold_longcomment(text, pos, line, s, match)
