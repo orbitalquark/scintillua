@@ -1,4 +1,4 @@
--- Copyright 2006-2011 gwash. See LICENSE.
+-- Copyright 2006-2012 gwash. See LICENSE.
 -- Archlinux PKGBUILD LPeg lexer.
 
 local l = lexer

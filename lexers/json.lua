@@ -1,4 +1,4 @@
--- Copyright 2006-2011 Brian "Sir Alaran" Schott. See LICENSE.
+-- Copyright 2006-2012 Brian "Sir Alaran" Schott. See LICENSE.
 -- JSON LPeg lexer.
 -- Based off of lexer code by Mitchell.
 

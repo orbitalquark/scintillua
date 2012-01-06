@@ -1,5 +1,5 @@
 # Make file for LexLPeg external lexer for Scintilla.
-# Copyright 2010-2011 Mitchell mitchell<att>caladbolg.net
+# Copyright 2010-2012 Mitchell mitchell<att>caladbolg.net
 
 .SUFFIXES: .cxx .c .o .h .a
 

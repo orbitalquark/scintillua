@@ -1,4 +1,4 @@
--- Copyright 2006-2011 Mitchell mitchell<att>caladbolg.net. See LICENSE.
+-- Copyright 2006-2012 Mitchell mitchell<att>caladbolg.net. See LICENSE.
 -- SciTE lexer theme for Scintillua.
 
 local l, color, style = lexer, lexer.color, lexer.style

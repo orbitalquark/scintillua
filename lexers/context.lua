@@ -1,4 +1,4 @@
--- Copyright 2006-2011 Robert Gieseke. See LICENSE.
+-- Copyright 2006-2012 Robert Gieseke. See LICENSE.
 -- ConTeXt LPeg lexer.
 
 local l = lexer
