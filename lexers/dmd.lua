@@ -67,10 +67,7 @@ local type = token(l.TYPE, word_match {
 -- Constants.
 local constant = token(l.CONSTANT, word_match {
   '__FILE__', '__LINE__', '__DATE__', '__EOF__', '__TIME__', '__TIMESTAMP__',
-  '__VENDOR__', '__VERSION__', 'DigitalMars', 'X86', 'X86_64', 'Windows',
-  'Win32', 'Win64', 'linux', 'Posix', 'LittleEndian', 'BigEndian', 'D_Coverage',
-  'D_InlineAsm_X86', 'D_InlineAsm_X86_64', 'D_LP64', 'D_PIC',
-  'D_Version2', 'all',
+  '__VENDOR__', '__VERSION__'
 })
 
 local class_sequence = token(l.TYPE, P('class') + P('struct')) * ws^1 *
@@ -98,13 +95,28 @@ local preproc = token(l.PREPROCESSOR, '#' * l.nonnewline^0)
 
 -- Traits.
 local traits_list = token('traits', word_match {
-    "isAbstractClass", "isArithmetic", "isAssociativeArray", "isFinalClass",
-	"isFloating", "isIntegral", "isScalar", "isStaticArray", "isUnsigned",
-	"isVirtualFunction", "isAbstractFunction", "isFinalFunction",
-	"isStaticFunction", "isRef", "isOut", "isLazy", "hasMember", "identifier",
-	"getMember", "getOverloads", "getVirtualFunctions", "classInstanceSize",
-	"allMembers", "derivedMembers", "isSame", "compiles"
+  'isAbstractClass', 'isArithmetic', 'isAssociativeArray', 'isFinalClass',
+  'isFloating', 'isIntegral', 'isScalar', 'isStaticArray', 'isUnsigned',
+  'isVirtualFunction', 'isAbstractFunction', 'isFinalFunction',
+  'isStaticFunction', 'isRef', 'isOut', 'isLazy', 'hasMember', 'identifier',
+  'getMember', 'getOverloads', 'getVirtualFunctions', 'parent',
+  'classInstanceSize', 'allMembers', 'derivedMembers', 'isSame', 'compiles'
 })
+
+-- versions
+local versions_list = token('versions', word_match {
+  'AIX', 'all', 'Alpha', 'ARM', 'BigEndian', 'BSD', 'Cygwin', 'D_Coverage',
+  'D_Ddoc', 'DigitalMars', 'D_InlineAsm_X86', 'D_InlineAsm_X86_64', 'D_LP64',
+  'D_NET','D_PIC','D_Version2', 'FreeBSD', 'GNU', 'HPPA', 'HPPA64', 'Hurd',
+  'IA64', 'LDC', 'linux', 'LittleEndian', 'MinGW', 'MIPS', 'MIPS64', 'none',
+  'OpenBSD', 'OSX', 'Posix', 'PPC', 'PPC64', 'S390', 'S390X', 'SDC', 'SH',
+  'SH64', 'SkyOS', 'Solaris', 'SPARC', 'SPARC64', 'SysV3', 'SysV4', 'unittest',
+  'Win32', 'Win64', 'Windows', 'X86', 'X86_64'
+})
+
+local versions = token(l.KEYWORD, 'version') * l.space^0 *
+                 token(l.OPERATOR, '(') * l.space^0 * versions_list
+
 
 local traits = token(l.KEYWORD, '__traits') * l.space^0 *
                token(l.OPERATOR, '(') * l.space^0 * traits_list
@@ -113,27 +125,29 @@ local func = token(l.FUNCTION, l.word) *
              #(l.space^0 * (P('!') * l.word^-1 * l.space^-1)^-1 * P('('))
 
 M._rules = {
-	{ 'whitespace', ws },
-	{ 'class', class_sequence },
-	{ 'traits', traits },
-	{ 'keyword', keyword },
-	{ 'variable', properties },
-	{ 'type', type },
-	{ 'function', func},
-	{ 'constant', constant },
-	{ 'string', string },
-	{ 'identifier', identifier },
-	{ 'comment', comment },
-	{ 'number', number },
-	{ 'preproc', preproc },
-	{ 'operator', operator },
-	{ 'annotation', annotation },
-	{ 'any_char', l.any_char },
+  { 'whitespace', ws },
+  { 'class', class_sequence },
+  { 'traits', traits },
+  { 'versions', versions },
+  { 'keyword', keyword },
+  { 'variable', properties },
+  { 'type', type },
+  { 'function', func},
+  { 'constant', constant },
+  { 'string', string },
+  { 'identifier', identifier },
+  { 'comment', comment },
+  { 'number', number },
+  { 'preproc', preproc },
+  { 'operator', operator },
+  { 'annotation', annotation },
+  { 'any_char', l.any_char },
 }
 
 M._tokenstyles = {
-	{ 'annotation', l.style_preproc },
-	{ 'traits', l.style_definition },
+  { 'annotation', l.style_preproc },
+  { 'traits', l.style_definition },
+  { 'versions', l.style_constant },
 }
 
 M._foldsymbols = {
