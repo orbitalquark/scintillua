@@ -406,12 +406,11 @@ module('lexer')]]
 -- lexer. This is something of the form `<style type="text/css">`. Similarly,
 -- the transition from child to parent is `</style>`.
 --
---     local css_start_rule = #(P('<') * P('style') *
---       P(function(input, index)
---         if input:find('[^>]+type%s*=%s*(["\'])text/css%1') then
---           return index
---         end
---       end)) * tag
+--     local css_start_rule = #(P('<') * P('style') * P(function(input, index)
+--       if input:find('^[^>]+type%s*=%s*(["\'])text/css%1', index) then
+--         return index
+--       end
+--     end)) * tag
 --     local css_end_rule = #(P('</') * P('style') * ws^0 * P('>')) * tag
 --
 -- where `tag` and `ws` have been previously defined in the HTML lexer.
@@ -427,12 +426,11 @@ module('lexer')]]
 --
 --     local js = l.load('javascript')
 --
---     local js_start_rule = #(P('<') * P('script') *
---       P(function(input, index)
---         if input:find('[^>]+type%s*=%s*(["\'])text/javascript%1') then
---           return index
---         end
---       end)) * tag
+--     local js_start_rule = #(P('<') * P('script') * P(function(input, index)
+--       if input:find('^[^>]+type%s*=%s*(["\'])text/javascript%1', index) then
+--         return index
+--       end
+--     end)) * tag
 --     local js_end_rule = #('</' * P('script') * ws^0 * '>') * tag
 --     l.embed_lexer(M, js, js_start_rule, js_end_rule)
 --

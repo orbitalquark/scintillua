@@ -95,7 +95,9 @@ M._tokenstyles = {
 local css = l.load('css')
 local style_element = word_match({ 'style' }, nil, case_insensitive_tags)
 local css_start_rule = #(P('<') * style_element * P(function(input, index)
-  if input:find('[^>]+type%s*=%s*(["\'])text/css%1') then return index end
+  if input:find('^[^>]+type%s*=%s*(["\'])text/css%1', index) then
+    return index
+  end
 end)) * tag -- <style type="text/css">
 local css_end_rule = #('</' * style_element * ws^0 * '>') * tag -- </style>
 l.embed_lexer(M, css, css_start_rule, css_end_rule)
@@ -104,7 +106,7 @@ l.embed_lexer(M, css, css_start_rule, css_end_rule)
 local js = l.load('javascript')
 local script_element = word_match({ 'script' }, nil, case_insensitive_tags)
 local js_start_rule = #(P('<') * script_element * P(function(input, index)
-  if input:find('[^>]+type%s*=%s*(["\'])text/javascript%1') then
+  if input:find('^[^>]+type%s*=%s*(["\'])text/javascript%1', index) then
     return index
   end
 end)) * tag -- <script type="text/javascript">
@@ -115,7 +117,7 @@ l.embed_lexer(M, js, js_start_rule, js_end_rule)
 local cs = l.load('coffeescript')
 local script_element = word_match({ 'script' }, nil, case_insensitive_tags)
 local cs_start_rule = #(P('<') * script_element * P(function(input, index)
-  if input:find('[^>]+type%s*=%s*(["\'])text/coffeescript%1') then
+  if input:find('^[^>]+type%s*=%s*(["\'])text/coffeescript%1', index) then
     return index
   end
 end)) * tag -- <script type="text/coffeescript">

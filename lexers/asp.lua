@@ -20,10 +20,11 @@ l.embed_lexer(html, vb, vb_start_rule, vb_end_rule)
 -- Embedded VBScript.
 local vbs = l.load('vbscript')
 local script_element = word_match({ 'script' }, nil, html.case_insensitive_tags)
-local vbs_start_rule = #(P('<') * script_element *
-  P(function(input, index)
-    if input:find('[^>]+language%s*=%s*(["\'])vbscript%1') then return index end
-  end)) * html._RULES['tag'] -- <script language="vbscript">
+local vbs_start_rule = #(P('<') * script_element * P(function(input, index)
+  if input:find('^[^>]+language%s*=%s*(["\'])vbscript%1', index) then
+    return index
+  end
+end)) * html._RULES['tag'] -- <script language="vbscript">
 local vbs_end_rule = #('</' * script_element * l.space^0 * '>') *
                      html._RULES['tag'] -- </script>
 l.embed_lexer(html, vbs, vbs_start_rule, vbs_end_rule)
@@ -33,8 +34,9 @@ M._tokenstyles = {
 }
 
 local _foldsymbols = html._foldsymbols
-M._foldsymbols._patterns[#_foldsymbols._patterns + 1] = '<%%'
-M._foldsymbols._patterns[#_foldsymbols._patterns + 1] = '%%>'
-M._foldsymbols.asp_tag = { ['<%'] = 1, ['%>'] = -1 }
+_foldsymbols._patterns[#_foldsymbols._patterns + 1] = '<%%'
+_foldsymbols._patterns[#_foldsymbols._patterns + 1] = '%%>'
+_foldsymbols.asp_tag = { ['<%'] = 1, ['%>'] = -1 }
+M._foldsymbols = _foldsymbols
 
 return M

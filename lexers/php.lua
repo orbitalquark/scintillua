@@ -84,12 +84,13 @@ M._tokenstyles = {
 }
 
 local _foldsymbols = html._foldsymbols
-M._foldsymbols._patterns[#_foldsymbols._patterns + 1] = '<%?'
-M._foldsymbols._patterns[#_foldsymbols._patterns + 1] = '%?>'
-M._foldsymbols._patterns[#_foldsymbols._patterns + 1] = '//'
-M._foldsymbols._patterns[#_foldsymbols._patterns + 1] = '#'
-M._foldsymbols.php_tag = { ['<?'] = 1, ['?>'] = -1 }
-M._foldsymbols[l.COMMENT]['//'] = l.fold_line_comments('//')
-M._foldsymbols[l.COMMENT]['#'] = l.fold_line_comments('#')
+_foldsymbols._patterns[#_foldsymbols._patterns + 1] = '<%?'
+_foldsymbols._patterns[#_foldsymbols._patterns + 1] = '%?>'
+_foldsymbols._patterns[#_foldsymbols._patterns + 1] = '//'
+_foldsymbols._patterns[#_foldsymbols._patterns + 1] = '#'
+_foldsymbols.php_tag = { ['<?'] = 1, ['?>'] = -1 }
+_foldsymbols[l.COMMENT]['//'] = l.fold_line_comments('//')
+_foldsymbols[l.COMMENT]['#'] = l.fold_line_comments('#')
+M._foldsymbols = _foldsymbols
 
 return M

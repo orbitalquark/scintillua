@@ -80,12 +80,13 @@ local variable = token(l.VARIABLE, word_match {
 
 -- Extend cpp lexer to include CUDA elements.
 local cpp = l.load('cpp')
-M._rules = cpp._rules
-M._rules[1] = { 'whitespace', ws }
+local _rules = cpp._rules
+_rules[1] = { 'whitespace', ws }
 table.insert(_rules, 2, { 'cuda_keyword', keyword })
 table.insert(_rules, 3, { 'cuda_function', func })
 table.insert(_rules, 4, { 'cuda_type', type })
 table.insert(_rules, 5, { 'cuda_variable', variable })
+M._rules = _rules
 M._foldsymbols = cpp._foldsymbols
 
 return M

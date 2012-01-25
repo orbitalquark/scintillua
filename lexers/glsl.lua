@@ -120,12 +120,13 @@ local constant = token(l.CONSTANT, word_match {
 
 -- Extend cpp lexer to include GLSL elements.
 local cpp = l.load('cpp')
-M._rules = cpp._rules
-M._rules[1] = { 'whitespace', ws }
+local _rules = cpp._rules
+_rules[1] = { 'whitespace', ws }
 table.insert(_rules, 2, { 'glsl_keyword', keyword })
 table.insert(_rules, 3, { 'glsl_function', func })
 table.insert(_rules, 4, { 'glsl_type', type })
 table.insert(_rules, 5, { 'glsl_variable', variable })
+M._rules = _rules
 M._foldsymbols = cpp._foldsymbols
 
 return M

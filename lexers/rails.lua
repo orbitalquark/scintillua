@@ -53,12 +53,13 @@ local active_support = token(l.FUNCTION, word_match {
 
 -- Extend Ruby lexer to include Rails methods.
 local ruby = l.load('ruby')
-M._rules = ruby._rules
-M._rules[1] = { 'whitespace', ws }
+local _rules = ruby._rules
+_rules[1] = { 'whitespace', ws }
 table.insert(_rules, 3, { 'actionpack', actionpack })
 table.insert(_rules, 4, { 'view_helpers', view_helpers })
 table.insert(_rules, 5, { 'activerecord', activerecord  })
 table.insert(_rules, 6, { 'active_support', active_support })
+M._rules = _rules
 M._foldsymbols = ruby._foldsymbols
 
 return M
