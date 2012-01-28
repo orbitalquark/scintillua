@@ -45,8 +45,8 @@ local keyword = token(l.KEYWORD, word_match {
 local func = token(l.FUNCTION, word_match {
   'assert', 'collectgarbage', 'dofile', 'error', 'getmetatable', 'ipairs',
   'load', 'loadfile', 'next', 'pairs', 'pcall', 'print', 'rawequal', 'rawget',
-  'rawlen', 'rawset', 'require', 'setmetatable', 'tonumber', 'tostring', 'type',
-  'xpcall'
+  'rawlen', 'rawset', 'require', 'select', 'setmetatable', 'tonumber',
+  'tostring', 'type', 'xpcall'
 })
 
 -- Constants.
