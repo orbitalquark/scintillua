@@ -397,8 +397,6 @@ public:
 
 		unsigned int startSeg = startPos, endSeg = startPos + lengthDoc;
 		int style = 0;
-		styler.StartAt(startPos, static_cast<char>(STYLE_MAX));
-		styler.StartSegment(startPos);
 		lua_getglobal(L, "lexer");
 		lua_getfield(L, -1, "lex");
 		if (lua_isfunction(L, -1)) {
@@ -409,37 +407,41 @@ public:
 			if (lua_pcall(L, 2, 1, 0) != LUA_OK) l_error(L);
 			// Style the text from the token table returned.
 			if (lua_istable(L, -1)) {
-				lua_getglobal(L, "_LEXER");
-				lua_pushstring(L, "_TOKENS");
-				lua_rawget(L, -2);
-				lua_remove(L, lua_gettop(L) - 1); // _LEXER
-				lua_pushnil(L);
-				while (lua_next(L, -3)) { // token (tokens[i])
-					if (!lua_istable(L, -1)) {
-						l_error(L, "Table of tokens expected from lexer.lex");
-						break;
+				if (lua_rawlen(L, -1) > 0) {
+					styler.StartAt(startPos, static_cast<char>(STYLE_MAX));
+					styler.StartSegment(startPos);
+					lua_getglobal(L, "_LEXER");
+					lua_pushstring(L, "_TOKENS");
+					lua_rawget(L, -2);
+					lua_remove(L, lua_gettop(L) - 1); // _LEXER
+					lua_pushnil(L);
+					while (lua_next(L, -3)) { // token (tokens[i])
+						if (!lua_istable(L, -1)) {
+							l_error(L, "Table of tokens expected from lexer.lex");
+							break;
+						}
+						lua_rawgeti(L, -1, 1); // token[1]
+						lua_rawget(L, -4); // _LEXER._TOKENS[token[1]]
+						style = 32;
+						if (!lua_isnil(L, -1)) style = lua_tointeger(L, -1);
+						lua_pop(L, 1); // _LEXER._TOKENS[token[1]]
+						lua_rawgeti(L, -1, 2); // token[2]
+						unsigned int position = lua_tointeger(L, -1) - 1;
+						lua_pop(L, 1); // token[2]
+						lua_pop(L, 1); // token (tokens[i])
+						if (style >= 0 && style <= STYLE_MAX)
+							styler.ColourTo(startSeg + position - 1, style);
+						else
+							l_error(L, "Bad style number");
+						if (position > endSeg) break;
 					}
-					lua_rawgeti(L, -1, 1); // token[1]
-					lua_rawget(L, -4); // _LEXER._TOKENS[token[1]]
-					style = 32;
-					if (!lua_isnil(L, -1)) style = lua_tointeger(L, -1);
-					lua_pop(L, 1); // _LEXER._TOKENS[token[1]]
-					lua_rawgeti(L, -1, 2); // token[2]
-					unsigned int position = lua_tointeger(L, -1) - 1;
-					lua_pop(L, 1); // token[2]
-					lua_pop(L, 1); // token (tokens[i])
-					if (style >= 0 && style <= STYLE_MAX)
-						styler.ColourTo(startSeg + position - 1, style);
-					else
-						l_error(L, "Bad style number");
-					if (position > endSeg) break;
+					lua_pop(L, 2); // _LEXER._TOKENS and token table returned
+					styler.ColourTo(endSeg - 1, style);
+					styler.Flush();
 				}
-				lua_pop(L, 2); // _LEXER._TOKENS and token table returned
 			} else l_error(L, "Table of tokens expected from lexer.lex");
 		} else l_error(L, "lexer.lex not found");
 		lua_pop(L, 1); // lexer
-		styler.ColourTo(endSeg - 1, style);
-		styler.Flush();
 	}
 
 	void SCI_METHOD Fold(unsigned int startPos, int lengthDoc, int initStyle,
