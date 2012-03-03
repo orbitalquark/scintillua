@@ -496,7 +496,7 @@ module('lexer')]]
 --
 --     l.embed_lexer(html, M, php_start_rule, php_end_rule)
 --
--- ### Code Folding (Optional)
+-- #### Code Folding
 --
 -- It is sometimes convenient to "fold", or not show blocks of text. These
 -- blocks can be functions, classes, comments, etc. A folder iterates over each
