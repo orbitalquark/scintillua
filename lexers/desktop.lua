@@ -1,4 +1,4 @@
--- Copyright 2006-2012 Mitchell mitchell<att>caladbolg.net. See LICENSE.
+-- Copyright 2006-2012 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- Desktop Entry LPeg lexer.
 
 local l = lexer

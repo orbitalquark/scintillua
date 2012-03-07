@@ -1,4 +1,4 @@
--- Copyright 2006-2012 Mitchell mitchell<att>caladbolg.net. See LICENSE.
+-- Copyright 2006-2012 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- HTML LPeg lexer.
 
 local l = lexer
@@ -69,7 +69,9 @@ local word = token(l.DEFAULT, (l.any - l.space - S('<&'))^1)
 local entity = token('entity', '&' * (l.any - l.space - ';')^1 * ';')
 
 -- Doctype.
-local doctype = token('doctype', '<!DOCTYPE' * (l.any - '>')^1 * '>')
+local doctype = token('doctype', '<!' *
+                      word_match({ 'doctype' }, nil, case_insensitive_tags) *
+                      (l.any - '>')^1 * '>')
 
 M._rules = {
   { 'whitespace', ws },

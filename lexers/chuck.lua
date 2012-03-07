@@ -22,7 +22,7 @@
 -- THE SOFTWARE.
 --------------------------------------------------------------------------------
 
--- Based on lexer code from Mitchell mitchell<att>caladbolg.net.
+-- Based on lexer code from Mitchell mitchell.att.foicica.com.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
