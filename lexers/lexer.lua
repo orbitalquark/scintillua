@@ -100,33 +100,54 @@ module('lexer')]]
 -- `\f`, `\n`, `\r`, or ` `. The `lexer` module also provides you with a
 -- shortcut for this and many other character sequences. They are:
 --
--- * `any`: Matches any single character.
--- * `ascii`: Matches any ASCII character (`0`..`127`).
--- * `extend`: Matches any ASCII extended character (`0`..`255`).
--- * `alpha`: Matches any alphabetic character (`A-Z`, `a-z`).
--- * `digit`: Matches any digit (`0-9`).
--- * `alnum`: Matches any alphanumeric character (`A-Z`, `a-z`, `0-9`).
--- * `lower`: Matches any lowercase character (`a-z`).
--- * `upper`: Matches any uppercase character (`A-Z`).
--- * `xdigit`: Matches any hexadecimal digit (`0-9`, `A-F`, `a-f`).
--- * `cntrl`: Matches any control character (`0`..`31`).
--- * `graph`: Matches any graphical character (`!` to `~`).
--- * `print`: Matches any printable character (space to `~`).
--- * `punct`: Matches any punctuation character not alphanumeric (`!` to `/`,
---   `:` to `@`, `[` to `'`, `{` to `~`).
--- * `space`: Matches any whitespace character (`\t`, `\v`, `\f`, `\n`, `\r`,
---   space).
--- * `newline`: Matches any newline characters.
--- * `nonnewline`: Matches any non-newline character.
--- * `nonnewline_esc`: Matches any non-newline character excluding newlines
---   escaped with `\\`.
--- * `dec_num`: Matches a decimal number.
--- * `hex_num`: Matches a hexadecimal number.
--- * `oct_num`: Matches an octal number.
--- * `integer`: Matches a decimal, hexadecimal, or octal number.
--- * `float`: Matches a floating point number.
--- * `word`: Matches a typical word starting with a letter or underscore and
---   then any alphanumeric or underscore characters.
+-- * `any`
+--   Matches any single character.
+-- * `ascii`
+--   Matches any ASCII character (`0`..`127`).
+-- * `extend`
+--   Matches any ASCII extended character (`0`..`255`).
+-- * `alpha`
+--   Matches any alphabetic character (`A-Z`, `a-z`).
+-- * `digit`
+--   Matches any digit (`0-9`).
+-- * `alnum`
+--   Matches any alphanumeric character (`A-Z`, `a-z`, `0-9`).
+-- * `lower`
+--   Matches any lowercase character (`a-z`).
+-- * `upper`
+--   Matches any uppercase character (`A-Z`).
+-- * `xdigit`
+--   Matches any hexadecimal digit (`0-9`, `A-F`, `a-f`).
+-- * `cntrl`
+--   Matches any control character (`0`..`31`).
+-- * `graph`
+--   Matches any graphical character (`!` to `~`).
+-- * `print`
+--   Matches any printable character (space to `~`).
+-- * `punct`
+--   Matches any punctuation character not alphanumeric (`!` to `/`, `:` to `@`,
+--   `[` to `'`, `{` to `~`).
+-- * `space`
+--   Matches any whitespace character (`\t`, `\v`, `\f`, `\n`, `\r`, space).
+-- * `newline`
+--   Matches any newline characters.
+-- * `nonnewline`
+--   Matches any non-newline character.
+-- * `nonnewline_esc`
+--   Matches any non-newline character excluding newlines escaped with `\\`.
+-- * `dec_num`
+--   Matches a decimal number.
+-- * `hex_num`
+--   Matches a hexadecimal number.
+-- * `oct_num`
+--   Matches an octal number.
+-- * `integer`
+--   Matches a decimal, hexadecimal, or octal number.
+-- * `float`
+--   Matches a floating point number.
+-- * `word`
+--   Matches a typical word starting with a letter or underscore and then any
+--   alphanumeric or underscore characters.
 --
 -- The above whitespace token can be rewritten more simply as:
 --
@@ -293,25 +314,44 @@ module('lexer')]]
 -- The term for coloring text is styling. Just like with predefined LPeg
 -- patterns in `lexer`, predefined styles are available.
 --
--- * `style_nothing`: Typically used for whitespace.
--- * `style_class`: Typically used for class definitions.
--- * `style_comment`: Typically used for code comments.
--- * `style_constant`: Typically used for constants.
--- * `style_definition`: Typically used for definitions.
--- * `style_error`: Typically used for erroneous syntax.
--- * `style_function`: Typically used for function definitions.
--- * `style_keyword`: Typically used for language keywords.
--- * `style_label`: Typically used for labels.
--- * `style_number`: Typically used for numbers.
--- * `style_operator`: Typically used for operators.
--- * `style_regex`: Typically used for regular expression strings.
--- * `style_string`: Typically used for strings.
--- * `style_preproc`: Typically used for preprocessor statements.
--- * `style_tag`: Typically used for markup tags.
--- * `style_type`: Typically used for static types.
--- * `style_variable`: Typically used for variables.
--- * `style_embedded`: Typically used for embedded code.
--- * `style_identifier`: Typically used for identifier words.
+-- * `style_nothing`
+--   Typically used for whitespace.
+-- * `style_class`
+--   Typically used for class definitions.
+-- * `style_comment`
+--   Typically used for code comments.
+-- * `style_constant`
+--   Typically used for constants.
+-- * `style_definition`
+--   Typically used for definitions.
+-- * `style_error`
+--   Typically used for erroneous syntax.
+-- * `style_function`
+--   Typically used for function definitions.
+-- * `style_keyword`
+--   Typically used for language keywords.
+-- * `style_label`
+--   Typically used for labels.
+-- * `style_number`
+--   Typically used for numbers.
+-- * `style_operator`
+--   Typically used for operators.
+-- * `style_regex`
+--   Typically used for regular expression strings.
+-- * `style_string`
+--   Typically used for strings.
+-- * `style_preproc`
+--   Typically used for preprocessor statements.
+-- * `style_tag`
+--   Typically used for markup tags.
+-- * `style_type`
+--   Typically used for static types.
+-- * `style_variable`
+--   Typically used for variables.
+-- * `style_embedded`
+--   Typically used for embedded code.
+-- * `style_identifier`
+--   Typically used for identifier words.
 --
 -- Each style consists of a set of attributes:
 --
@@ -531,11 +571,14 @@ module('lexer')]]
 --
 -- The following Scintilla fold flags are available:
 --
--- * `SC_FOLDLEVELBASE`: The initial (root) fold level.
--- * `SC_FOLDLEVELWHITEFLAG`: Flag indicating that the line is blank.
--- * `SC_FOLDLEVELHEADERFLAG`: Flag indicating the line is fold point.
--- * `SC_FOLDLEVELNUMBERMASK`: Flag used with `SCI_GETFOLDLEVEL(line)` to get
---   the fold level of a line.
+-- * `SC_FOLDLEVELBASE`
+--   The initial (root) fold level.
+-- * `SC_FOLDLEVELWHITEFLAG`
+--   Flag indicating that the line is blank.
+-- * `SC_FOLDLEVELHEADERFLAG`
+--   Flag indicating the line is fold point.
+-- * `SC_FOLDLEVELNUMBERMASK`
+--   Flag used with `SCI_GETFOLDLEVEL(line)` to get the fold level of a line.
 --
 -- Have your fold function interate over each line, setting fold levels. You can
 -- use the [`get_style_at()`](#get_style_at), [`get_property()`](#get_property),
@@ -729,9 +772,9 @@ end
 
 -- (Re)constructs lexer._GRAMMAR.
 -- @param lexer The parent lexer.
--- @param initial_rule The name of the rule to start lexing with. Defaults to
---   lexer._NAME. Multilang lexers use this to start with a child rule if
---   necessary.
+-- @param initial_rule The name of the rule to start lexing with. The default
+--   value is `lexer._NAME`. Multilang lexers use this to start with a child
+--   rule if necessary.
 local function build_grammar(lexer, initial_rule)
   local children = lexer._CHILDREN
   if children then
@@ -1061,20 +1104,19 @@ M.colors = {}
 -- Creates a Scintilla style from a table of style properties.
 -- @param style_table A table of style properties.
 -- Style properties available:
---   font         = [string]
---   size         = [integer]
---   bold         = [boolean]
---   italic       = [boolean]
---   underline    = [boolean]
---   fore         = [integer]*
---   back         = [integer]*
---   eolfilled    = [boolean]
---   characterset = ?
---   case         = [integer]
---   visible      = [boolean]
---   changeable   = [boolean]
---   hotspot      = [boolean]
--- * Use the value returned by `color()`.
+--     * font [string]
+--     * size [integer]
+--     * bold [boolean]
+--     * italic [boolean]
+--     * underline [boolean]
+--     * fore [integer] (Use value returned by [`color()`](#color))
+--     * back [integer] (Use value returned by [`color()`](#color))
+--     * eolfilled [boolean]
+--     * characterset [?]
+--     * case [integer]
+--     * visible [boolean]
+--     * changeable [boolean]
+--     * hotspot [boolean]
 -- @usage local bold_italic = style { bold = true, italic = true }
 -- @see color
 -- @name style
