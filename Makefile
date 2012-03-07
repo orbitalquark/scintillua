@@ -12,6 +12,7 @@ LUA_CFLAGS = -D_WIN32 -DWIN32
 LEXLPEG = lexers/LexLPeg.dll
 SO_FLAGS = -g -static -mwindows --relocatable -s LexLPeg.def \
   -Wl,--enable-stdcall-fixup
+LUADOC = luadoc_start.bat
 else
 CC = gcc -fPIC
 CPP = g++ -fPIC
@@ -20,6 +21,7 @@ PLAT_FLAGS = -DGTK
 LUA_CFLAGS = -DLUA_USE_LINUX
 LEXLPEG = lexers/liblexlpeg.so
 SO_FLAGS = -g -Wl,-soname,$(LEXLPEG).0 -Wl,-fvisibility=hidden
+LUADOC = luadoc
 endif
 
 INCLUDEDIRS = -I scintilla/include -I scintilla/lexlib -I scite/lua/include
@@ -55,13 +57,22 @@ LexLPeg.o: LexLPeg.cxx
 clean:
 	rm *.o $(LEXLPEG)
 
+doc: manual luadoc
+manual:
+	cd doc && lua gen_manual.lua
+luadoc: lexers/lexer.lua scintillua.luadoc
+	cd doc && $(LUADOC) -d . --doclet markdowndoc $^
+cleandoc:
+	rm -f doc/manual/*.html
+	rm -rf doc/api
+
 # Package
 # Pass 'VERSION=[release version]' to 'make'. e.g. 'VERSION=2.22-1'
 
 RELEASEDIR = scintillua$(value VERSION)
 PACKAGE = releases/$(RELEASEDIR).zip
 
-release: #lexers/LexLPeg.dll lexers/liblexlpeg.so
+release: doc #lexers/LexLPeg.dll lexers/liblexlpeg.so
 	./gen_lexer_props.lua
 	hg archive $(RELEASEDIR)
 	rm $(RELEASEDIR)/.hg*

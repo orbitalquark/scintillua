@@ -25,7 +25,7 @@ module('lexer')]]
 -- similar to any of the 80+ languages supported. If so, you can copy and modify
 -- that lexer, saving some time and effort.
 --
--- #### Introduction
+-- ### Introduction
 --
 -- All lexers are contained in the `lexers/` directory. To begin, create a Lua
 -- script with the name of your lexer and open it for editing.
@@ -57,14 +57,14 @@ module('lexer')]]
 -- The local variables above give easy access to the many useful functions
 -- available for creating lexers.
 --
--- #### Lexer Language Structure
+-- ### Lexer Language Structure
 --
 -- It is important to spend some time considering the structure of the language
 -- you are creating the lexer for. What kinds of tokens does it have? Comments,
 -- strings, keywords, etc.? Lua has 9 tokens: whitespace, comments, strings,
 -- numbers, keywords, functions, constants, identifiers, and operators.
 --
--- #### Tokens
+-- ### Tokens
 --
 -- In a lexer, tokens are comprised of a token type followed by an LPeg pattern.
 -- They are created using the [`token()`](#token) function. The `lexer` (`l`)
@@ -250,7 +250,7 @@ module('lexer')]]
 --
 --     local operator = token(l.OPERATOR, '~=' + S('+-*/%^#=<>;:,.{}[]()'))
 --
--- #### Rules
+-- ### Rules
 --
 -- Rules are just a combination of tokens. In Lua, all rules consist of a
 -- single token, but other languages may have two or more tokens in a rule.
@@ -296,7 +296,7 @@ module('lexer')]]
 -- single character and moves on. It may be colored red (indicating a syntax
 -- error) if desired because it is a token, not just a pattern.
 --
--- #### Summary
+-- ### Summary
 --
 -- The above method of defining tokens and rules is sufficient for a majority of
 -- lexers. The `lexer` module provides many useful patterns and functions for
@@ -309,7 +309,7 @@ module('lexer')]]
 --
 -- The rest of this document is devoted to more complex lexer techniques.
 --
--- #### Styling Tokens
+-- ### Styling Tokens
 --
 -- The term for coloring text is styling. Just like with predefined LPeg
 -- patterns in `lexer`, predefined styles are available.
@@ -417,7 +417,7 @@ module('lexer')]]
 -- For examples of how styles are created, please see the theme files in the
 -- `lexers/themes/` folder.
 --
--- #### Line Lexer
+-- ### Line Lexer
 --
 -- Sometimes it is advantageous to lex input text line by line rather than a
 -- chunk at a time. This occurs particularly in diff, patch, or make files. Put
@@ -426,7 +426,7 @@ module('lexer')]]
 --
 -- somewhere in your lexer in order to do this.
 --
--- #### Embedded Lexers
+-- ### Embedded Lexers
 --
 -- A particular advantage that dynamic lexers have over static ones is that
 -- lexers can be embedded within one another very easily, requiring minimal
@@ -434,7 +434,7 @@ module('lexer')]]
 -- other child lexers in it, and a child lexer that embeds itself within a
 -- parent lexer.
 --
--- ##### Parent Lexer with Children
+-- #### Parent Lexer with Children
 --
 -- An example of this kind of lexer is HTML with embedded CSS and Javascript.
 -- After creating the parent lexer, load the children lexers in it using
@@ -474,7 +474,7 @@ module('lexer')]]
 --     local js_end_rule = #('</' * P('script') * ws^0 * '>') * tag
 --     l.embed_lexer(M, js, js_start_rule, js_end_rule)
 --
--- ##### Child Lexer Within Parent
+-- #### Child Lexer Within Parent
 --
 -- An example of this kind of lexer is PHP embedded in HTML. After creating the
 -- child lexer, load the parent lexer. As an example:
@@ -496,14 +496,14 @@ module('lexer')]]
 --
 --     l.embed_lexer(html, M, php_start_rule, php_end_rule)
 --
--- #### Code Folding (Optional)
+-- ### Code Folding (Optional)
 --
 -- It is sometimes convenient to "fold", or not show blocks of text. These
 -- blocks can be functions, classes, comments, etc. A folder iterates over each
 -- line of input text and assigns a fold level to it. Certain lines can be
 -- specified as fold points that fold subsequent lines with a higher fold level.
 --
--- ##### Simple Code Folding
+-- #### Simple Code Folding
 --
 -- To specify the fold points of your lexer's language, create a
 -- `M._foldsymbols` table of the following form:
@@ -551,7 +551,7 @@ module('lexer')]]
 -- fold points. Finally, unmatched brackets in comments are fold points in order
 -- to fold long (multi-line) comments.
 --
--- ##### Advanced Code Folding
+-- #### Advanced Code Folding
 --
 -- If you need more granularity than `M._foldsymbols`, you can define your own
 -- fold function:
@@ -624,7 +624,7 @@ module('lexer')]]
 -- `.properties` file because SciTE is not set up to forward them to your lexer.
 -- Instead, you can provide options that can be set at the top of the lexer.
 --
--- #### Using the Lexer with SciTE
+-- ### Using with SciTE
 --
 -- Create a `.properties` file for your lexer and `import` it in either your
 -- `SciTEUser.properties` or `SciTEGlobal.properties`. The contents of the
@@ -638,7 +638,7 @@ module('lexer')]]
 --
 -- Please note any styling information in `.properties` files is ignored.
 --
--- #### Using the Lexer with Textadept
+-- ### Using with Textadept
 --
 -- Put your lexer in your [`~/.textadept/`][user]`lexers/` directory. That way
 -- your lexer will not be overwritten when upgrading. Also, lexers in this
@@ -649,19 +649,19 @@ module('lexer')]]
 --
 -- [user]: http://caladbolg.net/luadoc/textadept/manual/5_FolderStructure.html
 --
--- #### Optimization
+-- ### Optimization
 --
 -- Lexers can usually be optimized for speed by re-arranging tokens so that the
 -- most common ones are recognized first. Keep in mind the issue that was raised
 -- earlier: if you put similar tokens like `identifier`s before `keyword`s, the
 -- latter will not be styled correctly.
 --
--- #### Troubleshooting
+-- ### Troubleshooting
 --
 -- Errors in lexers can be tricky to debug. Lua errors are printed to STDERR
 -- and `_G.print()` statements in lexers are printed to STDOUT.
 --
--- #### Limitations
+-- ### Limitations
 --
 -- True embedded preprocessor language highlighting is not available. For most
 -- cases this will not be noticed, but code like
@@ -674,7 +674,7 @@ module('lexer')]]
 --
 -- will not highlight correctly.
 --
--- #### Performance
+-- ### Performance
 --
 -- There might be some slight overhead when initializing a lexer, but loading a
 -- file from disk into Scintilla is usually more expensive.
@@ -682,7 +682,7 @@ module('lexer')]]
 -- On modern computer systems, I see no difference in speed between LPeg lexers
 -- and Scintilla's C++ ones.
 --
--- #### Risks
+-- ### Risks
 --
 -- Poorly written lexers have the ability to crash Scintilla, so unsaved data
 -- might be lost. However, these crashes have only been observed in early lexer
@@ -690,7 +690,7 @@ module('lexer')]]
 -- actually starts styling text (either correctly or incorrectly; it does not
 -- matter), no crashes have occurred.
 --
--- #### Acknowledgements
+-- ### Acknowledgements
 --
 -- Thanks to Peter Odding for his [lexer post][post] on the Lua mailing list
 -- that inspired me, and of course thanks to Roberto Ierusalimschy for LPeg.
