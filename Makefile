@@ -61,7 +61,7 @@ doc: manual luadoc
 manual:
 	cd doc && lua gen_manual.lua
 luadoc: lexers/lexer.lua scintillua.luadoc
-	cd doc && $(LUADOC) -d . --doclet markdowndoc $^
+	$(LUADOC) -d doc --doclet doc/markdowndoc $^
 cleandoc:
 	rm -f doc/manual/*.html
 	rm -rf doc/api
