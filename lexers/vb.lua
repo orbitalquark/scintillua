@@ -11,7 +11,7 @@ local M = { _NAME = 'vb' }
 local ws = token(l.WHITESPACE, l.space^1)
 
 -- Comments.
-local comment = token(l.COMMENT, (P("'") + 'REM ') * l.nonnewline^0)
+local comment = token(l.COMMENT, (P("'") + 'Rem ') * l.nonnewline^0)
 
 -- Strings.
 local string = token(l.STRING, l.delimited_range('"', nil, true, false, '\n'))
@@ -22,14 +22,15 @@ local number = token(l.NUMBER, (l.float + l.integer) * S('LlUuFf')^-2)
 -- Keywords.
 local keyword = token(l.KEYWORD, word_match {
   -- Control.
-  'If', 'Then', 'Else', 'ElseIf', 'EndIf', 'While', 'Went', 'For', 'To', 'Each',
-  'In', 'Step', 'Case', 'Select', 'EndSelect', 'Return', 'Continue', 'Do',
+  'If', 'Then', 'Else', 'ElseIf', 'While', 'Wend', 'For', 'To', 'Each',
+  'In', 'Step', 'Case', 'Select', 'Return', 'Continue', 'Do',
   'Until', 'Loop', 'Next', 'With', 'Exit',
   -- Operators.
   'Mod', 'And', 'Not', 'Or', 'Xor', 'Is',
   -- Storage types.
-  'Call', 'Class', 'Const', 'Dim', 'Redim', 'Function', 'Sub', 'Property',
-  'End', 'Set', 'Let', 'Get', 'New', 'Randomize',
+  'Call', 'Class', 'Const', 'Dim', 'ReDim', 'Preserve', 'Function', 'Sub',
+  'Property', 'End', 'Set', 'Let', 'Get', 'New', 'Randomize', 'Option',
+  'Explicit', 'On', 'Error', 'Execute',
   -- Storage modifiers.
   'Private', 'Public', 'Default',
   -- Constants.
