@@ -31,8 +31,8 @@ Changes:
 * Added Lua libraries and library functions to Lua lexer.
 * Updated lexers and [API documentation][] to [Lua 5.2][].
 
-[tokens]: ../api/lexer.html#Tokens
-[API documentation]: ../api/lexer.html
+[tokens]: api/lexer.html#Tokens
+[API documentation]: api/lexer.html
 [Lua 5.2]: http://www.lua.org/manual/5.2/
 
 ## 2.29-1 (19 Sep 2011)
@@ -81,8 +81,8 @@ Changes:
 * Added native folding for more than 60% of existing lexers. The rest still use
   folding by indentation by default.
 
-[`get_style_at()`]: ../api/lexer.html#get_style_at
-[easier]: ../api/lexer.html#Simple.Code.Folding
+[`get_style_at()`]: api/lexer.html#get_style_at
+[easier]: api/lexer.html#Simple.Code.Folding
 
 ## 2.25-1 (20 Mar 2011)
 
@@ -153,7 +153,7 @@ Changes:
 * Renamed `lexers/ocaml.lua` to `lexers/caml.lua` and `lexers/postscript.lua` to
   `lexers/ps.lua` to conform to Scintilla names.
 
-[`_RULES`]: ../api/lexer.html#_RULES
+[`_RULES`]: api/lexer.html#_RULES
 
 ## 2.21-1 (01 Sep 2010)
 

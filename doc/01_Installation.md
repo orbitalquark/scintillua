@@ -91,7 +91,7 @@ include, but are not limited to:
 * Python colon matching.
 * HTML/XML tag auto-completion.
 
-[write one]: ../api/lexer.html
+[write one]: api/lexer.html
 [submit]: README.html#Contact
 
 ### Using Scintillua with Other Apps
