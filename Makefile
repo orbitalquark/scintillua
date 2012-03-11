@@ -58,8 +58,8 @@ clean:
 	rm *.o $(LEXLPEG)
 
 doc: manual luadoc
-manual:
-	cd doc && lua gen_manual.lua
+manual: doc/*.md *.md
+	doc/bombay -d doc -t doc --title Scintillua --navtitle Manual $^
 luadoc: lexers/lexer.lua scintillua.luadoc
 	$(LUADOC) -d doc -t doc --doclet doc/markdowndoc $^
 cleandoc:
