@@ -1,6 +1,14 @@
 # Changelog
 
+[Atom Feed][]
+
+[Atom Feed]: feed
+
 ## 3.0.3-1 (28 Jan 2012)
+
+Download:
+
+* [Scintillua 3.0.3-1][]
 
 Bugfixes:
 
@@ -12,7 +20,13 @@ Changes:
 * Updated D lexer.
 * Added ChucK lexer.
 
+[Scintillua 3.0.3-1]: download/scintillua3.0.3-1.zip
+
 ## 3.0.2-1 (08 Dec 2011)
+
+Download:
+
+* [Scintillua 3.0.2-1][]
 
 Bugfixes:
 
@@ -31,11 +45,32 @@ Changes:
 * Added Lua libraries and library functions to Lua lexer.
 * Updated lexers and [API documentation][] to [Lua 5.2][].
 
+[Scintillua 3.0.2-1]: download/scintillua3.0.2-1.zip
 [tokens]: api/lexer.html#Tokens
 [API documentation]: api/lexer.html
 [Lua 5.2]: http://www.lua.org/manual/5.2/
 
+## 3.0.0-1 (01 Nov 2011)
+
+Download:
+
+* [Scintillua 3.0.0-1][]
+
+Bugfixes:
+
+* None.
+
+Changes:
+
+* None.
+
+[Scintillua 3.0.0-1]: download/scintillua3.0.0-1.zip
+
 ## 2.29-1 (19 Sep 2011)
+
+Download:
+
+* [Scintillua 2.29-1][]
 
 Bugfixes:
 
@@ -56,7 +91,13 @@ Changes:
 * Updated LaTeX and TeX lexers.
 * Added `l.style_embedded` to `themes/scite.lua` theme.
 
+[Scintillua 2.29-1]: download/scintillua229-1.zip
+
 ## 2.27-1 (20 Jun 2011)
+
+Download:
+
+* [Scintillua 2.27-1][]
 
 Bugfixes:
 
@@ -66,7 +107,13 @@ Changes:
 
 * Added Scala lexer.
 
+[Scintillua 2.27-1]: download/scintillua227-1.zip
+
 ## 2.26 (10 Jun 2011)
+
+Download:
+
+* [Scintillua 2.26-1][]
 
 Bugfixes:
 
@@ -81,10 +128,15 @@ Changes:
 * Added native folding for more than 60% of existing lexers. The rest still use
   folding by indentation by default.
 
+[Scintillua 2.26-1]: download/scintillua226-1.zip
 [`get_style_at()`]: api/lexer.html#get_style_at
 [easier]: api/lexer.html#Simple.Code.Folding
 
 ## 2.25-1 (20 Mar 2011)
+
+Download:
+
+* [Scintillua 2.25-1][]
 
 Bugfixes:
 
@@ -99,7 +151,13 @@ Changes:
 * Added Ruby on Rails lexer, use it instead of Ruby lexer in RHTML lexer.
 * Updated `lpeg.properties` file with SciTE changes.
 
+[Scintillua 2.25-1]: download/scintillua225-1.zip
+
 ## 2.24-1 (03 Feb 2011)
+
+Download:
+
+* [Scintillua 2.24-1][]
 
 Bugfixes:
 
@@ -112,7 +170,13 @@ Changes:
 * HTML lexer is more flexible.
 * Update Lua functions and constants to Lua 5.1.
 
+[Scintillua 2.24-1]: download/scintillua224-1.zip
+
 ## 2.23-1 (07 Dec 2010)
+
+Download:
+
+* [Scintillua 2.23-1][]
 
 Bugfixes:
 
@@ -123,7 +187,13 @@ Changes:
 * Renamed `MAC` flag to `OSX`.
 * Removed unused Errorlist and Maxima lexers.
 
+[Scintillua 2.23-1]: download/scintillua223-1.zip
+
 ## 2.22-1 (27 Oct 2010)
+
+Download:
+
+* [Scintillua 2.22-1][]
 
 Bugfixes:
 
@@ -139,9 +209,14 @@ Changes:
 * Updated XML lexer.
 * Scintillua can be dropped into a [SciTE][] install.
 
+[Scintillua 2.22-1]: download/scintillua222-1.zip
 [SciTE]: http://scintilla.org/SciTE.html
 
 ## 2.22-pre-1 (13 Sep 2010)
+
+Download:
+
+* [Scintillua 2.22-pre-1][]
 
 Bugfixes:
 
@@ -153,6 +228,7 @@ Changes:
 * Renamed `lexers/ocaml.lua` to `lexers/caml.lua` and `lexers/postscript.lua` to
   `lexers/ps.lua` to conform to Scintilla names.
 
+[Scintillua 2.22-pre-1]: download/scintillua222-pre-1.zip
 [`_RULES`]: api/lexer.html#_RULES
 
 ## 2.21-1 (01 Sep 2010)
@@ -167,6 +243,10 @@ Changes:
 
 ## 2.20-1 (17 Aug 2010)
 
+Download:
+
+* [Scintillua 2.20-1][]
+
 Bugfixes:
 
 * Fixed bug with child's main lexer not having a `_tokenstyles` table.
@@ -180,10 +260,15 @@ Changes:
 * Only highlight C/C++ preprocessor words, not the whole line.
 * Updated to [Scintilla][]/[SciTE][] 2.20.
 
+[Scintillua 2.20-1]: download/scintillua220-1.zip
 [Scintilla]: http://scintilla.org
 [SciTE]: http://scintilla.org/SciTE.html
 
 ## 2.12-1 (15 Jun 2010)
+
+Download:
+
+* [Scintillua 2.12-1][]
 
 Bugfixes:
 
@@ -195,10 +280,15 @@ Changes:
 * Updated D lexer.
 * Updated to [Scintilla][]/[SciTE][] 2.12.
 
+[Scintillua 2.12-1]: download/scintillua212-1.zip
 [Scintilla]: http://scintilla.org
 [SciTE]: http://scintilla.org/SciTE.html
 
 ## 2.11-1 (30 Apr 2010)
+
+Download:
+
+* [Scintillua 2.11-1][]
 
 Bugfixes:
 
@@ -222,10 +312,15 @@ Changes:
 * Updated LaTeX lexer.
 * Updated to [Scintilla][]/[SciTE][] 2.11.
 
+[Scintillua 2.11-1]: download/scintillua211-1.zip
 [Scintilla]: http://scintilla.org
 [SciTE]: http://scintilla.org/SciTE.html
 
 ## 2.03-1 (22 Feb 2010)
+
+Download:
+
+* [Scintillua 2.03-1][]
 
 Bugfixes:
 
@@ -236,10 +331,15 @@ Changes:
 
 * Updated to [Scintilla][]/[SciTE][] 2.03.
 
+[Scintillua 2.03-1]: download/scintillua203-1.zip
 [Scintilla]: http://scintilla.org
 [SciTE]: http://scintilla.org/SciTE.html
 
 ## 2.02-1 (26 Jan 2010)
+
+Download:
+
+* [Scintillua 2.02-1][]
 
 Bugfixes:
 
@@ -253,6 +353,7 @@ Changes:
 * Call `ruby.LoadStyles()` from RHTML lexer.
 * Updated to [Scintilla][]/[SciTE][] 2.02.
 
+[Scintillua 2.02-1]: download/scintillua202-1.zip
 [MinGW]: http://mingw.org
 [Scintilla]: http://scintilla.org
 [SciTE]: http://scintilla.org/SciTE.html
