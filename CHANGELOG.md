@@ -4,6 +4,24 @@
 
 [Atom Feed]: feed
 
+## 3.0.4-1 (11 Mar 2012)
+
+Download:
+
+* [Scintillua 3.0.4-1][]
+
+Bugfixes:
+
+* None.
+
+Changes:
+
+* Allow container styling.
+* Updated VB and VBScript lexers.
+* All new documentation in the `doc/` directory.
+
+[Scintillua 3.0.4-1]: download/scintillua3.0.4-1.zip
+
 ## 3.0.3-1 (28 Jan 2012)
 
 Download:
