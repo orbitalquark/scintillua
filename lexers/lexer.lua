@@ -982,14 +982,15 @@ function M.fold(text, start_pos, start_line, start_level)
     for p, l in text:gmatch('()(.-)\r?\n') do lines[#lines + 1] = { p, l } end
     lines[#lines + 1] = { text:match('()([^\r\n]*)$') }
     local fold_symbols = lexer._foldsymbols
+    local fold_symbols_patterns = fold_symbols._patterns
     local get_style_at = GetStyleAt
     local line_num, prev_level = start_line, start_level
     local current_level = prev_level
     for i = 1, #lines do
       local pos, line = lines[i][1], lines[i][2]
       if line ~= '' then
-        for _, patt in ipairs(fold_symbols._patterns) do
-          for s, match in line:gmatch(patt) do
+        for j = 1, #fold_symbols_patterns do
+          for s, match in line:gmatch(fold_symbols_patterns[j]) do
             local symbols = fold_symbols[get_style_at(start_pos + pos + s - 1)]
             local l = symbols and symbols[match]
             if type(l) == 'number' then
