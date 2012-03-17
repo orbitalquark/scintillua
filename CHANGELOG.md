@@ -148,7 +148,7 @@ Changes:
 
 [Scintillua 2.26-1]: download/scintillua226-1.zip
 [`get_style_at()`]: api/lexer.html#get_style_at
-[easier]: api/lexer.html#Simple.Code.Folding
+[easier]: api/lexer.html#Simple.Folding
 
 ## 2.25-1 (20 Mar 2011)
 

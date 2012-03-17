@@ -2,12 +2,10 @@
 
 local M = {}
 
---[[ This comment is for LuaDoc.
+--[=[ This comment is for LuaDoc.
 ---
 -- Performs lexing of Scintilla documents.
-module('lexer')]]
-
--- Markdown:
+--
 -- ## Overview
 --
 -- Dynamic lexers are more flexible than Scintilla's static ones. They are often
@@ -19,7 +17,7 @@ module('lexer')]]
 --
 -- [LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
 --
--- ## Writing a Dynamic Lexer
+-- ## Writing a Lexer
 --
 -- Rather than writing a lexer from scratch, first see if your language is
 -- similar to any of the 80+ languages supported. If so, you can copy and modify
@@ -57,7 +55,7 @@ module('lexer')]]
 -- The local variables above give easy access to the many useful functions
 -- available for creating lexers.
 --
--- ### Lexer Language Structure
+-- ### Language Structure
 --
 -- It is important to spend some time considering the structure of the language
 -- you are creating the lexer for. What kinds of tokens does it have? Comments,
@@ -70,23 +68,23 @@ module('lexer')]]
 -- They are created using the [`token()`](#token) function. The `lexer` (`l`)
 -- module provides a number of default token types:
 --
--- * `DEFAULT`
--- * `WHITESPACE`
--- * `COMMENT`
--- * `STRING`
--- * `NUMBER`
--- * `KEYWORD`
--- * `IDENTIFIER`
--- * `OPERATOR`
--- * `ERROR`
--- * `PREPROCESSOR`
--- * `CONSTANT`
--- * `VARIABLE`
--- * `FUNCTION`
--- * `CLASS`
--- * `TYPE`
--- * `LABEL`
--- * `REGEX`
+-- + `DEFAULT`
+-- + `WHITESPACE`
+-- + `COMMENT`
+-- + `STRING`
+-- + `NUMBER`
+-- + `KEYWORD`
+-- + `IDENTIFIER`
+-- + `OPERATOR`
+-- + `ERROR`
+-- + `PREPROCESSOR`
+-- + `CONSTANT`
+-- + `VARIABLE`
+-- + `FUNCTION`
+-- + `CLASS`
+-- + `TYPE`
+-- + `LABEL`
+-- + `REGEX`
 --
 -- Please note you are not limited to just these token types; you can create
 -- your own. If you create your own, you will have to specify how they are
@@ -100,54 +98,29 @@ module('lexer')]]
 -- `\f`, `\n`, `\r`, or ` `. The `lexer` module also provides you with a
 -- shortcut for this and many other character sequences. They are:
 --
--- * `any`
---   Matches any single character.
--- * `ascii`
---   Matches any ASCII character (`0`..`127`).
--- * `extend`
---   Matches any ASCII extended character (`0`..`255`).
--- * `alpha`
---   Matches any alphabetic character (`A-Z`, `a-z`).
--- * `digit`
---   Matches any digit (`0-9`).
--- * `alnum`
---   Matches any alphanumeric character (`A-Z`, `a-z`, `0-9`).
--- * `lower`
---   Matches any lowercase character (`a-z`).
--- * `upper`
---   Matches any uppercase character (`A-Z`).
--- * `xdigit`
---   Matches any hexadecimal digit (`0-9`, `A-F`, `a-f`).
--- * `cntrl`
---   Matches any control character (`0`..`31`).
--- * `graph`
---   Matches any graphical character (`!` to `~`).
--- * `print`
---   Matches any printable character (space to `~`).
--- * `punct`
---   Matches any punctuation character not alphanumeric (`!` to `/`, `:` to `@`,
---   `[` to `'`, `{` to `~`).
--- * `space`
---   Matches any whitespace character (`\t`, `\v`, `\f`, `\n`, `\r`, space).
--- * `newline`
---   Matches any newline characters.
--- * `nonnewline`
---   Matches any non-newline character.
--- * `nonnewline_esc`
---   Matches any non-newline character excluding newlines escaped with `\\`.
--- * `dec_num`
---   Matches a decimal number.
--- * `hex_num`
---   Matches a hexadecimal number.
--- * `oct_num`
---   Matches an octal number.
--- * `integer`
---   Matches a decimal, hexadecimal, or octal number.
--- * `float`
---   Matches a floating point number.
--- * `word`
---   Matches a typical word starting with a letter or underscore and then any
---   alphanumeric or underscore characters.
+-- * [`any`](#any)
+-- * [`ascii`](#ascii)
+-- * [`extend`](#extend)
+-- * [`alpha`](#alpha)
+-- * [`digit`](#digit)
+-- * [`alnum`](#alnum)
+-- * [`lower`](#lower)
+-- * [`upper`](#upper)
+-- * [`xdigit`](#xdigit)
+-- * [`cntrl`](#cntrl)
+-- * [`graph`](#graph)
+-- * [`print`](#print)
+-- * [`punct`](#punct)
+-- * [`space`](#space)
+-- * [`newline`](#newline)
+-- * [`nonnewline`](#nonnewline)
+-- * [`nonnewline_esc`](#nonnewline_esc)
+-- * [`dec_num`](#dec_num)
+-- * [`hex_num`](#hex_num)
+-- * [`oct_num`](#oct_num)
+-- * [`integer`](#integer)
+-- * [`float`](#float)
+-- * [`word`](#word)
 --
 -- The above whitespace token can be rewritten more simply as:
 --
@@ -314,44 +287,26 @@ module('lexer')]]
 -- The term for coloring text is styling. Just like with predefined LPeg
 -- patterns in `lexer`, predefined styles are available.
 --
--- * `style_nothing`
---   Typically used for whitespace.
--- * `style_class`
---   Typically used for class definitions.
--- * `style_comment`
---   Typically used for code comments.
--- * `style_constant`
---   Typically used for constants.
--- * `style_definition`
---   Typically used for definitions.
--- * `style_error`
---   Typically used for erroneous syntax.
--- * `style_function`
---   Typically used for function definitions.
--- * `style_keyword`
---   Typically used for language keywords.
--- * `style_label`
---   Typically used for labels.
--- * `style_number`
---   Typically used for numbers.
--- * `style_operator`
---   Typically used for operators.
--- * `style_regex`
---   Typically used for regular expression strings.
--- * `style_string`
---   Typically used for strings.
--- * `style_preproc`
---   Typically used for preprocessor statements.
--- * `style_tag`
---   Typically used for markup tags.
--- * `style_type`
---   Typically used for static types.
--- * `style_variable`
---   Typically used for variables.
--- * `style_embedded`
---   Typically used for embedded code.
--- * `style_identifier`
---   Typically used for identifier words.
+-- + `style_nothing`
+-- + `style_class`
+-- + `style_comment`
+-- + `style_constant`
+-- + `style_definition`
+-- + `style_error`
+-- + `style_function`
+-- + `style_keyword`
+-- + `style_label`
+-- + `style_number`
+-- + `style_operator`
+-- + `style_regex`
+-- + `style_string`
+-- + `style_preproc`
+-- + `style_tag`
+-- + `style_type`
+-- + `style_variable`
+-- + `style_whitespace`
+-- + `style_embedded`
+-- + `style_identifier`
 --
 -- Each style consists of a set of attributes:
 --
@@ -434,7 +389,7 @@ module('lexer')]]
 -- other child lexers in it, and a child lexer that embeds itself within a
 -- parent lexer.
 --
--- #### Parent Lexer with Children
+-- #### Parent Lexer
 --
 -- An example of this kind of lexer is HTML with embedded CSS and Javascript.
 -- After creating the parent lexer, load the children lexers in it using
@@ -474,7 +429,7 @@ module('lexer')]]
 --     local js_end_rule = #('</' * P('script') * ws^0 * '>') * tag
 --     l.embed_lexer(M, js, js_start_rule, js_end_rule)
 --
--- #### Child Lexer Within Parent
+-- #### Child Lexer
 --
 -- An example of this kind of lexer is PHP embedded in HTML. After creating the
 -- child lexer, load the parent lexer. As an example:
@@ -503,7 +458,7 @@ module('lexer')]]
 -- line of input text and assigns a fold level to it. Certain lines can be
 -- specified as fold points that fold subsequent lines with a higher fold level.
 --
--- #### Simple Code Folding
+-- #### Simple Folding
 --
 -- To specify the fold points of your lexer's language, create a
 -- `M._foldsymbols` table of the following form:
@@ -551,7 +506,7 @@ module('lexer')]]
 -- fold points. Finally, unmatched brackets in comments are fold points in order
 -- to fold long (multi-line) comments.
 --
--- #### Advanced Code Folding
+-- #### Advanced Folding
 --
 -- If you need more granularity than `M._foldsymbols`, you can define your own
 -- fold function:
@@ -696,6 +651,92 @@ module('lexer')]]
 -- that inspired me, and of course thanks to Roberto Ierusalimschy for LPeg.
 --
 -- [post]: http://lua-users.org/lists/lua-l/2007-04/msg00116.html
+-- @field DEFAULT Token type for default tokens.
+-- @field WHITESPACE Token type for whitespace tokens.
+-- @field COMMENT Token type for comment tokens.
+-- @field STRING Token type for string tokens.
+-- @field NUMBER Token type for number tokens.
+-- @field KEYWORD Token type for keyword tokens.
+-- @field IDENTIFIER Token type for identifier tokens.
+-- @field OPERATOR Token type for operator tokens.
+-- @field ERROR Token type for error tokens.
+-- @field PREPROCESSOR Token type for preprocessor tokens.
+-- @field CONSTANT Token type for constant tokens.
+-- @field VARIABLE Token type for variable tokens.
+-- @field FUNCTION Token type for function toeksn.
+-- @field CLASS Token type for class tokens.
+-- @field TYPE Token type for type tokens.
+-- @field LABEL Token type for label tokens.
+-- @field REGEX Token type for regex tokens.
+-- @field any
+--   Matches any single character.
+-- @field ascii
+--   Matches any ASCII character (`0`..`127`).
+-- @field extend
+--   Matches any ASCII extended character (`0`..`255`).
+-- @field alpha
+--   Matches any alphabetic character (`A-Z`, `a-z`).
+-- @field digit
+--   Matches any digit (`0-9`).
+-- @field alnum
+--   Matches any alphanumeric character (`A-Z`, `a-z`, `0-9`).
+-- @field lower
+--   Matches any lowercase character (`a-z`).
+-- @field upper
+--   Matches any uppercase character (`A-Z`).
+-- @field xdigit
+--   Matches any hexadecimal digit (`0-9`, `A-F`, `a-f`).
+-- @field cntrl
+--   Matches any control character (`0`..`31`).
+-- @field graph
+--   Matches any graphical character (`!` to `~`).
+-- @field print
+--   Matches any printable character (space to `~`).
+-- @field punct
+--   Matches any punctuation character not alphanumeric (`!` to `/`, `:` to `@`,
+--   `[` to `'`, `{` to `~`).
+-- @field space
+--   Matches any whitespace character (`\t`, `\v`, `\f`, `\n`, `\r`, space).
+-- @field newline
+--   Matches any newline characters.
+-- @field nonnewline
+--   Matches any non-newline character.
+-- @field nonnewline_esc
+--   Matches any non-newline character excluding newlines escaped with `\\`.
+-- @field dec_num
+--   Matches a decimal number.
+-- @field hex_num
+--   Matches a hexadecimal number.
+-- @field oct_num
+--   Matches an octal number.
+-- @field integer
+--   Matches a decimal, hexadecimal, or octal number.
+-- @field float
+--   Matches a floating point number.
+-- @field word
+--   Matches a typical word starting with a letter or underscore and then any
+--   alphanumeric or underscore characters.
+-- @field style_nothing Style typically used for no styling.
+-- @field style_class Style typically used for class definitions.
+-- @field style_comment Style typically used for code comments.
+-- @field style_constant Style typically used for constants.
+-- @field style_definition Style typically used for definitions.
+-- @field style_error Style typically used for erroneous syntax.
+-- @field style_function Style typically used for function definitions.
+-- @field style_keyword Style typically used for language keywords.
+-- @field style_label Style typically used for labels.
+-- @field style_number Style typically used for numbers.
+-- @field style_operator Style typically used for operators.
+-- @field style_regex Style typically used for regular expression strings.
+-- @field style_string Style typically used for strings.
+-- @field style_preproc Style typically used for preprocessor statements.
+-- @field style_tag Style typically used for markup tags.
+-- @field style_type Style typically used for static types.
+-- @field style_variable Style typically used for variables.
+-- @field style_whitespace Style typically used for whitespace.
+-- @field style_embedded Style typically used for embedded code.
+-- @field style_identifier Style typically used for identifier words.
+module('lexer')]=]
 
 local lpeg = require 'lpeg'
 local lpeg_P, lpeg_R, lpeg_S, lpeg_V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
