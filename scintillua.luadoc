@@ -1,10 +1,7 @@
 -- Copyright 2007-2012 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- This is a DUMMY FILE used for making LuaDoc for the Scintillua API.
 
-module('Scintillua')
-
--- Markdown:
---
+---
 -- ## Overview
 --
 -- The Scintillua Scintilla lexer has its own API to avoid any modifications to
@@ -49,6 +46,7 @@ module('Scintillua')
 --       SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETDOCPOINTER, sci)
 --       SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETLEXERLANGUAGE, lang)
 --     }
+module('Scintillua')
 
 ---
 -- Tells Scintillua the address of the function that handles Scintilla messages.
