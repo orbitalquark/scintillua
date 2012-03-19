@@ -526,14 +526,10 @@ local M = {}
 --
 -- The following Scintilla fold flags are available:
 --
--- * `SC_FOLDLEVELBASE`
---   The initial (root) fold level.
--- * `SC_FOLDLEVELWHITEFLAG`
---   Flag indicating that the line is blank.
--- * `SC_FOLDLEVELHEADERFLAG`
---   Flag indicating the line is fold point.
--- * `SC_FOLDLEVELNUMBERMASK`
---   Flag used with `SCI_GETFOLDLEVEL(line)` to get the fold level of a line.
+-- + [`SC_FOLDLEVELBASE`](#SC_FOLDLEVELBASE)
+-- + [`SC_FOLDLEVELWHITEFLAG`](#SC_FOLDLEVELWHITEFLAG)
+-- + [`SC_FOLDLEVELHEADERFLAG`](#SC_FOLDLEVELHEADERFLAG)
+-- + [`SC_FOLDLEVELNUMBERMASK`](#SC_FOLDLEVELNUMBERMASK)
 --
 -- Have your fold function interate over each line, setting fold levels. You can
 -- use the [`get_style_at()`](#get_style_at), [`get_property()`](#get_property),
@@ -668,51 +664,32 @@ local M = {}
 -- @field TYPE Token type for type tokens.
 -- @field LABEL Token type for label tokens.
 -- @field REGEX Token type for regex tokens.
--- @field any
---   Matches any single character.
--- @field ascii
---   Matches any ASCII character (`0`..`127`).
--- @field extend
---   Matches any ASCII extended character (`0`..`255`).
--- @field alpha
---   Matches any alphabetic character (`A-Z`, `a-z`).
--- @field digit
---   Matches any digit (`0-9`).
--- @field alnum
---   Matches any alphanumeric character (`A-Z`, `a-z`, `0-9`).
--- @field lower
---   Matches any lowercase character (`a-z`).
--- @field upper
---   Matches any uppercase character (`A-Z`).
--- @field xdigit
---   Matches any hexadecimal digit (`0-9`, `A-F`, `a-f`).
--- @field cntrl
---   Matches any control character (`0`..`31`).
--- @field graph
---   Matches any graphical character (`!` to `~`).
--- @field print
---   Matches any printable character (space to `~`).
+-- @field any Matches any single character.
+-- @field ascii Matches any ASCII character (`0`..`127`).
+-- @field extend Matches any ASCII extended character (`0`..`255`).
+-- @field alpha Matches any alphabetic character (`A-Z`, `a-z`).
+-- @field digit Matches any digit (`0-9`).
+-- @field alnum Matches any alphanumeric character (`A-Z`, `a-z`, `0-9`).
+-- @field lower Matches any lowercase character (`a-z`).
+-- @field upper Matches any uppercase character (`A-Z`).
+-- @field xdigit Matches any hexadecimal digit (`0-9`, `A-F`, `a-f`).
+-- @field cntrl Matches any control character (`0`..`31`).
+-- @field graph Matches any graphical character (`!` to `~`).
+-- @field print Matches any printable character (space to `~`).
 -- @field punct
 --   Matches any punctuation character not alphanumeric (`!` to `/`, `:` to `@`,
 --   `[` to `'`, `{` to `~`).
 -- @field space
 --   Matches any whitespace character (`\t`, `\v`, `\f`, `\n`, `\r`, space).
--- @field newline
---   Matches any newline characters.
--- @field nonnewline
---   Matches any non-newline character.
+-- @field newline Matches any newline characters.
+-- @field nonnewline Matches any non-newline character.
 -- @field nonnewline_esc
 --   Matches any non-newline character excluding newlines escaped with `\\`.
--- @field dec_num
---   Matches a decimal number.
--- @field hex_num
---   Matches a hexadecimal number.
--- @field oct_num
---   Matches an octal number.
--- @field integer
---   Matches a decimal, hexadecimal, or octal number.
--- @field float
---   Matches a floating point number.
+-- @field dec_num Matches a decimal number.
+-- @field hex_num Matches a hexadecimal number.
+-- @field oct_num Matches an octal number.
+-- @field integer Matches a decimal, hexadecimal, or octal number.
+-- @field float Matches a floating point number.
 -- @field word
 --   Matches a typical word starting with a letter or underscore and then any
 --   alphanumeric or underscore characters.
@@ -736,6 +713,11 @@ local M = {}
 -- @field style_whitespace Style typically used for whitespace.
 -- @field style_embedded Style typically used for embedded code.
 -- @field style_identifier Style typically used for identifier words.
+-- @field SC_FOLDLEVELBASE The initial (root) fold level.
+-- @field SC_FOLDLEVELWHITEFLAG Flag indicating that the line is blank.
+-- @field SC_FOLDLEVELHEADERFLAG Flag indicating the line is fold point.
+-- @field SC_FOLDLEVELNUMBERMASK
+--   Flag used with `SCI_GETFOLDLEVEL(line)` to get the fold level of a line.
 module('lexer')]=]
 
 local lpeg = require 'lpeg'
