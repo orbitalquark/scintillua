@@ -38,12 +38,14 @@
 --       SendScintilla(sci, SCI_SETPROPERTY, "lexer.lpeg.color.theme", "light")
 --       fn = SendScintilla(sci, SCI_GETDIRECTFUNCTION)
 --       SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_GETDIRECTFUNCTION, fn)
---       SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETDOCPOINTER, sci)
+--       psci = SendScintilla(sci, SCI_GETDIRECTPOINTER)
+--       SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETDOCPOINTER, psci)
 --       SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETLEXERLANGUAGE, "lua")
 --     }
 --
 --     set_lexer(lang) {
---       SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETDOCPOINTER, sci)
+--       psci = SendScintilla(sci, SCI_GETDIRECTPOINTER)
+--       SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETDOCPOINTER, psci)
 --       SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETLEXERLANGUAGE, lang)
 --     }
 module('Scintillua')
