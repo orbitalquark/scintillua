@@ -6,7 +6,7 @@
  * This file is distributed under Scintilla's license.
  *
  * Documentation can be found in the README, /lexers/lexer.lua, and
- * http://caladbolg.net/luadoc/textadept/modules/lexer.html.
+ * http://foicica.com/scintillua/api/lexer.html.
  */
 
 #if LPEG_LEXER || LPEG_LEXER_EXTERNAL

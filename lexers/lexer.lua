@@ -591,14 +591,14 @@ local M = {}
 --
 -- ### Using with Textadept
 --
--- Put your lexer in your [`~/.textadept/`][user]`lexers/` directory. That way
+-- Put your lexer in your `~/.textadept/lexers/` directory. That way
 -- your lexer will not be overwritten when upgrading. Also, lexers in this
 -- directory override default lexers. (A user `lua` lexer would be loaded
 -- instead of the default `lua` lexer. This is convenient if you wish to tweak
--- a default lexer to your liking.) Do not forget to add a
--- [mime-type](textadept.mime_types.html) for your lexer.
+-- a default lexer to your liking.) Do not forget to add a [mime-type][] for
+-- your lexer.
 --
--- [user]: http://caladbolg.net/luadoc/textadept/manual/5_FolderStructure.html
+-- [mime-type]: _M.textadept.mime_types.html
 --
 -- ### Optimization
 --
