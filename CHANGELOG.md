@@ -127,7 +127,7 @@ Changes:
 
 [Scintillua 2.27-1]: download/scintillua227-1.zip
 
-## 2.26 (10 Jun 2011)
+## 2.26-1 (10 Jun 2011)
 
 Download:
 
