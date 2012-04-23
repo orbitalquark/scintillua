@@ -12,7 +12,7 @@ Download:
 
 Bugfixes:
 
-* Fixed bug with Python lexer indentification in SciTE.
+* Fixed bug with Python lexer identification in SciTE.
 
 Changes:
 
