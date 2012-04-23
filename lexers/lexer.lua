@@ -939,7 +939,6 @@ end
 -- @name lex
 function M.lex(text, init_style)
   local lexer = _G._LEXER
-  if not lexer._GRAMMAR then return {} end
   if not lexer._LEXBYLINE then
     -- For multilang lexers, build a new grammar whose initial_rule is the
     -- current language.

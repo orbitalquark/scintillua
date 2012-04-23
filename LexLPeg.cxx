@@ -383,6 +383,15 @@ public:
 		lua_setfield(L, LUA_REGISTRYINDEX, "pAccess");
 		LexAccessor styler(pAccess);
 
+		// Ensure the lexer has a grammar.
+		// This could be done in lexer.lex(), but for large files, passing string
+		// arguments from C to Lua is expensive.
+		lua_getglobal(L, "lexer");
+		lua_getfield(L, -1, "_GRAMMAR");
+		int has_grammar = lua_isnil(L, -1);
+		lua_pop(L, 2); // lexer, lexer._GRAMMAR
+		if (!has_grammar) return;
+
 		// Start from the beginning of the current style so LPeg matches it.
 		// For multilang lexers, start at whitespace since embedded languages have
 		// [lang]_whitespace styles. This is so LPeg can start matching child
@@ -413,7 +422,7 @@ public:
 					lua_getglobal(L, "_LEXER");
 					lua_pushstring(L, "_TOKENS");
 					lua_rawget(L, -2);
-					lua_remove(L, lua_gettop(L) - 1); // _LEXER
+					lua_remove(L, -2); // _LEXER
 					lua_pushnil(L);
 					while (lua_next(L, -3)) { // token (tokens[i])
 						if (!lua_istable(L, -1)) {
