@@ -388,7 +388,7 @@ public:
 		// arguments from C to Lua is expensive.
 		lua_getglobal(L, "lexer");
 		lua_getfield(L, -1, "_GRAMMAR");
-		int has_grammar = lua_isnil(L, -1);
+		int has_grammar = !lua_isnil(L, -1);
 		lua_pop(L, 2); // lexer, lexer._GRAMMAR
 		if (!has_grammar) return;
 
