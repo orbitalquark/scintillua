@@ -183,12 +183,12 @@ private:
 					} else if (streq(prop, "italic")) {
 						SSS(SCI_STYLESETITALIC, lua_toboolean(L, -1));
 #ifndef NO_SCITE
-						sprintf(prop_part, lua_toboolean(L, -1) ? "%s," : "not%s,", prop);
+						sprintf(prop_part, lua_toboolean(L, -1) ? "%ss," : "not%ss,", prop);
 #endif
 					} else if (streq(prop, "underline")) {
 						SSS(SCI_STYLESETUNDERLINE, lua_toboolean(L, -1));
 #ifndef NO_SCITE
-						sprintf(prop_part, lua_toboolean(L, -1) ? "%s," : "not%s,", prop);
+						sprintf(prop_part, lua_toboolean(L, -1) ? "%sd," : "not%sd,", prop);
 #endif
 					} else if (streq(prop, "fore")) {
 						SSS(SCI_STYLESETFORE, static_cast<int>(lua_tointeger(L, -1)));
