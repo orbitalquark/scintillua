@@ -12,7 +12,7 @@ local ws = token(l.WHITESPACE, l.space^1)
 
 -- Comments.
 local rem = (P('REM') + 'rem') * l.space
-local comment = token(l.COMMENT, (rem + ':') * l.nonnewline^0)
+local comment = token(l.COMMENT, (rem + '::') * l.nonnewline^0)
 
 -- Strings.
 local string = token(l.STRING, l.delimited_range('"', '\\', true, false, '\n'))
@@ -20,9 +20,9 @@ local string = token(l.STRING, l.delimited_range('"', '\\', true, false, '\n'))
 -- Keywords.
 local keyword = token(l.KEYWORD, word_match({
   'cd', 'chdir', 'md', 'mkdir', 'cls', 'for', 'if', 'echo', 'echo.', 'move',
-  'copy', 'move', 'ren', 'del', 'set', 'call', 'exit', 'setlocal', 'shift',
+  'copy', 'ren', 'del', 'set', 'call', 'exit', 'setlocal', 'shift',
   'endlocal', 'pause', 'defined', 'exist', 'errorlevel', 'else', 'in', 'do',
-  'NUL', 'AUX', 'PRN', 'not', 'goto',
+  'NUL', 'AUX', 'PRN', 'not', 'goto', 'pushd', 'popd'
 }, nil, true))
 
 -- Functions.
@@ -32,7 +32,7 @@ local func = token(l.FUNCTION, word_match({
   'FC', 'FDISK', 'FIND', 'FORMAT', 'GRAPHICS', 'KEYB', 'LABEL', 'LOADFIX',
   'MEM', 'MODE', 'MORE', 'MOVE', 'MSCDEX', 'NLSFUNC', 'POWER', 'PRINT', 'RD',
   'REPLACE', 'RESTORE', 'SETVER', 'SHARE', 'SORT', 'SUBST', 'SYS', 'TREE',
-  'UNDELETE', 'UNFORMAT', 'VSAFE', 'XCOPY',
+  'UNDELETE', 'UNFORMAT', 'VSAFE', 'XCOPY'
 }, nil, true))
 
 -- Identifiers.
