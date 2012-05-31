@@ -4,6 +4,23 @@
 
 [Atom Feed]: feed
 
+## 3.2.0-1 (01 Jun 2012)
+
+Download:
+
+* [Scintillua 3.2.0-1][]
+
+Bugfixes:
+
+* Fixed bug with SciTE italic and underlined style properties.
+
+Changes:
+
+* Identify more file extensions.
+* Updated Batch lexer.
+
+[Scintillua 3.2.0-1]: download/scintillua3.2.0-1.zip
+
 ## 3.1.0-1 (23 Apr 2012)
 
 Download:
