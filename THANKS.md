@@ -15,6 +15,7 @@ Scintillua better and better over the years.
 * Robert Gieseke
 * Roberto Ierusalimschy
 * Tymur Gubayev
+* Wolfgang Seeberg
 
 If I have left off your name, please [contact me][]. I am very sorry about that.
 
