@@ -4,6 +4,23 @@
 
 [Atom Feed]: feed
 
+## 3.2.1-1 (15 Jul 2012)
+
+Download:
+
+* [Scintillua 3.2.1-1][]
+
+Bugfixes:
+
+* None.
+
+Changes:
+
+* Updated AWK lexer.
+* Updated HTML lexer to recognize HTML5 'script' and 'style' tags.
+
+[Scintillua 3.2.1-1]: download/scintillua3.2.1-1.zip
+
 ## 3.2.0-1 (01 Jun 2012)
 
 Download:
