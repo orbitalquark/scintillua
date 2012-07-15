@@ -32,7 +32,7 @@ extern "C" {
 LUALIB_API int (luaopen_lpeg) (lua_State *L);
 }
 
-#ifdef __WIN32__
+#ifdef _WIN32
 #define strcasecmp _stricmp
 #endif
 
@@ -272,11 +272,11 @@ private:
 		lua_setfield(L, LUA_REGISTRYINDEX, "lexer_name");
 
 		// Set variables from platform.
-#ifdef __WIN32__
+#ifdef _WIN32
 		lua_pushboolean(L, 1);
 		lua_setglobal(L, "WIN32");
 #endif
-#ifdef __OSX__
+#ifdef __APPLE__
 		lua_pushboolean(L, 1);
 		lua_setglobal(L, "OSX");
 #endif
@@ -586,11 +586,11 @@ public:
 };
 
 #ifdef LPEG_LEXER_EXTERNAL
-#ifdef __WIN32__
+#ifdef _WIN32
 #define EXT_LEXER_DECL __declspec( dllexport ) __stdcall
 #else
 #define EXT_LEXER_DECL
-#endif // __WIN32__
+#endif // _WIN32
 static const char *lexerName = "lpeg";
 extern "C" {
 int EXT_LEXER_DECL GetLexerCount() { return 1; }
