@@ -16,6 +16,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef NCURSES
+#include <ncurses.h>
+#endif
 
 #include "ILexer.h"
 #include "Scintilla.h"
@@ -135,6 +138,9 @@ static int lua_get_indent_amount(lua_State *L) {
 #define RGB(c) ((c & 0xFF0000) >> 16) | (c & 0xFF00) | ((c & 0xFF) << 16)
 #define PROPLEN 256
 #endif
+#ifdef NCURSES
+#define A_COLORCHAR (A_COLOR | A_CHARTEXT)
+#endif
 
 class LexerLPeg : public ILexer {
 	lua_State *L;
@@ -176,7 +182,22 @@ private:
 						        static_cast<int>(lua_tointeger(L, -1)));
 #endif
 					} else if (streq(prop, "bold")) {
+#ifndef NCURSES
 						SSS(SCI_STYLESETBOLD, lua_toboolean(L, -1));
+#else
+						// First, clear any existing SC_WEIGHT_NORMAL, SC_WEIGHT_SEMIBOLD,
+						// or SC_WEIGHT_BOLD values stored in the lower 16 bits. Then set
+						// the appropriate ncurses attr.
+						SSS(SCI_STYLESETWEIGHT,
+						    SS(sci, SCI_STYLEGETWEIGHT, style_num, 0) & ~A_COLORCHAR);
+						if (lua_toboolean(L, -1)) { // weight |= A_BOLD
+							SSS(SCI_STYLESETWEIGHT,
+							    SS(sci, SCI_STYLEGETWEIGHT, style_num, 0) | A_BOLD);
+						} else { // weight &= ~A_BOLD
+							SSS(SCI_STYLESETWEIGHT,
+							    SS(sci, SCI_STYLEGETWEIGHT, style_num, 0) & ~A_BOLD);
+						}
+#endif
 #ifndef NO_SCITE
 						sprintf(prop_part, lua_toboolean(L, -1) ? "%s," : "not%s,", prop);
 #endif
@@ -186,7 +207,22 @@ private:
 						sprintf(prop_part, lua_toboolean(L, -1) ? "%ss," : "not%ss,", prop);
 #endif
 					} else if (streq(prop, "underline")) {
+#ifndef NCURSES
 						SSS(SCI_STYLESETUNDERLINE, lua_toboolean(L, -1));
+#else
+						// First, clear any existing SC_WEIGHT_NORMAL, SC_WEIGHT_SEMIBOLD,
+						// or SC_WEIGHT_BOLD values stored in the lower 16 bits. Then set
+						// the appropriate ncurses attr.
+						SSS(SCI_STYLESETWEIGHT,
+						    SS(sci, SCI_STYLEGETWEIGHT, style_num, 0) & ~A_COLORCHAR);
+						if (lua_toboolean(L, -1)) { // weight |= A_UNDERLINE
+							SSS(SCI_STYLESETWEIGHT,
+							    SS(sci, SCI_STYLEGETWEIGHT, style_num, 0) | A_UNDERLINE);
+						} else { // weight &= ~A_UNDERLINE
+							SSS(SCI_STYLESETWEIGHT,
+							    SS(sci, SCI_STYLEGETWEIGHT, style_num, 0) & ~A_UNDERLINE);
+						}
+#endif
 #ifndef NO_SCITE
 						sprintf(prop_part, lua_toboolean(L, -1) ? "%sd," : "not%sd,", prop);
 #endif
@@ -284,6 +320,10 @@ private:
 		lua_pushboolean(L, 1);
 		lua_setglobal(L, "GTK");
 #endif
+#ifdef NCURSES
+		lua_pushboolean(L, 1);
+		lua_setglobal(L, "NCURSES");
+#endif
 
 		// Load Lua libraries.
 		l_openlib(luaopen_base, LUA_BASELIBNAME);
@@ -366,7 +406,7 @@ private:
 	}
 
 public:
-	LexerLPeg() : reinit(true), multilang(false) { L = 0; SS = 0; sci = 0; }
+	LexerLPeg() : reinit(true), multilang(false) { L = 0, SS = 0, sci = 0; }
 	~LexerLPeg() {}
 
 	void SCI_METHOD Release() {
