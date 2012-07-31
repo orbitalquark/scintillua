@@ -126,17 +126,21 @@ local identifier = token(l.IDENTIFIER, l.word)
 
 -- Variables.
 local special_var = '$' * ('^' * S('ADEFHILMOPSTWX')^-1 +
-                    S('\\"[]\'&`+*.,;=%~?@$<>(|/!-') + ':' * (l.any - ':') +
-                    l.digit^1)
+                           S('\\"[]\'&`+*.,;=%~?@<>(|/!-') +
+                           ':' * (l.any - ':') + P('$') * -l.word + l.digit^1)
 local plain_var = ('$#' + S('$@%')) * P('$')^0 * l.word
 local variable = token(l.VARIABLE, special_var + plain_var)
 
 -- Operators.
 local operator = token(l.OPERATOR, S('-<>+*!~\\=/%&|^&.?:;()[]{}'))
 
+-- Markers.
+local marker = token(l.COMMENT, word_match { '__DATA__', '__END__' } * l.any^0)
+
 M._rules = {
   { 'whitespace', ws },
   { 'keyword', keyword },
+  { 'marker', marker },
   { 'function', func },
   { 'string', string },
   { 'identifier', identifier },
