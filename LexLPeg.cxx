@@ -171,7 +171,7 @@ private:
 				while (lua_next(L, -2)) { // properties table
 					const char *prop = lua_tostring(L, -2);
 					if (streq(prop, "font")) {
-						SSS(SCI_STYLESETFONT, reinterpret_cast<long>(lua_tostring(L, -1)));
+						SSS(SCI_STYLESETFONT, reinterpret_cast<sptr_t>(lua_tostring(L, -1)));
 #ifndef NO_SCITE
 						sprintf(prop_part, "font:%s,", lua_tostring(L, -1));
 #endif
@@ -560,7 +560,7 @@ public:
 	int SCI_METHOD WordListSet(int n, const char *wl) { return -1; }
 
 	void * SCI_METHOD PrivateCall(int code, void *arg) {
-		long lParam = reinterpret_cast<long>(arg);
+		sptr_t lParam = reinterpret_cast<sptr_t>(arg);
 		const char *val = 0;
 		switch(code) {
 		case SCI_GETDIRECTFUNCTION:
