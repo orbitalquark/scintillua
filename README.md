@@ -29,9 +29,9 @@ Scintilla-based application.
 
 ## Download
 
-Download Scintillua from the [project page][].
+Download Scintillua from the project's [download page][].
 
-[project page]: http://foicica.com/scintillua
+[download page]: http://foicica.com/scintillua/download
 
 ## Installation and Usage
 
