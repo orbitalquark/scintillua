@@ -98,7 +98,7 @@ function SCI_PRIVATELEXERCALL(SCI_SETDOCPOINTER, sci) end
 -- If you are having the Scintillua lexer set the Lua LPeg lexer styles
 -- automatically, make sure you call the
 -- [`SCI_SETDOCPOINTER()`](#SCI_SETDOCPOINTER) Scintillua API *first*.
--- @param languageName [const char\*] The name of the Lua LPeg lexer to use.
+-- @param languageName (`const char*`) The name of the Lua LPeg lexer to use.
 -- @usage SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETLEXERLANGUAGE, "lua")
 -- @see SCI_SETDOCPOINTER
 -- @name SCI_SETLEXERLANGUAGE
@@ -108,7 +108,7 @@ function SCI_PRIVATELEXERCALL(SCI_SETLEXERLANGUAGE, languageName) end
 -- Returns the length of the string name of the current Lua LPeg lexer or stores
 -- the name into the given buffer. If the buffer is long enough, the name is
 -- terminated by a `0` character.
--- @param languageName [char \*] If `0`, returns the length that should be
+-- @param languageName (`char *`) If `0`, returns the length that should be
 --   allocated to store the string Lua LPeg lexer name. Otherwise fills the
 --   buffer with the name.
 -- @name SCI_GETLEXERLANGUAGE
@@ -130,13 +130,13 @@ function SCI_PRIVATELEXERCALL(SCI_GETLEXERLANGUAGE, languageName) end
 -- and [`SCI_SETDOCPOINTER()`](#SCI_SETDOCPOINTER) Scintillua API calls.
 --
 -- [SciTE documentation]: http://scintilla.org/SciTEDoc.html
--- @param styleNum [int] For the range `-STYLE_MAX <= styleNum < 0`, uses the
+-- @param styleNum (`int`) For the range `-STYLE_MAX <= styleNum < 0`, uses the
 --   Scintilla style number `-styleNum - 1` for returning SciTE-formatted style
 --   definitions. (Style `0` would be `-1`, style `1` would be `-2`, and so on.)
 --   For the range `0 <= styleNum < STYLE_MAX`, uses the normal Scintilla style
 --   number for returning token names.
--- @param style [char *] If `0`, returns the length that should be allocated to
---   store the associated string. Otherwise fills the buffer with the string.
+-- @param style (`char *`) If `0`, returns the length that should be allocated
+--   to store the associated string. Otherwise fills the buffer with the string.
 -- @usage style = SendScintilla(sci, SCI_GETSTYLEAT, pos)
 -- @usage SendScintilla(sci, SCI_PRIVATELEXERCALL, style, token)
 -- @usage // token now contains the name of the style at pos
