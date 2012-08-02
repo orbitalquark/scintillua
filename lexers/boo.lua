@@ -19,8 +19,11 @@ local comment = token(l.COMMENT, line_comment + block_comment)
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true, false, '\n')
 local triple_dq_str = '"""' * (l.any - '"""')^0 * P('"""')^-1
+local regex_str = l.last_char_includes('!%^&*([{-=+|:;,?<>~') *
+                  l.delimited_range('/', '\\', false, false, '\n')
 local string = token(l.STRING, triple_dq_str + sq_str + dq_str) +
-               token(l.REGEX, l.delimited_range('/', '\\', false, false, '\n'))
+               token(l.REGEX, regex_str)
+
 
 -- Numbers.
 local number = token(l.NUMBER, (l.float + l.integer) *

@@ -70,7 +70,8 @@ local lit_cmd = 'qx' * literal_delimitted
 local lit_match = 'm' * literal_delimitted * S('cgimosx')^0
 local lit_sub = 's' * literal_delimitted2 * S('ecgimosx')^0
 local lit_tr = (P('tr') + 'y') * literal_delimitted2 * S('cds')^0
-local regex_str = l.delimited_range('/', '\\', false, true, '\n') * S('imosx')^0
+local regex_str = l.last_char_includes('-<>+*!~\\=%&|^?:;([{') *
+                  l.delimited_range('/', '\\', false, true, '\n') * S('imosx')^0
 local lit_regex = 'qr' * literal_delimitted * S('imosx')^0
 local string = token(l.STRING, sq_str + dq_str + cmd_str + heredoc + lit_str +
                                lit_array + lit_cmd + lit_match + lit_sub +
@@ -132,7 +133,7 @@ local plain_var = ('$#' + S('$@%')) * P('$')^0 * l.word
 local variable = token(l.VARIABLE, special_var + plain_var)
 
 -- Operators.
-local operator = token(l.OPERATOR, S('-<>+*!~\\=/%&|^&.?:;()[]{}'))
+local operator = token(l.OPERATOR, S('-<>+*!~\\=/%&|^.?:;()[]{}'))
 
 -- Markers.
 local marker = token(l.COMMENT, word_match { '__DATA__', '__END__' } * l.any^0)

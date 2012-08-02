@@ -20,8 +20,9 @@ end) * l.nonnewline^0)
 -- Strings.
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')
 local dq_str = l.delimited_range('"', '\\', true, false, '\n')
-local regex = l.delimited_range('/', '\\', false, false, '\n')
-local string = token(l.STRING, sq_str + dq_str) + token(l.REGEX, regex)
+local regex_str = l.last_char_includes('<>=+-*!@|&,:;?([{') *
+                  l.delimited_range('/', '\\', false, false, '\n')
+local string = token(l.STRING, sq_str + dq_str) + token(l.REGEX, regex_str)
 
 -- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)

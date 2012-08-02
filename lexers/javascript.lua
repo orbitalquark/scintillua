@@ -18,13 +18,9 @@ local comment = token(l.COMMENT, line_comment + block_comment)
 -- Strings.
 local sq_str = l.delimited_range("'", '\\', true)
 local dq_str = l.delimited_range('"', '\\', true)
-local string = token(l.STRING, sq_str + dq_str) + P(function(input, index)
-  if index == 1 then return index end
-  local i = index
-  while input:sub(i - 1, i - 1):match('[ \t\r\n\f]') do i = i - 1 end
-  return input:sub(i - 1, i - 1):match('[+%-*%%^!=&|?:;,()%[%]{}]') and
-    index or nil
-end) * token(l.REGEX, l.delimited_range('/', '\\', nil, nil, '\n') * S('igm')^0)
+local regex_str = l.last_char_includes('+-*%^!=&|?:;,([{<>') *
+                  l.delimited_range('/', '\\', nil, nil, '\n') * S('igm')^0
+local string = token(l.STRING, sq_str + dq_str) + token(l.REGEX, regex_str)
 
 -- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)

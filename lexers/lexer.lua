@@ -1222,6 +1222,23 @@ function M.starts_line(patt)
 end
 
 ---
+-- Creates an LPeg pattern that matches any previous non-whitespace character
+-- in the given set.
+-- @param s String character set like one passed to `lpeg.S()`.
+-- @usage local regex = l.last_char_includes('+-*!%^&|=,([{') *
+--   l.delimited_range('/', '\\')
+-- @name last_char_includes
+function M.last_char_includes(s)
+  s = '['..s:gsub('[-%%%[]', '%%%1')..']'
+  return lpeg_P(function(input, index)
+    if index == 1 then return index end
+    local i = index
+    while input:sub(i - 1, i - 1):match('[ \t\r\n\f]') do i = i - 1 end
+    return input:sub(i - 1, i - 1):match(s) and index or nil
+  end)
+end
+
+---
 -- Similar to `delimited_range()`, but allows for multi-character delimitters.
 -- This is useful for lexers with tokens such as nested block comments. With
 -- single-character delimiters, this function is identical to
