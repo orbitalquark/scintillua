@@ -8,21 +8,25 @@ local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
 local M = { _NAME = 'awk' }
 
--- Whitespace.
-local ws = token(l.WHITESPACE, l.space^1)
+local LEFTBRACKET = '['
+local RIGHTBRACKET = ']'
+local SLASH = '/'
+local BACKSLASH = '\\'
+local CARET = '^'
+local CR = '\r'
+local LF = '\n'
+local CRLF = CR .. LF
+local DQUOTE = '"'
+local DELIMITER_MATCHES = { ['('] = ')', ['['] = ']' }
+local COMPANION = { ['('] = '[', ['['] = '(' }
+local CC = {
+  alnum = 1, alpha = 1, blank = 1, cntrl = 1, digit = 1, graph = 1, lower = 1,
+  print = 1, punct = 1, space = 1, upper = 1, xdigit = 1
+}
+local LastRegexEnd = 0
+local BackslashAtCommentEnd = 0
 
--- Comments.
-local comment = token(l.COMMENT, '#' * l.nonnewline^0)
-
--- Strings.
-local string = token(l.STRING, l.delimited_range('"', '\\', true, false, '\n'))
-
--- Regular expressions.
-local slashes = l.delimited_range('//', '\\', true, false, '\n')
--- Regular expressions are preceded by most operators or the
--- keywords 'print' and 'case', possibly on a preceding line.
-local function isRegex(input, index)
-  local i = index - 1
+local function isRegex(input, i)
   while i >= 1 and input:find('^[ \t]', i) do i = i - 1 end
   if i < 1 then return true end
   local function findword(input, word, e)
@@ -33,35 +37,221 @@ local function isRegex(input, index)
       return s == 1 or not input:find("^[%w_$]", s - 1)
     end
   end
-  if input:find("^[,([{~&|!=+%-/*<>?:^;}$%%]", i) or
+  if input:find("^[-!%%&(*+,:;<=>?[^{|}~\f]", i) or
      findword(input, 'case', i) or findword(input, 'print', i) then
     return true
+  elseif input:sub(i, i) == SLASH then
+    return i ~= LastRegexEnd -- deals with /xx/ / /yy/.
   elseif input:find('^[]%w)."]', i) then
     return false
-  elseif input:sub(i, i) == "\n" then
+  elseif input:sub(i, i) == LF then
     if i == 1 then return true end
     i = i - 1
-    if input:sub(i, i) == "\r" then
+    if input:sub(i, i) == CR then
       if i == 1 then return true end
       i = i - 1
     end
-  elseif input:sub(i, i) == "\r" then
+  elseif input:sub(i, i) == CR then
     if i == 1 then return true end
     i = i - 1
   else
     return false
   end
-  if input:sub(i, i) == "\\" then
-    return isRegex(input, i)
+  if input:sub(i, i) == BACKSLASH and i ~= BackslashAtCommentEnd then
+    return isRegex(input, i - 1)
   else
     return true
   end
 end
--- not yet supported: /[/]/.
-local regex = token('regex', P(isRegex) * slashes)
 
+local function eatCharacterClass(input, s, e)
+  local i = s
+  while i <= e do
+    if input:find('^[\r\n]', i) then
+      return false
+    elseif input:sub(i, i + 1) == ':]' then
+      local str = input:sub(s, i - 1)
+      return CC[str] == 1 and i + 1
+    end
+    i = i + 1
+  end
+  return false
+end
+
+local function eatBrackets(input, i, e)
+  if input:sub(i, i) == CARET then i = i + 1 end
+  if input:sub(i, i) == RIGHTBRACKET then i = i + 1 end
+  while i <= e do
+    if input:find('^[\r\n]', i) then
+      return false
+    elseif input:sub(i, i) == RIGHTBRACKET then
+      return i
+    elseif input:sub(i, i + 1) == '[:' then
+      i = eatCharacterClass(input, i + 2, e)
+      if not i then return false end
+    elseif input:sub(i, i) == BACKSLASH then
+      i = i + 1
+      if input:sub(i, i + 1) == CRLF then i = i + 1 end
+    end
+    i = i + 1
+  end
+  return false
+end
+
+local function eatRegex(input, i)
+  local e = #input
+  while i <= e do
+    if input:find('^[\r\n]', i) then
+      return false
+    elseif input:sub(i, i) == SLASH then
+      LastRegexEnd = i
+      return i
+    elseif input:sub(i, i) == LEFTBRACKET then
+      i = eatBrackets(input, i + 1, e)
+      if not i then return false end
+    elseif input:sub(i, i) == BACKSLASH then
+      i = i + 1
+      if input:sub(i, i + 1) == CRLF then i = i + 1 end
+    end
+    i = i + 1
+  end
+  return false
+end
+
+local ScanRegexResult
+local function scanGawkRegex(input, index)
+  if isRegex(input, index - 2) then
+    local i = eatRegex(input, index)
+    if not i then
+      ScanRegexResult = false
+      return false
+    end
+    local rx = input:sub(index - 1, i)
+    for bs in rx:gmatch("[^\\](\\+)[BSsWwxy<>`']") do
+      -- /\S/ is special, but /\\S/ is not.
+      if #bs % 2 == 1 then return i + 1 end
+    end
+    ScanRegexResult = i + 1
+  else
+    ScanRegexResult = false
+  end
+  return false
+end
+-- Is only called immediately after scanGawkRegex().
+local function scanRegex()
+    return ScanRegexResult
+end
+
+local function scanString(input, index)
+  local i = index
+  local e = #input
+  while i <= e do
+    if input:find('^[\r\n]', i) then
+      return false
+    elseif input:sub(i, i) == DQUOTE then
+      return i + 1
+    elseif input:sub(i, i) == BACKSLASH then
+      i = i + 1
+      -- l.delimited_range() doesn't handle CRLF.
+      if input:sub(i, i + 1) == CRLF then i = i + 1 end
+    end
+    i = i + 1
+  end
+  return false
+end
+
+-- purpose: prevent isRegex() from entering a comment line that ends with a
+-- backslash.
+local function scanComment(input, index)
+  local _, i = input:find('[^\r\n]*', index)
+  if input:sub(i, i) == BACKSLASH then BackslashAtCommentEnd = i end
+  return i + 1
+end
+
+local function scanFieldDelimiters(input, index)
+  local i = index
+  local e = #input
+  local left = input:sub(i - 1, i - 1)
+  local count = 1
+  local right = DELIMITER_MATCHES[left]
+  local left2 = COMPANION[left]
+  local count2 = 0
+  local right2 = DELIMITER_MATCHES[left2]
+  while i <= e do
+    if input:find('^[#\r\n]', i) then
+      return false
+    elseif input:sub(i, i) == right then
+      count = count - 1
+      if count == 0 then return count2 == 0 and i + 1 end
+    elseif input:sub(i, i) == left then
+      count = count + 1
+    elseif input:sub(i, i) == right2 then
+      count2 = count2 - 1
+      if count2 < 0 then return false end
+    elseif input:sub(i, i) == left2 then
+      count2 = count2 + 1
+    elseif input:sub(i, i) == DQUOTE then
+      i = scanString(input, i + 1)
+      if not i then return false end
+      i = i - 1
+    elseif input:sub(i, i) == SLASH then
+      if isRegex(input, i - 1) then
+        i = eatRegex(input, i + 1)
+        if not i then return false end
+      end
+    elseif input:sub(i, i) == BACKSLASH then
+      if input:sub(i + 1, i + 2) == CRLF then
+        i = i + 2
+      elseif input:find('^[\r\n]', i + 1) then
+        i = i + 1
+      end
+    end
+    i = i + 1
+  end
+  return false
+end
+
+-- Whitespace.
+local ws = token(l.WHITESPACE, l.space^1)
+
+-- Comments.
+local comment = token(l.COMMENT, '#' * P(scanComment))
+
+-- Strings.
+local string = token(l.STRING, DQUOTE * P(scanString))
+
+-- Regular expressions.
+-- Slash delimited regular expressions are preceded by most operators or
+-- the keywords 'print' and 'case', possibly on a preceding line. They
+-- can contain unescaped slashes and brackets in brackets. Some escape
+-- sequences like '\S', '\s' have special meanings with Gawk. Tokens that
+-- contain them are displayed differently.
+local regex = token(l.REGEX, SLASH * P(scanRegex))
+local gawkRegex = token('gawkRegex', SLASH * P(scanGawkRegex))
+
+-- no leading sign because it might be binary.
+local float = ((l.digit ^ 1 * ('.' * l.digit ^ 0) ^ -1) +
+    ('.' * l.digit ^ 1)) * (S('eE') * S('+-') ^ -1 * l.digit ^ 1) ^ -1
 -- Numbers.
-local number = token(l.NUMBER, l.float + l.integer)
+local number = token(l.NUMBER, float)
+local gawkNumber = token('gawkNumber', l.hex_num + l.oct_num)
+
+-- Operators.
+local operator = token(l.OPERATOR, S('!%&()*+,-/:;<=>?[\\]^{|}~'))
+local gawkOperator = token('gawkOperator', P("|&") + "@" + "**=" + "**")
+
+-- Fields. E.g. $1, $a, $(x), $a(x), $a[x], $"1", $$a, etc.
+local field = token('field',
+                    P('$') * S('$+-') ^ 0 *
+                    (float + (l.word ^ 0 * '(' * P(scanFieldDelimiters)) +
+                     (l.word ^ 1 * ('[' * P(scanFieldDelimiters)) ^ -1) +
+                     ('"' * P(scanString)) + ('/' * P(eatRegex) * '/')))
+
+-- Functions.
+local func = token(l.FUNCTION, l.word * #P('('))
+
+-- Identifiers.
+local identifier = token(l.IDENTIFIER, l.word)
 
 -- Keywords.
 local keyword = token(l.KEYWORD, word_match {
@@ -89,46 +279,44 @@ local gawkBuiltInVariable = token('gawkBuiltInVariable', word_match {
   'PROCINFO', 'RT', 'TEXTDOMAIN'
 })
 
--- Operators.
-local operator = token(l.OPERATOR, S('=!<>+-*/%&|^~,:;()[]{}\\'))
-
-local gawkOperator = token('gawkOperator', P("|&") + P("@"))
-
--- Field variables.
-local fieldVariable = token('fieldVariable', '$' * (l.word + l.digit)^0)
-local parens = l.delimited_range('()', '\\', true, true, '"/\n')
--- e.g. $(NF-2).
--- not yet supported: $(length("a)))b")).
-local fieldVariableInParens = token('fieldVariableInParens', '$' * parens)
-
--- Identifiers.
-local identifier = token(l.IDENTIFIER, l.word)
-
+-- Within each group order matters, but the groups themselves (except the
+-- last) can be in any order.
 M._rules = {
   { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'gawkKeyword', gawkKeyword },
-  { 'builtInVariable', builtInVariable },
-  { 'gawkBuiltInVariable', gawkBuiltInVariable },
-  { 'identifier', identifier },
+
   { 'comment', comment },
-  { 'number', number },
+
   { 'string', string },
+
+  { 'field', field },
+
+  { 'gawkRegex', gawkRegex },
   { 'regex', regex },
-  { 'fieldVariableInParens', fieldVariableInParens },
-  { 'fieldVariable', fieldVariable },
   { 'gawkOperator', gawkOperator },
   { 'operator', operator },
-  { 'any_char', l.any_char },
+
+  { 'gawkNumber', gawkNumber },
+  { 'number', number },
+
+  { 'keyword', keyword },
+  { 'builtInVariable', builtInVariable },
+  { 'gawkKeyword', gawkKeyword },
+  { 'gawkBuiltInVariable', gawkBuiltInVariable },
+  { 'function', func },
+  { 'identifier', identifier },
+
+  { 'default', l.any_char } -- must stay at the end.
 }
 
 M._tokenstyles = {
   { 'builtInVariable', l.style_constant },
-  { 'fieldVariable', l.style_label },
-  { 'fieldVariableInParens', l.style_label },
+  { 'default', l.style_error },
+  { 'field', l.style_label },
   { 'gawkBuiltInVariable', l.style_constant .. { underline = true } },
   { 'gawkKeyword', l.style_keyword .. { underline = true } },
+  { 'gawkNumber', l.style_number .. { underline = true } },
   { 'gawkOperator', l.style_operator .. { underline = true } },
+  { 'gawkRegex', l.style_preproc .. { underline = true } },
   { 'regex', l.style_preproc },
 }
 
