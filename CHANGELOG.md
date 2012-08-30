@@ -4,6 +4,28 @@
 
 [Atom Feed]: feed
 
+## 3.2.2-1 (31 Aug 2012)
+
+Download:
+
+* [Scintillua 3.2.2-1][]
+
+Bugfixes:
+
+* Fixed bug with `$$` variables in Perl lexer.
+
+Changes:
+
+* Added support for ncurses via [scinterm][].
+* Added `__DATA__` and `__END__` markers to Perl lexer.
+* Added new [`lexer.last_char_includes()`][] function for better regex
+  detection.
+* Updated AWK lexer.
+
+[Scintillua 3.2.2-1]: download/scintillua3.2.2-1.zip
+[scinterm]: http://foicica.com/scinterm
+[`lexer.last_char_includes()`]: api/lexer.html#last_char_includes
+
 ## 3.2.1-1 (15 Jul 2012)
 
 Download:
