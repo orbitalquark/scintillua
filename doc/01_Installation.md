@@ -68,6 +68,10 @@ If an LPeg lexer is loaded but you prefer to use the Scintilla lexer instead,
 edit `lexers/lpeg.properties` by commenting out the desired lexer's
 `file.pattern.lexer` and `lexer.$(file.pattern.lexer)` property lines.
 
+Themes are located in the `lexers/themes/` folder and set in
+`lexers/lpeg.properties`. You can define the overall fonts and styles used by
+LPeg lexers using themes.
+
 #### Troubleshooting
 
 If you get incorrect or no syntax highlighting, please check the following:
