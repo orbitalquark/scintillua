@@ -40,7 +40,7 @@ local key = token(l.VARIABLE, word_match {
 local code = l.token(l.CONSTANT, P('%') * S('fFuUdDnNickvm'))
 
 -- Identifiers.
-local identifier = l.token(l.IDENTIFIER, l.alpha * (l.alnum + '-')^0)
+local identifier = l.token(l.IDENTIFIER, l.alpha * (l.alnum + S('_-'))^0)
 
 -- Operators.
 local operator = token(l.OPERATOR, S('='))
