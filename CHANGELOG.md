@@ -4,6 +4,24 @@
 
 [Atom Feed]: feed
 
+## 3.2.3-1 (22 Oct 2012)
+
+Download:
+
+* [Scintillua 3.2.3-1][]
+
+Bugfixes:
+
+* Include `_` as identifier char in Desktop lexer.
+
+Changes:
+
+* Copied `container` lexer to a new `text` lexer for containers that prefer to
+  use the latter.
+* Added SciTE usage note on themes.
+
+[Scintillua 3.2.3-1]: download/scintillua3.2.3-1.zip
+
 ## 3.2.2-1 (31 Aug 2012)
 
 Download:
