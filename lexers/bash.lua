@@ -49,7 +49,7 @@ local variable = token(l.VARIABLE,
                               l.delimited_range('{}', nil, true, false, '\n')))
 
 -- Operators.
-local operator = token(l.OPERATOR, S('=!<>+-/*^~.,:;?()[]{}'))
+local operator = token(l.OPERATOR, S('=!<>+-/*^&|~.,:;?()[]{}'))
 
 M._rules = {
   { 'whitespace', ws },
