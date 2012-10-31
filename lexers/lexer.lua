@@ -55,7 +55,7 @@ local M = {}
 -- though, first determine if your programming language is similar to any of the
 -- 80+ languages supported. If so, you may be able to copy and modify that
 -- lexer, saving some time and effort. The filename of your lexer should be the
--- name of your programming language in lowercase followed by a `.lua`
+-- name of your programming language in lower case followed by a `.lua`
 -- extension. For example, a new Lua lexer would have the name `lua.lua`.
 --
 -- Note: It is not recommended to use one-character language names like "b",
@@ -201,7 +201,7 @@ local M = {}
 --     local string = token(l.STRING, dq_str + sq_str)
 --
 -- In this case, `\` is treated as an escape character in a string sequence. The
--- `true` argument is analagous to `P('"')^-1` in that non-terminated strings
+-- `true` argument is analogous to `P('"')^-1` in that non-terminated strings
 -- are highlighted as expected.
 --
 -- **Keywords**
@@ -349,20 +349,20 @@ local M = {}
 -- core, styles are just Lua tables, so you can create new ones and/or modify
 -- existing ones. Each style consists of a set of attributes:
 --
--- Attribute  | Description
--- -----------|------------
--- `font`     | The name of the font the style uses.
--- `size`     | The size of the font the style uses.
--- `bold`     | Is the font face bold?
--- `italic`   | Is the font face italic?
--- `underline`| Is the font face underlined?
--- `fore`     | The foreground color of the font face.
--- `back`     | The background color of the font face.
--- `eolfilled`| Does the background color extend to the end of the line?
--- `case`     | The case of the font (1 = upper, 2 = lower, 0 = normal).
--- `visible`  | Is the text visible?
--- `changable`| Is the text changable or read-only?
--- `hotspot`  | Is the text clickable?
+-- Attribute   | Description
+-- ------------|------------
+-- `font`      | The name of the font the style uses.
+-- `size`      | The size of the font the style uses.
+-- `bold`      | Is the font face bold?
+-- `italic`    | Is the font face italic?
+-- `underline` | Is the font face underlined?
+-- `fore`      | The foreground color of the font face.
+-- `back`      | The background color of the font face.
+-- `eolfilled` | Does the background color extend to the end of the line?
+-- `case`      | The case of the font (1 = upper, 2 = lower, 0 = normal).
+-- `visible`   | Is the text visible?
+-- `changeable`| Is the text changeable or read-only?
+-- `hotspot`   | Is the text clickable?
 --
 -- Font colors are defined using the [`color()`](#color) function. Like with
 -- token names, LPeg patterns, and styles, there is a set of pre-defined colors
@@ -573,7 +573,7 @@ local M = {}
 -- an `OPERATOR` token is a fold point. The integer `1` indicates the match is
 -- a beginning fold point and `-1` indicates the match is an ending fold point.
 -- Likewise, the second assignment states that any `/*` or `*/` that the lexer
--- recognizes as part of a `COMMENT` token is a fold point. Any occurances of
+-- recognizes as part of a `COMMENT` token is a fold point. Any occurences of
 -- these characters outside their defined tokens (such as in a string) would not
 -- be considered a fold point. Finally, every `_foldsymbols` table must have a
 -- `_patterns` field that contains a list of [Lua patterns][] that match fold
@@ -594,7 +594,7 @@ local M = {}
 --       _patterns = { '%l+' },
 --     }
 --
--- Any time the lexer encounters a lowercase word, if that word is a `KEYWORD`
+-- Any time the lexer encounters a lower case word, if that word is a `KEYWORD`
 -- token and in the associated list of fold points, it is identified as a fold
 -- point.
 --
@@ -747,9 +747,9 @@ local M = {}
 -- @field alnum (pattern)
 --   Matches any alphanumeric character (`A-Z`, `a-z`, `0-9`).
 -- @field lower (pattern)
---   Matches any lowercase character (`a-z`).
+--   Matches any lower case character (`a-z`).
 -- @field upper (pattern)
---   Matches any uppercase character (`A-Z`).
+--   Matches any upper case character (`A-Z`).
 -- @field xdigit (pattern)
 --   Matches any hexadecimal digit (`0-9`, `A-F`, `a-f`).
 -- @field cntrl (pattern)
@@ -1513,7 +1513,7 @@ end
 
 ---
 -- Individual lexer fields.
--- @field _NAME The string name of the lexer in lowercase.
+-- @field _NAME The string name of the lexer in lower case.
 -- @field _rules An ordered list of rules for a lexer grammar.
 --   Each rule is a table containing an arbitrary rule name and the LPeg pattern
 --   associated with the rule. The order of rules is important as rules are
