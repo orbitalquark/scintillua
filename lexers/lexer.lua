@@ -50,22 +50,22 @@ local M = {}
 --
 -- ## Lexer Basics
 --
--- All lexers are contained in the `lexers/` directory. Your new lexer will also
+-- All lexers are contained in the *lexers/* directory. Your new lexer will also
 -- be included in this directory. Before attempting to write one from scratch
 -- though, first determine if your programming language is similar to any of the
 -- 80+ languages supported. If so, you may be able to copy and modify that
 -- lexer, saving some time and effort. The filename of your lexer should be the
--- name of your programming language in lower case followed by a `.lua`
--- extension. For example, a new Lua lexer would have the name `lua.lua`.
+-- name of your programming language in lower case followed by a *.lua*
+-- extension. For example, a new Lua lexer would have the name *lua.lua*.
 --
 -- Note: It is not recommended to use one-character language names like "b",
--- "c", or "d". These lexers happen to be named `b_lang.lua`, `cpp.lua`, and
--- `dmd.lua` respectively, for example.
+-- "c", or "d". These lexers happen to be named *b_lang.lua*, *cpp.lua*, and
+-- *dmd.lua* respectively, for example.
 --
 -- ### New Lexer Template
 --
--- There is a `lexers/template.txt` file that contains a simple template for a
--- new lexer. Feel free to use it, replacing the "`?`"s with the name of your
+-- There is a *lexers/template.txt* file that contains a simple template for a
+-- new lexer. Feel free to use it, replacing the '?'s with the name of your
 -- lexer:
 --
 --     -- ? LPeg lexer.
@@ -167,19 +167,19 @@ local M = {}
 --     local shell_comment = token(l.COMMENT, '#' * l.nonnewline^0)
 --     local c_line_comment = token(l.COMMENT, '//' * l.nonnewline_esc^0)
 --
--- The comments above start with a `#` or `//` and go to the end of the line.
+-- The comments above start with a '#' or "//" and go to the end of the line.
 -- The second comment recognizes the next line also as a comment if the current
--- line ends with a `\` escape character.
+-- line ends with a '\' escape character.
 --
 -- C-style "block" comments with a start and end delimiter are also easy to
 -- express:
 --
 --     local c_comment = token(l.COMMENT, '/*' * (l.any - '*/')^0 * P('*/')^-1)
 --
--- This comment starts with a `/*` sequence and can contain anything up to, and
--- including, an ending `*/` sequence. The ending `*/` is defined to be optional
--- so that an unfinished comment is still matched as a comment and highlighted
--- as you would expect.
+-- This comment starts with a "/\*" sequence and can contain anything up to, and
+-- including, an ending "\*/" sequence. The ending "\*/" is defined to be
+-- optional so that an unfinished comment is still matched as a comment and
+-- highlighted as you would expect.
 --
 -- **Strings**
 --
@@ -191,16 +191,16 @@ local M = {}
 --     local simple_string = token(l.STRING, dq_str + sq_str)
 --
 -- However, most programming languages allow escape sequences in strings such
--- that a sequence like `\"` in a double-quoted string indicates that the `"` is
--- not the end of the string. The above token would incorrectly match such a
--- string. Instead, a convenient function is provided for you:
+-- that a sequence like "\\&quot;" in a double-quoted string indicates that the
+-- '&quot;' is not the end of the string. The above token would incorrectly
+-- match such a string. Instead, a convenient function is provided for you:
 -- [`delimited_range()`](#delimited_range).
 --
 --     local dq_str = l.delimited_range('"', '\\', true)
 --     local sq_str = l.delimited_range("'", '\\', true)
 --     local string = token(l.STRING, dq_str + sq_str)
 --
--- In this case, `\` is treated as an escape character in a string sequence. The
+-- In this case, '\' is treated as an escape character in a string sequence. The
 -- `true` argument is analogous to `P('"')^-1` in that non-terminated strings
 -- are highlighted as expected.
 --
@@ -224,7 +224,7 @@ local M = {}
 --
 -- By default, characters considered to be in keywords are in the set of
 -- alphanumeric characters and underscores. The last token demonstrates how to
--- allow `-` (hyphen) characters to be in keywords as well.
+-- allow '-' (hyphen) characters to be in keywords as well.
 --
 -- **Numbers**
 --
@@ -260,7 +260,7 @@ local M = {}
 -- identify and distinguish between different rules. Rule order is important: if
 -- text does not match the first rule, the second rule is tried, and so on. This
 -- simple grammar says to match whitespace tokens under a rule named
--- `whitespace` and anything else under a rule named `any_char`.
+-- "whitespace" and anything else under a rule named "any_char".
 --
 -- To illustrate why rule order is important, here is an example of a simplified
 -- Lua grammar:
@@ -279,23 +279,23 @@ local M = {}
 --
 -- Note how identifiers come after keywords. In Lua, as with most programming
 -- languages, the characters allowed in keywords and identifiers are in the same
--- set (alphanumerics plus underscores). If the `identifier` rule was listed
--- before the `keyword` rule, all keywords would match identifiers and thus
+-- set (alphanumerics plus underscores). If the "identifier" rule was listed
+-- before the "keyword" rule, all keywords would match identifiers and thus
 -- would be incorrectly highlighted as identifiers instead of keywords. The same
 -- idea applies to function, constant, etc. tokens that you may want to
 -- distinguish between: their rules should come before identifiers.
 --
--- Now, you may be wondering what `l.any_char` is and why the `any_char` rule
+-- Now, you may be wondering what `l.any_char` is and why the "any_char" rule
 -- exists. `l.any_char` is a special, pre-defined token that matches one single
--- character as a `DEFAULT` token. The `any_char` rule should appear in every
+-- character as a `DEFAULT` token. The "any_char" rule should appear in every
 -- lexer because there may be some text that does not match any of the rules you
--- defined. How is that possible? Well in Lua, for example, the `!` character is
+-- defined. How is that possible? Well in Lua, for example, the '!' character is
 -- meaningless outside a string or comment. Therefore, if the lexer encounters a
--- `!` in such a circumstance, it would not match any existing rules other than
--- `any_char`. With `any_char`, the lexer can "skip" over the "error" and
+-- '!' in such a circumstance, it would not match any existing rules other than
+-- "any_char". With "any_char", the lexer can "skip" over the "error" and
 -- continue highlighting the rest of the source file correctly. Without
--- `any_char`, the lexer would fail to continue. Perhaps you instead want your
--- language to highlight such "syntax errors". You would replace the `any_char`
+-- "any_char", the lexer would fail to continue. Perhaps you instead want your
+-- language to highlight such "syntax errors". You would replace the "any_char"
 -- rule such that the grammar looks like:
 --
 --     M._rules = {
@@ -399,7 +399,7 @@ local M = {}
 --     local style_static_var = l.style_variable..{ italic = true }
 --
 -- More examples of style definitions are in the color theme files in the
--- `lexers/themes/` folder.
+-- *lexers/themes/* folder.
 --
 -- ### Token Styles
 --
@@ -432,7 +432,7 @@ local M = {}
 -- and its associated style. Unlike with `_rules`, the ordering in
 -- `_tokenstyles` does not matter since entries are just associations. Do not
 -- confuse token names with rule names. They are completely different entities.
--- In the example above, the `custom_whitespace` token is just being assigned
+-- In the example above, the "custom_whitespace" token is just being assigned
 -- the existing style for `WHITESPACE` tokens. If instead you wanted to color
 -- the background of whitespace a shade of grey, it might look like:
 --
@@ -450,7 +450,7 @@ local M = {}
 -- Scintilla. These chunks may be a full document, only the visible part of a
 -- document, or even just portions of lines. Some lexers need to match whole
 -- lines. For example, a lexer for the output of a file "diff" needs to know if
--- the line started with a "+" or "-" and then style the entire line
+-- the line started with a '+' or '-' and then style the entire line
 -- accordingly. To indicate that your lexer matches by line, use the
 -- `_LEXBYLINE` field:
 --
@@ -498,8 +498,8 @@ local M = {}
 --     end)
 --
 -- This pattern looks for the beginning of a "style" tag and searches its
--- attribute list for the text `type="text/css"`. (In this simplified example,
--- the Lua pattern does not consider whitespace between the `=` nor does it
+-- attribute list for the text "`type="text/css"`". (In this simplified example,
+-- the Lua pattern does not consider whitespace between the '=' nor does it
 -- consider that single quotes can be used instead of double quotes.) If there
 -- is a match, the functional pattern returns a value instead of `nil`. In this
 -- case, the value returned does not matter because we ultimately want the
@@ -556,7 +556,7 @@ local M = {}
 --
 -- The fold points for most languages occur on keywords or character sequences.
 -- Examples of fold keywords are "if" and "end" in Lua and examples of fold
--- character sequences are "{", "}", "/\*", and "\*/" in C for code block and
+-- character sequences are '{', '}', "/\*", and "\*/" in C for code block and
 -- comment delimiters, respectively. However, these fold points cannot occur
 -- just anywhere. For example, fold keywords that appear within strings or
 -- comments should not be recognized as fold points. Your lexer can conveniently
@@ -569,22 +569,23 @@ local M = {}
 --       _patterns = { '[{}]', '/%*', '%*/' }
 --     }
 --
--- The first assignment states that any `{` or `}` that the lexer recognized as
+-- The first assignment states that any '{' or '}' that the lexer recognized as
 -- an `OPERATOR` token is a fold point. The integer `1` indicates the match is
 -- a beginning fold point and `-1` indicates the match is an ending fold point.
--- Likewise, the second assignment states that any `/*` or `*/` that the lexer
+-- Likewise, the second assignment states that any "/\*" or "\*/" that the lexer
 -- recognizes as part of a `COMMENT` token is a fold point. Any occurences of
 -- these characters outside their defined tokens (such as in a string) would not
 -- be considered a fold point. Finally, every `_foldsymbols` table must have a
 -- `_patterns` field that contains a list of [Lua patterns][] that match fold
 -- points. If the lexer encounters text that matches one of those patterns, the
 -- matched text is looked up in its token's table to determine whether or not it
--- is a fold point. In the example above, the first Lua pattern matches any `{`
--- or `}` characters. When the lexer comes across one of those characters, it
+-- is a fold point. In the example above, the first Lua pattern matches any '{'
+-- or '}' characters. When the lexer comes across one of those characters, it
 -- checks if the match is an `OPERATOR` token. If so, the match is identified as
--- a fold point. It is the same idea for the other patterns. (The `%` is in the
--- other patterns because "*" is a special character in Lua patterns and it must
--- be escaped.) How are fold keywords specified? Here is an example for Lua:
+-- a fold point. It is the same idea for the other patterns. (The '%' is in the
+-- other patterns because '\*' is a special character in Lua patterns and it
+-- must be escaped.) How are fold keywords specified? Here is an example for
+-- Lua:
 --
 --     M._foldsymbols = {
 --       [l.KEYWORD] = {
@@ -617,8 +618,8 @@ local M = {}
 --       _patterns = { '|' }
 --     }
 --
--- Any time the lexer encounters a `|` that is a `strange_token`, it calls the
--- `fold_strange_token` function to determine if `|` is a fold point. These
+-- Any time the lexer encounters a '|' that is a "strange_token", it calls the
+-- `fold_strange_token` function to determine if '|' is a fold point. These
 -- kinds of functions are called with the following arguments: the text to fold,
 -- the position of the start of the current line in the text to fold, the text
 -- of the current line, the position in the current line the matched text starts
@@ -630,29 +631,29 @@ local M = {}
 --
 -- ### Textadept
 --
--- Put your lexer in your `~/.textadept/lexers/` directory so it will not be
+-- Put your lexer in your *~/.textadept/lexers/* directory so it will not be
 -- overwritten when upgrading Textadept. Also, lexers in this directory override
--- default lexers. Thus, a user `lua` lexer would be loaded instead of the
--- default `lua` lexer. This is convenient if you wish to tweak a default lexer
+-- default lexers. Thus, a user *lua* lexer would be loaded instead of the
+-- default *lua* lexer. This is convenient if you wish to tweak a default lexer
 -- to your liking. Then add a [mime-type][] for your lexer if necessary.
 --
 -- [mime-type]: _M.textadept.mime_types.html
 --
 -- ### SciTE
 --
--- Create a `.properties` file for your lexer and `import` it in either your
--- `SciTEUser.properties` or `SciTEGlobal.properties`. The contents of the
--- `.properties` file should contain:
+-- Create a *.properties* file for your lexer and `import` it in either your
+-- *SciTEUser.properties* or *SciTEGlobal.properties*. The contents of the
+-- *.properties* file should contain:
 --
 --     file.patterns.[lexer_name]=[file_patterns]
 --     lexer.$(file.patterns.[lexer_name])=[lexer_name]
 --
--- where `[lexer_name]` is the name of your lexer (minus the `.lua` extension)
+-- where `[lexer_name]` is the name of your lexer (minus the *.lua* extension)
 -- and `[file_patterns]` is a set of file extensions matched to your lexer.
 --
--- Please note any styling information in `.properties` files is ignored.
+-- Please note any styling information in *.properties* files is ignored.
 -- Styling information for Lua lexers is contained in your theme file in the
--- `lexers/themes/` directory.
+-- *lexers/themes/* directory.
 --
 -- ## Considerations
 --
@@ -681,9 +682,10 @@ local M = {}
 --
 -- ### Troubleshooting
 --
--- Errors in lexers can be tricky to debug. Lua errors are printed to STDERR
--- and `_G.print()` statements in lexers are printed to STDOUT. Running your
--- editor from a terminal is the easiest way to see errors as they occur.
+-- Errors in lexers can be tricky to debug. Lua errors are printed to
+-- `io.stderr` and `_G.print()` statements in lexers are printed to `io.stdout`.
+-- Running your editor from a terminal is the easiest way to see errors as they
+-- occur.
 --
 -- ### Risks
 --
@@ -737,38 +739,38 @@ local M = {}
 -- @field any (pattern)
 --   Matches any single character.
 -- @field ascii (pattern)
---   Matches any ASCII character (`0`..`127`).
+--   Matches any ASCII character (value 0 to 127).
 -- @field extend (pattern)
---   Matches any ASCII extended character (`0`..`255`).
+--   Matches any ASCII extended character (value 0 to 255).
 -- @field alpha (pattern)
---   Matches any alphabetic character (`A-Z`, `a-z`).
+--   Matches any alphabetic character ('A' to 'Z', 'a' to 'z').
 -- @field digit (pattern)
---   Matches any digit (`0-9`).
+--   Matches any digit ('0' to '9').
 -- @field alnum (pattern)
---   Matches any alphanumeric character (`A-Z`, `a-z`, `0-9`).
+--   Matches any alphanumeric character ('A' to 'Z', 'a' to 'z', '0' to '9').
 -- @field lower (pattern)
---   Matches any lower case character (`a-z`).
+--   Matches any lower case character ('a' to 'z').
 -- @field upper (pattern)
---   Matches any upper case character (`A-Z`).
+--   Matches any upper case character ('A' to 'Z').
 -- @field xdigit (pattern)
---   Matches any hexadecimal digit (`0-9`, `A-F`, `a-f`).
+--   Matches any hexadecimal digit ('0' to '9', 'A' to 'F', 'a' to 'f').
 -- @field cntrl (pattern)
---   Matches any control character (`0`..`31`).
+--   Matches any control character (value 0 to 31).
 -- @field graph (pattern)
---   Matches any graphical character (`!` to `~`).
+--   Matches any graphical character ('!' to '~').
 -- @field print (pattern)
---   Matches any printable character (space to `~`).
+--   Matches any printable character (' ' to '~').
 -- @field punct (pattern)
---   Matches any punctuation character not alphanumeric (`!` to `/`, `:` to `@`,
---   `[` to `'`, `{` to `~`).
+--   Matches any punctuation character not alphanumeric ('!' to '/', ':' to '@',
+--   '[' to ''', '{' to '~').
 -- @field space (pattern)
---   Matches any whitespace character (`\t`, `\v`, `\f`, `\n`, `\r`, space).
+--   Matches any whitespace character ("\t", "\v", "\f", "\n", "\r", ' ').
 -- @field newline (pattern)
 --   Matches any newline characters.
 -- @field nonnewline (pattern)
 --   Matches any non-newline character.
 -- @field nonnewline_esc (pattern)
---   Matches any non-newline character excluding newlines escaped with `\`.
+--   Matches any non-newline character excluding newlines escaped with '\'.
 -- @field dec_num (pattern)
 --   Matches a decimal number.
 -- @field hex_num (pattern)
@@ -1101,7 +1103,7 @@ local FOLD_BLANK = SC_FOLDLEVELWHITEFLAG
 -- Folds the given text.
 -- Called by the Scintilla lexer; **do not call from Lua**.
 -- If the current lexer has a `_fold` function or a `_foldsymbols` table, it is
--- used to perform folding. Otherwise, if a `fold.by.indentation` property is
+-- used to perform folding. Otherwise, if a "fold.by.indentation" property is
 -- set, folding by indentation is done.
 -- @param text The document text to fold.
 -- @param start_pos The position in the document text starts at.
@@ -1295,8 +1297,8 @@ function M.color(r, g, b) return tonumber(b..g..r, 16) end
 --   delimiter matches until an end delimiter or the end of the input is
 --   reached.
 -- @param balanced Optional flag indicating whether or not a balanced range is
---   matched, like the `%b` Lua pattern. This flag only applies if `chars`
---   consists of two different characters (e.g. `()`).
+--   matched, like the "%b" Lua pattern. This flag only applies if `chars`
+--   consists of two different characters (e.g. "()").
 -- @param forbidden Optional string of characters forbidden in a delimited
 --   range. Each character is part of the set. This is particularly useful for
 --   disallowing newlines in delimited ranges.
@@ -1305,6 +1307,7 @@ function M.color(r, g, b) return tonumber(b..g..r, 16) end
 -- @usage local sq_str_escapes = delimited_range("'", '\\', true)
 -- @usage local unbalanced_parens = delimited_range('()', '\\')
 -- @usage local balanced_parens = delimited_range('()', '\\', false, true)
+-- @see nested_pair
 -- @name delimited_range
 function M.delimited_range(chars, escape, end_optional, balanced, forbidden)
   local s = chars:sub(1, 1)
@@ -1375,6 +1378,7 @@ end
 --   reached.
 -- @return pattern
 -- @usage local nested_comment = l.nested_pair('/*', '*/', true)
+-- @see delimited_range
 -- @name nested_pair
 function M.nested_pair(start_chars, end_chars, end_optional)
   local s, e = start_chars, end_optional and lpeg_P(end_chars)^-1 or end_chars
@@ -1389,7 +1393,7 @@ end
 -- @param words A table of words.
 -- @param word_chars Optional string of additional characters considered to be
 --   part of a word. By default, word characters are alphanumerics and
---   underscores (`%w_` in Lua). This parameter may be `nil` or the empty string
+--   underscores ("%w_" in Lua). This parameter may be `nil` or the empty string
 --   to indicate no additional word characters.
 -- @param case_insensitive Optional boolean flag indicating whether or not the
 --   word match is case-insensitive. The default is `false`.
@@ -1513,7 +1517,7 @@ end
 
 ---
 -- Individual lexer fields.
--- @field _NAME The string name of the lexer in lower case.
+-- @field _NAME The string name of the lexer in lowercase.
 -- @field _rules An ordered list of rules for a lexer grammar.
 --   Each rule is a table containing an arbitrary rule name and the LPeg pattern
 --   associated with the rule. The order of rules is important as rules are
