@@ -1073,9 +1073,9 @@ function M.lex(text, init_style)
   else
     local tokens = {}
     local function append(tokens, line_tokens, offset)
-      for _, token in ipairs(line_tokens) do
-        token[2] = token[2] + offset
-        tokens[#tokens + 1] = token
+      for i = 1, #line_tokens, 2 do
+        tokens[#tokens + 1] = line_tokens[i]
+        tokens[#tokens + 1] = line_tokens[i + 1] + offset
       end
     end
     local offset = 0
@@ -1085,8 +1085,8 @@ function M.lex(text, init_style)
       if line_tokens then append(tokens, line_tokens, offset) end
       offset = offset + #line
       -- Use the default style to the end of the line if none was specified.
-      if tokens[#tokens][2] ~= offset then
-        tokens[#tokens + 1] = { 'default', offset + 1 }
+      if tokens[#tokens] ~= offset then
+        tokens[#tokens + 1], tokens[#tokens + 2] = 'default', offset + 1
       end
     end
     return tokens
@@ -1139,12 +1139,14 @@ function M.fold(text, start_pos, start_line, start_level)
             end
           end
         end
-        folds[line_num] = { prev_level }
-        if current_level > prev_level then folds[line_num][2] = FOLD_HEADER end
+        folds[line_num] = prev_level
+        if current_level > prev_level then
+          folds[line_num] = prev_level + FOLD_HEADER
+        end
         if current_level < FOLD_BASE then current_level = FOLD_BASE end
         prev_level = current_level
       else
-        folds[line_num] = { prev_level, FOLD_BLANK }
+        folds[line_num] = prev_level + FOLD_BLANK
       end
       line_num = line_num + 1
     end
@@ -1173,11 +1175,15 @@ function M.fold(text, start_pos, start_line, start_level)
       end
       current_line = current_line + 1
     end
+    -- Flatten.
+    for line, level in pairs(folds) do
+      folds[line] = level[1] + (level[2] or 0)
+    end
   else
     -- No folding, reset fold levels if necessary.
     local current_line = start_line
     for _ in text:gmatch(".-\r?\n") do
-      folds[current_line] = { start_level }
+      folds[current_line] = start_level
       current_line = current_line + 1
     end
   end
@@ -1228,7 +1234,7 @@ M.word = (M.alpha + '_') * (M.alnum + '_')^0
 -- @usage local annotation = token('annotation', '@' * l.word)
 -- @name token
 function M.token(name, patt)
-  return lpeg_Ct(lpeg_Cc(name) * patt * lpeg_Cp())
+  return lpeg_Cc(name) * patt * lpeg_Cp()
 end
 
 -- Common tokens

@@ -456,28 +456,23 @@ public:
 			if (lua_pcall(L, 2, 1, 0) != LUA_OK) l_error(L);
 			// Style the text from the token table returned.
 			if (lua_istable(L, -1)) {
-				if (lua_rawlen(L, -1) > 0) {
+				int len = lua_rawlen(L, -1);
+				if (len > 0) {
 					styler.StartAt(startPos, static_cast<char>(STYLE_MAX));
 					styler.StartSegment(startPos);
 					lua_getglobal(L, "_LEXER");
 					lua_pushstring(L, "_TOKENS");
 					lua_rawget(L, -2);
 					lua_remove(L, -2); // _LEXER
-					lua_pushnil(L);
-					while (lua_next(L, -3)) { // token (tokens[i])
-						if (!lua_istable(L, -1)) {
-							l_error(L, "Table of tokens expected from lexer.lex");
-							break;
-						}
-						lua_rawgeti(L, -1, 1); // token[1]
-						lua_rawget(L, -4); // _LEXER._TOKENS[token[1]]
+					// Loop through token-position pairs.
+					for (int i = 1; i < len; i += 2) {
 						style = 32;
+						lua_rawgeti(L, -2, i), lua_rawget(L, -2); // _LEXER._TOKENS[token]
 						if (!lua_isnil(L, -1)) style = lua_tointeger(L, -1);
-						lua_pop(L, 1); // _LEXER._TOKENS[token[1]]
-						lua_rawgeti(L, -1, 2); // token[2]
+						lua_pop(L, 1); // _LEXER._TOKENS[token]
+						lua_rawgeti(L, -2, i + 1); // pos
 						unsigned int position = lua_tointeger(L, -1) - 1;
-						lua_pop(L, 1); // token[2]
-						lua_pop(L, 1); // token (tokens[i])
+						lua_pop(L, 1); // pos
 						if (style >= 0 && style <= STYLE_MAX)
 							styler.ColourTo(startSeg + position - 1, style);
 						else
@@ -516,27 +511,11 @@ public:
 			if (lua_istable(L, -1)) {
 				lua_pushnil(L);
 				int line = 0, level = 0, maxline = 0, maxlevel = 0;
-				while (lua_next(L, -2)) { // fold (folds[i])
-					if (!lua_istable(L, -1)) {
-						l_error(L, "Table of folds expected from lexer.fold");
-						break;
-					}
-					line = lua_tointeger(L, -2);
-					lua_rawgeti(L, -1, 1); // fold[1]
-					level = lua_tointeger(L, -1);
-					lua_pop(L, 1); // fold[1]
-					if (lua_rawlen(L, -1) > 1) {
-						lua_rawgeti(L, -1, 2); // fold[2]
-						int flag = lua_tointeger(L, -1);
-						level |= flag;
-						lua_pop(L, 1); // fold[2]
-					}
+				while (lua_next(L, -2)) {
+					line = lua_tointeger(L, -2), level = lua_tointeger(L, -1);
 					styler.SetLevel(line, level);
-					if (line > maxline) {
-						maxline = line;
-						maxlevel = level;
-					}
-					lua_pop(L, 1); // fold
+					if (line > maxline) maxline = line, maxlevel = level;
+					lua_pop(L, 1); // level
 				}
 				lua_pop(L, 1); // fold table returned
 				// Mask off the level number, leaving only the previous flags.
