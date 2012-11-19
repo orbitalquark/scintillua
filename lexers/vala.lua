@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'vala' }
+local M = {_NAME = 'vala'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -26,7 +26,7 @@ local string = token(l.STRING, tq_str + sq_str + dq_str + ml_str)
 local number = token(l.NUMBER, (l.float + l.integer) * S('uUlLfFdDmM')^-1)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'class', 'delegate', 'enum', 'errordomain', 'interface', 'namespace',
   'signal', 'struct', 'using',
   -- Modifiers.
@@ -43,7 +43,7 @@ local keyword = token(l.KEYWORD, word_match {
 })
 
 -- Types.
-local type = token(l.TYPE, word_match {
+local type = token(l.TYPE, word_match{
   'bool', 'char', 'double', 'float', 'int', 'int8', 'int16', 'int32', 'int64',
   'long', 'short', 'size_t', 'ssize_t', 'string', 'uchar', 'uint', 'uint8',
   'uint16', 'uint32', 'uint64', 'ulong', 'unichar', 'ushort'
@@ -56,21 +56,21 @@ local identifier = token(l.IDENTIFIER, l.word)
 local operator = token(l.OPERATOR, S('+-/*%<>!=^&|?~:;.()[]{}'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'type', type },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'type', type},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'number', number},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {
-  _patterns = {'[{}]', '/%*', '%*/', '//' },
-  [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
-  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//') }
+  _patterns = {'[{}]', '/%*', '%*/', '//'},
+  [l.OPERATOR] = {['{'] = 1, ['}'] = -1},
+  [l.COMMENT] = {['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//')}
 }
 
 return M

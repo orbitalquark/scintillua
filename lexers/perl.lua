@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S, V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
 
-local M = { _NAME = 'perl' }
+local M = {_NAME = 'perl'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -16,7 +16,7 @@ local block_comment = #P('=') * l.starts_line('=' * l.alpha *
                      (l.any - l.newline * '=cut')^0 * (l.newline * '=cut')^-1)
 local comment = token(l.COMMENT, block_comment + line_comment)
 
-local delimiter_matches = { ['('] = ')', ['['] = ']', ['{'] = '}', ['<'] = '>' }
+local delimiter_matches = {['('] = ')', ['['] = ']', ['{'] = '}', ['<'] = '>'}
 local literal_delimitted = P(function(input, index) -- for single delimiter sets
   local delimiter = input:sub(index, index)
   if not delimiter:find('%w') then -- only non alpha-numerics
@@ -82,7 +82,7 @@ local string = token(l.STRING, sq_str + dq_str + cmd_str + heredoc + lit_str +
 local number = token(l.NUMBER, l.float + l.integer)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'STDIN', 'STDOUT', 'STDERR', 'BEGIN', 'END', 'CHECK', 'INIT',
   'require', 'use',
   'break', 'continue', 'do', 'each', 'else', 'elsif', 'foreach', 'for', 'if',
@@ -136,26 +136,26 @@ local variable = token(l.VARIABLE, special_var + plain_var)
 local operator = token(l.OPERATOR, S('-<>+*!~\\=/%&|^.?:;()[]{}'))
 
 -- Markers.
-local marker = token(l.COMMENT, word_match { '__DATA__', '__END__' } * l.any^0)
+local marker = token(l.COMMENT, word_match{'__DATA__', '__END__'} * l.any^0)
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'marker', marker },
-  { 'function', func },
-  { 'string', string },
-  { 'identifier', identifier },
-  { 'comment', comment },
-  { 'number', number },
-  { 'variable', variable },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'marker', marker},
+  {'function', func},
+  {'string', string},
+  {'identifier', identifier},
+  {'comment', comment},
+  {'number', number},
+  {'variable', variable},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {
-  _patterns = { '[%[%]{}]', '#' },
-  [l.OPERATOR] = { ['['] = 1, [']'] = -1, ['{'] = 1, ['}'] = -1 },
-  [l.COMMENT] = { ['#'] = l.fold_line_comments('#') }
+  _patterns = {'[%[%]{}]', '#'},
+  [l.OPERATOR] = {['['] = 1, [']'] = -1, ['{'] = 1, ['}'] = -1},
+  [l.COMMENT] = {['#'] = l.fold_line_comments('#')}
 }
 
 return M

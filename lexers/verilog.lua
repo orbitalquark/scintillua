@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'verilog' }
+local M = {_NAME = 'verilog'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -74,20 +74,20 @@ local identifier = token(l.IDENTIFIER, l.word)
 local operator = token(l.OPERATOR, S('=~+-/*<>%&|^~,:;()[]{}'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'number', number },
-  { 'keyword', keyword },
-  { 'function', func },
-  { 'type', type },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'number', number},
+  {'keyword', keyword},
+  {'function', func},
+  {'type', type},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {
-  _patterns = { '[a-z]+', '[%(%){}]', '/%*', '%*/', '//' },
+  _patterns = {'[a-z]+', '[%(%){}]', '/%*', '%*/', '//'},
   [l.KEYWORD] = {
     case = 1, casex = 1, casez = 1, endcase = -1, ['function'] = 1,
     endfunction = -1, fork = 1, join = -1, table = 1, endtable = -1, task = 1,
@@ -95,8 +95,8 @@ M._foldsymbols = {
     primitive = 1, endprimitive = -1, ['module'] = 1, endmodule = -1, begin = 1,
     ['end'] = -1
   },
-  [l.OPERATOR] = { ['('] = 1, [')'] = -1, ['{'] = 1, ['}'] = -1 },
-  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//') }
+  [l.OPERATOR] = {['('] = 1, [')'] = -1, ['{'] = 1, ['}'] = -1},
+  [l.COMMENT] = {['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//')}
 }
 
 return M

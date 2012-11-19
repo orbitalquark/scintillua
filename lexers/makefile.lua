@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'makefile' }
+local M = {_NAME = 'makefile'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -49,7 +49,7 @@ local special_var = l.word_match({
   '.VARIABLES', '.FEATURES', '.INCLUDE_DIRS',
   'GPATH', 'MAKECMDGOALS', 'MAKESHELL', 'SHELL', 'VPATH'
 }, '.') * #(ws^0 * assign)
-local implicit_var = l.word_match {
+local implicit_var = l.word_match{
   -- Some common variables.
   'AR', 'AS', 'CC', 'CXX', 'CPP', 'FC', 'M2C', 'PC', 'CO', 'GET', 'LEX', 'YACC',
   'LINT', 'MAKEINFO', 'TEX', 'TEXI2DVI', 'WEAVE', 'CWEAVE', 'TANGLE', 'CTANGLE',
@@ -82,18 +82,18 @@ local identifier = token(l.IDENTIFIER, word_char^1)
 local operator = token(l.OPERATOR, assign + S(':$(){}'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'target', target },
-  { 'variable', variable },
-  { 'operator', operator },
-  { 'identifier', identifier },
-  { 'comment', comment },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'target', target},
+  {'variable', variable},
+  {'operator', operator},
+  {'identifier', identifier},
+  {'comment', comment},
+  {'any_char', l.any_char},
 }
 
 M._tokenstyles = {
-  { 'target', l.style_definition },
+  {'target', l.style_definition},
 }
 
 M._LEXBYLINE = true

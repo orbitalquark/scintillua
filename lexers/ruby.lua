@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'ruby' }
+local M = {_NAME = 'ruby'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -16,7 +16,7 @@ local block_comment = #P('=begin') * l.starts_line('=begin' *
                       (l.any - l.newline * '=end')^0 * (l.newline * '=end')^-1)
 local comment = token(l.COMMENT, block_comment + line_comment)
 
-local delimiter_matches = { ['('] = ')', ['['] = ']', ['{'] = '}' }
+local delimiter_matches = {['('] = ')', ['['] = ']', ['{'] = '}'}
 local literal_delimitted = P(function(input, index)
   local delimiter = input:sub(index, index)
   if not delimiter:find('[%w\r\n\f\t ]') then -- only non alpha-numerics
@@ -107,21 +107,21 @@ end) * (word_char^1 + sq_str + dq_str))
 local operator = token(l.OPERATOR, S('!%^&*()[]{}-=+/|:;.,?<>~'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'function', func },
-  { 'identifier', identifier },
-  { 'comment', comment },
-  { 'string', string },
-  { 'number', number },
-  { 'variable', variable },
-  { 'symbol', symbol },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'function', func},
+  {'identifier', identifier},
+  {'comment', comment},
+  {'string', string},
+  {'number', number},
+  {'variable', variable},
+  {'symbol', symbol},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._tokenstyles = {
-  { 'symbol', l.style_constant },
+  {'symbol', l.style_constant},
 }
 
 local function disambiguate(text, pos, line, s)
@@ -130,7 +130,7 @@ local function disambiguate(text, pos, line, s)
 end
 
 M._foldsymbols = {
-  _patterns = { '%l+', '[%(%)%[%]{}]', '=begin', '=end', '#' },
+  _patterns = {'%l+', '[%(%)%[%]{}]', '=begin', '=end', '#'},
   [l.KEYWORD] = {
     begin = 1, class = 1, def = 1, ['do'] = 1, ['for'] = 1, ['module'] = 1,
     case = 1,

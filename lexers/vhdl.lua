@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'vhdl' }
+local M = {_NAME = 'vhdl'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -22,7 +22,7 @@ local string = token(l.STRING, sq_str + dq_str)
 local number = token(l.NUMBER, l.float + l.integer)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'access', 'after', 'alias', 'all', 'architecture', 'array', 'assert',
   'attribute', 'begin', 'block', 'body', 'buffer', 'bus', 'case', 'component',
   'configuration', 'constant', 'disconnect', 'downto', 'else', 'elsif', 'end',
@@ -40,7 +40,7 @@ local keyword = token(l.KEYWORD, word_match {
 })
 
 -- Functions.
-local func = token(l.FUNCTION, word_match {
+local func = token(l.FUNCTION, word_match{
   'rising_edge', 'shift_left', 'shift_right', 'rotate_left', 'rotate_right',
   'resize', 'std_match', 'to_integer', 'to_unsigned', 'to_signed', 'unsigned',
   'signed', 'to_bit', 'to_bitvector', 'to_stdulogic', 'to_stdlogicvector',
@@ -48,7 +48,7 @@ local func = token(l.FUNCTION, word_match {
 })
 
 -- Types.
-local type = token(l.TYPE, word_match {
+local type = token(l.TYPE, word_match{
   'bit', 'bit_vector', 'character', 'boolean', 'integer', 'real', 'time',
   'string', 'severity_level', 'positive', 'natural', 'signed', 'unsigned',
   'line', 'text', 'std_logic', 'std_logic_vector', 'std_ulogic',
@@ -58,7 +58,7 @@ local type = token(l.TYPE, word_match {
 })
 
 -- Constants.
-local constant = token(l.CONSTANT, word_match {
+local constant = token(l.CONSTANT, word_match{
   'EVENT', 'BASE', 'LEFT', 'RIGHT', 'LOW', 'HIGH', 'ASCENDING', 'IMAGE',
   'VALUE', 'POS', 'VAL', 'SUCC', 'VAL', 'POS', 'PRED', 'VAL', 'POS', 'LEFTOF',
   'RIGHTOF', 'LEFT', 'RIGHT', 'LOW', 'HIGH', 'RANGE', 'REVERSE', 'LENGTH',
@@ -74,17 +74,17 @@ local identifier = token(l.IDENTIFIER, word)
 local operator = token(l.OPERATOR, S('=/!:;<>+-/*%&|^~()'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'function', func },
-  { 'type', type },
-  { 'constant', constant },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'function', func},
+  {'type', type},
+  {'constant', constant},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'number', number},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 return M

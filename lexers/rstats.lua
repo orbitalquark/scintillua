@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'rstats' }
+local M = {_NAME = 'rstats'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -22,13 +22,13 @@ local string = token(l.STRING, sq_str + dq_str)
 local number = token(l.NUMBER, (l.float + l.integer) * P('i')^-1)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'break', 'else', 'for', 'if', 'in', 'next', 'repeat', 'return', 'switch',
   'try', 'while', 'Inf', 'NA', 'NaN', 'NULL', 'FALSE', 'TRUE'
 })
 
 -- Types.
-local type = token(l.TYPE, word_match {
+local type = token(l.TYPE, word_match{
   'array', 'character', 'complex', 'data.frame', 'double', 'factor', 'function',
   'integer', 'list', 'logical', 'matrix', 'numeric', 'vector'
 })
@@ -40,15 +40,15 @@ local identifier = token(l.IDENTIFIER, l.word)
 local operator = token(l.OPERATOR, S('<->+*/^=.,:;|$()[]{}'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'type', type },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'type', type},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'number', number},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 return M

@@ -6,7 +6,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'nsis' }
+local M = {_NAME = 'nsis'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -167,17 +167,17 @@ local operator = token(l.OPERATOR, S('+-*/%|&^~!<>'))
 local identifier = token(l.IDENTIFIER, l.word)
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'comment', comment },
-  { 'string', string },
-  { 'constant', constant },
-  { 'variable', variable },
-  { 'keyword', keyword },
-  { 'number', number },
-  { 'operator', operator },
-  { 'label', label },
-  { 'identifier', identifier },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'comment', comment},
+  {'string', string},
+  {'constant', constant},
+  {'variable', variable},
+  {'keyword', keyword},
+  {'number', number},
+  {'operator', operator},
+  {'label', label},
+  {'identifier', identifier},
+  {'any_char', l.any_char},
 }
 
 return M

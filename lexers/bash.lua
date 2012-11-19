@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'bash' }
+local M = {_NAME = 'bash'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -52,24 +52,24 @@ local variable = token(l.VARIABLE,
 local operator = token(l.OPERATOR, S('=!<>+-/*^&|~.,:;?()[]{}'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number },
-  { 'variable', variable },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'number', number},
+  {'variable', variable},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {
-  _patterns = { '[a-z]+', '[{}]', '#' },
+  _patterns = {'[a-z]+', '[{}]', '#'},
   [l.KEYWORD] = {
     ['if'] = 1, fi = -1, case = 1, esac = -1, ['do'] = 1, done = -1
   },
-  [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
-  [l.COMMENT] = { ['#'] = l.fold_line_comments('#') }
+  [l.OPERATOR] = {['{'] = 1, ['}'] = -1},
+  [l.COMMENT] = {['#'] = l.fold_line_comments('#')}
 }
 
 return M

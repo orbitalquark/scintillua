@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'rebol' }
+local M = {_NAME = 'rebol'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -111,19 +111,19 @@ local identifier = token(l.IDENTIFIER, word)
 local operator = token(l.OPERATOR, S('=<>+/*:()[]'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'comment', comment },
-  { 'keyword', keyword },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'comment', comment},
+  {'keyword', keyword},
+  {'identifier', identifier},
+  {'string', string},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {
-  _patterns = { '[%[%]{}]', ';' },
-  [l.COMMENT] = { ['{'] = 1, ['}'] = -1, [';'] = l.fold_line_comments(';') },
-  [l.OPERATOR] = { ['['] = 1, [']'] = -1, ['{'] = 1, ['}'] = -1 }
+  _patterns = {'[%[%]{}]', ';'},
+  [l.COMMENT] = {['{'] = 1, ['}'] = -1, [';'] = l.fold_line_comments(';')},
+  [l.OPERATOR] = {['['] = 1, [']'] = -1, ['{'] = 1, ['}'] = -1}
 }
 
 return M

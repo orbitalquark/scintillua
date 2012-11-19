@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'scala' }
+local M = {_NAME = 'scala'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -25,7 +25,7 @@ local string = token(l.STRING, tq_str + symbol + dq_str)
 local number = token(l.NUMBER, (l.float + l.integer) * S('LlFfDd')^-1)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'abstract', 'case', 'catch', 'class', 'def', 'do', 'else', 'extends', 'false',
   'final', 'finally', 'for', 'forSome', 'if', 'implicit', 'import', 'lazy',
   'match', 'new', 'null', 'object', 'override', 'package', 'private',
@@ -34,7 +34,7 @@ local keyword = token(l.KEYWORD, word_match {
 })
 
 -- Types.
-local type = token(l.TYPE, word_match {
+local type = token(l.TYPE, word_match{
   'Array', 'Boolean', 'Buffer', 'Byte', 'Char', 'Collection', 'Double', 'Float',
   'Int', 'Iterator', 'LinkedList', 'List', 'Long', 'Map', 'None', 'Option',
   'Set', 'Short', 'SortedMap', 'SortedSet', 'String', 'TreeMap', 'TreeSet'
@@ -54,23 +54,23 @@ local class_sequence = token(l.KEYWORD, P('class')) * ws^1 *
                        token(l.CLASS, l.word)
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'class', class_sequence },
-  { 'keyword', keyword },
-  { 'type', type },
-  { 'function', func},
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'class', class_sequence},
+  {'keyword', keyword},
+  {'type', type},
+  {'function', func},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'number', number},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {
-  _patterns = { '[{}]', '/%*', '%*/', '//' },
-  [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
-  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//') }
+  _patterns = {'[{}]', '/%*', '%*/', '//'},
+  [l.OPERATOR] = {['{'] = 1, ['}'] = -1},
+  [l.COMMENT] = {['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//')}
 }
 
 return M

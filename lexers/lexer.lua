@@ -75,14 +75,14 @@ local M = {}
 --     local style, color = l.style, l.color
 --     local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 --
---     local M = { _NAME = '?' }
+--     local M = {_NAME = '?'}
 --
 --     -- Whitespace.
 --     local ws = token(l.WHITESPACE, l.space^1)
 --
 --     M._rules = {
---       { 'whitespace', ws },
---       { 'any_char', l.any_char },
+--       {'whitespace', ws},
+--       {'any_char', l.any_char},
 --     }
 --
 --     M._tokenstyles = {
@@ -210,7 +210,7 @@ local M = {}
 -- choices, another convenience function, [`word_match()`](#word_match), is
 -- provided. It is much easier and more efficient to write word matches like:
 --
---     local keyword = token(l.KEYWORD, l.word_match {
+--     local keyword = token(l.KEYWORD, l.word_match{
 --       'keyword_1', 'keyword_2', ..., 'keyword_n'
 --     })
 --
@@ -251,8 +251,8 @@ local M = {}
 -- the rules used by the lexer grammar:
 --
 --     M._rules = {
---       { 'whitespace', ws },
---       { 'any_char', l.any_char },
+--       {'whitespace', ws},
+--       {'any_char', l.any_char},
 --     }
 --
 -- Each entry in a lexer's `_rules` table is composed of a rule name and its
@@ -266,15 +266,15 @@ local M = {}
 -- Lua grammar:
 --
 --     M._rules = {
---       { 'whitespace', ws },
---       { 'keyword', keyword },
---       { 'identifier', identifier },
---       { 'string', string },
---       { 'comment', comment },
---       { 'number', number },
---       { 'label', label },
---       { 'operator', operator },
---       { 'any_char', l.any_char },
+--       {'whitespace', ws},
+--       {'keyword', keyword},
+--       {'identifier', identifier},
+--       {'string', string},
+--       {'comment', comment},
+--       {'number', number},
+--       {'label', label},
+--       {'operator', operator},
+--       {'any_char', l.any_char},
 --     }
 --
 -- Note how identifiers come after keywords. In Lua, as with most programming
@@ -299,8 +299,8 @@ local M = {}
 -- rule such that the grammar looks like:
 --
 --     M._rules = {
---       { 'whitespace', ws },
---       { 'error', token(l.ERROR, l.any) },
+--       {'whitespace', ws},
+--       {'error', token(l.ERROR, l.any)},
 --     }
 --
 -- This would identify and highlight any character not matched by an existing
@@ -312,7 +312,7 @@ local M = {}
 -- tokens, allowing all tokens to be highlighted separately. The rule might look
 -- something like this:
 --
---     { 'tag', tag_start * (ws * attributes)^0 * tag_end^-1 }
+--     {'tag', tag_start * (ws * attributes)^0 * tag_end^-1}
 --
 -- ### Summary
 --
@@ -380,23 +380,23 @@ local M = {}
 -- Defining styles is pretty straightforward. An empty style that inherits the
 -- default theme settings is defined like this:
 --
---     local style_nothing = l.style {}
+--     local style_nothing = l.style{}
 --
 -- A similar style but with a bold font face is defined like this:
 --
---     local style_bold = l.style { bold = true }
+--     local style_bold = l.style{bold = true}
 --
 -- If you wanted the same style, but also with an italic font face, you can
 -- define the new style in terms of the old one:
 --
---     local style_bold_italic = style_bold..{ italic = true }
+--     local style_bold_italic = style_bold..{italic = true}
 --
 -- This allows you to derive new styles from pre-defined ones without having to
 -- rewrite them. This operation leaves the old style unchanged. Thus if you
 -- had a "static variable" token whose style you wanted to base off of
 -- `style_variable`, it would probably look like:
 --
---     local style_static_var = l.style_variable..{ italic = true }
+--     local style_static_var = l.style_variable..{italic = true}
 --
 -- More examples of style definitions are in the color theme files in the
 -- *lexers/themes/* folder.
@@ -425,7 +425,7 @@ local M = {}
 -- Assigning a style to this token looks like:
 --
 --     M._tokenstyles = {
---       { 'custom_whitespace', l.style_whitespace }
+--       {'custom_whitespace', l.style_whitespace}
 --     }
 --
 -- Each entry in a lexer's `_tokenstyles` table is composed of a token's name
@@ -436,9 +436,9 @@ local M = {}
 -- the existing style for `WHITESPACE` tokens. If instead you wanted to color
 -- the background of whitespace a shade of grey, it might look like:
 --
---     local style = l.style_whitespace..{ back = l.colors.grey }
+--     local style = l.style_whitespace..{back = l.colors.grey}
 --     M._tokenstyles = {
---       { 'custom_whitespace', style }
+--       {'custom_whitespace', style}
 --     }
 --
 -- Remember it is generally not recommended to assign specific colors in styles,
@@ -564,9 +564,9 @@ local M = {}
 -- example, consider C:
 --
 --     M._foldsymbols = {
---       [l.OPERATOR] = { ['{'] = 1, ['}'] = -1, },
---       [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1 },
---       _patterns = { '[{}]', '/%*', '%*/' }
+--       [l.OPERATOR] = {['{'] = 1, ['}'] = -1},
+--       [l.COMMENT] = {['/*'] = 1, ['*/'] = -1},
+--       _patterns = {'[{}]', '/%*', '%*/'}
 --     }
 --
 -- The first assignment states that any '{' or '}' that the lexer recognized as
@@ -591,8 +591,8 @@ local M = {}
 --       [l.KEYWORD] = {
 --         ['if'] = 1, ['do'] = 1, ['function'] = 1,
 --         ['end'] = -1, ['repeat'] = 1, ['until'] = -1
---       }
---       _patterns = { '%l+' },
+--       },
+--       _patterns = {'%l+'},
 --     }
 --
 -- Any time the lexer encounters a lower case word, if that word is a `KEYWORD`
@@ -614,8 +614,8 @@ local M = {}
 --     end
 --
 --     M._foldsymbols = {
---       ['strange_token'] = { ['|'] = fold_strange_token },
---       _patterns = { '|' }
+--       ['strange_token'] = {['|'] = fold_strange_token},
+--       _patterns = {'|'}
 --     }
 --
 -- Any time the lexer encounters a '|' that is a "strange_token", it calls the
@@ -915,7 +915,7 @@ local function build_grammar(lexer, initial_rule)
   if children then
     local lexer_name = lexer._NAME
     if not initial_rule then initial_rule = lexer_name end
-    local grammar = { initial_rule }
+    local grammar = {initial_rule}
     add_lexer(grammar, lexer)
     lexer._INITIALRULE = initial_rule
     lexer._GRAMMAR = lpeg_Ct(lpeg_P(grammar))
@@ -1012,7 +1012,7 @@ function M.load(lexer_name)
     if not l._tokenstyles then l._tokenstyles = {} end
     for _, r in ipairs(_r or {}) do
       -- Prevent rule id clashes.
-      l._rules[#l._rules + 1] = { lexer._NAME..'_'..r[1], r[2] }
+      l._rules[#l._rules + 1] = {lexer._NAME..'_'..r[1], r[2]}
     end
     for _, s in ipairs(_s or {}) do l._tokenstyles[#l._tokenstyles + 1] = s end
     -- Each lexer that is loaded with l.load() has its _STYLES modified through
@@ -1119,8 +1119,8 @@ function M.fold(text, start_pos, start_line, start_level)
     return lexer._fold(text, start_pos, start_line, start_level)
   elseif lexer._foldsymbols then
     local lines = {}
-    for p, l in text:gmatch('()(.-)\r?\n') do lines[#lines + 1] = { p, l } end
-    lines[#lines + 1] = { text:match('()([^\r\n]*)$') }
+    for p, l in text:gmatch('()(.-)\r?\n') do lines[#lines + 1] = {p, l} end
+    lines[#lines + 1] = {text:match('()([^\r\n]*)$')}
     local fold_symbols = lexer._foldsymbols
     local fold_symbols_patterns = fold_symbols._patterns
     local line_num, prev_level = start_line, start_level
@@ -1160,18 +1160,18 @@ function M.fold(text, start_pos, start_line, start_level)
           local i = current_line - 1
           while folds[i] and folds[i][2] == FOLD_BLANK do i = i - 1 end
           if folds[i] then folds[i][2] = FOLD_HEADER end -- low indent
-          folds[current_line] = { current_level } -- high indent
+          folds[current_line] = {current_level} -- high indent
         elseif current_level < prev_level then -- prev level
           if folds[current_line - 1] then
             folds[current_line - 1][1] = prev_level -- high indent
           end
-          folds[current_line] = { current_level } -- low indent
+          folds[current_line] = {current_level} -- low indent
         else -- same level
-          folds[current_line] = { prev_level }
+          folds[current_line] = {prev_level}
         end
         prev_level = current_level
       else
-        folds[current_line] = { prev_level, FOLD_BLANK }
+        folds[current_line] = {prev_level, FOLD_BLANK}
       end
       current_line = current_line + 1
     end
@@ -1264,8 +1264,8 @@ M.colors = {}
 --   * `changeable` (boolean) Is the text changable or read-only?
 --   * `hotspot` (boolean) Is the text clickable?
 -- @return style table
--- @usage local style_bold_italic = style { bold = true, italic = true }
--- @usage local style_grey = style { fore = l.colors.grey }
+-- @usage local style_bold_italic = style{bold = true, italic = true}
+-- @usage local style_grey = style{fore = l.colors.grey}
 -- @see color
 -- @name style
 function M.style(style_table)
@@ -1329,7 +1329,7 @@ function M.delimited_range(chars, escape, end_optional, balanced, forbidden)
     range = M.any - invalid + escape * M.any
   end
   if balanced and s ~= e then
-    return lpeg_P{ s * (range + lpeg_V(1))^0 * e }
+    return lpeg_P{s * (range + lpeg_V(1))^0 * e}
   else
     if end_optional then e = lpeg_P(e)^-1 end
     return s * range^0 * e
@@ -1388,7 +1388,7 @@ end
 -- @name nested_pair
 function M.nested_pair(start_chars, end_chars, end_optional)
   local s, e = start_chars, end_optional and lpeg_P(end_chars)^-1 or end_chars
-  return lpeg_P{ s * (M.any - s - end_chars + lpeg_V(1))^0 * e }
+  return lpeg_P{s * (M.any - s - end_chars + lpeg_V(1))^0 * e}
 end
 
 ---
@@ -1404,9 +1404,9 @@ end
 -- @param case_insensitive Optional boolean flag indicating whether or not the
 --   word match is case-insensitive. The default is `false`.
 -- @return pattern
--- @usage local keyword = token(l.KEYWORD, word_match { 'foo', 'bar', 'baz' })
--- @usage local keyword = token(l.KEYWORD, word_match({ 'foo-bar', 'foo-baz',
---   'bar-foo', 'bar-baz', 'baz-foo', 'baz-bar' }, '-', true))
+-- @usage local keyword = token(l.KEYWORD, word_match{'foo', 'bar', 'baz'})
+-- @usage local keyword = token(l.KEYWORD, word_match({'foo-bar', 'foo-baz',
+--   'bar-foo', 'bar-baz', 'baz-foo', 'baz-bar'}, '-', true))
 -- @name word_match
 function M.word_match(words, word_chars, case_insensitive)
   local word_list = {}
@@ -1455,8 +1455,8 @@ function M.embed_lexer(parent, child, start_rule, end_rule)
   -- Add child styles.
   if not parent._tokenstyles then parent._tokenstyles = {} end
   local tokenstyles = parent._tokenstyles
-  tokenstyles[#tokenstyles + 1] = { child._NAME..'_whitespace',
-                                    M.style_whitespace }
+  tokenstyles[#tokenstyles + 1] = {child._NAME..'_whitespace',
+                                   M.style_whitespace}
   for _, style in ipairs(child._tokenstyles or {}) do
     tokenstyles[#tokenstyles + 1] = style
   end
@@ -1506,8 +1506,8 @@ end
 -- Returns a fold function that folds consecutive line comments.
 -- This function should be used inside the lexer's `_foldsymbols` table.
 -- @param prefix The prefix string defining a line comment.
--- @usage [l.COMMENT] = { ['--'] = l.fold_line_comments('--') }
--- @usage [l.COMMENT] = { ['//'] = l.fold_line_comments('//') }
+-- @usage [l.COMMENT] = {['--'] = l.fold_line_comments('--')}
+-- @usage [l.COMMENT] = {['//'] = l.fold_line_comments('//')}
 -- @name fold_line_comments
 function M.fold_line_comments(prefix)
   return function(text, pos, line, s)

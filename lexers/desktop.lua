@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'desktop' }
+local M = {_NAME = 'desktop'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -24,13 +24,13 @@ local group_header = l.starts_line(token(l.STRING,
 local number = token(l.NUMBER, (l.float + l.integer))
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match { 'true', 'false' })
+local keyword = token(l.KEYWORD, word_match{'true', 'false'})
 
 -- Locales.
 local locale = token(l.CLASS, l.delimited_range('[]', nil, true))
 
 -- Keys.
-local key = token(l.VARIABLE, word_match {
+local key = token(l.VARIABLE, word_match{
   'Type', 'Version', 'Name', 'GenericName', 'NoDisplay', 'Comment', 'Icon',
   'Hidden', 'OnlyShowIn', 'NotShowIn', 'TryExec', 'Exec', 'Exec', 'Path',
   'Terminal', 'MimeType', 'Categories', 'StartupNotify', 'StartupWMClass', 'URL'
@@ -46,18 +46,18 @@ local identifier = l.token(l.IDENTIFIER, l.alpha * (l.alnum + S('_-'))^0)
 local operator = token(l.OPERATOR, S('='))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'key', key },
-  { 'identifier', identifier },
-  { 'group_header', group_header },
-  { 'locale', locale },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number },
-  { 'code', code },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'key', key},
+  {'identifier', identifier},
+  {'group_header', group_header},
+  {'locale', locale},
+  {'string', string},
+  {'comment', comment},
+  {'number', number},
+  {'code', code},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 return M

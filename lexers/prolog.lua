@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'prolog' }
+local M = {_NAME = 'prolog'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -24,7 +24,7 @@ local string = token(l.STRING, sq_str + dq_str)
 local number = token(l.NUMBER, l.digit^1 * ('.' * l.digit^1)^-1)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'module', 'meta_predicate', 'multifile', 'dynamic', 'abolish',
   'current_output', 'peek_code', 'append', 'current_predicate', 'put_byte',
   'arg', 'current_prolog_flag', 'put_char', 'asserta', 'assert', 'fail',
@@ -52,14 +52,14 @@ local identifier = token(l.IDENTIFIER, l.word)
 local operator = token(l.OPERATOR, S('-!+\\|=:;&<>()[]{}'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'number', number},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 return M

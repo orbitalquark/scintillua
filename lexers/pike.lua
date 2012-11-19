@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'pike' }
+local M = {_NAME = 'pike'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -29,7 +29,7 @@ local preproc = token(l.PREPROCESSOR,
                       #P('#') * l.starts_line('#' * l.nonnewline^0))
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'break', 'case', 'catch', 'continue', 'default', 'do', 'else', 'for',
   'foreach', 'gauge', 'if', 'lambda', 'return', 'sscanf', 'switch', 'while',
   'import', 'inherit',
@@ -39,7 +39,7 @@ local keyword = token(l.KEYWORD, word_match {
 })
 
 -- Types.
-local type = token(l.TYPE, word_match {
+local type = token(l.TYPE, word_match{
   'array', 'class', 'float', 'function', 'int', 'mapping', 'mixed', 'multiset',
   'object', 'program', 'string', 'void'
 })
@@ -51,22 +51,22 @@ local identifier = token(l.IDENTIFIER, l.word)
 local operator = token(l.OPERATOR, S('<>=!+-/*%&|^~@`.,:;()[]{}'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'type', type },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number },
-  { 'preproc', preproc },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'type', type},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'number', number},
+  {'preproc', preproc},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {
-  _patterns = { '[{}]', '/%*', '%*/', '//' },
-  [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
-  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//') }
+  _patterns = {'[{}]', '/%*', '%*/', '//'},
+  [l.OPERATOR] = {['{'] = 1, ['}'] = -1},
+  [l.COMMENT] = {['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//')}
 }
 
 return M

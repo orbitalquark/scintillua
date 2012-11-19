@@ -6,7 +6,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'matlab' }
+local M = {_NAME = 'matlab'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -36,7 +36,7 @@ local keyword = token(l.KEYWORD, word_match({
 }, nil, true))
 
 -- Functions.
-local func = token(l.FUNCTION, word_match {
+local func = token(l.FUNCTION, word_match{
   'abs', 'any', 'argv','atan2', 'axes', 'axis', 'ceil', 'cla', 'clear', 'clf',
   'columns', 'cos', 'delete', 'diff', 'disp', 'doc', 'double', 'drawnow', 'exp',
   'figure', 'find', 'fix', 'floor', 'fprintf', 'gca', 'gcf', 'get', 'grid',
@@ -50,13 +50,13 @@ local func = token(l.FUNCTION, word_match {
 })
 
 -- Constants.
-local constant = token(l.CONSTANT, word_match {
+local constant = token(l.CONSTANT, word_match{
   'EDITOR', 'I', 'IMAGEPATH', 'INFO_FILE', 'J', 'LOADPATH', 'OCTAVE_VERSION',
   'PAGER', 'PS1', 'PS2', 'PS4', 'PWD'
 })
 
 -- Variable.
-local variable = token(l.VARIABLE, word_match {
+local variable = token(l.VARIABLE, word_match{
   'ans', 'automatic_replot', 'default_return_value', 'do_fortran_indexing',
   'define_all_return_values', 'empty_list_elements_ok', 'eps', 'false',
   'gnuplot_binary', 'ignore_function_time_stamp', 'implicit_str_to_num_ok',
@@ -78,25 +78,25 @@ local identifier = token(l.IDENTIFIER, l.word)
 local operator = token(l.OPERATOR, S('!%^&*()[]{}-=+/\\|:;.,?<>~`´'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'function', func },
-  { 'constant', constant },
-  { 'variable', variable },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'function', func},
+  {'constant', constant},
+  {'variable', variable},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'number', number},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {
-  _patterns = { '[a-z]+', '[%(%)%[%]]', '%%[{}]?', '#' },
+  _patterns = {'[a-z]+', '[%(%)%[%]]', '%%[{}]?', '#'},
   [l.KEYWORD] = {
     ['if'] = 1, ['for'] = 1, ['while'] = 1, switch = 1, ['end'] = -1
   },
-  [l.OPERATOR] = { ['('] = 1, [')'] = -1, ['['] = 1, [']'] = -1 },
+  [l.OPERATOR] = {['('] = 1, [')'] = -1, ['['] = 1, [']'] = -1},
   [l.COMMENT] = {
     ['%{'] = 1, ['%}'] = -1, ['%'] = l.fold_line_comments('%'),
     ['#'] = l.fold_line_comments('#')

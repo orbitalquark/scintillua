@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'inform' }
+local M = {_NAME = 'inform'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -24,7 +24,7 @@ local inform_bin = '$$' * S('01')^1
 local number = token(l.NUMBER, l.integer + inform_hex + inform_bin)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'Abbreviate', 'Array', 'Attribute', 'Class', 'Constant', 'Default', 'End',
   'Endif', 'Extend', 'Global', 'Ifdef', 'Iffalse', 'Ifndef', 'Ifnot', 'Iftrue',
   'Import', 'Include', 'Link', 'Lowstring', 'Message', 'Object', 'Property',
@@ -56,7 +56,7 @@ local keyword = token(l.KEYWORD, word_match {
 })
 
 -- Library actions.
-local action = token('action', word_match {
+local action = token('action', word_match{
   'Answer', 'Ask', 'AskFor', 'Attack', 'Blow', 'Burn', 'Buy', 'Climb', 'Close',
   'Consult', 'Cut', 'Dig', 'Disrobe', 'Drink', 'Drop', 'Eat', 'Empty', 'EmptyT',
   'Enter', 'Examine', 'Exit', 'Fill', 'FullScore', 'GetOff', 'Give', 'Go',
@@ -79,19 +79,19 @@ local identifier = token(l.IDENTIFIER, l.word)
 local operator = token(l.OPERATOR, S('@~=+-*/%^#=<>;:,.{}[]()&|?'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'comment', comment },
-  { 'string', string },
-  { 'number', number },
-  { 'keyword', keyword },
-  { 'action', action },
-  { 'identifier', identifier },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'comment', comment},
+  {'string', string},
+  {'number', number},
+  {'keyword', keyword},
+  {'action', action},
+  {'identifier', identifier},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 _styles = {
-  { 'action', l.style_variable }
+  {'action', l.style_variable}
 }
 
 return M

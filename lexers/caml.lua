@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'caml' }
+local M = {_NAME = 'caml'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -22,7 +22,7 @@ local string = token(l.STRING, sq_str + dq_str)
 local number = token(l.NUMBER, l.float + l.integer)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'and', 'as', 'asr', 'begin', 'class', 'closed', 'constraint', 'do', 'done',
   'downto', 'else', 'end', 'exception', 'external', 'failwith', 'false',
   'flush', 'for', 'fun', 'function', 'functor', 'if', 'in', 'include',
@@ -34,12 +34,12 @@ local keyword = token(l.KEYWORD, word_match {
 })
 
 -- Types.
-local type = token(l.TYPE, word_match {
+local type = token(l.TYPE, word_match{
   'int', 'float', 'bool', 'char', 'string', 'unit'
 })
 
 -- Functions.
-local func = token(l.FUNCTION, word_match {
+local func = token(l.FUNCTION, word_match{
   'raise', 'invalid_arg', 'failwith', 'compare', 'min', 'max', 'succ', 'pred',
   'mod', 'abs', 'max_int', 'min_int', 'sqrt', 'exp', 'log', 'log10', 'cos',
   'sin', 'tan', 'acos', 'asin', 'atan', 'atan2', 'cosh', 'sinh', 'tanh', 'ceil',
@@ -69,16 +69,16 @@ local identifier = token(l.IDENTIFIER, l.word)
 local operator = token(l.OPERATOR, S('=<>+-*/.,:;~!#%^&|?[](){}'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'type', type },
-  { 'function', func },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'type', type},
+  {'function', func},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'number', number},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 return M

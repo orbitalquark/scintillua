@@ -7,7 +7,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'latex' }
+local M = {_NAME = 'latex'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -20,13 +20,13 @@ local block_comment = '\\begin{comment}' * (l.any - '\\end{comment}')^0 *
 local comment = token(l.COMMENT, block_comment + line_comment)
 
 -- Sections.
-local section = token('section', '\\' * word_match {
+local section = token('section', '\\' * word_match{
   'part', 'chapter', 'section', 'subsection', 'subsubsection', 'paragraph',
   'subparagraph'
 } * P('*')^-1)
 
 -- Math environments.
-local math_word = word_match {
+local math_word = word_match{
   'align', 'displaymath', 'eqnarray', 'equation', 'gather', 'math', 'multline'
 }
 local math_begin_end = (P('begin') + P('end')) *
@@ -44,29 +44,29 @@ local command = token(l.KEYWORD, '\\' * (l.alpha^1 + S('#$&~_^%{}')))
 local operator = token(l.OPERATOR, S('&#{}[]'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'comment', comment },
-  { 'math', math },
-  { 'environment', environment },
-  { 'section', section },
-  { 'keyword', command },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'comment', comment},
+  {'math', math},
+  {'environment', environment},
+  {'section', section},
+  {'keyword', command},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._tokenstyles = {
-  { 'environment', l.style_tag },
-  { 'math', l.style_function },
-  { 'section', l.style_class },
+  {'environment', l.style_tag},
+  {'math', l.style_function},
+  {'section', l.style_class},
 }
 
 M._foldsymbols = {
-  _patterns = { '\\[a-z]+', '[{}]', '%%' },
+  _patterns = {'\\[a-z]+', '[{}]', '%%'},
   [l.COMMENT] = {
     ['\\begin'] = 1, ['\\end'] = -1, ['%'] = l.fold_line_comments('%')
   },
-  ['environment'] = { ['\\begin'] = 1, ['\\end'] = -1 },
-  [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 }
+  ['environment'] = {['\\begin'] = 1, ['\\end'] = -1},
+  [l.OPERATOR] = {['{'] = 1, ['}'] = -1}
 }
 
 return M

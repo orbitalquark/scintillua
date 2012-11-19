@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'nemerle' }
+local M = {_NAME = 'nemerle'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -24,7 +24,7 @@ local string = token(l.STRING, sq_str + dq_str)
 local number = token(l.NUMBER, l.float + l.integer)
 
 -- Preprocessor.
-local preproc_word = word_match {
+local preproc_word = word_match{
   'define', 'elif', 'else', 'endif', 'endregion', 'error', 'if', 'ifdef',
   'ifndef', 'line', 'pragma', 'region', 'undef', 'using', 'warning'
 }
@@ -32,7 +32,7 @@ local preproc = token(l.PREPROCESSOR,
                       #P('#') * l.starts_line('#' * S('\t ')^0 * preproc_word))
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   '_', 'abstract', 'and', 'array', 'as', 'base', 'catch', 'class', 'def', 'do',
   'else', 'extends', 'extern', 'finally', 'foreach', 'for',  'fun', 'if',
   'implements', 'in', 'interface', 'internal', 'lock', 'macro', 'match',
@@ -45,7 +45,7 @@ local keyword = token(l.KEYWORD, word_match {
 })
 
 -- Types.
-local type = token(l.TYPE, word_match {
+local type = token(l.TYPE, word_match{
   'bool', 'byte', 'char', 'decimal', 'double', 'float', 'int', 'list', 'long',
   'object', 'sbyte', 'short', 'string', 'uint', 'ulong', 'ushort', 'void'
 })
@@ -57,26 +57,26 @@ local identifier = token(l.IDENTIFIER, l.word)
 local operator = token(l.OPERATOR, S('+-/*%<>!=^&|?~:;.()[]{}'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'type', type },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number },
-  { 'preproc', preproc },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'type', type},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'number', number},
+  {'preproc', preproc},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {
-  _patterns = { '%l+', '[{}]', '/%*', '%*/', '//' },
+  _patterns = {'%l+', '[{}]', '/%*', '%*/', '//'},
   [l.PREPROCESSOR] = {
     region = 1, endregion = -1,
     ['if'] = 1, ifdef = 1, ifndef = 1, endif = -1
   },
-  [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
-  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//') }
+  [l.OPERATOR] = {['{'] = 1, ['}'] = -1},
+  [l.COMMENT] = {['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//')}
 }
 
 return M

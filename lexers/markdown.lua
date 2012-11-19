@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'markdown' }
+local M = {_NAME = 'markdown'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -84,37 +84,37 @@ local text_line = (ws + escape + link + strong + em + code + l.any_char)^1
 local list = token('list', S('*+-') + R('09') * '.') * ws * text_line
 
 M._rules = {
-  { 'blank', blank },
-  { 'html', html },
-  { 'header', header },
-  { 'blockquote', blockquote },
-  { 'blockcode', blockcode },
-  { 'hr', hr },
-  { 'link_label', link_label },
-  { 'list', list },
-  { 'text_line', text_line },
+  {'blank', blank},
+  {'html', html},
+  {'header', header},
+  {'blockquote', blockquote},
+  {'blockcode', blockcode},
+  {'hr', hr},
+  {'link_label', link_label},
+  {'list', list},
+  {'text_line', text_line},
 }
 
 M._LEXBYLINE = true
 
 local font_size = 10
-local hstyle = l.style_nothing..{ fore = l.colors.red }
+local hstyle = l.style_nothing..{fore = l.colors.red}
 M._tokenstyles = {
-  { 'h6', hstyle },
-  { 'h5', hstyle..{ size = font_size + 1 } },
-  { 'h4', hstyle..{ size = font_size + 2 } },
-  { 'h3', hstyle..{ size = font_size + 3 } },
-  { 'h2', hstyle..{ size = font_size + 4 } },
-  { 'h1', hstyle..{ size = font_size + 5 } },
-  { 'code', l.style_embedded..{ eolfilled = true } },
-  { 'hr', l.style_nothing..{ back = l.colors.black, eolfilled = true } },
-  { 'link', l.style_nothing..{ underline = true } },
-  { 'link_url', l.style_nothing..{ underline = true } },
-  { 'link_label', l.style_label },
-  { 'strong', l.style_nothing..{ bold = true } },
-  { 'em', l.style_nothing..{ italic = true } },
-  { 'list', l.style_constant },
-  { 'html', l.style_embedded }
+  {'h6', hstyle},
+  {'h5', hstyle..{size = font_size + 1}},
+  {'h4', hstyle..{size = font_size + 2}},
+  {'h3', hstyle..{size = font_size + 3}},
+  {'h2', hstyle..{size = font_size + 4}},
+  {'h1', hstyle..{size = font_size + 5}},
+  {'code', l.style_embedded..{eolfilled = true}},
+  {'hr', l.style_nothing..{back = l.colors.black, eolfilled = true}},
+  {'link', l.style_nothing..{underline = true}},
+  {'link_url', l.style_nothing..{underline = true}},
+  {'link_label', l.style_label},
+  {'strong', l.style_nothing..{bold = true}},
+  {'em', l.style_nothing..{italic = true}},
+  {'list', l.style_constant},
+  {'html', l.style_embedded}
 }
 
 -- Do not actually embed; just load the styles.

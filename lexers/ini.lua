@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'ini' }
+local M = {_NAME = 'ini'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -27,7 +27,7 @@ local integer = S('+-')^-1 * (l.hex_num + oct_num + dec)
 local number = token(l.NUMBER, (l.float + integer))
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'true', 'false', 'on', 'off', 'yes', 'no'
 })
 
@@ -39,14 +39,14 @@ local identifier = token(l.IDENTIFIER, word)
 local operator = token(l.OPERATOR, '=')
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'number', number},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._LEXBYLINE = true

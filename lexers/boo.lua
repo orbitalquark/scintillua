@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'boo' }
+local M = {_NAME = 'boo'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -30,7 +30,7 @@ local number = token(l.NUMBER, (l.float + l.integer) *
                                (S('msdhsfFlL') + 'ms')^-1)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'and', 'break', 'cast', 'continue', 'elif', 'else', 'ensure', 'except', 'for',
   'given', 'goto', 'if', 'in', 'isa', 'is', 'not', 'or', 'otherwise', 'pass',
   'raise', 'ref', 'try', 'unless', 'when', 'while',
@@ -46,14 +46,14 @@ local keyword = token(l.KEYWORD, word_match {
 })
 
 -- Types.
-local type = token(l.TYPE, word_match {
+local type = token(l.TYPE, word_match{
   'bool', 'byte', 'char', 'date', 'decimal', 'double', 'duck', 'float', 'int',
   'long', 'object', 'operator', 'regex', 'sbyte', 'short', 'single', 'string',
   'timespan', 'uint', 'ulong', 'ushort'
 })
 
 -- Functions.
-local func = token(l.FUNCTION, word_match {
+local func = token(l.FUNCTION, word_match{
   'array', 'assert', 'checked', 'enumerate', '__eval__', 'filter', 'getter',
   'len', 'lock', 'map', 'matrix', 'max', 'min', 'normalArrayIndexing', 'print',
   'property', 'range', 'rawArrayIndexing', 'required', '__switch__', 'typeof',
@@ -67,16 +67,16 @@ local identifier = token(l.IDENTIFIER, l.word)
 local operator = token(l.OPERATOR, S('!%^&*()[]{}-=+/|:;.,?<>~`'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'type', type },
-  { 'function', func },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'type', type},
+  {'function', func},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'number', number},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 return M

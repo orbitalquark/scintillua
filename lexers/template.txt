@@ -5,14 +5,14 @@ local token, word_match = l.token, l.word_match
 local style, color = l.style, l.color
 local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 
-local M = { _NAME = '?' }
+local M = {_NAME = '?'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'any_char', l.any_char},
 }
 
 M._tokenstyles = {

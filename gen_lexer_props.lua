@@ -22,7 +22,7 @@ local alt_name = {
 }
 
 -- Process file patterns and lexer definitions from Textadept.
-local output = { '# Lexer definitions (' }
+local output = {'# Lexer definitions ('}
 local lexer, ext
 local exts = {}
 for line in io.lines('../textadept/modules/textadept/mime_types.conf') do

@@ -6,7 +6,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'dot' }
+local M = {_NAME = 'dot'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -25,7 +25,7 @@ local string = token(l.STRING, sq_str + dq_str)
 local number = token(l.NUMBER, l.digit^1 + l.float)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'graph', 'node', 'edge', 'digraph', 'fontsize', 'rankdir',
   'fontname', 'shape', 'label', 'arrowhead', 'arrowtail', 'arrowsize',
   'color', 'comment', 'constraint', 'decorate', 'dir', 'headlabel', 'headport',
@@ -36,7 +36,7 @@ local keyword = token(l.KEYWORD, word_match {
 })
 
 -- Types.
-local type = token(l.TYPE, word_match {
+local type = token(l.TYPE, word_match{
 	'box', 'polygon', 'ellipse', 'circle', 'point', 'egg', 'triangle',
 	'plaintext', 'diamond', 'trapezium', 'parallelogram', 'house', 'pentagon',
 	'hexagon', 'septagon', 'octagon', 'doublecircle', 'doubleoctagon',
@@ -52,21 +52,21 @@ local identifier = token(l.IDENTIFIER, l.word)
 local operator = token(l.OPERATOR, S('->()[]{};'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'comment', comment },
-  { 'keyword', keyword },
-  { 'type', type },
-  { 'identifier', identifier },
-  { 'number', number },
-  { 'string', string },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'comment', comment},
+  {'keyword', keyword},
+  {'type', type},
+  {'identifier', identifier},
+  {'number', number},
+  {'string', string},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {
-  _patterns = { '[{}]', '/%*', '%*/', '//' },
-  [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
-  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//') }
+  _patterns = {'[{}]', '/%*', '%*/', '//'},
+  [l.OPERATOR] = {['{'] = 1, ['}'] = -1},
+  [l.COMMENT] = {['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//')}
 }
 
 return M

@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'pkgbuild' }
+local M = {_NAME = 'pkgbuild'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -43,9 +43,9 @@ local keyword = token(l.KEYWORD, word_match({
 }, '-'))
 
 -- Functions.
-local func = token(l.FUNCTION, word_match { 'build' })
+local func = token(l.FUNCTION, word_match{'build'})
 
-local constant = token(l.CONSTANT, word_match {
+local constant = token(l.CONSTANT, word_match{
   'pkgname', 'pkgver', 'pkgrel', 'pkgdesc', 'arch', 'url',
   'license', 'optdepends', 'depends', 'makedepends', 'provides',
   'conflicts', 'replaces', 'install', 'source', 'md5sums',
@@ -68,23 +68,23 @@ local variable = token(l.VARIABLE,
 local operator = token(l.OPERATOR, S('=!<>+-/*^~.,:;?()[]{}'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'comment', comment },
-  { 'string', string },
-  { 'number', number },
-  { 'keyword', keyword },
-  { 'function', func },
-  { 'constant', constant },
-  { 'identifier', identifier },
-  { 'variable', variable },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'comment', comment},
+  {'string', string},
+  {'number', number},
+  {'keyword', keyword},
+  {'function', func},
+  {'constant', constant},
+  {'identifier', identifier},
+  {'variable', variable},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {
-  _patterns = { '[%(%){}]', '#' },
-  [l.OPERATOR] = { ['('] = 1, [')'] = -1, ['{'] = 1, ['}'] = -1 },
-  [l.COMMENT] = { ['#'] = l.fold_line_comments('#') }
+  _patterns = {'[%(%){}]', '#'},
+  [l.OPERATOR] = {['('] = 1, [')'] = -1, ['{'] = 1, ['}'] = -1},
+  [l.COMMENT] = {['#'] = l.fold_line_comments('#')}
 }
 
 return M

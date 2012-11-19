@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'rexx' }
+local M = {_NAME = 'rexx'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -75,25 +75,25 @@ local identifier = token(l.IDENTIFIER, word)
 local operator = token(l.OPERATOR, S('=!<>+-/\\*%&|^~.,:;(){}'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'function', func },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number },
-  { 'preproc', preproc },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'function', func},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'number', number},
+  {'preproc', preproc},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {
-  _patterns = { '[a-z]+', '/%*', '%*/', '%-%-', ':' },
-  [l.KEYWORD] = { ['do'] = 1, select = 1, ['end'] = -1, ['return'] = -1 },
+  _patterns = {'[a-z]+', '/%*', '%*/', '%-%-', ':'},
+  [l.KEYWORD] = {['do'] = 1, select = 1, ['end'] = -1, ['return'] = -1},
   [l.COMMENT] = {
     ['/*'] = 1, ['*/'] = -1, ['--'] = l.fold_line_comments('--')
   },
-  [l.OPERATOR] = { [':'] = 1 }
+  [l.OPERATOR] = {[':'] = 1}
 }
 
 return M

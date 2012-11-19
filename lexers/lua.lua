@@ -6,7 +6,7 @@ local l = lexer
 local token, word_match = l.token, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'lua' }
+local M = {_NAME = 'lua'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -35,14 +35,14 @@ local lua_integer = P('-')^-1 * (l.hex_num + l.dec_num)
 local number = token(l.NUMBER, l.float + lua_integer)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for', 'function',
   'goto', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat', 'return', 'then',
   'true', 'until', 'while'
 })
 
 -- Functions.
-local func = token(l.FUNCTION, word_match {
+local func = token(l.FUNCTION, word_match{
   'assert', 'collectgarbage', 'dofile', 'error', 'getmetatable', 'ipairs',
   'load', 'loadfile', 'next', 'pairs', 'pcall', 'print', 'rawequal', 'rawget',
   'rawlen', 'rawset', 'require', 'select', 'setmetatable', 'tonumber',
@@ -50,7 +50,7 @@ local func = token(l.FUNCTION, word_match {
 })
 
 -- Constants.
-local constant = token(l.CONSTANT, word_match {
+local constant = token(l.CONSTANT, word_match{
   '_G', '_VERSION'
 })
 
@@ -107,23 +107,23 @@ local label = token(l.LABEL, '::' * l.word * '::')
 local operator = token(l.OPERATOR, '~=' + S('+-*/%^#=<>;:,.{}[]()'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'function', func },
-  { 'constant', constant },
-  { 'library', library },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number },
-  { 'label', label },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'function', func},
+  {'constant', constant},
+  {'library', library},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'number', number},
+  {'label', label},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._tokenstyles = {
-  { 'longstring', l.style_string },
-  { 'library', l.style_type }
+  {'longstring', l.style_string},
+  {'library', l.style_type}
 }
 
 local function fold_longcomment(text, pos, line, s, match)
@@ -136,7 +136,7 @@ local function fold_longcomment(text, pos, line, s, match)
 end
 
 M._foldsymbols = {
-  _patterns = { '%l+', '[%({%)}]', '[%[%]]', '%-%-' },
+  _patterns = {'%l+', '[%({%)}]', '[%[%]]', '%-%-'},
   [l.KEYWORD] = {
     ['if'] = 1, ['do'] = 1, ['function'] = 1, ['end'] = -1, ['repeat'] = 1,
     ['until'] = -1
@@ -145,8 +145,8 @@ M._foldsymbols = {
     ['['] = fold_longcomment, [']'] = fold_longcomment,
     ['--'] = l.fold_line_comments('--')
   },
-  longstring = { ['['] = 1, [']'] = -1 },
-  [l.OPERATOR] = { ['('] = 1, ['{'] = 1, [')'] = -1, ['}'] = -1 }
+  longstring = {['['] = 1, [']'] = -1},
+  [l.OPERATOR] = {['('] = 1, ['{'] = 1, [')'] = -1, ['}'] = -1}
 }
 
 return M

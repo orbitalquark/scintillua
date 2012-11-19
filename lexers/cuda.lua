@@ -6,18 +6,18 @@ local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 local table = _G.table
 
-local M = { _NAME = 'cuda' }
+local M = {_NAME = 'cuda'}
 
 -- Whitespace
 local ws = token(l.WHITESPACE, l.space^1)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   '__global__', '__host__', '__device__', '__constant__', '__shared__'
 })
 
 -- Functions.
-local func = token(l.FUNCTION, word_match {
+local func = token(l.FUNCTION, word_match{
   -- Atom.
   'atomicAdd', 'atomicAnd', 'atomicCAS', 'atomicDec', 'atomicExch', 'atomicInc',
   'atomicMax', 'atomicMin', 'atomicOr', 'atomicSub', 'atomicXor',
@@ -66,7 +66,7 @@ local func = token(l.FUNCTION, word_match {
 })
 
 -- Types.
-local type = token(l.TYPE, word_match {
+local type = token(l.TYPE, word_match{
   'uint', 'int1', 'uint1', 'int2', 'uint2', 'int3', 'uint3', 'int4', 'uint4',
   'float1', 'float2', 'float3', 'float4', 'char1', 'char2', 'char3', 'char4',
   'uchar1', 'uchar2', 'uchar3', 'uchar4', 'short1', 'short2', 'short3',
@@ -74,18 +74,18 @@ local type = token(l.TYPE, word_match {
 })
 
 -- Variables.
-local variable = token(l.VARIABLE, word_match {
+local variable = token(l.VARIABLE, word_match{
   'gridDim', 'blockIdx', 'blockDim', 'threadIdx'
 })
 
 -- Extend cpp lexer to include CUDA elements.
 local cpp = l.load('cpp')
 local _rules = cpp._rules
-_rules[1] = { 'whitespace', ws }
-table.insert(_rules, 2, { 'cuda_keyword', keyword })
-table.insert(_rules, 3, { 'cuda_function', func })
-table.insert(_rules, 4, { 'cuda_type', type })
-table.insert(_rules, 5, { 'cuda_variable', variable })
+_rules[1] = {'whitespace', ws}
+table.insert(_rules, 2, {'cuda_keyword', keyword})
+table.insert(_rules, 3, {'cuda_function', func})
+table.insert(_rules, 4, {'cuda_type', type})
+table.insert(_rules, 5, {'cuda_variable', variable})
 M._rules = _rules
 M._foldsymbols = cpp._foldsymbols
 

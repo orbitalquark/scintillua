@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'b_lang' }
+local M = {_NAME = 'b_lang'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -24,7 +24,7 @@ local string = token(l.STRING, sq_str + dq_str)
 local number = token(l.NUMBER, l.float + l.integer)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   -- Clauses.
   'ABSTRACT_CONSTANTS', 'ABSTRACT_VARIABLES', 'CONCRETE_CONSTANTS',
   'CONCRETE_VARIABLES', 'CONSTANTS', 'VARIABLES', 'ASSERTIONS', 'CONSTRAINTS',
@@ -39,13 +39,13 @@ local keyword = token(l.KEYWORD, word_match {
 })
 
 -- Types.
-local type = token(l.TYPE, word_match {
+local type = token(l.TYPE, word_match{
   'FIN', 'FIN1', 'INT', 'INTEGER', 'INTER', 'MAXINT', 'MININT', 'NAT', 'NAT1',
   'NATURAL', 'NATURAL1', 'PI', 'POW', 'POW1', 'SIGMA', 'UNION'
 })
 
 -- Functions.
-local func = token(l.FUNCTION, word_match {
+local func = token(l.FUNCTION, word_match{
   'arity', 'bin', 'bool', 'btree', 'card', 'closure', 'closure1', 'conc',
   'const', 'dom', 'father', 'first', 'fnc', 'front', 'id', 'infix', 'inter',
   'iseq', 'iseq1', 'iterate', 'last', 'left', 'max', 'min', 'mirror', 'mod',
@@ -61,22 +61,22 @@ local identifier = token(l.IDENTIFIER, l.word)
 local operator = token(l.OPERATOR, S('!#%=&<>*+/\\~:;|-^.,()[]{}') + '$0')
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'comment', comment },
-  { 'string', string },
-  { 'number', number },
-  { 'keyword', keyword },
-  { 'type', type },
-  { 'function', func },
-  { 'identifier', identifier },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'comment', comment},
+  {'string', string},
+  {'number', number},
+  {'keyword', keyword},
+  {'type', type},
+  {'function', func},
+  {'identifier', identifier},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {
-  _patterns = { '[{}]', '/%*', '%*/', '//' },
-  [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
-  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//') }
+  _patterns = {'[{}]', '/%*', '%*/', '//'},
+  [l.OPERATOR] = {['{'] = 1, ['}'] = -1},
+  [l.COMMENT] = {['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//')}
 }
 
 return M

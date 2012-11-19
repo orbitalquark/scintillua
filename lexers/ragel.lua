@@ -27,7 +27,7 @@ local builtin_machine = word_match(word_list{
 builtin_machine = token('ragel_builtin_machine', builtin_machine)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'machine', 'include', 'import', 'action', 'getkey', 'access', 'variable',
   'prepush', 'postpop', 'write', 'data', 'init', 'exec', 'exports', 'export'
 })

@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'go' }
+local M = {_NAME = 'go'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -25,7 +25,7 @@ local string = token(l.STRING, sq_str + dq_str + raw_str)
 local number = token(l.NUMBER, (l.float + l.integer) * P('i')^-1)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'break', 'case', 'chan', 'const', 'continue', 'default', 'defer', 'else',
   'fallthrough', 'for', 'func', 'go', 'goto', 'if', 'import', 'interface',
   'map', 'package', 'range', 'return', 'select', 'struct', 'switch', 'type',
@@ -33,19 +33,19 @@ local keyword = token(l.KEYWORD, word_match {
 })
 
 -- Constants.
-local constant = token(l.CONSTANT, word_match {
+local constant = token(l.CONSTANT, word_match{
   'true', 'false', 'iota', 'nil'
 })
 
 -- Types.
-local type = token(l.TYPE, word_match {
+local type = token(l.TYPE, word_match{
   'bool', 'byte', 'complex64', 'complex128', 'ffloat32', 'float64', 'int8',
   'int16', 'int32', 'int64', 'string', 'uint8', 'uint16', 'uint32', 'uint64',
   'complex', 'float', 'int', 'uint', 'uintptr'
 })
 
 -- Functions.
-local func = token(l.FUNCTION, word_match {
+local func = token(l.FUNCTION, word_match{
   'cap', 'close', 'closed', 'cmplx', 'copy', 'imag', 'len', 'make', 'new',
   'panic', 'print', 'println', 'real'
 })
@@ -57,23 +57,23 @@ local identifier = token(l.IDENTIFIER, l.word)
 local operator = token(l.OPERATOR, S('+-*/%&|^<>=!:;.,()[]{}'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'constant', constant },
-  { 'type', type },
-  { 'function', func },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'constant', constant},
+  {'type', type},
+  {'function', func},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'number', number},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {
-  _patterns = { '[{}]', '/%*', '%*/', '//' },
-  [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
-  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//') }
+  _patterns = {'[{}]', '/%*', '%*/', '//'},
+  [l.OPERATOR] = {['{'] = 1, ['}'] = -1},
+  [l.COMMENT] = {['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//')}
 }
 
 return M

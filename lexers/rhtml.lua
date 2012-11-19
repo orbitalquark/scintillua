@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'rhtml' }
+local M = {_NAME = 'rhtml'}
 
 -- Embedded in HTML.
 local html = l.load('hypertext')
@@ -18,13 +18,13 @@ local ruby_end_rule = token('rhtml_tag', '%>')
 l.embed_lexer(html, ruby, ruby_start_rule, ruby_end_rule, true)
 
 M._tokenstyles = {
-  { 'rhtml_tag', l.style_embedded },
+  {'rhtml_tag', l.style_embedded},
 }
 
 local _foldsymbols = html._foldsymbols
 _foldsymbols._patterns[#_foldsymbols._patterns + 1] = '<%%'
 _foldsymbols._patterns[#_foldsymbols._patterns + 1] = '%%>'
-_foldsymbols.rhtml_tag = { ['<%'] = 1, ['%>'] = -1 }
+_foldsymbols.rhtml_tag = {['<%'] = 1, ['%>'] = -1}
 M._foldsymbols = _foldsymbols
 
 return M

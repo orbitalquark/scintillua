@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'erlang' }
+local M = {_NAME = 'erlang'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -23,7 +23,7 @@ local string = token(l.STRING, sq_str + dq_str + literal)
 local number = token(l.NUMBER, l.float + l.integer)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'after', 'begin', 'case', 'catch', 'cond', 'end', 'fun', 'if', 'let', 'of',
   'query', 'receive', 'when',
   -- Operators.
@@ -33,7 +33,7 @@ local keyword = token(l.KEYWORD, word_match {
 })
 
 -- Functions.
-local func = token(l.FUNCTION, word_match {
+local func = token(l.FUNCTION, word_match{
   'abs', 'alive', 'apply', 'atom_to_list', 'binary_to_list', 'binary_to_term',
   'concat_binary', 'date', 'disconnect_node', 'element', 'erase', 'exit',
   'float', 'float_to_list', 'get', 'get_keys', 'group_leader', 'halt', 'hd',
@@ -64,38 +64,38 @@ local identifier = token(l.IDENTIFIER, l.word)
 local operator = token(l.OPERATOR, S('-<>.;=/|#+*:,?!()[]{}'))
 
 -- Directives.
-local directive = token('directive', '-' * word_match {
+local directive = token('directive', '-' * word_match{
   'author', 'compile', 'copyright', 'define', 'doc', 'else', 'endif', 'export',
   'file', 'ifdef', 'ifndef', 'import', 'include_lib', 'include', 'module',
   'record', 'undef'
 })
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'function', func },
-  { 'identifier', identifier },
-  { 'directive', directive },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'function', func},
+  {'identifier', identifier},
+  {'directive', directive},
+  {'string', string},
+  {'comment', comment},
+  {'number', number},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._tokenstyles = {
-  { 'directive', l.style_preproc },
+  {'directive', l.style_preproc},
 }
 
 M._foldsymbols = {
-  _patterns = { '[a-z]+', '[%(%)%[%]{}]', '%%' },
+  _patterns = {'[a-z]+', '[%(%)%[%]{}]', '%%'},
   [l.KEYWORD] = {
     case = 1, fun = 1, ['if'] = 1, query = 1, receive = 1, ['end'] = -1
   },
   [l.OPERATOR] = {
     ['('] = 1, [')'] = -1, ['['] = 1, [']'] = -1, ['{'] = 1, ['}'] = -1
   },
-  [l.COMMENT] = { ['%'] = l.fold_line_comments('%') }
+  [l.COMMENT] = {['%'] = l.fold_line_comments('%')}
 }
 
 return M

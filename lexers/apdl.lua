@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'apdl' }
+local M = {_NAME = 'apdl'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -78,26 +78,26 @@ local operator = token(l.OPERATOR, S('+-*/$=,;()'))
 local label = token(l.LABEL, #P(':') * l.starts_line(':' * l.word))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'number', number },
-  { 'function', func },
-  { 'label', label },
-  { 'comment', comment },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'identifier', identifier},
+  {'string', string},
+  {'number', number},
+  {'function', func},
+  {'label', label},
+  {'comment', comment},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {
-  _patterns = { '%*[A-Za-z]+', '!' },
+  _patterns = {'%*[A-Za-z]+', '!'},
   [l.KEYWORD] = {
     ['*if'] = 1, ['*IF'] = 1, ['*do'] = 1, ['*DO'] = 1, ['*dowhile'] = 1,
     ['*DOWHILE'] = 1,
     ['*endif'] = -1, ['*ENDIF'] = -1, ['*enddo'] = -1, ['*ENDDO'] = -1
   },
-  [l.COMMENT] = { ['!'] = l.fold_line_comments('!') }
+  [l.COMMENT] = {['!'] = l.fold_line_comments('!')}
 }
 
 return M

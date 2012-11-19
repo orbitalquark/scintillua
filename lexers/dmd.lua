@@ -6,7 +6,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'dmd' }
+local M = {_NAME = 'dmd'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -42,7 +42,7 @@ local integer = S('+-')^-1 * (l.hex_num + oct_num + bin_num + dec)
 local number = token(l.NUMBER, (l.float + integer) * S('uUlLdDfFi')^-1)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'abstract', 'align', 'asm', 'assert', 'auto', 'body', 'break', 'case', 'cast',
   'catch', 'const', 'continue', 'debug', 'default', 'delete',
   'deprecated', 'do', 'else', 'extern', 'export', 'false', 'final', 'finally',
@@ -55,7 +55,7 @@ local keyword = token(l.KEYWORD, word_match {
 })
 
 -- Types.
-local type = token(l.TYPE, word_match {
+local type = token(l.TYPE, word_match{
   'alias', 'bool', 'byte', 'cdouble', 'cent', 'cfloat', 'char', 'class',
   'creal', 'dchar', 'delegate', 'double', 'enum', 'float', 'function',
   'idouble', 'ifloat', 'int', 'interface', 'ireal', 'long', 'module', 'package',
@@ -65,7 +65,7 @@ local type = token(l.TYPE, word_match {
 })
 
 -- Constants.
-local constant = token(l.CONSTANT, word_match {
+local constant = token(l.CONSTANT, word_match{
   '__FILE__', '__LINE__', '__DATE__', '__EOF__', '__TIME__', '__TIMESTAMP__',
   '__VENDOR__', '__VERSION__'
 })
@@ -81,7 +81,7 @@ local operator = token(l.OPERATOR, S('?=!<>+-*$/%&|^~.,;()[]{}'))
 
 -- Properties.
 local properties = (type + identifier + operator) * token(l.OPERATOR, '.') *
-  token(l.VARIABLE, word_match {
+  token(l.VARIABLE, word_match{
     'alignof', 'dig', 'dup', 'epsilon', 'idup', 'im', 'init', 'infinity',
     'keys', 'length', 'mangleof', 'mant_dig', 'max', 'max_10_exp', 'max_exp',
     'min', 'min_normal', 'min_10_exp', 'min_exp', 'nan', 'offsetof', 'ptr',
@@ -94,7 +94,7 @@ local annotation = token('annotation', '@' * l.word^1)
 local preproc = token(l.PREPROCESSOR, '#' * l.nonnewline^0)
 
 -- Traits.
-local traits_list = token('traits', word_match {
+local traits_list = token('traits', word_match{
   'isAbstractClass', 'isArithmetic', 'isAssociativeArray', 'isFinalClass',
   'isFloating', 'isIntegral', 'isScalar', 'isStaticArray', 'isUnsigned',
   'isVirtualFunction', 'isAbstractFunction', 'isFinalFunction',
@@ -104,7 +104,7 @@ local traits_list = token('traits', word_match {
 })
 
 -- versions
-local versions_list = token('versions', word_match {
+local versions_list = token('versions', word_match{
   'AIX', 'all', 'Alpha', 'ARM', 'BigEndian', 'BSD', 'Cygwin', 'D_Coverage',
   'D_Ddoc', 'DigitalMars', 'D_InlineAsm_X86', 'D_InlineAsm_X86_64', 'D_LP64',
   'D_NET','D_PIC','D_Version2', 'FreeBSD', 'GNU', 'HPPA', 'HPPA64', 'Hurd',
@@ -125,34 +125,34 @@ local func = token(l.FUNCTION, l.word) *
              #(l.space^0 * (P('!') * l.word^-1 * l.space^-1)^-1 * P('('))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'class', class_sequence },
-  { 'traits', traits },
-  { 'versions', versions },
-  { 'keyword', keyword },
-  { 'variable', properties },
-  { 'type', type },
-  { 'function', func},
-  { 'constant', constant },
-  { 'string', string },
-  { 'identifier', identifier },
-  { 'comment', comment },
-  { 'number', number },
-  { 'preproc', preproc },
-  { 'operator', operator },
-  { 'annotation', annotation },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'class', class_sequence},
+  {'traits', traits},
+  {'versions', versions},
+  {'keyword', keyword},
+  {'variable', properties},
+  {'type', type},
+  {'function', func},
+  {'constant', constant},
+  {'string', string},
+  {'identifier', identifier},
+  {'comment', comment},
+  {'number', number},
+  {'preproc', preproc},
+  {'operator', operator},
+  {'annotation', annotation},
+  {'any_char', l.any_char},
 }
 
 M._tokenstyles = {
-  { 'annotation', l.style_preproc },
-  { 'traits', l.style_definition },
-  { 'versions', l.style_constant },
+  {'annotation', l.style_preproc},
+  {'traits', l.style_definition},
+  {'versions', l.style_constant},
 }
 
 M._foldsymbols = {
-  _patterns = { '[{}]', '/[*+]', '[*+]/', '//' },
-  [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
+  _patterns = {'[{}]', '/[*+]', '[*+]/', '//'},
+  [l.OPERATOR] = {['{'] = 1, ['}'] = -1},
   [l.COMMENT] = {
     ['/*'] = 1, ['*/'] = -1, ['/+'] = 1, ['+/'] = -1,
     ['//'] = l.fold_line_comments('//')

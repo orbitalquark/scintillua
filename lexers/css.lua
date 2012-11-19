@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S, V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
 
-local M = { _NAME = 'css' }
+local M = {_NAME = 'css'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -110,14 +110,14 @@ local identifier = token(l.IDENTIFIER, l.alpha * (l.alnum + S('_-'))^0)
 local operator = token(l.OPERATOR, S('~!#*>+=|.,:;()[]{}'))
 
 -- At rule.
-local at_rule = token('at_rule', P('@') * word_match {
+local at_rule = token('at_rule', P('@') * word_match{
   'charset', 'font-face', 'media', 'page', 'import'
 })
 
 -- Colors.
 local xdigit = l.xdigit
 local hex_color = '#' * xdigit * xdigit * xdigit * (xdigit * xdigit * xdigit)^-1
-local color_name = word_match {
+local color_name = word_match{
   'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy',
   'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow'
 }
@@ -132,36 +132,36 @@ local pseudo = token(l.CONSTANT, word_match({
 }, '-'))
 
 -- Units.
-local unit = token('unit', word_match {
+local unit = token('unit', word_match{
   'em', 'ex', 'px', 'pt', 'pc', 'in', 'ft', 'mm', 'cm', 'kHz', 'Hz', 'deg',
   'rad', 'grad', 'ms', 's'
 } + '%')
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'pseudo', pseudo },
-  { 'color', color },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number * unit^-1 },
-  { 'operator', operator },
-  { 'at_rule', at_rule },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'pseudo', pseudo},
+  {'color', color},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'number', number * unit^-1},
+  {'operator', operator},
+  {'at_rule', at_rule},
+  {'any_char', l.any_char},
 }
 
 M._tokenstyles = {
-  { 'unit', l.style_label },
-  { 'value', l.style_constant },
-  { 'color', l.style_number },
-  { 'at_rule', l.style_preprocessor },
+  {'unit', l.style_label},
+  {'value', l.style_constant},
+  {'color', l.style_number},
+  {'at_rule', l.style_preprocessor},
 }
 
 M._foldsymbols = {
-  _patterns = { '[{}]', '/%*', '%*/' },
-  [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
-  [l.COMMENT] = { ['/*'] = 1, ['*/'] = -1 }
+  _patterns = {'[{}]', '/%*', '%*/'},
+  [l.OPERATOR] = {['{'] = 1, ['}'] = -1},
+  [l.COMMENT] = {['/*'] = 1, ['*/'] = -1}
 }
 
 return M

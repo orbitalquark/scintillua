@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S, V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
 
-local M = { _NAME = 'hypertext' }
+local M = {_NAME = 'hypertext'}
 
 case_insensitive_tags = true
 
@@ -57,7 +57,7 @@ local attribute = (token('attribute', ('data-' * l.alnum^1) + word_match({
   'hidden', 'image', 'xml', 'xmlns', 'xml:lang'
 }, '-:', case_insensitive_tags)) + token('unknown_attribute', l.word)) *
          (ws^0 * token(l.OPERATOR, '=') * ws^0 * (string + number))^-1
-local attributes = P{ attribute * (ws * V(1))^0 }
+local attributes = P{attribute * (ws * V(1))^0}
 local tag_start = token('tag', '<' * P('/')^-1) * element
 local tag_end = token('tag', P('/')^-1 * '>')
 local tag = tag_start * (ws * attributes)^0 * ws^0 * tag_end^-1
@@ -70,32 +70,32 @@ local entity = token('entity', '&' * (l.any - l.space - ';')^1 * ';')
 
 -- Doctype.
 local doctype = token('doctype', '<!' *
-                      word_match({ 'doctype' }, nil, case_insensitive_tags) *
+                      word_match({'doctype'}, nil, case_insensitive_tags) *
                       (l.any - '>')^1 * '>')
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'default', word },
-  { 'comment', comment },
-  { 'doctype', doctype },
-  { 'tag', tag },
-  { 'entity', entity },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'default', word},
+  {'comment', comment},
+  {'doctype', doctype},
+  {'tag', tag},
+  {'entity', entity},
+  {'any_char', l.any_char},
 }
 
 M._tokenstyles = {
-  { 'tag', l.style_tag },
-  { 'element', l.style_tag },
-  { 'unknown_element', l.style_tag..{ italic = true } },
-  { 'attribute', l.style_variable },
-  { 'unknown_attribute', l.style_type..{ italic = true } },
-  { 'entity', l.style_operator },
-  { 'doctype', l.style_comment },
+  {'tag', l.style_tag},
+  {'element', l.style_tag},
+  {'unknown_element', l.style_tag..{italic = true}},
+  {'attribute', l.style_variable},
+  {'unknown_attribute', l.style_type..{italic = true}},
+  {'entity', l.style_operator},
+  {'doctype', l.style_comment},
 }
 
 -- Embedded CSS.
 local css = l.load('css')
-local style_element = word_match({ 'style' }, nil, case_insensitive_tags)
+local style_element = word_match({'style'}, nil, case_insensitive_tags)
 local css_start_rule = #(P('<') * style_element *
                         ('>' + P(function(input, index)
   if input:find('^[^>]+type%s*=%s*(["\'])text/css%1', index) then
@@ -107,7 +107,7 @@ l.embed_lexer(M, css, css_start_rule, css_end_rule)
 
 -- Embedded Javascript.
 local js = l.load('javascript')
-local script_element = word_match({ 'script' }, nil, case_insensitive_tags)
+local script_element = word_match({'script'}, nil, case_insensitive_tags)
 local js_start_rule = #(P('<') * script_element *
                        ('>' + P(function(input, index)
   if input:find('^[^>]+type%s*=%s*(["\'])text/javascript%1', index) then
@@ -119,7 +119,7 @@ l.embed_lexer(M, js, js_start_rule, js_end_rule)
 
 -- Embedded CoffeeScript.
 local cs = l.load('coffeescript')
-local script_element = word_match({ 'script' }, nil, case_insensitive_tags)
+local script_element = word_match({'script'}, nil, case_insensitive_tags)
 local cs_start_rule = #(P('<') * script_element * P(function(input, index)
   if input:find('^[^>]+type%s*=%s*(["\'])text/coffeescript%1', index) then
     return index
@@ -129,9 +129,9 @@ local cs_end_rule = #('</' * script_element * ws^0 * '>') * tag -- </script>
 l.embed_lexer(M, cs, cs_start_rule, cs_end_rule)
 
 M._foldsymbols = {
-  _patterns = { '</?', '/>', '<!%-%-', '%-%->' },
-  tag = { ['<'] = 1, ['/>'] = -1, ['</'] = -1 },
-  [l.COMMENT] = { ['<!--'] = 1, ['-->'] = -1 }
+  _patterns = {'</?', '/>', '<!%-%-', '%-%->'},
+  tag = {['<'] = 1, ['/>'] = -1, ['</'] = -1},
+  [l.COMMENT] = {['<!--'] = 1, ['-->'] = -1}
 }
 
 return M

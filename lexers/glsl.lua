@@ -6,13 +6,13 @@ local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 local table = _G.table
 
-local M = { _NAME = 'glsl' }
+local M = {_NAME = 'glsl'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'attribute', 'const', 'in', 'inout', 'out', 'uniform', 'varying', 'invariant',
   'centroid', 'flat', 'smooth', 'noperspective', 'layout', 'patch', 'sample',
   'subroutine', 'lowp', 'mediump', 'highp', 'precision',
@@ -21,7 +21,7 @@ local keyword = token(l.KEYWORD, word_match {
 })
 
 -- Functions.
-local func = token(l.FUNCTION, word_match {
+local func = token(l.FUNCTION, word_match{
   'radians', 'degrees', 'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'sinh',
   'cosh', 'tanh', 'asinh', 'acosh', 'atanh', 'pow', 'exp', 'log', 'exp2',
   'log2', 'sqrt', 'inversesqrt', 'abs', 'sign', 'floor', 'trunc', 'round',
@@ -57,17 +57,17 @@ local type = token(l.TYPE,
                    P('d')^-1 * 'mat' * R('24') * ('x' * R('24')^-1) +
                    S('iu')^-1 * 'sampler' * R('13') * 'D' +
                    'sampler' * R('12') * 'D' * P('Array')^-1 * 'Shadow' +
-                   S('iu')^-1 * 'sampler' * (R('12') * 'DArray' + word_match {
+                   S('iu')^-1 * 'sampler' * (R('12') * 'DArray' + word_match{
                      'Cube', '2DRect', 'Buffer', '2DMS', '2DMSArray',
                      '2DMSCubeArray'
                    }) +
-                   word_match {
+                   word_match{
                      'samplerCubeShadow', 'sampler2DRectShadow',
                      'samplerCubeArrayShadow'
                    })
 
 -- Variables.
-local variable = token(l.VARIABLE, word_match {
+local variable = token(l.VARIABLE, word_match{
   'gl_VertexID', 'gl_InstanceID', 'gl_Position', 'gl_PointSize',
   'gl_ClipDistance', 'gl_PrimitiveIDIn', 'gl_InvocationID', 'gl_PrimitiveID',
   'gl_Layer', 'gl_PatchVerticesIn', 'gl_TessLevelOuter', 'gl_TessLevelInner',
@@ -82,7 +82,7 @@ local variable = token(l.VARIABLE, word_match {
 })
 
 -- Constants.
-local constant = token(l.CONSTANT, word_match {
+local constant = token(l.CONSTANT, word_match{
   'gl_MaxVertexAttribs', 'gl_MaxVertexUniformComponents', 'gl_MaxVaryingFloats',
   'gl_MaxVaryingComponents', 'gl_MaxVertexOutputComponents',
   'gl_MaxGeometryInputComponents', 'gl_MaxGeometryOutputComponents',
@@ -121,11 +121,11 @@ local constant = token(l.CONSTANT, word_match {
 -- Extend cpp lexer to include GLSL elements.
 local cpp = l.load('cpp')
 local _rules = cpp._rules
-_rules[1] = { 'whitespace', ws }
-table.insert(_rules, 2, { 'glsl_keyword', keyword })
-table.insert(_rules, 3, { 'glsl_function', func })
-table.insert(_rules, 4, { 'glsl_type', type })
-table.insert(_rules, 5, { 'glsl_variable', variable })
+_rules[1] = {'whitespace', ws}
+table.insert(_rules, 2, {'glsl_keyword', keyword})
+table.insert(_rules, 3, {'glsl_function', func})
+table.insert(_rules, 4, {'glsl_type', type})
+table.insert(_rules, 5, {'glsl_variable', variable})
 M._rules = _rules
 M._foldsymbols = cpp._foldsymbols
 

@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'eiffel' }
+local M = {_NAME = 'eiffel'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -22,7 +22,7 @@ local string = token(l.STRING, sq_str + dq_str)
 local number = token(l.NUMBER, l.float + l.integer)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'alias', 'all', 'and', 'as', 'check', 'class', 'creation', 'debug',
   'deferred', 'do', 'else', 'elseif', 'end', 'ensure', 'expanded', 'export',
   'external', 'feature', 'from', 'frozen', 'if', 'implies', 'indexing', 'infix',
@@ -34,7 +34,7 @@ local keyword = token(l.KEYWORD, word_match {
 })
 
 -- Types.
-local type = token(l.TYPE, word_match {
+local type = token(l.TYPE, word_match{
   'character', 'string', 'bit', 'boolean', 'integer', 'real', 'none', 'any'
 })
 
@@ -45,26 +45,26 @@ local identifier = token(l.IDENTIFIER, l.word)
 local operator = token(l.OPERATOR, S('=!<>+-/*%&|^~.,:;?()[]{}'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'type', type },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'type', type},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'number', number},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {
-  _patterns = { '[a-z]+', '%-%-' },
+  _patterns = {'[a-z]+', '%-%-'},
   [l.KEYWORD] = {
     check = 1, debug = 1, deferred = 1, ['do'] = 1, from = 1, ['if'] = 1,
     inspect = 1, once = 1, class = function(text, pos, line, s)
       return line:find('deferred%s+class') and 0 or 1
     end, ['end'] = -1
   },
-  [l.COMMENT] = { ['--'] = l.fold_line_comments('--') }
+  [l.COMMENT] = {['--'] = l.fold_line_comments('--')}
 }
 
 return M

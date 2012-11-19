@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'fsharp' }
+local M = {_NAME = 'fsharp'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -24,7 +24,7 @@ local string = token(l.STRING, sq_str + dq_str)
 local number = token(l.NUMBER, (l.float + l.integer * S('uUlL')^-1))
 
 -- Preprocessor.
-local preproc_word = word_match {
+local preproc_word = word_match{
   'ifndef', 'ifdef', 'if', 'else', 'endif', 'light', 'region', 'endregion'
 }
 local preproc = token(l.PREPROCESSOR,
@@ -32,7 +32,7 @@ local preproc = token(l.PREPROCESSOR,
                       (l.nonnewline_esc^1 + l.space * l.nonnewline_esc^0)))
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'abstract', 'and', 'as', 'assert', 'asr', 'begin', 'class', 'default',
   'delegate', 'do', 'done', 'downcast', 'downto', 'else', 'end', 'enum',
   'exception', 'false', 'finaly', 'for', 'fun', 'function', 'if', 'in',
@@ -50,7 +50,7 @@ local keyword = token(l.KEYWORD, word_match {
 })
 
 -- Types.
-local type = token(l.TYPE, word_match {
+local type = token(l.TYPE, word_match{
   'bool', 'byte', 'sbyte', 'int16', 'uint16', 'int', 'uint32', 'int64',
   'uint64', 'nativeint', 'unativeint', 'char', 'string', 'decimal', 'unit',
   'void', 'float32', 'single', 'float', 'double'
@@ -63,15 +63,15 @@ local identifier = token(l.IDENTIFIER, l.word)
 local operator = token(l.OPERATOR, S('=<>+-*/^.,:;~!@#%^&|?[](){}'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'type', type },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'type', type},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'number', number},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 return M

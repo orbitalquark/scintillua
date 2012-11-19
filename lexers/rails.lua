@@ -6,14 +6,14 @@ local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 local table = _G.table
 
-local M = { _NAME = 'rails' }
+local M = {_NAME = 'rails'}
 
 -- Whitespace
 local ws = token(l.WHITESPACE, l.space^1)
 
 -- Functions.
 
-local actionpack = token(l.FUNCTION, word_match {
+local actionpack = token(l.FUNCTION, word_match{
   'before_filter', 'skip_before_filter', 'skip_after_filter', 'after_filter',
   'around_filter', 'filter', 'filter_parameter_logging', 'layout',
   'require_dependency', 'render', 'render_action', 'render_text', 'render_file',
@@ -24,13 +24,13 @@ local actionpack = token(l.FUNCTION, word_match {
   'verify', 'hide_action'
 })
 
-local view_helpers = token(l.FUNCTION, word_match {
+local view_helpers = token(l.FUNCTION, word_match{
   'check_box', 'content_for', 'error_messages_for', 'form_for', 'fields_for',
   'file_field', 'hidden_field', 'image_submit_tag', 'label', 'link_to',
   'password_field', 'radio_button', 'submit', 'text_field', 'text_area'
 })
 
-local activerecord = token(l.FUNCTION, word_match {
+local activerecord = token(l.FUNCTION, word_match{
   'after_create', 'after_destroy', 'after_save', 'after_update',
   'after_validation', 'after_validation_on_create',
   'after_validation_on_update', 'before_create', 'before_destroy',
@@ -46,7 +46,7 @@ local activerecord = token(l.FUNCTION, word_match {
   'accepts_nested_attributes_for', 'default_scope', 'scope'
 })
 
-local active_support = token(l.FUNCTION, word_match {
+local active_support = token(l.FUNCTION, word_match{
   'alias_method_chain', 'alias_attribute', 'delegate', 'cattr_accessor',
   'mattr_accessor', 'returning', 'memoize'
 })
@@ -54,11 +54,11 @@ local active_support = token(l.FUNCTION, word_match {
 -- Extend Ruby lexer to include Rails methods.
 local ruby = l.load('ruby')
 local _rules = ruby._rules
-_rules[1] = { 'whitespace', ws }
-table.insert(_rules, 3, { 'actionpack', actionpack })
-table.insert(_rules, 4, { 'view_helpers', view_helpers })
-table.insert(_rules, 5, { 'activerecord', activerecord  })
-table.insert(_rules, 6, { 'active_support', active_support })
+_rules[1] = {'whitespace', ws}
+table.insert(_rules, 3, {'actionpack', actionpack})
+table.insert(_rules, 4, {'view_helpers', view_helpers})
+table.insert(_rules, 5, {'activerecord', activerecord})
+table.insert(_rules, 6, {'active_support', active_support})
 M._rules = _rules
 M._foldsymbols = ruby._foldsymbols
 

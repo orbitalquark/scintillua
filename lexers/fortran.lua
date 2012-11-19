@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'fortran' }
+local M = {_NAME = 'fortran'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -77,16 +77,16 @@ local identifier = token(l.IDENTIFIER, l.alnum^1)
 local operator = token(l.OPERATOR, S('<>=&+-/*,()'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'comment', comment },
-  { 'keyword', keyword },
-  { 'function', func },
-  { 'type', type },
-  { 'number', number },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'comment', comment},
+  {'keyword', keyword},
+  {'function', func},
+  {'type', type},
+  {'number', number},
+  {'identifier', identifier},
+  {'string', string},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 return M

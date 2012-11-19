@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'smalltalk' }
+local M = {_NAME = 'smalltalk'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -22,13 +22,13 @@ local string = token(l.STRING, sq_str + literal)
 local number = token(l.NUMBER, l.float + l.integer)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'true', 'false', 'nil', 'self', 'super', 'isNil', 'not', 'Smalltalk',
   'Transcript'
 })
 
 -- Types.
-local type = token(l.TYPE, word_match {
+local type = token(l.TYPE, word_match{
   'Date', 'Time', 'Boolean', 'True', 'False', 'Character', 'String', 'Array',
   'Symbol', 'Integer', 'Object'
 })
@@ -43,21 +43,21 @@ local operator = token(l.OPERATOR, S(':=_<>+-/*!()[]'))
 local label = token(l.LABEL, '#' * l.word)
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'type', type },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number },
-  { 'label', label },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'type', type},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'number', number},
+  {'label', label},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {
-  _patterns = { '[%[%]]' },
-  [l.OPERATOR] = { ['['] = 1, [']'] = -1 }
+  _patterns = {'[%[%]]'},
+  [l.OPERATOR] = {['['] = 1, [']'] = -1}
 }
 
 return M

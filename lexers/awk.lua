@@ -6,7 +6,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'awk' }
+local M = {_NAME = 'awk'}
 
 local LEFTBRACKET = '['
 local RIGHTBRACKET = ']'
@@ -17,8 +17,8 @@ local CR = '\r'
 local LF = '\n'
 local CRLF = CR .. LF
 local DQUOTE = '"'
-local DELIMITER_MATCHES = { ['('] = ')', ['['] = ']' }
-local COMPANION = { ['('] = '[', ['['] = '(' }
+local DELIMITER_MATCHES = {['('] = ')', ['['] = ']'}
+local COMPANION = {['('] = '[', ['['] = '('}
 local CC = {
   alnum = 1, alpha = 1, blank = 1, cntrl = 1, digit = 1, graph = 1, lower = 1,
   print = 1, punct = 1, space = 1, upper = 1, xdigit = 1
@@ -254,7 +254,7 @@ local func = token(l.FUNCTION, l.word * #P('('))
 local identifier = token(l.IDENTIFIER, l.word)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'BEGIN', 'END', 'atan2', 'break', 'close', 'continue', 'cos', 'delete', 'do',
   'else', 'exit', 'exp', 'fflush', 'for', 'function', 'getline', 'gsub', 'if',
   'in', 'index', 'int', 'length', 'log', 'match', 'next', 'nextfile', 'print',
@@ -262,19 +262,19 @@ local keyword = token(l.KEYWORD, word_match {
   'substr', 'system', 'tolower', 'toupper', 'while'
 })
 
-local gawkKeyword = token('gawkKeyword', word_match {
+local gawkKeyword = token('gawkKeyword', word_match{
   'BEGINFILE', 'ENDFILE', 'adump', 'and', 'asort', 'asorti', 'bindtextdomain',
   'case', 'compl', 'dcgettext', 'dcngettext', 'default', 'extension', 'func',
   'gensub', 'include', 'isarray', 'lshift', 'mktime', 'or', 'patsplit',
   'rshift', 'stopme', 'strftime', 'strtonum', 'switch', 'systime', 'xor'
 })
 
-local builtInVariable = token('builtInVariable', word_match {
+local builtInVariable = token('builtInVariable', word_match{
   'ARGC', 'ARGV', 'CONVFMT', 'ENVIRON', 'FILENAME', 'FNR', 'FS', 'NF', 'NR',
   'OFMT', 'OFS', 'ORS', 'RLENGTH', 'RS', 'RSTART', 'SUBSEP'
 })
 
-local gawkBuiltInVariable = token('gawkBuiltInVariable', word_match {
+local gawkBuiltInVariable = token('gawkBuiltInVariable', word_match{
   'ARGIND', 'BINMODE', 'ERRNO', 'FIELDWIDTHS', 'FPAT', 'IGNORECASE', 'LINT',
   'PROCINFO', 'RT', 'TEXTDOMAIN'
 })
@@ -282,48 +282,48 @@ local gawkBuiltInVariable = token('gawkBuiltInVariable', word_match {
 -- Within each group order matters, but the groups themselves (except the
 -- last) can be in any order.
 M._rules = {
-  { 'whitespace', ws },
+  {'whitespace', ws},
 
-  { 'comment', comment },
+  {'comment', comment},
 
-  { 'string', string },
+  {'string', string},
 
-  { 'field', field },
+  {'field', field},
 
-  { 'gawkRegex', gawkRegex },
-  { 'regex', regex },
-  { 'gawkOperator', gawkOperator },
-  { 'operator', operator },
+  {'gawkRegex', gawkRegex},
+  {'regex', regex},
+  {'gawkOperator', gawkOperator},
+  {'operator', operator},
 
-  { 'gawkNumber', gawkNumber },
-  { 'number', number },
+  {'gawkNumber', gawkNumber},
+  {'number', number},
 
-  { 'keyword', keyword },
-  { 'builtInVariable', builtInVariable },
-  { 'gawkKeyword', gawkKeyword },
-  { 'gawkBuiltInVariable', gawkBuiltInVariable },
-  { 'function', func },
-  { 'identifier', identifier },
+  {'keyword', keyword},
+  {'builtInVariable', builtInVariable},
+  {'gawkKeyword', gawkKeyword},
+  {'gawkBuiltInVariable', gawkBuiltInVariable},
+  {'function', func},
+  {'identifier', identifier},
 
-  { 'default', l.any_char } -- must stay at the end.
+  {'default', l.any_char} -- must stay at the end.
 }
 
 M._tokenstyles = {
-  { 'builtInVariable', l.style_constant },
-  { 'default', l.style_error },
-  { 'field', l.style_label },
-  { 'gawkBuiltInVariable', l.style_constant .. { underline = true } },
-  { 'gawkKeyword', l.style_keyword .. { underline = true } },
-  { 'gawkNumber', l.style_number .. { underline = true } },
-  { 'gawkOperator', l.style_operator .. { underline = true } },
-  { 'gawkRegex', l.style_preproc .. { underline = true } },
-  { 'regex', l.style_preproc },
+  {'builtInVariable', l.style_constant},
+  {'default', l.style_error},
+  {'field', l.style_label},
+  {'gawkBuiltInVariable', l.style_constant .. {underline = true}},
+  {'gawkKeyword', l.style_keyword .. {underline = true}},
+  {'gawkNumber', l.style_number .. {underline = true}},
+  {'gawkOperator', l.style_operator .. {underline = true}},
+  {'gawkRegex', l.style_preproc .. {underline = true}},
+  {'regex', l.style_preproc},
 }
 
 M._foldsymbols = {
-  _patterns = { '[{}]', '#' },
-  [l.OPERATOR] = { ['{'] = 1, ['}'] = -1 },
-  [l.COMMENT] = { ['#'] = l.fold_line_comments('#') }
+  _patterns = {'[{}]', '#'},
+  [l.OPERATOR] = {['{'] = 1, ['}'] = -1},
+  [l.COMMENT] = {['#'] = l.fold_line_comments('#')}
 }
 
 return M

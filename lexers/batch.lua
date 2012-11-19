@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'batch' }
+local M = {_NAME = 'batch'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -50,23 +50,23 @@ local operator = token(l.OPERATOR, S('+|&!<>='))
 local label = token(l.LABEL, ':' * l.word)
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'function', func },
-  { 'comment', comment },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'variable', variable },
-  { 'label', label },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'function', func},
+  {'comment', comment},
+  {'identifier', identifier},
+  {'string', string},
+  {'variable', variable},
+  {'label', label},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 M._LEXBYLINE = true
 
 M._foldsymbols = {
-  _patterns = { '[A-Za-z]+' },
-  [l.KEYWORD] = { setlocal = 1, endlocal = -1, SETLOCAL = 1, ENDLOCAL = -1 }
+  _patterns = {'[A-Za-z]+'},
+  [l.KEYWORD] = {setlocal = 1, endlocal = -1, SETLOCAL = 1, ENDLOCAL = -1}
 }
 
 return M

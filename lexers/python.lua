@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'python' }
+local M = {_NAME = 'python'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -32,7 +32,7 @@ local integer = S('+-')^-1 * (bin + l.hex_num + oct + dec)
 local number = token(l.NUMBER, l.float + integer)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'and', 'as', 'assert', 'break', 'class', 'continue', 'def', 'del', 'elif',
   'else', 'except', 'exec', 'finally', 'for', 'from', 'global', 'if', 'import',
   'in', 'is', 'lambda', 'not', 'or', 'pass', 'print', 'raise', 'return', 'try',
@@ -67,7 +67,7 @@ local keyword = token(l.KEYWORD, word_match {
 })
 
 -- Functions.
-local func = token(l.FUNCTION, word_match {
+local func = token(l.FUNCTION, word_match{
   'abs', 'all', 'any', 'apply', 'basestring', 'bool', 'buffer', 'callable',
   'chr', 'classmethod', 'cmp', 'coerce', 'compile', 'complex', 'copyright',
   'credits', 'delattr', 'dict', 'dir', 'divmod', 'enumerate', 'eval',
@@ -82,7 +82,7 @@ local func = token(l.FUNCTION, word_match {
 })
 
 -- Constants.
-local constant = token(l.CONSTANT, word_match {
+local constant = token(l.CONSTANT, word_match{
   'ArithmeticError', 'AssertionError', 'AttributeError', 'BaseException',
   'DeprecationWarning', 'EOFError', 'Ellipsis', 'EnvironmentError', 'Exception',
   'False', 'FloatingPointError', 'FutureWarning', 'GeneratorExit', 'IOError',
@@ -108,22 +108,22 @@ local decorator = token('decorator',
                         #P('@') * l.starts_line('@' * l.nonnewline^0))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'function', func },
-  { 'constant', constant },
-  { 'identifier', identifier },
-  { 'comment', comment },
-  { 'string', string },
-  { 'number', number },
-  { 'decorator', decorator },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'function', func},
+  {'constant', constant},
+  {'identifier', identifier},
+  {'comment', comment},
+  {'string', string},
+  {'number', number},
+  {'decorator', decorator},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 
 M._tokenstyles = {
-  { 'decorator', l.style_preproc },
+  {'decorator', l.style_preproc},
 }
 
 return M

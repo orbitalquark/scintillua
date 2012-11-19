@@ -6,7 +6,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'haskell' }
+local M = {_NAME = 'haskell'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -26,7 +26,7 @@ local char = token(l.STRING, l.delimited_range("'", "\\", false, false, '\n'))
 local number = token(l.NUMBER, l.float + l.integer)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'case', 'class', 'data', 'default', 'deriving', 'do', 'else', 'if', 'import',
   'in', 'infix', 'infixl', 'infixr', 'instance', 'let', 'module', 'newtype',
   'of', 'then', 'type', 'where', '_', 'as', 'qualified', 'hiding'
@@ -44,16 +44,16 @@ local operator = token(l.OPERATOR, op)
 local constructor = token(l.TYPE, (l.upper * word) + (P(":") * (op^1 - P(":"))))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'type', constructor },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'char', char },
-  { 'comment', comment },
-  { 'number', number },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'type', constructor},
+  {'identifier', identifier},
+  {'string', string},
+  {'char', char},
+  {'comment', comment},
+  {'number', number},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 return M

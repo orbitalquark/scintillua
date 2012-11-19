@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'cmake' }
+local M = {_NAME = 'cmake'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -52,7 +52,7 @@ local constant = token(l.CONSTANT, word_match({
 }, nil, true))
 
 -- Variables.
-local variable = token(l.VARIABLE, word_match {
+local variable = token(l.VARIABLE, word_match{
   'APPLE', 'BORLAND', 'CMAKE_AR', 'CMAKE_BACKWARDS_COMPATIBILITY',
   'CMAKE_BASE_NAME', 'CMAKE_BINARY_DIR', 'CMAKE_BUILD_TOOL', 'CMAKE_BUILD_TYPE',
   'CMAKE_CACHEFILE_DIR', 'CMAKE_CACHE_MAJOR_VERSION',
@@ -149,26 +149,26 @@ local operator = token(l.OPERATOR, word_match({
 }) + S('=(){}'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'command', command },
-  { 'constant', constant },
-  { 'variable', variable },
-  { 'operator', operator },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'command', command},
+  {'constant', constant},
+  {'variable', variable},
+  {'operator', operator},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {
-  _patterns = { '[A-Z]+', '[%(%){}]', '#' },
+  _patterns = {'[A-Z]+', '[%(%){}]', '#'},
   [l.KEYWORD] = {
     IF = 1, ENDIF = -1, FOREACH = 1, ENDFOREACH = -1, WHILE = 1, ENDWHILE = -1
   },
-  [l.FUNCTION] = { MACRO = 1, ENDMACRO = -1 },
-  [l.OPERATOR] = { ['('] = 1, [')'] = -1, ['{'] = 1, ['}'] = -1 },
-  [l.COMMENT] = { ['#'] = l.fold_line_comments('#') }
+  [l.FUNCTION] = {MACRO = 1, ENDMACRO = -1},
+  [l.OPERATOR] = {['('] = 1, [')'] = -1, ['{'] = 1, ['}'] = -1},
+  [l.COMMENT] = {['#'] = l.fold_line_comments('#')}
 }
 
 return M

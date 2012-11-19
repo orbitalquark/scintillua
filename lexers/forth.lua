@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'forth' }
+local M = {_NAME = 'forth'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -45,14 +45,14 @@ local identifier = token(l.IDENTIFIER, (l.alnum + S('+-*=<>.?/\'%,_$'))^1)
 local operator = token(l.OPERATOR, S(':;<>+*-/()[]'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'string', string },
-  { 'identifier', identifier },
-  { 'comment', comment },
-  { 'number', number },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'string', string},
+  {'identifier', identifier},
+  {'comment', comment},
+  {'number', number},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 return M

@@ -5,7 +5,7 @@ local l = lexer
 local token, word_match = l.token, l.word_match
 local P, S = lpeg.P, lpeg.S
 
-local M = { _NAME = 'coffeescript' }
+local M = {_NAME = 'coffeescript'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -26,7 +26,7 @@ local string = token(l.STRING, sq_str + dq_str) + token(l.REGEX, regex_str)
 local number = token(l.NUMBER, l.float + l.integer)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match {
+local keyword = token(l.KEYWORD, word_match{
   'all', 'and', 'bind', 'break', 'by', 'case', 'catch', 'class', 'const',
   'continue', 'default', 'delete', 'do', 'each', 'else', 'enum', 'export',
   'extends', 'false', 'for', 'finally', 'function', 'if', 'import', 'in',
@@ -47,15 +47,15 @@ local identifier = token(l.IDENTIFIER, l.word)
 local operator = token(l.OPERATOR, S('+-/*%<>!=^&|?~:;,.()[]{}'))
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'field', field },
-  { 'identifier', identifier },
-  { 'comment', comment },
-  { 'number', number },
-  { 'string', string },
-  { 'operator', operator },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'field', field},
+  {'identifier', identifier},
+  {'comment', comment},
+  {'number', number},
+  {'string', string},
+  {'operator', operator},
+  {'any_char', l.any_char},
 }
 
 return M

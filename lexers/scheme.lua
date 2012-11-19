@@ -5,7 +5,7 @@ local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = { _NAME = 'scheme' }
+local M = {_NAME = 'scheme'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -79,27 +79,27 @@ local operator = token(l.OPERATOR, S('<>=*/+-`@%:()'))
 local entity = token('entity', '&' * word)
 
 M._rules = {
-  { 'whitespace', ws },
-  { 'keyword', keyword },
-  { 'identifier', identifier },
-  { 'string', string },
-  { 'comment', comment },
-  { 'number', number },
-  { 'operator', operator },
-  { 'entity', entity },
-  { 'any_char', l.any_char },
+  {'whitespace', ws},
+  {'keyword', keyword},
+  {'identifier', identifier},
+  {'string', string},
+  {'comment', comment},
+  {'number', number},
+  {'operator', operator},
+  {'entity', entity},
+  {'any_char', l.any_char},
 }
 
 M._tokenstyles = {
-  { 'entity', l.style_variable },
+  {'entity', l.style_variable},
 }
 
 M._foldsymbols = {
-  _patterns = { '[%(%)%[%]{}]', '#|', '|#', ';' },
+  _patterns = {'[%(%)%[%]{}]', '#|', '|#', ';'},
   [l.OPERATOR] = {
     ['('] = 1, [')'] = -1, ['['] = 1, [']'] = -1, ['{'] = 1, ['}'] = -1
   },
-  [l.COMMENT] = { ['#|'] = 1, ['|#'] = -1, [';'] = l.fold_line_comments(';') }
+  [l.COMMENT] = {['#|'] = 1, ['|#'] = -1, [';'] = l.fold_line_comments(';')}
 }
 
 return M
