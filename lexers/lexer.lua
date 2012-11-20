@@ -829,6 +829,22 @@ local M = {}
 --   The style typically used for embedded code.
 -- @field style_identifier (table)
 --   The style typically used for identifier words.
+-- @field style_default (table)
+--   The style all styles are based off of.
+-- @field style_line_number (table)
+--   The style used for all margins except fold margins.
+-- @field style_bracelight (table)
+--   The style used for highlighted brace characters.
+-- @field style_bracebad (table)
+--   The style used for unmatched brace characters.
+-- @field style_controlchar (table)
+--   The style used for control characters.
+--   Color attributes are ignored.
+-- @field style_indentguide (table)
+--   The style used for indentation guides.
+-- @field style_calltip (table)
+--   The style used by call tips if `buffer.call_tip_use_style` is set.
+--   Only the font name, size, and color attributes are used.
 -- @field SC_FOLDLEVELBASE (number)
 --   The initial (root) fold level.
 -- @field SC_FOLDLEVELWHITEFLAG (number)
