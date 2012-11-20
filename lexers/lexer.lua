@@ -4,7 +4,7 @@ local M = {}
 
 --[=[ This comment is for LuaDoc.
 ---
--- Performs lexing of Scintilla documents with Lua and LPeg.
+-- Lexes Scintilla documents with Lua and LPeg.
 --
 -- ## Overview
 --
@@ -105,7 +105,7 @@ local M = {}
 -- ### Tokens
 --
 -- Take a moment to think about your programming language's structure. What kind
--- of key elements does it have? In the template shown earlier, one pre-defined
+-- of key elements does it have? In the template shown earlier, one predefined
 -- element all languages have is whitespace. Your language probably also has
 -- elements like comments, strings, and keywords. These elements are called
 -- "tokens". They are the so-called "building blocks" of lexers. Source code is
@@ -151,7 +151,7 @@ local M = {}
 -- [`dec_num`](#dec_num), [`hex_num`](#hex_num), [`oct_num`](#oct_num),
 -- [`integer`](#integer), [`float`](#float), and [`word`](#word). However, you
 -- are not limited to the token names and LPeg patterns listed. You can do
--- whatever you like. However, the advantage of using pre-defined token names is
+-- whatever you like. However, the advantage of using predefined token names is
 -- that your lexer's tokens will inherit the universal syntax highlighting color
 -- theme used by your text editor.
 --
@@ -229,7 +229,7 @@ local M = {}
 -- **Numbers**
 --
 -- Most programming languages have the same format for integer and float tokens,
--- so it might be as simple as using a couple of pre-defined LPeg patterns:
+-- so it might be as simple as using a couple of predefined LPeg patterns:
 --
 --     local number = token(l.NUMBER, l.float + l.integer)
 --
@@ -286,7 +286,7 @@ local M = {}
 -- distinguish between: their rules should come before identifiers.
 --
 -- Now, you may be wondering what `l.any_char` is and why the "any_char" rule
--- exists. `l.any_char` is a special, pre-defined token that matches one single
+-- exists. `l.any_char` is a special, predefined token that matches one single
 -- character as a `DEFAULT` token. The "any_char" rule should appear in every
 -- lexer because there may be some text that does not match any of the rules you
 -- defined. How is that possible? Well in Lua, for example, the '!' character is
@@ -318,7 +318,7 @@ local M = {}
 --
 -- Lexers are primarily composed of tokens and grammar rules. A number of
 -- convenience patterns and functions are available for rapidly creating a
--- lexer. If you choose to use pre-defined token names for your tokens, you do
+-- lexer. If you choose to use predefined token names for your tokens, you do
 -- not have to define how tokens are highlighted. They will inherit the default
 -- syntax highlighting color theme your editor uses.
 --
@@ -331,9 +331,9 @@ local M = {}
 -- for more rich highlighting, or "styling", with different fonts, font sizes,
 -- font attributes, and foreground and background colors, just to name a few.
 -- The unit of this rich highlighting is called a "style". Styles are created
--- using the [`style()`](#style) function. By default, pre-defined token names
+-- using the [`style()`](#style) function. By default, predefined token names
 -- like `WHITESPACE`, `COMMENT`, `STRING`, etc. are associated with a particular
--- style as part of a universal color theme. These pre-defined styles include
+-- style as part of a universal color theme. These predefined styles include
 -- [`style_nothing`](#style_nothing), [`style_class`](#style_class),
 -- [`style_comment`](#style_comment), [`style_constant`](#style_constant),
 -- [`style_definition`](#style_definition), [`style_error`](#style_error),
@@ -344,35 +344,35 @@ local M = {}
 -- [`style_tag`](#style_tag), [`style_type`](#style_type),
 -- [`style_variable`](#style_variable), [`style_whitespace`](#style_whitespace),
 -- [`style_embedded`](#style_embedded), and
--- [`style_identifier`](#style_identifier). Like with pre-defined token names
--- and LPeg patterns, you are not limited to these pre-defined styles. At their
--- core, styles are just Lua tables, so you can create new ones and/or modify
--- existing ones. Each style consists of a set of attributes:
+-- [`style_identifier`](#style_identifier). Like with predefined token names and
+-- LPeg patterns, you are not limited to these predefined styles. At their core,
+-- styles are just Lua tables, so you can create new ones and/or modify existing
+-- ones. Each style consists of a set of attributes:
 --
 -- Attribute   | Description
 -- ------------|------------
 -- `font`      | The name of the font the style uses.
 -- `size`      | The size of the font the style uses.
--- `bold`      | Is the font face bold?
--- `italic`    | Is the font face italic?
--- `underline` | Is the font face underlined?
+-- `bold`      | Whether or not the font face is bold.
+-- `italic`    | Whether or not the font face is italic.
+-- `underline` | Whether or not the font face is underlined.
 -- `fore`      | The foreground color of the font face.
 -- `back`      | The background color of the font face.
 -- `eolfilled` | Does the background color extend to the end of the line?
 -- `case`      | The case of the font (1 = upper, 2 = lower, 0 = normal).
--- `visible`   | Is the text visible?
--- `changeable`| Is the text changeable or read-only?
--- `hotspot`   | Is the text clickable?
+-- `visible`   | Whether or not the text is visible.
+-- `changeable`| Whether the text is changeable or read-only.
+-- `hotspot`   | Whether or not the text is clickable.
 --
 -- Font colors are defined using the [`color()`](#color) function. Like with
--- token names, LPeg patterns, and styles, there is a set of pre-defined colors
+-- token names, LPeg patterns, and styles, there is a set of predefined colors
 -- in the `l.colors` table, but the color names depend on the current theme
 -- being used. It is generally not a good idea to manually define colors within
 -- styles in your lexer because they might not fit into a user's chosen color
--- theme. It is not even recommended to use a pre-defined color in a style
+-- theme. It is not even recommended to use a predefined color in a style
 -- because that color may be theme-specific. Instead, the best practice is to
--- either use pre-defined styles or derive new color-agnostic styles from
--- pre-defined ones. For example, Lua "longstring" tokens use the existing
+-- either use predefined styles or derive new color-agnostic styles from
+-- predefined ones. For example, Lua "longstring" tokens use the existing
 -- `style_string` style instead of defining a new one.
 --
 -- #### Example Styles
@@ -391,7 +391,7 @@ local M = {}
 --
 --     local style_bold_italic = style_bold..{italic = true}
 --
--- This allows you to derive new styles from pre-defined ones without having to
+-- This allows you to derive new styles from predefined ones without having to
 -- rewrite them. This operation leaves the old style unchanged. Thus if you
 -- had a "static variable" token whose style you wanted to base off of
 -- `style_variable`, it would probably look like:
@@ -416,7 +416,7 @@ local M = {}
 --     }
 --
 -- Why is a style not assigned to the `WHITESPACE` token? As mentioned earlier,
--- tokens that use pre-defined token names are automatically associated with a
+-- tokens that use predefined token names are automatically associated with a
 -- particular style. Only tokens with custom token names need manual style
 -- associations. As an example, consider a custom whitespace token:
 --
@@ -703,130 +703,132 @@ local M = {}
 --
 -- [lexer post]: http://lua-users.org/lists/lua-l/2007-04/msg00116.html
 -- @field DEFAULT (string)
---   Token name for default tokens.
+--   The token name for default tokens.
 -- @field WHITESPACE (string)
---   Token name for whitespace tokens.
+--   The token name for whitespace tokens.
 -- @field COMMENT (string)
---   Token name for comment tokens.
+--   The token name for comment tokens.
 -- @field STRING (string)
---   Token name for string tokens.
+--   The token name for string tokens.
 -- @field NUMBER (string)
---   Token name for number tokens.
+--   The token name for number tokens.
 -- @field KEYWORD (string)
---   Token name for keyword tokens.
+--   The token name for keyword tokens.
 -- @field IDENTIFIER (string)
---   Token name for identifier tokens.
+--   The token name for identifier tokens.
 -- @field OPERATOR (string)
---   Token name for operator tokens.
+--   The token name for operator tokens.
 -- @field ERROR (string)
---   Token name for error tokens.
+--   The token name for error tokens.
 -- @field PREPROCESSOR (string)
---   Token name for preprocessor tokens.
+--   The token name for preprocessor tokens.
 -- @field CONSTANT (string)
---   Token name for constant tokens.
+--   The token name for constant tokens.
 -- @field VARIABLE (string)
---   Token name for variable tokens.
+--   The token name for variable tokens.
 -- @field FUNCTION (string)
---   Token name for function tokens.
+--   The token name for function tokens.
 -- @field CLASS (string)
---   Token name for class tokens.
+--   The token name for class tokens.
 -- @field TYPE (string)
---   Token name for type tokens.
+--   The token name for type tokens.
 -- @field LABEL (string)
---   Token name for label tokens.
+--   The token name for label tokens.
 -- @field REGEX (string)
---   Token name for regex tokens.
+--   The token name for regex tokens.
 -- @field any (pattern)
---   Matches any single character.
+--   A pattern matching any single character.
 -- @field ascii (pattern)
---   Matches any ASCII character (value 0 to 127).
+--   A pattern matching any ASCII character (`0`..`127`).
 -- @field extend (pattern)
---   Matches any ASCII extended character (value 0 to 255).
+--   A pattern matching any ASCII extended character (`0`..`255`).
 -- @field alpha (pattern)
---   Matches any alphabetic character ('A' to 'Z', 'a' to 'z').
+--   A pattern matching any alphabetic character (`A-Z`, `a-z`).
 -- @field digit (pattern)
---   Matches any digit ('0' to '9').
+--   A pattern matching any digit (`0-9`).
 -- @field alnum (pattern)
---   Matches any alphanumeric character ('A' to 'Z', 'a' to 'z', '0' to '9').
+--   A pattern matching any alphanumeric character (`A-Z`, `a-z`, `0-9`).
 -- @field lower (pattern)
---   Matches any lower case character ('a' to 'z').
+--   A pattern matching any lower case character (`a-z`).
 -- @field upper (pattern)
---   Matches any upper case character ('A' to 'Z').
+--   A pattern matching any upper case character (`A-Z`).
 -- @field xdigit (pattern)
---   Matches any hexadecimal digit ('0' to '9', 'A' to 'F', 'a' to 'f').
+--   A pattern matching any hexadecimal digit (`0-9`, `A-F`, `a-f`).
 -- @field cntrl (pattern)
---   Matches any control character (value 0 to 31).
+--   A pattern matching any control character (`0`..`31`).
 -- @field graph (pattern)
---   Matches any graphical character ('!' to '~').
+--   A pattern matching any graphical character (`!` to `~`).
 -- @field print (pattern)
---   Matches any printable character (' ' to '~').
+--   A pattern matching any printable character (space to `~`).
 -- @field punct (pattern)
---   Matches any punctuation character not alphanumeric ('!' to '/', ':' to '@',
---   '[' to ''', '{' to '~').
+--   A pattern matching any punctuation character not alphanumeric (`!` to `/`,
+--   `:` to `@`, `[` to `'`, `{` to `~`).
 -- @field space (pattern)
---   Matches any whitespace character ("\t", "\v", "\f", "\n", "\r", ' ').
+--   A pattern matching any whitespace character (`\t`, `\v`, `\f`, `\n`, `\r`,
+--   space).
 -- @field newline (pattern)
---   Matches any newline characters.
+--   A pattern matching any newline characters.
 -- @field nonnewline (pattern)
---   Matches any non-newline character.
+--   A pattern matching any non-newline character.
 -- @field nonnewline_esc (pattern)
---   Matches any non-newline character excluding newlines escaped with '\'.
+--   A pattern matching any non-newline character excluding newlines escaped
+--   with '\'.
 -- @field dec_num (pattern)
---   Matches a decimal number.
+--   A pattern matching a decimal number.
 -- @field hex_num (pattern)
---   Matches a hexadecimal number.
+--   A pattern matching a hexadecimal number.
 -- @field oct_num (pattern)
---   Matches an octal number.
+--   A pattern matching an octal number.
 -- @field integer (pattern)
---   Matches a decimal, hexadecimal, or octal number.
+--   A pattern matching a decimal, hexadecimal, or octal number.
 -- @field float (pattern)
---   Matches a floating point number.
+--   A pattern matching a floating point number.
 -- @field word (pattern)
---   Matches a typical word starting with a letter or underscore and then any
---   alphanumeric or underscore characters.
+--   A pattern matching a typical word starting with a letter or underscore and
+--   then any alphanumeric or underscore characters.
 -- @field any_char (pattern)
---   A `DEFAULT` token matching any single character. This is useful in a
---   fallback rule for a grammar.
+--   A `DEFAULT` token matching any single character, useful in a fallback rule
+--   for a grammar.
 -- @field style_nothing (table)
---   Style typically used for no styling.
+--   The style typically used for no styling.
 -- @field style_class (table)
---   Style typically used for class definitions.
+--   The style typically used for class definitions.
 -- @field style_comment (table)
---   Style typically used for code comments.
+--   The style typically used for code comments.
 -- @field style_constant (table)
---   Style typically used for constants.
+--   The style typically used for constants.
 -- @field style_definition (table)
---   Style typically used for definitions.
+--   The style typically used for definitions.
 -- @field style_error (table)
---   Style typically used for erroneous syntax.
+--   The style typically used for erroneous syntax.
 -- @field style_function (table)
---   Style typically used for function definitions.
+--   The style typically used for function definitions.
 -- @field style_keyword (table)
---   Style typically used for language keywords.
+--   The style typically used for language keywords.
 -- @field style_label (table)
---   Style typically used for labels.
+--   The style typically used for labels.
 -- @field style_number (table)
---   Style typically used for numbers.
+--   The style typically used for numbers.
 -- @field style_operator (table)
---   Style typically used for operators.
+--   The style typically used for operators.
 -- @field style_regex (table)
---   Style typically used for regular expression strings.
+--   The style typically used for regular expression strings.
 -- @field style_string (table)
---   Style typically used for strings.
+--   The style typically used for strings.
 -- @field style_preproc (table)
---   Style typically used for preprocessor statements.
+--   The style typically used for preprocessor statements.
 -- @field style_tag (table)
---   Style typically used for markup tags.
+--   The style typically used for markup tags.
 -- @field style_type (table)
---   Style typically used for static types.
+--   The style typically used for static types.
 -- @field style_variable (table)
---   Style typically used for variables.
+--   The style typically used for variables.
 -- @field style_whitespace (table)
---   Style typically used for whitespace.
+--   The style typically used for whitespace.
 -- @field style_embedded (table)
---   Style typically used for embedded code.
+--   The style typically used for embedded code.
 -- @field style_identifier (table)
---   Style typically used for identifier words.
+--   The style typically used for identifier words.
 -- @field SC_FOLDLEVELBASE (number)
 --   The initial (root) fold level.
 -- @field SC_FOLDLEVELWHITEFLAG (number)
@@ -925,7 +927,7 @@ local function build_grammar(lexer, initial_rule)
 end
 
 -- Default tokens.
--- Contains pre-defined token names and their associated style numbers.
+-- Contains predefined token names and their associated style numbers.
 -- @class table
 -- @name tokens
 -- @field default The default token's style (0).
@@ -968,7 +970,7 @@ local string_upper = string.upper
 for k, v in pairs(tokens) do M[string_upper(k)] = k end
 
 ---
--- Initializes or loads the specified lexer.
+-- Initializes or loads lexer *lexer_name* and returns the lexer object.
 -- Scintilla calls this function to load a lexer. Parent lexers also call this
 -- function to load child lexers and vice-versa.
 -- @param lexer_name The name of the lexing language.
@@ -1044,10 +1046,10 @@ function M.load(lexer_name)
 end
 
 ---
--- Lexes the given text.
--- Called by the Scintilla lexer; **do not call from Lua**.
--- If the lexer has a `_LEXBYLINE` flag set, the text is lexed one line at a
--- time. Otherwise the text is lexed as a whole.
+-- Lexes a chunk of text *text* with an initial style number of *init_style*.
+-- Called by the Scintilla lexer; **do not call from Lua**. If the lexer has a
+-- `_LEXBYLINE` flag set, the text is lexed one line at a time. Otherwise the
+-- text is lexed as a whole.
 -- @param text The text to lex.
 -- @param init_style The current style. Multilang lexers use this to determine
 --   which language to start lexing in.
@@ -1100,11 +1102,12 @@ local FOLD_HEADER  = SC_FOLDLEVELHEADERFLAG
 local FOLD_BLANK = SC_FOLDLEVELWHITEFLAG
 
 ---
--- Folds the given text.
--- Called by the Scintilla lexer; **do not call from Lua**.
--- If the current lexer has a `_fold` function or a `_foldsymbols` table, it is
--- used to perform folding. Otherwise, if a "fold.by.indentation" property is
--- set, folding by indentation is done.
+-- Folds *text*, a chunk of text starting at position *start_pos* on line number
+-- *start_line* with a beginning fold level of *start_level* in the buffer.
+-- Called by the Scintilla lexer; **do not call from Lua**. If the current lexer
+-- has a `_fold` function or a `_foldsymbols` table, it is used to perform
+-- folding. Otherwise, if a `fold.by.indentation` property is set, folding by
+-- indentation is done.
 -- @param text The document text to fold.
 -- @param start_pos The position in the document text starts at.
 -- @param start_line The line number text starts on.
@@ -1223,9 +1226,10 @@ M.float = lpeg_S('+-')^-1 *
 M.word = (M.alpha + '_') * (M.alnum + '_')^0
 
 ---
--- Creates and returns a lexer token pattern with the given name and LPeg
--- pattern.
--- @param name The name of token. If this name is not a pre-defined token name,
+-- Creates and returns a token pattern with the name *name* and pattern *patt*.
+-- If *name* is not a predefined token name, its style must be defined in the
+-- lexer's `_tokenstyles` table.
+-- @param name The name of token. If this name is not a predefined token name,
 --   then a style needs to be assiciated with it in the lexer's `_tokenstyles`
 --   table.
 -- @param patt The LPeg pattern associated with the token.
@@ -1248,21 +1252,22 @@ M.any_char = M.token(M.DEFAULT, M.any)
 M.colors = {}
 
 ---
--- Creates a Scintilla style from the given table of style properties.
+-- Creates and returns a Scintilla style from the given table of style
+-- properties.
 -- @param style_table A table of style properties:
 --   * `font` (string) The name of the font the style uses.
---   * `size` (integer) The size of the font the style uses.
---   * `bold` (boolean) Is the font face bold?
---   * `italic` (boolean) Is the font face italic?
---   * `underline` (boolean) Is the font face underlined?
---   * `fore` (integer) The foreground [`color`](#color) of the font face.
---   * `back` (integer) The background [`color`](#color) of the font face.
---   * `eolfilled` (boolean) Does the background color extend to the end of the
---     line?
---   * `case` (integer) The case of the font (1 = upper, 2 = lower, 0 = normal).
---   * `visible` (boolean) Is the text visible?
---   * `changeable` (boolean) Is the text changable or read-only?
---   * `hotspot` (boolean) Is the text clickable?
+--   * `size` (number) The size of the font the style uses.
+--   * `bold` (bool) Whether or not the font face is bold.
+--   * `italic` (bool) Whether or not the font face is italic.
+--   * `underline` (bool) Whether or not the font face is underlined.
+--   * `fore` (number) The foreground [`color`](#color) of the font face.
+--   * `back` (number) The background [`color`](#color) of the font face.
+--   * `eolfilled` (bool) Whether or not the background color extends to the end
+--     of the line.
+--   * `case` (number) The case of the font (1 = upper, 2 = lower, 0 = normal).
+--   * `visible` (bool) Whether or not the text is visible.
+--   * `changeable` (bool) Whether the text changable or read-only.
+--   * `hotspot` (bool) Whether or not the text is clickable.
 -- @return style table
 -- @usage local style_bold_italic = style{bold = true, italic = true}
 -- @usage local style_grey = style{fore = l.colors.grey}
@@ -1281,7 +1286,8 @@ function M.style(style_table)
 end
 
 ---
--- Creates a Scintilla color.
+-- Creates and returns a Scintilla color from *r*, *g*, and *b* string
+-- hexadecimal color components.
 -- @param r The string red hexadecimal component of the color.
 -- @param g The string green hexadecimal component of the color.
 -- @param b The string blue hexadecimal component of the color.
@@ -1291,10 +1297,15 @@ end
 function M.color(r, g, b) return tonumber(b..g..r, 16) end
 
 ---
--- Creates and returns a pattern that matches a range of characters delimited by
--- the given character(s).
+-- Creates and returns a pattern that matches a range of text bounded by
+-- *chars* characters.
 -- This is a convenience function for matching more complicated delimited ranges
--- like strings with escape characters and balanced parentheses.
+-- like strings with escape characters and balanced parentheses. *escape*
+-- specifies the escape characters a range can have, *end_optional* indicates
+-- whether or not unterminated ranges match, *balanced* indicates whether or not
+-- to handle balanced ranges like parentheses and requires *chars* to be
+-- composed of two characters, and *forbidden* is a set of characters disallowed
+-- in ranges such as newlines.
 -- @param chars The character(s) that bound the matched range.
 -- @param escape Optional escape character. This parameter may `nil` or the
 --   empty string to indicate no escape character.
@@ -1309,10 +1320,10 @@ function M.color(r, g, b) return tonumber(b..g..r, 16) end
 --   range. Each character is part of the set. This is particularly useful for
 --   disallowing newlines in delimited ranges.
 -- @return pattern
--- @usage local sq_str_noescapes = delimited_range("'", nil, true)
--- @usage local sq_str_escapes = delimited_range("'", '\\', true)
--- @usage local unbalanced_parens = delimited_range('()', '\\')
--- @usage local balanced_parens = delimited_range('()', '\\', false, true)
+-- @usage local dq_str_noescapes = l.delimited_range('"', nil, true)
+-- @usage local dq_str_escapes = l.delimited_range('"', '\\', true)
+-- @usage local unbalanced_parens = l.delimited_range('()', '\\')
+-- @usage local balanced_parens = l.delimited_range('()', '\\', false, true)
 -- @see nested_pair
 -- @name delimited_range
 function M.delimited_range(chars, escape, end_optional, balanced, forbidden)
@@ -1337,7 +1348,7 @@ function M.delimited_range(chars, escape, end_optional, balanced, forbidden)
 end
 
 ---
--- Creates and returns a pattern that matches the given pattern only at the
+-- Creates and returns a pattern that matches pattern *patt* only at the
 -- beginning of a line.
 -- @param patt The LPeg pattern to match on the beginning of a line.
 -- @return pattern
@@ -1354,8 +1365,7 @@ end
 
 ---
 -- Creates and returns a pattern that matches any previous non-whitespace
--- character in the given set.
--- A match consumes no input.
+-- character in *s* and consumes no input.
 -- @param s String character set like one passed to `lpeg.S()`.
 -- @return pattern
 -- @usage local regex = l.last_char_includes('+-*!%^&|=,([{') *
@@ -1373,7 +1383,8 @@ end
 
 ---
 -- Similar to `delimited_range()`, but allows for multi-character, nested
--- delimiters.
+-- delimiters *start_chars* and *end_chars*. *end_optional* indicates whether or
+-- not unterminated ranges match.
 -- With single-character delimiters, this function is identical to
 -- `delimited_range(start_chars..end_chars, nil, end_optional, true)`.
 -- @param start_chars The string starting a nested sequence.
@@ -1392,8 +1403,10 @@ function M.nested_pair(start_chars, end_chars, end_optional)
 end
 
 ---
--- Creates and returns a pattern that matches any word in the given set of
--- words.
+-- Creates and returns a pattern that matches any word in the set *words*
+-- case-sensitively, unless *case_insensitive* is `true`, with the set of word
+-- characters being alphanumerics, underscores, and all of the characters in
+-- *word_chars*.
 -- This is a convenience function for simplifying a set of ordered choice word
 -- patterns.
 -- @param words A table of words.
@@ -1427,15 +1440,16 @@ function M.word_match(words, word_chars, case_insensitive)
 end
 
 ---
--- Embeds a child lexer language in a parent one.
+-- Embeds *child* lexer in *parent* with *start_rule* and *end_rule*, patterns
+-- that signal the beginning and end of the embedded lexer, respectively.
 -- @param parent The parent lexer.
 -- @param child The child lexer.
--- @param start_rule The token that signals the beginning of the embedded
+-- @param start_rule The pattern that signals the beginning of the embedded
 --   lexer.
--- @param end_rule The token that signals the end of the embedded lexer.
--- @usage embed_lexer(M, css, css_start_rule, css_end_rule)
--- @usage embed_lexer(html, M, php_start_rule, php_end_rule)
--- @usage embed_lexer(html, ruby, ruby_start_rule, rule_end_rule)
+-- @param end_rule The pattern that signals the end of the embedded lexer.
+-- @usage l.embed_lexer(M, css, css_start_rule, css_end_rule)
+-- @usage l.embed_lexer(html, M, php_start_rule, php_end_rule)
+-- @usage l.embed_lexer(html, ruby, ruby_start_rule, ruby_end_rule)
 -- @name embed_lexer
 function M.embed_lexer(parent, child, start_rule, end_rule)
   -- Add child rules.
@@ -1503,8 +1517,8 @@ local function next_line_is_comment(prefix, text, pos, line, s)
 end
 
 ---
--- Returns a fold function that folds consecutive line comments.
--- This function should be used inside the lexer's `_foldsymbols` table.
+-- Returns a fold function, to be used within the lexer's `_foldsymbols` table,
+-- that folds consecutive line comments beginning with string *prefix*.
 -- @param prefix The prefix string defining a line comment.
 -- @usage [l.COMMENT] = {['--'] = l.fold_line_comments('--')}
 -- @usage [l.COMMENT] = {['//'] = l.fold_line_comments('//')}
@@ -1528,18 +1542,17 @@ end
 --   Each rule is a table containing an arbitrary rule name and the LPeg pattern
 --   associated with the rule. The order of rules is important as rules are
 --   matched sequentially. Ensure there is a fallback rule in case the lexer
---   encounters any unexpected input, usually using the pre-defined `l.any_char`
+--   encounters any unexpected input, usually using the predefined `l.any_char`
 --   token.
 --   Child lexers should not use this table to access and/or modify their
 --   parent's rules and vice-versa. Use the `_RULES` table instead.
--- @field _tokenstyles A list of styles associated with non-pre-defined token
+-- @field _tokenstyles A list of styles associated with non-predefined token
 --   names.
 --   Each token style is a table containing the name of the token (not a rule
 --   containing the token) and the style associated with the token. The order of
 --   token styles is not important.
---   It is recommended to use pre-defined styles or color-agnostic styles
---   derived from pre-defined styles to ensure compatibility with user color
---   themes.
+--   It is recommended to use predefined styles or color-agnostic styles derived
+--   from predefined styles to ensure compatibility with user color themes.
 -- @field _foldsymbols A table of recognized fold points for the lexer.
 --   Keys are token names with table values defining fold points. Those table
 --   values have string keys of keywords or characters that indicate a fold
@@ -1557,14 +1570,15 @@ end
 -- @field _lexer For child lexers embedding themselves into a parent lexer, this
 --   field should be set to the parent lexer object in order for the parent's
 --   rules to be used instead of the child's.
--- @field _RULES A table of rule name keys with their associated LPeg pattern
+-- @field _RULES A map of rule name keys with their associated LPeg pattern
 --   values for the lexer.
 --   This is constructed from the lexer's `_rules` table and accessible to other
 --   lexers for embedded lexer applications like modifying parent or child
 --   rules.
--- @field _LEXBYLINE A boolean that, when `true`, indicates the lexer matches
---   text by whole lines instead of arbitrary chunks. The default is `false`.
---   Line lexers cannot look ahead to subsequent lines.
+-- @field _LEXBYLINE Indicates the lexer matches text by whole lines instead of
+--    arbitrary chunks.
+--    The default value is `false`. Line lexers cannot look ahead to subsequent
+--    lines.
 -- @class table
 -- @name lexer
 local lexer
@@ -1572,7 +1586,8 @@ local lexer
 -- Registered functions and constants.
 
 ---
--- Returns the string style name and style number at a given position.
+-- Returns the string style name and style number at position *pos* in the
+-- buffer.
 -- @param pos The position to get the style for.
 -- @return style name
 -- @return style number
@@ -1581,7 +1596,8 @@ local lexer
 M.get_style_at = GetStyleAt
 
 ---
--- Returns an integer property value for a given key.
+-- Returns the integer property value associated with string property *key*, or
+-- *default*.
 -- @param key The property key.
 -- @param default Optional integer value to return if key is not set.
 -- @return integer property value
@@ -1590,7 +1606,7 @@ M.get_style_at = GetStyleAt
 M.get_property = GetProperty
 
 ---
--- Returns the fold level for a given line.
+-- Returns the fold level for line number *line_number*.
 -- This level already has `SC_FOLDLEVELBASE` added to it, so you do not need to
 -- add it yourself.
 -- @param line_number The line number to get the fold level of.
@@ -1600,8 +1616,8 @@ M.get_property = GetProperty
 M.get_fold_level = GetFoldLevel
 
 ---
--- Returns the indent amount of text for a given line.
--- @param line The line number to get the indent amount of.
+-- Returns the amount of indentation the text on line number *line_number* has.
+-- @param line_number The line number to get the indent amount of.
 -- @return integer indent amount
 -- @class function
 -- @name get_indent_amount
