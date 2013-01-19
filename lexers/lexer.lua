@@ -1066,9 +1066,9 @@ end
 -- Called by the Scintilla lexer; **do not call from Lua**. If the lexer has a
 -- `_LEXBYLINE` flag set, the text is lexed one line at a time. Otherwise the
 -- text is lexed as a whole.
--- @param text The text to lex.
--- @param init_style The current style. Multilang lexers use this to determine
---   which language to start lexing in.
+-- @param text The text in the buffer to lex.
+-- @param init_style The current style. Multiple-language lexers use this to
+--   determine which language to start lexing in.
 -- @return table of token names and positions.
 -- @name lex
 function M.lex(text, init_style)
@@ -1124,10 +1124,10 @@ local FOLD_BLANK = SC_FOLDLEVELWHITEFLAG
 -- has a `_fold` function or a `_foldsymbols` table, it is used to perform
 -- folding. Otherwise, if a `fold.by.indentation` property is set, folding by
 -- indentation is done.
--- @param text The document text to fold.
--- @param start_pos The position in the document text starts at.
--- @param start_line The line number text starts on.
--- @param start_level The fold level text starts on.
+-- @param text The text in the buffer to fold.
+-- @param start_pos The position in the buffer *text* starts at.
+-- @param start_line The line number *text* starts on.
+-- @param start_level The fold level *text* starts on.
 -- @return table of fold levels.
 -- @name fold
 function M.fold(text, start_pos, start_line, start_level)
@@ -1330,7 +1330,7 @@ function M.color(r, g, b) return tonumber(b..g..r, 16) end
 --   delimiter matches until an end delimiter or the end of the input is
 --   reached.
 -- @param balanced Optional flag indicating whether or not a balanced range is
---   matched, like the "%b" Lua pattern. This flag only applies if `chars`
+--   matched, like the "%b" Lua pattern. This flag only applies if *chars*
 --   consists of two different characters (e.g. "()").
 -- @param forbidden Optional string of characters forbidden in a delimited
 --   range. Each character is part of the set. This is particularly useful for
@@ -1604,7 +1604,7 @@ local lexer
 ---
 -- Returns the string style name and style number at position *pos* in the
 -- buffer.
--- @param pos The position to get the style for.
+-- @param pos The position in the buffer to get the style for.
 -- @return style name
 -- @return style number
 -- @class function
@@ -1614,8 +1614,8 @@ M.get_style_at = GetStyleAt
 ---
 -- Returns the integer property value associated with string property *key*, or
 -- *default*.
--- @param key The property key.
--- @param default Optional integer value to return if key is not set.
+-- @param key The string property key.
+-- @param default Optional integer value to return if *key* is not set.
 -- @return integer property value
 -- @class function
 -- @name get_property
