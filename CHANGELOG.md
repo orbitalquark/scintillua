@@ -4,6 +4,24 @@
 
 [Atom Feed]: feed
 
+## 3.2.4-1 (18 Jan 2013)
+
+Download:
+
+* [Scintillua 3.2.4-1][]
+
+Bugfixes:
+
+* Fixed some operators in Bash lexer.
+
+Changes:
+
+* Rewrote Makefile lexer.
+* Rewrote documentation.
+* Improved speed and memory usage of lexers.
+
+[Scintillua 3.2.4-1]: download/scintillua3.2.4-1.zip
+
 ## 3.2.3-1 (22 Oct 2012)
 
 Download:
