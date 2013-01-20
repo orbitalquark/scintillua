@@ -1,4 +1,4 @@
--- Copyright 2006-2012 Mitchell mitchell.att.foicica.com. See LICENSE.
+-- Copyright 2006-2013 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- SQL LPeg lexer.
 
 local l = lexer

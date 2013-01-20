@@ -1,4 +1,4 @@
--- Copyright 2006-2012 Mitchell mitchell.att.foicica.com. See LICENSE.
+-- Copyright 2006-2013 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- Light lexer theme for Scintillua.
 
 local l, color, style = lexer, lexer.color, lexer.style
