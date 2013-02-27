@@ -1,6 +1,6 @@
 -- Copyright 2006-2013 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- AWK LPeg lexer.
--- Modified by Wolfgang Seeberg 2012.
+-- Modified by Wolfgang Seeberg 2012, 2013.
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -25,20 +25,28 @@ local CC = {
 }
 local LastRegexEnd = 0
 local BackslashAtCommentEnd = 0
+local KW_BEFORE_RX = {
+  case = 1, ['do'] = 1, ['else'] = 1, exit = 1, print = 1, printf = 1,
+  ['return'] = 1
+}
+
+local function findKeyword(input, e)
+  local i = e
+  while i > 0 and input:find("^[%l]", i) do i = i - 1 end
+  local w = input:sub(i + 1, e)
+  if i == 0 then
+    return KW_BEFORE_RX[w] == 1
+  elseif input:find("^[%u%d_]", i) then
+    return false
+  else
+    return KW_BEFORE_RX[w] == 1
+  end
+end
 
 local function isRegex(input, i)
   while i >= 1 and input:find('^[ \t]', i) do i = i - 1 end
   if i < 1 then return true end
-  local function findword(input, word, e)
-    local s = e - #word + 1
-    if s < 1 or input:sub(s, e) ~= word then
-      return false
-    else
-      return s == 1 or not input:find("^[%w_$]", s - 1)
-    end
-  end
-  if input:find("^[-!%%&(*+,:;<=>?[^{|}~\f]", i) or
-     findword(input, 'case', i) or findword(input, 'print', i) then
+  if input:find("^[-!%%&(*+,:;<=>?[^{|}~\f]", i) or findKeyword(input, i) then
     return true
   elseif input:sub(i, i) == SLASH then
     return i ~= LastRegexEnd -- deals with /xx/ / /yy/.
@@ -127,7 +135,7 @@ local function scanGawkRegex(input, index)
       return false
     end
     local rx = input:sub(index - 1, i)
-    for bs in rx:gmatch("[^\\](\\+)[BSsWwxy<>`']") do
+    for bs in rx:gmatch("[^\\](\\+)[BSsWwy<>`']") do
       -- /\S/ is special, but /\\S/ is not.
       if #bs % 2 == 1 then return i + 1 end
     end
@@ -139,7 +147,7 @@ local function scanGawkRegex(input, index)
 end
 -- Is only called immediately after scanGawkRegex().
 local function scanRegex()
-    return ScanRegexResult
+  return ScanRegexResult
 end
 
 local function scanString(input, index)
@@ -241,8 +249,7 @@ local operator = token(l.OPERATOR, S('!%&()*+,-/:;<=>?[\\]^{|}~'))
 local gawkOperator = token('gawkOperator', P("|&") + "@" + "**=" + "**")
 
 -- Fields. E.g. $1, $a, $(x), $a(x), $a[x], $"1", $$a, etc.
-local field = token('field',
-                    P('$') * S('$+-') ^ 0 *
+local field = token('field', P('$') * S('$+-') ^ 0 *
                     (float + (l.word ^ 0 * '(' * P(scanFieldDelimiters)) +
                      (l.word ^ 1 * ('[' * P(scanFieldDelimiters)) ^ -1) +
                      ('"' * P(scanString)) + ('/' * P(eatRegex) * '/')))
@@ -265,7 +272,7 @@ local keyword = token(l.KEYWORD, word_match{
 local gawkKeyword = token('gawkKeyword', word_match{
   'BEGINFILE', 'ENDFILE', 'adump', 'and', 'asort', 'asorti', 'bindtextdomain',
   'case', 'compl', 'dcgettext', 'dcngettext', 'default', 'extension', 'func',
-  'gensub', 'include', 'isarray', 'lshift', 'mktime', 'or', 'patsplit',
+  'gensub', 'include', 'isarray', 'load', 'lshift', 'mktime', 'or', 'patsplit',
   'rshift', 'stopme', 'strftime', 'strtonum', 'switch', 'systime', 'xor'
 })
 
@@ -274,9 +281,9 @@ local builtInVariable = token('builtInVariable', word_match{
   'OFMT', 'OFS', 'ORS', 'RLENGTH', 'RS', 'RSTART', 'SUBSEP'
 })
 
-local gawkBuiltInVariable = token('gawkBuiltInVariable', word_match{
-  'ARGIND', 'BINMODE', 'ERRNO', 'FIELDWIDTHS', 'FPAT', 'IGNORECASE', 'LINT',
-  'PROCINFO', 'RT', 'TEXTDOMAIN'
+local gawkBuiltInVariable = token('gawkBuiltInVariable', word_match {
+  'ARGIND', 'BINMODE', 'ERRNO', 'FIELDWIDTHS', 'FPAT', 'FUNCTAB', 'IGNORECASE',
+  'LINT', 'PREC', 'PROCINFO', 'ROUNDMODE', 'RT', 'SYMTAB', 'TEXTDOMAIN'
 })
 
 -- Within each group order matters, but the groups themselves (except the
