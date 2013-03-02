@@ -994,8 +994,8 @@ for k, v in pairs(tokens) do M[string_upper(k)] = k end
 -- @name load
 function M.load(lexer_name)
   M.WHITESPACE = lexer_name..'_whitespace'
-  local lexer = require(lexer_name or 'null')
-  if not lexer then error('Lexer '..lexer_name..' does not exist') end
+  local ok, lexer = pcall(require, lexer_name or 'null')
+  if not ok then lexer = {_NAME = lexer_name} end
   lexer._TOKENS = tokens
   lexer._STYLES = {
     [0] = M.style_nothing,
