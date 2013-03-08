@@ -845,14 +845,12 @@ local M = {}
 -- @field style_calltip (table)
 --   The style used by call tips if `buffer.call_tip_use_style` is set.
 --   Only the font name, size, and color attributes are used.
--- @field SC_FOLDLEVELBASE (number)
+-- @field FOLD_BASE (number)
 --   The initial (root) fold level.
--- @field SC_FOLDLEVELWHITEFLAG (number)
+-- @field FOLD_BLANK (number)
 --   Flag indicating that the line is blank.
--- @field SC_FOLDLEVELHEADERFLAG (number)
+-- @field FOLD_HEADER (number)
 --   Flag indicating the line is fold point.
--- @field SC_FOLDLEVELNUMBERMASK (number)
---   Flag used with `SCI_GETFOLDLEVEL(line)` to get the fold level of a line.
 module('lexer')]=]
 
 local lpeg = require 'lpeg'
@@ -885,7 +883,7 @@ end
 local function add_style(lexer, token_name, style)
   local len = lexer._STYLES.len
   if len == 32 then len = len + 8 end -- skip predefined styles
-  if len >= 128 then print('Too many styles defined (128 MAX)') end
+  if len >= 255 then print('Too many styles defined (255 MAX)') end
   lexer._TOKENS[token_name] = len
   lexer._STYLES[len] = style
   lexer._STYLES.len = len + 1
@@ -1111,12 +1109,6 @@ function M.lex(text, init_style)
   end
 end
 
-local get_style_at = GetStyleAt
-local get_property, get_indent_amount = GetProperty, GetIndentAmount
-local FOLD_BASE = SC_FOLDLEVELBASE
-local FOLD_HEADER  = SC_FOLDLEVELHEADERFLAG
-local FOLD_BLANK = SC_FOLDLEVELWHITEFLAG
-
 ---
 -- Folds *text*, a chunk of text starting at position *start_pos* on line number
 -- *start_line* with a beginning fold level of *start_level* in the buffer.
@@ -1134,6 +1126,8 @@ function M.fold(text, start_pos, start_line, start_level)
   local folds = {}
   if text == '' then return folds end
   local lexer = _G._LEXER
+  local FOLD_BASE = M.FOLD_BASE
+  local FOLD_HEADER, FOLD_BLANK  = M.FOLD_HEADER, M.FOLD_BLANK
   if lexer._fold then
     return lexer._fold(text, start_pos, start_line, start_level)
   elseif lexer._foldsymbols then
@@ -1142,6 +1136,7 @@ function M.fold(text, start_pos, start_line, start_level)
     lines[#lines + 1] = {text:match('()([^\r\n]*)$')}
     local fold_symbols = lexer._foldsymbols
     local fold_symbols_patterns = fold_symbols._patterns
+    local get_style_at = M.get_style_at
     local line_num, prev_level = start_line, start_level
     local current_level = prev_level
     for i = 1, #lines do
@@ -1169,7 +1164,8 @@ function M.fold(text, start_pos, start_line, start_level)
       end
       line_num = line_num + 1
     end
-  elseif get_property('fold.by.indentation', 1) == 1 then
+  elseif M.get_property('fold.by.indentation', 1) == 1 then
+    local get_indent_amount = M.get_indent_amount
     -- Indentation based folding.
     local current_line, prev_level = start_line, start_level
     for _, line in text:gmatch('([\t ]*)(.-)\r?\n') do
@@ -1540,6 +1536,7 @@ end
 -- @usage [l.COMMENT] = {['//'] = l.fold_line_comments('//')}
 -- @name fold_line_comments
 function M.fold_line_comments(prefix)
+  local get_property = M.get_property
   return function(text, pos, line, s)
     if get_property('fold.line.comments', 0) == 0 then return 0 end
     if s > 1 and line:match('^%s*()') < s then return 0 end
@@ -1550,6 +1547,8 @@ function M.fold_line_comments(prefix)
     return 0
   end
 end
+
+--[[ The functions and fields below were defined in C.
 
 ---
 -- Individual lexer fields.
@@ -1599,8 +1598,6 @@ end
 -- @name lexer
 local lexer
 
--- Registered functions and constants.
-
 ---
 -- Returns the string style name and style number at position *pos* in the
 -- buffer.
@@ -1609,7 +1606,7 @@ local lexer
 -- @return style number
 -- @class function
 -- @name get_style_at
-M.get_style_at = GetStyleAt
+local get_style_at
 
 ---
 -- Returns the integer property value associated with string property *key*, or
@@ -1619,7 +1616,7 @@ M.get_style_at = GetStyleAt
 -- @return integer property value
 -- @class function
 -- @name get_property
-M.get_property = GetProperty
+local get_property
 
 ---
 -- Returns the fold level for line number *line_number*.
@@ -1629,7 +1626,7 @@ M.get_property = GetProperty
 -- @return integer fold level
 -- @class function
 -- @name get_fold_level
-M.get_fold_level = GetFoldLevel
+local get_fold_level
 
 ---
 -- Returns the amount of indentation the text on line number *line_number* has.
@@ -1637,11 +1634,7 @@ M.get_fold_level = GetFoldLevel
 -- @return integer indent amount
 -- @class function
 -- @name get_indent_amount
-M.get_indent_amount = GetIndentAmount
-
-M.SC_FOLDLEVELBASE = SC_FOLDLEVELBASE
-M.SC_FOLDLEVELWHITEFLAG = SC_FOLDLEVELWHITEFLAG
-M.SC_FOLDLEVELHEADERFLAG = SC_FOLDLEVELHEADERFLAG
-M.SC_FOLDLEVELNUMBERMASK = SC_FOLDLEVELNUMBERMASK
+local get_indent_amount
+]]
 
 return M
