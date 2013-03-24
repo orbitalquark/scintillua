@@ -155,7 +155,7 @@ M._tokenstyles = {
   {'unit', l.style_label},
   {'value', l.style_constant},
   {'color', l.style_number},
-  {'at_rule', l.style_preprocessor},
+  {'at_rule', l.style_preproc},
 }
 
 M._foldsymbols = {
