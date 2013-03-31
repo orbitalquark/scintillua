@@ -17,6 +17,7 @@ local alt_name = {
   dmd = 'd',
   hypertext = 'html',
   javascript = 'js',
+  python = 'py',
   rstats = 'r',
   ruby = 'rb',
 }
