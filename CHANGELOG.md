@@ -4,6 +4,23 @@
 
 [Atom Feed]: feed
 
+## 3.3.0-1 (31 Mar 2013)
+
+Download:
+
+* [Scintillua 3.3.0-1][]
+
+Bugfixes:
+
+* Fixed crash when attempting to load a non-existant lexer.
+* Fixed CSS preprocessor styling.
+
+Changes:
+
+* Added Less, Literal Coffeescript, and Sass lexers.
+
+[Scintillua 3.3.0-1]: download/scintillua3.3.0-1.zip
+
 ## 3.2.4-1 (18 Jan 2013)
 
 Download:
