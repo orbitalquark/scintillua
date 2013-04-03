@@ -15,8 +15,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifdef NCURSES
-#include <ncurses.h>
+#ifdef CURSES
+#include <curses.h>
 #endif
 
 #include "ILexer.h"
@@ -61,7 +61,7 @@ using namespace Scintilla;
 #define RGB(c) ((c & 0xFF0000) >> 16) | (c & 0xFF00) | ((c & 0xFF) << 16)
 #define PROPLEN 256
 #endif
-#ifdef NCURSES
+#ifdef CURSES
 #define A_COLORCHAR (A_COLOR | A_CHARTEXT)
 #endif
 
@@ -189,14 +189,14 @@ class LexerLPeg : public ILexer {
 						        static_cast<int>(lua_tointeger(L, -1)));
 #endif
 					} else if (streq(prop, "bold")) {
-#ifndef NCURSES
+#ifndef CURSES
 						SSS(SCI_STYLESETBOLD, lua_toboolean(L, -1));
 #else
 						// Scinterm requires font attributes to be stored in the "font
 						// weight" style attribute.
 						// First, clear any existing SC_WEIGHT_NORMAL, SC_WEIGHT_SEMIBOLD,
 						// or SC_WEIGHT_BOLD values stored in the lower 16 bits. Then set
-						// the appropriate ncurses attr.
+						// the appropriate curses attr.
 						SSS(SCI_STYLESETWEIGHT,
 						    SS(sci, SCI_STYLEGETWEIGHT, style_num, 0) & ~A_COLORCHAR);
 						if (lua_toboolean(L, -1)) { // weight |= A_BOLD
@@ -216,14 +216,14 @@ class LexerLPeg : public ILexer {
 						sprintf(prop_part, lua_toboolean(L, -1) ? "%ss," : "not%ss,", prop);
 #endif
 					} else if (streq(prop, "underline")) {
-#ifndef NCURSES
+#ifndef CURSES
 						SSS(SCI_STYLESETUNDERLINE, lua_toboolean(L, -1));
 #else
 						// Scinterm requires font attributes to be stored in the "font
 						// weight" style attribute.
 						// First, clear any existing SC_WEIGHT_NORMAL, SC_WEIGHT_SEMIBOLD,
 						// or SC_WEIGHT_BOLD values stored in the lower 16 bits. Then set
-						// the appropriate ncurses attr.
+						// the appropriate curses attr.
 						SSS(SCI_STYLESETWEIGHT,
 						    SS(sci, SCI_STYLEGETWEIGHT, style_num, 0) & ~A_COLORCHAR);
 						if (lua_toboolean(L, -1)) { // weight |= A_UNDERLINE
@@ -331,8 +331,8 @@ class LexerLPeg : public ILexer {
 #ifdef GTK
 		lua_pushboolean(L, 1), lua_setglobal(L, "GTK");
 #endif
-#ifdef NCURSES
-		lua_pushboolean(L, 1), lua_setglobal(L, "NCURSES");
+#ifdef CURSES
+		lua_pushboolean(L, 1), lua_setglobal(L, "CURSES");
 #endif
 
 		if (luaL_dostring(L, "lexer=require'lexer'") != LUA_OK) return l_error(L);
