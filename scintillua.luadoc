@@ -108,6 +108,13 @@ function SCI_PRIVATELEXERCALL(SCI_SETLEXERLANGUAGE, languageName) end
 -- Returns the length of the string name of the current Lua LPeg lexer or stores
 -- the name into the given buffer. If the buffer is long enough, the name is
 -- terminated by a `0` character.
+--
+-- For parent lexers with embedded children or child lexers embedded into
+-- parents, the name is in "lexer/current" format, where "lexer" is the actual
+-- lexer's name and "current" is the parent or child lexer at the current caret
+-- position. In order for this to work, you must have called
+-- [`SCI_GETDIRECTFUNCTION`](#SCI_GETDIRECTFUNCTION) and
+-- [`SCI_SETDOCPOINTER`](#SCI_SETDOCPOINTER).
 -- @param languageName (`char *`) If `0`, returns the length that should be
 --   allocated to store the string Lua LPeg lexer name. Otherwise fills the
 --   buffer with the name.

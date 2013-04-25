@@ -141,8 +141,7 @@ class LexerLPeg : public ILexer {
 	static int l_getstyleat(lua_State *L) {
 		lua_getfield(L, LUA_REGISTRYINDEX, "pAccess");
 		IDocument *pAccess = static_cast<IDocument *>(lua_touserdata(L, -1));
-		LexAccessor styler(pAccess);
-		int style = styler.StyleAt(luaL_checkinteger(L, 1) - 1);
+		int style = pAccess->StyleAt(luaL_checkinteger(L, 1) - 1);
 		lua_getglobal(L, "_LEXER"), lua_getfield(L, -1, "_TOKENS");
 		lua_pushnil(L);
 		while (lua_next(L, -2)) { // style_name = style_num
@@ -295,6 +294,35 @@ class LexerLPeg : public ILexer {
 		} while (lua_next(L, -2)); // _STYLES table
 		lua_pop(L, 2); // _LEXER._STYLES and _LEXER
 		return true;
+	}
+
+	/**
+	 * Returns the style name for the given style number.
+	 * @param style The style number to get the style name for.
+	 * @return style name or NULL
+	 */
+	const char *GetStyleName(int style) {
+		const char *name = NULL;
+		if (L) {
+			lua_getglobal(L, "_LEXER");
+			if (lua_istable(L, -1)) {
+				lua_getfield(L, -1, "_TOKENS");
+				if (lua_istable(L, -1)) {
+					lua_pushnil(L);
+					while (lua_next(L, -2)) { // style_name = style_num
+						if (luaL_checkinteger(L, -1) == style) {
+							name = lua_tostring(L, -2);
+							lua_pop(L, 2); // value and key
+							break;
+						}
+						lua_pop(L, 1); // value
+					}
+				}
+				lua_pop(L, 1); // _LEXER._TOKENS
+			}
+			lua_pop(L, 1); // _LEXER
+		}
+		return name;
 	}
 
 	/**
@@ -580,8 +608,21 @@ public:
 			val = "null";
 			if (L) {
 				lua_getfield(L, LUA_REGISTRYINDEX, "lexer_name");
+				if (SS && sci && multilang) {
+					int pos = SS(sci, SCI_GETCURRENTPOS, 0, 0);
+					while (pos >= 0 && !ws[SS(sci, SCI_GETSTYLEAT, pos, 0)]) pos--;
+					const char *name = NULL, *p = NULL;
+					if (pos >= 0) {
+						name = GetStyleName(SS(sci, SCI_GETSTYLEAT, pos, 0));
+						p = strstr(name, "_whitespace");
+					}
+					if (!name) name = lua_tostring(L, -1); // "lexer:lexer" fallback
+					if (!p) p = name + strlen(name); // "lexer:lexer" fallback
+					lua_pushstring(L, "/"), lua_pushlstring(L, name, p - name);
+					lua_concat(L, 3);
+				}
 				val = lua_tostring(L, -1);
-				lua_pop(L, 1); // lexer_name
+				lua_pop(L, 1); // lexer_name or lexer language string
 			}
 			return StringResult(lParam, val);
 		default: // style-related
@@ -594,26 +635,8 @@ public:
 				return NULL;
 #endif
 			} else if (code <= STYLE_MAX) { // retrieve style names
-				val = "";
-				if (L) {
-					lua_getglobal(L, "_LEXER");
-					if (lua_istable(L, -1)) {
-						lua_getfield(L, -1, "_TOKENS");
-						if (lua_istable(L, -1)) {
-							lua_pushnil(L);
-							while (lua_next(L, -2)) { // style_name = style_num
-								if (luaL_checkinteger(L, -1) == static_cast<int>(code)) {
-									val = lua_tostring(L, -2);
-									lua_pop(L, 2); // value and key
-									break;
-								}
-								lua_pop(L, 1); // value
-							}
-							lua_pop(L, 2); // _LEXER._TOKENS and _LEXER
-						}
-					}
-				}
-				return StringResult(lParam, strlen(val) ? val : "Not Available");
+				val = GetStyleName(code);
+				return StringResult(lParam, val ? val : "Not Available");
 			} else return NULL;
 		}
 	}
