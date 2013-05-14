@@ -2,8 +2,7 @@
 -- AWK LPeg lexer.
 -- Modified by Wolfgang Seeberg 2012, 2013.
 
-local l = lexer
-local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local l, token, word_match = lexer, lexer.token, lexer.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
 local M = {_NAME = 'awk'}
@@ -316,15 +315,15 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'builtInVariable', l.style_constant},
-  {'default', l.style_error},
-  {'field', l.style_label},
-  {'gawkBuiltInVariable', l.style_constant .. {underline = true}},
-  {'gawkKeyword', l.style_keyword .. {underline = true}},
-  {'gawkNumber', l.style_number .. {underline = true}},
-  {'gawkOperator', l.style_operator .. {underline = true}},
-  {'gawkRegex', l.style_preproc .. {underline = true}},
-  {'regex', l.style_preproc},
+  {'builtInVariable', l.STYLE_CONSTANT},
+  {'default', l.STYLE_ERROR},
+  {'field', l.STYLE_LABEL},
+  {'gawkBuiltInVariable', l.STYLE_CONSTANT..',underlined'},
+  {'gawkKeyword', l.STYLE_KEYWORD..',underlined'},
+  {'gawkNumber', l.STYLE_NUMBER..',underlined'},
+  {'gawkOperator', l.STYLE_OPERATOR..',underlined'},
+  {'gawkRegex', l.STYLE_PREPROCESSOR..',underlined'},
+  {'regex', l.STYLE_PREPROCESSOR},
 }
 
 M._foldsymbols = {

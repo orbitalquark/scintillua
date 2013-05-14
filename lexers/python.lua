@@ -1,8 +1,7 @@
 -- Copyright 2006-2013 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- Python LPeg lexer.
 
-local l = lexer
-local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local l, token, word_match = lexer, lexer.token, lexer.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
 local M = {_NAME = 'python'}
@@ -123,7 +122,7 @@ M._rules = {
 
 
 M._tokenstyles = {
-  {'decorator', l.style_preproc},
+  {'decorator', l.STYLE_PREPROCESSOR},
 }
 
 return M

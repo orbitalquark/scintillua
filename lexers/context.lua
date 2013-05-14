@@ -1,8 +1,7 @@
 -- Copyright 2006-2013 Robert Gieseke. See LICENSE.
 -- ConTeXt LPeg lexer.
 
-local l = lexer
-local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local l, token, word_match = lexer, lexer.token, lexer.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
 local M = {_NAME = 'context'}
@@ -39,8 +38,8 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'environment', l.style_tag},
-  {'section', l.style_class},
+  {'environment', l.STYLE_KEYWORD},
+  {'section', l.STYLE_CLASS},
 }
 
 M._foldsymbols = {

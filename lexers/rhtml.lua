@@ -1,8 +1,7 @@
 -- Copyright 2006-2013 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- RHTML LPeg lexer.
 
-local l = lexer
-local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local l, token, word_match = lexer, lexer.token, lexer.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
 local M = {_NAME = 'rhtml'}
@@ -18,7 +17,7 @@ local ruby_end_rule = token('rhtml_tag', '%>')
 l.embed_lexer(html, ruby, ruby_start_rule, ruby_end_rule, true)
 
 M._tokenstyles = {
-  {'rhtml_tag', l.style_embedded},
+  {'rhtml_tag', l.STYLE_EMBEDDED},
 }
 
 local _foldsymbols = html._foldsymbols

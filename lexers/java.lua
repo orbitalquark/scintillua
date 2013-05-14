@@ -2,8 +2,7 @@
 -- Java LPeg lexer.
 -- Modified by Brian Schott.
 
-local l = lexer
-local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local l, token, word_match = lexer, lexer.token, lexer.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
 local M = {_NAME = 'java'}
@@ -75,7 +74,7 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'annotation', l.style_preproc},
+  {'annotation', l.STYLE_PREPROCESSOR},
 }
 
 M._foldsymbols = {

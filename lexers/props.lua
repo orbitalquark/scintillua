@@ -1,8 +1,7 @@
 -- Copyright 2006-2013 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- Props LPeg lexer.
 
-local l = lexer
-local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local l, token, word_match = lexer, lexer.token, lexer.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
 local M = {_NAME = 'props'}
@@ -40,8 +39,7 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'variable', l.style_variable},
-  {'color', l.style_number},
+  {'color', l.STYLE_NUMBER},
 }
 
 M._LEXBYLINE = true

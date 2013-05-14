@@ -1,8 +1,7 @@
 -- Copyright 2006-2013 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- HTML LPeg lexer.
 
-local l = lexer
-local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local l, token, word_match = lexer, lexer.token, lexer.word_match
 local P, R, S, V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
 
 local M = {_NAME = 'hypertext'}
@@ -84,13 +83,13 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'tag', l.style_tag},
-  {'element', l.style_tag},
-  {'unknown_element', l.style_tag..{italic = true}},
-  {'attribute', l.style_variable},
-  {'unknown_attribute', l.style_type..{italic = true}},
-  {'entity', l.style_operator},
-  {'doctype', l.style_comment},
+  {'tag', l.STYLE_KEYWORD},
+  {'element', l.STYLE_KEYWORD},
+  {'unknown_element', l.STYLE_KEYWORD..',italics'},
+  {'attribute', l.STYLE_VARIABLE},
+  {'unknown_attribute', l.STYLE_TYPE..',italics'},
+  {'entity', l.STYLE_OPERATOR},
+  {'doctype', l.STYLE_COMMENT},
 }
 
 -- Embedded CSS.

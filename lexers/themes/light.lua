@@ -1,97 +1,93 @@
 -- Copyright 2006-2013 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- Light lexer theme for Scintillua.
+-- Contributions by Ana Balan.
 
-local l, color, style = lexer, lexer.color, lexer.style
+local set_property = lexer.set_property
 
-l.colors = {
-  -- Greyscale colors.
---dark_black   = color('00', '00', '00'),
---black        = color('1A', '1A', '1A'),
-  light_black  = color('33', '33', '33'),
-  --             color('4D', '4D', '4D'),
---dark_grey    = color('66', '66', '66'),
-  grey         = color('80', '80', '80'),
---light_grey   = color('99', '99', '99'),
-  --             color('B3', 'B3', 'B3'),
-  dark_white   = color('CC', 'CC', 'CC'),
-  white        = color('E6', 'E6', 'E6'),
---light_white  = color('FF', 'FF', 'FF'),
+-- Greyscale colors.
+--set_property('color.dark_black', '#000000')
+--set_property('color.black', '#1A1A1A')
+set_property('color.light_black', '#333333')
+--set_property('color.grey_black', '#4D4D4D')
+--set_property('color.dark_grey', '#666666')
+set_property('color.grey', '#808080')
+--set_property('color.light_grey', '#999999')
+--set_property('grey_white', '#B3B3B3')
+set_property('color.dark_white', '#CCCCCC')
+set_property('color.white', '#E6E6E6')
+--set_property('color.light_white', '#FFFFFF')
 
-  -- Dark colors.
---dark_red      = color('66', '1A', '1A'),
-  dark_yellow   = color('66', '66', '1A'),
-  dark_green    = color('1A', '66', '1A'),
---dark_teal     = color('1A', '66', '66'),
---dark_purple   = color('66', '1A', '66'),
-  dark_orange   = color('B3', '66', '1A'),
---dark_pink     = color('B3', '66', '66'),
-  dark_lavender = color('66', '66', 'B3'),
-  dark_blue     = color('1A', '66', 'B3'),
+-- Dark colors.
+--set_property('color.dark_red', '#661A1A')
+set_property('color.dark_yellow', '#66661A')
+set_property('color.dark_green', '#1A661A')
+--set_property('color.dark_teal', '#1A6666')
+--set_property('color.dark_purple', '#661A66')
+set_property('color.dark_orange', '#B3661A')
+--set_property('color.dark_pink', '#B36666')
+set_property('color.dark_lavender', '#6666B3')
+set_property('color.dark_blue', '#1A66B3')
 
-  -- Normal colors.
-  red      = color('99', '4D', '4D'),
-  yellow   = color('99', '99', '4D'),
-  green    = color('4D', '99', '4D'),
-  teal     = color('4D', '99', '99'),
-  purple   = color('99', '4D', '99'),
---orange   = color('E6', '99', '4D'),
---pink     = color('E6', '99', '99'),
-  lavender = color('99', '99', 'E6'),
---blue     = color('4D', '99', 'E6'),
+-- Normal colors.
+set_property('color.red', '#994D4D')
+set_property('color.yellow', '#99994D')
+set_property('color.green', '#4D994D')
+set_property('color.teal', '#4D9999')
+set_property('color.purple', '#994D99')
+--set_property('color.orange', '#E6994D')
+--set_property('color.pink', '#E69999')
+set_property('color.lavender', '#9999E6')
+--set_property('color.blue', '#4D99E6')
 
-  -- Light colors.
-  light_red      = color('CC', '80', '80'),
---light_yellow   = color('CC', 'CC', '80'),
---light_green    = color('80', 'CC', '80'),
---light_teal     = color('80', 'CC', 'CC'),
---light_purple   = color('CC', '80', 'CC'),
---light_orange   = color('FF', 'CC', '80'),
---light_pink     = color('FF', 'CC', 'CC'),
---light_lavender = color('CC', 'CC', 'FF'),
-  light_blue     = color('80', 'CC', 'FF'),
-}
+-- Light colors.
+set_property('color.light_red', '#C08080')
+--set_property('color.light_yellow', '#CCCC80')
+--set_property('color.light_green', '#80CC80')
+--set_property('color.light_teal', '#80CCCC')
+--set_property('color.light_purple', '#CC80CC')
+--set_property('color.light_orange', '#FFCC80')
+--set_property('color.light_pink', '#FFCCCC')
+--set_property('color.light_lavender', '#CCCCFF')
+set_property('color.light_blue', '#80CCFF')
 
-l.style_nothing    = style{                                  }
-l.style_class      = style{fore = l.colors.yellow            }
-l.style_comment    = style{fore = l.colors.grey              }
-l.style_constant   = style{fore = l.colors.red               }
-l.style_definition = style{fore = l.colors.yellow            }
-l.style_error      = style{fore = l.colors.red, italic = true}
-l.style_function   = style{fore = l.colors.dark_orange       }
-l.style_keyword    = style{fore = l.colors.dark_blue         }
-l.style_label      = style{fore = l.colors.dark_orange       }
-l.style_number     = style{fore = l.colors.teal              }
-l.style_operator   = style{fore = l.colors.purple            }
-l.style_regex      = style{fore = l.colors.dark_green        }
-l.style_string     = style{fore = l.colors.green             }
-l.style_preproc    = style{fore = l.colors.dark_yellow       }
-l.style_tag        = style{fore = l.colors.dark_blue         }
-l.style_type       = style{fore = l.colors.lavender          }
-l.style_variable   = style{fore = l.colors.dark_lavender     }
-l.style_whitespace = style{                                  }
-l.style_embedded   = l.style_tag..{back = l.colors.dark_white}
-l.style_identifier = l.style_nothing
-
--- Default styles.
-local font_face = 'Bitstream Vera Sans Mono'
-local font_size = 10
+-- Default style.
+local font, size = 'Bitstream Vera Sans Mono', 10
 if WIN32 then
-  font_face = 'Courier New'
+  font = 'Courier New'
 elseif OSX then
-  font_face = 'Monaco'
-  font_size = 12
+  font, size = 'Monaco', 12
 end
-l.style_default = style{
-  font = font_face,
-  size = font_size,
-  fore = l.colors.light_black,
-  back = l.colors.white
-}
-l.style_line_number = style{fore = l.colors.grey, back = l.colors.white}
-l.style_bracelight  = style{fore = l.colors.light_blue}
-l.style_bracebad    = style{fore = l.colors.light_red}
-l.style_controlchar = l.style_nothing
-l.style_indentguide = style{
-  fore = l.colors.dark_white, back = l.colors.dark_white
-}
-l.style_calltip = style{fore = l.colors.light_black, back = l.colors.dark_white}
+set_property('style.default', 'font:'..font..',size:'..size..
+                              ',fore:$(color.light_black),back:$(color.white)')
+
+-- Token styles.
+set_property('style.nothing', '')
+set_property('style.class', 'fore:$(color.yellow)')
+set_property('style.comment', 'fore:$(color.grey)')
+set_property('style.constant', 'fore:$(color.red)')
+set_property('style.definition', 'fore:$(color.yellow)')
+set_property('style.error', 'fore:$(color.red),italics')
+set_property('style.function', 'fore:$(color.dark_orange)')
+set_property('style.keyword', 'fore:$(color.dark_blue)')
+set_property('style.label', 'fore:$(color.dark_orange)')
+set_property('style.number', 'fore:$(color.teal)')
+set_property('style.operator', 'fore:$(color.purple)')
+set_property('style.regex', 'fore:$(color.dark_green)')
+set_property('style.string', 'fore:$(color.green)')
+set_property('style.preproc', 'fore:$(color.dark_yellow)')
+set_property('style.tag', 'fore:$(color.dark_blue)')
+set_property('style.type', 'fore:$(color.lavender)')
+set_property('style.variable', 'fore:$(color.dark_lavender)')
+set_property('style.whitespace', '')
+set_property('style.embedded', '$(style.tag),back:$(color.dark_white)')
+set_property('style.identifier', '$(style.nothing)')
+
+-- Predefined styles.
+set_property('style.linenumber', 'fore:$(color.grey),back:$(color.white)')
+set_property('style.bracelight', 'fore:$(color.light_blue)')
+set_property('style.bracebad', 'fore:$(color.light_red)')
+set_property('style.controlchar', '$(style.nothing)')
+set_property('style.indentguide',
+             'fore:$(color.dark_white),black:$(color.dark_white)')
+set_property('style.calltip',
+             'fore:$(color.light_black),black:$(color.dark_white)')

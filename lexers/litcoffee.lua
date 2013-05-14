@@ -2,8 +2,7 @@
 -- Literate CoffeeScript LPeg lexer.
 -- http://coffeescript.org/#literate
 
-local l = lexer
-local token = l.token
+local l, token = lexer, lexer.token
 local P = lpeg.P
 
 local M = {_NAME = 'litcoffee'}
@@ -14,8 +13,8 @@ M._lexer = markdown
 
 -- Embedded CoffeeScript.
 local coffeescript = l.load('coffeescript')
-local coffee_start_rule = token(l.style_embedded, (P(' ')^4 + P('\t')))
-local coffee_end_rule = token(l.style_embedded, l.newline)
+local coffee_start_rule = token(l.STYLE_EMBEDDED, (P(' ')^4 + P('\t')))
+local coffee_end_rule = token(l.STYLE_EMBEDDED, l.newline)
 l.embed_lexer(markdown, coffeescript, coffee_start_rule, coffee_end_rule)
 
 return M

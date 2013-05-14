@@ -21,9 +21,9 @@ see `lexers/lpeg.properties`.
 1. C#`*`
 1. Chuck
 1. CMake`*`
-1. CSS`*`
 1. Coffeescript
 1. ConTeXt`*`
+1. CSS`*`
 1. CUDA`*`
 1. Desktop Entry
 1. Diff
@@ -53,7 +53,9 @@ see `lexers/lpeg.properties`.
 1. JSON`*`
 1. JSP`*`
 1. LaTeX`*`
+1. Less`*`
 1. Lilypond
+1. Literal Coffeescript
 1. Lisp`*`
 1. Lua`*`
 1. Makefile
@@ -72,13 +74,13 @@ see `lexers/lpeg.properties`.
 1. Prolog
 1. Properties
 1. Python
-1. Ragel
 1. Rebol`*`
 1. Rexx`*`
 1. RHTML`*`
 1. R
 1. Ruby`*`
 1. Ruby on Rails`*`
+1. Sass`*`
 1. Scala`*`
 1. Scheme`*`
 1. Smalltalk`*`

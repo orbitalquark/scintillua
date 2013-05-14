@@ -2,8 +2,7 @@
 -- Dot LPeg lexer.
 -- Based off of lexer code by Mitchell.
 
-local l = lexer
-local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local l, token, word_match = lexer, lexer.token, lexer.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
 local M = {_NAME = 'dot'}

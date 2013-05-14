@@ -112,14 +112,16 @@ initialization:
   put Scintillua's `lexers/` folder. Please see the SciTE examples above for
   more information.
 
-* `lexer.lpeg.color.theme`
-
-  The color theme to use. Color themes are located in the `lexers/themes/`
-  directory. Currently supported themes are `light`, `dark`, and `scite`.
-
 [Scintilla properties]: http://scintilla.org/ScintillaDoc.html#SCI_SETPROPERTY
 
 The following properties are optional and may or may not be set:
+
+* `lexer.lpeg.color.theme`
+
+  The color theme to use. Color themes are located in the `lexers/themes/`
+  directory. Currently supported themes are `light`, `dark`, and `scite`. Your
+  application can define colors and styles manually through Scintilla
+  properties. The theme files have examples.
 
 * `fold.by.indentation`
 

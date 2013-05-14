@@ -1,8 +1,7 @@
 -- Copyright 2006-2013 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- ANTLR LPeg lexer.
 
-local l = lexer
-local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local l, token, word_match = lexer, lexer.token, lexer.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
 local M = {_NAME = 'antlr'}
@@ -61,7 +60,7 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'action', l.style_nothing}
+  {'action', l.STYLE_NOTHING}
 }
 
 M._foldsymbols = {

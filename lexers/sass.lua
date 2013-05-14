@@ -2,8 +2,7 @@
 -- Sass CSS preprocessor LPeg lexer.
 -- http://sass-lang.com
 
-local l = lexer
-local token = l.token
+local l, token = lexer, lexer.token
 local P, S = lpeg.P, lpeg.S
 
 local M = {_NAME = 'sass'}
@@ -25,7 +24,7 @@ table.insert(_rules, #_rules - 1, {'variable', variable})
 M._rules = _rules
 
 M._tokenstyles = css._tokenstyles
-table.insert(M._tokenstyles, #M._tokenstyles - 1, {'mixin', l.style_function})
+table.insert(M._tokenstyles, #M._tokenstyles - 1, {'mixin', l.STYLE_FUNCTION})
 
 M._foldsymbols = css._foldsymbols
 

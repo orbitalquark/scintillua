@@ -1,8 +1,7 @@
 -- Copyright 2006-2013 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- CSS LPeg lexer.
 
-local l = lexer
-local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local l, token, word_match = lexer, lexer.token, lexer.word_match
 local P, R, S, V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
 
 local M = {_NAME = 'css'}
@@ -152,10 +151,10 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'unit', l.style_label},
-  {'value', l.style_constant},
-  {'color', l.style_number},
-  {'at_rule', l.style_preproc},
+  {'unit', l.STYLE_LABEL},
+  {'value', l.STYLE_CONSTANT},
+  {'color', l.STYLE_NUMBER},
+  {'at_rule', l.STYLE_PREPROCESSOR},
 }
 
 M._foldsymbols = {

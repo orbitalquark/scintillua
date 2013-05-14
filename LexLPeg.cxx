@@ -55,12 +55,7 @@ using namespace Scintilla;
 #endif
 #define l_setcfunction(f, k) (lua_pushcfunction(L, f), lua_setfield(L, -2, k))
 #define l_setconstant(c, k) (lua_pushnumber(L, c), lua_setfield(L, -2, k))
-#define SSS(m, l) if (SS && sci) SS(sci, m, style_num, l)
 
-#ifndef NO_SCITE
-#define RGB(c) ((c & 0xFF0000) >> 16) | (c & 0xFF00) | ((c & 0xFF) << 16)
-#define PROPLEN 256
-#endif
 #ifdef CURSES
 #define A_COLORCHAR (A_COLOR | A_CHARTEXT)
 #endif
@@ -137,6 +132,14 @@ class LexerLPeg : public ILexer {
 		return 1;
 	}
 
+	/** `lexer.set_property()` Lua function. */
+	static int l_setproperty(lua_State *L) {
+		lua_getfield(L, LUA_REGISTRYINDEX, "props");
+		PropSetSimple *props = static_cast<PropSetSimple *>(lua_touserdata(L, -1));
+		props->Set(luaL_checkstring(L, 1), luaL_checkstring(L, 2));
+		return 0;
+	}
+
 	/** `lexer.get_style_at()` Lua function. */
 	static int l_getstyleat(lua_State *L) {
 		lua_getfield(L, LUA_REGISTRYINDEX, "pAccess");
@@ -152,147 +155,125 @@ class LexerLPeg : public ILexer {
 	}
 
 	/**
-	 * Iterates through `_LEXER._STYLES`, setting the style properties for all
+	 * Parses the given style string to set the properties for the given style
+	 * number.
+	 * @param num The style number to set properties for.
+	 * @param style The style string containing properties to set. It is deleted
+	 *   at the end of the function.
+	 */
+	void SetStyle(int num, char *style) {
+		char *option = style;
+		while (option) {
+			char *next = strchr(option, ',');
+			if (next) *next++ = '\0';
+			char *p = strchr(option, ':');
+			if (p) *p++ = '\0';
+			if (streq(option, "font"))
+				SS(sci, SCI_STYLESETFONT, num, reinterpret_cast<sptr_t>(p));
+			else if (streq(option, "size"))
+				SS(sci, SCI_STYLESETSIZE, num, static_cast<int>(atoi(p)));
+			else if (streq(option, "bold") || streq(option, "notbold")) {
+#ifndef CURSES
+				SS(sci, SCI_STYLESETBOLD, num, *option == 'b');
+#else
+				// Scinterm requires font attributes to be stored in the "font weight"
+				// style attribute.
+				// First, clear any existing SC_WEIGHT_NORMAL, SC_WEIGHT_SEMIBOLD, or
+				// SC_WEIGHT_BOLD values stored in the lower 16 bits. Then set the
+				// appropriate curses attr.
+				sptr_t weight = SS(sci, SCI_STYLEGETWEIGHT, num, 0) & ~A_COLORCHAR;
+				if (*option == 'b')
+					SS(sci, SCI_STYLESETWEIGHT, num, weight | A_BOLD);
+				else
+					SS(sci, SCI_STYLESETWEIGHT, num, weight & ~A_BOLD);
+#endif
+			} else if (streq(option, "italics") || streq(option, "notitalics"))
+				SS(sci, SCI_STYLESETITALIC, num, *option == 'i');
+			else if (streq(option, "underlined") || streq(option, "notunderlined")) {
+#ifndef CURSES
+				SS(sci, SCI_STYLESETUNDERLINE, num, *option == 'u');
+#else
+				// Scinterm requires font attributes to be stored in the "font weight"
+				// style attribute.
+				// First, clear any existing SC_WEIGHT_NORMAL, SC_WEIGHT_SEMIBOLD, or
+				// SC_WEIGHT_BOLD values stored in the lower 16 bits. Then set the
+				// appropriate curses attr.
+				sptr_t weight = SS(sci, SCI_STYLEGETWEIGHT, num, 0) & ~A_COLORCHAR;
+				if (*option == 'u')
+					SS(sci, SCI_STYLESETWEIGHT, num, weight | A_UNDERLINE);
+				else
+					SS(sci, SCI_STYLESETWEIGHT, num, weight & ~A_UNDERLINE);
+#endif
+			} else if (streq(option, "fore")) {
+				int base = 0;
+				if (*p == '#') p++, base = 16; // #RRGGBB format
+				SS(sci, SCI_STYLESETFORE, num, static_cast<int>(strtol(p, NULL, base)));
+			} else if (streq(option, "back")) {
+				int base = 0;
+				if (*p == '#') p++, base = 16; // #RRGGBB format
+				SS(sci, SCI_STYLESETBACK, num, static_cast<int>(strtol(p, NULL, base)));
+			} else if (streq(option, "eolfilled") || streq(option, "noteolfilled"))
+				SS(sci, SCI_STYLESETEOLFILLED, num, *option == 'e');
+			else if (streq(option, "characterset"))
+				SS(sci, SCI_STYLESETCHARACTERSET, num, static_cast<int>(atoi(p)));
+			else if (streq(option, "case") && p) {
+				if (*p == 'u')
+					SS(sci, SCI_STYLESETCASE, num, SC_CASE_UPPER);
+				else if (*p == 'l')
+					SS(sci, SCI_STYLESETCASE, num, SC_CASE_LOWER);
+			} else if (streq(option, "visible") || streq(option, "notvisible"))
+				SS(sci, SCI_STYLESETVISIBLE, num, *option == 'v');
+			else if (streq(option, "changeable") || streq(option, "notchangeable"))
+				SS(sci, SCI_STYLESETCHANGEABLE, num, *option == 'c');
+			else if (streq(option, "hotspot") || streq(option, "nothotspot"))
+				SS(sci, SCI_STYLESETHOTSPOT, num, *option == 'h');
+			option = next;
+		}
+		delete[] style;
+	}
+
+	/**
+	 * Iterates through `_LEXER._TOKENS`, setting the style properties for all
 	 * defined styles, or for SciTE, generates the set of style properties instead
 	 * of directly setting style properties.
 	 */
 	bool SetStyles() {
 		lua_getglobal(L, "_LEXER");
 		if (!lua_istable(L, -1)) return l_error(L, "'_LEXER' table not found");
-		lua_getfield(L, -1, "_STYLES");
+		lua_getfield(L, -1, "_TOKENS");
 		if (!lua_istable(L, -1))
-			return l_error(L, "'_LEXER._STYLES' table not found");
-		bool cleared = false;
-		// Start with STYLE_DEFAULT in order to call SCI_STYLECLEARALL.
-		lua_pushinteger(L, STYLE_DEFAULT), lua_rawgeti(L, -2, STYLE_DEFAULT);
-		do {
-			if (lua_isnumber(L, -2) && lua_istable(L, -1)) {
-				int style_num = lua_tointeger(L, -2); // [style_num] = {style_props}
-#ifndef NO_SCITE
-				char prop_name[PROPLEN], prop_str[PROPLEN], prop_part[PROPLEN];
-				char *p = prop_str;
-#endif
-				lua_pushnil(L);
-				while (lua_next(L, -2)) { // style_prop = value
-					const char *prop = lua_tostring(L, -2);
-					if (streq(prop, "font")) {
-						SSS(SCI_STYLESETFONT,
-						    reinterpret_cast<sptr_t>(lua_tostring(L, -1)));
-#ifndef NO_SCITE
-						sprintf(prop_part, "font:%s,", lua_tostring(L, -1));
-#endif
-					} else if (streq(prop, "size")) {
-						SSS(SCI_STYLESETSIZE, static_cast<int>(lua_tointeger(L, -1)));
-#ifndef NO_SCITE
-						sprintf(prop_part, "size:%i,",
-						        static_cast<int>(lua_tointeger(L, -1)));
-#endif
-					} else if (streq(prop, "bold")) {
-#ifndef CURSES
-						SSS(SCI_STYLESETBOLD, lua_toboolean(L, -1));
-#else
-						// Scinterm requires font attributes to be stored in the "font
-						// weight" style attribute.
-						// First, clear any existing SC_WEIGHT_NORMAL, SC_WEIGHT_SEMIBOLD,
-						// or SC_WEIGHT_BOLD values stored in the lower 16 bits. Then set
-						// the appropriate curses attr.
-						SSS(SCI_STYLESETWEIGHT,
-						    SS(sci, SCI_STYLEGETWEIGHT, style_num, 0) & ~A_COLORCHAR);
-						if (lua_toboolean(L, -1)) { // weight |= A_BOLD
-							SSS(SCI_STYLESETWEIGHT,
-							    SS(sci, SCI_STYLEGETWEIGHT, style_num, 0) | A_BOLD);
-						} else { // weight &= ~A_BOLD
-							SSS(SCI_STYLESETWEIGHT,
-							    SS(sci, SCI_STYLEGETWEIGHT, style_num, 0) & ~A_BOLD);
-						}
-#endif
-#ifndef NO_SCITE
-						sprintf(prop_part, lua_toboolean(L, -1) ? "%s," : "not%s,", prop);
-#endif
-					} else if (streq(prop, "italic")) {
-						SSS(SCI_STYLESETITALIC, lua_toboolean(L, -1));
-#ifndef NO_SCITE
-						sprintf(prop_part, lua_toboolean(L, -1) ? "%ss," : "not%ss,", prop);
-#endif
-					} else if (streq(prop, "underline")) {
-#ifndef CURSES
-						SSS(SCI_STYLESETUNDERLINE, lua_toboolean(L, -1));
-#else
-						// Scinterm requires font attributes to be stored in the "font
-						// weight" style attribute.
-						// First, clear any existing SC_WEIGHT_NORMAL, SC_WEIGHT_SEMIBOLD,
-						// or SC_WEIGHT_BOLD values stored in the lower 16 bits. Then set
-						// the appropriate curses attr.
-						SSS(SCI_STYLESETWEIGHT,
-						    SS(sci, SCI_STYLEGETWEIGHT, style_num, 0) & ~A_COLORCHAR);
-						if (lua_toboolean(L, -1)) { // weight |= A_UNDERLINE
-							SSS(SCI_STYLESETWEIGHT,
-							    SS(sci, SCI_STYLEGETWEIGHT, style_num, 0) | A_UNDERLINE);
-						} else { // weight &= ~A_UNDERLINE
-							SSS(SCI_STYLESETWEIGHT,
-							    SS(sci, SCI_STYLEGETWEIGHT, style_num, 0) & ~A_UNDERLINE);
-						}
-#endif
-#ifndef NO_SCITE
-						sprintf(prop_part, lua_toboolean(L, -1) ? "%sd," : "not%sd,", prop);
-#endif
-					} else if (streq(prop, "fore")) {
-						SSS(SCI_STYLESETFORE, static_cast<int>(lua_tointeger(L, -1)));
-#ifndef NO_SCITE
-						sprintf(prop_part, "fore:#%06X,",
-						        RGB(static_cast<int>(lua_tointeger(L, -1))));
-#endif
-					} else if (streq(prop, "back")) {
-						SSS(SCI_STYLESETBACK, static_cast<int>(lua_tointeger(L, -1)));
-#ifndef NO_SCITE
-						sprintf(prop_part, "back:#%06X,",
-						        RGB(static_cast<int>(lua_tointeger(L, -1))));
-#endif
-					} else if (streq(prop, "eolfilled")) {
-						SSS(SCI_STYLESETEOLFILLED, lua_toboolean(L, -1));
-#ifndef NO_SCITE
-						sprintf(prop_part, lua_toboolean(L, -1) ? "%s," : "not%s,", prop);
-#endif
-					} else if (streq(prop, "characterset")) {
-						SSS(SCI_STYLESETCHARACTERSET,
-						    static_cast<int>(lua_tointeger(L, -1)));
-					} else if (streq(prop, "case")) {
-						SSS(SCI_STYLESETCASE, static_cast<int>(lua_tointeger(L, -1)));
-#ifndef NO_SCITE
-						switch (lua_tointeger(L, -1)) {
-							case 1: strcpy(prop_part, "case:u,\0"); break;
-							case 2: strcpy(prop_part, "case:l,\0"); break;
-							default: strcpy(prop_part, "case:m,\0"); break;
-						}
-#endif
-					} else if (streq(prop, "visible")) {
-						SSS(SCI_STYLESETVISIBLE, lua_toboolean(L, -1));
-					} else if (streq(prop, "changeable")) {
-						SSS(SCI_STYLESETCHANGEABLE, lua_toboolean(L, -1));
-					} else if (streq(prop, "hotspot")) {
-						SSS(SCI_STYLESETHOTSPOT, lua_toboolean(L, -1));
-					}
-#ifndef NO_SCITE
-					if (p + strlen(prop_part) < prop_str + PROPLEN)
-						strcpy(p, prop_part), p += strlen(prop_part);
-#endif
-					lua_pop(L, 1); // value
-				}
-				if (style_num == STYLE_DEFAULT && !cleared) {
-					// Set all styles to style_default before loading individual ones.
-					if (SS && sci) SS(sci, SCI_STYLECLEARALL, 0, 0);
-					cleared = true;
-					lua_pushnil(L), lua_replace(L, -3);
-				}
-#ifndef NO_SCITE
-				sprintf(prop_name, "style.lpeg.%0d", style_num);
-				*p = '\0';
-				props.Set(prop_name, prop_str);
-#endif
+			return l_error(L, "'_LEXER._TOKENS' table not found");
+#ifdef NO_SCITE
+		if (!SS || !sci) return true; // skip, but do not report an error
+		SetStyle(STYLE_DEFAULT, props.Expanded("style.default"));
+		SS(sci, SCI_STYLECLEARALL, 0, 0); // set default styles
+		lua_pushnil(L);
+		while (lua_next(L, -2)) {
+			if (lua_isstring(L, -2) && lua_isnumber(L, -1) &&
+			    lua_tointeger(L, -1) != STYLE_DEFAULT) {
+				lua_pushstring(L, "style."), lua_pushvalue(L, -3), lua_concat(L, 2);
+				SetStyle(lua_tointeger(L, -2), props.Expanded(lua_tostring(L, -1)));
+				lua_pop(L, 1); // "style.token"
 			}
 			lua_pop(L, 1); // value
-		} while (lua_next(L, -2)); // _STYLES table
-		lua_pop(L, 2); // _LEXER._STYLES and _LEXER
+		}
+		lua_pop(L, 2); // _LEXER._TOKENS and _LEXER
+#else
+		char prop_name[32];
+		lua_pushnil(L);
+		while (lua_next(L, -2)) {
+			if (lua_isstring(L, -2) && lua_isnumber(L, -1)) {
+				sprintf(prop_name, "style.lpeg.%0d",
+				        static_cast<int>(lua_tointeger(L, -1)));
+				lua_pushstring(L, "style."), lua_pushvalue(L, -3), lua_concat(L, 2);
+				char *value = props.Expanded(lua_tostring(L, -1));
+				props.Set(prop_name, value);
+				delete[] value;
+				lua_pop(L, 1); // "style.token"
+			}
+			lua_pop(L, 1); // value
+		}
+#endif
 		return true;
 	}
 
@@ -310,7 +291,7 @@ class LexerLPeg : public ILexer {
 				if (lua_istable(L, -1)) {
 					lua_pushnil(L);
 					while (lua_next(L, -2)) { // style_name = style_num
-						if (luaL_checkinteger(L, -1) == style) {
+						if (lua_tointeger(L, -1) == style) {
 							name = lua_tostring(L, -2);
 							lua_pop(L, 2); // value and key
 							break;
@@ -326,27 +307,29 @@ class LexerLPeg : public ILexer {
 	}
 
 	/**
-	 * Initializes the lexer once the `lexer.name`, `lexer.lpeg.home`, and
-	 * `lexer.lpeg.color.theme` properties are set.
+	 * Initializes the lexer once the `lexer.lpeg.home` and `lexer.name`
+	 * properties are set.
 	 */
 	bool Init() {
-		char p1[50], p2[FILENAME_MAX], p3[FILENAME_MAX];
-		props.GetExpanded("lexer.name", p1);
-		props.GetExpanded("lexer.lpeg.home", p2);
-		props.GetExpanded("lexer.lpeg.color.theme", p3);
-		if (*p1 == '\0' || *p2 == '\0' || *p3 == '\0') return false;
+		char home[FILENAME_MAX], lexer[50], theme[FILENAME_MAX];
+		props.GetExpanded("lexer.lpeg.home", home);
+		props.GetExpanded("lexer.name", lexer);
+		props.GetExpanded("lexer.lpeg.color.theme", theme);
+		if (*home == '\0' || *lexer == '\0') return false;
 
 		if (L) lua_close(L);
 		if (!(L = luaL_newstate()))
 			return (fprintf(stderr, "Lua failed to initialize.\n"), false);
-		lua_pushstring(L, p1), lua_setfield(L, LUA_REGISTRYINDEX, "lexer_name");
+		lua_pushlightuserdata(L, reinterpret_cast<void *>(&props));
+		lua_setfield(L, LUA_REGISTRYINDEX, "props");
+		lua_pushstring(L, lexer), lua_setfield(L, LUA_REGISTRYINDEX, "lexer_name");
 
 		l_openlib(luaopen_base, LUA_BASELIBNAME);
 		l_openlib(luaopen_table, LUA_TABLIBNAME);
 		l_openlib(luaopen_string, LUA_STRLIBNAME);
 		l_openlib(luaopen_package, LUA_LOADLIBNAME);
 		lua_getglobal(L, "package");
-		lua_pushstring(L, p2), lua_pushstring(L, "/?.lua"), lua_concat(L, 2);
+		lua_pushstring(L, home), lua_pushstring(L, "/?.lua"), lua_concat(L, 2);
 		lua_setfield(L, -2, "path"), lua_pop(L, 1); // package
 		l_openlib(luaopen_lpeg, "lpeg");
 
@@ -364,25 +347,28 @@ class LexerLPeg : public ILexer {
 #endif
 
 		if (luaL_dostring(L, "lexer=require'lexer'") != LUA_OK) return l_error(L);
-		if (!(strstr(p3, "/") || strstr(p3, "\\"))) { // theme name
-			lua_pushstring(L, p2);
-			lua_pushstring(L, "/themes/");
-			lua_pushstring(L, p3);
-			lua_pushstring(L, ".lua");
-			lua_concat(L, 4);
-		} else lua_pushstring(L, p3); // path to theme
-		if (luaL_dofile(L, lua_tostring(L, -1)) != LUA_OK) return l_error(L);
-		lua_settop(L, 0); // pop results from dostring and dofile
-
 		lua_getglobal(L, "lexer");
 		l_setcfunction(l_getfoldlevel, "get_fold_level");
 		l_setcfunction(l_getindentamount, "get_indent_amount");
 		l_setcfunction(l_getproperty, "get_property");
+		l_setcfunction(l_setproperty, "set_property");
 		l_setcfunction(l_getstyleat, "get_style_at");
 		l_setconstant(SC_FOLDLEVELBASE, "FOLD_BASE");
 		l_setconstant(SC_FOLDLEVELWHITEFLAG, "FOLD_BLANK");
 		l_setconstant(SC_FOLDLEVELHEADERFLAG, "FOLD_HEADER");
-		lua_getfield(L, -1, "load");
+		if (*theme) {
+			if (!(strstr(theme, "/") || strstr(theme, "\\"))) { // theme name
+				lua_pushstring(L, home);
+				lua_pushstring(L, "/themes/");
+				lua_pushstring(L, theme);
+				lua_pushstring(L, ".lua");
+				lua_concat(L, 4);
+			} else lua_pushstring(L, theme); // path to theme
+			if (luaL_dofile(L, lua_tostring(L, -1)) != LUA_OK) return l_error(L);
+		}
+		lua_settop(L, 0); // pop results from dostring and dofile
+
+		lua_getglobal(L, "lexer"), lua_getfield(L, -1, "load");
 		if (lua_isfunction(L, -1)) {
 			lua_getfield(L, LUA_REGISTRYINDEX, "lexer_name");
 			if (lua_pcall(L, 1, 0, 0) != LUA_OK) return l_error(L);
@@ -618,7 +604,8 @@ public:
 					}
 					if (!name) name = lua_tostring(L, -1); // "lexer:lexer" fallback
 					if (!p) p = name + strlen(name); // "lexer:lexer" fallback
-					lua_pushstring(L, "/"), lua_pushlstring(L, name, p - name);
+					lua_pushstring(L, "/");
+					lua_pushlstring(L, name, p - name);
 					lua_concat(L, 3);
 				}
 				val = lua_tostring(L, -1);
@@ -628,9 +615,9 @@ public:
 		default: // style-related
 			if (code >= -STYLE_MAX && code < 0) { // retrieve SciTE style strings
 #ifndef NO_SCITE
-				char prop_str[PROPLEN];
-				sprintf(prop_str, "style.lpeg.%0d", code + STYLE_MAX);
-				return StringResult(lParam, props.Get(prop_str));
+				char prop_name[32];
+				sprintf(prop_name, "style.lpeg.%0d", code + STYLE_MAX);
+				return StringResult(lParam, props.Get(prop_name));
 #else
 				return NULL;
 #endif

@@ -72,7 +72,6 @@ local M = {}
 --
 --     local l = lexer
 --     local token, word_match = l.token, l.word_match
---     local style, color = l.style, l.color
 --     local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
 --
 --     local M = {_NAME = '?'}
@@ -142,18 +141,19 @@ local M = {}
 -- [`IDENTIFIER`](#IDENTIFIER), [`OPERATOR`](#OPERATOR), [`ERROR`](#ERROR),
 -- [`PREPROCESSOR`](#PREPROCESSOR), [`CONSTANT`](#CONSTANT),
 -- [`VARIABLE`](#VARIABLE), [`FUNCTION`](#FUNCTION), [`CLASS`](#CLASS),
--- [`TYPE`](#TYPE), [`LABEL`](#LABEL), and [`REGEX`](#REGEX). Patterns include
--- [`any`](#any), [`ascii`](#ascii), [`extend`](#extend), [`alpha`](#alpha),
--- [`digit`](#digit), [`alnum`](#alnum), [`lower`](#lower), [`upper`](#upper),
--- [`xdigit`](#xdigit), [`cntrl`](#cntrl), [`graph`](#graph), [`print`](#print),
--- [`punct`](#punct), [`space`](#space), [`newline`](#newline),
--- [`nonnewline`](#nonnewline), [`nonnewline_esc`](#nonnewline_esc),
--- [`dec_num`](#dec_num), [`hex_num`](#hex_num), [`oct_num`](#oct_num),
--- [`integer`](#integer), [`float`](#float), and [`word`](#word). However, you
--- are not limited to the token names and LPeg patterns listed. You can do
--- whatever you like. However, the advantage of using predefined token names is
--- that your lexer's tokens will inherit the universal syntax highlighting color
--- theme used by your text editor.
+-- [`TYPE`](#TYPE), [`LABEL`](#LABEL), [`REGEX`](#REGEX), and
+-- [`EMBEDDED`](#EMBEDDED). Patterns include [`any`](#any), [`ascii`](#ascii),
+-- [`extend`](#extend), [`alpha`](#alpha), [`digit`](#digit), [`alnum`](#alnum),
+-- [`lower`](#lower), [`upper`](#upper), [`xdigit`](#xdigit), [`cntrl`](#cntrl),
+-- [`graph`](#graph), [`print`](#print), [`punct`](#punct), [`space`](#space),
+-- [`newline`](#newline), [`nonnewline`](#nonnewline),
+-- [`nonnewline_esc`](#nonnewline_esc), [`dec_num`](#dec_num),
+-- [`hex_num`](#hex_num), [`oct_num`](#oct_num), [`integer`](#integer),
+-- [`float`](#float), and [`word`](#word). However, you are not limited to the
+-- token names and LPeg patterns listed. You can do whatever you like. However,
+-- the advantage of using predefined token names is that your lexer's tokens
+-- will inherit the universal syntax highlighting color theme used by your text
+-- editor.
 --
 -- #### Example Tokens
 --
@@ -330,73 +330,72 @@ local M = {}
 -- different tokens. Instead of highlighting with just colors, Scintilla allows
 -- for more rich highlighting, or "styling", with different fonts, font sizes,
 -- font attributes, and foreground and background colors, just to name a few.
--- The unit of this rich highlighting is called a "style". Styles are created
--- using the [`style()`](#style) function. By default, predefined token names
--- like `WHITESPACE`, `COMMENT`, `STRING`, etc. are associated with a particular
--- style as part of a universal color theme. These predefined styles include
--- [`style_nothing`](#style_nothing), [`style_class`](#style_class),
--- [`style_comment`](#style_comment), [`style_constant`](#style_constant),
--- [`style_definition`](#style_definition), [`style_error`](#style_error),
--- [`style_function`](#style_function), [`style_keyword`](#style_keyword),
--- [`style_label`](#style_label), [`style_number`](#style_number),
--- [`style_operator`](#style_operator), [`style_regex`](#style_regex),
--- [`style_string`](#style_string), [`style_preproc`](#style_preproc),
--- [`style_tag`](#style_tag), [`style_type`](#style_type),
--- [`style_variable`](#style_variable), [`style_whitespace`](#style_whitespace),
--- [`style_embedded`](#style_embedded), and
--- [`style_identifier`](#style_identifier). Like with predefined token names and
--- LPeg patterns, you are not limited to these predefined styles. At their core,
--- styles are just Lua tables, so you can create new ones and/or modify existing
--- ones. Each style consists of a set of attributes:
+-- The unit of this rich highlighting is called a "style". Styles are simply
+-- strings of comma-separated property settings. By default, predefined token
+-- names like `WHITESPACE`, `COMMENT`, `STRING`, etc. are associated with a
+-- particular style as part of a universal color theme. These predefined styles
+-- include [`STYLE_NOTHING`](#STYLE_NOTHING), [`STYLE_CLASS`](#STYLE_CLASS),
+-- [`STYLE_COMMENT`](#STYLE_COMMENT), [`STYLE_CONSTANT`](#STYLE_CONSTANT),
+-- [`STYLE_ERROR`](#STYLE_ERROR), [`STYLE_FUNCTION`](#STYLE_FUNCTION),
+-- [`STYLE_KEYWORD`](#STYLE_KEYWORD), [`STYLE_LABEL`](#STYLE_LABEL),
+-- [`STYLE_NUMBER`](#STYLE_NUMBER), [`STYLE_OPERATOR`](#STYLE_OPERATOR),
+-- [`STYLE_REGEX`](#STYLE_REGEX), [`STYLE_STRING`](#STYLE_STRING),
+-- [`STYLE_PREPROCESSOR`](#STYLE_PREPROCESSOR), [`STYLE_TYPE`](#STYLE_TYPE),
+-- [`STYLE_VARIABLE`](#STYLE_VARIABLE), [`STYLE_WHITESPACE`](#STYLE_WHITESPACE),
+-- [`STYLE_EMBEDDED`](#STYLE_EMBEDDED),
+-- and [`STYLE_IDENTIFIER`](#STYLE_IDENTIFIER). Like with predefined token names
+-- and LPeg patterns, you are not limited to these predefined styles. At their
+-- core, styles are just strings, so you can create new ones and/or modify
+-- existing ones. Each style consists of the following comma-separated settings:
 --
--- Attribute   | Description
--- ------------|------------
--- `font`      | The name of the font the style uses.
--- `size`      | The size of the font the style uses.
--- `bold`      | Whether or not the font face is bold.
--- `italic`    | Whether or not the font face is italic.
--- `underline` | Whether or not the font face is underlined.
--- `fore`      | The foreground color of the font face.
--- `back`      | The background color of the font face.
--- `eolfilled` | Does the background color extend to the end of the line?
--- `case`      | The case of the font (1 = upper, 2 = lower, 0 = normal).
--- `visible`   | Whether or not the text is visible.
--- `changeable`| Whether the text is changeable or read-only.
--- `hotspot`   | Whether or not the text is clickable.
+-- Setting        | Description
+-- ---------------|------------
+-- font:_name_    | The name of the font the style uses.
+-- size:_int_     | The size of the font the style uses.
+-- [not]bold      | Whether or not the font face is bold.
+-- [not]italics   | Whether or not the font face is italic.
+-- [not]underlined| Whether or not the font face is underlined.
+-- fore:_color_   | The foreground color of the font face.
+-- back:_color_   | The background color of the font face.
+-- [not]eolfilled | Does the background color extend to the end of the line?
+-- case:_char_    | The case of the font ('u': upper, 'l': lower, 'm': normal).
+-- [not]visible   | Whether or not the text is visible.
+-- [not]changeable| Whether the text is changeable or read-only.
+-- [not]hotspot   | Whether or not the text is clickable.
 --
--- Font colors are defined using the [`color()`](#color) function. Like with
--- token names, LPeg patterns, and styles, there is a set of predefined colors
--- in the `l.colors` table, but the color names depend on the current theme
--- being used. It is generally not a good idea to manually define colors within
--- styles in your lexer because they might not fit into a user's chosen color
--- theme. It is not even recommended to use a predefined color in a style
--- because that color may be theme-specific. Instead, the best practice is to
--- either use predefined styles or derive new color-agnostic styles from
--- predefined ones. For example, Lua "longstring" tokens use the existing
--- `style_string` style instead of defining a new one.
+-- Font colors are specified in either "#RRGGBB" format, "0xBBGGRR" format, or
+-- the decimal equivalent of the latter. As with token names, LPeg patterns, and
+-- styles, there is a set of predefined color names, but they vary depending on
+-- the current theme being used. Therefore, it is generally not a good idea to
+-- manually define colors within styles in your lexer since they might not fit
+-- into a user's chosen color theme. It is not even recommended to use a
+-- predefined color in a style because that color may be theme-specific.
+-- Instead, the best practice is to either use predefined styles or derive new
+-- color-agnostic styles from predefined ones. For example, Lua "longstring"
+-- tokens use the existing `STYLE_STRING` style instead of defining a new one.
 --
 -- #### Example Styles
 --
 -- Defining styles is pretty straightforward. An empty style that inherits the
--- default theme settings is defined like this:
+-- default theme settings is simply an empty string:
 --
---     local style_nothing = l.style{}
+--     local style_nothing = ''
 --
--- A similar style but with a bold font face is defined like this:
+-- A similar style but with a bold font face looks like this:
 --
---     local style_bold = l.style{bold = true}
+--     local style_bold = 'bold'
 --
 -- If you wanted the same style, but also with an italic font face, you can
 -- define the new style in terms of the old one:
 --
---     local style_bold_italic = style_bold..{italic = true}
+--     local style_bold_italic = style_bold..',italics'
 --
 -- This allows you to derive new styles from predefined ones without having to
 -- rewrite them. This operation leaves the old style unchanged. Thus if you
 -- had a "static variable" token whose style you wanted to base off of
--- `style_variable`, it would probably look like:
+-- `STYLE_VARIABLE`, it would probably look like:
 --
---     local style_static_var = l.style_variable..{italic = true}
+--     local style_static_var = l.STYLE_VARIABLE..',italics'
 --
 -- More examples of style definitions are in the color theme files in the
 -- *lexers/themes/* folder.
@@ -425,7 +424,7 @@ local M = {}
 -- Assigning a style to this token looks like:
 --
 --     M._tokenstyles = {
---       {'custom_whitespace', l.style_whitespace}
+--       {'custom_whitespace', l.STYLE_WHITESPACE}
 --     }
 --
 -- Each entry in a lexer's `_tokenstyles` table is composed of a token's name
@@ -436,13 +435,15 @@ local M = {}
 -- the existing style for `WHITESPACE` tokens. If instead you wanted to color
 -- the background of whitespace a shade of grey, it might look like:
 --
---     local style = l.style_whitespace..{back = l.colors.grey}
+--     local style = l.STYLE_WHITESPACE..',back:$(color.grey)'
 --     M._tokenstyles = {
 --       {'custom_whitespace', style}
 --     }
 --
+-- Notice that Scintilla/SciTE-style "$()" property expansion is performed.
 -- Remember it is generally not recommended to assign specific colors in styles,
--- but in this case, the color grey likely exists in all user color themes.
+-- but in this case, the "color.grey" property is likely defined in all user
+-- color themes.
 --
 -- ### Line Lexers
 --
@@ -736,6 +737,58 @@ local M = {}
 --   The token name for label tokens.
 -- @field REGEX (string)
 --   The token name for regex tokens.
+-- @field STYLE_NOTHING (string)
+--   The style typically used for no styling.
+-- @field STYLE_CLASS (string)
+--   The style typically used for class definitions.
+-- @field STYLE_COMMENT (string)
+--   The style typically used for code comments.
+-- @field STYLE_CONSTANT (string)
+--   The style typically used for constants.
+-- @field STYLE_ERROR (string)
+--   The style typically used for erroneous syntax.
+-- @field STYLE_FUNCTION (string)
+--   The style typically used for function definitions.
+-- @field STYLE_KEYWORD (string)
+--   The style typically used for language keywords.
+-- @field STYLE_LABEL (string)
+--   The style typically used for labels.
+-- @field STYLE_NUMBER (string)
+--   The style typically used for numbers.
+-- @field STYLE_OPERATOR (string)
+--   The style typically used for operators.
+-- @field STYLE_REGEX (string)
+--   The style typically used for regular expression strings.
+-- @field STYLE_STRING (string)
+--   The style typically used for strings.
+-- @field STYLE_PREPROCESSOR (string)
+--   The style typically used for preprocessor statements.
+-- @field STYLE_TYPE (string)
+--   The style typically used for static types.
+-- @field STYLE_VARIABLE (string)
+--   The style typically used for variables.
+-- @field STYLE_WHITESPACE (string)
+--   The style typically used for whitespace.
+-- @field STYLE_EMBEDDED (string)
+--   The style typically used for embedded code.
+-- @field STYLE_IDENTIFIER (string)
+--   The style typically used for identifier words.
+-- @field STYLE_DEFAULT (string)
+--   The style all styles are based off of.
+-- @field STYLE_LINENUMBER (string)
+--   The style used for all margins except fold margins.
+-- @field STYLE_BRACELIGHT (string)
+--   The style used for highlighted brace characters.
+-- @field STYLE_BRACEBAD (string)
+--   The style used for unmatched brace characters.
+-- @field STYLE_CONTROLCHAR (string)
+--   The style used for control characters.
+--   Color attributes are ignored.
+-- @field STYLE_INDENTGUIDE (string)
+--   The style used for indentation guides.
+-- @field STYLE_CALLTIP (string)
+--   The style used by call tips if `buffer.call_tip_use_style` is set.
+--   Only the font name, size, and color attributes are used.
 -- @field any (pattern)
 --   A pattern matching any single character.
 -- @field ascii (pattern)
@@ -789,62 +842,6 @@ local M = {}
 -- @field any_char (pattern)
 --   A `DEFAULT` token matching any single character, useful in a fallback rule
 --   for a grammar.
--- @field style_nothing (table)
---   The style typically used for no styling.
--- @field style_class (table)
---   The style typically used for class definitions.
--- @field style_comment (table)
---   The style typically used for code comments.
--- @field style_constant (table)
---   The style typically used for constants.
--- @field style_definition (table)
---   The style typically used for definitions.
--- @field style_error (table)
---   The style typically used for erroneous syntax.
--- @field style_function (table)
---   The style typically used for function definitions.
--- @field style_keyword (table)
---   The style typically used for language keywords.
--- @field style_label (table)
---   The style typically used for labels.
--- @field style_number (table)
---   The style typically used for numbers.
--- @field style_operator (table)
---   The style typically used for operators.
--- @field style_regex (table)
---   The style typically used for regular expression strings.
--- @field style_string (table)
---   The style typically used for strings.
--- @field style_preproc (table)
---   The style typically used for preprocessor statements.
--- @field style_tag (table)
---   The style typically used for markup tags.
--- @field style_type (table)
---   The style typically used for static types.
--- @field style_variable (table)
---   The style typically used for variables.
--- @field style_whitespace (table)
---   The style typically used for whitespace.
--- @field style_embedded (table)
---   The style typically used for embedded code.
--- @field style_identifier (table)
---   The style typically used for identifier words.
--- @field style_default (table)
---   The style all styles are based off of.
--- @field style_line_number (table)
---   The style used for all margins except fold margins.
--- @field style_bracelight (table)
---   The style used for highlighted brace characters.
--- @field style_bracebad (table)
---   The style used for unmatched brace characters.
--- @field style_controlchar (table)
---   The style used for control characters.
---   Color attributes are ignored.
--- @field style_indentguide (table)
---   The style used for indentation guides.
--- @field style_calltip (table)
---   The style used by call tips if `buffer.call_tip_use_style` is set.
---   Only the font name, size, and color attributes are used.
 -- @field FOLD_BASE (number)
 --   The initial (root) fold level.
 -- @field FOLD_BLANK (number)
@@ -875,18 +872,21 @@ local function add_rule(lexer, id, rule)
   lexer._RULEORDER[#lexer._RULEORDER + 1] = id
 end
 
+local num_styles
 -- Adds a new Scintilla style to Scintilla.
 -- @param lexer The lexer to add the given style to.
 -- @param token_name The name of the token associated with this style.
 -- @param style A Scintilla style created from `style()`.
 -- @see style
 local function add_style(lexer, token_name, style)
-  local len = lexer._STYLES.len
-  if len == 32 then len = len + 8 end -- skip predefined styles
-  if len >= 255 then print('Too many styles defined (255 MAX)') end
-  lexer._TOKENS[token_name] = len
-  lexer._STYLES[len] = style
-  lexer._STYLES.len = len + 1
+  if num_styles == 32 then num_styles = num_styles + 8 end -- skip predefined
+  if num_styles >= 255 then print('Too many styles defined (255 MAX)') end
+  -- Since parent lexers inherit child lexer tokens and styles, ensure the style
+  -- is not added again since the child added it first.
+  if not lexer._TOKENS[token_name] then
+    lexer._TOKENS[token_name], num_styles = num_styles, num_styles + 1
+    M.set_property('style.'..token_name, style)
+  end
 end
 
 -- (Re)constructs `lexer._TOKENRULE`.
@@ -962,7 +962,7 @@ end
 -- @field label The label token's style (15).
 -- @field regex The regex token's style (16).
 local tokens = {
-  default      = 0,
+  nothing      = 0,
   whitespace   = 1,
   comment      = 2,
   string       = 3,
@@ -979,9 +979,22 @@ local tokens = {
   type         = 14,
   label        = 15,
   regex        = 16,
+  embedded     = 17,
+  -- Predefined styles.
+  default      = 32,
+  linenumber   = 33,
+  bracelight   = 34,
+  bracebad     = 35,
+  controlchar  = 36,
+  indentguide  = 37,
+  calltip      = 38,
 }
+num_styles = 18 -- 0 to 17 are used
 local string_upper = string.upper
-for k, v in pairs(tokens) do M[string_upper(k)] = k end
+for k in pairs(tokens) do
+  local K = string_upper(k)
+  M[K], M['STYLE_'..K] = k, '$(style.'..k..')'
+end
 
 ---
 -- Initializes or loads lexer *lexer_name* and returns the lexer object.
@@ -993,36 +1006,11 @@ for k, v in pairs(tokens) do M[string_upper(k)] = k end
 function M.load(lexer_name)
   M.WHITESPACE = lexer_name..'_whitespace'
   local ok, lexer = pcall(require, lexer_name or 'null')
-  if not ok then lexer = {_NAME = lexer_name} end
+  if not ok then
+    _G.print(lexer) -- error message
+    lexer = {_NAME = lexer_name}
+  end
   lexer._TOKENS = tokens
-  lexer._STYLES = {
-    [0] = M.style_nothing,
-    [1] = M.style_whitespace,
-    [2] = M.style_comment,
-    [3] = M.style_string,
-    [4] = M.style_number,
-    [5] = M.style_keyword,
-    [6] = M.style_identifier,
-    [7] = M.style_operator,
-    [8] = M.style_error,
-    [9] = M.style_preproc,
-    [10] = M.style_constant,
-    [11] = M.style_variable,
-    [12] = M.style_function,
-    [13] = M.style_class,
-    [14] = M.style_type,
-    [15] = M.style_label,
-    [16] = M.style_regex,
-    len = 17,
-    -- Predefined styles.
-    [32] = M.style_default,
-    [33] = M.style_line_number,
-    [34] = M.style_bracelight,
-    [35] = M.style_bracebad,
-    [36] = M.style_controlchar,
-    [37] = M.style_indentguide,
-    [38] = M.style_calltip,
-  }
   if lexer._lexer then
     local l, _r, _s = lexer._lexer, lexer._rules, lexer._tokenstyles
     if not l._tokenstyles then l._tokenstyles = {} end
@@ -1031,16 +1019,6 @@ function M.load(lexer_name)
       l._rules[#l._rules + 1] = {lexer._NAME..'_'..r[1], r[2]}
     end
     for _, s in ipairs(_s or {}) do l._tokenstyles[#l._tokenstyles + 1] = s end
-    -- Each lexer that is loaded with l.load() has its _STYLES modified through
-    -- add_style(). Reset _lexer's _STYLES accordingly.
-    -- For example: RHTML load's HTML (which loads CSS and Javascript). CSS's
-    -- styles are added to css._STYLES and JS's styles are added to js._STYLES.
-    -- HTML adds its styles to html._STYLES as well as CSS's and JS's styles.
-    -- RHTML adds its styles, HTML's styles, CSS's styles, and JS's styles to
-    -- rhtml._STYLES. The problem is that rhtml == _lexer == html. Therefore
-    -- html._STYLES would contain duplicate styles. Compensate by setting
-    -- html._STYLES to rhtml._STYLES.
-    l._STYLES = lexer._STYLES
     lexer = l
   end
   if lexer._rules then
@@ -1050,7 +1028,7 @@ function M.load(lexer_name)
     for _, r in ipairs(lexer._rules) do add_rule(lexer, r[1], r[2]) end
     build_grammar(lexer)
   end
-  add_style(lexer, lexer._NAME..'_whitespace', M.style_whitespace)
+  add_style(lexer, lexer._NAME..'_whitespace', M.STYLE_WHITESPACE)
   if lexer._foldsymbols and lexer._foldsymbols._patterns then
     local patterns = lexer._foldsymbols._patterns
     for i = 1, #patterns do patterns[i] = '()('..patterns[i]..')' end
@@ -1257,58 +1235,6 @@ end
 M.any_char = M.token(M.DEFAULT, M.any)
 
 ---
--- Table of common colors for a theme.
--- This table should be redefined in each theme.
--- @class table
--- @name colors
-M.colors = {}
-
----
--- Creates and returns a Scintilla style from the given table of style
--- properties.
--- @param style_table A table of style properties:
---   * `font` (string) The name of the font the style uses.
---   * `size` (number) The size of the font the style uses.
---   * `bold` (bool) Whether or not the font face is bold.
---   * `italic` (bool) Whether or not the font face is italic.
---   * `underline` (bool) Whether or not the font face is underlined.
---   * `fore` (number) The foreground [`color`](#color) of the font face.
---   * `back` (number) The background [`color`](#color) of the font face.
---   * `eolfilled` (bool) Whether or not the background color extends to the end
---     of the line.
---   * `case` (number) The case of the font (1 = upper, 2 = lower, 0 = normal).
---   * `visible` (bool) Whether or not the text is visible.
---   * `changeable` (bool) Whether the text changable or read-only.
---   * `hotspot` (bool) Whether or not the text is clickable.
--- @return style table
--- @usage local style_bold_italic = style{bold = true, italic = true}
--- @usage local style_grey = style{fore = l.colors.grey}
--- @see color
--- @name style
-function M.style(style_table)
-  setmetatable(style_table, {
-    __concat = function(t1, t2)
-      local t = setmetatable({}, getmetatable(t1)) -- duplicate t1
-      for k,v in pairs(t1) do t[k] = v end
-      for k,v in pairs(t2) do t[k] = v end
-      return t
-    end
-  })
-  return style_table
-end
-
----
--- Creates and returns a Scintilla color from *r*, *g*, and *b* string
--- hexadecimal color components.
--- @param r The string red hexadecimal component of the color.
--- @param g The string green hexadecimal component of the color.
--- @param b The string blue hexadecimal component of the color.
--- @return integer color for Scintilla.
--- @usage local red = color('FF', '00', '00')
--- @name color
-function M.color(r, g, b) return tonumber(b..g..r, 16) end
-
----
 -- Creates and returns a pattern that matches a range of text bounded by
 -- *chars* characters.
 -- This is a convenience function for matching more complicated delimited ranges
@@ -1482,7 +1408,7 @@ function M.embed_lexer(parent, child, start_rule, end_rule)
   if not parent._tokenstyles then parent._tokenstyles = {} end
   local tokenstyles = parent._tokenstyles
   tokenstyles[#tokenstyles + 1] = {child._NAME..'_whitespace',
-                                   M.style_whitespace}
+                                   M.STYLE_WHITESPACE}
   for _, style in ipairs(child._tokenstyles or {}) do
     tokenstyles[#tokenstyles + 1] = style
   end
@@ -1617,6 +1543,14 @@ local get_style_at
 -- @class function
 -- @name get_property
 local get_property
+
+---
+-- Associates string property *key* with string *value*.
+-- @param key The string property key.
+-- @param value The string value.
+-- @class function
+-- @name set_property
+local set_property
 
 ---
 -- Returns the fold level for line number *line_number*.

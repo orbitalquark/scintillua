@@ -2,8 +2,7 @@
 -- D LPeg lexer.
 -- Heavily modified by Brian Schott (@Hackerpilot on Github).
 
-local l = lexer
-local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local l, token, word_match = lexer, lexer.token, lexer.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
 local M = {_NAME = 'dmd'}
@@ -148,9 +147,9 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'annotation', l.style_preproc},
-  {'traits', l.style_definition},
-  {'versions', l.style_constant},
+  {'annotation', l.STYLE_PREPROCESSOR},
+  {'traits', 'fore:$(color.yellow)'},
+  {'versions', l.STYLE_CONSTANT},
 }
 
 M._foldsymbols = {

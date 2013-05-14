@@ -1,8 +1,7 @@
 -- Copyright 2006-2013 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- XML LPeg lexer.
 
-local l = lexer
-local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local l, token, word_match = lexer, lexer.token, lexer.word_match
 local P, R, S, V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
 
 local M = {_NAME = 'xml'}
@@ -59,13 +58,13 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'tag', l.style_tag},
-  {'element', l.style_tag},
-  {'namespace', l.style_class},
-  {'attribute', l.style_type},
-  {'cdata', l.style_comment},
-  {'entity', l.style_operator},
-  {'doctype', l.style_comment},
+  {'tag', l.STYLE_KEYWORD},
+  {'element', l.STYLE_KEYWORD},
+  {'namespace', l.STYLE_CLASS},
+  {'attribute', l.STYLE_TYPE},
+  {'cdata', l.STYLE_COMMENT},
+  {'entity', l.STYLE_OPERATOR},
+  {'doctype', l.STYLE_COMMENT},
 }
 
 M._foldsymbols = {

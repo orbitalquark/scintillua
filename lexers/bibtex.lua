@@ -1,8 +1,7 @@
 -- Copyright 2006-2013 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- Bibtex LPeg lexer.
 
-local l = lexer
-local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local l, token, word_match = lexer, lexer.token, lexer.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
 local M = {_NAME = 'bibtex'}
@@ -53,8 +52,8 @@ local bibtex_end_rule = token(l.OPERATOR, P('}'))
 l.embed_lexer(latex, M, bibtex_start_rule, bibtex_end_rule)
 
 M._tokenstyles = {
-  {'field', l.style_constant},
-  {'entry', l.style_preproc}
+  {'field', l.STYLE_CONSTANT},
+  {'entry', l.STYLE_PREPROCESSOR}
 }
 
 return M
