@@ -1,6 +1,6 @@
 -- Copyright 2006-2013 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- D LPeg lexer.
--- Heavily modified by Brian Schott (SirAlaran).
+-- Heavily modified by Brian Schott (@Hackerpilot on Github).
 
 local l = lexer
 local token, style, color, word_match = l.token, l.style, l.color, l.word_match
@@ -19,18 +19,18 @@ local comment = token(l.COMMENT, line_comment + block_comment + nested_comment)
 
 -- Strings.
 local sq_str = l.delimited_range("'", '\\', true, false, '\n') * S('cwd')^-1
-local dq_str = l.delimited_range('"', '\\', true, false, '\n') * S('cwd')^-1
-local lit_str = 'r' * l.delimited_range('"', nil, true, false, '\n') *
+local dq_str = l.delimited_range('"', '\\', true, false) * S('cwd')^-1
+local lit_str = 'r' * l.delimited_range('"', nil, true, false) *
                 S('cwd')^-1
-local bt_str = l.delimited_range('`', '\\', nil, false, '\n') * S('cwd')^-1
-local hex_str = 'x' * l.delimited_range('"', '\\', nil, false, '\n') *
+local bt_str = l.delimited_range('`', nil, true, false) * S('cwd')^-1
+local hex_str = 'x' * l.delimited_range('"', '\\', nil, false) *
                 S('cwd')^-1
 local other_hex_str = '\\x' * (l.xdigit * l.xdigit)^1
-local del_str = l.nested_pair('q"[', ']"', true) +
-                l.nested_pair('q"(', ')"', true) +
-                l.nested_pair('q"{', '}"', true) +
-                l.nested_pair('q"<', '>"', true) +
-                P('q') * l.nested_pair('{', '}', true)
+local del_str = l.nested_pair('q"[', ']"', true) * S('cwd')^-1 +
+                l.nested_pair('q"(', ')"', true) * S('cwd')^-1 +
+                l.nested_pair('q"{', '}"', true) * S('cwd')^-1 +
+                l.nested_pair('q"<', '>"', true) * S('cwd')^-1 +
+                P('q') * l.nested_pair('{', '}', true) * S('cwd')^-1
 local string = token(l.STRING, del_str + sq_str + dq_str + lit_str + bt_str +
                                hex_str + other_hex_str)
 
@@ -51,7 +51,8 @@ local keyword = token(l.KEYWORD, word_match{
   'null', 'out', 'override', 'pragma', 'private', 'protected', 'public', 'pure',
   'ref', 'return', 'scope', 'shared', 'static', 'super', 'switch',
   'synchronized', 'this', 'throw','true', 'try', 'typeid', 'typeof', 'unittest',
-  'version', 'volatile', 'while', 'with', '__gshared', '__thread', '__traits'
+  'version', 'volatile', 'while', 'with', '__gshared', '__thread', '__traits',
+  '__vector', '__parameters'
 })
 
 -- Types.
@@ -67,7 +68,8 @@ local type = token(l.TYPE, word_match{
 -- Constants.
 local constant = token(l.CONSTANT, word_match{
   '__FILE__', '__LINE__', '__DATE__', '__EOF__', '__TIME__', '__TIMESTAMP__',
-  '__VENDOR__', '__VERSION__'
+  '__VENDOR__', '__VERSION__', '__FUNCTON__', '__PRETTY_FUNCTION__',
+  '__MODULE__',
 })
 
 local class_sequence = token(l.TYPE, P('class') + P('struct')) * ws^1 *
@@ -96,10 +98,11 @@ local preproc = token(l.PREPROCESSOR, '#' * l.nonnewline^0)
 -- Traits.
 local traits_list = token('traits', word_match{
   'isAbstractClass', 'isArithmetic', 'isAssociativeArray', 'isFinalClass',
-  'isFloating', 'isIntegral', 'isScalar', 'isStaticArray', 'isUnsigned',
-  'isVirtualFunction', 'isAbstractFunction', 'isFinalFunction',
-  'isStaticFunction', 'isRef', 'isOut', 'isLazy', 'hasMember', 'identifier',
-  'getMember', 'getOverloads', 'getVirtualFunctions', 'parent',
+  'isPOD', 'isNested', 'isFloating', 'isIntegral', 'isScalar', 'isStaticArray',
+  'isUnsigned', 'isVirtualFunction', 'isVirtualMethod', 'isAbstractFunction',
+  'isFinalFunction', 'isStaticFunction', 'isRef', 'isOut', 'isLazy',
+  'hasMember', 'identifier', 'getAttributes', 'getMember', 'getOverloads',
+  'getProtection', 'getVirtualFunctions', 'getVirtualMethods', 'parent',
   'classInstanceSize', 'allMembers', 'derivedMembers', 'isSame', 'compiles'
 })
 
