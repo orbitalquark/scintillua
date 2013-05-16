@@ -68,7 +68,7 @@ local type = token(l.TYPE, word_match{
 -- Constants.
 local constant = token(l.CONSTANT, word_match{
   '__FILE__', '__LINE__', '__DATE__', '__EOF__', '__TIME__', '__TIMESTAMP__',
-  '__VENDOR__', '__VERSION__', '__FUNCTON__', '__PRETTY_FUNCTION__',
+  '__VENDOR__', '__VERSION__', '__FUNCTION__', '__PRETTY_FUNCTION__',
   '__MODULE__',
 })
 
