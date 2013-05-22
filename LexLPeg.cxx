@@ -127,8 +127,8 @@ class LexerLPeg : public ILexer {
 	static int l_getproperty(lua_State *L) {
 		lua_getfield(L, LUA_REGISTRYINDEX, "props");
 		PropSetSimple *props = static_cast<PropSetSimple *>(lua_touserdata(L, -1));
-		int value = (lua_gettop(L) > 1) ? luaL_checkinteger(L, 2) : 0;
-		lua_pushnumber(L, props->GetInt(luaL_checkstring(L, 1), value));
+		lua_pushstring(L, props->Get(luaL_checkstring(L, 1)));
+		if (lua_rawlen(L, -1) == 0 && lua_gettop(L) > 3) lua_pushvalue(L, 2);
 		return 1;
 	}
 
@@ -155,14 +155,26 @@ class LexerLPeg : public ILexer {
 	}
 
 	/**
+	 * Expands value of the string property key at index *index* and pushes the
+	 * result onto the stack.
+	 * @param L The Lua State.
+	 * @param index The index the string property key.
+	 */
+	void lL_getexpanded(lua_State *L, int index) {
+		lua_getglobal(L, "lexer"), lua_getfield(L, -1, "get_property_expanded");
+		lua_pushvalue(L, (index > 0) ? index : index - 2);
+		lua_pcall(L, 1, 1, 0);
+		lua_replace(L, -2);
+	}
+
+	/**
 	 * Parses the given style string to set the properties for the given style
 	 * number.
 	 * @param num The style number to set properties for.
-	 * @param style The style string containing properties to set. It is deleted
-	 *   at the end of the function.
+	 * @param style The style string containing properties to set.
 	 */
-	void SetStyle(int num, char *style) {
-		char *option = style;
+	void SetStyle(int num, const char *style) {
+		char *option = const_cast<char *>(style);
 		while (option) {
 			char *next = strchr(option, ',');
 			if (next) *next++ = '\0';
@@ -229,7 +241,6 @@ class LexerLPeg : public ILexer {
 				SS(sci, SCI_STYLESETHOTSPOT, num, *option == 'h');
 			option = next;
 		}
-		delete[] style;
 	}
 
 	/**
@@ -245,19 +256,21 @@ class LexerLPeg : public ILexer {
 			return l_error(L, "'_LEXER._TOKENS' table not found");
 #ifdef NO_SCITE
 		if (!SS || !sci) return true; // skip, but do not report an error
-		SetStyle(STYLE_DEFAULT, props.Expanded("style.default"));
+		lua_pushstring(L, "style.default"), lL_getexpanded(L, -1);
+		SetStyle(STYLE_DEFAULT, lua_tostring(L, -1));
+		lua_pop(L, 2); // style and "style.default"
 		SS(sci, SCI_STYLECLEARALL, 0, 0); // set default styles
 		lua_pushnil(L);
 		while (lua_next(L, -2)) {
 			if (lua_isstring(L, -2) && lua_isnumber(L, -1) &&
 			    lua_tointeger(L, -1) != STYLE_DEFAULT) {
 				lua_pushstring(L, "style."), lua_pushvalue(L, -3), lua_concat(L, 2);
-				SetStyle(lua_tointeger(L, -2), props.Expanded(lua_tostring(L, -1)));
-				lua_pop(L, 1); // "style.token"
+				lL_getexpanded(L, -1), lua_replace(L, -2);
+				SetStyle(lua_tointeger(L, -2), lua_tostring(L, -1));
+				lua_pop(L, 1); // style
 			}
 			lua_pop(L, 1); // value
 		}
-		lua_pop(L, 2); // _LEXER._TOKENS and _LEXER
 #else
 		char prop_name[32];
 		lua_pushnil(L);
@@ -266,14 +279,14 @@ class LexerLPeg : public ILexer {
 				sprintf(prop_name, "style.lpeg.%0d",
 				        static_cast<int>(lua_tointeger(L, -1)));
 				lua_pushstring(L, "style."), lua_pushvalue(L, -3), lua_concat(L, 2);
-				char *value = props.Expanded(lua_tostring(L, -1));
-				props.Set(prop_name, value);
-				delete[] value;
-				lua_pop(L, 1); // "style.token"
+				lL_getexpanded(L, -1), lua_replace(L, -2);
+				props.Set(prop_name, lua_tostring(L, -1));
+				lua_pop(L, 1); // style
 			}
 			lua_pop(L, 1); // value
 		}
 #endif
+		lua_pop(L, 2); // _LEXER._TOKENS and _LEXER
 		return true;
 	}
 

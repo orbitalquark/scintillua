@@ -1142,7 +1142,7 @@ function M.fold(text, start_pos, start_line, start_level)
       end
       line_num = line_num + 1
     end
-  elseif M.get_property('fold.by.indentation', 1) == 1 then
+  elseif M.get_property('fold.by.indentation', '1') == '1' then
     local get_indent_amount = M.get_indent_amount
     -- Indentation based folding.
     local current_line, prev_level = start_line, start_level
@@ -1464,7 +1464,7 @@ end
 function M.fold_line_comments(prefix)
   local get_property = M.get_property
   return function(text, pos, line, s)
-    if get_property('fold.line.comments', 0) == 0 then return 0 end
+    if get_property('fold.line.comments', '0') == '0' then return 0 end
     if s > 1 and line:match('^%s*()') < s then return 0 end
     local prev_line_comment = prev_line_is_comment(prefix, text, pos, line, s)
     local next_line_comment = next_line_is_comment(prefix, text, pos, line, s)
@@ -1472,6 +1472,17 @@ function M.fold_line_comments(prefix)
     if prev_line_comment and not next_line_comment then return -1 end
     return 0
   end
+end
+
+---
+-- Returns the string property value associated with string property *key*,
+-- replacing any "$()" expressions with the values of their keys.
+-- @param key The string property key.
+-- @return property value
+function M.get_property_expanded(key)
+  return M.get_property(key):gsub('$%b()', function(key)
+    return M.get_property_expanded(key:sub(3, -2))
+  end)
 end
 
 --[[ The functions and fields below were defined in C.
@@ -1535,11 +1546,11 @@ local lexer
 local get_style_at
 
 ---
--- Returns the integer property value associated with string property *key*, or
+-- Returns the string property value associated with string property *key*, or
 -- *default*.
 -- @param key The string property key.
--- @param default Optional integer value to return if *key* is not set.
--- @return integer property value
+-- @param default Optional value to return if *key* is not set.
+-- @return property value
 -- @class function
 -- @name get_property
 local get_property
