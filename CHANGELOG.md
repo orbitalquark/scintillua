@@ -4,6 +4,26 @@
 
 [Atom Feed]: feed
 
+## 3.3.2-1 (25 May 2013)
+
+Download:
+
+* [Scintillua 3.3.2-1][]
+
+Bugfixes:
+
+* None.
+
+Changes:
+
+* No need for '!' in front of font faces in GTK anymore.
+* Scintillua supports multiple curses platforms, not just ncurses.
+* [SCI\_GETLEXERLANGUAGE][] returns "lexer/current" for multi-lang lexers.
+* Updated D lexer.
+
+[Scintillua 3.3.2-1]: download/scintillua3.3.2-1.zip
+[SCI\_GETLEXERLANGUAGE]: api/Scintillua.html#SCI_GETLEXERLANGUAGE
+
 ## 3.3.0-1 (31 Mar 2013)
 
 Download:
