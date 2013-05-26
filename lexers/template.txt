@@ -1,7 +1,7 @@
 -- ? LPeg lexer.
 
 local l, token, word_match = lexer, lexer.token, lexer.word_match
-local P, R, S = l.lpeg.P, l.lpeg.R, l.lpeg.S
+local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
 local M = {_NAME = '?'}
 
