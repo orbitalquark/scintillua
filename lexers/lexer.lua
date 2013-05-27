@@ -8,18 +8,18 @@ local M = {}
 --
 -- ## Overview
 --
--- Lexers are the mechanism for highlighting the syntax of source code.
--- Scintilla (the editing component behind [Textadept][] and [SciTE][])
--- traditionally uses static, compiled C++ lexers which are notoriously
--- difficult to create and/or extend. On the other hand, lexers written with Lua
--- make it easy to rapidly create new lexers, extend existing ones, and embed
--- lexers within one another. They tend to be more readable than C++ lexers too.
+-- Lexers highlight the syntax of source code. Scintilla (the editing component
+-- behind [Textadept][] and [SciTE][]) traditionally uses static, compiled C++
+-- lexers which are notoriously difficult to create and/or extend. On the other
+-- hand, Lua makes it easy to to rapidly create new lexers, extend existing
+-- ones, and embed lexers within one another. Lua lexers tend to be more
+-- readable than C++ lexers too.
 --
--- Lexers are written using Parsing Expression Grammars, or PEGs, with the Lua
--- [LPeg library][]. The following table is taken from the LPeg documentation
--- and summarizes all you need to know about constructing basic LPeg patterns.
--- This module provides convenience functions for creating and working with
--- other more advanced patterns and concepts.
+-- Lexers are Parsing Expression Grammars, or PEGs, composed with the Lua
+-- [LPeg library][]. The following table comes from the LPeg documentation and
+-- summarizes all you need to know about constructing basic LPeg patterns. This
+-- module provides convenience functions for creating and working with other
+-- more advanced patterns and concepts.
 --
 -- Operator             | Description
 -- ---------------------|------------
@@ -38,11 +38,11 @@ local M = {}
 -- The first part of this document deals with rapidly constructing a simple
 -- lexer. The next part deals with more advanced techniques, such as custom
 -- coloring and embedding lexers within one another. Following that is a
--- discussion about code folding, or being able to tell Scintilla what code
--- blocks can be "folded" (hidden temporarily from view). After that,
+-- discussion about code folding, or being able to tell Scintilla which code
+-- blocks are "foldable" (temporarily hideable from view). After that are
 -- instructions on how to use LPeg lexers with the aforementioned Textadept and
--- SciTE editors is listed. Finally, considerations on performance and
--- limitations are given.
+-- SciTE editors. Finally there are comments on lexer performance and
+-- limitations.
 --
 -- [LPeg library]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
 -- [Textadept]: http://foicica.com/textadept
@@ -50,17 +50,17 @@ local M = {}
 --
 -- ## Lexer Basics
 --
--- All lexers are contained in the *lexers/* directory. Your new lexer will also
--- be included in this directory. Before attempting to write one from scratch
--- though, first determine if your programming language is similar to any of the
--- 80+ languages supported. If so, you may be able to copy and modify that
--- lexer, saving some time and effort. The filename of your lexer should be the
--- name of your programming language in lower case followed by a *.lua*
--- extension. For example, a new Lua lexer would have the name *lua.lua*.
+-- The *lexers/* directory contains all lexers, including your new one. Before
+-- attempting to write one from scratch though, first determine if your
+-- programming language is similar to any of the 80+ languages supported. If so,
+-- you may be able to copy and modify that lexer, saving some time and effort.
+-- The filename of your lexer should be the name of your programming language in
+-- lower case followed by a *.lua* extension. For example, a new Lua lexer has
+-- the name *lua.lua*.
 --
--- Note: It is not recommended to use one-character language names like "b",
--- "c", or "d". These lexers happen to be named *b_lang.lua*, *cpp.lua*, and
--- *dmd.lua* respectively, for example.
+-- Note: Try to refrain from using one-character language names like "b", "c",
+-- or "d". For example, Scintillua uses "b_lang", "cpp", and "dmd",
+-- respectively.
 --
 -- ### New Lexer Template
 --
@@ -90,47 +90,46 @@ local M = {}
 --
 --     return M
 --
--- The first 4 lines of code are simply defining convenience variables you will
--- be using often. The 5th and last lines define and return the lexer object
--- used by Scintilla; they are very important and must be part of every lexer.
--- The sixth line defines what is called a "token", an essential building block
--- of a lexer. Tokens will be discussed shortly. The rest of the code defines a
--- set of grammar rules and token styles. Those will be discussed later. Note,
--- however, the `M.` prefix in front of `_rules` and `_tokenstyles`: not only do
--- these tables belong to their respective lexers, but any non-local variables
--- should be prefixed by `M.` so-as not to affect Lua's global environment. All
--- in all, this is a minimal, working lexer that can be built on.
+-- The first 4 lines of code simply define often used convenience variables. The
+-- 5th and last lines define and return the lexer object Scintilla uses; they
+-- are very important and must be part of every lexer. The sixth line defines
+-- something called a "token", an essential building block of lexers. You will
+-- learn about tokens shortly. The rest of the code defines a set of grammar
+-- rules and token styles. You will learn about those later. Note, however, the
+-- `M.` prefix in front of `_rules` and `_tokenstyles`: not only do these tables
+-- belong to their respective lexers, but any non-local variables need the `M.`
+-- prefix too so-as not to affect Lua's global environment. All in all, this is
+-- a minimal, working lexer that you can build on.
 --
 -- ### Tokens
 --
 -- Take a moment to think about your programming language's structure. What kind
 -- of key elements does it have? In the template shown earlier, one predefined
 -- element all languages have is whitespace. Your language probably also has
--- elements like comments, strings, and keywords. These elements are called
--- "tokens". They are the so-called "building blocks" of lexers. Source code is
--- broken down into tokens and subsequently colored, resulting in the syntax
--- highlighting you are familiar with. It is up to you how specific you would
--- like your lexer to be when it comes to tokens. Perhaps you would like to only
--- distinguish between keywords and identifiers, or maybe you would like to also
--- recognize constants and built-in functions, methods, or libraries. The Lua
--- lexer, for example, defines 11 tokens: whitespace, comments, strings,
--- numbers, keywords, built-in functions, constants, built-in libraries,
--- identifiers, labels, and operators. Even though constants, built-in
--- functions, and built-in libraries are a subset of identifiers, it is helpful
--- to Lua programmers for the lexer to distinguish between them all. It would
--- have otherwise been perfectly acceptable to just recognize keywords and
+-- elements like comments, strings, and keywords. Lexers refer to these elements
+-- as "tokens". Tokens are the fundamental "building blocks" of lexers. Lexers
+-- break down source code into tokens for coloring, which results in the syntax
+-- highlighting familiar to you. It is up to you how specific your lexer is when
+-- it comes to tokens. Perhaps only distinguishing between keywords and
+-- identifiers is necessary, or maybe recognizing constants and built-in
+-- functions, methods, or libraries is desirable. The Lua lexer, for example,
+-- defines 11 tokens: whitespace, comments, strings, numbers, keywords, built-in
+-- functions, constants, built-in libraries, identifiers, labels, and operators.
+-- Even though constants, built-in functions, and built-in libraries are subsets
+-- of identifiers, Lua programmers find it helpful for the lexer to distinguish
+-- between them all. It is perfectly acceptable to just recognize keywords and
 -- identifiers.
 --
--- In a lexer, tokens are composed of a token name and an LPeg pattern that
--- matches a sequence of characters recognized to be an instance of that token.
--- Tokens are created using the [`token()`](#token) function. Let us examine the
--- "whitespace" token defined in the template shown earlier:
+-- In a lexer, tokens consist of a token name and an LPeg pattern that matches a
+-- sequence of characters recognized as an instance of that token. Create tokens
+-- using the [`token()`](#token) function. Let us examine the "whitespace" token
+-- defined in the template shown earlier:
 --
 --     local ws = token(l.WHITESPACE, l.space^1)
 --
 -- At first glance, the first argument does not appear to be a string name and
--- the second argument does not appear to be an LPeg pattern. Perhaps you were
--- expecting something like:
+-- the second argument does not appear to be an LPeg pattern. Perhaps you
+-- expected something like:
 --
 --     local ws = token('whitespace', S('\t\v\f\n\r ')^1)
 --
@@ -149,15 +148,14 @@ local M = {}
 -- [`newline`](#newline), [`nonnewline`](#nonnewline),
 -- [`nonnewline_esc`](#nonnewline_esc), [`dec_num`](#dec_num),
 -- [`hex_num`](#hex_num), [`oct_num`](#oct_num), [`integer`](#integer),
--- [`float`](#float), and [`word`](#word). However, you are not limited to the
--- token names and LPeg patterns listed. You can do whatever you like. However,
--- the advantage of using predefined token names is that your lexer's tokens
--- will inherit the universal syntax highlighting color theme used by your text
--- editor.
+-- [`float`](#float), and [`word`](#word). You may use your own token names if
+-- none of the above fit your language, but an advantage to using predefined
+-- token names is that your lexer's tokens will inherit the universal syntax
+-- highlighting color theme used by your text editor.
 --
 -- #### Example Tokens
 --
--- So, how might other tokens like comments, strings, and keywords be defined?
+-- So, how might you define other tokens like comments, strings, and keywords?
 -- Here are some examples.
 --
 -- **Comments**
@@ -176,15 +174,14 @@ local M = {}
 --
 --     local c_comment = token(l.COMMENT, '/*' * (l.any - '*/')^0 * P('*/')^-1)
 --
--- This comment starts with a "/\*" sequence and can contain anything up to, and
--- including, an ending "\*/" sequence. The ending "\*/" is defined to be
--- optional so that an unfinished comment is still matched as a comment and
--- highlighted as you would expect.
+-- This comment starts with a "/\*" sequence and contains anything up to and
+-- including an ending "\*/" sequence. The ending "\*/" is optional so the lexer
+-- can recognize unfinished comments as comments and highlight them properly.
 --
 -- **Strings**
 --
--- It may be tempting to think that a string is not much different from the
--- block comment shown above in that both have start and end delimiters:
+-- It is tempting to think that a string is not much different from the block
+-- comment shown above in that both have start and end delimiters:
 --
 --     local dq_str = '"' * (l.any - '"')^0 * P('"')^-1
 --     local sq_str = "'" * (l.any - "'")^0 * P("'")^-1
@@ -192,23 +189,23 @@ local M = {}
 --
 -- However, most programming languages allow escape sequences in strings such
 -- that a sequence like "\\&quot;" in a double-quoted string indicates that the
--- '&quot;' is not the end of the string. The above token would incorrectly
--- match such a string. Instead, a convenient function is provided for you:
--- [`delimited_range()`](#delimited_range).
+-- '&quot;' is not the end of the string. The above token incorrectly matches
+-- such a string. Instead, use the [`delimited_range()`](#delimited_range)
+-- convenience function.
 --
 --     local dq_str = l.delimited_range('"', '\\', true)
 --     local sq_str = l.delimited_range("'", '\\', true)
 --     local string = token(l.STRING, dq_str + sq_str)
 --
--- In this case, '\' is treated as an escape character in a string sequence. The
--- `true` argument is analogous to `P('"')^-1` in that non-terminated strings
--- are highlighted as expected.
+-- In this case, the lexer treats '\' as an escape character in a string
+-- sequence. The `true` argument is analogous to `P('"')^-1` in that the lexer
+-- highlights non-terminated strings as expected.
 --
 -- **Keywords**
 --
 -- Instead of matching _n_ keywords with _n_ `P('keyword_`_`n`_`')` ordered
--- choices, another convenience function, [`word_match()`](#word_match), is
--- provided. It is much easier and more efficient to write word matches like:
+-- choices, use another convenience function: [`word_match()`](#word_match). It
+-- is much easier and more efficient to write word matches like:
 --
 --     local keyword = token(l.KEYWORD, l.word_match{
 --       'keyword_1', 'keyword_2', ..., 'keyword_n'
@@ -238,32 +235,32 @@ local M = {}
 --     local integer = P('-')^-1 * (l.dec_num * S('lL')^-1)
 --     local number = token(l.NUMBER, l.float + l.hex_num + integer)
 --
--- Your language may have other tweaks that may be necessary, but it is up to
--- you how fine-grained you want your highlighting to be. After all, it is not
--- like you are writing a compiler or interpreter!
+-- Your language may need other tweaks, but it is up to you how fine-grained you
+-- want your highlighting to be. After all, you are not writing a compiler or
+-- interpreter!
 --
 -- ### Rules
 --
--- Programming languages have grammars, which specify how their tokens may be
--- used structurally. For example, comments usually cannot appear within a
--- string. Grammars are broken down into rules, which are simply combinations of
--- tokens. Recall from the lexer template the `_rules` table, which defines all
--- the rules used by the lexer grammar:
+-- Programming languages have grammars, which specify valid token structure. For
+-- example, comments usually cannot appear within a string. Grammars consist of
+-- rules, which are simply combinations of tokens. Recall from the lexer
+-- template the `_rules` table, which defines all the rules used by the lexer
+-- grammar:
 --
 --     M._rules = {
 --       {'whitespace', ws},
 --       {'any_char', l.any_char},
 --     }
 --
--- Each entry in a lexer's `_rules` table is composed of a rule name and its
+-- Each entry in a lexer's `_rules` table consists of a rule name and its
 -- associated pattern. Rule names are completely arbitrary and serve only to
 -- identify and distinguish between different rules. Rule order is important: if
--- text does not match the first rule, the second rule is tried, and so on. This
--- simple grammar says to match whitespace tokens under a rule named
+-- text does not match the first rule, the lexer tries the second rule, and so
+-- on. This simple grammar says to match whitespace tokens under a rule named
 -- "whitespace" and anything else under a rule named "any_char".
 --
--- To illustrate why rule order is important, here is an example of a simplified
--- Lua grammar:
+-- To illustrate the importance of rule order, here is an example of a
+-- simplified Lua grammar:
 --
 --     M._rules = {
 --       {'whitespace', ws},
@@ -279,47 +276,46 @@ local M = {}
 --
 -- Note how identifiers come after keywords. In Lua, as with most programming
 -- languages, the characters allowed in keywords and identifiers are in the same
--- set (alphanumerics plus underscores). If the "identifier" rule was listed
--- before the "keyword" rule, all keywords would match identifiers and thus
--- would be incorrectly highlighted as identifiers instead of keywords. The same
--- idea applies to function, constant, etc. tokens that you may want to
--- distinguish between: their rules should come before identifiers.
+-- set (alphanumerics plus underscores). If the lexer specified the "identifier"
+-- rule before the "keyword" rule, all keywords would match identifiers and thus
+-- incorrectly highlight as identifiers instead of keywords. The same idea
+-- applies to function, constant, etc. tokens that you may want to distinguish
+-- between: their rules should come before identifiers.
 --
 -- Now, you may be wondering what `l.any_char` is and why the "any_char" rule
 -- exists. `l.any_char` is a special, predefined token that matches one single
 -- character as a `DEFAULT` token. The "any_char" rule should appear in every
--- lexer because there may be some text that does not match any of the rules you
--- defined. How is that possible? Well in Lua, for example, the '!' character is
+-- lexer because there may be some text that does not match any of the defined
+-- rules. How is that possible? Well in Lua, for example, the '!' character is
 -- meaningless outside a string or comment. Therefore, if the lexer encounters a
 -- '!' in such a circumstance, it would not match any existing rules other than
--- "any_char". With "any_char", the lexer can "skip" over the "error" and
--- continue highlighting the rest of the source file correctly. Without
--- "any_char", the lexer would fail to continue. Perhaps you instead want your
--- language to highlight such "syntax errors". You would replace the "any_char"
--- rule such that the grammar looks like:
+-- "any_char". With "any_char", the lexer "skips" over the "error" and continues
+-- highlighting the rest of the source file correctly. Without "any_char", the
+-- lexer would fail to continue. If instead you want to highlight these "syntax
+-- errors", replace the "any_char" rule such that the grammar looks like:
 --
 --     M._rules = {
 --       {'whitespace', ws},
 --       {'error', token(l.ERROR, l.any)},
 --     }
 --
--- This would identify and highlight any character not matched by an existing
+-- This identifies and highlights any character not matched by an existing
 -- rule as an `ERROR` token.
 --
 -- Even though the rules defined in the examples above contain a single token,
--- rules can consist of multiple tokens. For example, a rule for an HTML tag
--- could be composed of a tag token followed by an arbitrary number of attribute
--- tokens, allowing all tokens to be highlighted separately. The rule might look
--- something like this:
+-- rules may consist of multiple tokens. For example, a rule for an HTML tag
+-- could consist of a tag token followed by an arbitrary number of attribute
+-- tokens, allowing the lexer to highlight all tokens separately. The rule might
+-- look something like this:
 --
 --     {'tag', tag_start * (ws * attributes)^0 * tag_end^-1}
 --
 -- ### Summary
 --
--- Lexers are primarily composed of tokens and grammar rules. A number of
--- convenience patterns and functions are available for rapidly creating a
--- lexer. If you choose to use predefined token names for your tokens, you do
--- not have to define how tokens are highlighted. They will inherit the default
+-- Lexers primarily consist of tokens and grammar rules. At your disposal are a
+-- number of convenience patterns and functions for rapidly creating a lexer. If
+-- you choose to use predefined token names for your tokens, you do not have to
+-- define how the lexer highlights them. The tokens will inherit the default
 -- syntax highlighting color theme your editor uses.
 --
 -- ## Advanced Techniques
@@ -331,9 +327,9 @@ local M = {}
 -- for more rich highlighting, or "styling", with different fonts, font sizes,
 -- font attributes, and foreground and background colors, just to name a few.
 -- The unit of this rich highlighting is called a "style". Styles are simply
--- strings of comma-separated property settings. By default, predefined token
--- names like `WHITESPACE`, `COMMENT`, `STRING`, etc. are associated with a
--- particular style as part of a universal color theme. These predefined styles
+-- strings of comma-separated property settings. By default, lexers associate
+-- predefined token names like `WHITESPACE`, `COMMENT`, `STRING`, etc. with
+-- particular styles as part of a universal color theme. These predefined styles
 -- include [`STYLE_NOTHING`](#STYLE_NOTHING), [`STYLE_CLASS`](#STYLE_CLASS),
 -- [`STYLE_COMMENT`](#STYLE_COMMENT), [`STYLE_CONSTANT`](#STYLE_CONSTANT),
 -- [`STYLE_ERROR`](#STYLE_ERROR), [`STYLE_FUNCTION`](#STYLE_FUNCTION),
@@ -344,9 +340,9 @@ local M = {}
 -- [`STYLE_VARIABLE`](#STYLE_VARIABLE), [`STYLE_WHITESPACE`](#STYLE_WHITESPACE),
 -- [`STYLE_EMBEDDED`](#STYLE_EMBEDDED),
 -- and [`STYLE_IDENTIFIER`](#STYLE_IDENTIFIER). Like with predefined token names
--- and LPeg patterns, you are not limited to these predefined styles. At their
--- core, styles are just strings, so you can create new ones and/or modify
--- existing ones. Each style consists of the following comma-separated settings:
+-- and LPeg patterns, you may define your own styles. At their core, styles are
+-- just strings, so you may create new ones and/or modify existing ones. Each
+-- style consists of the following comma-separated settings:
 --
 -- Setting        | Description
 -- ---------------|------------
@@ -363,16 +359,16 @@ local M = {}
 -- [not]changeable| Whether the text is changeable or read-only.
 -- [not]hotspot   | Whether or not the text is clickable.
 --
--- Font colors are specified in either "#RRGGBB" format, "0xBBGGRR" format, or
--- the decimal equivalent of the latter. As with token names, LPeg patterns, and
+-- Specify font colors in either "#RRGGBB" format, "0xBBGGRR" format, or the
+-- decimal equivalent of the latter. As with token names, LPeg patterns, and
 -- styles, there is a set of predefined color names, but they vary depending on
--- the current theme being used. Therefore, it is generally not a good idea to
+-- the current color theme in use. Therefore, it is generally not a good idea to
 -- manually define colors within styles in your lexer since they might not fit
--- into a user's chosen color theme. It is not even recommended to use a
--- predefined color in a style because that color may be theme-specific.
--- Instead, the best practice is to either use predefined styles or derive new
--- color-agnostic styles from predefined ones. For example, Lua "longstring"
--- tokens use the existing `STYLE_STRING` style instead of defining a new one.
+-- into a user's chosen color theme. Try to refrain from even using predefined
+-- colors in a style because that color may be theme-specific. Instead, the best
+-- practice is to either use predefined styles or derive new color-agnostic
+-- styles from predefined ones. For example, Lua "longstring" tokens use the
+-- existing `STYLE_STRING` style instead of defining a new one.
 --
 -- #### Example Styles
 --
@@ -385,8 +381,8 @@ local M = {}
 --
 --     local style_bold = 'bold'
 --
--- If you wanted the same style, but also with an italic font face, you can
--- define the new style in terms of the old one:
+-- If you want the same style, but also with an italic font face, define the new
+-- style in terms of the old one:
 --
 --     local style_bold_italic = style_bold..',italics'
 --
@@ -397,14 +393,13 @@ local M = {}
 --
 --     local style_static_var = l.STYLE_VARIABLE..',italics'
 --
--- More examples of style definitions are in the color theme files in the
--- *lexers/themes/* folder.
+-- The color theme files in the *lexers/themes/* folder give more examples of
+-- style definitions.
 --
 -- ### Token Styles
 --
--- Tokens are assigned to a particular style with the lexer's `_tokenstyles`
--- table. Recall the token definition and `_tokenstyles` table from the lexer
--- template:
+-- Lexers use the `_tokenstyles` table to assign tokens to a particular style.
+-- Recall the token definition and `_tokenstyles` table from the lexer template:
 --
 --     local ws = token(l.WHITESPACE, l.space^1)
 --
@@ -415,7 +410,7 @@ local M = {}
 --     }
 --
 -- Why is a style not assigned to the `WHITESPACE` token? As mentioned earlier,
--- tokens that use predefined token names are automatically associated with a
+-- lexers automatically associate tokens that use predefined token names with a
 -- particular style. Only tokens with custom token names need manual style
 -- associations. As an example, consider a custom whitespace token:
 --
@@ -427,23 +422,22 @@ local M = {}
 --       {'custom_whitespace', l.STYLE_WHITESPACE}
 --     }
 --
--- Each entry in a lexer's `_tokenstyles` table is composed of a token's name
--- and its associated style. Unlike with `_rules`, the ordering in
--- `_tokenstyles` does not matter since entries are just associations. Do not
--- confuse token names with rule names. They are completely different entities.
--- In the example above, the "custom_whitespace" token is just being assigned
--- the existing style for `WHITESPACE` tokens. If instead you wanted to color
--- the background of whitespace a shade of grey, it might look like:
+-- Each entry in a lexer's `_tokenstyles` table consists of a token's name and
+-- its associated style. Unlike with `_rules`, the ordering in `_tokenstyles`
+-- is not significant since entries are just associations. Do not confuse token
+-- names with rule names. They are completely different entities. In the example
+-- above, the lexer assigns the "custom_whitespace" token the existing style for
+-- `WHITESPACE` tokens. If instead you want to color the background of
+-- whitespace a shade of grey, it might look like:
 --
 --     local style = l.STYLE_WHITESPACE..',back:$(color.grey)'
 --     M._tokenstyles = {
 --       {'custom_whitespace', style}
 --     }
 --
--- Notice that Scintilla/SciTE-style "$()" property expansion is performed.
--- Remember it is generally not recommended to assign specific colors in styles,
--- but in this case, the "color.grey" property is likely defined in all user
--- color themes.
+-- Notice that the lexer peforms Scintilla/SciTE-style "$()" property expansion.
+-- Remember to refrain from assigning specific colors in styles, but in this
+-- case, all user color themes probably define the "color.grey" property.
 --
 -- ### Line Lexers
 --
@@ -462,35 +456,33 @@ local M = {}
 --
 -- ### Embedded Lexers
 --
--- Lexers can be embedded within one another very easily, requiring minimal
--- effort. In the following sections, the lexer being embedded is called the
--- "child" lexer and the lexer a child is being embedded in is called the
--- "parent". For example, consider an HTML lexer and a CSS lexer. Either lexer
--- can stand alone for styling their respective HTML and CSS files. However, CSS
--- can be embedded inside HTML. In this specific case, the CSS lexer is referred
--- to as the "child" lexer with the HTML lexer being the "parent". Now consider
--- an HTML lexer and a PHP lexer. This sounds a lot like the case with CSS, but
--- there is a subtle difference: PHP _embeds itself_ into HTML while CSS is
--- _embedded in_ HTML. This fundamental difference results in two types of
--- embedded lexers: a parent lexer that embeds other child lexers in it (like
--- HTML embedding CSS), and a child lexer that embeds itself within a parent
--- lexer (like PHP embedding itself in HTML).
+-- Lexers embed within one another very easily, requiring minimal effort. In the
+-- following sections, the lexer being embedded is called the "child" lexer and
+-- the lexer a child is being embedded in is called the "parent". For example,
+-- consider an HTML lexer and a CSS lexer. Either lexer stands alone for styling
+-- their respective HTML and CSS files. However, CSS can be embedded inside
+-- HTML. In this specific case, the CSS lexer is the "child" lexer with the HTML
+-- lexer being the "parent". Now consider an HTML lexer and a PHP lexer. This
+-- sounds a lot like the case with CSS, but there is a subtle difference: PHP
+-- _embeds itself_ into HTML while CSS is _embedded in_ HTML. This fundamental
+-- difference results in two types of embedded lexers: a parent lexer that
+-- embeds other child lexers in it (like HTML embedding CSS), and a child lexer
+-- that embeds itself within a parent lexer (like PHP embedding itself in HTML).
 --
 -- #### Parent Lexer
 --
--- Before you can embed a child lexer into a parent lexer, the child lexer needs
--- to be loaded inside the parent. This is done with the [`load()`](#load)
--- function. For example, loading the CSS lexer within the HTML lexer looks
--- like:
+-- Before embedding a child lexer into a parent lexer, the parent lexer needs to
+-- load the child lexer. This is done with the [`load()`](#load) function. For
+-- example, loading the CSS lexer within the HTML lexer looks like:
 --
 --     local css = l.load('css')
 --
 -- The next part of the embedding process is telling the parent lexer when to
--- switch over to the child lexer and when to switch back. These indications are
--- called the "start rule" and "end rule", respectively, and are just LPeg
--- patterns. Continuing with the HTML/CSS example, the transition from HTML to
--- CSS is when a "style" tag with a "type" attribute whose value is "text/css"
--- is encountered:
+-- switch over to the child lexer and when to switch back. The lexer refers to
+-- these indications as the "start rule" and "end rule", respectively, and are
+-- just LPeg patterns. Continuing with the HTML/CSS example, the transition from
+-- HTML to CSS is when the lexer encounters a "style" tag with a "type"
+-- attribute whose value is "text/css":
 --
 --     local css_tag = P('<style') * P(function(input, index)
 --       if input:find('^[^>]+type="text/css"', index) then
@@ -501,24 +493,22 @@ local M = {}
 -- This pattern looks for the beginning of a "style" tag and searches its
 -- attribute list for the text "`type="text/css"`". (In this simplified example,
 -- the Lua pattern does not consider whitespace between the '=' nor does it
--- consider that single quotes can be used instead of double quotes.) If there
--- is a match, the functional pattern returns a value instead of `nil`. In this
--- case, the value returned does not matter because we ultimately want the
--- "style" tag to be styled as an HTML tag, so the actual start rule looks like
--- this:
+-- consider that using single quotes is valid.) If there is a match, the
+-- functional pattern returns a value instead of `nil`. In this case, the value
+-- returned does not matter because we ultimately want to style the "style" tag
+-- as an HTML tag, so the actual start rule looks like this:
 --
 --     local css_start_rule = #css_tag * tag
 --
 -- Now that the parent knows when to switch to the child, it needs to know when
--- to switch back. In the case of HTML/CSS, the switch back occurs when an
--- ending "style" tag is encountered, but the tag should still be styled as an
--- HTML tag:
+-- to switch back. In the case of HTML/CSS, the switch back occurs when the
+-- lexer encounters an ending "style" tag, though the lexer should still style
+-- the tag as an HTML tag:
 --
 --     local css_end_rule = #P('</style>') * tag
 --
--- Once the child lexer is loaded and its start and end rules are defined, you
--- can embed it in the parent using the [`embed_lexer()`](#embed_lexer)
--- function:
+-- Once the parent loads the child lexer and defines the child's start and end
+-- rules, it embeds the child with the [`embed_lexer()`](#embed_lexer) function:
 --
 --     l.embed_lexer(M, css, css_start_rule, css_end_rule)
 --
@@ -533,8 +523,8 @@ local M = {}
 -- into the child lexer with the [`load()`](#load) function and then create
 -- start and end rules for the child lexer. However, in this case, swap the
 -- lexer object arguments to [`embed_lexer()`](#embed_lexer) and indicate
--- through a `_lexer` field in the child lexer that the parent should be used as
--- the primary lexer. For example, in the PHP lexer:
+-- through a `_lexer` field in the child lexer that the parent is the primary
+-- lexer. For example, in the PHP lexer:
 --
 --     local html = l.load('hypertext')
 --     local php_start_rule = token('php_tag', '<?php ')
@@ -542,27 +532,27 @@ local M = {}
 --     l.embed_lexer(html, M, php_start_rule, php_end_rule)
 --     M._lexer = html
 --
--- The last line is very important. Without it, the PHP lexer's rules would be
--- used instead of the HTML lexer's rules.
+-- The last line is very important. Without it, the lexer uses PHP's rules
+-- instead of HTML's.
 --
 -- ## Code Folding
 --
 -- When reading source code, it is occasionally helpful to temporarily hide
--- blocks of code like functions, classes, comments, etc. This concept is called
+-- blocks of code like functions, classes, comments, etc. This is the concept of
 -- "folding". In the Textadept and SciTE editors for example, little indicators
 -- in the editor margins appear next to code that can be folded at places called
--- "fold points". When an indicator is clicked, the code associated with it is
--- visually hidden until the indicator is clicked again. A lexer can specify
--- these fold points and what code exactly to fold.
+-- "fold points". When the user clicks an indicator, the editor hides the code
+-- associated with the indicator until the user clicks the indicator again. The
+-- lexer specifies these fold points and what code exactly to fold.
 --
 -- The fold points for most languages occur on keywords or character sequences.
 -- Examples of fold keywords are "if" and "end" in Lua and examples of fold
 -- character sequences are '{', '}', "/\*", and "\*/" in C for code block and
 -- comment delimiters, respectively. However, these fold points cannot occur
--- just anywhere. For example, fold keywords that appear within strings or
--- comments should not be recognized as fold points. Your lexer can conveniently
--- define fold points with such granularity in a `_foldsymbols` table. For
--- example, consider C:
+-- just anywhere. For example, lexers should not recognize fold keywords that
+-- appear within strings or comments. The lexer's `_foldsymbols` table allows
+-- you to conveniently define fold points with such granularity. For example,
+-- consider C:
 --
 --     M._foldsymbols = {
 --       [l.OPERATOR] = {['{'] = 1, ['}'] = -1},
@@ -574,19 +564,19 @@ local M = {}
 -- an `OPERATOR` token is a fold point. The integer `1` indicates the match is
 -- a beginning fold point and `-1` indicates the match is an ending fold point.
 -- Likewise, the second assignment states that any "/\*" or "\*/" that the lexer
--- recognizes as part of a `COMMENT` token is a fold point. Any occurences of
--- these characters outside their defined tokens (such as in a string) would not
--- be considered a fold point. Finally, every `_foldsymbols` table must have a
--- `_patterns` field that contains a list of [Lua patterns][] that match fold
--- points. If the lexer encounters text that matches one of those patterns, the
--- matched text is looked up in its token's table to determine whether or not it
--- is a fold point. In the example above, the first Lua pattern matches any '{'
--- or '}' characters. When the lexer comes across one of those characters, it
--- checks if the match is an `OPERATOR` token. If so, the match is identified as
--- a fold point. It is the same idea for the other patterns. (The '%' is in the
--- other patterns because '\*' is a special character in Lua patterns and it
--- must be escaped.) How are fold keywords specified? Here is an example for
--- Lua:
+-- recognizes as part of a `COMMENT` token is a fold point. The lexer does not
+-- consider any occurences of these characters outside their defined tokens
+-- (such as in a string) as fold points. Finally, every `_foldsymbols` table
+-- must have a `_patterns` field that contains a list of [Lua patterns][] that
+-- match fold points. If the lexer encounters text that matches one of those
+-- patterns, the lexer looks up the matched text in its token's table to
+-- determine whether or not the text is a fold point. In the example above, the
+-- first Lua pattern matches any '{' or '}' characters. When the lexer comes
+-- across one of those characters, it checks if the match is an `OPERATOR`
+-- token. If so, the lexer identifies the match as a fold point. The same idea
+-- applies for the other patterns. (The '%' is in the other patterns because
+-- '\*' is a special character in Lua patterns that needs escaping.) How do you
+-- specify fold keywords? Here is an example for Lua:
 --
 --     M._foldsymbols = {
 --       [l.KEYWORD] = {
@@ -597,13 +587,13 @@ local M = {}
 --     }
 --
 -- Any time the lexer encounters a lower case word, if that word is a `KEYWORD`
--- token and in the associated list of fold points, it is identified as a fold
--- point.
+-- token and in the associated list of fold points, the lexer identifies the
+-- word as a fold point.
 --
--- If your lexer needs to do some additional processing to determine if a fold
--- point has occurred on a match, you can assign a function that returns an
--- integer. Returning `1` or `-1` indicates the match is a fold point. Returning
--- `0` indicates it is not. For example:
+-- If your lexer needs to do some additional processing to determine if a match
+-- is a fold point, assign a function that returns an integer. Returning `1` or
+-- `-1` indicates the match is a fold point. Returning `0` indicates it is not.
+-- For example:
 --
 --     local function fold_strange_token(text, pos, line, s, match)
 --       if ... then
@@ -620,10 +610,10 @@ local M = {}
 --     }
 --
 -- Any time the lexer encounters a '|' that is a "strange_token", it calls the
--- `fold_strange_token` function to determine if '|' is a fold point. These
--- kinds of functions are called with the following arguments: the text to fold,
--- the position of the start of the current line in the text to fold, the text
--- of the current line, the position in the current line the matched text starts
+-- `fold_strange_token` function to determine if '|' is a fold point. The lexer
+-- calls these functions with the following arguments: the text to fold, the
+-- position of the start of the current line in the text to fold, the text of
+-- the current line, the position in the current line the matched text starts
 -- at, and the matched text itself.
 --
 -- [Lua patterns]: http://www.lua.org/manual/5.2/manual.html#6.4.1
@@ -632,11 +622,11 @@ local M = {}
 --
 -- ### Textadept
 --
--- Put your lexer in your *~/.textadept/lexers/* directory so it will not be
--- overwritten when upgrading Textadept. Also, lexers in this directory override
--- default lexers. Thus, a user *lua* lexer would be loaded instead of the
--- default *lua* lexer. This is convenient if you wish to tweak a default lexer
--- to your liking. Then add a [mime-type][] for your lexer if necessary.
+-- Put your lexer in your *~/.textadept/lexers/* directory so you do not
+-- overwrite it when upgrading Textadept. Also, lexers in this directory
+-- override default lexers. Thus, Textadept loads a user *lua* lexer instead of
+-- the default *lua* lexer. This is convenient for tweaking a default lexer to
+-- your liking. Then add a [mime-type][] for your lexer if necessary.
 --
 -- [mime-type]: _M.textadept.mime_types.html
 --
@@ -650,11 +640,11 @@ local M = {}
 --     lexer.$(file.patterns.[lexer_name])=[lexer_name]
 --
 -- where `[lexer_name]` is the name of your lexer (minus the *.lua* extension)
--- and `[file_patterns]` is a set of file extensions matched to your lexer.
+-- and `[file_patterns]` is a set of file extensions to use your lexer for.
 --
--- Please note any styling information in *.properties* files is ignored.
--- Styling information for Lua lexers is contained in your theme file in the
--- *lexers/themes/* directory.
+-- Please note that Lua lexers ignore any styling information in *.properties*
+-- files. Your theme file in the *lexers/themes/* directory contains styling
+-- information.
 --
 -- ## Considerations
 --
@@ -663,13 +653,13 @@ local M = {}
 -- There might be some slight overhead when initializing a lexer, but loading a
 -- file from disk into Scintilla is usually more expensive. On modern computer
 -- systems, I see no difference in speed between LPeg lexers and Scintilla's C++
--- ones. Lexers can usually be optimized for speed by re-arranging rules in the
--- `_rules` table so that the most common rules are matched first. Do keep in
--- mind the fact that order matters for similar rules.
+-- ones. Optimize lexers for speed by re-arranging rules in the `_rules` table
+-- so that the most common rules match first. Do keep in mind that order matters
+-- for similar rules.
 --
 -- ### Limitations
 --
--- Embedded preprocessor languages like PHP are not completely embedded in their
+-- Embedded preprocessor languages like PHP cannot completely embed in their
 -- parent languages in that the parent's tokens do not support start and end
 -- rules. This mostly goes unnoticed, but code like
 --
@@ -683,19 +673,18 @@ local M = {}
 --
 -- ### Troubleshooting
 --
--- Errors in lexers can be tricky to debug. Lua errors are printed to
--- `io.stderr` and `_G.print()` statements in lexers are printed to `io.stdout`.
--- Running your editor from a terminal is the easiest way to see errors as they
--- occur.
+-- Errors in lexers can be tricky to debug. Lexers print Lua errors to
+-- `io.stderr` and `_G.print()` statements to `io.stdout`. Running your editor
+-- from a terminal is the easiest way to see errors as they occur.
 --
 -- ### Risks
 --
 -- Poorly written lexers have the ability to crash Scintilla (and thus its
--- containing application), so unsaved data might be lost. However, these
--- crashes have only been observed in early lexer development, when syntax
--- errors or pattern errors are present. Once the lexer actually starts styling
--- text (either correctly or incorrectly, it does not matter), no crashes have
--- been observed.
+-- containing application), so unsaved data might be lost. However, I have only
+-- observed these crashes in early lexer development, when syntax errors or
+-- pattern errors are present. Once the lexer actually starts styling text
+-- (either correctly or incorrectly, it does not matter), I have not observed
+-- any crashes.
 --
 -- ### Acknowledgements
 --
