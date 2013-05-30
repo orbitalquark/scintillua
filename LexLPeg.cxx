@@ -399,7 +399,7 @@ class LexerLPeg : public ILexer {
 			// ([lang]_whitespace). This is necessary for determining which language
 			// to start lexing with.
 			char style_name[50];
-			for (int i = 1; i <= STYLE_MAX; i++) {
+			for (int i = 0; i <= STYLE_MAX; i++) {
 				PrivateCall(i, reinterpret_cast<void *>(style_name));
 				ws[i] = strstr(style_name, "whitespace") ? true : false;
 			}
