@@ -436,8 +436,9 @@ local M = {}
 --     }
 --
 -- Notice that the lexer peforms Scintilla/SciTE-style "$()" property expansion.
--- Remember to refrain from assigning specific colors in styles, but in this
--- case, all user color themes probably define the "color.grey" property.
+-- You may also use "%()". Remember to refrain from assigning specific colors in
+-- styles, but in this case, all user color themes probably define the
+-- "color.grey" property.
 --
 -- ### Line Lexers
 --
@@ -1465,11 +1466,11 @@ end
 
 ---
 -- Returns the string property value associated with string property *key*,
--- replacing any "$()" expressions with the values of their keys.
+-- replacing any "$()" and "%()" expressions with the values of their keys.
 -- @param key The string property key.
 -- @return property value
 function M.get_property_expanded(key)
-  return M.get_property(key):gsub('$%b()', function(key)
+  return M.get_property(key):gsub('[$%%]%b()', function(key)
     return M.get_property_expanded(key:sub(3, -2))
   end)
 end
