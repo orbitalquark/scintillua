@@ -88,6 +88,6 @@ set_property('style.bracelight', 'fore:$(color.light_blue)')
 set_property('style.bracebad', 'fore:$(color.light_red)')
 set_property('style.controlchar', '$(style.nothing)')
 set_property('style.indentguide',
-             'fore:$(color.light_black),black:$(color.light_black)')
+             'fore:$(color.light_black),back:$(color.light_black)')
 set_property('style.calltip',
-             'fore:$(color.light_grey),black:$(color.light_black)')
+             'fore:$(color.light_grey),back:$(color.light_black)')
