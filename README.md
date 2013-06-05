@@ -29,9 +29,13 @@ Scintilla-based application.
 
 ## Download
 
-Download Scintillua from the project's [download page][].
+Download Scintillua from the project's [download page][] or from this quick
+link:
+
+* [Win32 and Linux][]
 
 [download page]: http://foicica.com/scintillua/download
+[Win32 and Linux]: download/scintilluaLATEST.zip
 
 ## Installation and Usage
 
