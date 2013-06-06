@@ -564,12 +564,30 @@ public:
 	const char * SCI_METHOD DescribeProperty(const char *name) { return ""; }
 	/**
 	 * Sets the *key* lexer property to *value*.
+	 * If *key* starts with "style.", also set the style for the token.
 	 * @param key The string keyword.
 	 * @param val The string value.
 	 */
 	int SCI_METHOD PropertySet(const char *key, const char *value) {
 		props.Set(key, value);
 		if (reinit) Init();
+#ifdef NO_SCITE
+		else if (L && SS && sci && strncmp(key, "style.", 6) == 0) {
+			lua_getglobal(L, "_LEXER");
+			if (lua_istable(L, -1)) {
+				lua_getfield(L, -1, "_TOKENS");
+				if (lua_istable(L, -1)) {
+					lua_pushstring(L, key + 6), lua_rawget(L, -2);
+					lua_pushstring(L, key), lL_getexpanded(L, -1), lua_replace(L, -2);
+					if (lua_isnumber(L, -2))
+						SetStyle(lua_tointeger(L, -2), lua_tostring(L, -1));
+					lua_pop(L, 2); // style and style number
+				}
+				lua_pop(L, 1); // _LEXER._TOKENS
+			}
+			lua_pop(L, 1); // _LEXER
+		}
+#endif
 		return -1; // no need to re-lex
 	}
 	/** Returning keyword list descriptions is not implemented. */
