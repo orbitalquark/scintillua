@@ -1469,6 +1469,7 @@ end
 -- replacing any "$()" and "%()" expressions with the values of their keys.
 -- @param key The string property key.
 -- @return property value
+-- @name get_property_expanded
 function M.get_property_expanded(key)
   return M.get_property(key):gsub('[$%%]%b()', function(key)
     return M.get_property_expanded(key:sub(3, -2))
