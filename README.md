@@ -29,13 +29,24 @@ Scintilla-based application.
 
 ## Download
 
-Download Scintillua from the project's [download page][] or from this quick
-link:
+Download Scintillua from the project's [download page][] or from these quick
+links:
+
+Stable Builds
 
 * [Win32 and Linux][]
 
+Unstable Builds
+
+* [Win32 and Linux Nightly][]
+
+_Warning_: nightly builds are untested, may have bugs, and are the absolute
+cutting-edge versions of Scintillua. Do not use them in production, but for
+testing purposes only.
+
 [download page]: http://foicica.com/scintillua/download
 [Win32 and Linux]: download/scintilluaLATEST.zip
+[Win32 and Linux Nightly]: download/scintillua_NIGHTLY.zip
 
 ## Installation and Usage
 
