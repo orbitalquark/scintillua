@@ -83,7 +83,7 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'directive', l.STYLE_PREPROCESSOR},
+  directive = l.STYLE_PREPROCESSOR
 }
 
 M._foldsymbols = {

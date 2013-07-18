@@ -79,7 +79,7 @@ local php_end_rule = token('php_tag', '?>')
 l.embed_lexer(html, M, php_start_rule, php_end_rule)
 
 M._tokenstyles = {
-  {'php_tag', l.STYLE_EMBEDDED},
+  php_tag = l.STYLE_EMBEDDED
 }
 
 local _foldsymbols = html._foldsymbols

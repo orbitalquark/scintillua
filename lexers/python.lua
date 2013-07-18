@@ -122,7 +122,7 @@ M._rules = {
 
 
 M._tokenstyles = {
-  {'decorator', l.STYLE_PREPROCESSOR},
+  decorator = l.STYLE_PREPROCESSOR
 }
 
 return M

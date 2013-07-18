@@ -147,9 +147,9 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'annotation', l.STYLE_PREPROCESSOR},
-  {'traits', 'fore:$(color.yellow)'},
-  {'versions', l.STYLE_CONSTANT},
+  annotation = l.STYLE_PREPROCESSOR,
+  traits = 'fore:$(color.yellow)',
+  versions = l.STYLE_CONSTANT
 }
 
 M._foldsymbols = {

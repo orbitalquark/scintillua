@@ -58,13 +58,13 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'tag', l.STYLE_KEYWORD},
-  {'element', l.STYLE_KEYWORD},
-  {'namespace', l.STYLE_CLASS},
-  {'attribute', l.STYLE_TYPE},
-  {'cdata', l.STYLE_COMMENT},
-  {'entity', l.STYLE_OPERATOR},
-  {'doctype', l.STYLE_COMMENT},
+  tag = l.STYLE_KEYWORD,
+  element = l.STYLE_KEYWORD,
+  namespace = l.STYLE_CLASS,
+  attribute = l.STYLE_TYPE,
+  cdata = l.STYLE_COMMENT,
+  entity = l.STYLE_OPERATOR,
+  doctype = l.STYLE_COMMENT
 }
 
 M._foldsymbols = {

@@ -83,13 +83,13 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'tag', l.STYLE_KEYWORD},
-  {'element', l.STYLE_KEYWORD},
-  {'unknown_element', l.STYLE_KEYWORD..',italics'},
-  {'attribute', l.STYLE_VARIABLE},
-  {'unknown_attribute', l.STYLE_TYPE..',italics'},
-  {'entity', l.STYLE_OPERATOR},
-  {'doctype', l.STYLE_COMMENT},
+  tag = l.STYLE_KEYWORD,
+  element = l.STYLE_KEYWORD,
+  unknown_element = l.STYLE_KEYWORD..',italics',
+  attribute = l.STYLE_VARIABLE,
+  unknown_attribute = l.STYLE_TYPE..',italics',
+  entity = l.STYLE_OPERATOR,
+  doctype = l.STYLE_COMMENT
 }
 
 -- Embedded CSS.

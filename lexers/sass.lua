@@ -24,7 +24,7 @@ table.insert(_rules, #_rules - 1, {'variable', variable})
 M._rules = _rules
 
 M._tokenstyles = css._tokenstyles
-table.insert(M._tokenstyles, #M._tokenstyles - 1, {'mixin', l.STYLE_FUNCTION})
+M._tokenstyles['mixin'] = l.STYLE_FUNCTION
 
 M._foldsymbols = css._foldsymbols
 

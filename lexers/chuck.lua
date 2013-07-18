@@ -107,9 +107,9 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'ugen', l.STYLE_CONSTANT},
-  {'time', l.STYLE_NUMBER},
-  {'now', l.STYLE_CONSTANT..',bold'},
+  ugen = l.STYLE_CONSTANT,
+  time = l.STYLE_NUMBER,
+  now = l.STYLE_CONSTANT..',bold'
 }
 
 return M

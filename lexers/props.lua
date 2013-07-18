@@ -39,7 +39,7 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'color', l.STYLE_NUMBER},
+  color = l.STYLE_NUMBER
 }
 
 M._LEXBYLINE = true

@@ -92,7 +92,7 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'target', l.STYLE_LABEL},
+  target = l.STYLE_LABEL
 }
 
 M._LEXBYLINE = true

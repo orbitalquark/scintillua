@@ -315,15 +315,15 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'builtInVariable', l.STYLE_CONSTANT},
-  {'default', l.STYLE_ERROR},
-  {'field', l.STYLE_LABEL},
-  {'gawkBuiltInVariable', l.STYLE_CONSTANT..',underlined'},
-  {'gawkKeyword', l.STYLE_KEYWORD..',underlined'},
-  {'gawkNumber', l.STYLE_NUMBER..',underlined'},
-  {'gawkOperator', l.STYLE_OPERATOR..',underlined'},
-  {'gawkRegex', l.STYLE_PREPROCESSOR..',underlined'},
-  {'regex', l.STYLE_PREPROCESSOR},
+  builtInVariable = l.STYLE_CONSTANT,
+  default = l.STYLE_ERROR,
+  field = l.STYLE_LABEL,
+  gawkBuiltInVariable = l.STYLE_CONSTANT..',underlined',
+  gawkKeyword = l.STYLE_KEYWORD..',underlined',
+  gawkNumber = l.STYLE_NUMBER..',underlined',
+  gawkOperator = l.STYLE_OPERATOR..',underlined',
+  gawkRegex = l.STYLE_PREPROCESSOR..',underlined',
+  regex = l.STYLE_PREPROCESSOR
 }
 
 M._foldsymbols = {

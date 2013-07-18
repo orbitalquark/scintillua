@@ -54,9 +54,9 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'environment', l.STYLE_KEYWORD},
-  {'math', l.STYLE_FUNCTION},
-  {'section', l.STYLE_CLASS},
+  environment = l.STYLE_KEYWORD,
+  math = l.STYLE_FUNCTION,
+  section = l.STYLE_CLASS
 }
 
 M._foldsymbols = {

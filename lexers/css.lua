@@ -151,10 +151,10 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'unit', l.STYLE_LABEL},
-  {'value', l.STYLE_CONSTANT},
-  {'color', l.STYLE_NUMBER},
-  {'at_rule', l.STYLE_PREPROCESSOR},
+  unit = l.STYLE_LABEL,
+  value = l.STYLE_CONSTANT,
+  color = l.STYLE_NUMBER,
+  at_rule = l.STYLE_PREPROCESSOR
 }
 
 M._foldsymbols = {

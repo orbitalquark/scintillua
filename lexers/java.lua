@@ -74,7 +74,7 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'annotation', l.STYLE_PREPROCESSOR},
+  annotation = l.STYLE_PREPROCESSOR
 }
 
 M._foldsymbols = {

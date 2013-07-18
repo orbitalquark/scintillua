@@ -121,8 +121,8 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'longstring', l.STYLE_STRING},
-  {'library', l.STYLE_TYPE}
+  longstring = l.STYLE_STRING,
+  library = l.STYLE_TYPE
 }
 
 local function fold_longcomment(text, pos, line, s, match)

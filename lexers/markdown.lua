@@ -99,21 +99,21 @@ M._LEXBYLINE = true
 local font_size = 10
 local hstyle = 'fore:$(color.red)'
 M._tokenstyles = {
-  {'h6', hstyle},
-  {'h5', hstyle..',size:'..(font_size + 1)},
-  {'h4', hstyle..',size:'..(font_size + 2)},
-  {'h3', hstyle..',size:'..(font_size + 3)},
-  {'h2', hstyle..',size:'..(font_size + 4)},
-  {'h1', hstyle..',size:'..(font_size + 5)},
-  {'code', l.STYLE_EMBEDDED..',eolfilled'},
-  {'hr', 'back:$(color.black),eolfilled'},
-  {'link', 'underlined'},
-  {'link_url', 'underlined'},
-  {'link_label', l.STYLE_LABEL},
-  {'strong', 'bold'},
-  {'em', 'italics'},
-  {'list', l.STYLE_CONSTANT},
-  {'html', l.STYLE_EMBEDDED}
+  h6 = hstyle,
+  h5 = hstyle..',size:'..(font_size + 1),
+  h4 = hstyle..',size:'..(font_size + 2),
+  h3 = hstyle..',size:'..(font_size + 3),
+  h2 = hstyle..',size:'..(font_size + 4),
+  h1 = hstyle..',size:'..(font_size + 5),
+  code = l.STYLE_EMBEDDED..',eolfilled',
+  hr = 'back:$(color.black),eolfilled',
+  link = 'underlined',
+  link_url = 'underlined',
+  link_label = l.STYLE_LABEL,
+  strong = 'bold',
+  em = 'italics',
+  list = l.STYLE_CONSTANT,
+  html = l.STYLE_EMBEDDED
 }
 
 -- Do not actually embed; just load the styles.

@@ -17,7 +17,7 @@ local ruby_end_rule = token('rhtml_tag', '%>')
 l.embed_lexer(html, ruby, ruby_start_rule, ruby_end_rule, true)
 
 M._tokenstyles = {
-  {'rhtml_tag', l.STYLE_EMBEDDED},
+  rhtml_tag = l.STYLE_EMBEDDED
 }
 
 local _foldsymbols = html._foldsymbols

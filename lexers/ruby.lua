@@ -120,7 +120,7 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'symbol', l.STYLE_CONSTANT},
+  symbol = l.STYLE_CONSTANT
 }
 
 local function disambiguate(text, pos, line, s)

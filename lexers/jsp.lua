@@ -17,7 +17,7 @@ local java_end_rule = token('jsp_tag', '%>')
 l.embed_lexer(html, java, java_start_rule, java_end_rule, true)
 
 M._tokenstyles = {
-  {'jsp_tag', l.STYLE_EMBEDDED},
+  jsp_tag = l.STYLE_EMBEDDED
 }
 
 local _foldsymbols = html._foldsymbols

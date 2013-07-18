@@ -65,7 +65,7 @@ l.embed_lexer(html, M, django_start_rule, django_end_rule)
 html._RULES['comment'] = html._RULES['comment'] + comment
 
 M._tokenstyles = {
-  {'django_tag', l.STYLE_EMBEDDED},
+  django_tag = l.STYLE_EMBEDDED
 }
 
 local _foldsymbols = html._foldsymbols

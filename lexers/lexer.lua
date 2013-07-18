@@ -398,7 +398,7 @@ local M = {}
 --
 -- ### Token Styles
 --
--- Lexers use the `_tokenstyles` table to assign tokens to a particular style.
+-- Lexers use the `_tokenstyles` table to assign tokens to particular styles.
 -- Recall the token definition and `_tokenstyles` table from the lexer template:
 --
 --     local ws = token(l.WHITESPACE, l.space^1)
@@ -419,20 +419,17 @@ local M = {}
 -- Assigning a style to this token looks like:
 --
 --     M._tokenstyles = {
---       {'custom_whitespace', l.STYLE_WHITESPACE}
+--       custom_whitespace = l.STYLE_WHITESPACE
 --     }
 --
--- Each entry in a lexer's `_tokenstyles` table consists of a token's name and
--- its associated style. Unlike with `_rules`, the ordering in `_tokenstyles`
--- is not significant since entries are just associations. Do not confuse token
--- names with rule names. They are completely different entities. In the example
--- above, the lexer assigns the "custom_whitespace" token the existing style for
--- `WHITESPACE` tokens. If instead you want to color the background of
--- whitespace a shade of grey, it might look like:
+-- Do not confuse token names with rule names. They are completely different
+-- entities. In the example above, the lexer assigns the "custom_whitespace"
+-- token the existing style for `WHITESPACE` tokens. If instead you want to
+-- color the background of whitespace a shade of grey, it might look like:
 --
 --     local style = l.STYLE_WHITESPACE..',back:$(color.grey)'
 --     M._tokenstyles = {
---       {'custom_whitespace', style}
+--       custom_whitespace = style
 --     }
 --
 -- Notice that the lexer peforms Scintilla/SciTE-style "$()" property expansion.
@@ -1008,12 +1005,12 @@ function M.load(lexer_name)
       -- Prevent rule id clashes.
       l._rules[#l._rules + 1] = {lexer._NAME..'_'..r[1], r[2]}
     end
-    for _, s in ipairs(_s or {}) do l._tokenstyles[#l._tokenstyles + 1] = s end
+    for token, style in pairs(_s or {}) do l._tokenstyles[token] = style end
     lexer = l
   end
   if lexer._rules then
-    for _, s in ipairs(lexer._tokenstyles or {}) do
-      add_style(lexer, s[1], s[2])
+    for token, style in pairs(lexer._tokenstyles or {}) do
+      add_style(lexer, token, style)
     end
     for _, r in ipairs(lexer._rules) do add_rule(lexer, r[1], r[2]) end
     build_grammar(lexer)
@@ -1397,10 +1394,9 @@ function M.embed_lexer(parent, child, start_rule, end_rule)
   -- Add child styles.
   if not parent._tokenstyles then parent._tokenstyles = {} end
   local tokenstyles = parent._tokenstyles
-  tokenstyles[#tokenstyles + 1] = {child._NAME..'_whitespace',
-                                   M.STYLE_WHITESPACE}
-  for _, style in ipairs(child._tokenstyles or {}) do
-    tokenstyles[#tokenstyles + 1] = style
+  tokenstyles[child._NAME..'_whitespace'] = M.STYLE_WHITESPACE
+  for token, style in pairs(child._tokenstyles or {}) do
+    tokenstyles[token] = style
   end
 end
 
@@ -1489,13 +1485,10 @@ end
 --   token.
 --   Child lexers should not use this table to access and/or modify their
 --   parent's rules and vice-versa. Use the `_RULES` table instead.
--- @field _tokenstyles A list of styles associated with non-predefined token
---   names.
---   Each token style is a table containing the name of the token (not a rule
---   containing the token) and the style associated with the token. The order of
---   token styles is not important.
---   It is recommended to use predefined styles or color-agnostic styles derived
---   from predefined styles to ensure compatibility with user color themes.
+-- @field _tokenstyles A map of non-predefined token names to styles.
+--   Remember to use token names, not rule names. It is recommended to use
+--   predefined styles or color-agnostic styles derived from predefined styles
+--   to ensure compatibility with user color themes.
 -- @field _foldsymbols A table of recognized fold points for the lexer.
 --   Keys are token names with table values defining fold points. Those table
 --   values have string keys of keywords or characters that indicate a fold

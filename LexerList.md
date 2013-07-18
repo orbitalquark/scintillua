@@ -7,11 +7,11 @@ see `lexers/lpeg.properties`.
 
 1. Actionscript`*`
 1. Ada
-1. Antlr`*`
+1. ANTLR`*`
 1. APDL`*`
 1. Applescript
 1. ASP`*`
-1. Awk`*`
+1. AWK`*`
 1. Bash`*`
 1. Batch`*`
 1. B`*`
@@ -19,7 +19,7 @@ see `lexers/lpeg.properties`.
 1. Boo
 1. C/C++`*`
 1. C#`*`
-1. Chuck
+1. ChucK
 1. CMake`*`
 1. Coffeescript
 1. ConTeXt`*`
@@ -35,8 +35,8 @@ see `lexers/lpeg.properties`.
 1. F#
 1. Forth
 1. Fortran
-1. Gap`*`
-1. Gettext
+1. GAP`*`
+1. gettext
 1. GLSL`*`
 1. Gnuplot
 1. Go`*`
@@ -53,14 +53,14 @@ see `lexers/lpeg.properties`.
 1. JSON`*`
 1. JSP`*`
 1. LaTeX`*`
-1. Less`*`
-1. Lilypond
-1. Literal Coffeescript
+1. LESS`*`
+1. LilyPond
 1. Lisp`*`
+1. Literal Coffeescript
 1. Lua`*`
 1. Makefile
 1. Markdown
-1. Matlab`*`
+1. MATLAB`*`
 1. Nemerle`*`
 1. NSIS
 1. Objective-C`*`
@@ -70,11 +70,11 @@ see `lexers/lpeg.properties`.
 1. PHP`*`
 1. Pike`*`
 1. PKGBUILD`*`
-1. Postscript
+1. PostScript
 1. Prolog
 1. Properties
 1. Python
-1. Rebol`*`
+1. REBOL`*`
 1. Rexx`*`
 1. RHTML`*`
 1. R

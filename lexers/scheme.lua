@@ -90,7 +90,7 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'entity', l.STYLE_VARIABLE},
+  entity = l.STYLE_VARIABLE
 }
 
 M._foldsymbols = {

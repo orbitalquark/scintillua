@@ -60,7 +60,7 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'action', l.STYLE_NOTHING}
+  action = l.STYLE_NOTHING
 }
 
 M._foldsymbols = {

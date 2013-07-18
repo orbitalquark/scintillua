@@ -32,7 +32,7 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  {'environment', l.STYLE_KEYWORD},
+  environment = l.STYLE_KEYWORD
 }
 
 M._foldsymbols = {

@@ -52,8 +52,8 @@ local bibtex_end_rule = token(l.OPERATOR, P('}'))
 l.embed_lexer(latex, M, bibtex_start_rule, bibtex_end_rule)
 
 M._tokenstyles = {
-  {'field', l.STYLE_CONSTANT},
-  {'entry', l.STYLE_PREPROCESSOR}
+  field = l.STYLE_CONSTANT,
+  entry = l.STYLE_PREPROCESSOR
 }
 
 return M

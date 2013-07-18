@@ -29,7 +29,7 @@ local vbs_end_rule = #('</' * script_element * l.space^0 * '>') *
 l.embed_lexer(html, vbs, vbs_start_rule, vbs_end_rule)
 
 M._tokenstyles = {
-  {'asp_tag', l.STYLE_EMBEDDED},
+  asp_tag = l.STYLE_EMBEDDED
 }
 
 local _foldsymbols = html._foldsymbols
