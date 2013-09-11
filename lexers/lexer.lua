@@ -25,8 +25,8 @@ local M = {}
 -- ---------------------|------------
 -- `lpeg.P(string)`     | Matches `string` literally.
 -- `lpeg.P(`_`n`_`)`    | Matches exactly _`n`_ characters.
--- `lpeg.S(string)`     | Matches any character in `string` (Set).
--- `lpeg.R("`_`xy`_`")` | Matches any character between `x` and `y` (Range).
+-- `lpeg.S(string)`     | Matches any character in set `string`.
+-- `lpeg.R("`_`xy`_`")` | Matches any character between range `x` and `y`.
 -- `patt^`_`n`_         | Matches at least _`n`_ repetitions of `patt`.
 -- `patt^-`_`n`_        | Matches at most _`n`_ repetitions of `patt`.
 -- `patt1 * patt2`      | Matches `patt1` followed by `patt2`.
@@ -330,16 +330,16 @@ local M = {}
 -- strings of comma-separated property settings. By default, lexers associate
 -- predefined token names like `WHITESPACE`, `COMMENT`, `STRING`, etc. with
 -- particular styles as part of a universal color theme. These predefined styles
--- include [`STYLE_NOTHING`](#STYLE_NOTHING), [`STYLE_CLASS`](#STYLE_CLASS),
--- [`STYLE_COMMENT`](#STYLE_COMMENT), [`STYLE_CONSTANT`](#STYLE_CONSTANT),
--- [`STYLE_ERROR`](#STYLE_ERROR), [`STYLE_FUNCTION`](#STYLE_FUNCTION),
--- [`STYLE_KEYWORD`](#STYLE_KEYWORD), [`STYLE_LABEL`](#STYLE_LABEL),
--- [`STYLE_NUMBER`](#STYLE_NUMBER), [`STYLE_OPERATOR`](#STYLE_OPERATOR),
--- [`STYLE_REGEX`](#STYLE_REGEX), [`STYLE_STRING`](#STYLE_STRING),
--- [`STYLE_PREPROCESSOR`](#STYLE_PREPROCESSOR), [`STYLE_TYPE`](#STYLE_TYPE),
--- [`STYLE_VARIABLE`](#STYLE_VARIABLE), [`STYLE_WHITESPACE`](#STYLE_WHITESPACE),
--- [`STYLE_EMBEDDED`](#STYLE_EMBEDDED),
--- and [`STYLE_IDENTIFIER`](#STYLE_IDENTIFIER). Like with predefined token names
+-- include [`STYLE_CLASS`](#STYLE_CLASS), [`STYLE_COMMENT`](#STYLE_COMMENT),
+-- [`STYLE_CONSTANT`](#STYLE_CONSTANT), [`STYLE_ERROR`](#STYLE_ERROR),
+-- [`STYLE_EMBEDDED`](#STYLE_EMBEDDED), [`STYLE_FUNCTION`](#STYLE_FUNCTION),
+-- [`STYLE_IDENTIFIER`](#STYLE_IDENTIFIER), [`STYLE_KEYWORD`](#STYLE_KEYWORD),
+-- [`STYLE_LABEL`](#STYLE_LABEL), [`STYLE_NUMBER`](#STYLE_NUMBER),
+-- [`STYLE_OPERATOR`](#STYLE_OPERATOR),
+-- [`STYLE_PREPROCESSOR`](#STYLE_PREPROCESSOR), [`STYLE_REGEX`](#STYLE_REGEX),
+-- [`STYLE_STRING`](#STYLE_STRING), [`STYLE_TYPE`](#STYLE_TYPE),
+-- [`STYLE_VARIABLE`](#STYLE_VARIABLE), and
+-- [`STYLE_WHITESPACE`](#STYLE_WHITESPACE). Like with predefined token names
 -- and LPeg patterns, you may define your own styles. At their core, styles are
 -- just strings, so you may create new ones and/or modify existing ones. Each
 -- style consists of the following comma-separated settings:
@@ -427,9 +427,9 @@ local M = {}
 -- token the existing style for `WHITESPACE` tokens. If instead you want to
 -- color the background of whitespace a shade of grey, it might look like:
 --
---     local style = l.STYLE_WHITESPACE..',back:$(color.grey)'
+--     local custom_style = l.STYLE_WHITESPACE..',back:$(color.grey)'
 --     M._tokenstyles = {
---       custom_whitespace = style
+--       custom_whitespace = custom_style
 --     }
 --
 -- Notice that the lexer peforms Scintilla/SciTE-style "$()" property expansion.
@@ -581,7 +581,7 @@ local M = {}
 --         ['if'] = 1, ['do'] = 1, ['function'] = 1,
 --         ['end'] = -1, ['repeat'] = 1, ['until'] = -1
 --       },
---       _patterns = {'%l+'},
+--       _patterns = {'%l+'}
 --     }
 --
 -- Any time the lexer encounters a lower case word, if that word is a `KEYWORD`
@@ -624,9 +624,9 @@ local M = {}
 -- overwrite it when upgrading Textadept. Also, lexers in this directory
 -- override default lexers. Thus, Textadept loads a user *lua* lexer instead of
 -- the default *lua* lexer. This is convenient for tweaking a default lexer to
--- your liking. Then add a [mime-type][] for your lexer if necessary.
+-- your liking. Then add a [file type][] for your lexer if necessary.
 --
--- [mime-type]: _M.textadept.mime_types.html
+-- [file type]: _M.textadept.file_types.html
 --
 -- ### SciTE
 --
@@ -724,8 +724,6 @@ local M = {}
 --   The token name for label tokens.
 -- @field REGEX (string)
 --   The token name for regex tokens.
--- @field STYLE_NOTHING (string)
---   The style typically used for no styling.
 -- @field STYLE_CLASS (string)
 --   The style typically used for class definitions.
 -- @field STYLE_COMMENT (string)
@@ -777,55 +775,56 @@ local M = {}
 --   The style used by call tips if `buffer.call_tip_use_style` is set.
 --   Only the font name, size, and color attributes are used.
 -- @field any (pattern)
---   A pattern matching any single character.
+--   A pattern that matches any single character.
 -- @field ascii (pattern)
---   A pattern matching any ASCII character (`0`..`127`).
+--   A pattern that matches any ASCII character (codes 0 to 127).
 -- @field extend (pattern)
---   A pattern matching any ASCII extended character (`0`..`255`).
+--   A pattern that matches any ASCII extended character (codes 0 to 255).
 -- @field alpha (pattern)
---   A pattern matching any alphabetic character (`A-Z`, `a-z`).
+--   A pattern that matches any alphabetic character ('A'-'Z', 'a'-'z').
 -- @field digit (pattern)
---   A pattern matching any digit (`0-9`).
+--   A pattern that matches any digit ('0'-'9').
 -- @field alnum (pattern)
---   A pattern matching any alphanumeric character (`A-Z`, `a-z`, `0-9`).
+--   A pattern that matches any alphanumeric character ('A'-'Z', 'a'-'z',
+--     '0'-'9').
 -- @field lower (pattern)
---   A pattern matching any lower case character (`a-z`).
+--   A pattern that matches any lower case character ('a'-'z').
 -- @field upper (pattern)
---   A pattern matching any upper case character (`A-Z`).
+--   A pattern that matches any upper case character ('A'-'Z').
 -- @field xdigit (pattern)
---   A pattern matching any hexadecimal digit (`0-9`, `A-F`, `a-f`).
+--   A pattern that matches any hexadecimal digit ('0'-'9', 'A'-'F', 'a'-'f').
 -- @field cntrl (pattern)
---   A pattern matching any control character (`0`..`31`).
+--   A pattern that matches any control character (ASCII codes 0 to 31).
 -- @field graph (pattern)
---   A pattern matching any graphical character (`!` to `~`).
+--   A pattern that matches any graphical character ('!' to '~').
 -- @field print (pattern)
---   A pattern matching any printable character (space to `~`).
+--   A pattern that matches any printable character (' ' to '~').
 -- @field punct (pattern)
---   A pattern matching any punctuation character not alphanumeric (`!` to `/`,
---   `:` to `@`, `[` to `'`, `{` to `~`).
+--   A pattern that matches any punctuation character not alphanumeric ('!' to
+--   '/', ':' to '@', '[' to ''', '{' to '~').
 -- @field space (pattern)
---   A pattern matching any whitespace character (`\t`, `\v`, `\f`, `\n`, `\r`,
---   space).
+--   A pattern that matches any whitespace character ('\t', '\v', '\f', '\n',
+--   '\r', space).
 -- @field newline (pattern)
---   A pattern matching any newline characters.
+--   A pattern that matches any newline characters.
 -- @field nonnewline (pattern)
---   A pattern matching any non-newline character.
+--   A pattern that matches any non-newline character.
 -- @field nonnewline_esc (pattern)
---   A pattern matching any non-newline character excluding newlines escaped
---   with '\'.
+--   A pattern that matches any non-newline character, excluding newlines
+--   escaped with '\'.
 -- @field dec_num (pattern)
---   A pattern matching a decimal number.
+--   A pattern that matches a decimal number.
 -- @field hex_num (pattern)
---   A pattern matching a hexadecimal number.
+--   A pattern that matches a hexadecimal number.
 -- @field oct_num (pattern)
---   A pattern matching an octal number.
+--   A pattern that matches an octal number.
 -- @field integer (pattern)
---   A pattern matching a decimal, hexadecimal, or octal number.
+--   A pattern that matches a decimal, hexadecimal, or octal number.
 -- @field float (pattern)
---   A pattern matching a floating point number.
+--   A pattern that matches a floating point number.
 -- @field word (pattern)
---   A pattern matching a typical word starting with a letter or underscore and
---   then any alphanumeric or underscore characters.
+--   A pattern that matches a typical word starting with a letter or underscore
+--   and then any alphanumeric or underscore characters.
 -- @field any_char (pattern)
 --   A `DEFAULT` token matching any single character, useful in a fallback rule
 --   for a grammar.
@@ -835,6 +834,30 @@ local M = {}
 --   Flag indicating that the line is blank.
 -- @field FOLD_HEADER (number)
 --   Flag indicating the line is fold point.
+-- @field fold_level (table, Read-only)
+--   Table of fold level bit-masks for line numbers starting from zero.
+--   Fold level masks are composed of an integer level combined with any of the
+--   following bits:
+--
+--   * `lexer.FOLDBASE`
+--     The initial fold level.
+--   * `lexer.FOLD_BLANK`
+--     The line is blank.
+--   * `lexer.FOLD_HEADER`
+--     The line is a header, or fold point.
+-- @field indent_amount (table, Read-only)
+--   Table of indentation amounts in character columns, for line numbers
+--   starting from zero.
+-- @field property (table)
+--   Map of key-value string pairs.
+-- @field property_expanded (table, Read-only)
+--   Map of key-value string pairs with `$()` and `%()` variable replacement
+--   performed in values.
+-- @field property_int (table, Read-only)
+--   Map of key-value pairs with values interpreted as numbers, or `0` if not
+--   found.
+-- @field style_at (table, Read-only)
+--   Table of style names at positions in the buffer starting from zero.
 module('lexer')]=]
 
 local lpeg = require 'lpeg'
@@ -872,7 +895,7 @@ local function add_style(lexer, token_name, style)
   -- is not added again since the child added it first.
   if not lexer._TOKENS[token_name] then
     lexer._TOKENS[token_name], num_styles = num_styles, num_styles + 1
-    M.set_property('style.'..token_name, style)
+    M.property['style.'..token_name] = style
   end
 end
 
@@ -1101,7 +1124,7 @@ function M.fold(text, start_pos, start_line, start_level)
     lines[#lines + 1] = {text:match('()([^\r\n]*)$')}
     local fold_symbols = lexer._foldsymbols
     local fold_symbols_patterns = fold_symbols._patterns
-    local get_style_at = M.get_style_at
+    local style_at = M.style_at
     local line_num, prev_level = start_line, start_level
     local current_level = prev_level
     for i = 1, #lines do
@@ -1109,7 +1132,7 @@ function M.fold(text, start_pos, start_line, start_level)
       if line ~= '' then
         for j = 1, #fold_symbols_patterns do
           for s, match in line:gmatch(fold_symbols_patterns[j]) do
-            local symbols = fold_symbols[get_style_at(start_pos + pos + s - 1)]
+            local symbols = fold_symbols[style_at[start_pos + pos + s - 1]]
             local l = symbols and symbols[match]
             if type(l) == 'number' then
               current_level = current_level + l
@@ -1129,13 +1152,13 @@ function M.fold(text, start_pos, start_line, start_level)
       end
       line_num = line_num + 1
     end
-  elseif M.get_property('fold.by.indentation', '1') == '1' then
-    local get_indent_amount = M.get_indent_amount
+  elseif M.property_int['fold.by.indentation'] > 0 then
+    local indent_amount = M.indent_amount
     -- Indentation based folding.
     local current_line, prev_level = start_line, start_level
     for _, line in text:gmatch('([\t ]*)(.-)\r?\n') do
       if line ~= '' then
-        local current_level = FOLD_BASE + get_indent_amount(current_line)
+        local current_level = FOLD_BASE + indent_amount[current_line]
         if current_level > prev_level then -- next level
           local i = current_line - 1
           while folds[i] and folds[i][2] == FOLD_BLANK do i = i - 1 end
@@ -1328,10 +1351,10 @@ function M.nested_pair(start_chars, end_chars, end_optional)
 end
 
 ---
--- Creates and returns a pattern that matches any word in the set *words*
+-- Creates and returns a pattern that matches any word in set *words*
 -- case-sensitively, unless *case_insensitive* is `true`, with the set of word
 -- characters being alphanumerics, underscores, and all of the characters in
--- *word_chars*.
+-- string *word_chars*.
 -- This is a convenience function for simplifying a set of ordered choice word
 -- patterns.
 -- @param words A table of words.
@@ -1365,8 +1388,9 @@ function M.word_match(words, word_chars, case_insensitive)
 end
 
 ---
--- Embeds *child* lexer in *parent* with *start_rule* and *end_rule*, patterns
--- that signal the beginning and end of the embedded lexer, respectively.
+-- Embeds child lexer *child* in parent *parent* with *start_rule* and
+-- *end_rule*, patterns that signal the beginning and end of the embedded lexer,
+-- respectively.
 -- @param parent The parent lexer.
 -- @param child The child lexer.
 -- @param start_rule The pattern that signals the beginning of the embedded
@@ -1448,9 +1472,9 @@ end
 -- @usage [l.COMMENT] = {['//'] = l.fold_line_comments('//')}
 -- @name fold_line_comments
 function M.fold_line_comments(prefix)
-  local get_property = M.get_property
+  local property_int = M.property_int
   return function(text, pos, line, s)
-    if get_property('fold.line.comments', '0') == '0' then return 0 end
+    if property_int['fold.line.comments'] == 0 then return 0 end
     if s > 1 and line:match('^%s*()') < s then return 0 end
     local prev_line_comment = prev_line_is_comment(prefix, text, pos, line, s)
     local next_line_comment = next_line_is_comment(prefix, text, pos, line, s)
@@ -1460,23 +1484,22 @@ function M.fold_line_comments(prefix)
   end
 end
 
----
--- Returns the string property value associated with string property *key*,
--- replacing any "$()" and "%()" expressions with the values of their keys.
--- @param key The string property key.
--- @return property value
--- @name get_property_expanded
-function M.get_property_expanded(key)
-  return M.get_property(key):gsub('[$%%]%b()', function(key)
-    return M.get_property_expanded(key:sub(3, -2))
-  end)
-end
+M.property_expanded = setmetatable({}, {
+  -- Returns the string property value associated with string property *key*,
+  -- replacing any "$()" and "%()" expressions with the values of their keys.
+  __index = function(t, key)
+    return M.property[key]:gsub('[$%%]%b()', function(key)
+      return t[key:sub(3, -2)]
+    end)
+  end,
+  __newindex = function() error('read-only property') end
+})
 
 --[[ The functions and fields below were defined in C.
 
 ---
 -- Individual lexer fields.
--- @field _NAME The string name of the lexer in lowercase.
+-- @field _NAME The string name of the lexer.
 -- @field _rules An ordered list of rules for a lexer grammar.
 --   Each rule is a table containing an arbitrary rule name and the LPeg pattern
 --   associated with the rule. The order of rules is important as rules are
@@ -1518,52 +1541,6 @@ end
 -- @class table
 -- @name lexer
 local lexer
-
----
--- Returns the string style name and style number at position *pos* in the
--- buffer.
--- @param pos The position in the buffer to get the style for.
--- @return style name
--- @return style number
--- @class function
--- @name get_style_at
-local get_style_at
-
----
--- Returns the string property value associated with string property *key*, or
--- *default*.
--- @param key The string property key.
--- @param default Optional value to return if *key* is not set.
--- @return property value
--- @class function
--- @name get_property
-local get_property
-
----
--- Associates string property *key* with string *value*.
--- @param key The string property key.
--- @param value The string value.
--- @class function
--- @name set_property
-local set_property
-
----
--- Returns the fold level for line number *line_number*.
--- This level already has `SC_FOLDLEVELBASE` added to it, so you do not need to
--- add it yourself.
--- @param line_number The line number to get the fold level of.
--- @return integer fold level
--- @class function
--- @name get_fold_level
-local get_fold_level
-
----
--- Returns the amount of indentation the text on line number *line_number* has.
--- @param line_number The line number to get the indent amount of.
--- @return integer indent amount
--- @class function
--- @name get_indent_amount
-local get_indent_amount
 ]]
 
 return M

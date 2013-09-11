@@ -43,18 +43,31 @@ LUALIB_API int (luaopen_lpeg) (lua_State *L);
 using namespace Scintilla;
 #endif
 
+#define l_setmetatable(l, k, mtf) { \
+	if (luaL_newmetatable(l, k)) { \
+		lua_pushcfunction(l, mtf), lua_setfield(l, -2, "__index"); \
+		lua_pushcfunction(l, mtf), lua_setfield(l, -2, "__newindex"); \
+	} \
+	lua_setmetatable(l, -2); \
+}
+#define l_pushlexerp(l, mtf) { \
+	lua_newtable(l); \
+	lua_pushvalue(l, 2), lua_setfield(l, -2, "property"); \
+	l_setmetatable(l, "sci_lexerp", mtf); \
+}
 #if LUA_VERSION_NUM < 502
 #define l_openlib(f, s) \
 	(lua_pushcfunction(L, f), lua_pushstring(L, s), lua_call(L, 1, 0))
 #define LUA_BASELIBNAME ""
 #define lua_rawlen lua_objlen
 #define LUA_OK 0
+#define lua_compare(l, a, b, _) lua_equal(l, a, b)
+#define LUA_OPEQ 0
 #else
 #define l_openlib(f, s) (luaL_requiref(L, s, f, 1), lua_pop(L, 1))
 #define LUA_BASELIBNAME "_G"
 #endif
-#define l_setcfunction(f, k) (lua_pushcfunction(L, f), lua_setfield(L, -2, k))
-#define l_setconstant(c, k) (lua_pushnumber(L, c), lua_setfield(L, -2, k))
+#define l_setconstant(l, c, k) (lua_pushnumber(l, c), lua_setfield(l, -2, k))
 
 #ifdef CURSES
 #define A_COLORCHAR (A_COLOR | A_CHARTEXT)
@@ -91,7 +104,7 @@ class LexerLPeg : public ILexer {
 	/**
 	 * The list of style numbers considered to be whitespace styles.
 	 * This is used in multi-language lexers when backtracking to whitespace to
-	 * determine which lexer grammar to start matching.
+	 * determine which lexer grammar to use.
 	 */
 	bool ws[STYLE_MAX + 1];
 
@@ -107,51 +120,66 @@ class LexerLPeg : public ILexer {
 		return false;
 	}
 
-	/** `lexer.get_fold_level()` Lua function. */
-	static int l_getfoldlevel(lua_State *L) {
-		lua_getfield(L, LUA_REGISTRYINDEX, "pAccess");
-		IDocument *pAccess = static_cast<IDocument *>(lua_touserdata(L, -1));
-		lua_pushnumber(L, pAccess->GetLevel(luaL_checkinteger(L, 1)));
-		return 1;
-	}
+	/** `lexer.__index` Lua metatable. */
+	static int llexer_property(lua_State *L) {
+		int newindex = (lua_gettop(L) == 3);
+		luaL_getmetatable(L, "sci_lexer");
+		lua_getmetatable(L, 1); // metatable can be either sci_lexer or sci_lexerp
+		int is_lexer = lua_compare(L, -1, -2, LUA_OPEQ);
+		lua_pop(L, 2); // metatable, metatable
 
-	/** `lexer.get_indent_amount()` Lua function. */
-	static int l_getindentamount(lua_State *L) {
-		lua_getfield(L, LUA_REGISTRYINDEX, "pAccess");
-		IDocument *pAccess = static_cast<IDocument *>(lua_touserdata(L, -1));
-		lua_pushnumber(L, pAccess->GetLineIndentation(luaL_checkinteger(L, 1)));
-		return 1;
-	}
-
-	/** `lexer.get_property()` Lua function. */
-	static int l_getproperty(lua_State *L) {
-		lua_getfield(L, LUA_REGISTRYINDEX, "props");
+		lua_getfield(L, LUA_REGISTRYINDEX, "sci_buffer");
+		IDocument *buffer = static_cast<IDocument *>(lua_touserdata(L, -1));
+		lua_getfield(L, LUA_REGISTRYINDEX, "sci_props");
 		PropSetSimple *props = static_cast<PropSetSimple *>(lua_touserdata(L, -1));
-		lua_pushstring(L, props->Get(luaL_checkstring(L, 1)));
-		if (lua_rawlen(L, -1) == 0 && lua_gettop(L) > 3) lua_pushvalue(L, 2);
+		lua_pop(L, 2); // sci_buffer and sci_props
+
+		is_lexer ? lua_pushvalue(L, 2) // key is given
+		         : lua_getfield(L, 1, "property"); // indexible property
+		const char *key = lua_tostring(L, -1);
+		if (strcmp(key, "fold_level") == 0) {
+			luaL_argcheck(L, !newindex, 3, "read-only property");
+			if (is_lexer) {
+				l_pushlexerp(L, llexer_property);
+			} else lua_pushnumber(L, buffer->GetLevel(luaL_checkinteger(L, 2)));
+		} else if (strcmp(key, "indent_amount") == 0) {
+			luaL_argcheck(L, !newindex, 3, "read-only property");
+			if (is_lexer) {
+				l_pushlexerp(L, llexer_property);
+			} else
+				lua_pushnumber(L, buffer->GetLineIndentation(luaL_checkinteger(L, 2)));
+		} else if (strcmp(key, "property") == 0) {
+			luaL_argcheck(L, !is_lexer || !newindex, 3, "read-only property");
+			if (is_lexer) {
+				l_pushlexerp(L, llexer_property);
+			} else if (!newindex)
+				lua_pushstring(L, props->Get(luaL_checkstring(L, 2)));
+			else
+				props->Set(luaL_checkstring(L, 2), luaL_checkstring(L, 3));
+		} else if (strcmp(key, "property_int") == 0) {
+			luaL_argcheck(L, !newindex, 3, "read-only property");
+			if (is_lexer) {
+				l_pushlexerp(L, llexer_property);
+			} else {
+				lua_pushstring(L, props->Get(luaL_checkstring(L, 2)));
+				lua_pushnumber(L, lua_tonumber(L, -1));
+			}
+		} else if (strcmp(key, "style_at") == 0) {
+			luaL_argcheck(L, !newindex, 3, "read-only property");
+			if (is_lexer) {
+				l_pushlexerp(L, llexer_property);
+			} else {
+				int style = buffer->StyleAt(luaL_checkinteger(L, 2) - 1);
+				lua_getglobal(L, "_LEXER"), lua_getfield(L, -1, "_TOKENS");
+				lua_pushnil(L);
+				while (lua_next(L, -2)) { // style_name = style_num
+					if (luaL_checkinteger(L, -1) == style) break;
+					lua_pop(L, 1); // value
+				}
+				lua_pop(L, 1); // style_num
+			}
+		} else !newindex ? lua_rawget(L, 1) : lua_rawset(L, 1);
 		return 1;
-	}
-
-	/** `lexer.set_property()` Lua function. */
-	static int l_setproperty(lua_State *L) {
-		lua_getfield(L, LUA_REGISTRYINDEX, "props");
-		PropSetSimple *props = static_cast<PropSetSimple *>(lua_touserdata(L, -1));
-		props->Set(luaL_checkstring(L, 1), luaL_checkstring(L, 2));
-		return 0;
-	}
-
-	/** `lexer.get_style_at()` Lua function. */
-	static int l_getstyleat(lua_State *L) {
-		lua_getfield(L, LUA_REGISTRYINDEX, "pAccess");
-		IDocument *pAccess = static_cast<IDocument *>(lua_touserdata(L, -1));
-		int style = pAccess->StyleAt(luaL_checkinteger(L, 1) - 1);
-		lua_getglobal(L, "_LEXER"), lua_getfield(L, -1, "_TOKENS");
-		lua_pushnil(L);
-		while (lua_next(L, -2)) { // style_name = style_num
-			if (luaL_checkinteger(L, -1) == style) break;
-			lua_pop(L, 1); // value
-		}
-		return 2;
 	}
 
 	/**
@@ -161,10 +189,11 @@ class LexerLPeg : public ILexer {
 	 * @param index The index the string property key.
 	 */
 	void lL_getexpanded(lua_State *L, int index) {
-		lua_getglobal(L, "lexer"), lua_getfield(L, -1, "get_property_expanded");
+		lua_getglobal(L, "lexer");
+		lua_getfield(L, -1, "property_expanded");
 		lua_pushvalue(L, (index > 0) ? index : index - 2);
-		lua_pcall(L, 1, 1, 0);
-		lua_replace(L, -2);
+		lua_gettable(L, -2);
+		lua_remove(L, -2), lua_remove(L, -2); // lexer, property_expanded
 	}
 
 	/**
@@ -333,10 +362,6 @@ class LexerLPeg : public ILexer {
 		if (L) lua_close(L);
 		if (!(L = luaL_newstate()))
 			return (fprintf(stderr, "Lua failed to initialize.\n"), false);
-		lua_pushlightuserdata(L, reinterpret_cast<void *>(&props));
-		lua_setfield(L, LUA_REGISTRYINDEX, "props");
-		lua_pushstring(L, lexer), lua_setfield(L, LUA_REGISTRYINDEX, "lexer_name");
-
 		l_openlib(luaopen_base, LUA_BASELIBNAME);
 		l_openlib(luaopen_table, LUA_TABLIBNAME);
 		l_openlib(luaopen_string, LUA_STRLIBNAME);
@@ -358,17 +383,17 @@ class LexerLPeg : public ILexer {
 #ifdef CURSES
 		lua_pushboolean(L, 1), lua_setglobal(L, "CURSES");
 #endif
+		lua_pushlightuserdata(L, reinterpret_cast<void *>(&props));
+		lua_setfield(L, LUA_REGISTRYINDEX, "sci_props");
+		lua_pushstring(L, lexer);
+		lua_setfield(L, LUA_REGISTRYINDEX, "sci_lexer_name");
 
 		if (luaL_dostring(L, "lexer=require'lexer'") != LUA_OK) return l_error(L);
 		lua_getglobal(L, "lexer");
-		l_setcfunction(l_getfoldlevel, "get_fold_level");
-		l_setcfunction(l_getindentamount, "get_indent_amount");
-		l_setcfunction(l_getproperty, "get_property");
-		l_setcfunction(l_setproperty, "set_property");
-		l_setcfunction(l_getstyleat, "get_style_at");
-		l_setconstant(SC_FOLDLEVELBASE, "FOLD_BASE");
-		l_setconstant(SC_FOLDLEVELWHITEFLAG, "FOLD_BLANK");
-		l_setconstant(SC_FOLDLEVELHEADERFLAG, "FOLD_HEADER");
+		l_setconstant(L, SC_FOLDLEVELBASE, "FOLD_BASE");
+		l_setconstant(L, SC_FOLDLEVELWHITEFLAG, "FOLD_BLANK");
+		l_setconstant(L, SC_FOLDLEVELHEADERFLAG, "FOLD_HEADER");
+		l_setmetatable(L, "sci_lexer", llexer_property);
 		if (*theme) {
 			if (!(strstr(theme, "/") || strstr(theme, "\\"))) { // theme name
 				lua_pushstring(L, home);
@@ -383,7 +408,7 @@ class LexerLPeg : public ILexer {
 
 		lua_getglobal(L, "lexer"), lua_getfield(L, -1, "load");
 		if (lua_isfunction(L, -1)) {
-			lua_getfield(L, LUA_REGISTRYINDEX, "lexer_name");
+			lua_getfield(L, LUA_REGISTRYINDEX, "sci_lexer_name");
 			if (lua_pcall(L, 1, 0, 0) != LUA_OK) return l_error(L);
 		} else return l_error(L, "'lexer.load' function not found");
 		lua_pop(L, 1); // lexer
@@ -441,16 +466,16 @@ public:
 	 * @param startPos The position in the document to start lexing at.
 	 * @param lengthDoc The number of bytes in the document to lex.
 	 * @param initStyle The initial style at position *startPos* in the document.
-	 * @param pAccess The document interface.
+	 * @param buffer The document interface.
 	 */
 	void SCI_METHOD Lex(unsigned int startPos, int lengthDoc, int initStyle,
-	                    IDocument *pAccess) {
+	                    IDocument *buffer) {
 		if ((reinit && !Init()) || !L) return;
 		lua_pushlightuserdata(L, reinterpret_cast<void *>(&props));
-		lua_setfield(L, LUA_REGISTRYINDEX, "props");
-		lua_pushlightuserdata(L, reinterpret_cast<void *>(pAccess));
-		lua_setfield(L, LUA_REGISTRYINDEX, "pAccess");
-		LexAccessor styler(pAccess);
+		lua_setfield(L, LUA_REGISTRYINDEX, "sci_props");
+		lua_pushlightuserdata(L, reinterpret_cast<void *>(buffer));
+		lua_setfield(L, LUA_REGISTRYINDEX, "sci_buffer");
+		LexAccessor styler(buffer);
 
 		// Ensure the lexer has a grammar.
 		// This could be done in lexer.lex(), but for large files, passing string
@@ -475,7 +500,7 @@ public:
 		int style = 0;
 		lua_getglobal(L, "lexer"), lua_getfield(L, -1, "lex");
 		if (lua_isfunction(L, -1)) {
-			lua_pushlstring(L, pAccess->BufferPointer() + startPos, lengthDoc);
+			lua_pushlstring(L, buffer->BufferPointer() + startPos, lengthDoc);
 			lua_pushinteger(L, styler.StyleAt(startPos));
 			if (lua_pcall(L, 2, 1, 0) != LUA_OK) l_error(L);
 			// Style the text from the token table returned.
@@ -516,21 +541,21 @@ public:
 	 * @param startPos The position in the document to start folding at.
 	 * @param lengthDoc The number of bytes in the document to fold.
 	 * @param initStyle The initial style at position *startPos* in the document.
-	 * @param pAccess The document interface.
+	 * @param buffer The document interface.
 	 */
 	void SCI_METHOD Fold(unsigned int startPos, int lengthDoc, int initStyle,
-	                     IDocument *pAccess) {
+	                     IDocument *buffer) {
 		if ((reinit && !Init()) || !L) return;
 		lua_pushlightuserdata(L, reinterpret_cast<void *>(&props));
-		lua_setfield(L, LUA_REGISTRYINDEX, "props");
-		lua_pushlightuserdata(L, reinterpret_cast<void *>(pAccess));
-		lua_setfield(L, LUA_REGISTRYINDEX, "pAccess");
-		LexAccessor styler(pAccess);
+		lua_setfield(L, LUA_REGISTRYINDEX, "sci_props");
+		lua_pushlightuserdata(L, reinterpret_cast<void *>(buffer));
+		lua_setfield(L, LUA_REGISTRYINDEX, "sci_buffer");
+		LexAccessor styler(buffer);
 
 		lua_getglobal(L, "lexer"), lua_getfield(L, -1, "fold");
 		if (lua_isfunction(L, -1)) {
 			int currentLine = styler.GetLine(startPos);
-			lua_pushlstring(L, pAccess->BufferPointer() + startPos, lengthDoc);
+			lua_pushlstring(L, buffer->BufferPointer() + startPos, lengthDoc);
 			lua_pushnumber(L, startPos);
 			lua_pushnumber(L, currentLine);
 			lua_pushnumber(L, styler.LevelAt(currentLine) & SC_FOLDLEVELNUMBERMASK);
@@ -608,10 +633,10 @@ public:
 		const char *val = NULL;
 		switch(code) {
 		case SCI_GETDIRECTFUNCTION:
-			SS = reinterpret_cast<SciFnDirect>(reinterpret_cast<sptr_t>(arg));
+			SS = reinterpret_cast<SciFnDirect>(lParam);
 			return NULL;
 		case SCI_SETDOCPOINTER:
-			sci = reinterpret_cast<sptr_t>(arg);
+			sci = lParam;
 			return NULL;
 		case SCI_SETLEXERLANGUAGE:
 			char lexer_name[50];
@@ -624,7 +649,7 @@ public:
 		case SCI_GETLEXERLANGUAGE:
 			val = "null";
 			if (L) {
-				lua_getfield(L, LUA_REGISTRYINDEX, "lexer_name");
+				lua_getfield(L, LUA_REGISTRYINDEX, "sci_lexer_name");
 				if (SS && sci && multilang) {
 					int pos = SS(sci, SCI_GETCURRENTPOS, 0, 0);
 					while (pos >= 0 && !ws[SS(sci, SCI_GETSTYLEAT, pos, 0)]) pos--;
