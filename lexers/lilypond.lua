@@ -16,7 +16,7 @@ local line_comment = '%' * l.nonnewline^0
 local comment = token(l.COMMENT, line_comment)
 
 -- Strings.
-local string = token(l.STRING, l.delimited_range('"'))
+local string = token(l.STRING, l.delimited_range('"', false, true))
 
 -- Keywords, commands.
 local keyword = token(l.KEYWORD, '\\' * l.word)

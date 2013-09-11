@@ -17,13 +17,11 @@ local nested_comment = l.nested_pair('/+', '+/')
 local comment = token(l.COMMENT, line_comment + block_comment + nested_comment)
 
 -- Strings.
-local sq_str = l.delimited_range("'", '\\', true, false, '\n') * S('cwd')^-1
-local dq_str = l.delimited_range('"', '\\', true, false) * S('cwd')^-1
-local lit_str = 'r' * l.delimited_range('"', nil, true, false) *
-                S('cwd')^-1
-local bt_str = l.delimited_range('`', nil, true, false) * S('cwd')^-1
-local hex_str = 'x' * l.delimited_range('"', '\\', nil, false) *
-                S('cwd')^-1
+local sq_str = l.delimited_range("'", true) * S('cwd')^-1
+local dq_str = l.delimited_range('"') * S('cwd')^-1
+local lit_str = 'r' * l.delimited_range('"', false, true) * S('cwd')^-1
+local bt_str = l.delimited_range('`', false, true) * S('cwd')^-1
+local hex_str = 'x' * l.delimited_range('"') * S('cwd')^-1
 local other_hex_str = '\\x' * (l.xdigit * l.xdigit)^1
 local del_str = l.nested_pair('q"[', ']"') * S('cwd')^-1 +
                 l.nested_pair('q"(', ')"') * S('cwd')^-1 +

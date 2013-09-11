@@ -16,9 +16,9 @@ local block_comment = '/*' * (l.any - '*/')^0 * '*/'
 local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- Strings.
-local sq_str = l.delimited_range("'", '$\\')
-local dq_str = l.delimited_range('"', '$\\')
-local ex_str = l.delimited_range('`', '$\\')
+local sq_str = l.delimited_range("'")
+local dq_str = l.delimited_range('"')
+local ex_str = l.delimited_range('`')
 local string = token(l.STRING, sq_str + dq_str + ex_str)
 
 -- Numbers.

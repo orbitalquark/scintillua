@@ -15,11 +15,11 @@ local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
 local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- Strings.
-local sq_str = l.delimited_range("'", '\\', true, false, '\n')
-local dq_str = l.delimited_range('"', '\\', true, false, '\n')
+local sq_str = l.delimited_range("'", true)
+local dq_str = l.delimited_range('"', true)
 local triple_dq_str = '"""' * (l.any - '"""')^0 * P('"""')^-1
 local regex_str = l.last_char_includes('!%^&*([{-=+|:;,?<>~') *
-                  l.delimited_range('/', '\\', false, false, '\n')
+                  l.delimited_range('/', true)
 local string = token(l.STRING, triple_dq_str + sq_str + dq_str) +
                token(l.REGEX, regex_str)
 

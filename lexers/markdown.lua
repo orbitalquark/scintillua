@@ -57,13 +57,14 @@ local blank = token(l.DEFAULT, l.newline^1 * P(function(input, index)
 end))
 
 -- Span elements.
-local dq_str = token(l.STRING, l.delimited_range('"', nil, true))
-local sq_str = token(l.STRING, l.delimited_range("'", nil, true))
-local paren_str = token(l.STRING, l.delimited_range('()', nil, true))
+local dq_str = token(l.STRING, l.delimited_range('"', false, true))
+local sq_str = token(l.STRING, l.delimited_range("'", false, true))
+local paren_str = token(l.STRING, l.delimited_range('()'))
 local link = token('link', P('!')^-1 * l.delimited_range('[]') *
                            (P('(') * (l.any - S(') \t'))^0 *
-                            (l.space^1 * l.delimited_range('"', nil, true))^-1 *
-                            ')' + l.space^0 * l.delimited_range('[]')) +
+                            (l.space^1 *
+                             l.delimited_range('"', false, true))^-1 * ')' +
+                            l.space^0 * l.delimited_range('[]')) +
                            P('http://') * (l.any - l.space)^1)
 local link_label = ws^0 * token('link_label', l.delimited_range('[]') * ':') *
                    ws * token('link_url', (l.any - l.space)^1) *
@@ -71,10 +72,9 @@ local link_label = ws^0 * token('link_label', l.delimited_range('[]') * ':') *
 
 local strong = token('strong', (P('**') * (l.any - '**')^0 * P('**')^-1) +
                                (P('__') * (l.any - '__')^0 * P('__')^-1))
-local em = token('em', l.delimited_range('*', '\\', true) +
-                       l.delimited_range('_', '\\', true))
+local em = token('em', l.delimited_range('*') + l.delimited_range('_'))
 local code = token('code', (P('``') * (l.any - '``')^0 * P('``')^-1) +
-                           l.delimited_range('`', nil, true))
+                           l.delimited_range('`'))
 
 local escape = token(l.DEFAULT, P('\\') * 1)
 

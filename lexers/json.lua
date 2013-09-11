@@ -14,8 +14,8 @@ local ws = token(l.WHITESPACE, l.space^1)
 local comment = token(l.COMMENT, '/*' * (l.any - '*/')^0 * P('*/')^-1)
 
 -- Strings.
-local sq_str = P('u')^-1 * l.delimited_range("'", '\\', true, false, '\n')
-local dq_str = P('U')^-1 * l.delimited_range('"', '\\', true, false, '\n')
+local sq_str = P('u')^-1 * l.delimited_range("'", true)
+local dq_str = P('U')^-1 * l.delimited_range('"', true)
 local string = token(l.STRING, sq_str + dq_str)
 
 -- Numbers.

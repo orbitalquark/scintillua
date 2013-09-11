@@ -13,7 +13,7 @@ local ws = token(l.WHITESPACE, l.space^1)
 local comment = token(l.COMMENT, (P("'") + 'Rem ') * l.nonnewline^0)
 
 -- Strings.
-local string = token(l.STRING, l.delimited_range('"', nil, true, false, '\n'))
+local string = token(l.STRING, l.delimited_range('"', true, true))
 
 -- Numbers.
 local number = token(l.NUMBER, (l.float + l.integer) * S('LlUuFf')^-2)

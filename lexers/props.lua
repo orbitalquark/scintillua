@@ -16,8 +16,8 @@ local comment = token(l.COMMENT, '#' * l.nonnewline^0)
 local equals = token(l.OPERATOR, '=')
 
 -- Strings.
-local sq_str = l.delimited_range("'", '\\', true)
-local dq_str = l.delimited_range('"', '\\', true)
+local sq_str = l.delimited_range("'")
+local dq_str = l.delimited_range('"')
 local string = token(l.STRING, sq_str + dq_str)
 
 -- Variables.

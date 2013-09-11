@@ -13,7 +13,7 @@ local ws = token(l.WHITESPACE, l.space^1)
 local comment = token(l.COMMENT, '--' * l.nonnewline^0)
 
 -- Strings.
-local string = token(l.STRING, l.delimited_range('"', nil, true, false, '\n'))
+local string = token(l.STRING, l.delimited_range('"', true, true))
 
 -- Numbers.
 local hex_num = 'O' * S('xX') * (l.xdigit + '_')^1

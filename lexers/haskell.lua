@@ -16,10 +16,10 @@ local block_comment = '{-' * (l.any - '-}')^0 * P('-}')^-1
 local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- Strings.
-local string = token(l.STRING, l.delimited_range('"', '\\'))
+local string = token(l.STRING, l.delimited_range('"'))
 
 -- Chars.
-local char = token(l.STRING, l.delimited_range("'", "\\", false, false, '\n'))
+local char = token(l.STRING, l.delimited_range("'", true))
 
 -- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)

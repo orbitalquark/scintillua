@@ -10,8 +10,8 @@ local M = {_NAME = 'bibtex'}
 local ws = token(l.WHITESPACE, l.space^1)
 
 -- Strings.
-local string = token(l.STRING, l.delimited_range('"', '\\', true) +
-                               l.delimited_range('{}', nil, true, true))
+local string = token(l.STRING, l.delimited_range('"') +
+                               l.delimited_range('{}', false, true, true))
 
 -- Fields.
 local field = token('field', word_match{

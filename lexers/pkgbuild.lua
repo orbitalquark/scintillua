@@ -13,9 +13,9 @@ local ws = token(l.WHITESPACE, l.space^1)
 local comment = token(l.COMMENT, '#' * l.nonnewline^0)
 
 -- Strings.
-local sq_str = l.delimited_range("'", nil, true)
-local dq_str = l.delimited_range('"', '\\', true)
-local ex_str = l.delimited_range('`', '\\', true)
+local sq_str = l.delimited_range("'", false, true)
+local dq_str = l.delimited_range('"')
+local ex_str = l.delimited_range('`')
 local heredoc = '<<' * P(function(input, index)
   local s, e, _, delimiter =
     input:find('(["\']?)([%a_][%w_]*)%1[\n\r\f;]+', index)
@@ -57,10 +57,10 @@ local identifier = token(l.IDENTIFIER, l.word)
 -- Variables.
 local variable = token(l.VARIABLE,
                        '$' * (S('!#?*@$') +
-                       l.delimited_range('()', nil, true, false, '\n') +
-                       l.delimited_range('[]', nil, true, false, '\n') +
-                       l.delimited_range('{}', nil, true, false, '\n') +
-                       l.delimited_range('`', nil, true, false, '\n') +
+                       l.delimited_range('()', true, true) +
+                       l.delimited_range('[]', true, true) +
+                       l.delimited_range('{}', true, true) +
+                       l.delimited_range('`', true, true) +
                        l.digit^1 + l.word))
 
 -- Operators.

@@ -13,8 +13,8 @@ local ws = token(l.WHITESPACE, l.space^1)
 local comment = token(l.COMMENT, '%' * l.nonnewline^0)
 
 -- Strings.
-local sq_str = l.delimited_range("'", '\\', true, false, '\n')
-local dq_str = l.delimited_range('"', '\\', true)
+local sq_str = l.delimited_range("'", true)
+local dq_str = l.delimited_range('"')
 local literal = '$' * l.any * l.alnum^0
 local string = token(l.STRING, sq_str + dq_str + literal)
 

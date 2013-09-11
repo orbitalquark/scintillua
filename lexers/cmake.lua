@@ -13,7 +13,7 @@ local ws = token(l.WHITESPACE, l.space^1)
 local comment = token(l.COMMENT, '#' * l.nonnewline^0)
 
 -- Strings.
-local string = token(l.STRING, l.delimited_range('"', '\\', true))
+local string = token(l.STRING, l.delimited_range('"'))
 
 -- Keywords.
 local keyword = token(l.KEYWORD, word_match({
@@ -135,7 +135,7 @@ local variable = token(l.VARIABLE, word_match{
   'RUN_CONFIGURE', 'UNIX', 'WIN32', '_CMAKE_OSX_MACHINE',
   -- More variables.
   'LOCATION', 'TARGET', 'POST_BUILD', 'PRE_BUILD', 'ARGS'
-} + P('$') * l.delimited_range('{}', nil, true))
+} + P('$') * l.delimited_range('{}', false, true))
 
 -- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)

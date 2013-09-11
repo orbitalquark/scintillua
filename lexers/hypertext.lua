@@ -15,8 +15,8 @@ local ws = token(l.WHITESPACE, l.space^1)
 local comment = token(l.COMMENT, '<!--' * (l.any - '-->')^0 * P('-->')^-1)
 
 -- Strings.
-local sq_str = l.delimited_range("'", '\\', true)
-local dq_str = l.delimited_range('"', '\\', true)
+local sq_str = l.delimited_range("'")
+local dq_str = l.delimited_range('"')
 local string = token(l.STRING, sq_str + dq_str)
 
 -- Tags.

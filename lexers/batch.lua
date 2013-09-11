@@ -14,7 +14,7 @@ local rem = (P('REM') + 'rem') * l.space
 local comment = token(l.COMMENT, (rem + '::') * l.nonnewline^0)
 
 -- Strings.
-local string = token(l.STRING, l.delimited_range('"', '\\', true, false, '\n'))
+local string = token(l.STRING, l.delimited_range('"', true))
 
 -- Keywords.
 local keyword = token(l.KEYWORD, word_match({
@@ -40,7 +40,7 @@ local identifier = token(l.IDENTIFIER, l.word)
 -- Variables.
 local variable = token(l.VARIABLE,
                        '%' * (l.digit + '%' * l.alpha) +
-                       l.delimited_range('%', nil, false, false, '\n'))
+                       l.delimited_range('%', true, true))
 
 -- Operators.
 local operator = token(l.OPERATOR, S('+|&!<>='))

@@ -13,11 +13,11 @@ local ws = token(l.WHITESPACE, l.space^1)
 local comment = token(l.COMMENT, '#' * l.nonnewline^0)
 
 -- Strings.
-local string = token(l.STRING, l.delimited_range('"', '\\', true))
+local string = token(l.STRING, l.delimited_range('"'))
 
 -- Group headers.
 local group_header = l.starts_line(token(l.STRING,
-                                         l.delimited_range('[]', nil, true)))
+                                         l.delimited_range('[]', false, true)))
 
 -- Numbers.
 local number = token(l.NUMBER, (l.float + l.integer))
@@ -26,7 +26,7 @@ local number = token(l.NUMBER, (l.float + l.integer))
 local keyword = token(l.KEYWORD, word_match{'true', 'false'})
 
 -- Locales.
-local locale = token(l.CLASS, l.delimited_range('[]', nil, true))
+local locale = token(l.CLASS, l.delimited_range('[]', false, true))
 
 -- Keys.
 local key = token(l.VARIABLE, word_match{

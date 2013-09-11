@@ -15,7 +15,7 @@ local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
 local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- Strings.
-local string = token(l.STRING, l.delimited_range("'", '\\', true, false, '\n'))
+local string = token(l.STRING, l.delimited_range("'", true))
 
 -- Keywords.
 local keyword = token(l.KEYWORD, word_match{

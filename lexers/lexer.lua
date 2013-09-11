@@ -193,13 +193,12 @@ local M = {}
 -- such a string. Instead, use the [`delimited_range()`](#delimited_range)
 -- convenience function.
 --
---     local dq_str = l.delimited_range('"', '\\', true)
---     local sq_str = l.delimited_range("'", '\\', true)
+--     local dq_str = l.delimited_range('"')
+--     local sq_str = l.delimited_range("'")
 --     local string = token(l.STRING, dq_str + sq_str)
 --
 -- In this case, the lexer treats '\' as an escape character in a string
--- sequence. The `true` argument is analogous to `P('"')^-1` in that the lexer
--- highlights non-terminated strings as expected.
+-- sequence.
 --
 -- **Keywords**
 --
@@ -1248,50 +1247,43 @@ M.any_char = M.token(M.DEFAULT, M.any)
 -- Creates and returns a pattern that matches a range of text bounded by
 -- *chars* characters.
 -- This is a convenience function for matching more complicated delimited ranges
--- like strings with escape characters and balanced parentheses. *escape*
--- specifies the escape characters a range can have, *end_optional* indicates
--- whether or not unterminated ranges match, *balanced* indicates whether or not
--- to handle balanced ranges like parentheses and requires *chars* to be
--- composed of two characters, and *forbidden* is a set of characters disallowed
--- in ranges such as newlines.
+-- like strings with escape characters and balanced parentheses. *single_line*
+-- indicates whether or not ranges must be on a single line, *no_escape*
+-- indicates whether or not to treat '\' character as an escape character, and
+-- *balanced* indicates whether or not to handle balanced ranges like
+-- parentheses and requires *chars* to be composed of two characters.
 -- @param chars The character(s) that bound the matched range.
--- @param escape Optional escape character. This parameter may `nil` or the
---   empty string to indicate no escape character.
--- @param end_optional Optional flag indicating whether or not an ending
---   delimiter is optional or not. If `true`, the range begun by the start
---   delimiter matches until an end delimiter or the end of the input is
---   reached.
--- @param balanced Optional flag indicating whether or not a balanced range is
---   matched, like the "%b" Lua pattern. This flag only applies if *chars*
+-- @param single_line Optional flag indicating whether or not the range must be
+--   on a single line.
+-- @param no_escape Optional flag indicating whether or not the range end
+--   character may be escaped by a '\\' character.
+-- @param balanced Optional flag indicating whether or not to match a balanced
+--   range, like the "%b" Lua pattern. This flag only applies if *chars*
 --   consists of two different characters (e.g. "()").
--- @param forbidden Optional string of characters forbidden in a delimited
---   range. Each character is part of the set. This is particularly useful for
---   disallowing newlines in delimited ranges.
 -- @return pattern
--- @usage local dq_str_noescapes = l.delimited_range('"', nil, true)
--- @usage local dq_str_escapes = l.delimited_range('"', '\\', true)
--- @usage local unbalanced_parens = l.delimited_range('()', '\\')
--- @usage local balanced_parens = l.delimited_range('()', '\\', false, true)
+-- @usage local dq_str_escapes = l.delimited_range('"')
+-- @usage local dq_str_noescapes = l.delimited_range('"', false, true)
+-- @usage local unbalanced_parens = l.delimited_range('()')
+-- @usage local balanced_parens = l.delimited_range('()', false, false, true)
 -- @see nested_pair
 -- @name delimited_range
-function M.delimited_range(chars, escape, end_optional, balanced, forbidden)
+function M.delimited_range(chars, single_line, no_escape, balanced)
   local s = chars:sub(1, 1)
   local e = #chars == 2 and chars:sub(2, 2) or s
   local range
   local b = balanced and s or ''
-  local f = forbidden or ''
-  if not escape or escape == '' then
-    local invalid = lpeg_S(e..f..b)
+  local n = single_line and '\n' or ''
+  if no_escape then
+    local invalid = lpeg_S(e..n..b)
     range = M.any - invalid
   else
-    local invalid = lpeg_S(e..f..b) + escape
-    range = M.any - invalid + escape * M.any
+    local invalid = lpeg_S(e..n..b) + '\\'
+    range = M.any - invalid + '\\' * M.any
   end
   if balanced and s ~= e then
     return lpeg_P{s * (range + lpeg_V(1))^0 * e}
   else
-    if end_optional then e = lpeg_P(e)^-1 end
-    return s * range^0 * e
+    return s * range^0 * lpeg_P(e)^-1
   end
 end
 
@@ -1317,7 +1309,7 @@ end
 -- @param s String character set like one passed to `lpeg.S()`.
 -- @return pattern
 -- @usage local regex = l.last_char_includes('+-*!%^&|=,([{') *
---   l.delimited_range('/', '\\')
+--   l.delimited_range('/')
 -- @name last_char_includes
 function M.last_char_includes(s)
   s = '['..s:gsub('[-%%%[]', '%%%1')..']'
@@ -1333,7 +1325,7 @@ end
 -- Similar to `delimited_range()`, but allows for multi-character, nested
 -- delimiters *start_chars* and *end_chars*.
 -- With single-character delimiters, this function is identical to
--- `delimited_range(start_chars..end_chars, nil, true, true)`.
+-- `delimited_range(start_chars..end_chars, false, true, true)`.
 -- @param start_chars The string starting a nested sequence.
 -- @param end_chars The string ending a nested sequence.
 -- @return pattern

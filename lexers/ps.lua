@@ -13,8 +13,8 @@ local ws = token(l.WHITESPACE, l.space^1)
 local comment = token(l.COMMENT, '%' * l.nonnewline^0)
 
 -- Strings.
-local arrow_string = l.delimited_range('<>', '\\', true)
-local nested_string = l.delimited_range('()', '\\', true, true)
+local arrow_string = l.delimited_range('<>')
+local nested_string = l.delimited_range('()', false, false, true)
 local string = token(l.STRING, arrow_string + nested_string)
 
 -- Numbers.

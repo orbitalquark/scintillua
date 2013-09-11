@@ -16,7 +16,7 @@ local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- Strings.
 local literal = (P("'") + '#' * S('\\bdox')) * l.word
-local dq_str = l.delimited_range('"', '\\', true)
+local dq_str = l.delimited_range('"')
 local string = token(l.STRING, literal + dq_str)
 
 -- Numbers.

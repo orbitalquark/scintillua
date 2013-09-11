@@ -13,7 +13,7 @@ local ws = token(l.WHITESPACE, l.space^1)
 local comment = token(l.COMMENT, '!' * l.nonnewline^0)
 
 -- Strings.
-local string = token(l.STRING, l.delimited_range("'", nil, true, false, '\n'))
+local string = token(l.STRING, l.delimited_range("'", true, true))
 
 -- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
@@ -68,7 +68,7 @@ local keyword = token(l.KEYWORD, word_match({
 local identifier = token(l.IDENTIFIER, l.word)
 
 -- Functions.
-local func = token(l.FUNCTION, l.delimited_range('%', nil, false, false, '\n'))
+local func = token(l.FUNCTION, l.delimited_range('%', true, true))
 
 -- Operators.
 local operator = token(l.OPERATOR, S('+-*/$=,;()'))

@@ -15,9 +15,9 @@ local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
 local comment = token(l.COMMENT, block_comment + line_comment)
 
 -- Strings.
-local sq_str = l.delimited_range("'", '\\', true)
-local dq_str = l.delimited_range('"', '\\', true)
-local bt_str = l.delimited_range('`', '\\', true)
+local sq_str = l.delimited_range("'")
+local dq_str = l.delimited_range('"')
+local bt_str = l.delimited_range('`')
 local heredoc = '<<<' * P(function(input, index)
   local _, e, delimiter = input:find('([%a_][%w_]*)[\n\r\f]+', index)
   if delimiter then

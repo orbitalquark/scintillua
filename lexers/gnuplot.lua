@@ -13,10 +13,10 @@ local ws = token(l.WHITESPACE, l.space^1)
 local comment = token(l.COMMENT, '#' * l.nonnewline^0)
 
 -- Strings.
-local sq_str = l.delimited_range("'", '\\', true)
-local dq_str = l.delimited_range('"', '\\', true)
-local bk_str = l.delimited_range('[]', '\\', true, false, '\n')
-local bc_str = l.delimited_range('{}', '\\', true, false, '\n')
+local sq_str = l.delimited_range("'")
+local dq_str = l.delimited_range('"')
+local bk_str = l.delimited_range('[]', true)
+local bc_str = l.delimited_range('{}', true)
 local string = token(l.STRING, sq_str + dq_str + bk_str + bc_str)
 
 -- Keywords.

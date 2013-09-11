@@ -10,10 +10,10 @@ local M = {_NAME = 'smalltalk'}
 local ws = token(l.WHITESPACE, l.space^1)
 
 -- Comments.
-local comment = token(l.COMMENT, l.delimited_range('"', nil, true))
+local comment = token(l.COMMENT, l.delimited_range('"', false, true))
 
 -- Strings.
-local sq_str = l.delimited_range("'", '\\', true)
+local sq_str = l.delimited_range("'")
 local literal = '$' * l.word
 local string = token(l.STRING, sq_str + literal)
 

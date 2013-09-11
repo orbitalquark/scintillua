@@ -19,8 +19,8 @@ local comment = token(l.COMMENT, c_comment + d_comment + ex_comment +
                       ast_comment + line_comment)
 
 -- Strings.
-local sq_str = l.delimited_range("'", nil, true, false, '\n')
-local dq_str = l.delimited_range('"', nil, true, false, '\n')
+local sq_str = l.delimited_range("'", true, true)
+local dq_str = l.delimited_range('"', true, true)
 local string = token(l.STRING, sq_str + dq_str)
 
 -- Numbers.

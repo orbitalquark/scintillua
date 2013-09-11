@@ -15,7 +15,7 @@ local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
 local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- Strings.
-local string = token(l.STRING, l.delimited_range('"', '\\', true))
+local string = token(l.STRING, l.delimited_range('"'))
 
 -- Numbers.
 local bin_suffix = S('bB') * S('01_xXzZ')^1

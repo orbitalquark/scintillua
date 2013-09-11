@@ -18,7 +18,7 @@ local word = l.alpha * (l.alnum + '_' + '-')^0
 
 -- Strings.
 local literal = "'" * word
-local dq_str = l.delimited_range('"', '\\', true)
+local dq_str = l.delimited_range('"')
 local string = token(l.STRING, literal + dq_str)
 
 -- Numbers.

@@ -11,12 +11,13 @@ local ws = token(l.WHITESPACE, l.space^1)
 
 -- Comments.
 local line_comment = ';' * l.nonnewline^0;
-local block_comment = 'comment' * P(' ')^-1 * l.delimited_range('{}', nil, true)
+local block_comment = 'comment' * P(' ')^-1 *
+                      l.delimited_range('{}', false, true)
 local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- Strings.
-local sl_string = l.delimited_range('"', '\\', true, false, '\n')
-local ml_string = l.delimited_range('{}', '\\', true)
+local sl_string = l.delimited_range('"', true)
+local ml_string = l.delimited_range('{}')
 local lit_string = "'" * l.word
 local string = token(l.STRING, sl_string + ml_string + lit_string)
 

@@ -15,9 +15,9 @@ local nested_comment = l.nested_pair('/*', '*/')
 local comment = token(l.COMMENT, line_comment + nested_comment)
 
 -- Strings.
-local sq_str = l.delimited_range("'", '\\', true, false, '\n')
-local dq_str = l.delimited_range('"', '\\', true, false, '\n')
-local lit_str = '#' * l.delimited_range('"', '\\', true)
+local sq_str = l.delimited_range("'", true)
+local dq_str = l.delimited_range('"', true)
+local lit_str = '#' * l.delimited_range('"')
 local string = token(l.STRING, sq_str + dq_str + lit_str)
 
 -- Numbers.

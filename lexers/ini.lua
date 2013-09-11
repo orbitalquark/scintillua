@@ -14,9 +14,9 @@ local comment = token(l.COMMENT, #S(';#') * l.starts_line(S(';#') *
                                  l.nonnewline^0))
 
 -- Strings.
-local sq_str = l.delimited_range("'", '\\', true)
-local dq_str = l.delimited_range('"', '\\', true)
-local label = l.delimited_range('[]', nil, true, false, '\n')
+local sq_str = l.delimited_range("'")
+local dq_str = l.delimited_range('"')
+local label = l.delimited_range('[]', true, true)
 local string = token(l.STRING, sq_str + dq_str + label)
 
 -- Numbers.

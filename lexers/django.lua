@@ -14,7 +14,7 @@ local comment = token(l.COMMENT, '{#' * (l.any - l.newline - '#}')^0 *
                                  P('#}')^-1)
 
 -- Strings.
-local string = token(l.STRING, l.delimited_range('"', nil, true))
+local string = token(l.STRING, l.delimited_range('"', false, true))
 
 -- Keywords.
 local keyword = token(l.KEYWORD, word_match{

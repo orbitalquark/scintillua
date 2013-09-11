@@ -17,7 +17,7 @@ local comment = token(l.COMMENT, line_comment + bblock_comment + pblock_comment)
 
 -- Strings.
 local string = token(l.STRING, S('uUrR')^-1 *
-                               l.delimited_range("'", nil, true, false, '\n'))
+                               l.delimited_range("'", true, true))
 
 -- Numbers.
 local number = token(l.NUMBER, (l.float + l.integer) * S('LlDdFf')^-1)

@@ -13,7 +13,7 @@ local ws = token(l.WHITESPACE, l.space^1)
 local comment = token(l.COMMENT, '#' * S(': .~') * l.nonnewline^0)
 
 -- Strings.
-local string = token(l.STRING, l.delimited_range('"', '\\', true, false, '\n'))
+local string = token(l.STRING, l.delimited_range('"', true))
 
 -- Keywords.
 local keyword = token(l.KEYWORD, word_match({

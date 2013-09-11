@@ -14,8 +14,8 @@ local comment = token(l.COMMENT, '<!--' * (l.any - '-->')^0 * P('-->')^-1)
 local cdata = token('cdata', '<![CDATA[' * (l.any - ']]>')^0 * P(']]>')^-1)
 
 -- Strings.
-local sq_str = l.delimited_range("'", nil, true)
-local dq_str = l.delimited_range('"', nil, true)
+local sq_str = l.delimited_range("'", false, true)
+local dq_str = l.delimited_range('"', false, true)
 local string = token(l.STRING, sq_str + dq_str)
 
 local equals = token(l.OPERATOR, '=')
