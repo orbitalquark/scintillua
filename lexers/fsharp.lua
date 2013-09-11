@@ -11,7 +11,7 @@ local ws = token(l.WHITESPACE, l.space^1)
 
 -- Comments.
 local line_comment = P('//') * l.nonnewline^0
-local block_comment = l.nested_pair('(*', '*)', true)
+local block_comment = l.nested_pair('(*', '*)')
 local comment = token(l.COMMENT, line_comment + block_comment)
 
 -- Strings.

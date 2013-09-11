@@ -10,7 +10,7 @@ local M = {_NAME = 'caml'}
 local ws = token(l.WHITESPACE, l.space^1)
 
 -- Comments.
-local comment = token(l.COMMENT, l.nested_pair('(*', '*)', true))
+local comment = token(l.COMMENT, l.nested_pair('(*', '*)'))
 
 -- Strings.
 local sq_str = l.delimited_range("'", '\\', true, false, '\n')

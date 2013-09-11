@@ -1331,22 +1331,17 @@ end
 
 ---
 -- Similar to `delimited_range()`, but allows for multi-character, nested
--- delimiters *start_chars* and *end_chars*. *end_optional* indicates whether or
--- not unterminated ranges match.
+-- delimiters *start_chars* and *end_chars*.
 -- With single-character delimiters, this function is identical to
--- `delimited_range(start_chars..end_chars, nil, end_optional, true)`.
+-- `delimited_range(start_chars..end_chars, nil, true, true)`.
 -- @param start_chars The string starting a nested sequence.
 -- @param end_chars The string ending a nested sequence.
--- @param end_optional Optional flag indicating whether or not an ending
---   delimiter is optional or not. If `true`, the range begun by the start
---   delimiter matches until an end delimiter or the end of the input is
---   reached.
 -- @return pattern
--- @usage local nested_comment = l.nested_pair('/*', '*/', true)
+-- @usage local nested_comment = l.nested_pair('/*', '*/')
 -- @see delimited_range
 -- @name nested_pair
-function M.nested_pair(start_chars, end_chars, end_optional)
-  local s, e = start_chars, end_optional and lpeg_P(end_chars)^-1 or end_chars
+function M.nested_pair(start_chars, end_chars)
+  local s, e = start_chars, lpeg_P(end_chars)^-1
   return lpeg_P{s * (M.any - s - end_chars + lpeg_V(1))^0 * e}
 end
 

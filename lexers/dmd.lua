@@ -13,7 +13,7 @@ local ws = token(l.WHITESPACE, l.space^1)
 -- Comments.
 local line_comment = '//' * l.nonnewline_esc^0
 local block_comment = '/*' * (l.any - '*/')^0 * P('*/')^-1
-local nested_comment = l.nested_pair('/+', '+/', true)
+local nested_comment = l.nested_pair('/+', '+/')
 local comment = token(l.COMMENT, line_comment + block_comment + nested_comment)
 
 -- Strings.
@@ -25,11 +25,11 @@ local bt_str = l.delimited_range('`', nil, true, false) * S('cwd')^-1
 local hex_str = 'x' * l.delimited_range('"', '\\', nil, false) *
                 S('cwd')^-1
 local other_hex_str = '\\x' * (l.xdigit * l.xdigit)^1
-local del_str = l.nested_pair('q"[', ']"', true) * S('cwd')^-1 +
-                l.nested_pair('q"(', ')"', true) * S('cwd')^-1 +
-                l.nested_pair('q"{', '}"', true) * S('cwd')^-1 +
-                l.nested_pair('q"<', '>"', true) * S('cwd')^-1 +
-                P('q') * l.nested_pair('{', '}', true) * S('cwd')^-1
+local del_str = l.nested_pair('q"[', ']"') * S('cwd')^-1 +
+                l.nested_pair('q"(', ')"') * S('cwd')^-1 +
+                l.nested_pair('q"{', '}"') * S('cwd')^-1 +
+                l.nested_pair('q"<', '>"') * S('cwd')^-1 +
+                P('q') * l.nested_pair('{', '}') * S('cwd')^-1
 local string = token(l.STRING, del_str + sq_str + dq_str + lit_str + bt_str +
                                hex_str + other_hex_str)
 
