@@ -125,4 +125,6 @@ M._tokenstyles = {
   decorator = l.STYLE_PREPROCESSOR
 }
 
+l.property['fold.by.indentation'] = '1'
+
 return M

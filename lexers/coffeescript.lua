@@ -57,4 +57,6 @@ M._rules = {
   {'any_char', l.any_char},
 }
 
+l.property['fold.by.indentation'] = '1'
+
 return M
