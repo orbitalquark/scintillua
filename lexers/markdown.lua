@@ -118,5 +118,6 @@ M._tokenstyles = {
 
 -- Do not actually embed; just load the styles.
 l.embed_lexer(M, hypertext, P(false), P(false))
+l.property['fold.by.indentation'] = '0' -- revert from CoffeeScript
 
 return M
