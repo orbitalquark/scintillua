@@ -656,7 +656,7 @@ public:
 					const char *name = NULL, *p = NULL;
 					if (pos >= 0) {
 						name = GetStyleName(SS(sci, SCI_GETSTYLEAT, pos, 0));
-						p = strstr(name, "_whitespace");
+						if (name) p = strstr(name, "_whitespace");
 					}
 					if (!name) name = lua_tostring(L, -1); // "lexer:lexer" fallback
 					if (!p) p = name + strlen(name); // "lexer:lexer" fallback
