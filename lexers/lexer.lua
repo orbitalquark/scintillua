@@ -1112,12 +1112,13 @@ end
 function M.fold(text, start_pos, start_line, start_level)
   local folds = {}
   if text == '' then return folds end
+  local fold = M.property_int['fold'] > 0
   local lexer = _G._LEXER
   local FOLD_BASE = M.FOLD_BASE
   local FOLD_HEADER, FOLD_BLANK  = M.FOLD_HEADER, M.FOLD_BLANK
-  if lexer._fold then
+  if fold and lexer._fold then
     return lexer._fold(text, start_pos, start_line, start_level)
-  elseif lexer._foldsymbols then
+  elseif fold and lexer._foldsymbols then
     local lines = {}
     for p, l in text:gmatch('()(.-)\r?\n') do lines[#lines + 1] = {p, l} end
     lines[#lines + 1] = {text:match('()([^\r\n]*)$')}
@@ -1151,7 +1152,7 @@ function M.fold(text, start_pos, start_line, start_level)
       end
       line_num = line_num + 1
     end
-  elseif M.property_int['fold.by.indentation'] > 0 then
+  elseif fold and M.property_int['fold.by.indentation'] > 0 then
     local indent_amount = M.indent_amount
     -- Indentation based folding.
     local current_line, prev_level = start_line, start_level
