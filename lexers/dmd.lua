@@ -94,29 +94,40 @@ local preproc = token(l.PREPROCESSOR, '#' * l.nonnewline^0)
 
 -- Traits.
 local traits_list = token('traits', word_match{
-  'isAbstractClass', 'isArithmetic', 'isAssociativeArray', 'isFinalClass',
-  'isPOD', 'isNested', 'isFloating', 'isIntegral', 'isScalar', 'isStaticArray',
-  'isUnsigned', 'isVirtualFunction', 'isVirtualMethod', 'isAbstractFunction',
-  'isFinalFunction', 'isStaticFunction', 'isRef', 'isOut', 'isLazy',
-  'hasMember', 'identifier', 'getAttributes', 'getMember', 'getOverloads',
-  'getProtection', 'getVirtualFunctions', 'getVirtualMethods', 'parent',
-  'classInstanceSize', 'allMembers', 'derivedMembers', 'isSame', 'compiles'
+  'allMembers', 'classInstanceSize', 'compiles', 'derivedMembers',
+  'getAttributes', 'getMember', 'getOverloads', 'getProtection', 'getUnitTests',
+  'getVirtualFunctions', 'getVirtualIndex', 'getVirtualMethods', 'hasMember',
+  'identifier', 'isAbstractClass', 'isAbstractFunction', 'isArithmetic',
+  'isAssociativeArray', 'isFinalClass', 'isFinalFunction', 'isFloating',
+  'isIntegral', 'isLazy', 'isNested', 'isOut', 'isOverrideFunction', 'isPOD',
+  'isRef', 'isSame', 'isScalar', 'isStaticArray', 'isStaticFunction',
+  'isUnsigned', 'isVirtualFunction', 'isVirtualMethod', 'parent'
 })
+
+local scopes_list = token('scopes', word_match{'exit', 'success', 'failure'})
 
 -- versions
 local versions_list = token('versions', word_match{
-  'AIX', 'all', 'Alpha', 'ARM', 'BigEndian', 'BSD', 'Cygwin', 'D_Coverage',
-  'D_Ddoc', 'DigitalMars', 'D_InlineAsm_X86', 'D_InlineAsm_X86_64', 'D_LP64',
-  'D_NET','D_PIC','D_Version2', 'FreeBSD', 'GNU', 'HPPA', 'HPPA64', 'Hurd',
-  'IA64', 'LDC', 'linux', 'LittleEndian', 'MinGW', 'MIPS', 'MIPS64', 'none',
-  'OpenBSD', 'OSX', 'Posix', 'PPC', 'PPC64', 'S390', 'S390X', 'SDC', 'SH',
-  'SH64', 'SkyOS', 'Solaris', 'SPARC', 'SPARC64', 'SysV3', 'SysV4', 'unittest',
-  'Win32', 'Win64', 'Windows', 'X86', 'X86_64'
+  'AArch64', 'AIX', 'all', 'Alpha', 'Alpha_HardFloat', 'Alpha_SoftFloat',
+  'Android', 'ARM', 'ARM_HardFloat', 'ARM_SoftFloat', 'ARM_SoftFP', 'ARM_Thumb',
+  'assert', 'BigEndian', 'BSD', 'Cygwin', 'D_Coverage', 'D_Ddoc', 'D_HardFloat',
+  'DigitalMars', 'D_InlineAsm_X86', 'D_InlineAsm_X86_64', 'D_LP64',
+  'D_NoBoundsChecks', 'D_PIC', 'DragonFlyBSD', 'D_SIMD', 'D_SoftFloat',
+  'D_Version2', 'D_X32', 'FreeBSD', 'GNU', 'Haiku', 'HPPA', 'HPPA64', 'Hurd',
+  'IA64', 'LDC', 'linux', 'LittleEndian', 'MIPS32', 'MIPS64', 'MIPS_EABI',
+  'MIPS_HardFloat', 'MIPS_N32', 'MIPS_N64', 'MIPS_O32', 'MIPS_O64',
+  'MIPS_SoftFloat', 'NetBSD', 'none', 'OpenBSD', 'OSX', 'Posix', 'PPC', 'PPC64',
+  'PPC_HardFloat', 'PPC_SoftFloat', 'S390', 'S390X', 'SDC', 'SH', 'SH64',
+  'SkyOS', 'Solaris', 'SPARC', 'SPARC64', 'SPARC_HardFloat', 'SPARC_SoftFloat',
+  'SPARC_V8Plus', 'SysV3', 'SysV4', 'unittest', 'Win32', 'Win64', 'Windows',
+  'X86', 'X86_64'
 })
 
 local versions = token(l.KEYWORD, 'version') * l.space^0 *
                  token(l.OPERATOR, '(') * l.space^0 * versions_list
 
+local scopes = token(l.KEYWORD, 'scope') * l.space^0 *
+               token(l.OPERATOR, '(') * l.space^0 * scopes_list
 
 local traits = token(l.KEYWORD, '__traits') * l.space^0 *
                token(l.OPERATOR, '(') * l.space^0 * traits_list
@@ -129,6 +140,7 @@ M._rules = {
   {'class', class_sequence},
   {'traits', traits},
   {'versions', versions},
+  {'scopes', scopes},
   {'keyword', keyword},
   {'variable', properties},
   {'type', type},
@@ -147,7 +159,8 @@ M._rules = {
 M._tokenstyles = {
   annotation = l.STYLE_PREPROCESSOR,
   traits = 'fore:$(color.yellow)',
-  versions = l.STYLE_CONSTANT
+  versions = l.STYLE_CONSTANT,
+  scopes = l.STYLE_CONSTANT
 }
 
 M._foldsymbols = {
