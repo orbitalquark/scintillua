@@ -1010,15 +1010,19 @@ end
 -- Scintilla calls this function to load a lexer. Parent lexers also call this
 -- function to load child lexers and vice-versa.
 -- @param lexer_name The name of the lexing language.
+-- @param alt_name The alternate name of the lexing language. This is useful for
+--   embedding the same child lexer with multiple sets of start and end tokens.
 -- @return lexer object
 -- @name load
-function M.load(lexer_name)
-  M.WHITESPACE = lexer_name..'_whitespace'
+function M.load(lexer_name, alt_name)
+  package.loaded[lexer_name] = nil
+  M.WHITESPACE = (alt_name or lexer_name)..'_whitespace'
   local ok, lexer = pcall(require, lexer_name or 'null')
   if not ok then
     _G.print(lexer) -- error message
-    lexer = {_NAME = lexer_name}
+    lexer = {_NAME = (alt_name or lexer_name)}
   end
+  if alt_name then lexer._NAME = alt_name end
   lexer._TOKENS = tokens
   if lexer._lexer then
     local l, _r, _s = lexer._lexer, lexer._rules, lexer._tokenstyles
