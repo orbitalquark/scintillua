@@ -35,7 +35,6 @@ M._rules = {
   {'equals', equals},
   {'string', string},
   {'variable', variable},
-  {'any_char', l.any_char},
 }
 
 M._tokenstyles = {

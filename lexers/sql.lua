@@ -73,7 +73,6 @@ M._rules = {
   {'comment', comment},
   {'number', number},
   {'operator', operator},
-  {'any_char', l.any_char},
 }
 
 return M

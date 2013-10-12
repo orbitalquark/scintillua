@@ -88,7 +88,6 @@ M._rules = {
   {'operator', operator},
   {'identifier', identifier},
   {'comment', comment},
-  {'any_char', l.any_char},
 }
 
 M._tokenstyles = {

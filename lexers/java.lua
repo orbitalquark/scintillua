@@ -70,7 +70,6 @@ M._rules = {
   {'number', number},
   {'annotation', annotation},
   {'operator', operator},
-  {'any_char', l.any_char},
 }
 
 M._tokenstyles = {

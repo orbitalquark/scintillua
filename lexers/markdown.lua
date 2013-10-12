@@ -40,9 +40,8 @@ local hypertext = l.load('hypertext')
 local html_rules = hypertext._RULES
 --local html_rule = html_rules['whitespace'] + html_rules['default'] +
 --                  html_rules['tag'] + html_rules['entity'] +
---                  html_rules['any_char']
 local html_rule = html_rules['default'] + html_rules['tag'] +
-                  html_rules['entity'] + html_rules['any_char']
+                  html_rules['entity'] + token(l.DEFAULT, l.any)
 local in_html = false
 local html = #P('<') * html_rule^1 * P(function(input, index)
   in_html = true
@@ -78,7 +77,9 @@ local code = token('code', (P('``') * (l.any - '``')^0 * P('``')^-1) +
 
 local escape = token(l.DEFAULT, P('\\') * 1)
 
-local text_line = (ws + escape + link + strong + em + code + l.any_char)^1
+local any = token(l.DEFAULT, l.any)
+
+local text_line = (ws + escape + link + strong + em + code + any)^1
 
 local list = token('list', S('*+-') + R('09') * '.') * ws * text_line
 

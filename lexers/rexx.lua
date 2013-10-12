@@ -83,7 +83,6 @@ M._rules = {
   {'number', number},
   {'preproc', preproc},
   {'operator', operator},
-  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {

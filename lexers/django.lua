@@ -50,7 +50,6 @@ M._rules = {
   {'identifier', identifier},
   {'string', string},
   {'operator', operator},
-  {'any_char', l.any_char},
 }
 
 -- Embedded in HTML.

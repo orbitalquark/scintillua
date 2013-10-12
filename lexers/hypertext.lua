@@ -79,7 +79,6 @@ M._rules = {
   {'doctype', doctype},
   {'tag', tag},
   {'entity', entity},
-  {'any_char', l.any_char},
 }
 
 M._tokenstyles = {

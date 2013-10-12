@@ -153,7 +153,6 @@ M._rules = {
   {'preproc', preproc},
   {'operator', operator},
   {'annotation', annotation},
-  {'any_char', l.any_char},
 }
 
 M._tokenstyles = {

@@ -59,7 +59,6 @@ M._rules = {
   {'number', number},
   {'string', string},
   {'operator', operator},
-  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {

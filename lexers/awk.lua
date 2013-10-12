@@ -310,8 +310,6 @@ M._rules = {
   {'gawkBuiltInVariable', gawkBuiltInVariable},
   {'function', func},
   {'identifier', identifier},
-
-  {'default', l.any_char} -- must stay at the end.
 }
 
 M._tokenstyles = {

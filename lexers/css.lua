@@ -147,7 +147,6 @@ M._rules = {
   {'number', number * unit^-1},
   {'operator', operator},
   {'at_rule', at_rule},
-  {'any_char', l.any_char},
 }
 
 M._tokenstyles = {

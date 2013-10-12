@@ -34,7 +34,6 @@ M._rules = {
   {'keyword', keyword},
   {'operator', operator},
   {'identifier', identifier},
-  {'any_char', l.any_char},
 }
 
 return M

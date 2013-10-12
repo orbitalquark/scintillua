@@ -50,7 +50,6 @@ M._rules = {
   {'section', section},
   {'keyword', command},
   {'operator', operator},
-  {'any_char', l.any_char},
 }
 
 M._tokenstyles = {

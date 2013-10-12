@@ -86,7 +86,6 @@ M._rules = {
   {'action', action},
   {'identifier', identifier},
   {'operator', operator},
-  {'any_char', l.any_char},
 }
 
 _styles = {

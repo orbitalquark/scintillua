@@ -117,7 +117,6 @@ M._rules = {
   {'number', number},
   {'decorator', decorator},
   {'operator', operator},
-  {'any_char', l.any_char},
 }
 
 

@@ -69,7 +69,6 @@ M._rules = {
   {'function', func},
   {'identifier', identifier},
   {'operator', operator},
-  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {

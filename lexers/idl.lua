@@ -63,7 +63,6 @@ M._rules = {
   {'number', number},
   {'preprocessor', preproc},
   {'operator', operator},
-  {'any_char', l.any_char},
 }
 
 return M

@@ -86,7 +86,6 @@ M._rules = {
   {'label', label},
   {'comment', comment},
   {'operator', operator},
-  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {

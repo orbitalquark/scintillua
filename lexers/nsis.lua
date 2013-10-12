@@ -176,7 +176,6 @@ M._rules = {
   {'operator', operator},
   {'label', label},
   {'identifier', identifier},
-  {'any_char', l.any_char},
 }
 
 return M

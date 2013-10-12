@@ -33,7 +33,6 @@ M._rules = {
   {'keyword', keyword},
   {'identifier', identifier},
   {'variable', variable},
-  {'any_char', l.any_char},
 }
 
 return M

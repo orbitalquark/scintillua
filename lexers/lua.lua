@@ -117,7 +117,6 @@ M._rules = {
   {'number', number},
   {'label', label},
   {'operator', operator},
-  {'any_char', l.any_char},
 }
 
 M._tokenstyles = {

@@ -74,7 +74,6 @@ M._rules = {
   {'string', string},
   {'comment', comment},
   {'operator', operator},
-  {'any_char', l.any_char},
 }
 
 return M

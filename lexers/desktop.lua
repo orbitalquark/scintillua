@@ -56,7 +56,6 @@ M._rules = {
   {'number', number},
   {'code', code},
   {'operator', operator},
-  {'any_char', l.any_char},
 }
 
 return M

@@ -56,7 +56,6 @@ M._rules = {
   {'comment', comment},
   {'action', action},
   {'operator', operator},
-  {'any_char', l.any_char},
 }
 
 M._tokenstyles = {

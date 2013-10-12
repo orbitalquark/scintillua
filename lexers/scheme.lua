@@ -86,7 +86,6 @@ M._rules = {
   {'number', number},
   {'operator', operator},
   {'entity', entity},
-  {'any_char', l.any_char},
 }
 
 M._tokenstyles = {

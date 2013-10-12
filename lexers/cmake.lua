@@ -157,7 +157,6 @@ M._rules = {
   {'identifier', identifier},
   {'string', string},
   {'comment', comment},
-  {'any_char', l.any_char},
 }
 
 M._foldsymbols = {

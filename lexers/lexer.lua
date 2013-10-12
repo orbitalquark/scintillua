@@ -81,7 +81,6 @@ local M = {}
 --
 --     M._rules = {
 --       {'whitespace', ws},
---       {'any_char', l.any_char},
 --     }
 --
 --     M._tokenstyles = {
@@ -248,7 +247,6 @@ local M = {}
 --
 --     M._rules = {
 --       {'whitespace', ws},
---       {'any_char', l.any_char},
 --     }
 --
 -- Each entry in a lexer's `_rules` table consists of a rule name and its
@@ -256,7 +254,7 @@ local M = {}
 -- identify and distinguish between different rules. Rule order is important: if
 -- text does not match the first rule, the lexer tries the second rule, and so
 -- on. This simple grammar says to match whitespace tokens under a rule named
--- "whitespace" and anything else under a rule named "any_char".
+-- "whitespace".
 --
 -- To illustrate the importance of rule order, here is an example of a
 -- simplified Lua grammar:
@@ -270,7 +268,6 @@ local M = {}
 --       {'number', number},
 --       {'label', label},
 --       {'operator', operator},
---       {'any_char', l.any_char},
 --     }
 --
 -- Note how identifiers come after keywords. In Lua, as with most programming
@@ -281,17 +278,10 @@ local M = {}
 -- applies to function, constant, etc. tokens that you may want to distinguish
 -- between: their rules should come before identifiers.
 --
--- Now, you may be wondering what `l.any_char` is and why the "any_char" rule
--- exists. `l.any_char` is a special, predefined token that matches one single
--- character as a `DEFAULT` token. The "any_char" rule should appear in every
--- lexer because there may be some text that does not match any of the defined
--- rules. How is that possible? Well in Lua, for example, the '!' character is
--- meaningless outside a string or comment. Therefore, if the lexer encounters a
--- '!' in such a circumstance, it would not match any existing rules other than
--- "any_char". With "any_char", the lexer "skips" over the "error" and continues
--- highlighting the rest of the source file correctly. Without "any_char", the
--- lexer would fail to continue. If instead you want to highlight these "syntax
--- errors", replace the "any_char" rule such that the grammar looks like:
+-- So what about text that does not match any rules? For example in Lua, the '!'
+-- character is meaningless outside a string or comment. Normally the lexer
+-- skips over such text. If instead you want to highlight these "syntax errors",
+-- add an additional end rule:
 --
 --     M._rules = {
 --       {'whitespace', ws},
@@ -824,9 +814,6 @@ local M = {}
 -- @field word (pattern)
 --   A pattern that matches a typical word starting with a letter or underscore
 --   and then any alphanumeric or underscore characters.
--- @field any_char (pattern)
---   A `DEFAULT` token matching any single character, useful in a fallback rule
---   for a grammar.
 -- @field FOLD_BASE (number)
 --   The initial (root) fold level.
 -- @field FOLD_BLANK (number)
@@ -904,7 +891,7 @@ local function join_tokens(lexer)
   local patterns, order = lexer._RULES, lexer._RULEORDER
   local token_rule = patterns[order[1]]
   for i = 2, #order do token_rule = token_rule + patterns[order[i]] end
-  lexer._TOKENRULE = token_rule
+  lexer._TOKENRULE = token_rule + M.token(M.DEFAULT, M.any)
   return lexer._TOKENRULE
 end
 
@@ -1245,9 +1232,6 @@ function M.token(name, patt)
   return lpeg_Cc(name) * patt * lpeg_Cp()
 end
 
--- Common tokens
-M.any_char = M.token(M.DEFAULT, M.any)
-
 ---
 -- Creates and returns a pattern that matches a range of text bounded by
 -- *chars* characters.
@@ -1495,9 +1479,7 @@ M.property_expanded = setmetatable({}, {
 -- @field _rules An ordered list of rules for a lexer grammar.
 --   Each rule is a table containing an arbitrary rule name and the LPeg pattern
 --   associated with the rule. The order of rules is important as rules are
---   matched sequentially. Ensure there is a fallback rule in case the lexer
---   encounters any unexpected input, usually using the predefined `l.any_char`
---   token.
+--   matched sequentially.
 --   Child lexers should not use this table to access and/or modify their
 --   parent's rules and vice-versa. Use the `_RULES` table instead.
 -- @field _tokenstyles A map of non-predefined token names to styles.
