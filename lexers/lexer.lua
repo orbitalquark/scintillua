@@ -509,18 +509,13 @@ local M = {}
 -- very similar to embedding a child into a parent: first, load the parent lexer
 -- into the child lexer with the [`load()`](#load) function and then create
 -- start and end rules for the child lexer. However, in this case, swap the
--- lexer object arguments to [`embed_lexer()`](#embed_lexer) and indicate
--- through a `_lexer` field in the child lexer that the parent is the primary
--- lexer. For example, in the PHP lexer:
+-- lexer object arguments to [`embed_lexer()`](#embed_lexer). For example, in
+-- the PHP lexer:
 --
 --     local html = l.load('hypertext')
 --     local php_start_rule = token('php_tag', '<?php ')
 --     local php_end_rule = token('php_tag', '?>')
 --     l.embed_lexer(html, M, php_start_rule, php_end_rule)
---     M._lexer = html
---
--- The last line is very important. Without it, the lexer uses PHP's rules
--- instead of HTML's.
 --
 -- ## Code Folding
 --
@@ -599,9 +594,9 @@ local M = {}
 -- Any time the lexer encounters a '|' that is a "strange_token", it calls the
 -- `fold_strange_token` function to determine if '|' is a fold point. The lexer
 -- calls these functions with the following arguments: the text to fold, the
--- position of the start of the current line in the text to fold, the text of
--- the current line, the position in the current line the matched text starts
--- at, and the matched text itself.
+-- position of the start of the current line in the text to fold, the current
+-- line's text, the position in the current line the matched text starts at, and
+-- the matched text itself.
 --
 -- [Lua patterns]: http://www.lua.org/manual/5.2/manual.html#6.4.1
 --
@@ -1002,6 +997,7 @@ end
 -- @return lexer object
 -- @name load
 function M.load(lexer_name, alt_name)
+  -- Load the lexer module with its rules, styles, etc.
   package.loaded[lexer_name] = nil
   M.WHITESPACE = (alt_name or lexer_name)..'_whitespace'
   local ok, lexer = pcall(require, lexer_name or 'null')
@@ -1011,6 +1007,15 @@ function M.load(lexer_name, alt_name)
   end
   if alt_name then lexer._NAME = alt_name end
   lexer._TOKENS = tokens
+  -- If the lexer is a proxy (loads parent and child lexers to embed) and does
+  -- not declare a parent, try and find one and use its rules.
+  if not lexer._rules and not lexer._lexer then
+    for _, l in pairs(package.loaded) do
+      if l._CHILDREN then lexer._lexer = l end
+    end
+  end
+  -- If the lexer is a proxy or a child that embedded itself, add its rules and
+  -- styles to the parent lexer. Then set the parent to be the main lexer.
   if lexer._lexer then
     local l, _r, _s = lexer._lexer, lexer._rules, lexer._tokenstyles
     if not l._tokenstyles then l._tokenstyles = {} end
@@ -1021,6 +1026,7 @@ function M.load(lexer_name, alt_name)
     for token, style in pairs(_s or {}) do l._tokenstyles[token] = style end
     lexer = l
   end
+  -- Add the lexer's styles and build its grammar.
   if lexer._rules then
     for token, style in pairs(lexer._tokenstyles or {}) do
       add_style(lexer, token, style)
@@ -1028,11 +1034,14 @@ function M.load(lexer_name, alt_name)
     for _, r in ipairs(lexer._rules) do add_rule(lexer, r[1], r[2]) end
     build_grammar(lexer)
   end
+  -- Add the lexer's unique whitespace style.
   add_style(lexer, lexer._NAME..'_whitespace', M.STYLE_WHITESPACE)
+  -- Process the lexer's fold symbols.
   if lexer._foldsymbols and lexer._foldsymbols._patterns then
     local patterns = lexer._foldsymbols._patterns
     for i = 1, #patterns do patterns[i] = '()('..patterns[i]..')' end
   end
+  -- Finished.
   _G._LEXER = lexer
   return lexer
 end
@@ -1398,6 +1407,7 @@ function M.embed_lexer(parent, child, start_rule, end_rule)
   for token, style in pairs(child._tokenstyles or {}) do
     tokenstyles[token] = style
   end
+  child._lexer = parent -- use parent's tokens if child is embedding itself
 end
 
 -- Determines if the previous line is a comment.
@@ -1500,9 +1510,9 @@ M.property_expanded = setmetatable({}, {
 --   to determine whether or not it is a fold point.
 -- @field _fold If this function exists in the lexer, it is called for folding
 --   the document instead of using `_foldsymbols` or indentation.
--- @field _lexer For child lexers embedding themselves into a parent lexer, this
---   field should be set to the parent lexer object in order for the parent's
---   rules to be used instead of the child's.
+-- @field _lexer The parent lexer object whose rules should be used. This field
+--   is only necessary to disambiguate a proxy lexer that loaded parent and
+--   child lexers for embedding and ended up having multiple parents loaded.
 -- @field _RULES A map of rule name keys with their associated LPeg pattern
 --   values for the lexer.
 --   This is constructed from the lexer's `_rules` table and accessible to other

@@ -8,7 +8,6 @@ local M = {_NAME = 'rhtml'}
 
 -- Embedded in HTML.
 local html = l.load('hypertext')
-M._lexer = html
 
 -- Embedded Ruby.
 local ruby = l.load('rails')

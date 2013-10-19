@@ -49,12 +49,12 @@ M._rules = {
   {'function', func},
   {'identifier', identifier},
   {'string', string},
+  {'comment', comment},
   {'operator', operator},
 }
 
 -- Embedded in HTML.
 local html = l.load('hypertext')
-M._lexer = html
 
 -- Embedded Django.
 local django_start_rule = token('django_tag', '{' * S('{%'))

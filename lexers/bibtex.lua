@@ -38,7 +38,6 @@ M._rules = {
 
 -- Embedded in Latex.
 local latex = l.load('latex')
-M._lexer = latex
 
 -- Embedded Bibtex.
 local entry = token('entry', P('@') * word_match({

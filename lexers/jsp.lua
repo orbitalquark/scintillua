@@ -8,7 +8,6 @@ local M = {_NAME = 'jsp'}
 
 -- Embedded in HTML.
 local html = l.load('hypertext')
-M._lexer = html
 
 -- Embedded Java.
 local java = l.load('java')

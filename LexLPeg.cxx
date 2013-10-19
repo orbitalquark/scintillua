@@ -415,10 +415,8 @@ class LexerLPeg : public ILexer {
 		if (!SetStyles()) return false;
 
 		// If the lexer is a parent, it will have children in its _CHILDREN table.
-		// If the lexer is a child, it will have a parent in its _TOKENRULES table.
-		lua_getglobal(L, "_LEXER");
-		lua_getfield(L, -1, "_CHILDREN"), lua_getfield(L, -2, "_TOKENRULES");
-		if (lua_istable(L, -1) || lua_istable(L, -2)) {
+		lua_getglobal(L, "_LEXER"), lua_getfield(L, -1, "_CHILDREN");
+		if (lua_istable(L, -1)) {
 			multilang = true;
 			// Determine which styles are language whitespace styles
 			// ([lang]_whitespace). This is necessary for determining which language
@@ -429,7 +427,7 @@ class LexerLPeg : public ILexer {
 				ws[i] = strstr(style_name, "whitespace") ? true : false;
 			}
 		}
-		lua_pop(L, 3); // _LEXER._TOKENRULES, _LEXER._CHILDREN, and _LEXER
+		lua_pop(L, 2); // _LEXER._CHILDREN, and _LEXER
 
 		reinit = false;
 		return true;

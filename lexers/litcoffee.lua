@@ -9,7 +9,7 @@ local M = {_NAME = 'litcoffee'}
 
 -- Embedded in Markdown.
 local markdown = l.load('markdown')
-M._lexer = markdown
+M._lexer = markdown -- ensure markdown's rules are loaded, not HTML's
 
 -- Embedded CoffeeScript.
 local coffeescript = l.load('coffeescript')

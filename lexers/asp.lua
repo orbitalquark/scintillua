@@ -8,7 +8,6 @@ local M = {_NAME = 'asp'}
 
 -- Embedded in HTML.
 local html = l.load('hypertext')
-M._lexer = html
 
 -- Embedded VB.
 local vb = l.load('vb')
