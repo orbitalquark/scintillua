@@ -7,6 +7,7 @@ Scintillua better and better over the years.
 
 * Alex Saraci
 * Brian Schott
+* Chris Emerson
 * Jeff Stone
 * M Rawash
 * Martin Morawetz

@@ -38,9 +38,14 @@ local tag_start = token('tag', '<' * P('/')^-1) * element
 local tag_end = token('tag', P('/')^-1 * '>')
 local tag = tag_start * (ws * attributes)^0 * ws^0 * tag_end
 
--- Doctypes.
-local doctype = token('doctype', '<?xml') * (ws * attributes)^0 * ws^0 *
-                token('doctype', '?>')
+-- Doctypes and other markup tags
+local doctype = token('doctype', P('<!DOCTYPE')) * ws *
+                token('doctype', identifier) * (ws * identifier)^-1 *
+                (1 - P('>'))^0 * token('doctype', '>')
+
+-- Processing instructions
+local proc_insn = token('proc_insn', P('<?') * identifier) *
+                  (ws * attributes)^0 * ws^0 * token('proc_insn', '?>')
 
 -- Entities.
 local entity = token('entity', '&' * word_match{
@@ -52,6 +57,7 @@ M._rules = {
   {'comment', comment},
   {'cdata', cdata},
   {'doctype', doctype},
+  {'proc_insn', proc_insn},
   {'tag', tag},
   {'entity', entity},
 }
@@ -63,7 +69,9 @@ M._tokenstyles = {
   attribute = l.STYLE_TYPE,
   cdata = l.STYLE_COMMENT,
   entity = l.STYLE_OPERATOR,
-  doctype = l.STYLE_COMMENT
+  doctype = l.STYLE_COMMENT,
+  proc_insn = l.STYLE_COMMENT,
+  --markup = l.STYLE_COMMENT
 }
 
 M._foldsymbols = {
