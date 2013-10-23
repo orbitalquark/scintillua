@@ -22,8 +22,7 @@ local number = token(l.NUMBER, l.float + l.integer * S('hqb')^-1)
 
 -- Preprocessor.
 local preproc_word = word_match{
-  'arg', 'assign', 'clear', 'define', 'defmacro', 'defstr', 'deftok', 'depend',
-  'elif',
+  'arg', 'assign', 'clear', 'define', 'defstr', 'deftok', 'depend', 'elif',
   'elifctx', 'elifdef', 'elifempty', 'elifenv', 'elifid', 'elifidn', 'elifidni',
   'elifmacro', 'elifn', 'elifnctx', 'elifndef', 'elifnempty', 'elifnenv',
   'elifnid', 'elifnidn', 'elifnidni', 'elifnmacro', 'elifnnum', 'elifnstr',
@@ -466,8 +465,8 @@ M._tokenstyles = {
 M._foldsymbols = {
   _patterns = {'%l+', '//'},
   [l.PREPROCESSOR] = {
-    macro = 1, endmacro = -1, rep = 1, endrep = -1,
-    ['if'] = 1, endif = -1, ['while'] = 1, endwhile = -1,
+    ['if'] = 1, endif = -1, macro = 1, endmacro = -1, rep = 1, endrep = -1,
+    ['while'] = 1, endwhile = -1,
   },
   [l.KEYWORD] = {struc = 1, endstruc = -1},
   [l.COMMENT] = {['//'] = l.fold_line_comments('//')}
