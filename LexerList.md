@@ -11,6 +11,7 @@ see `lexers/lpeg.properties`.
 1. ANTLR`*`
 1. APDL`*`
 1. Applescript
+1. ASM`*`
 1. ASP`*`
 1. AWK`*`
 1. B`*`
