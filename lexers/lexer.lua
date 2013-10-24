@@ -299,6 +299,9 @@ local M = {}
 --
 --     {'tag', tag_start * (ws * attributes)^0 * tag_end^-1}
 --
+-- Note however that lexers with complex rules like these are more prone to lose
+-- track of their state.
+--
 -- ### Summary
 --
 -- Lexers primarily consist of tokens and grammar rules. At your disposal are a

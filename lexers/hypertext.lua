@@ -17,11 +17,22 @@ local comment = token(l.COMMENT, '<!--' * (l.any - '-->')^0 * P('-->')^-1)
 -- Strings.
 local sq_str = l.delimited_range("'")
 local dq_str = l.delimited_range('"')
-local string = token(l.STRING, sq_str + dq_str)
+local string = l.last_char_includes('=') * token(l.STRING, sq_str + dq_str)
 
--- Tags.
-local number = token(l.NUMBER, l.digit^1 * P('%')^-1)
-local element = token('element', word_match({
+local in_tag = P(function(input, index)
+  local before = input:sub(1, index - 1)
+  local s, e = before:find('<[^>]-$'), before:find('>[^<]-$')
+  if s and e then return s > e and index or nil end
+  if s then return index end
+  return input:find('^[^<]->', index) and index or nil
+end)
+
+-- Numbers.
+local number = l.last_char_includes('=') *
+               token(l.NUMBER, l.digit^1 * P('%')^-1) * in_tag
+
+-- Elements.
+local known_element = token('element', word_match({
   'a', 'abbr', 'acronym', 'address', 'applet', 'area', 'b', 'base', 'basefont',
   'bdo', 'big', 'blockquote', 'body', 'br', 'button', 'caption', 'center',
   'cite', 'code', 'col', 'colgroup', 'dd', 'del', 'dfn', 'dir', 'div', 'dl',
@@ -32,8 +43,12 @@ local element = token('element', word_match({
   'pre', 'q', 'samp', 'script', 'select', 'small', 'span', 'strike', 'strong',
   'style', 'sub', 'sup', 's', 'table', 'tbody', 'td', 'textarea', 'tfoot', 'th',
   'thead', 'title', 'tr', 'tt', 'u', 'ul', 'var', 'xml'
-}, nil, case_insensitive_tags)) + token('unknown_element', l.word)
-local attribute = (token('attribute', ('data-' * l.alnum^1) + word_match({
+}, nil, case_insensitive_tags))
+local unknown_element = token('unknown_element', l.word)
+local element = l.last_char_includes('</') * (known_element + unknown_element)
+
+-- Attributes
+local known_attribute = token('attribute', ('data-' * l.alnum^1) + word_match({
   'abbr', 'accept-charset', 'accept', 'accesskey', 'action', 'align', 'alink',
   'alt', 'archive', 'axis', 'background', 'bgcolor', 'border', 'cellpadding',
   'cellspacing', 'char', 'charoff', 'charset', 'checked', 'cite', 'class',
@@ -54,15 +69,15 @@ local attribute = (token('attribute', ('data-' * l.alnum^1) + word_match({
   'usemap', 'valign', 'value', 'valuetype', 'version', 'vlink', 'vspace',
   'width', 'text', 'password', 'checkbox', 'radio', 'submit', 'reset', 'file',
   'hidden', 'image', 'xml', 'xmlns', 'xml:lang'
-}, '-:', case_insensitive_tags)) + token('unknown_attribute', l.word)) *
-         (ws^0 * token(l.OPERATOR, '=') * ws^0 * (string + number))^-1
-local attributes = P{attribute * (ws * V(1))^0}
-local tag_start = token('tag', '<' * P('/')^-1) * element
-local tag_end = token('tag', P('/')^-1 * '>')
-local tag = tag_start * (ws * attributes)^0 * ws^0 * tag_end^-1
+}, '-:', case_insensitive_tags))
+local unknown_attribute = token('unknown_attribute', l.word)
+local attribute = (known_attribute + unknown_attribute) * #(l.space^0 * '=')
 
--- Words.
-local word = token(l.DEFAULT, (l.any - l.space - S('<&'))^1)
+-- Tags.
+local tag = token('tag', '<' * P('/')^-1 + P('/')^-1 * '>')
+
+-- Equals.
+local equals = token(l.OPERATOR, '=') * in_tag
 
 -- Entities.
 local entity = token('entity', '&' * (l.any - l.space - ';')^1 * ';')
@@ -74,10 +89,14 @@ local doctype = token('doctype', '<!' *
 
 M._rules = {
   {'whitespace', ws},
-  {'default', word},
   {'comment', comment},
   {'doctype', doctype},
   {'tag', tag},
+  {'element', element},
+  {'attribute', attribute},
+  {'equals', equals},
+  {'string', string},
+  {'number', number},
   {'entity', entity},
 }
 
