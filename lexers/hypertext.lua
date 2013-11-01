@@ -110,16 +110,22 @@ M._tokenstyles = {
   doctype = l.STYLE_COMMENT
 }
 
+-- Tags that start embedded languages.
+M.embed_start_tag = tag * element * ws^1 * attribute * ws^0 * equals *
+                        ws^0 * string * ws^0 * tag
+M.embed_end_tag = tag * element * tag
+
 -- Embedded CSS.
 local css = l.load('css')
 local style_element = word_match({'style'}, nil, case_insensitive_tags)
 local css_start_rule = #(P('<') * style_element *
                         ('>' + P(function(input, index)
-  if input:find('^[^>]+type%s*=%s*(["\'])text/css%1', index) then
+  if input:find('^%s+type%s*=%s*(["\'])text/css%1', index) then
     return index
   end
-end))) * tag -- <style type="text/css">
-local css_end_rule = #('</' * style_element * ws^0 * '>') * tag -- </style>
+end))) * M.embed_start_tag -- <style type="text/css">
+local css_end_rule = #('</' * style_element * ws^0 * '>') *
+                     M.embed_end_tag -- </style>
 l.embed_lexer(M, css, css_start_rule, css_end_rule)
 
 -- Embedded Javascript.
@@ -127,11 +133,12 @@ local js = l.load('javascript')
 local script_element = word_match({'script'}, nil, case_insensitive_tags)
 local js_start_rule = #(P('<') * script_element *
                        ('>' + P(function(input, index)
-  if input:find('^[^>]+type%s*=%s*(["\'])text/javascript%1', index) then
+  if input:find('^%s+type%s*=%s*(["\'])text/javascript%1', index) then
     return index
   end
-end))) * tag -- <script type="text/javascript">
-local js_end_rule = #('</' * script_element * ws^0 * '>') * tag -- </script>
+end))) * M.embed_start_tag -- <script type="text/javascript">
+local js_end_rule = #('</' * script_element * ws^0 * '>') *
+                    M.embed_end_tag -- </script>
 l.embed_lexer(M, js, js_start_rule, js_end_rule)
 
 -- Embedded CoffeeScript.
@@ -141,8 +148,9 @@ local cs_start_rule = #(P('<') * script_element * P(function(input, index)
   if input:find('^[^>]+type%s*=%s*(["\'])text/coffeescript%1', index) then
     return index
   end
-end)) * tag -- <script type="text/coffeescript">
-local cs_end_rule = #('</' * script_element * ws^0 * '>') * tag -- </script>
+end)) * M.embed_start_tag -- <script type="text/coffeescript">
+local cs_end_rule = #('</' * script_element * ws^0 * '>') *
+                    M.embed_end_tag -- </script>
 l.embed_lexer(M, cs, cs_start_rule, cs_end_rule)
 
 M._foldsymbols = {

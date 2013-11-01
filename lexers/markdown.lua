@@ -16,44 +16,32 @@ local h4 = token('h4', P('####') * l.any^0)
 local h3 = token('h3', P('###') * l.any^0)
 local h2 = token('h2', P('##') * l.any^0)
 local h1 = token('h1', P('#') * l.any^0)
-local header = #P('#') * (h6 + h5 + h4 + h3 + h2 + h1)
+local header = l.starts_line(ws^0 * #P('#') * (h6 + h5 + h4 + h3 + h2 + h1))
 
 local in_blockquote
-local blockquote = token(l.STRING, P('>') * P(function(input, index)
-  in_blockquote = true
-  return index
-end) * l.any^0 + P(function(input, index)
-  return in_blockquote and index or nil
-end) * l.any^1)
+local blockquote = l.starts_line(ws^0 * token(l.STRING, P('>'))) *
+                   P(function(input, index)
+                     in_blockquote = true
+                     return index
+                   end) * token(l.STRING, l.any^0) + P(function(input, index)
+                     return in_blockquote and index or nil
+                   end) * token(l.STRING, l.any^1)
 
-local blockcode = token('code', (P(' ')^4 + P('\t')) * l.any^0)
+local blockcode = l.starts_line(token('code', (P(' ')^4 + P('\t')) * -P('<') *
+                                              l.any^0))
 
-local hr = token('hr', #S('*-_') * P(function(input, index)
+local hr = l.starts_line(ws^0 * token('hr', #S('*-_') * P(function(input, index)
   local line = input:gsub(' ', '')
   if line:find('[^\r\n*-_]') then return nil end
   if line:find('^%*%*%*') or line:find('^%-%-%-') or line:find('^___') then
     return index
   end
-end) * l.any^1)
+end) * l.any^1))
 
-local hypertext = l.load('hypertext')
-local html_rules = hypertext._RULES
---local html_rule = html_rules['whitespace'] + html_rules['default'] +
---                  html_rules['tag'] + html_rules['entity'] +
-local html_rule = html_rules['default'] + html_rules['tag'] +
-                  html_rules['entity'] + token(l.DEFAULT, l.any)
-local in_html = false
-local html = #P('<') * html_rule^1 * P(function(input, index)
-  in_html = true
-  return index
-end) + P(function(input, index)
-  return in_html and index or nil
-end) * html_rule^1
-
-local blank = token(l.DEFAULT, l.newline^1 * P(function(input, index)
-  in_blockquote = false
-  in_html = false
-end))
+local blank = l.starts_line(token(l.DEFAULT, l.newline^1 *
+                                             P(function(input, index)
+                                               in_blockquote = false
+                                             end)))
 
 -- Span elements.
 local dq_str = token(l.STRING, l.delimited_range('"', false, true))
@@ -77,22 +65,22 @@ local code = token('code', (P('``') * (l.any - '``')^0 * P('``')^-1) +
 
 local escape = token(l.DEFAULT, P('\\') * 1)
 
-local any = token(l.DEFAULT, l.any)
-
-local text_line = (ws + escape + link + strong + em + code + any)^1
-
-local list = token('list', S('*+-') + R('09') * '.') * ws * text_line
+local list = l.starts_line(ws^0 * token('list', S('*+-') + R('09') * '.') * ws)
 
 M._rules = {
   {'blank', blank},
-  {'html', html},
   {'header', header},
   {'blockquote', blockquote},
   {'blockcode', blockcode},
   {'hr', hr},
-  {'link_label', link_label},
   {'list', list},
-  {'text_line', text_line},
+  {'whitespace', ws},
+  {'link_label', link_label},
+  {'escape', escape},
+  {'link', link},
+  {'strong', strong},
+  {'em', em},
+  {'code', code},
 }
 
 M._LEXBYLINE = true
@@ -114,11 +102,14 @@ M._tokenstyles = {
   strong = 'bold',
   em = 'italics',
   list = l.STYLE_CONSTANT,
-  html = l.STYLE_EMBEDDED
 }
 
--- Do not actually embed; just load the styles.
-l.embed_lexer(M, hypertext, P(false), P(false))
+-- Embedded HTML.
+local html = l.load('hypertext')
+local start_rule = l.starts_line(ws^0 * token('tag', P('<')))
+local end_rule = token(l.WHITESPACE, P('\n'))
+l.embed_lexer(M, html, start_rule, end_rule)
+
 l.property['fold.by.indentation'] = '0' -- revert from CoffeeScript
 
 return M

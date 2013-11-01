@@ -105,7 +105,6 @@ local identifier = token(l.IDENTIFIER, l.word)
 -- Operators.
 local operator = token(l.OPERATOR, S('=+-*/<>@$~&%|!?^.:\\`()[]{},;'))
 
-
 M._rules = {
   {'whitespace', ws},
   {'keyword', keyword},
@@ -118,7 +117,6 @@ M._rules = {
   {'number', number},
   {'operator', operator},
 }
-
 
 l.property['fold.by.indentation'] = '1'
 
