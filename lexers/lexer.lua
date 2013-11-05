@@ -1123,8 +1123,9 @@ function M.fold(text, start_pos, start_line, start_level)
     return lexer._fold(text, start_pos, start_line, start_level)
   elseif fold and lexer._foldsymbols then
     local lines = {}
-    for p, l in text:gmatch('()(.-)\r?\n') do lines[#lines + 1] = {p, l} end
-    lines[#lines + 1] = {text:match('()([^\r\n]*)$')}
+    for p, l in (text..'\n'):gmatch('()(.-)\r?\n') do
+      lines[#lines + 1] = {p, l}
+    end
     local fold_symbols = lexer._foldsymbols
     local fold_symbols_patterns = fold_symbols._patterns
     local style_at = M.style_at
