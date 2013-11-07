@@ -1,10 +1,10 @@
 -- Copyright 2006-2013 Mitchell mitchell.att.foicica.com. See LICENSE.
--- C++ LPeg lexer.
+-- C LPeg lexer.
 
 local l, token, word_match = lexer, lexer.token, lexer.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = {_NAME = 'cpp'}
+local M = {_NAME = 'ansi_c'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
@@ -24,42 +24,30 @@ local number = token(l.NUMBER, l.float + l.integer)
 
 -- Preprocessor.
 local preproc_word = word_match{
-  'define', 'elif', 'else', 'endif', 'error', 'if', 'ifdef', 'ifndef', 'import',
-  'include', 'line', 'pragma', 'undef', 'using', 'warning'
+  'define', 'elif', 'else', 'endif', 'if', 'ifdef', 'ifndef', 'include', 'line',
+  'pragma', 'undef'
 }
 local preproc = token(l.PREPROCESSOR,
                       #P('#') * l.starts_line('#' * S('\t ')^0 * preproc_word))
 
 -- Keywords.
 local keyword = token(l.KEYWORD, word_match{
-  'asm', 'auto', 'break', 'case', 'catch', 'class', 'const', 'const_cast',
-  'continue', 'default', 'delete', 'do', 'dynamic_cast', 'else', 'explicit',
-  'export', 'extern', 'false', 'for', 'friend', 'goto', 'if', 'inline',
-  'mutable', 'namespace', 'new', 'operator', 'private', 'protected', 'public',
-  'register', 'reinterpret_cast', 'return', 'sizeof', 'static', 'static_cast',
-  'switch', 'template', 'this', 'throw', 'true', 'try', 'typedef', 'typeid',
-  'typename', 'using', 'virtual', 'volatile', 'while',
-  -- Operators
-  'and', 'and_eq', 'bitand', 'bitor', 'compl', 'not', 'not_eq', 'or', 'or_eq',
-  'xor', 'xor_eq',
-  -- C++11
-  'alignas', 'alignof', 'constexpr', 'decltype', 'final', 'noexcept',
-  'override', 'static_assert', 'thread_local'
+  'auto', 'break', 'case', 'const', 'continue', 'default', 'do', 'else',
+  'extern', 'for', 'goto', 'if', 'inline', 'register', 'restrict', 'return',
+  'sizeof', 'static', 'switch', 'typedef', 'volatile', 'while'
 })
 
 -- Types.
 local type = token(l.TYPE, word_match{
-  'bool', 'char', 'double', 'enum', 'float', 'int', 'long', 'short', 'signed',
-  'struct', 'union', 'unsigned', 'void', 'wchar_t',
-  -- C++11
-  'char16_t', 'char32_t', 'nullptr'
+  'char', 'double', 'enum', 'float', 'int', 'long', 'short', 'signed', 'struct',
+  'union', 'unsigned', 'void', '_Bool', '_Complex', '_Imaginary'
 })
 
 -- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
 -- Operators.
-local operator = token(l.OPERATOR, S('+-/*%<>!=^&|?~:;,.()[]{}'))
+local operator = token(l.OPERATOR, S('+-/*%<>~!=^&|?~:;,.()[]{}'))
 
 M._rules = {
   {'whitespace', ws},
@@ -75,10 +63,7 @@ M._rules = {
 
 M._foldsymbols = {
   _patterns = {'%l+', '[{}]', '/%*', '%*/', '//'},
-  [l.PREPROCESSOR] = {
-    region = 1, endregion = -1,
-    ['if'] = 1, ifdef = 1, ifndef = 1, endif = -1
-  },
+  [l.PREPROCESSOR] = {['if'] = 1, ifdef = 1, ifndef = 1, endif = -1},
   [l.OPERATOR] = {['{'] = 1, ['}'] = -1},
   [l.COMMENT] = {['/*'] = 1, ['*/'] = -1, ['//'] = l.fold_line_comments('//')}
 }

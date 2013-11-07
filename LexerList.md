@@ -5,7 +5,6 @@ native [folders][]. For languages without native folding support, folding based
 on indentation can be used if [`fold.by.indentation`][] is enabled. For SciTE,
 see `lexers/lpeg.properties`.
 
-
 1. Actionscript`*`
 1. Ada
 1. ANTLR`*`
@@ -18,8 +17,9 @@ see `lexers/lpeg.properties`.
 1. Batch`*`
 1. BibTeX`*`
 1. Boo
+1. C`*`
+1. C++`*`
 1. C#`*`
-1. C/C++`*`
 1. ChucK
 1. CMake`*`
 1. Coffeescript
