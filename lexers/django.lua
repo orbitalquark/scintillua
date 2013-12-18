@@ -54,7 +54,7 @@ M._rules = {
 }
 
 -- Embedded in HTML.
-local html = l.load('hypertext')
+local html = l.load('html')
 
 -- Embedded Django.
 local django_start_rule = token('django_tag', '{' * S('{%'))

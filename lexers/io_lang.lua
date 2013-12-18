@@ -4,7 +4,7 @@
 local l, token, word_match = lexer, lexer.token, lexer.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = {_NAME = 'Io'}
+local M = {_NAME = 'io_lang'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)

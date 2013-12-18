@@ -69,7 +69,7 @@ M._rules = {
 }
 
 -- Embedded in HTML.
-local html = l.load('hypertext')
+local html = l.load('html')
 
 -- Embedded PHP.
 local php_start_rule = token('php_tag', '<?' * ('php' * l.space)^-1)

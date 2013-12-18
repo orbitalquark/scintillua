@@ -7,7 +7,7 @@ local P, R, S = lpeg.P, lpeg.R, lpeg.S
 local M = {_NAME = 'asp'}
 
 -- Embedded in HTML.
-local html = l.load('hypertext')
+local html = l.load('html')
 
 -- Embedded VB.
 local vb = l.load('vb')

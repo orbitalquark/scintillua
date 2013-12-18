@@ -105,7 +105,7 @@ M._tokenstyles = {
 }
 
 -- Embedded HTML.
-local html = l.load('hypertext')
+local html = l.load('html')
 local start_rule = l.starts_line(ws^0 * token('tag', P('<')))
 local end_rule = token(l.WHITESPACE, P('\n'))
 l.embed_lexer(M, html, start_rule, end_rule)

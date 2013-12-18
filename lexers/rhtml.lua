@@ -7,7 +7,7 @@ local P, R, S = lpeg.P, lpeg.R, lpeg.S
 local M = {_NAME = 'rhtml'}
 
 -- Embedded in HTML.
-local html = l.load('hypertext')
+local html = l.load('html')
 
 -- Embedded Ruby.
 local ruby = l.load('rails')

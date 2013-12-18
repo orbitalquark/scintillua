@@ -515,7 +515,7 @@ local M = {}
 -- lexer object arguments to [`embed_lexer()`](#embed_lexer). For example, in
 -- the PHP lexer:
 --
---     local html = l.load('hypertext')
+--     local html = l.load('html')
 --     local php_start_rule = token('php_tag', '<?php ')
 --     local php_end_rule = token('php_tag', '?>')
 --     l.embed_lexer(html, M, php_start_rule, php_end_rule)
@@ -596,10 +596,10 @@ local M = {}
 --
 -- Any time the lexer encounters a '|' that is a "strange_token", it calls the
 -- `fold_strange_token` function to determine if '|' is a fold point. The lexer
--- calls these functions with the following arguments: the text to fold, the
--- position of the start of the current line in the text to fold, the current
--- line's text, the position in the current line the matched text starts at, and
--- the matched text itself.
+-- calls these functions with the following arguments: the text to identify fold
+-- points in, the beginning position of the current line in the text to fold,
+-- the current line's text, the position in the current line the matched text
+-- starts at, and the matched text itself.
 --
 -- [Lua patterns]: http://www.lua.org/manual/5.2/manual.html#6.4.1
 --
@@ -787,18 +787,18 @@ local M = {}
 -- @field print (pattern)
 --   A pattern that matches any printable character (' ' to '~').
 -- @field punct (pattern)
---   A pattern that matches any punctuation character not alphanumeric ('!' to
---   '/', ':' to '@', '[' to ''', '{' to '~').
+--   A pattern that matches any punctuation character ('!' to '/', ':' to '@',
+--   '[' to ''', '{' to '~').
 -- @field space (pattern)
 --   A pattern that matches any whitespace character ('\t', '\v', '\f', '\n',
 --   '\r', space).
 -- @field newline (pattern)
---   A pattern that matches any newline characters.
+--   A pattern that matches any set of end of line characters.
 -- @field nonnewline (pattern)
---   A pattern that matches any non-newline character.
+--   A pattern that matches any single, non-newline character.
 -- @field nonnewline_esc (pattern)
---   A pattern that matches any non-newline character, excluding newlines
---   escaped with '\'.
+--   A pattern that matches any single, non-newline character or any set of end
+--   of line characters escaped with '\'.
 -- @field dec_num (pattern)
 --   A pattern that matches a decimal number.
 -- @field hex_num (pattern)
@@ -806,12 +806,12 @@ local M = {}
 -- @field oct_num (pattern)
 --   A pattern that matches an octal number.
 -- @field integer (pattern)
---   A pattern that matches a decimal, hexadecimal, or octal number.
+--   A pattern that matches either a decimal, hexadecimal, or octal number.
 -- @field float (pattern)
 --   A pattern that matches a floating point number.
 -- @field word (pattern)
---   A pattern that matches a typical word starting with a letter or underscore
---   and then any alphanumeric or underscore characters.
+--   A pattern that matches a typical word. Words begin with a letter or
+--   underscore and consist of alphanumeric and underscore characters.
 -- @field FOLD_BASE (number)
 --   The initial (root) fold level.
 -- @field FOLD_BLANK (number)
@@ -991,22 +991,22 @@ for k in pairs(tokens) do
 end
 
 ---
--- Initializes or loads lexer *lexer_name* and returns the lexer object.
+-- Initializes or loads and returns the lexer of string name *name*.
 -- Scintilla calls this function to load a lexer. Parent lexers also call this
 -- function to load child lexers and vice-versa.
--- @param lexer_name The name of the lexing language.
+-- @param name The name of the lexing language.
 -- @param alt_name The alternate name of the lexing language. This is useful for
 --   embedding the same child lexer with multiple sets of start and end tokens.
 -- @return lexer object
 -- @name load
-function M.load(lexer_name, alt_name)
+function M.load(name, alt_name)
   -- Load the lexer module with its rules, styles, etc.
-  package.loaded[lexer_name] = nil
-  M.WHITESPACE = (alt_name or lexer_name)..'_whitespace'
-  local ok, lexer = pcall(require, lexer_name or 'null')
+  package.loaded[name] = nil
+  M.WHITESPACE = (alt_name or name)..'_whitespace'
+  local ok, lexer = pcall(require, name or 'null')
   if not ok then
     _G.print(lexer) -- error message
-    lexer = {_NAME = (alt_name or lexer_name)}
+    lexer = {_NAME = (alt_name or name)}
   end
   if alt_name then lexer._NAME = alt_name end
   lexer._TOKENS = tokens
@@ -1230,7 +1230,8 @@ M.float = lpeg_S('+-')^-1 *
 M.word = (M.alpha + '_') * (M.alnum + '_')^0
 
 ---
--- Creates and returns a token pattern with the name *name* and pattern *patt*.
+-- Creates and returns a token pattern with token name *name* and pattern
+-- *patt*.
 -- If *name* is not a predefined token name, its style must be defined in the
 -- lexer's `_tokenstyles` table.
 -- @param name The name of token. If this name is not a predefined token name,
@@ -1250,10 +1251,10 @@ end
 -- *chars* characters.
 -- This is a convenience function for matching more complicated delimited ranges
 -- like strings with escape characters and balanced parentheses. *single_line*
--- indicates whether or not ranges must be on a single line, *no_escape*
--- indicates whether or not to treat '\' character as an escape character, and
--- *balanced* indicates whether or not to handle balanced ranges like
--- parentheses and requires *chars* to be composed of two characters.
+-- indicates whether or not the range must be on a single line, *no_escape*
+-- indicates whether or not to ignore '\' as an escape character, and *balanced*
+-- indicates whether or not to handle balanced ranges like parentheses and
+-- requires *chars* to be composed of two characters.
 -- @param chars The character(s) that bound the matched range.
 -- @param single_line Optional flag indicating whether or not the range must be
 --   on a single line.
@@ -1306,8 +1307,8 @@ function M.starts_line(patt)
 end
 
 ---
--- Creates and returns a pattern that matches any previous non-whitespace
--- character in *s* and consumes no input.
+-- Creates and returns a pattern that verifies that string set *s* contains the
+-- first non-whitespace character behind the current match position.
 -- @param s String character set like one passed to `lpeg.S()`.
 -- @return pattern
 -- @usage local regex = l.last_char_includes('+-*!%^&|=,([{') *
@@ -1324,8 +1325,8 @@ function M.last_char_includes(s)
 end
 
 ---
--- Similar to `delimited_range()`, but allows for multi-character, nested
--- delimiters *start_chars* and *end_chars*.
+-- Returns a pattern that matches a balanced range of text that starts with
+-- string *start_chars* and ends with string *end_chars*.
 -- With single-character delimiters, this function is identical to
 -- `delimited_range(start_chars..end_chars, false, true, true)`.
 -- @param start_chars The string starting a nested sequence.
@@ -1340,10 +1341,10 @@ function M.nested_pair(start_chars, end_chars)
 end
 
 ---
--- Creates and returns a pattern that matches any word in set *words*
--- case-sensitively, unless *case_insensitive* is `true`, with the set of word
--- characters being alphanumerics, underscores, and all of the characters in
--- string *word_chars*.
+-- Creates and returns a pattern that matches any single word in list *words*.
+-- Words consist of alphanumeric and underscore characters, as well as the
+-- characters in string set *word_chars*. *case_insensitive* indicates whether
+-- or not to ignore case when matching words.
 -- This is a convenience function for simplifying a set of ordered choice word
 -- patterns.
 -- @param words A table of words.
@@ -1377,9 +1378,9 @@ function M.word_match(words, word_chars, case_insensitive)
 end
 
 ---
--- Embeds child lexer *child* in parent *parent* with *start_rule* and
--- *end_rule*, patterns that signal the beginning and end of the embedded lexer,
--- respectively.
+-- Embeds child lexer *child* in parent lexer *parent* using patterns
+-- *start_rule* and *end_rule*, which signal the beginning and end of the
+-- embedded lexer, respectively.
 -- @param parent The parent lexer.
 -- @param child The child lexer.
 -- @param start_rule The pattern that signals the beginning of the embedded
@@ -1455,8 +1456,8 @@ local function next_line_is_comment(prefix, text, pos, line, s)
 end
 
 ---
--- Returns a fold function, to be used within the lexer's `_foldsymbols` table,
--- that folds consecutive line comments beginning with string *prefix*.
+-- Returns a fold function (to be used within the lexer's `_foldsymbols` table)
+-- that folds consecutive line comments that start with string *prefix*.
 -- @param prefix The prefix string defining a line comment.
 -- @usage [l.COMMENT] = {['--'] = l.fold_line_comments('--')}
 -- @usage [l.COMMENT] = {['//'] = l.fold_line_comments('//')}
@@ -1522,8 +1523,8 @@ M.property_expanded = setmetatable({}, {
 --   This is constructed from the lexer's `_rules` table and accessible to other
 --   lexers for embedded lexer applications like modifying parent or child
 --   rules.
--- @field _LEXBYLINE Indicates the lexer matches text by whole lines instead of
---    arbitrary chunks.
+-- @field _LEXBYLINE Indicates the lexer can only process one whole line of text
+--    (instead of an arbitrary chunk of text) at a time.
 --    The default value is `false`. Line lexers cannot look ahead to subsequent
 --    lines.
 -- @class table

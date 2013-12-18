@@ -4,7 +4,7 @@
 local l, token, word_match = lexer, lexer.token, lexer.word_match
 local P, R, S, V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
 
-local M = {_NAME = 'hypertext'}
+local M = {_NAME = 'html'}
 
 case_insensitive_tags = true
 
