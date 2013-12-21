@@ -4,6 +4,66 @@
 
 [Atom Feed]: feed
 
+## 3.3.7-1 (21 Dec 2013)
+
+Scintillua 3.3.7-1 is a major change from 3.3.2-1. It has a completely new
+[theme implementation][] and many lexer structure and API changes. Custom lexers
+and themes will need to be updated.
+
+Download:
+
+* [Scintillua 3.3.7-1][]
+
+Bugfixes:
+
+* Ensure the default style is not considered a whitespace style in
+  multi-language lexers.
+* Fixed occasional crash when getting the lexer name in a multi-language lexer.
+* Disable folding when `fold` property is `0`.
+* HTML and XML lexers maintain their states better.
+* Fixed slowdown in processing long lines for folding.
+* Fixed slowdown with large HTML files.
+
+Changes:
+
+* Completely new [theme implementation][]; removed `lexer.style()` and
+  `lexer.color()` functions.
+* Changed [`lexer._tokenstyles`][] to be a map instead of a list.
+* Changed `lexer.get_fold_level()`, `lexer.get_indent_amount()`,
+  `lexer.get_property()`, and `lexer.get_style_at()` functions to be
+  [`lexer.fold_level`][], [`lexer.indent_amount`][], [`lexer.property`][], and
+  [`lexer.style_at`][] tables, respectively.
+* Added [`lexer.property_int`][] and [`lexer.property_expanded`][] tables.
+* Changed API for [`lexer.delimited_range()`][] and [`lexer.nested_pair()`][].
+* Only enable `fold.by.indentation` property by default in
+  whitespace-significant languages.
+* Updated D lexer.
+* Added Nimrod lexer.
+* Added additional parameter to [`lexer.load()`][] to allow child lexers to be
+  embedded multiple times with different start/end tokens.
+* Lexers do not need an "any\_char" [rule][] anymore; it is included by default.
+* [Child lexers][] do not need an explicit `M._lexer = parent` declaration
+  anymore; it is done automatically.
+* Added NASM Assembly lexer.
+* Separated C/C++ lexer into ANSI C and C++ lexers.
+* Added Dart lexer.
+* Renamed "hypertext" and "Io" lexers to "html" and "io\_lang" internally.
+
+[theme implementation]: api/lexer.html#Styles.and.Styling
+[Scintillua 3.3.7-1]: download/scintillua3.3.7-1.zip
+[`lexer._tokenstyles`]: api/lexer.html#Token.Styles
+[`lexer.fold_level`]: api/lexer.html#fold_level
+[`lexer.indent_amount`]: api/lexer.html#indent_amount
+[`lexer.property`]: api/lexer.html#property
+[`lexer.style_at`]: api/lexer.html#style_at
+[`lexer.property_int`]: api/lexer.html#property_int
+[`lexer.property_expanded`]: api/lexer.html#property_expanded
+[`lexer.delimited_range()`]: api/lexer.html#delimited_range
+[`lexer.nested_pair()`]: api/lexer.html#nested_pair
+[`lexer.load()`]: api/lexer.html#load
+[rule]: api/lexer.html#Rules
+[Child lexers]: api/lexer.html#Child.Lexer
+
 ## 3.3.2-1 (25 May 2013)
 
 Download:
