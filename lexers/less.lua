@@ -2,7 +2,8 @@
 -- Less CSS LPeg lexer.
 -- http://lesscss.org
 
-local l, token = lexer, lexer.token
+local l = lexer
+local token = l.token
 local S = lpeg.S
 
 local M = {_NAME = 'less'}

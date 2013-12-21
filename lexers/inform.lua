@@ -1,7 +1,8 @@
 -- Inform LPeg lexer for Scintillua.
 -- JMS 2010-04-25.
 
-local l, token, word_match = lexer, lexer.token, lexer.word_match
+local l = lexer
+local token, word_match = l.token, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
 local M = {_NAME = 'inform'}

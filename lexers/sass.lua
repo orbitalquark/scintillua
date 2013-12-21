@@ -2,7 +2,8 @@
 -- Sass CSS preprocessor LPeg lexer.
 -- http://sass-lang.com
 
-local l, token = lexer, lexer.token
+local l = lexer
+local token = l.token
 local P, S = lpeg.P, lpeg.S
 
 local M = {_NAME = 'sass'}

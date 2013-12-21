@@ -2,7 +2,8 @@
 -- AWK LPeg lexer.
 -- Modified by Wolfgang Seeberg 2012, 2013.
 
-local l, token, word_match = lexer, lexer.token, lexer.word_match
+local l = lexer
+local token, word_match = l.token, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
 local M = {_NAME = 'awk'}
