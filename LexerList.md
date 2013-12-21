@@ -10,7 +10,7 @@ see `lexers/lpeg.properties`.
 1. ANTLR`*`
 1. APDL`*`
 1. Applescript
-1. ASM`*`
+1. ASM`*` (NASM)
 1. ASP`*`
 1. AWK`*`
 1. B`*`
@@ -27,6 +27,7 @@ see `lexers/lpeg.properties`.
 1. CSS`*`
 1. CUDA`*`
 1. D`*`
+1. Dart`*`
 1. Desktop Entry
 1. Diff
 1. Django`*`

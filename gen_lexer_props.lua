@@ -14,8 +14,8 @@ local noglobs = {
 
 local alt_name = {
   actionscript = 'flash',
+  ansi_c = 'c',
   dmd = 'd',
-  hypertext = 'html',
   javascript = 'js',
   python = 'py',
   rstats = 'r',
@@ -23,28 +23,33 @@ local alt_name = {
 }
 
 -- Process file patterns and lexer definitions from Textadept.
+local f = io.open('../textadept/modules/textadept/file_types.lua')
+local definitions = f:read('*all'):match('M%.extensions = (%b{})')
+f:close()
+
 local output = {'# Lexer definitions ('}
-local lexer, ext
+local lexer, ext, last_lexer
 local exts = {}
-for line in io.lines('../textadept/modules/textadept/mime_types.conf') do
-  if line:match('^%%') then
-    if #exts > 0 then
-      local name = alt_name[lexer] or lexer
-      output[#output + 1] = format('file.patterns.%s=%s', name,
-                                   concat(exts, ';'))
-      output[#output + 1] = format('lexer.$(file.patterns.%s)=lpeg_%s', name,
-                                   lexer)
-      exts = {}
-    end
-  elseif line:match('^[^#/%s]') then
-    ext, lexer = line:match('^(%S+) (%S+)')
-    exts[#exts + 1] = not noglobs[ext] and '*.'..ext or ext
+for ext, lexer in definitions:gmatch("([^,'%]]+)'?%]?='([%w_]+)'") do
+  if lexer ~= last_lexer and #exts > 0 then
+    local name = alt_name[last_lexer] or last_lexer
+    output[#output + 1] = format('file.patterns.%s=%s', name,
+                                 concat(exts, ';'))
+    output[#output + 1] = format('lexer.$(file.patterns.%s)=lpeg_%s', name,
+                                 last_lexer)
+    exts = {}
   end
+  exts[#exts + 1] = not noglobs[ext] and '*.'..ext or ext
+  last_lexer = lexer
 end
+local name = alt_name[last_lexer] or last_lexer
+output[#output + 1] = format('file.patterns.%s=%s', name, concat(exts, ';'))
+output[#output + 1] = format('lexer.$(file.patterns.%s)=lpeg_%s', name,
+                             last_lexer)
 output[#output + 1] = '# )'
 
 -- Write to lpeg.properties.
-local f = io.open('lexers/lpeg.properties')
+f = io.open('lexers/lpeg.properties')
 local text = f:read('*all')
 text = text:gsub('# Lexer definitions %b()', table.concat(output, '\n'), 1)
 f:close()
