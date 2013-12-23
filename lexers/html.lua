@@ -113,8 +113,9 @@ M._tokenstyles = {
 }
 
 -- Tags that start embedded languages.
-M.embed_start_tag = tag * element * ws^1 * attribute * ws^0 * equals *
-                        ws^0 * string * ws^0 * tag
+M.embed_start_tag = tag * element *
+                    (ws^1 * attribute * ws^0 * equals * ws^0 * string)^0 *
+                    ws^0 * tag
 M.embed_end_tag = tag * element * tag
 
 -- Embedded CSS.
