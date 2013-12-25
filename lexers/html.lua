@@ -35,43 +35,43 @@ local number = l.last_char_includes('=') *
 
 -- Elements.
 local known_element = token('element', word_match({
-  'a', 'abbr', 'acronym', 'address', 'applet', 'area', 'b', 'base', 'basefont',
-  'bdo', 'big', 'blockquote', 'body', 'br', 'button', 'caption', 'center',
-  'cite', 'code', 'col', 'colgroup', 'dd', 'del', 'dfn', 'dir', 'div', 'dl',
-  'dt', 'em', 'fieldset', 'font', 'form', 'frame', 'frameset', 'h1', 'h2', 'h3',
-  'h4', 'h5', 'h6', 'head', 'hr', 'html', 'i', 'iframe', 'img', 'input', 'ins',
-  'isindex', 'kbd', 'label', 'legend', 'li', 'link', 'map', 'menu', 'meta',
-  'noframes', 'noscript', 'object', 'ol', 'optgroup', 'option', 'p', 'param',
-  'pre', 'q', 'samp', 'script', 'select', 'small', 'span', 'strike', 'strong',
-  'style', 'sub', 'sup', 's', 'table', 'tbody', 'td', 'textarea', 'tfoot', 'th',
-  'thead', 'title', 'tr', 'tt', 'u', 'ul', 'var', 'xml'
+  'a', 'abbr', 'address', 'area', 'article', 'aside', 'audio', 'b', 'base',
+  'bdi', 'bdo', 'blockquote', 'body', 'br', 'button', 'canvas', 'caption',
+  'cite', 'code', 'col', 'colgroup', 'content', 'data', 'datalist', 'dd',
+  'decorator', 'del', 'details', 'dfn', 'div', 'dl', 'dt', 'element', 'em',
+  'embed', 'fieldset', 'figcaption', 'figure', 'footer', 'form', 'h1', 'h2',
+  'h3', 'h4', 'h5', 'h6', 'head', 'header', 'hr', 'html', 'i', 'iframe', 'img',
+  'input', 'ins', 'kbd', 'keygen', 'label', 'legend', 'li', 'link', 'main',
+  'map', 'mark', 'menu', 'menuitem', 'meta', 'meter', 'nav', 'noscript',
+  'object', 'ol', 'optgroup', 'option', 'output', 'p', 'param', 'pre',
+  'progress', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'script', 'section',
+  'select', 'shadow', 'small', 'source', 'spacer', 'spacer', 'span', 'strong',
+  'style', 'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'template',
+  'textarea', 'tfoot', 'th', 'thead', 'time', 'title', 'tr', 'track', 'u', 'ul',
+  'var', 'video', 'wbr'
 }, nil, case_insensitive_tags))
 local unknown_element = token('unknown_element', l.word)
 local element = l.last_char_includes('</') * (known_element + unknown_element)
 
 -- Attributes
-local known_attribute = token('attribute', ('data-' * l.alnum^1) + word_match({
-  'abbr', 'accept-charset', 'accept', 'accesskey', 'action', 'align', 'alink',
-  'alt', 'archive', 'axis', 'background', 'bgcolor', 'border', 'cellpadding',
-  'cellspacing', 'char', 'charoff', 'charset', 'checked', 'cite', 'class',
-  'classid', 'clear', 'codebase', 'codetype', 'color', 'cols', 'colspan',
-  'compact', 'content', 'coords', 'data', 'datafld', 'dataformatas',
-  'datapagesize', 'datasrc', 'datetime', 'declare', 'defer', 'dir', 'disabled',
-  'enctype', 'event', 'face', 'for', 'frame', 'frameborder', 'headers',
-  'height', 'href', 'hreflang', 'hspace', 'http-equiv', 'id', 'ismap', 'label',
-  'lang', 'language', 'leftmargin', 'link', 'longdesc', 'marginwidth',
-  'marginheight', 'maxlength', 'media', 'method', 'multiple', 'name', 'nohref',
-  'noresize', 'noshade', 'nowrap', 'object', 'onblur', 'onchange', 'onclick',
-  'ondblclick', 'onfocus', 'onkeydown', 'onkeypress', 'onkeyup', 'onload',
-  'onmousedown', 'onmousemove', 'onmouseover', 'onmouseout', 'onmouseup',
-  'onreset', 'onselect', 'onsubmit', 'onunload', 'profile', 'prompt',
-  'readonly', 'rel', 'rev', 'rows', 'rowspan', 'rules', 'scheme', 'scope',
-  'selected', 'shape', 'size', 'span', 'src', 'standby', 'start', 'style',
-  'summary', 'tabindex', 'target', 'text', 'title', 'topmargin', 'type',
-  'usemap', 'valign', 'value', 'valuetype', 'version', 'vlink', 'vspace',
-  'width', 'text', 'password', 'checkbox', 'radio', 'submit', 'reset', 'file',
-  'hidden', 'image', 'xml', 'xmlns', 'xml:lang'
-}, '-:', case_insensitive_tags))
+local known_attribute = token('attribute', word_match({
+  'accept', 'accept-charset', 'accesskey', 'action', 'align', 'alt', 'async',
+  'autocomplete', 'autofocus', 'autoplay', 'bgcolor', 'border', 'buffered',
+  'challenge', 'charset', 'checked', 'cite', 'class', 'code', 'codebase',
+  'color', 'cols', 'colspan', 'content', 'contenteditable', 'contextmenu',
+  'controls', 'coords', 'data', 'data-', 'datetime', 'default', 'defer', 'dir',
+  'dirname', 'disabled', 'download', 'draggable', 'dropzone', 'enctype', 'for',
+  'form', 'headers', 'height', 'hidden', 'high', 'href', 'hreflang',
+  'http-equiv', 'icon', 'id', 'ismap', 'itemprop', 'keytype', 'kind', 'label',
+  'lang', 'language', 'list', 'loop', 'low', 'manifest', 'max', 'maxlength',
+  'media', 'method', 'min', 'multiple', 'name', 'novalidate', 'open', 'optimum',
+  'pattern', 'ping', 'placeholder', 'poster', 'preload', 'pubdate',
+  'radiogroup', 'readonly', 'rel', 'required', 'reversed', 'role', 'rows',
+  'rowspan', 'sandbox', 'spellcheck', 'scope', 'scoped', 'seamless', 'selected',
+  'shape',   'size', 'sizes', 'span', 'src', 'srcdoc', 'srclang', 'start',
+  'step', 'style', 'summary', 'tabindex', 'target', 'title', 'type', 'usemap',
+  'value', 'width', 'wrap'
+}, '-', case_insensitive_tags) + ((P('data-') + 'aria-') * (l.alnum + '-')^1))
 local unknown_attribute = token('unknown_attribute', l.word)
 local attribute = (known_attribute + unknown_attribute) * #(l.space^0 * '=')
 
@@ -106,7 +106,7 @@ M._tokenstyles = {
   tag = l.STYLE_KEYWORD,
   element = l.STYLE_KEYWORD,
   unknown_element = l.STYLE_KEYWORD..',italics',
-  attribute = l.STYLE_VARIABLE,
+  attribute = l.STYLE_TYPE,
   unknown_attribute = l.STYLE_TYPE..',italics',
   entity = l.STYLE_OPERATOR,
   doctype = l.STYLE_COMMENT
@@ -131,7 +131,7 @@ local css_end_rule = #('</' * style_element * ws^0 * '>') *
                      M.embed_end_tag -- </style>
 l.embed_lexer(M, css, css_start_rule, css_end_rule)
 
--- Embedded Javascript.
+-- Embedded JavaScript.
 local js = l.load('javascript')
 local script_element = word_match({'script'}, nil, case_insensitive_tags)
 local js_start_rule = #(P('<') * script_element *
