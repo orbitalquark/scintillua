@@ -55,6 +55,11 @@ using namespace Scintilla;
 	lua_pushvalue(l, 2), lua_setfield(l, -2, "property"); \
 	l_setmetatable(l, "sci_lexerp", mtf); \
 }
+#define l_getlexerfield(l, k) { \
+	lua_getfield(l, LUA_REGISTRYINDEX, "sci_lexer_obj"); \
+	lua_getfield(L, -1, k); \
+	lua_remove(l, -2); \
+}
 #if LUA_VERSION_NUM < 502
 #define l_openlib(f, s) \
 	(lua_pushcfunction(L, f), lua_pushstring(L, s), lua_call(L, 1, 0))
@@ -120,7 +125,7 @@ class LexerLPeg : public ILexer {
 		return false;
 	}
 
-	/** `lexer.__index` Lua metatable. */
+	/** The lexer's `__index` Lua metatable. */
 	static int llexer_property(lua_State *L) {
 		int newindex = (lua_gettop(L) == 3);
 		luaL_getmetatable(L, "sci_lexer");
@@ -170,7 +175,7 @@ class LexerLPeg : public ILexer {
 				l_pushlexerp(L, llexer_property);
 			} else {
 				int style = buffer->StyleAt(luaL_checkinteger(L, 2) - 1);
-				lua_getglobal(L, "_LEXER"), lua_getfield(L, -1, "_TOKENS");
+				l_getlexerfield(L, "_TOKENS");
 				lua_pushnil(L);
 				while (lua_next(L, -2)) { // style_name = style_num
 					if (luaL_checkinteger(L, -1) == style) break;
@@ -189,11 +194,11 @@ class LexerLPeg : public ILexer {
 	 * @param index The index the string property key.
 	 */
 	void lL_getexpanded(lua_State *L, int index) {
-		lua_getglobal(L, "lexer");
+		lua_getfield(L, LUA_REGISTRYINDEX, "_LOADED"), lua_getfield(L, -1, "lexer");
 		lua_getfield(L, -1, "property_expanded");
-		lua_pushvalue(L, (index > 0) ? index : index - 2);
+		lua_pushvalue(L, (index > 0) ? index : index - 3);
 		lua_gettable(L, -2);
-		lua_remove(L, -2), lua_remove(L, -2); // lexer, property_expanded
+		lua_replace(L, -4), lua_pop(L, 2); // lexer module, property_expanded
 	}
 
 	/**
@@ -273,18 +278,14 @@ class LexerLPeg : public ILexer {
 	}
 
 	/**
-	 * Iterates through `_LEXER._TOKENS`, setting the style properties for all
-	 * defined styles, or for SciTE, generates the set of style properties instead
-	 * of directly setting style properties.
+	 * Iterates through the lexer's `_TOKENS`, setting the style properties for
+	 * all defined styles, or for SciTE, generates the set of style properties
+	 * instead of directly setting style properties.
 	 */
 	bool SetStyles() {
-		lua_getglobal(L, "_LEXER");
-		if (!lua_istable(L, -1)) return l_error(L, "'_LEXER' table not found");
-		lua_getfield(L, -1, "_TOKENS");
-		if (!lua_istable(L, -1))
-			return l_error(L, "'_LEXER._TOKENS' table not found");
+		l_getlexerfield(L, "_TOKENS");
 #ifdef NO_SCITE
-		if (!SS || !sci) return true; // skip, but do not report an error
+		if (!SS || !sci) return (lua_pop(L, 1), true); // skip, but do not error
 		lua_pushstring(L, "style.default"), lL_getexpanded(L, -1);
 		SetStyle(STYLE_DEFAULT, lua_tostring(L, -1));
 		lua_pop(L, 2); // style and "style.default"
@@ -315,7 +316,7 @@ class LexerLPeg : public ILexer {
 			lua_pop(L, 1); // value
 		}
 #endif
-		lua_pop(L, 2); // _LEXER._TOKENS and _LEXER
+		lua_pop(L, 1); // _TOKENS
 		return true;
 	}
 
@@ -325,26 +326,19 @@ class LexerLPeg : public ILexer {
 	 * @return style name or NULL
 	 */
 	const char *GetStyleName(int style) {
+		if (!L) return NULL;
 		const char *name = NULL;
-		if (L) {
-			lua_getglobal(L, "_LEXER");
-			if (lua_istable(L, -1)) {
-				lua_getfield(L, -1, "_TOKENS");
-				if (lua_istable(L, -1)) {
-					lua_pushnil(L);
-					while (lua_next(L, -2)) { // style_name = style_num
-						if (lua_tointeger(L, -1) == style) {
-							name = lua_tostring(L, -2);
-							lua_pop(L, 2); // value and key
-							break;
-						}
-						lua_pop(L, 1); // value
-					}
-				}
-				lua_pop(L, 1); // _LEXER._TOKENS
+		l_getlexerfield(L, "_TOKENS");
+		lua_pushnil(L);
+		while (lua_next(L, -2)) { // style_name = style_num
+			if (lua_tointeger(L, -1) == style) {
+				name = lua_tostring(L, -2);
+				lua_pop(L, 2); // value and key
+				break;
 			}
-			lua_pop(L, 1); // _LEXER
+			lua_pop(L, 1); // value
 		}
+		lua_pop(L, 1); // _TOKENS
 		return name;
 	}
 
@@ -365,6 +359,9 @@ class LexerLPeg : public ILexer {
 		l_openlib(luaopen_base, LUA_BASELIBNAME);
 		l_openlib(luaopen_table, LUA_TABLIBNAME);
 		l_openlib(luaopen_string, LUA_STRLIBNAME);
+#if LUA_VERSION_NUM < 502
+		l_openlib(luaopen_io, LUA_IOLIBNAME); // for `package.searchpath()`
+#endif
 		l_openlib(luaopen_package, LUA_LOADLIBNAME);
 		lua_getglobal(L, "package");
 		lua_pushstring(L, home), lua_pushstring(L, "/?.lua"), lua_concat(L, 2);
@@ -388,8 +385,10 @@ class LexerLPeg : public ILexer {
 		lua_pushstring(L, lexer);
 		lua_setfield(L, LUA_REGISTRYINDEX, "sci_lexer_name");
 
-		if (luaL_dostring(L, "lexer=require'lexer'") != LUA_OK) return l_error(L);
-		lua_getglobal(L, "lexer");
+		lua_getglobal(L, "require");
+		lua_pushstring(L, "lexer");
+		if (lua_pcall(L, 1, 1, 0) != LUA_OK) return l_error(L);
+		lua_pushvalue(L, -1), lua_setglobal(L, "lexer"); // for Textadept 7 compat
 		l_setconstant(L, SC_FOLDLEVELBASE, "FOLD_BASE");
 		l_setconstant(L, SC_FOLDLEVELWHITEFLAG, "FOLD_BLANK");
 		l_setconstant(L, SC_FOLDLEVELHEADERFLAG, "FOLD_HEADER");
@@ -402,20 +401,22 @@ class LexerLPeg : public ILexer {
 				lua_pushstring(L, ".lua");
 				lua_concat(L, 4);
 			} else lua_pushstring(L, theme); // path to theme
-			if (luaL_dofile(L, lua_tostring(L, -1)) != LUA_OK) return l_error(L);
+			if (luaL_loadfile(L, lua_tostring(L, -1)) != LUA_OK ||
+			    lua_pcall(L, 0, 0, 0) != LUA_OK) return l_error(L);
+			lua_pop(L, 1); // theme
 		}
-		lua_settop(L, 0); // pop results from dostring and dofile
 
-		lua_getglobal(L, "lexer"), lua_getfield(L, -1, "load");
+		lua_getfield(L, -1, "load");
 		if (lua_isfunction(L, -1)) {
 			lua_getfield(L, LUA_REGISTRYINDEX, "sci_lexer_name");
-			if (lua_pcall(L, 1, 0, 0) != LUA_OK) return l_error(L);
+			if (lua_pcall(L, 1, 1, 0) != LUA_OK) return l_error(L);
 		} else return l_error(L, "'lexer.load' function not found");
-		lua_pop(L, 1); // lexer
+		lua_pushvalue(L, -1), lua_setfield(L, LUA_REGISTRYINDEX, "sci_lexer_obj");
+		lua_remove(L, -2); // lexer module
 		if (!SetStyles()) return false;
 
 		// If the lexer is a parent, it will have children in its _CHILDREN table.
-		lua_getglobal(L, "_LEXER"), lua_getfield(L, -1, "_CHILDREN");
+		lua_getfield(L, -1, "_CHILDREN");
 		if (lua_istable(L, -1)) {
 			multilang = true;
 			// Determine which styles are language whitespace styles
@@ -427,7 +428,7 @@ class LexerLPeg : public ILexer {
 				ws[i] = strstr(style_name, "whitespace") ? true : false;
 			}
 		}
-		lua_pop(L, 2); // _LEXER._CHILDREN, and _LEXER
+		lua_pop(L, 2); // _CHILDREN and lexer object
 
 		reinit = false;
 		return true;
@@ -476,11 +477,11 @@ public:
 		LexAccessor styler(buffer);
 
 		// Ensure the lexer has a grammar.
-		// This could be done in lexer.lex(), but for large files, passing string
-		// arguments from C to Lua is expensive.
-		lua_getglobal(L, "_LEXER"), lua_getfield(L, -1, "_GRAMMAR");
+		// This could be done in the lexer module's `lex()`, but for large files,
+		// passing string arguments from C to Lua is expensive.
+		l_getlexerfield(L, "_GRAMMAR");
 		int has_grammar = !lua_isnil(L, -1);
-		lua_pop(L, 2); // lexer, lexer._GRAMMAR
+		lua_pop(L, 1); // _GRAMMAR
 		if (!has_grammar) return;
 
 		// Start from the beginning of the current style so LPeg matches it.
@@ -496,26 +497,25 @@ public:
 
 		unsigned int startSeg = startPos, endSeg = startPos + lengthDoc;
 		int style = 0;
-		lua_getglobal(L, "lexer"), lua_getfield(L, -1, "lex");
+		l_getlexerfield(L, "lex")
 		if (lua_isfunction(L, -1)) {
+			lua_getfield(L, LUA_REGISTRYINDEX, "sci_lexer_obj");
 			lua_pushlstring(L, buffer->BufferPointer() + startPos, lengthDoc);
 			lua_pushinteger(L, styler.StyleAt(startPos));
-			if (lua_pcall(L, 2, 1, 0) != LUA_OK) l_error(L);
+			if (lua_pcall(L, 3, 1, 0) != LUA_OK) l_error(L);
 			// Style the text from the token table returned.
 			if (lua_istable(L, -1)) {
 				int len = lua_rawlen(L, -1);
 				if (len > 0) {
 					styler.StartAt(startPos, static_cast<char>(STYLE_MAX));
 					styler.StartSegment(startPos);
-					lua_getglobal(L, "_LEXER");
-					lua_pushstring(L, "_TOKENS"), lua_rawget(L, -2);
-					lua_remove(L, -2); // _LEXER
+					l_getlexerfield(L, "_TOKENS");
 					// Loop through token-position pairs.
 					for (int i = 1; i < len; i += 2) {
 						style = STYLE_DEFAULT;
-						lua_rawgeti(L, -2, i), lua_rawget(L, -2); // _LEXER._TOKENS[token]
+						lua_rawgeti(L, -2, i), lua_rawget(L, -2); // _TOKENS[token]
 						if (!lua_isnil(L, -1)) style = lua_tointeger(L, -1);
-						lua_pop(L, 1); // _LEXER._TOKENS[token]
+						lua_pop(L, 1); // _TOKENS[token]
 						lua_rawgeti(L, -2, i + 1); // pos
 						unsigned int position = lua_tointeger(L, -1) - 1;
 						lua_pop(L, 1); // pos
@@ -525,13 +525,12 @@ public:
 							l_error(L, "Bad style number");
 						if (position > endSeg) break;
 					}
-					lua_pop(L, 2); // _LEXER._TOKENS and token table returned
+					lua_pop(L, 2); // _TOKENS and token table returned
 					styler.ColourTo(endSeg - 1, style);
 					styler.Flush();
 				}
 			} else l_error(L, "Table of tokens expected from 'lexer.lex'");
 		} else l_error(L, "'lexer.lex' function not found");
-		lua_pop(L, 1); // lexer
 	}
 
 	/**
@@ -550,14 +549,15 @@ public:
 		lua_setfield(L, LUA_REGISTRYINDEX, "sci_buffer");
 		LexAccessor styler(buffer);
 
-		lua_getglobal(L, "lexer"), lua_getfield(L, -1, "fold");
+		l_getlexerfield(L, "fold");
 		if (lua_isfunction(L, -1)) {
+			lua_getfield(L, LUA_REGISTRYINDEX, "sci_lexer_obj");
 			int currentLine = styler.GetLine(startPos);
 			lua_pushlstring(L, buffer->BufferPointer() + startPos, lengthDoc);
 			lua_pushnumber(L, startPos);
 			lua_pushnumber(L, currentLine);
 			lua_pushnumber(L, styler.LevelAt(currentLine) & SC_FOLDLEVELNUMBERMASK);
-			if (lua_pcall(L, 4, 1, 0) != LUA_OK) l_error(L);
+			if (lua_pcall(L, 5, 1, 0) != LUA_OK) l_error(L);
 			// Fold the text from the fold table returned.
 			if (lua_istable(L, -1)) {
 				lua_pushnil(L);
@@ -574,7 +574,6 @@ public:
 				styler.SetLevel(maxline + 1, maxlevel | flagsNext);
 			} else l_error(L, "Table of folds expected from 'lexer.fold'");
 		} else l_error(L, "'lexer.fold' function not found");
-		lua_pop(L, 1); // lexer
 	}
 
 	/** Returning the version of the lexer is not implemented. */
@@ -596,19 +595,12 @@ public:
 		if (reinit) Init();
 #ifdef NO_SCITE
 		else if (L && SS && sci && strncmp(key, "style.", 6) == 0) {
-			lua_getglobal(L, "_LEXER");
-			if (lua_istable(L, -1)) {
-				lua_getfield(L, -1, "_TOKENS");
-				if (lua_istable(L, -1)) {
-					lua_pushstring(L, key + 6), lua_rawget(L, -2);
-					lua_pushstring(L, key), lL_getexpanded(L, -1), lua_replace(L, -2);
-					if (lua_isnumber(L, -2))
-						SetStyle(lua_tointeger(L, -2), lua_tostring(L, -1));
-					lua_pop(L, 2); // style and style number
-				}
-				lua_pop(L, 1); // _LEXER._TOKENS
-			}
-			lua_pop(L, 1); // _LEXER
+			l_getlexerfield(L, "_TOKENS");
+			lua_pushstring(L, key + 6), lua_rawget(L, -2);
+			lua_pushstring(L, key), lL_getexpanded(L, -1), lua_replace(L, -2);
+			if (lua_isnumber(L, -2))
+				SetStyle(lua_tointeger(L, -2), lua_tostring(L, -1));
+			lua_pop(L, 3); // style, style number, _TOKENS
 		}
 #endif
 		return -1; // no need to re-lex

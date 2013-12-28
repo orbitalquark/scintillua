@@ -3,7 +3,7 @@
 -- Modified by Brian Schott.
 -- Modified by Robert Gieseke.
 
-local l = lexer
+local l = require('lexer')
 local token, word_match = l.token, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 

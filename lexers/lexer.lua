@@ -70,7 +70,7 @@ local M = {}
 --
 --     -- ? LPeg lexer.
 --
---     local l = lexer
+--     local l = require('lexer')
 --     local token, word_match = l.token, l.word_match
 --     local P, R, S = lpeg.P, lpeg.R, lpeg.S
 --
@@ -844,10 +844,29 @@ local M = {}
 --   Table of style names at positions in the buffer starting from zero.
 module('lexer')]=]
 
-local lpeg = require 'lpeg'
+local lpeg = require('lpeg')
 local lpeg_P, lpeg_R, lpeg_S, lpeg_V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
 local lpeg_Ct, lpeg_Cc, lpeg_Cp = lpeg.Ct, lpeg.Cc, lpeg.Cp
 local lpeg_match = lpeg.match
+
+-- Table of loaded lexers.
+local lexers = {}
+
+if not package.searchpath then
+  -- Searches for the given *name* in the given *path*.
+  -- This is an implementation of Lua 5.2's `package.searchpath()` function for
+  -- Lua 5.1.
+  function package.searchpath(name, path)
+    local tried = {}
+    for part in path:gmatch('[^;]+') do
+      local filename = part:gsub('%?', name)
+      local f = io.open(filename, 'r')
+      if f then f:close() return filename end
+      tried[#tried + 1] = ("no file '%s'"):format(filename)
+    end
+    return nil, table.concat(tried, '\n')
+  end
+end
 
 -- Adds a rule to a lexer's current ordered list of rules.
 -- @param lexer The lexer to add the given rule to.
@@ -993,19 +1012,28 @@ end
 ---
 -- Initializes or loads and returns the lexer of string name *name*.
 -- Scintilla calls this function to load a lexer. Parent lexers also call this
--- function to load child lexers and vice-versa.
+-- function to load child lexers and vice-versa. The user calls this function
+-- to load a lexer when using Scintillua as a Lua library.
 -- @param name The name of the lexing language.
 -- @param alt_name The alternate name of the lexing language. This is useful for
 --   embedding the same child lexer with multiple sets of start and end tokens.
 -- @return lexer object
 -- @name load
 function M.load(name, alt_name)
+  -- When using Scintillua as a stand-alone module, the `property` and
+  -- `propery_int` tables do not exist. Create them.
+  if not M.property then
+    M.property, M.property_int = {}, setmetatable({}, {__index = function(t, k)
+      return tostring(tonumber(M.property[k]) or 0)
+    end})
+  end
   -- Load the lexer module with its rules, styles, etc.
-  package.loaded[name] = nil
+  lexers[name] = nil
   M.WHITESPACE = (alt_name or name)..'_whitespace'
-  local ok, lexer = pcall(require, name or 'null')
+  local lexer_file, error = package.searchpath(name, package.path)
+  local ok, lexer = pcall(dofile, lexer_file or '')
   if not ok then
-    _G.print(lexer) -- error message
+    _G.print(error or lexer) -- error message
     lexer = {_NAME = (alt_name or name)}
   end
   if alt_name then lexer._NAME = alt_name end
@@ -1013,9 +1041,7 @@ function M.load(name, alt_name)
   -- If the lexer is a proxy (loads parent and child lexers to embed) and does
   -- not declare a parent, try and find one and use its rules.
   if not lexer._rules and not lexer._lexer then
-    for _, l in pairs(package.loaded) do
-      if l._CHILDREN then lexer._lexer = l end
-    end
+    for _, l in pairs(lexers) do if l._CHILDREN then lexer._lexer = l end end
   end
   -- If the lexer is a proxy or a child that embedded itself, add its rules and
   -- styles to the parent lexer. Then set the parent to be the main lexer.
@@ -1044,23 +1070,22 @@ function M.load(name, alt_name)
     local patterns = lexer._foldsymbols._patterns
     for i = 1, #patterns do patterns[i] = '()('..patterns[i]..')' end
   end
-  -- Finished.
-  _G._LEXER = lexer
+  lexer.lex, lexer.fold = M.lex, M.fold
   return lexer
 end
 
 ---
--- Lexes a chunk of text *text* with an initial style number of *init_style*.
--- Called by the Scintilla lexer; **do not call from Lua**. If the lexer has a
--- `_LEXBYLINE` flag set, the text is lexed one line at a time. Otherwise the
--- text is lexed as a whole.
+-- Lexes a chunk of text *text* (that has an initial style number of
+-- *init_style*) with lexer *lexer*.
+-- If *lexer* has a `_LEXBYLINE` flag set, the text is lexed one line at a time.
+-- Otherwise the text is lexed as a whole.
+-- @param lexer The lexer object to lex with.
 -- @param text The text in the buffer to lex.
 -- @param init_style The current style. Multiple-language lexers use this to
 --   determine which language to start lexing in.
 -- @return table of token names and positions.
 -- @name lex
-function M.lex(text, init_style)
-  local lexer = _G._LEXER
+function M.lex(lexer, text, init_style)
   if not lexer._LEXBYLINE then
     -- For multilang lexers, build a new grammar whose initial_rule is the
     -- current language.
@@ -1100,23 +1125,23 @@ function M.lex(text, init_style)
 end
 
 ---
--- Folds *text*, a chunk of text starting at position *start_pos* on line number
--- *start_line* with a beginning fold level of *start_level* in the buffer.
--- Called by the Scintilla lexer; **do not call from Lua**. If the current lexer
--- has a `_fold` function or a `_foldsymbols` table, it is used to perform
+-- Folds a chunk of text *text* with lexer *lexer*.
+-- Folds *text* starting at position *start_pos* on line number *start_line*
+-- with a beginning fold level of *start_level* in the buffer. If *lexer* has a
+-- a `_fold` function or a `_foldsymbols` table, that field is used to perform
 -- folding. Otherwise, if a `fold.by.indentation` property is set, folding by
 -- indentation is done.
+-- @param lexer The lexer object to fold with.
 -- @param text The text in the buffer to fold.
 -- @param start_pos The position in the buffer *text* starts at.
 -- @param start_line The line number *text* starts on.
 -- @param start_level The fold level *text* starts on.
 -- @return table of fold levels.
 -- @name fold
-function M.fold(text, start_pos, start_line, start_level)
+function M.fold(lexer, text, start_pos, start_line, start_level)
   local folds = {}
   if text == '' then return folds end
   local fold = M.property_int['fold'] > 0
-  local lexer = _G._LEXER
   local FOLD_BASE = M.FOLD_BASE
   local FOLD_HEADER, FOLD_BLANK  = M.FOLD_HEADER, M.FOLD_BLANK
   if fold and lexer._fold then

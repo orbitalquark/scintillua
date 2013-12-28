@@ -136,6 +136,40 @@ The following properties are optional and may or may not be set:
   performance penalty for large source files when this option and folding are
   enabled. The default is `0`.
 
+### Using Scintillua as a Lua Library
+
+In order to use Scintillua as a Lua library, simply place the `lexers/`
+directory in your Lua path (or modify Lua's `package.path` accordingly),
+`require()` the library and [`load()`][] a lexer, and call that lexer's
+[`lex()`][] function. Here is an example interactive Lua session doing this:
+
+    $> lua
+    Lua 5.1.4  Copyright (C) 1994-2008 Lua.org, PUC-Rio
+    > lexer_path = '/home/mitchell/code/scintillua/lexers/?.lua'
+    > package.path = package.path..';'..lexer_path
+    > c = require('lexer').load('ansi_c')
+    > tokens = c:lex('int void main() { return 0; }')
+    > for i = 1, #tokens, 2 do print(tokens[i], tokens[i+1]) end
+    type	4
+    ansi_c_whitespace	5
+    type	9
+    ansi_c_whitespace	10
+    identifier	14
+    operator	15
+    operator	16
+    ansi_c_whitespace	17
+    operator	18
+    ansi_c_whitespace	19
+    keyword	25
+    ansi_c_whitespace	26
+    number	27
+    operator	28
+    ansi_c_whitespace	29
+    operator	30
+
+[`load()`]: api/lexer.html#load
+[`lex()`]: api/lexer.html#lex
+
 ## Compiling Scintillua with Scintilla
 
 For native LPeg support, developers can add the included `LexLPeg.cxx` Scintilla

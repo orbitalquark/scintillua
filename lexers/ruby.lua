@@ -1,7 +1,7 @@
 -- Copyright 2006-2013 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- Ruby LPeg lexer.
 
-local l = lexer
+local l = require('lexer')
 local token, word_match = l.token, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
@@ -53,19 +53,19 @@ end)
 local regex_str = l.last_char_includes('!%^&*([{-=+|:;,?<>~') *
                   l.delimited_range('/', true, false) * S('iomx')^0
 local lit_regex = '%r' * literal_delimitted * S('iomx')^0
-local string = token(l.STRING, sq_str + dq_str + lit_str + heredoc + cmd_str +
-                               lit_cmd + lit_array) +
+local string = token(l.STRING, (sq_str + dq_str + lit_str + heredoc + cmd_str +
+                                lit_cmd + lit_array) * S('f')^-1) +
                token(l.REGEX, regex_str + lit_regex)
 
 local word_char = l.alnum + S('_!?')
 
 -- Numbers.
-local dec = l.digit^1 * ('_' * l.digit^1)^0
+local dec = l.digit^1 * ('_' * l.digit^1)^0 * S('ri')^-1
 local bin = '0b' * S('01')^1 * ('_' * S('01')^1)^0
 local integer = S('+-')^-1 * (bin + l.hex_num + l.oct_num + dec)
 -- TODO: meta, control, etc. for numeric_literal.
 local numeric_literal = '?' * (l.any - l.space) * -word_char
-local number = token(l.NUMBER, l.float + integer + numeric_literal)
+local number = token(l.NUMBER, l.float * S('ri')^-1 + integer + numeric_literal)
 
 -- Keywords.
 local keyword = token(l.KEYWORD, word_match({

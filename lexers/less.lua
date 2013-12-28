@@ -2,7 +2,7 @@
 -- Less CSS LPeg lexer.
 -- http://lesscss.org
 
-local l = lexer
+local l = require('lexer')
 local token = l.token
 local S = lpeg.S
 

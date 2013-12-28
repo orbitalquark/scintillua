@@ -2,7 +2,7 @@
 -- Literate CoffeeScript LPeg lexer.
 -- http://coffeescript.org/#literate
 
-local l = lexer
+local l = require('lexer')
 local token = l.token
 local P = lpeg.P
 

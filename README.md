@@ -7,6 +7,9 @@ quickest way to add new or customized syntax highlighting and code folding for
 programming languages to any Scintilla-based text editor or IDE. Scintillua was
 designed to be dropped into or compiled with any Scintilla environment.
 
+Scintillua may also be used as a Lua library for obtaining syntax highlighting
+information of source code snippets.
+
 [Lua]: http://lua.org
 [LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
 [Scintilla]: http://scintilla.org
@@ -19,6 +22,7 @@ designed to be dropped into or compiled with any Scintilla environment.
 * Easy lexer embedding for multi-language lexers.
 * Universal color themes.
 * Comparable speed to native Scintilla lexers.
+* Can be used as a Lua library (Scintilla is not required).
 
 ## Requirements
 
@@ -26,6 +30,11 @@ Scintillua only requires Scintilla 2.25 or greater. Lua and LPeg have been
 pre-compiled into the external lexer and you can download their source files
 using the links above should you choose to compile Scintillua directly into a
 Scintilla-based application.
+
+When used a Lua library, Scintillua requires Lua 5.1 or greater and
+[LPeg 0.10.2][]. It does not work with later versions of LPeg yet.
+
+[LPeg 0.10.2]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg-0.10.2.tar.gz
 
 ## Download
 
