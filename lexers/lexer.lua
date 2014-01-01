@@ -677,6 +677,10 @@ local M = {}
 -- that inspired me, and thanks to Roberto Ierusalimschy for LPeg.
 --
 -- [lexer post]: http://lua-users.org/lists/lua-l/2007-04/msg00116.html
+-- @field LEXERPATH (string)
+--   The path used to search for a lexer to load.
+--   Identical in format to Lua's `package.path` string.
+--   The default value is `package.path`.
 -- @field DEFAULT (string)
 --   The token name for default tokens.
 -- @field WHITESPACE (string)
@@ -849,8 +853,15 @@ local lpeg_P, lpeg_R, lpeg_S, lpeg_V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
 local lpeg_Ct, lpeg_Cc, lpeg_Cp = lpeg.Ct, lpeg.Cc, lpeg.Cp
 local lpeg_match = lpeg.match
 
+M.LEXERPATH = package.path
+
 -- Table of loaded lexers.
 local lexers = {}
+
+-- Keep track of the last parent lexer loaded. This lexer's rules are used for
+-- proxy lexers (those that load parent and child lexers to embed) that do not 
+-- declare a parent lexer.
+local parent_lexer
 
 if not package.searchpath then
   -- Searches for the given *name* in the given *path*.
@@ -885,21 +896,17 @@ local function add_rule(lexer, id, rule)
   lexer._RULEORDER[#lexer._RULEORDER + 1] = id
 end
 
-local num_styles
 -- Adds a new Scintilla style to Scintilla.
 -- @param lexer The lexer to add the given style to.
 -- @param token_name The name of the token associated with this style.
 -- @param style A Scintilla style created from `style()`.
 -- @see style
 local function add_style(lexer, token_name, style)
+  local num_styles = lexer._numstyles
   if num_styles == 32 then num_styles = num_styles + 8 end -- skip predefined
   if num_styles >= 255 then print('Too many styles defined (255 MAX)') end
-  -- Since parent lexers inherit child lexer tokens and styles, ensure the style
-  -- is not added again since the child added it first.
-  if not lexer._TOKENS[token_name] then
-    lexer._TOKENS[token_name], num_styles = num_styles, num_styles + 1
-    M.property['style.'..token_name] = style
-  end
+  lexer._TOKENSTYLES[token_name], lexer._numstyles = num_styles, num_styles + 1
+  lexer._EXTRASTYLES[token_name] = style
 end
 
 -- (Re)constructs `lexer._TOKENRULE`.
@@ -953,60 +960,23 @@ local function build_grammar(lexer, initial_rule)
   end
 end
 
--- Default tokens.
--- Contains predefined token names and their associated style numbers.
--- @class table
--- @name tokens
--- @field default The default token's style (0).
--- @field whitespace The whitespace token's style (1).
--- @field comment The comment token's style (2).
--- @field string The string token's style (3).
--- @field number The number token's style (4).
--- @field keyword The keyword token's style (5).
--- @field identifier The identifier token's style (6).
--- @field operator The operator token's style (7).
--- @field error The error token's style (8).
--- @field preprocessor The preprocessor token's style (9).
--- @field constant The constant token's style (10).
--- @field variable The variable token's style (11).
--- @field function The function token's style (12).
--- @field class The class token's style (13).
--- @field type The type token's style (14).
--- @field label The label token's style (15).
--- @field regex The regex token's style (16).
-local tokens = {
-  nothing      = 0,
-  whitespace   = 1,
-  comment      = 2,
-  string       = 3,
-  number       = 4,
-  keyword      = 5,
-  identifier   = 6,
-  operator     = 7,
-  error        = 8,
-  preprocessor = 9,
-  constant     = 10,
-  variable     = 11,
-  ['function'] = 12,
-  class        = 13,
-  type         = 14,
-  label        = 15,
-  regex        = 16,
-  embedded     = 17,
-  -- Predefined styles.
-  default      = 32,
-  linenumber   = 33,
-  bracelight   = 34,
-  bracebad     = 35,
-  controlchar  = 36,
-  indentguide  = 37,
-  calltip      = 38,
-}
-num_styles = 18 -- 0 to 17 are used
 local string_upper = string.upper
-for k in pairs(tokens) do
-  local K = string_upper(k)
-  M[K], M['STYLE_'..K] = k, '$(style.'..k..')'
+-- Default styles.
+local default = {
+  'nothing', 'whitespace', 'comment', 'string', 'number', 'keyword',
+  'identifier', 'operator', 'error', 'preprocessor', 'constant', 'variable',
+  'function', 'class', 'type', 'label', 'regex', 'embedded'
+}
+for _, v in ipairs(default) do
+  M[string_upper(v)], M['STYLE_'..string_upper(v)] = v, '$(style.'..v..')'
+end
+-- Predefined styles.
+local predefined = {
+  'default', 'linenumber', 'bracelight', 'bracebad', 'controlchar',
+  'indentguide', 'calltip'
+}
+for _, v in ipairs(predefined) do
+  M[string_upper(v)], M['STYLE_'..string_upper(v)] = v, '$(style.'..v..')'
 end
 
 ---
@@ -1020,29 +990,42 @@ end
 -- @return lexer object
 -- @name load
 function M.load(name, alt_name)
+  if lexers[alt_name or name] then return lexers[alt_name or name] end
+  parent_lexer = nil -- reset
+
   -- When using Scintillua as a stand-alone module, the `property` and
-  -- `propery_int` tables do not exist. Create them.
+  -- `propery_int` tables do not exist (they are not useful). Create them to
+  -- prevent errors from occurring.
   if not M.property then
-    M.property, M.property_int = {}, setmetatable({}, {__index = function(t, k)
-      return tostring(tonumber(M.property[k]) or 0)
-    end})
+    M.property, M.property_int = {}, setmetatable({}, {
+      __index = function(t, k)
+        return tostring(tonumber(M.property[k]) or 0)
+      end,
+      __newindex = function() error('read-only property') end
+    })
   end
-  -- Load the lexer module with its rules, styles, etc.
-  lexers[name] = nil
+
+  -- Load the language lexer with its rules, styles, etc.
   M.WHITESPACE = (alt_name or name)..'_whitespace'
-  local lexer_file, error = package.searchpath(name, package.path)
+  local lexer_file, error = package.searchpath(name, M.LEXERPATH)
   local ok, lexer = pcall(dofile, lexer_file or '')
   if not ok then
     _G.print(error or lexer) -- error message
-    lexer = {_NAME = (alt_name or name)}
+    lexer = {_NAME = alt_name or name}
   end
   if alt_name then lexer._NAME = alt_name end
-  lexer._TOKENS = tokens
+
+  -- Create the initial maps for token names to style numbers and styles.
+  local token_styles = {}
+  for i = 1, #default do token_styles[default[i]] = i - 1 end
+  for i = 1, #predefined do token_styles[predefined[i]] = i + 31 end
+  lexer._TOKENSTYLES, lexer._numstyles = token_styles, #default
+  lexer._EXTRASTYLES = {}
+
   -- If the lexer is a proxy (loads parent and child lexers to embed) and does
   -- not declare a parent, try and find one and use its rules.
-  if not lexer._rules and not lexer._lexer then
-    for _, l in pairs(lexers) do if l._CHILDREN then lexer._lexer = l end end
-  end
+  if not lexer._rules and not lexer._lexer then lexer._lexer = parent_lexer end
+
   -- If the lexer is a proxy or a child that embedded itself, add its rules and
   -- styles to the parent lexer. Then set the parent to be the main lexer.
   if lexer._lexer then
@@ -1055,6 +1038,7 @@ function M.load(name, alt_name)
     for token, style in pairs(_s or {}) do l._tokenstyles[token] = style end
     lexer = l
   end
+
   -- Add the lexer's styles and build its grammar.
   if lexer._rules then
     for token, style in pairs(lexer._tokenstyles or {}) do
@@ -1065,12 +1049,15 @@ function M.load(name, alt_name)
   end
   -- Add the lexer's unique whitespace style.
   add_style(lexer, lexer._NAME..'_whitespace', M.STYLE_WHITESPACE)
+
   -- Process the lexer's fold symbols.
   if lexer._foldsymbols and lexer._foldsymbols._patterns then
     local patterns = lexer._foldsymbols._patterns
     for i = 1, #patterns do patterns[i] = '()('..patterns[i]..')' end
   end
+
   lexer.lex, lexer.fold = M.lex, M.fold
+  lexers[alt_name or name] = lexer
   return lexer
 end
 
@@ -1090,7 +1077,7 @@ function M.lex(lexer, text, init_style)
     -- For multilang lexers, build a new grammar whose initial_rule is the
     -- current language.
     if lexer._CHILDREN then
-      for style, style_num in pairs(lexer._TOKENS) do
+      for style, style_num in pairs(lexer._TOKENSTYLES) do
         if style_num == init_style then
           local lexer_name = style:match('^(.+)_whitespace') or lexer._NAME
           if lexer._INITIALRULE ~= lexer_name then
@@ -1438,6 +1425,7 @@ function M.embed_lexer(parent, child, start_rule, end_rule)
     tokenstyles[token] = style
   end
   child._lexer = parent -- use parent's tokens if child is embedding itself
+  parent_lexer = parent -- use parent's tokens if the calling lexer is a proxy
 end
 
 -- Determines if the previous line is a comment.
