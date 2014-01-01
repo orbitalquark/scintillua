@@ -93,6 +93,26 @@ function SCI_PRIVATELEXERCALL(SCI_GETDIRECTFUNCTION, SciFnDirect) end
 function SCI_PRIVATELEXERCALL(SCI_SETDOCPOINTER, sci) end
 
 ---
+-- Tells Scintillua to use `lua` as its Lua state instead of creating a separate
+-- state.
+--
+-- `lua` must have already opened the "base", "string", "table", "package", and
+-- "lpeg" libraries. If `lua` is a Lua 5.1 state, it must have also opened the
+-- "io" library.
+--
+-- Scintillua will create a single `lexer` global variable, as well as a number
+-- of other variables in the `LUA_REGISTRYINDEX` table with the "sci_" prefix.
+--
+-- Instead of including the path to Scintillua's lexers in the `package.path` of
+-- the given Lua state, set the "lexer.lpeg.home" property appropriately
+-- instead. Scintillua uses that property to find and load lexers.
+-- @param lua (`lua_State *`) The Lua state to use.
+-- @usage lua = luaL_newstate()
+-- @usage SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_CHANGELEXERSTATE, lua)
+-- @name SCI_CHANGELEXERSTATE
+function SCI_PRIVATELEXERCALL(SCI_CHANGELEXERSTATE, lua) end
+
+---
 -- Sets the current Lua LPeg lexer to `languageName`.
 --
 -- If you are having the Scintillua lexer set the Lua LPeg lexer styles
