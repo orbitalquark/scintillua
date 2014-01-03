@@ -12,6 +12,7 @@ Scintillua better and better over the years.
 * M Rawash
 * Martin Morawetz
 * Neil Hodgson
+* Olivier Guibé
 * Peter Odding
 * Robert Gieseke
 * Roberto Ierusalimschy

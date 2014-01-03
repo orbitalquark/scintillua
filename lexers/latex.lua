@@ -14,8 +14,9 @@ local ws = token(l.WHITESPACE, l.space^1)
 
 -- Comments.
 local line_comment = '%' * l.nonnewline^0
-local block_comment = '\\begin{comment}' * (l.any - '\\end{comment}')^0 *
-                      P('\\end{comment}')^-1
+local block_comment = '\\begin' * P(' ')^0 * '{comment}' *
+                      (l.any - '\\end' * P(' ')^0 * '{comment}')^0 *
+                      P('\\end' * P(' ')^0 * '{comment}')^-1
 -- Note: need block_comment before line_comment or LPeg cannot compile rule.
 local comment = token(l.COMMENT, block_comment + line_comment)
 
@@ -29,12 +30,13 @@ local section = token('section', '\\' * word_match{
 local math_word = word_match{
   'align', 'displaymath', 'eqnarray', 'equation', 'gather', 'math', 'multline'
 }
-local math_begin_end = (P('begin') + P('end')) *
+local math_begin_end = (P('begin') + P('end')) * P(' ')^0 *
                        '{' * math_word * P('*')^-1 * '}'
 local math = token('math', '$' + '\\' * (S('[]()') + math_begin_end))
 
 -- LaTeX environments.
 local environment = token('environment', '\\' * (P('begin') + P('end')) *
+                                         P(' ')^0 *
                                          '{' * l.word * P('*')^-1 * '}')
 
 -- Commands.
