@@ -1,4 +1,4 @@
--- Copyright 2006-2013 Mitchell mitchell.att.foicica.com. See LICENSE.
+-- Copyright 2006-2014 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- AWK LPeg lexer.
 -- Modified by Wolfgang Seeberg 2012, 2013.
 
