@@ -39,15 +39,15 @@ local constant = token(l.CONSTANT, word_match{
 
 -- Types.
 local type = token(l.TYPE, word_match{
-  'bool', 'byte', 'complex64', 'complex128', 'ffloat32', 'float64', 'int8',
-  'int16', 'int32', 'int64', 'string', 'uint8', 'uint16', 'uint32', 'uint64',
-  'complex', 'float', 'int', 'uint', 'uintptr'
+  'bool', 'byte', 'complex64', 'complex128', 'error', 'float32', 'float64',
+  'int', 'int8', 'int16', 'int32', 'int64', 'rune', 'string', 'uint', 'uint8',
+  'uint16', 'uint32', 'uint64', 'uintptr'
 })
 
 -- Functions.
 local func = token(l.FUNCTION, word_match{
-  'cap', 'close', 'closed', 'cmplx', 'copy', 'imag', 'len', 'make', 'new',
-  'panic', 'print', 'println', 'real'
+  'append', 'cap', 'close', 'complex', 'copy', 'delete', 'imag', 'len', 'make',
+  'new', 'panic', 'print', 'println', 'real', 'recover'
 })
 
 -- Identifiers.
