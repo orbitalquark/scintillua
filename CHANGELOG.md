@@ -4,6 +4,26 @@
 
 [Atom Feed]: feed
 
+## 3.3.9-1 (05 Feb 2014)
+
+Download:
+
+* [Scintillua 3.3.9-1][]
+
+Bugfixes:
+
+* None.
+
+Changes:
+
+* Updated HTML, LaTeX, and Go lexers.
+* Enable Scintillua to be used as a stand-alone [Lua library][].
+* Scintillua can accept and use [external Lua states][].
+
+[Scintillua 3.3.9-1]: download/scintillua3.3.9-1.zip
+[Lua library]: 01_Installation.html#Using.Scintillua.as.a.Lua.Library
+[external Lua states]: api/Scintillua.html#SCI_CHANGELEXERSTATE
+
 ## 3.3.7-1 (21 Dec 2013)
 
 Scintillua 3.3.7-1 is a major change from 3.3.2-1. It has a completely new
