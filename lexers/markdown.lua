@@ -9,6 +9,7 @@ local M = {_NAME = 'markdown'}
 
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
+local indent = P(' ')^4 + P('\t')
 
 -- Block elements.
 local h6 = token('h6', P('######') * l.any^0)
@@ -17,10 +18,12 @@ local h4 = token('h4', P('####') * l.any^0)
 local h3 = token('h3', P('###') * l.any^0)
 local h2 = token('h2', P('##') * l.any^0)
 local h1 = token('h1', P('#') * l.any^0)
-local header = l.starts_line(ws^0 * #P('#') * (h6 + h5 + h4 + h3 + h2 + h1))
+local header = #(l.space^0 * '#') *
+               l.starts_line(-indent * ws^0 * (h6 + h5 + h4 + h3 + h2 + h1))
 
 local in_blockquote
-local blockquote = l.starts_line(ws^0 * token(l.STRING, P('>'))) *
+local blockquote = #(l.space^0 * '>') *
+                   l.starts_line(ws^0 * token(l.STRING, P('>'))) *
                    P(function(input, index)
                      in_blockquote = true
                      return index
@@ -28,21 +31,21 @@ local blockquote = l.starts_line(ws^0 * token(l.STRING, P('>'))) *
                      return in_blockquote and index or nil
                    end) * token(l.STRING, l.any^1)
 
-local blockcode = l.starts_line(token('code', (P(' ')^4 + P('\t')) * -P('<') *
-                                              l.any^0))
-
-local hr = l.starts_line(ws^0 * token('hr', #S('*-_') * P(function(input, index)
-  local line = input:gsub(' ', '')
-  if line:find('[^\r\n*-_]') then return nil end
-  if line:find('^%*%*%*') or line:find('^%-%-%-') or line:find('^___') then
-    return index
-  end
-end) * l.any^1))
-
-local blank = l.starts_line(token(l.DEFAULT, l.newline^1 *
+local blank = #l.newline *
+              l.starts_line(token(l.DEFAULT, l.newline^1 *
                                              P(function(input, index)
                                                in_blockquote = false
                                              end)))
+
+local blockcode = #indent *
+                  l.starts_line(token('code', indent * -P('<') * l.any^0))
+
+local hr = #(l.space^0 * S('*-_')) *
+           l.starts_line(ws^0 * token('hr', P(function(input, index)
+             local line = input:gsub(' ', '')
+             if line:find('[^\r\n*-_]') then return nil end
+             if line:find('^([*_-])%1%1') then return index end
+           end) * l.any^1))
 
 -- Span elements.
 local dq_str = token(l.STRING, l.delimited_range('"', false, true))
@@ -66,7 +69,8 @@ local code = token('code', (P('``') * (l.any - '``')^0 * P('``')^-1) +
 
 local escape = token(l.DEFAULT, P('\\') * 1)
 
-local list = l.starts_line(ws^0 * token('list', S('*+-') + R('09') * '.') * ws)
+local list = #(l.space^0 * (S('*+-') + R('09') * '.')) *
+             l.starts_line(ws^0 * token('list', S('*+-') + R('09') * '.') * ws)
 
 M._rules = {
   {'blank', blank},
