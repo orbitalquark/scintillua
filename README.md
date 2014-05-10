@@ -18,7 +18,7 @@ information of source code snippets.
 
 * Drop-in installation in most Scintilla environments -- no modifications to
   Scintilla are necessary.
-* Support for over 80 programming languages.
+* Support for over 90 programming languages.
 * Easy lexer embedding for multi-language lexers.
 * Universal color themes.
 * Comparable speed to native Scintilla lexers.

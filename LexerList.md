@@ -80,6 +80,7 @@ see `lexers/lpeg.properties`.
 1. R
 1. REBOL`*`
 1. Rexx`*`
+1. ReStructuredText`*`
 1. RHTML`*`
 1. Ruby`*`
 1. Ruby on Rails`*`
@@ -97,5 +98,7 @@ see `lexers/lpeg.properties`.
 1. VHDL
 1. Visual Basic
 1. XML`*`
+1. YAML
+
 [folders]: api/lexer.html#Code.Folding
 [`fold.by.indentation`]: 01_Installation.html#Using.Scintillua.with.Other.Apps
