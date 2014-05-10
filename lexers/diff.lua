@@ -10,16 +10,16 @@ local M = {_NAME = 'diff'}
 -- Text, separators, and file headers.
 local index = token(l.COMMENT, 'Index: ' * l.any^0 * P(-1))
 local separator = token(l.COMMENT, ('---' + P('*')^4 + P('=')^1) * l.space^0 *
-                                   P(-1))
-local header = token('header', (P('*** ') + '--- ' + '+++ ') * l.any^1 * P(-1))
+                                   -1)
+local header = token('header', (P('*** ') + '--- ' + '+++ ') * l.any^1)
 
 -- Location.
-local location = token(l.NUMBER, ('@@' + l.digit^1 + '****') * l.any^1 * P(-1))
+local location = token(l.NUMBER, ('@@' + l.digit^1 + '****') * l.any^1)
 
 -- Additions, deletions, and changes.
-local addition = token('addition', S('>+') * l.any^0 * P(-1))
-local deletion = token('deletion', S('<-') * l.any^0 * P(-1))
-local change   = token('change', '! ' * l.any^0 * P(-1))
+local addition = token('addition', S('>+') * l.any^0)
+local deletion = token('deletion', S('<-') * l.any^0)
+local change   = token('change', '! ' * l.any^0)
 
 M._rules = {
   {'index', index},
