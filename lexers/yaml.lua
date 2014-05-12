@@ -34,7 +34,7 @@ local ts = token('timestamp', l.digit * l.digit * l.digit * l.digit * -- year
                                ':' * l.digit * l.digit * -- second
                                ('.' * l.digit^0)^-1 * -- fraction
                                ('Z' + -- timezone
-                                S(' \t')^0 * S('-+') * l.digit * l.digit^-1 * 
+                                S(' \t')^0 * S('-+') * l.digit * l.digit^-1 *
                                 (':' * l.digit * l.digit)^-1)^-1)^-1)
 
 -- Constants.
@@ -67,8 +67,8 @@ local block = S('|>') * S('+-')^-1 * (l.newline + -1) * function(input, index)
   local rest = input:sub(index)
   local level = #rest:match('^( *)')
   for pos, indent, line in rest:gmatch('() *()([^\r\n]+)') do
-    if indent - pos < level and line ~= ' ' or level == 0 and pos > 1 then 
-      return index + pos - 1 
+    if indent - pos < level and line ~= ' ' or level == 0 and pos > 1 then
+      return index + pos - 1
     end
   end
   return #input + 1
@@ -105,5 +105,7 @@ M._tokenstyles = {
   tag = l.STYLE_CLASS,
   directive = l.STYLE_PREPROCESSOR,
 }
+
+l.property['fold.by.indentation'] = '1'
 
 return M
