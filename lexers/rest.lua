@@ -221,7 +221,7 @@ M._fold = function(text, start_pos, start_line, start_level)
   for pos in (text..'\n'):gmatch('().-\r?\n') do
     line_starts[#line_starts + 1] = pos
   end
-  local style_at, CLASS, level = l.style_at, l.CLASS, start_level
+  local style_at, CONSTANT, level = l.style_at, l.CONSTANT, start_level
   local FOLD_BASE = l.FOLD_BASE
   local FOLD_HEADER, FOLD_BLANK = l.FOLD_HEADER, l.FOLD_BLANK
   for i = 1, #line_starts do
@@ -229,7 +229,7 @@ M._fold = function(text, start_pos, start_line, start_level)
     local c = text:sub(pos, pos)
     local line_num = start_line + i - 1
     folds[line_num] = level
-    if style_at[start_pos + pos] == CLASS and c:find('^[^%w%s]') then
+    if style_at[start_pos + pos] == CONSTANT and c:find('^[^%w%s]') then
       level = level - 1
       if level < FOLD_BASE then level = FOLD_BASE end
       folds[line_num - 1], folds[line_num] = level, level + FOLD_HEADER
