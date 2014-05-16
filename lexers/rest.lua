@@ -215,6 +215,10 @@ M._tokenstyles = {
   citation = 'underlined',
 }
 
+local sphinx_levels = {
+  ['#'] = 0, ['*'] = 1, ['='] = 2, ['-'] = 3, ['^'] = 4, ['"'] = 5
+}
+
 -- Section-based folding.
 M._fold = function(text, start_pos, start_line, start_level)
   local folds, line_starts = {}, {}
@@ -222,6 +226,7 @@ M._fold = function(text, start_pos, start_line, start_level)
     line_starts[#line_starts + 1] = pos
   end
   local style_at, CONSTANT, level = l.style_at, l.CONSTANT, start_level
+  local sphinx = l.property_int['fold.by.sphinx.convention'] > 0
   local FOLD_BASE = l.FOLD_BASE
   local FOLD_HEADER, FOLD_BLANK = l.FOLD_HEADER, l.FOLD_BLANK
   for i = 1, #line_starts do
@@ -230,16 +235,19 @@ M._fold = function(text, start_pos, start_line, start_level)
     local line_num = start_line + i - 1
     folds[line_num] = level
     if style_at[start_pos + pos] == CONSTANT and c:find('^[^%w%s]') then
-      level = level - 1
+      local sphinx_level = FOLD_BASE + (sphinx_levels[c] or #sphinx_levels)
+      level = not sphinx and level - 1 or sphinx_level
       if level < FOLD_BASE then level = FOLD_BASE end
       folds[line_num - 1], folds[line_num] = level, level + FOLD_HEADER
-      level = level + 1
+      level = (not sphinx and level or sphinx_level) + 1
     elseif c == '\r' or c == '\n' then
       folds[line_num] = level + FOLD_BLANK
     end
   end
   return folds
 end
+
+l.property['fold.by.sphinx.convention'] = '0'
 
 --[[ Embedded languages.
 local bash = l.load('bash')
