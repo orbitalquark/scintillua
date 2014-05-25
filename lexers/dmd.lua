@@ -34,9 +34,10 @@ local string = token(l.STRING, del_str + sq_str + dq_str + lit_str + bt_str +
 
 -- Numbers.
 local dec = l.digit^1 * ('_' * l.digit^1)^0
+local hex_num = l.hex_num * ('_' * l.xdigit^1)^0
 local bin_num = '0' * S('bB') * S('01_')^1
 local oct_num = '0' * S('01234567_')^1
-local integer = S('+-')^-1 * (l.hex_num + oct_num + bin_num + dec)
+local integer = S('+-')^-1 * (hex_num + oct_num + bin_num + dec)
 local number = token(l.NUMBER, (l.float + integer) * S('uUlLdDfFi')^-1)
 
 -- Keywords.
@@ -49,8 +50,8 @@ local keyword = token(l.KEYWORD, word_match{
   'null', 'out', 'override', 'pragma', 'private', 'protected', 'public', 'pure',
   'ref', 'return', 'scope', 'shared', 'static', 'super', 'switch',
   'synchronized', 'this', 'throw','true', 'try', 'typeid', 'typeof', 'unittest',
-  'version', 'volatile', 'while', 'with', '__gshared', '__thread', '__traits',
-  '__vector', '__parameters'
+  'version', 'virtual', 'volatile', 'while', 'with', '__gshared', '__thread',
+  '__traits', '__vector', '__parameters'
 })
 
 -- Types.
