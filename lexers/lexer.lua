@@ -859,7 +859,7 @@ M.LEXERPATH = package.path
 local lexers = {}
 
 -- Keep track of the last parent lexer loaded. This lexer's rules are used for
--- proxy lexers (those that load parent and child lexers to embed) that do not 
+-- proxy lexers (those that load parent and child lexers to embed) that do not
 -- declare a parent lexer.
 local parent_lexer
 
@@ -1171,32 +1171,29 @@ function M.fold(lexer, text, start_pos, start_line, start_level)
   elseif fold and M.property_int['fold.by.indentation'] > 0 then
     local indent_amount = M.indent_amount
     -- Indentation based folding.
-    local current_line, prev_level = start_line, start_level
-    for _, line in text:gmatch('([\t ]*)(.-)\r?\n') do
-      if line ~= '' then
-        local current_level = FOLD_BASE + indent_amount[current_line]
-        if current_level > prev_level then -- next level
-          local i = current_line - 1
-          while folds[i] and folds[i][2] == FOLD_BLANK do i = i - 1 end
-          if folds[i] then folds[i][2] = FOLD_HEADER end -- low indent
-          folds[current_line] = {current_level} -- high indent
-        elseif current_level < prev_level then -- prev level
-          if folds[current_line - 1] then
-            folds[current_line - 1][1] = prev_level -- high indent
+    local indentation = {}
+    for indent, line in (text..'\n'):gmatch('([\t ]*)([^\r\n]*)\r?\n') do
+      indentation[#indentation + 1] = line ~= '' and #indent
+    end
+    local line_num, prev_level = start_line, FOLD_BASE + (indentation[1] or 0)
+    local current_level = prev_level
+    for i = 1, #indentation do
+      if indentation[i] then
+        for j = i + 1, #indentation do
+          if indentation[j] then
+            current_level = FOLD_BASE + indentation[j]
+            break
           end
-          folds[current_line] = {current_level} -- low indent
-        else -- same level
-          folds[current_line] = {prev_level}
+        end
+        folds[line_num] = prev_level
+        if current_level > prev_level then
+          folds[line_num] = prev_level + FOLD_HEADER
         end
         prev_level = current_level
       else
-        folds[current_line] = {prev_level, FOLD_BLANK}
+        folds[line_num] = prev_level + FOLD_BLANK
       end
-      current_line = current_line + 1
-    end
-    -- Flatten.
-    for line, level in pairs(folds) do
-      folds[line] = level[1] + (level[2] or 0)
+      line_num = line_num + 1
     end
   else
     -- No folding, reset fold levels if necessary.
