@@ -252,14 +252,15 @@ class LexerLPeg : public ILexer {
 				SS(sci, SCI_STYLESETWEIGHT, num,
 				   (*option == 'u') ? weight | A_UNDERLINE : weight & ~A_UNDERLINE);
 #endif
-			} else if (streq(option, "fore")) {
-				int base = 0;
-				if (*p == '#') p++, base = 16; // #RRGGBB format
-				SS(sci, SCI_STYLESETFORE, num, static_cast<int>(strtol(p, NULL, base)));
-			} else if (streq(option, "back")) {
-				int base = 0;
-				if (*p == '#') p++, base = 16; // #RRGGBB format
-				SS(sci, SCI_STYLESETBACK, num, static_cast<int>(strtol(p, NULL, base)));
+			} else if (streq(option, "fore") || streq(option, "back")) {
+				int msg = (*option == 'f') ? SCI_STYLESETFORE : SCI_STYLESETBACK;
+				int color = static_cast<int>(strtol(p, NULL, 0));
+				if (*p == '#') { // #RRGGBB format; Scintilla format is 0xBBGGRR
+					color = static_cast<int>(strtol(p + 1, NULL, 16));
+					color = ((color & 0xFF0000) >> 16) | (color & 0xFF00) |
+					        ((color & 0xFF) << 16); // convert to 0xBBGGRR
+				}
+				SS(sci, msg, num, color);
 			} else if (streq(option, "eolfilled") || streq(option, "noteolfilled"))
 				SS(sci, SCI_STYLESETEOLFILLED, num, *option == 'e');
 			else if (streq(option, "characterset"))
