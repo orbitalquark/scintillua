@@ -994,7 +994,7 @@ function M.load(name, alt_name)
   parent_lexer = nil -- reset
 
   -- When using Scintillua as a stand-alone module, the `property` and
-  -- `propery_int` tables do not exist (they are not useful). Create them to
+  -- `property_int` tables do not exist (they are not useful). Create them to
   -- prevent errors from occurring.
   if not M.property then
     M.property, M.property_int = {}, setmetatable({}, {
