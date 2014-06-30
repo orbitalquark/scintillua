@@ -52,10 +52,10 @@ clean: ; rm -f *.o
 
 doc: manual luadoc
 manual: doc/*.md *.md | doc/bombay
-	$| -d doc -t doc --title Scintillua --navtitle Manual $^
+	$| -d doc -t doc --title Scintillua $^
 luadoc: lexers/lexer.lua scintillua.luadoc
 	$(luadoc) -d doc -t doc --doclet doc/markdowndoc $^
-cleandoc: ; rm -rf doc/manual/*.html doc/api
+cleandoc: ; rm -rf doc/manual.html doc/api.html
 
 # Releases.
 

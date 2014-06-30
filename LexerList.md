@@ -100,5 +100,5 @@ see `lexers/lpeg.properties`.
 1. XML`*`
 1. YAML
 
-[folders]: api/lexer.html#Code.Folding
-[`fold.by.indentation`]: 01_Installation.html#Using.Scintillua.with.Other.Apps
+[folders]: api.html#lexer.Code.Folding
+[`fold.by.indentation`]: manual.html#Using.Scintillua.with.Other.Apps

@@ -95,7 +95,7 @@ include, but are not limited to:
 * Python colon matching.
 * HTML/XML tag auto-completion.
 
-[write one]: api/lexer.html
+[write one]: api.html#lexer
 [submit]: README.html#Contact
 
 ### Using Scintillua with Other Apps
@@ -167,8 +167,8 @@ directory in your Lua path (or modify Lua's `package.path` accordingly),
     ansi_c_whitespace	29
     operator	30
 
-[`load()`]: api/lexer.html#load
-[`lex()`]: api/lexer.html#lex
+[`load()`]: api.html#lexer.load
+[`lex()`]: api.html#lexer.lex
 
 ## Compiling Scintillua with Scintilla
 

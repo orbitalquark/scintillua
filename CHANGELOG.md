@@ -21,8 +21,8 @@ Changes:
 * Scintillua can accept and use [external Lua states][].
 
 [Scintillua 3.3.9-1]: download/scintillua3.3.9-1.zip
-[Lua library]: 01_Installation.html#Using.Scintillua.as.a.Lua.Library
-[external Lua states]: api/Scintillua.html#SCI_CHANGELEXERSTATE
+[Lua library]: manual.html#Using.Scintillua.as.a.Lua.Library
+[external Lua states]: api.html#SCI_CHANGELEXERSTATE
 
 ## 3.3.7-1 (21 Dec 2013)
 
@@ -69,20 +69,20 @@ Changes:
 * Added Dart lexer.
 * Renamed "hypertext" and "Io" lexers to "html" and "io\_lang" internally.
 
-[theme implementation]: api/lexer.html#Styles.and.Styling
+[theme implementation]: api.html#lexer.Styles.and.Styling
 [Scintillua 3.3.7-1]: download/scintillua3.3.7-1.zip
-[`lexer._tokenstyles`]: api/lexer.html#Token.Styles
-[`lexer.fold_level`]: api/lexer.html#fold_level
-[`lexer.indent_amount`]: api/lexer.html#indent_amount
-[`lexer.property`]: api/lexer.html#property
-[`lexer.style_at`]: api/lexer.html#style_at
-[`lexer.property_int`]: api/lexer.html#property_int
-[`lexer.property_expanded`]: api/lexer.html#property_expanded
-[`lexer.delimited_range()`]: api/lexer.html#delimited_range
-[`lexer.nested_pair()`]: api/lexer.html#nested_pair
-[`lexer.load()`]: api/lexer.html#load
-[rule]: api/lexer.html#Rules
-[Child lexers]: api/lexer.html#Child.Lexer
+[`lexer._tokenstyles`]: api.html#lexer.Token.Styles
+[`lexer.fold_level`]: api.html#lexer.fold_level
+[`lexer.indent_amount`]: api.html#lexer.indent_amount
+[`lexer.property`]: api.html#lexer.property
+[`lexer.style_at`]: api.html#lexer.style_at
+[`lexer.property_int`]: api.html#lexer.property_int
+[`lexer.property_expanded`]: api.html#lexer.property_expanded
+[`lexer.delimited_range()`]: api.html#lexer.delimited_range
+[`lexer.nested_pair()`]: api.html#lexer.nested_pair
+[`lexer.load()`]: api.html#lexer.load
+[rule]: api.html#lexer.Rules
+[Child lexers]: api.html#lexer.Child.Lexer
 
 ## 3.3.2-1 (25 May 2013)
 
@@ -102,7 +102,7 @@ Changes:
 * Updated D lexer.
 
 [Scintillua 3.3.2-1]: download/scintillua3.3.2-1.zip
-[SCI\_GETLEXERLANGUAGE]: api/Scintillua.html#SCI_GETLEXERLANGUAGE
+[SCI\_GETLEXERLANGUAGE]: api.html#SCI_GETLEXERLANGUAGE
 
 ## 3.3.0-1 (31 Mar 2013)
 
@@ -177,7 +177,7 @@ Changes:
 
 [Scintillua 3.2.2-1]: download/scintillua3.2.2-1.zip
 [scinterm]: http://foicica.com/scinterm
-[`lexer.last_char_includes()`]: api/lexer.html#last_char_includes
+[`lexer.last_char_includes()`]: api.html#lexer.last_char_includes
 
 ## 3.2.1-1 (15 Jul 2012)
 
@@ -290,8 +290,8 @@ Changes:
 * Updated lexers and [API documentation][] to [Lua 5.2][].
 
 [Scintillua 3.0.2-1]: download/scintillua3.0.2-1.zip
-[tokens]: api/lexer.html#Tokens
-[API documentation]: api/lexer.html
+[tokens]: api.html#lexer.Tokens
+[API documentation]: api.html#lexer
 [Lua 5.2]: http://www.lua.org/manual/5.2/
 
 ## 3.0.0-1 (01 Nov 2011)
@@ -373,8 +373,8 @@ Changes:
   folding by indentation by default.
 
 [Scintillua 2.26-1]: download/scintillua226-1.zip
-[`get_style_at()`]: api/lexer.html#get_style_at
-[easier]: api/lexer.html#Simple.Folding
+[`get_style_at()`]: api.html#lexer.style_at
+[easier]: api.html#lexer.Code.Folding
 
 ## 2.25-1 (20 Mar 2011)
 
@@ -468,12 +468,11 @@ Bugfixes:
 
 Changes:
 
-* No need to modify parent [`_RULES`][] from child lexer.
+* No need to modify parent `_RULES` from child lexer.
 * Renamed `lexers/ocaml.lua` to `lexers/caml.lua` and `lexers/postscript.lua` to
   `lexers/ps.lua` to conform to Scintilla names.
 
 [Scintillua 2.22-pre-1]: download/scintillua222-pre-1.zip
-[`_RULES`]: api/lexer.html#_RULES
 
 ## 2.21-1 (01 Sep 2010)
 
