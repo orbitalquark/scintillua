@@ -8,7 +8,7 @@
 
 Download:
 
-* [Scintillua 3.4.4.1-1][]
+* [Scintillua 3.4.4-1][]
 
 Bugfixes:
 

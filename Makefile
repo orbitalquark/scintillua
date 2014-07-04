@@ -61,8 +61,8 @@ cleandoc: ; rm -rf doc/manual.html doc/api.html
 
 build_dir = /tmp/scibuild
 ifndef NIGHTLY
-  basedir = scintillua$(shell grep '^\#\#' CHANGELOG.md | head -1 | \
-                              cut -d ' ' -f 2)
+  basedir = scintillua_$(shell grep '^\#\#' CHANGELOG.md | head -1 | \
+                               cut -d ' ' -f 2)
 else
   basedir = scintillua_NIGHTLY_$(shell date +"%F")
 endif

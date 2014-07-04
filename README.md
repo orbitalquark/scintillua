@@ -54,7 +54,7 @@ cutting-edge versions of Scintillua. Do not use them in production, but for
 testing purposes only.
 
 [download page]: http://foicica.com/scintillua/download
-[Win32 and Linux]: download/scintilluaLATEST.zip
+[Win32 and Linux]: download/scintillua_LATEST.zip
 [Win32 and Linux Nightly]: download/scintillua_NIGHTLY.zip
 
 ## Installation and Usage
