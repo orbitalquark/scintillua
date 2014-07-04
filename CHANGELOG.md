@@ -4,6 +4,29 @@
 
 [Atom Feed]: feed
 
+## 3.4.4-1 (04 Jul 2014)
+
+Download:
+
+* [Scintillua 3.4.4.1-1][]
+
+Bugfixes:
+
+* Fixed cases of incorrect Markdown header highlighting.
+* Fixed some folding by indentation edge cases.
+* Fixed `#RRGGBB` color interpretation for styles.
+* Fixed Bash heredoc highlighting.
+
+Changes:
+
+* Added reST and YAML lexers.
+* Updated D lexer.
+* Updated to [Scintilla][]/[SciTE][] 3.4.4.
+
+[Scintillua 3.4.4-1]: download/scintillua_3.4.4-1.zip
+[Scintilla]: http://scintilla.org
+[SciTE]: http://scintilla.org/SciTE.html
+
 ## 3.3.9-1 (05 Feb 2014)
 
 Download:
