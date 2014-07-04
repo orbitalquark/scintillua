@@ -558,7 +558,7 @@ public:
 			if (lua_istable(L, -1)) {
 				int len = lua_rawlen(L, -1);
 				if (len > 0) {
-					styler.StartAt(startPos, static_cast<char>(STYLE_MAX));
+					styler.StartAt(startPos);
 					styler.StartSegment(startPos);
 					l_getlexerfield(L, "_TOKENSTYLES");
 					// Loop through token-position pairs.
