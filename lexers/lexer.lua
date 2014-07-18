@@ -848,6 +848,7 @@ module('lexer')]=]
 local lpeg = require('lpeg')
 local lpeg_P, lpeg_R, lpeg_S, lpeg_V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
 local lpeg_Ct, lpeg_Cc, lpeg_Cp = lpeg.Ct, lpeg.Cc, lpeg.Cp
+local lpeg_Cmt, lpeg_C = lpeg.Cmt, lpeg.C
 local lpeg_match = lpeg.match
 
 M.LEXERPATH = package.path
@@ -1301,15 +1302,16 @@ end
 -- beginning of a line.
 -- @param patt The LPeg pattern to match on the beginning of a line.
 -- @return pattern
--- @usage local preproc = token(l.PREPROCESSOR, #P('#') * l.starts_line('#' *
---   l.nonnewline^0))
+-- @usage local preproc = token(l.PREPROCESSOR, l.starts_line('#') *
+--   l.nonnewline^0)
 -- @name starts_line
 function M.starts_line(patt)
-  return lpeg_P(function(input, index)
-    if index == 1 then return index end
-    local char = input:sub(index - 1, index - 1)
-    if char == '\n' or char == '\r' or char == '\f' then return index end
-  end) * patt
+  return lpeg_Cmt(lpeg_C(patt), function(input, index, match, ...)
+    local pos = index - #match
+    if pos == 1 then return index, ... end
+    local char = input:sub(pos - 1, pos - 1)
+    if char == '\n' or char == '\r' or char == '\f' then return index, ... end
+  end)
 end
 
 ---
@@ -1370,17 +1372,12 @@ function M.word_match(words, word_chars, case_insensitive)
   for _, word in ipairs(words) do
     word_list[case_insensitive and word:lower() or word] = true
   end
-  local chars = '%w_'
-  -- escape 'magic' characters
-  -- TODO: append chars to the end so ^_ can be passed for not including '_'s
-  if word_chars then chars = chars..word_chars:gsub('([%^%]%-])', '%%%1') end
-  return lpeg_P(function(input, index)
-      local s, e, word = input:find('^(['..chars..']+)', index)
-      if word then
-        if case_insensitive then word = word:lower() end
-        return word_list[word] and e + 1 or nil
-      end
-    end)
+  local chars = M.alnum + '_'
+  if word_chars then chars = chars + lpeg_S(word_chars) end
+  return lpeg_Cmt(chars^1, function(input, index, word)
+    if case_insensitive then word = word:lower() end
+    return word_list[word] and index or nil
+  end)
 end
 
 ---

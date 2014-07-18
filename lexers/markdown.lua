@@ -8,44 +8,37 @@ local P, R, S = lpeg.P, lpeg.R, lpeg.S
 local M = {_NAME = 'markdown'}
 
 -- Whitespace.
-local ws = token(l.WHITESPACE, l.space^1)
-local indent = P(' ')^4 + P('\t')
+local ws = token(l.WHITESPACE, S(' \t\v')^1)
+local newline = token(l.WHITESPACE, S('\r\n\f')^1)
 
 -- Block elements.
-local h6 = token('h6', P('######') * l.any^0)
-local h5 = token('h5', P('#####') * l.any^0)
-local h4 = token('h4', P('####') * l.any^0)
-local h3 = token('h3', P('###') * l.any^0)
-local h2 = token('h2', P('##') * l.any^0)
-local h1 = token('h1', P('#') * l.any^0)
-local header = #(l.space^0 * '#') *
-               l.starts_line(-indent * ws^0 * (h6 + h5 + h4 + h3 + h2 + h1))
+local header = token('h6', l.starts_line(P('######')) * l.nonnewline^0) +
+               token('h5', l.starts_line(P('#####')) * l.nonnewline^0) +
+               token('h4', l.starts_line(P('####')) * l.nonnewline^0) +
+               token('h3', l.starts_line(P('###')) * l.nonnewline^0) +
+               token('h2', l.starts_line(P('##')) * l.nonnewline^0) +
+               token('h1', l.starts_line(P('#')) * l.nonnewline^0)
 
-local in_blockquote
-local blockquote = #(l.space^0 * '>') *
-                   l.starts_line(ws^0 * token(l.STRING, P('>'))) *
-                   P(function(input, index)
-                     in_blockquote = true
-                     return index
-                   end) * token(l.STRING, l.any^0) + P(function(input, index)
-                     return in_blockquote and index or nil
-                   end) * token(l.STRING, l.any^1)
+local blockquote = token(l.STRING,
+                         lpeg.Cmt(l.starts_line(S(' \t')^0 * '>'),
+                                  function(input, index)
+                                    local _, e = input:find('\n[ \t]*\r?\n',
+                                                            index)
+                                    return (e or #input) + 1
+                                  end))
 
-local blank = #l.newline *
-              l.starts_line(token(l.DEFAULT, l.newline^1 *
-                                             P(function(input, index)
-                                               in_blockquote = false
-                                             end)))
+local blockcode = token('code', l.starts_line(P(' ')^4 + P('\t')) * -P('<') *
+                                l.nonnewline^0)
 
-local blockcode = #indent *
-                  l.starts_line(token('code', indent * -P('<') * l.any^0))
-
-local hr = #(l.space^0 * S('*-_')) *
-           l.starts_line(ws^0 * token('hr', P(function(input, index)
-             local line = input:gsub(' ', '')
-             if line:find('[^\r\n*-_]') then return nil end
-             if line:find('^([*_-])%1%1') then return index end
-           end) * l.any^1))
+local hr = token('hr', lpeg.Cmt(l.starts_line(S(' \t')^0 * lpeg.C(S('*-_'))),
+                                function(input, index, c)
+                                  local line = input:match('[^\n]+', index)
+                                  line = line:gsub('[ \t]', '')
+                                  if line:find('[^'..c..']') or #line < 2 then
+                                    return nil
+                                  end
+                                  return (input:find('\n', index) or #input) + 1
+                                end))
 
 -- Span elements.
 local dq_str = token(l.STRING, l.delimited_range('"', false, true))
@@ -53,9 +46,9 @@ local sq_str = token(l.STRING, l.delimited_range("'", false, true))
 local paren_str = token(l.STRING, l.delimited_range('()'))
 local link = token('link', P('!')^-1 * l.delimited_range('[]') *
                            (P('(') * (l.any - S(') \t'))^0 *
-                            (l.space^1 *
+                            (S(' \t')^1 *
                              l.delimited_range('"', false, true))^-1 * ')' +
-                            l.space^0 * l.delimited_range('[]')) +
+                            S(' \t')^0 * l.delimited_range('[]')) +
                            P('http://') * (l.any - l.space)^1)
 local link_label = ws^0 * token('link_label', l.delimited_range('[]') * ':') *
                    ws * token('link_url', (l.any - l.space)^1) *
@@ -63,23 +56,24 @@ local link_label = ws^0 * token('link_label', l.delimited_range('[]') * ':') *
 
 local strong = token('strong', (P('**') * (l.any - '**')^0 * P('**')^-1) +
                                (P('__') * (l.any - '__')^0 * P('__')^-1))
-local em = token('em', l.delimited_range('*') + l.delimited_range('_'))
+local em = token('em',
+                 l.delimited_range('*', true) + l.delimited_range('_', true))
 local code = token('code', (P('``') * (l.any - '``')^0 * P('``')^-1) +
-                           l.delimited_range('`'))
+                           l.delimited_range('`', true))
 
 local escape = token(l.DEFAULT, P('\\') * 1)
 
-local list = #(l.space^0 * (S('*+-') + R('09') * '.')) *
-             l.starts_line(ws^0 * token('list', S('*+-') + R('09') * '.') * ws)
+local list = token('list',
+                   l.starts_line(S(' \t')^0 * (S('*+-') + R('09')^1 * '.')) *
+                   S(' \t'))
 
 M._rules = {
-  {'blank', blank},
   {'header', header},
   {'blockquote', blockquote},
   {'blockcode', blockcode},
   {'hr', hr},
   {'list', list},
-  {'whitespace', ws},
+  {'whitespace', ws + newline},
   {'link_label', link_label},
   {'escape', escape},
   {'link', link},
@@ -87,8 +81,6 @@ M._rules = {
   {'em', em},
   {'code', code},
 }
-
-M._LEXBYLINE = true
 
 local font_size = 10
 local hstyle = 'fore:$(color.red)'
@@ -111,8 +103,8 @@ M._tokenstyles = {
 
 -- Embedded HTML.
 local html = l.load('html')
-local start_rule = l.starts_line(ws^0 * token('tag', P('<')))
-local end_rule = token(l.WHITESPACE, P('\n'))
+local start_rule = token('tag', l.starts_line(S(' \t')^0 * '<'))
+local end_rule = token(l.DEFAULT, P('\n')) -- TODO: l.WHITESPACE causes errors
 l.embed_lexer(M, html, start_rule, end_rule)
 
 l.property['fold.by.indentation'] = '0' -- revert from CoffeeScript

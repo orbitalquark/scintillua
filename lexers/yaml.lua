@@ -9,8 +9,8 @@ local P, R, S = lpeg.P, lpeg.R, lpeg.S
 local M = {_NAME = 'yaml'}
 
 -- Whitespace.
-local indent = #S(' \t') * l.starts_line((token(l.WHITESPACE, ' ') +
-                                          token('indent_error', '\t'))^1)
+local indent = #l.starts_line(S(' \t')) *
+               (token(l.WHITESPACE, ' ') + token('indent_error', '\t'))^1
 local ws = token(l.WHITESPACE, S(' \t')^1 + l.newline^1)
 
 -- Comments.
@@ -51,11 +51,10 @@ local type = token(l.TYPE, '!!' * word_match({
 }, nil, true) + '!' * l.delimited_range('<>'))
 
 -- Document boundaries.
-local doc_bounds = token('document', #S('-.') * l.starts_line(P('---') + '...'))
+local doc_bounds = token('document', l.starts_line(P('---') + '...'))
 
 -- Directives
-local directive = token('directive',
-                        #P('%') * l.starts_line('%' * l.nonnewline^1))
+local directive = token('directive', l.starts_line('%') * l.nonnewline^1)
 
 local word = (l.alpha + '-' * -l.space) * (l.alnum + '-')^0
 

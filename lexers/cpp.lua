@@ -29,7 +29,7 @@ local preproc_word = word_match{
   'include', 'line', 'pragma', 'undef', 'using', 'warning'
 }
 local preproc = token(l.PREPROCESSOR,
-                      #P('#') * l.starts_line('#' * S('\t ')^0 * preproc_word))
+                      l.starts_line('#') * S('\t ')^0 * preproc_word)
 
 -- Keywords.
 local keyword = token(l.KEYWORD, word_match{

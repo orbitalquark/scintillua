@@ -75,7 +75,7 @@ local func = token(l.FUNCTION, l.delimited_range('%', true, true))
 local operator = token(l.OPERATOR, S('+-*/$=,;()'))
 
 -- Labels.
-local label = token(l.LABEL, #P(':') * l.starts_line(':' * l.word))
+local label = token(l.LABEL, l.starts_line(':') * l.word)
 
 M._rules = {
   {'whitespace', ws},

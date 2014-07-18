@@ -31,7 +31,7 @@ lua_objs = lapi.o lcode.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o \
            lundump.o lvm.o lzio.o \
            lauxlib.o lbaselib.o ldblib.o liolib.o lmathlib.o ltablib.o \
            lstrlib.o loadlib.o loslib.o linit.o
-lua_lib_objs = lpeg.o
+lua_lib_objs = lpcap.o lpcode.o lpprint.o lptree.o lpvm.o
 
 # Build.
 
@@ -83,7 +83,7 @@ release: $(basedir) | $(build_dir)
 
 scintilla_tgz = scintilla344.tgz
 lua_tgz = lua-5.1.4.tar.gz
-lpeg_tgz = lpeg-0.10.2.tar.gz
+lpeg_tgz = lpeg-0.12.tar.gz
 bombay_zip = bombay.zip
 
 $(scintilla_tgz): ; wget "http://prdownloads.sourceforge.net/scintilla/$@"

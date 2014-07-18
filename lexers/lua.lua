@@ -11,13 +11,11 @@ local M = {_NAME = 'lua'}
 -- Whitespace.
 local ws = token(l.WHITESPACE, l.space^1)
 
-local longstring = #('[[' + ('[' * P('=')^0 * '[')) * P(function(input, index)
-  local level = input:match('^%[(=*)%[', index)
-  if level then
-    local _, stop = input:find(']'..level..']', index, true)
-    return stop and stop + 1 or #input + 1
-  end
-end)
+local longstring = lpeg.Cmt('[' * lpeg.C(P('=')^0) * '[',
+                            function(input, index, eq)
+                              local _, e = input:find(']'..eq..']', index, true)
+                              return (e or #input) + 1
+                            end)
 
 -- Comments.
 local line_comment = '--' * l.nonnewline^0

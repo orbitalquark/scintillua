@@ -11,10 +11,10 @@ local M = {_NAME = 'fortran'}
 local ws = token(l.WHITESPACE, l.space^1)
 
 -- Comments.
-local c_comment = #S('Cc') * l.starts_line(S('Cc') * l.nonnewline^0)
-local d_comment = #S('Dd') * l.starts_line(S('Dd') * l.nonnewline^0)
-local ex_comment = #P('!') * l.starts_line('!' * l.nonnewline^0)
-local ast_comment = #P('*') * l.starts_line('*' * l.nonnewline^0)
+local c_comment = l.starts_line(S('Cc')) * l.nonnewline^0
+local d_comment = l.starts_line(S('Dd')) * l.nonnewline^0
+local ex_comment = l.starts_line('!') * l.nonnewline^0
+local ast_comment = l.starts_line('*') * l.nonnewline^0
 local line_comment = '!' * l.nonnewline^0
 local comment = token(l.COMMENT, c_comment + d_comment + ex_comment +
                       ast_comment + line_comment)

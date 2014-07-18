@@ -104,8 +104,7 @@ local identifier = token(l.IDENTIFIER, l.word)
 local operator = token(l.OPERATOR, S('!%^&*()[]{}-=+/|:;.,?<>~`'))
 
 -- Decorators.
-local decorator = token('decorator',
-                        #P('@') * l.starts_line('@' * l.nonnewline^0))
+local decorator = token('decorator', l.starts_line('@') * l.nonnewline^0)
 
 M._rules = {
   {'whitespace', ws},

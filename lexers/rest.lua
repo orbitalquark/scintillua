@@ -12,29 +12,27 @@ local ws = token(l.WHITESPACE, S(' \t')^1 + l.newline^1)
 local any_indent = S(' \t')^0
 
 -- Section titles (2 or more characters).
-local adornment_chars = S('!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')
-local adornment = adornment_chars^2 * any_indent * (l.newline + -1)
-local overline_title = #adornment * starts_line(function(input, index)
+local adornment_chars = lpeg.C(S('!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'))
+local adornment = lpeg.C(adornment_chars^2 * any_indent) * (l.newline + -1)
+local overline = lpeg.Cmt(starts_line(adornment), function(input, index, adm, c)
+  if not adm:find('^%'..c..'+%s*$') then return nil end
   local rest = input:sub(index)
-  local adornment, char = rest:match('^(([^\r\n])[^ \t\r\n]+)')
-  if not adornment:find('^%'..char..'+%s*$') then return nil end
   local lines = 1
   for line, e in rest:gmatch('([^\r\n]+)()') do
-    if lines > 1 and line:match('^(%'..char..'+)%s*$') == adornment then
+    if lines > 1 and line:match('^(%'..c..'+)%s*$') == adm then
       return index + e - 1
     end
-    if lines > 3 or #line > #adornment then return nil end
+    if lines > 3 or #line > #adm then return nil end
     lines = lines + 1
   end
   return #input + 1
 end)
-local underline_title = #adornment * starts_line(function(input, index)
-  local adornment, char = input:match('^(([^\r\n])[^ \t\r\n]+)', index)
-  local pos = adornment:match('^%'..char..'+()%s*$')
-  return pos and index + pos - 1 or nil
+local underline = lpeg.Cmt(starts_line(adornment), function(_, index, adm, c)
+  local pos = adm:match('^%'..c..'+()%s*$')
+  return pos and index - #adm + pos - 1 or nil
 end)
 -- Token needs to be a predefined one in order for folder to work.
-local title = token(l.CONSTANT, overline_title + underline_title)
+local title = token(l.CONSTANT, overline + underline)
 
 -- Lists.
 local bullet_list = S('*+-') -- TODO: '•‣⁃', as lpeg does not support UTF-8
@@ -65,8 +63,7 @@ end
 local literal_block = token('literal_block', block)
 
 -- Line block.
-local line_block_char = #(any_indent * '|') *
-                        token(l.OPERATOR, starts_line(any_indent * '|'))
+local line_block_char = token(l.OPERATOR, starts_line(any_indent * '|'))
 
 local word = l.alpha * (l.alnum + S('-.+'))^0
 
