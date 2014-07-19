@@ -13,7 +13,7 @@ local ws = token(l.WHITESPACE, l.space^1)
 -- Comments.
 local line_comment = '#' * l.nonnewline_esc^0
 local block_comment = l.starts_line('=') * l.alpha *
-                     (l.any - l.newline * '=cut')^0 * (l.newline * '=cut')^-1
+                      (l.any - l.newline * '=cut')^0 * (l.newline * '=cut')^-1
 local comment = token(l.COMMENT, block_comment + line_comment)
 
 local delimiter_matches = {['('] = ')', ['['] = ']', ['{'] = '}', ['<'] = '>'}

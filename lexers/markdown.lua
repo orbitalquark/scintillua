@@ -12,12 +12,12 @@ local ws = token(l.WHITESPACE, S(' \t\v')^1)
 local newline = token(l.WHITESPACE, S('\r\n\f')^1)
 
 -- Block elements.
-local header = token('h6', l.starts_line(P('######')) * l.nonnewline^0) +
-               token('h5', l.starts_line(P('#####')) * l.nonnewline^0) +
-               token('h4', l.starts_line(P('####')) * l.nonnewline^0) +
-               token('h3', l.starts_line(P('###')) * l.nonnewline^0) +
-               token('h2', l.starts_line(P('##')) * l.nonnewline^0) +
-               token('h1', l.starts_line(P('#')) * l.nonnewline^0)
+local header = token('h6', l.starts_line('######') * l.nonnewline^0) +
+               token('h5', l.starts_line('#####') * l.nonnewline^0) +
+               token('h4', l.starts_line('####') * l.nonnewline^0) +
+               token('h3', l.starts_line('###') * l.nonnewline^0) +
+               token('h2', l.starts_line('##') * l.nonnewline^0) +
+               token('h1', l.starts_line('#') * l.nonnewline^0)
 
 local blockquote = token(l.STRING,
                          lpeg.Cmt(l.starts_line(S(' \t')^0 * '>'),
