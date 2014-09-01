@@ -20,6 +20,7 @@ Changes:
 * Updated to [Scintilla][]/[SciTE][] 3.5.0.
 
 [Scintillua 3.5.0-1]: download/scintillua_3.5.0-1.zip
+[LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
 [Scintilla]: http://scintilla.org
 [SciTE]: http://scintilla.org/SciTE.html
 
