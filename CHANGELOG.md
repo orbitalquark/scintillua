@@ -4,6 +4,25 @@
 
 [Atom Feed]: feed
 
+## 3.5.0-1 (01 Sep 2014)
+
+Download:
+
+* [Scintillua 3.5.0-1][]
+
+Bugfixes:
+
+* None.
+
+Changes:
+
+* Updated to [LPeg][] 0.12.
+* Updated to [Scintilla][]/[SciTE][] 3.5.0.
+
+[Scintillua 3.5.0-1]: download/scintillua_3.5.0-1.zip
+[Scintilla]: http://scintilla.org
+[SciTE]: http://scintilla.org/SciTE.html
+
 ## 3.4.4-1 (04 Jul 2014)
 
 Download:
