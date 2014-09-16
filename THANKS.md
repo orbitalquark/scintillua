@@ -15,6 +15,7 @@ Scintillua better and better over the years.
 * Neil Hodgson
 * Olivier Guibé
 * Peter Odding
+* Piotr Orzechowski
 * Robert Gieseke
 * Roberto Ierusalimschy
 * Tymur Gubayev
