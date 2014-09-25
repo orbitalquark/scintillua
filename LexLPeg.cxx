@@ -533,7 +533,14 @@ public:
 		l_getlexerfield(L, "_GRAMMAR");
 		int has_grammar = !lua_isnil(L, -1);
 		lua_pop(L, 1); // _GRAMMAR
-		if (!has_grammar) return;
+		if (!has_grammar) {
+			// Style everything in the default style.
+			styler.StartAt(startPos);
+			styler.StartSegment(startPos);
+			styler.ColourTo(startPos + lengthDoc - 1, STYLE_DEFAULT);
+			styler.Flush();
+			return;
+		}
 
 		// Start from the beginning of the current style so LPeg matches it.
 		// For multilang lexers, start at whitespace since embedded languages have
