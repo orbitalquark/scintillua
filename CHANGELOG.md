@@ -4,6 +4,26 @@
 
 [Atom Feed]: feed
 
+## 3.5.1-1 (01 Oct 2014)
+
+Download:
+
+* [Scintillua 3.5.1-1][]
+
+Bugfixes:
+
+* None.
+
+Changes:
+
+* Added Xtend lexer.
+* Improved performance for lexers with no grammars and no fold rules.
+* Updated to [Scintilla][]/[SciTE][] 3.5.1.
+
+[Scintillua 3.5.1-1]: download/scintillua_3.5.1-1.zip
+[Scintilla]: http://scintilla.org
+[SciTE]: http://scintilla.org/SciTE.html
+
 ## 3.5.0-1 (01 Sep 2014)
 
 Download:
