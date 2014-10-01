@@ -1196,7 +1196,7 @@ function M.fold(lexer, text, start_pos, start_line, start_level)
   else
     -- No folding, reset fold levels if necessary.
     local current_line = start_line
-    for _ in text:gmatch(".-\r?\n") do
+    for _ in text:gmatch('\r?\n') do
       folds[current_line] = start_level
       current_line = current_line + 1
     end
