@@ -549,7 +549,8 @@ public:
 		if (startPos > 0) {
 			int i = startPos;
 			while (i > 0 && styler.StyleAt(i - 1) == initStyle) i--;
-			if (multilang) while (i > 0 && !ws[styler.StyleAt(i)]) i--;
+			if (multilang)
+        while (i > 0 && !ws[static_cast<size_t>(styler.StyleAt(i))]) i--;
 			lengthDoc += startPos - i, startPos = i;
 		}
 

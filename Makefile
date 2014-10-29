@@ -21,7 +21,7 @@ endif
 
 # Scintilla.
 sci_flags = -g -pedantic $(plat_flag) -Iscintilla/include -Iscintilla/lexlib \
-            -DSCI_LEXER -Wall -Wno-missing-braces -Wno-char-subscripts
+            -DSCI_LEXER -Wall
 lex_objs = PropSetSimple.o WordList.o LexerModule.o LexerSimple.o LexerBase.o \
            Accessor.o
 
@@ -40,8 +40,8 @@ win32: $(lexer)
 deps: scintilla lua lua/src/lib/lpeg doc/bombay
 
 $(lex_objs): %.o: scintilla/lexlib/%.cxx ; $(CPP) $(sci_flags) -c $<
-$(lua_objs): %.o: lua/src/%.c ; $(CC) -Ilua/src $(LUA_CFLAGS) -c $<
-$(lua_lib_objs): %.o: lua/src/lib/%.c ; $(CC) -Ilua/src $(LUA_CFLAGS) -c $<
+$(lua_objs): %.o: lua/src/%.c ; $(CC) -Os -Ilua/src $(LUA_CFLAGS) -c $<
+$(lua_lib_objs): %.o: lua/src/lib/%.c ; $(CC) -Os -Ilua/src $(LUA_CFLAGS) -c $<
 LexLPeg.o: LexLPeg.cxx
 	$(CPP) $(sci_flags) $(LUA_CFLAGS) -DLPEG_LEXER_EXTERNAL -Ilua/src -c $<
 $(lexer): $(lex_objs) $(lua_objs) $(lua_lib_objs) LexLPeg.o
@@ -81,7 +81,7 @@ release: $(basedir) | $(build_dir)
 
 # External dependencies.
 
-scintilla_tgz = scintilla344.tgz
+scintilla_tgz = scintilla351.tgz
 lua_tgz = lua-5.1.4.tar.gz
 lpeg_tgz = lpeg-0.12.tar.gz
 bombay_zip = bombay.zip
