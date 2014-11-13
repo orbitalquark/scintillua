@@ -9,6 +9,7 @@ Scintillua better and better over the years.
 * Brian Schott
 * Chris Emerson
 * Jeff Stone
+* Joshua Krämer
 * Klaus Borges
 * M Rawash
 * Martin Morawetz
