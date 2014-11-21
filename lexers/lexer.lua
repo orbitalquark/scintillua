@@ -824,7 +824,7 @@ local M = {}
 --   Fold level masks are composed of an integer level combined with any of the
 --   following bits:
 --
---   * `lexer.FOLDBASE`
+--   * `lexer.FOLD_BASE`
 --     The initial fold level.
 --   * `lexer.FOLD_BLANK`
 --     The line is blank.
@@ -1136,28 +1136,46 @@ function M.fold(lexer, text, start_pos, start_line, start_level)
     for p, l in (text..'\n'):gmatch('()(.-)\r?\n') do
       lines[#lines + 1] = {p, l}
     end
+    local fold_zero_sum_lines = M.property_int['fold.on.zero.sum.lines'] > 0
     local fold_symbols = lexer._foldsymbols
     local fold_symbols_patterns = fold_symbols._patterns
-    local style_at = M.style_at
+    local style_at, fold_level = M.style_at, M.fold_level
     local line_num, prev_level = start_line, start_level
     local current_level = prev_level
     for i = 1, #lines do
       local pos, line = lines[i][1], lines[i][2]
       if line ~= '' then
+        local level_decreased = false
         for j = 1, #fold_symbols_patterns do
           for s, match in line:gmatch(fold_symbols_patterns[j]) do
             local symbols = fold_symbols[style_at[start_pos + pos + s - 1]]
             local l = symbols and symbols[match]
+            if type(l) == 'function' then l = l(text, pos, line, s, match) end
             if type(l) == 'number' then
               current_level = current_level + l
-            elseif type(l) == 'function' then
-              current_level = current_level + l(text, pos, line, s, match)
+              if l < 0 and current_level < prev_level then
+                -- Potential zero-sum line. If the level were to go back up on
+                -- the same line, the line may be marked as a fold header.
+                level_decreased = true
+              end
             end
           end
         end
         folds[line_num] = prev_level
         if current_level > prev_level then
           folds[line_num] = prev_level + FOLD_HEADER
+        elseif level_decreased and current_level == prev_level and
+               fold_zero_sum_lines then
+          if line_num > start_line then
+            folds[line_num] = prev_level - 1 + FOLD_HEADER
+          else
+            -- Typing within a zero-sum line.
+            local level = fold_level[line_num - 1] - 1
+            if level > FOLD_HEADER then level = level - FOLD_HEADER end
+            if level > FOLD_BLANK then level = level - FOLD_BLANK end
+            folds[line_num] = level + FOLD_HEADER
+            current_level = current_level + 1
+          end
         end
         if current_level < FOLD_BASE then current_level = FOLD_BASE end
         prev_level = current_level

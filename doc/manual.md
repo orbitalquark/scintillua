@@ -136,6 +136,12 @@ The following properties are optional and may or may not be set:
   performance penalty for large source files when this option and folding are
   enabled. The default is `0`.
 
+* `fold.on.zero.sum.lines`
+
+  If `fold.on.zero.sum.lines` is set to `1`, lines that contain both an ending
+  and starting fold point are marked as fold points. For example, the C line
+  `} else {` would be marked as a fold point. The default is `0`.
+
 ### Using Scintillua as a Lua Library
 
 In order to use Scintillua as a Lua library, simply place the `lexers/`
