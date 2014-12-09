@@ -1185,12 +1185,20 @@ function M.fold(lexer, text, start_pos, start_line, start_level)
       line_num = line_num + 1
     end
   elseif fold and M.property_int['fold.by.indentation'] > 0 then
-    local indent_amount = M.indent_amount
     -- Indentation based folding.
+    -- Calculate indentation per line.
     local indentation = {}
     for indent, line in (text..'\n'):gmatch('([\t ]*)([^\r\n]*)\r?\n') do
       indentation[#indentation + 1] = line ~= '' and #indent
     end
+    -- Make line before start_line a fold header if necessary.
+    if start_line > 0 and indentation[1] then
+      local indent = M.indent_amount[start_line - 1]
+      if indentation[1] > indent then
+        folds[start_line - 1] = FOLD_BASE + indent + FOLD_HEADER
+      end
+    end
+    -- Iterate over lines, setting fold numbers and fold flags.
     local line_num, prev_level = start_line, FOLD_BASE + (indentation[1] or 0)
     local current_level = prev_level
     for i = 1, #indentation do
