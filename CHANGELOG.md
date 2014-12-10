@@ -4,6 +4,26 @@
 
 [Atom Feed]: feed
 
+## 3.5.2-1 (10 Dec 2014)
+
+Download:
+
+* [Scintillua 3.5.2-1][]
+
+Bugfixes:
+
+* Improved folding by indentation.
+
+Changes:
+
+* Updated Tcl lexer.
+* Added `fold.on.zero.sum.line` property for folding on `} else {`-style lines.
+* Updated to [Scintilla][]/[SciTE][] 3.5.2.
+
+[Scintillua 3.5.2-1]: download/scintillua_3.5.2-1.zip
+[Scintilla]: http://scintilla.org
+[SciTE]: http://scintilla.org/SciTE.html
+
 ## 3.5.1-1 (01 Oct 2014)
 
 Download:
