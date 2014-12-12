@@ -59,7 +59,6 @@ cleandoc: ; rm -rf doc/manual.html doc/api.html
 
 # Releases.
 
-build_dir = /tmp/scibuild
 ifndef NIGHTLY
   basedir = scintillua_$(shell grep '^\#\#' CHANGELOG.md | head -1 | \
                                cut -d ' ' -f 2)
@@ -67,17 +66,15 @@ else
   basedir = scintillua_NIGHTLY_$(shell date +"%F")
 endif
 
-$(build_dir): ; hg clone -r tip /home/mitchell/code/scintillua $@
-$(basedir): | $(build_dir) ; hg archive $@ -X ".hg*"
-release: $(basedir) | $(build_dir)
-	make -C $| deps doc
-	make -C $| -j4
-	make -C $| -j4 clean
-	make -C $| -j4 CC=i586-mingw32msvc-gcc CPP=i586-mingw32msvc-g++ win32
-	cp -r $|/doc $<
-	cp $|/lexers/*.so $|/lexers/*.dll $</lexers/
-	zip -r /tmp/$<.zip $(basedir) && rm -rf $<
-	rm -rf $|
+$(basedir): ; hg archive $@ -X ".hg*"
+release: $(basedir)
+	make deps doc
+	make -j4
+	make -j4 clean
+	make -j4 CC=i586-mingw32msvc-gcc CPP=i586-mingw32msvc-g++ win32
+	cp -r doc $<
+	cp lexers/*.so lexers/*.dll $</lexers/
+	zip -r /tmp/$<.zip $< && rm -rf $<
 
 # External dependencies.
 
