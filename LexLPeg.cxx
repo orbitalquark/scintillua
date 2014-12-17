@@ -620,17 +620,11 @@ public:
 			// Fold the text from the fold table returned.
 			if (lua_istable(L, -1)) {
 				lua_pushnil(L);
-				int line = 0, level = 0, maxline = 0, maxlevel = 0;
-				while (lua_next(L, -2)) {
-					line = lua_tointeger(L, -2), level = lua_tointeger(L, -1);
-					styler.SetLevel(line, level);
-					if (line > maxline) maxline = line, maxlevel = level;
+				while (lua_next(L, -2)) { // line = level
+					styler.SetLevel(lua_tointeger(L, -2), lua_tointeger(L, -1));
 					lua_pop(L, 1); // level
 				}
 				lua_pop(L, 1); // fold table returned
-				// Mask off the level number, leaving only the previous flags.
-				int flagsNext = styler.LevelAt(maxline + 1) & ~SC_FOLDLEVELNUMBERMASK;
-				styler.SetLevel(maxline + 1, maxlevel | flagsNext);
 			} else l_error(L, "Table of folds expected from 'lexer.fold'");
 		} else l_error(L, "'lexer.fold' function not found");
 	}
