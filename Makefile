@@ -1,5 +1,5 @@
 # Make file for LexLPeg external lexer for Scintilla.
-# Copyright 2010-2014 Mitchell mitchell.att.foicica.com
+# Copyright 2010-2015 Mitchell mitchell.att.foicica.com
 
 ifeq (win, $(findstring win, $(MAKECMDGOALS)))
   CC = i686-w64-mingw32-gcc
