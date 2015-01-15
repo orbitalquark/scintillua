@@ -92,6 +92,7 @@ see `lexers/lpeg.properties`.
 1. SQL
 1. Tcl`*`
 1. TeX`*`
+1. Texinfo`*`
 1. Vala`*`
 1. VBScript
 1. vCard`*`

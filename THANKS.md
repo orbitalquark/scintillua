@@ -19,6 +19,7 @@ Scintillua better and better over the years.
 * Piotr Orzechowski
 * Robert Gieseke
 * Roberto Ierusalimschy
+* Stéphane Rivière
 * Tymur Gubayev
 * Wolfgang Seeberg
 
