@@ -94,6 +94,7 @@ see `lexers/lpeg.properties`.
 1. TeX`*`
 1. Vala`*`
 1. VBScript
+1. vCard`*`
 1. Verilog`*`
 1. VHDL
 1. Visual Basic
