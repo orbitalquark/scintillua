@@ -5,6 +5,26 @@
 -- Directives are processed (more or less) in the Reference Card Texinfo order
 -- Reference Card page for each directive group is in comment for reference
 
+--[[
+Note: Improving Fold Points use with Texinfo
+
+At the very beginning of your Texinfo file, it could be wised to insert theses
+alias :
+
+@alias startchapter = comment
+@alias endchapter = comment
+
+Then use this to begin each chapter :
+
+@endchapter --------------------------------------------------------------------
+@chapter CHAPTER TITLE
+@startchapter ------------------------------------------------------------------
+
+With the use of Scintilla's `SCI_FOLDALL(SC_FOLDACTION_TOGGLE)` or Textadept's
+`buffer:fold_all(buffer.FOLDACTION_TOGGLE)`, you have then a nice chapter
+folding, useful with large documents.
+]]
+
 local l = require('lexer')
 local token, word_match = l.token, l.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
