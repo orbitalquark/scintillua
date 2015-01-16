@@ -43,13 +43,23 @@ local keyword = token(l.KEYWORD, word_match{
 local func = token(l.FUNCTION, word_match{
   'assert', 'collectgarbage', 'dofile', 'error', 'getmetatable', 'ipairs',
   'load', 'loadfile', 'next', 'pairs', 'pcall', 'print', 'rawequal', 'rawget',
-  'rawlen', 'rawset', 'require', 'select', 'setmetatable', 'tonumber',
-  'tostring', 'type', 'xpcall'
+  'rawset', 'require', 'select', 'setmetatable', 'tonumber', 'tostring', 'type',
+  'xpcall',
+  -- Added in 5.2.
+  'rawlen'
+})
+
+-- Deprecated functions.
+local deprecated_func = token('deprecated_function', word_match{
+  -- Deprecated in 5.2.
+  'getfenv', 'loadstring', 'module', 'setfenv', 'unpack'
 })
 
 -- Constants.
 local constant = token(l.CONSTANT, word_match{
-  '_G', '_VERSION'
+  '_G', '_VERSION',
+  -- Added in 5.2.
+  '_ENV'
 })
 
 -- Libraries.
@@ -57,28 +67,36 @@ local library = token('library', word_match({
   -- Coroutine.
   'coroutine', 'coroutine.create', 'coroutine.resume', 'coroutine.running',
   'coroutine.status', 'coroutine.wrap', 'coroutine.yield',
+  -- Coroutine added in 5.3.
+  'coroutine.isyieldable',
   -- Module.
-  'package', 'package.config', 'package.cpath', 'package.loaded',
-  'package.loadlib', 'package.path', 'package.preload', 'package.searchers',
-  'package.searchpath',
+  'package', 'package.cpath', 'package.loaded', 'package.loadlib',
+  'package.path', 'package.preload',
+  -- Module added in 5.2.
+  'package.config', 'package.searchers', 'package.searchpath',
+  -- UTF-8 added in 5.3.
+  'utf8', 'utf8.char', 'utf8.charpattern', 'utf8.codepoint', 'utf8.codes',
+  'utf8.len', 'utf8.offset',
   -- String.
   'string', 'string.byte', 'string.char', 'string.dump', 'string.find',
   'string.format', 'string.gmatch', 'string.gsub', 'string.len', 'string.lower',
   'string.match', 'string.rep', 'string.reverse', 'string.sub', 'string.upper',
+  -- String added in 5.3.
+  'string.pack', 'string.packsize', 'string.unpack',
   -- Table.
-  'table', 'table.concat', 'table.insert', 'table.pack', 'table.remove',
-  'table.sort', 'table.unpack',
+  'table', 'table.concat', 'table.insert', 'table.remove', 'table.sort',
+  -- Table added in 5.2.
+  'table.pack', 'table.unpack',
+  -- Table added in 5.3.
+  'table.move',
   -- Math.
-  'math', 'math.abs', 'math.acos', 'math.asin', 'math.atan2', 'math.atan',
-  'math.ceil', 'math.cos', 'math.cosh', 'math.deg', 'math.exp', 'math.floor',
-  'math.fmod', 'math.frexp', 'math.huge', 'math.ldexp', 'math.log', 'math.max',
-  'math.min', 'math.modf', 'math.pi', 'math.pow', 'math.rad', 'math.random',
-  'math.randomseed', 'math.sin', 'math.sinh', 'math.sqrt', 'math.tan',
-  'math.tanh',
-  -- Bit32.
-  'bit32', 'bit32.arshift', 'bit32.band', 'bit32.bnot', 'bit32.bor',
-  'bit32.btest', 'bit32.extract', 'bit32.lrotate', 'bit32.lshift',
-  'bit32.replace', 'bit32.rrotate', 'bit32.rshift', 'bit32.xor',
+  'math', 'math.abs', 'math.acos', 'math.asin', 'math.atan', 'math.ceil',
+  'math.cos', 'math.deg', 'math.exp', 'math.floor', 'math.fmod', 'math.huge',
+  'math.log', 'math.max', 'math.min', 'math.modf', 'math.pi', 'math.rad',
+  'math.random', 'math.randomseed', 'math.sin', 'math.sqrt', 'math.tan',
+  -- Math added in 5.3.
+  'math.maxinteger', 'math.mininteger', 'math.tointeger', 'math.type',
+  'math.ult',
   -- IO.
   'io', 'io.close', 'io.flush', 'io.input', 'io.lines', 'io.open', 'io.output',
   'io.popen', 'io.read', 'io.stderr', 'io.stdin', 'io.stdout', 'io.tmpfile',
@@ -90,9 +108,30 @@ local library = token('library', word_match({
   -- Debug.
   'debug', 'debug.debug', 'debug.gethook', 'debug.getinfo', 'debug.getlocal',
   'debug.getmetatable', 'debug.getregistry', 'debug.getupvalue',
-  'debug.getuservalue', 'debug.sethook', 'debug.setlocal', 'debug.setmetatable',
-  'debug.setupvalue', 'debug.setuservalue', 'debug.traceback',
-  'debug.upvalueid', 'debug.upvaluejoin'
+  'debug.sethook', 'debug.setlocal', 'debug.setmetatable', 'debug.setupvalue',
+  'debug.traceback',
+  -- Debug added in 5.2.
+  'debug.getuservalue', 'debug.setuservalue', 'debug.upvalueid',
+  'debug.upvaluejoin',
+}, '.'))
+
+-- Deprecated libraries.
+local deprecated_library = token('deprecated_library', word_match({
+  -- Module deprecated in 5.2.
+  'package.loaders', 'package.seeall',
+  -- Table deprecated in 5.2.
+  'table.maxn',
+  -- Math deprecated in 5.2.
+  'math.log10',
+  -- Math deprecated in 5.3.
+  'math.atan2', 'math.cosh', 'math.frexp', 'math.ldexp', 'math.pow',
+  'math.sinh', 'math.tanh',
+  -- Bit32 deprecated in 5.3.
+  'bit32', 'bit32.arshift', 'bit32.band', 'bit32.bnot', 'bit32.bor',
+  'bit32.btest', 'bit32.extract', 'bit32.lrotate', 'bit32.lshift',
+  'bit32.replace', 'bit32.rrotate', 'bit32.rshift', 'bit32.xor',
+  -- Debug deprecated in 5.2.
+  'debug.getfenv', 'debug.setfenv'
 }, '.'))
 
 -- Identifiers.
@@ -107,9 +146,9 @@ local operator = token(l.OPERATOR, '~=' + S('+-*/%^#=<>;:,.{}[]()'))
 M._rules = {
   {'whitespace', ws},
   {'keyword', keyword},
-  {'function', func},
+  {'function', func + deprecated_func},
   {'constant', constant},
-  {'library', library},
+  {'library', library + deprecated_library},
   {'identifier', identifier},
   {'string', string},
   {'comment', comment},
@@ -120,7 +159,9 @@ M._rules = {
 
 M._tokenstyles = {
   longstring = l.STYLE_STRING,
-  library = l.STYLE_TYPE
+  deprecated_function = l.STYLE_FUNCTION..',italics',
+  library = l.STYLE_TYPE,
+  deprecated_library = l.STYLE_TYPE..',italics'
 }
 
 local function fold_longcomment(text, pos, line, s, match)
