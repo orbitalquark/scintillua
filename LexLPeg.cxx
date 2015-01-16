@@ -147,8 +147,10 @@ class LexerLPeg : public ILexer {
 		PropSetSimple *props = static_cast<PropSetSimple *>(lua_touserdata(L, -1));
 		lua_pop(L, 2); // sci_props and sci_buffer
 
-		is_lexer ? lua_pushvalue(L, 2) // key is given
-		         : lua_getfield(L, 1, "property"); // indexible property
+		if (is_lexer)
+			lua_pushvalue(L, 2); // key is given
+		else
+			lua_getfield(L, 1, "property"); // indexible property
 		const char *key = lua_tostring(L, -1);
 		if (strcmp(key, "fold_level") == 0) {
 			luaL_argcheck(L, !newindex, 3, "read-only property");
@@ -192,7 +194,7 @@ class LexerLPeg : public ILexer {
 				}
 				lua_pop(L, 1); // style_num
 			}
-		} else !newindex ? lua_rawget(L, 1) : lua_rawset(L, 1);
+		} else return !newindex ? (lua_rawget(L, 1), 1) : (lua_rawset(L, 1), 0);
 		return 1;
 	}
 
