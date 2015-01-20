@@ -32,9 +32,9 @@ using the links above should you choose to compile Scintillua directly into a
 Scintilla-based application.
 
 When used a Lua library, Scintillua requires Lua 5.1 or greater and
-[LPeg 0.10.2][]. It does not work with later versions of LPeg yet.
+[LPeg][] 0.12 or greater.
 
-[LPeg 0.10.2]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg-0.10.2.tar.gz
+[LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/
 
 ## Download
 
