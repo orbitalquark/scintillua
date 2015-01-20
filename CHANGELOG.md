@@ -4,6 +4,27 @@
 
 [Atom Feed]: feed
 
+## 3.5.3-1 (20 Jan 2015)
+
+Download:
+
+* [Scintillua 3.5.3-1][]
+
+Bugfixes:
+
+* Fixed bug in overwriting fold levels set by custom fold functions.
+
+Changes:
+
+* Added vCard and Texinfo lexers.
+* Updates to allow Scintillua to be compiled against Lua 5.3.
+* Updated Lua lexer for Lua 5.3.
+* Updated to [Scintilla][]/[SciTE][] 3.5.3.
+
+[Scintillua 3.5.3-1]: download/scintillua_3.5.3-1.zip
+[Scintilla]: http://scintilla.org
+[SciTE]: http://scintilla.org/SciTE.html
+
 ## 3.5.2-1 (10 Dec 2014)
 
 Download:
