@@ -35,8 +35,8 @@ local number = token(l.NUMBER, l.float + integer)
 local keyword = token(l.KEYWORD, word_match{
   'and', 'as', 'assert', 'break', 'class', 'continue', 'def', 'del', 'elif',
   'else', 'except', 'exec', 'finally', 'for', 'from', 'global', 'if', 'import',
-  'in', 'is', 'lambda', 'not', 'or', 'pass', 'print', 'raise', 'return', 'try',
-  'while', 'with', 'yield',
+  'in', 'is', 'lambda', 'nonlocal', 'not', 'or', 'pass', 'print', 'raise',
+  'return', 'try', 'while', 'with', 'yield',
   -- Descriptors/attr access.
   '__get__', '__set__', '__delete__', '__slots__',
   -- Class.
