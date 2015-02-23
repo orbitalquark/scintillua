@@ -1191,33 +1191,43 @@ function M.fold(lexer, text, start_pos, start_line, start_level)
     for indent, line in (text..'\n'):gmatch('([\t ]*)([^\r\n]*)\r?\n') do
       indentation[#indentation + 1] = line ~= '' and #indent
     end
-    -- Make line before start_line a fold header if necessary.
-    if start_line > 0 and indentation[1] then
-      local indent = M.indent_amount[start_line - 1]
-      if indentation[1] > indent then
-        folds[start_line - 1] = FOLD_BASE + indent + FOLD_HEADER
+    -- Find the first non-blank line before start_line. If the current line is
+    -- indented, make that previous line a header and update the levels of any
+    -- blank lines inbetween. If the current line is blank, match the level of
+    -- the previous non-blank line.
+    local current_level = start_level
+    for i = start_line - 1, 0, -1 do
+      local level = M.fold_level[i]
+      if level >= FOLD_HEADER then level = level - FOLD_HEADER end
+      if level < FOLD_BLANK then
+        local indent = M.indent_amount[i]
+        if indentation[1] and indentation[1] > indent then
+          folds[i] = FOLD_BASE + indent + FOLD_HEADER
+          for j = i + 1, start_line - 1 do
+            folds[j] = start_level + FOLD_BLANK
+          end
+        elseif not indentation[1] then
+          current_level = FOLD_BASE + indent
+        end
+        break
       end
     end
     -- Iterate over lines, setting fold numbers and fold flags.
-    local line_num, prev_level = start_line, FOLD_BASE + (indentation[1] or 0)
-    local current_level = prev_level
     for i = 1, #indentation do
       if indentation[i] then
+        current_level = FOLD_BASE + indentation[i]
+        folds[start_line + i - 1] = current_level
         for j = i + 1, #indentation do
           if indentation[j] then
-            current_level = FOLD_BASE + indentation[j]
+            if FOLD_BASE + indentation[j] > current_level then
+              folds[start_line + i - 1] = current_level + FOLD_HEADER
+            end
             break
           end
         end
-        folds[line_num] = prev_level
-        if current_level > prev_level then
-          folds[line_num] = prev_level + FOLD_HEADER
-        end
-        prev_level = current_level
       else
-        folds[line_num] = prev_level + FOLD_BLANK
+        folds[start_line + i - 1] = current_level + FOLD_BLANK
       end
-      line_num = line_num + 1
     end
   else
     -- No folding, reset fold levels if necessary.
