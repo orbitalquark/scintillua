@@ -1221,6 +1221,7 @@ function M.fold(lexer, text, start_pos, start_line, start_level)
           if indentation[j] then
             if FOLD_BASE + indentation[j] > current_level then
               folds[start_line + i - 1] = current_level + FOLD_HEADER
+              current_level = FOLD_BASE + indentation[j] -- for any blanks below
             end
             break
           end
