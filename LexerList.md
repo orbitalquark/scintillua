@@ -13,7 +13,6 @@ see `lexers/lpeg.properties`.
 1. ASM`*` (NASM)
 1. ASP`*`
 1. AWK`*`
-1. B`*`
 1. Batch`*`
 1. BibTeX`*`
 1. Boo
@@ -35,6 +34,7 @@ see `lexers/lpeg.properties`.
 1. Eiffel`*`
 1. Erlang`*`
 1. F#
+1. Fish`*`
 1. Forth
 1. Fortran
 1. GAP`*`
