@@ -8,6 +8,7 @@ Scintillua better and better over the years.
 * Alex Saraci
 * Brian Schott
 * Chris Emerson
+* Jason Schindler
 * Jeff Stone
 * Joshua Krämer
 * Klaus Borges
