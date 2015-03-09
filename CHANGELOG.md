@@ -4,6 +4,29 @@
 
 [Atom Feed]: feed
 
+## 3.5.4-1 (09 Mar 2015)
+
+Download:
+
+* [Scintillua 3.5.4-1][]
+
+Bugfixes:
+
+* Improved `fold.by.indentation`.
+
+Changes:
+
+* Updated PHP and Python lexers.
+* Added Fish lexer.
+* Removed extinct B lexer.
+* Updated to [LPeg][] 0.12.2.
+* Updated to [Scintilla][]/[SciTE][] 3.5.4.
+
+[Scintillua 3.5.4-1]: download/scintillua_3.5.4-1.zip
+[LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
+[Scintilla]: http://scintilla.org
+[SciTE]: http://scintilla.org/SciTE.html
+
 ## 3.5.3-1 (20 Jan 2015)
 
 Download:
