@@ -78,9 +78,9 @@ release: $(basedir)
 
 # External dependencies.
 
-scintilla_tgz = scintilla353.tgz
+scintilla_tgz = scintilla354.tgz
 lua_tgz = lua-5.1.4.tar.gz
-lpeg_tgz = lpeg-0.12.tar.gz
+lpeg_tgz = lpeg-0.12.2.tar.gz
 bombay_zip = bombay.zip
 
 $(scintilla_tgz): ; wget "http://prdownloads.sourceforge.net/scintilla/$@"
