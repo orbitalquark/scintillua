@@ -346,7 +346,6 @@ local M = {}
 -- case:_char_    | The case of the font ('u': upper, 'l': lower, 'm': normal).
 -- [not]visible   | Whether or not the text is visible.
 -- [not]changeable| Whether the text is changeable or read-only.
--- [not]hotspot   | Whether or not the text is clickable.
 --
 -- Specify font colors in either "#RRGGBB" format, "0xBBGGRR" format, or the
 -- decimal equivalent of the latter. As with token names, LPeg patterns, and
