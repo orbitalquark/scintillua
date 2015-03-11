@@ -64,7 +64,7 @@ see `lexers/lpeg.properties`.
 1. Markdown
 1. MATLAB`*`
 1. Nemerle`*`
-1. Nimrod
+1. Nim
 1. NSIS
 1. Objective-C`*`
 1. OCaml
