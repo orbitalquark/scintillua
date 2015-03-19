@@ -5,6 +5,7 @@ Scintillua better and better over the years.
 
 ## Code Contributors
 
+* Alejandro Baez
 * Alex Saraci
 * Brian Schott
 * Chris Emerson

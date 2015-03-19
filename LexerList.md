@@ -84,6 +84,7 @@ see `lexers/lpeg.properties`.
 1. RHTML`*`
 1. Ruby`*`
 1. Ruby on Rails`*`
+1. Rust`*`
 1. Sass`*`
 1. Scala`*`
 1. Scheme`*`
@@ -93,6 +94,7 @@ see `lexers/lpeg.properties`.
 1. Tcl`*`
 1. TeX`*`
 1. Texinfo`*`
+1. TOML
 1. Vala`*`
 1. VBScript
 1. vCard`*`
