@@ -105,6 +105,6 @@ M._tokenstyles = {
   directive = l.STYLE_PREPROCESSOR,
 }
 
-l.property['fold.by.indentation'] = '1'
+M._FOLDBYINDENTATION = true
 
 return M

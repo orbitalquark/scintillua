@@ -107,6 +107,4 @@ local start_rule = token('tag', l.starts_line(S(' \t')^0 * '<'))
 local end_rule = token(l.DEFAULT, P('\n')) -- TODO: l.WHITESPACE causes errors
 l.embed_lexer(M, html, start_rule, end_rule)
 
-l.property['fold.by.indentation'] = '0' -- revert from CoffeeScript
-
 return M

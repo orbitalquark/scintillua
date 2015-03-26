@@ -599,6 +599,15 @@ local M = {}
 --
 -- [Lua patterns]: http://www.lua.org/manual/5.2/manual.html#6.4.1
 --
+-- ### Fold by Indentation
+--
+-- Some languages have significant whitespace and/or no delimiters that indicate
+-- fold points. If your lexer falls into this category and you would like to
+-- mark fold points based on changes in indentation, use the
+-- `_FOLDBYINDENTATION` field:
+--
+--     M._FOLDBYINDENTATION = true
+--
 -- ## Using Lexers
 --
 -- ### Textadept
@@ -1113,8 +1122,8 @@ end
 -- Folds *text* starting at position *start_pos* on line number *start_line*
 -- with a beginning fold level of *start_level* in the buffer. If *lexer* has a
 -- a `_fold` function or a `_foldsymbols` table, that field is used to perform
--- folding. Otherwise, if a `fold.by.indentation` property is set, folding by
--- indentation is done.
+-- folding. Otherwise, if *lexer* has a `_FOLDBYINDENTATION` field set, or if a
+-- `fold.by.indentation` property is set, folding by indentation is done.
 -- @param lexer The lexer object to fold with.
 -- @param text The text in the buffer to fold.
 -- @param start_pos The position in the buffer *text* starts at.
@@ -1183,7 +1192,8 @@ function M.fold(lexer, text, start_pos, start_line, start_level)
       end
       line_num = line_num + 1
     end
-  elseif fold and M.property_int['fold.by.indentation'] > 0 then
+  elseif fold and (lexer._FOLDBYINDENTATION or
+                   M.property_int['fold.by.indentation'] > 0) then
     -- Indentation based folding.
     -- Calculate indentation per line.
     local indentation = {}
@@ -1567,6 +1577,8 @@ M.property_expanded = setmetatable({}, {
 --    (instead of an arbitrary chunk of text) at a time.
 --    The default value is `false`. Line lexers cannot look ahead to subsequent
 --    lines.
+-- @field _FOLDBYINDENTATION Declares the lexer does not define fold points and
+      that fold points should be calculated based on changes in indentation.
 -- @class table
 -- @name lexer
 local lexer
