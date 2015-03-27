@@ -129,7 +129,7 @@ local identifier = token(l.IDENTIFIER, l.word)
 local special_var = '$' * ('^' * S('ADEFHILMOPSTWX')^-1 +
                            S('\\"[]\'&`+*.,;=%~?@<>(|/!-') +
                            ':' * (l.any - ':') + P('$') * -l.word + l.digit^1)
-local plain_var = ('$#' + S('$@%')) * P('$')^0 * l.word
+local plain_var = ('$#' + S('$@%')) * P('$')^0 * l.word + '$#'
 local variable = token(l.VARIABLE, special_var + plain_var)
 
 -- Operators.
