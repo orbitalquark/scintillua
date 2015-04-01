@@ -1578,7 +1578,7 @@ M.property_expanded = setmetatable({}, {
 --    The default value is `false`. Line lexers cannot look ahead to subsequent
 --    lines.
 -- @field _FOLDBYINDENTATION Declares the lexer does not define fold points and
-      that fold points should be calculated based on changes in indentation.
+--    that fold points should be calculated based on changes in indentation.
 -- @class table
 -- @name lexer
 local lexer
