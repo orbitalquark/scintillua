@@ -74,6 +74,7 @@ see `lexers/lpeg.properties`.
 1. Pike`*`
 1. PKGBUILD`*`
 1. Postscript
+1. PowerShell`*`
 1. Prolog
 1. Properties
 1. Python
