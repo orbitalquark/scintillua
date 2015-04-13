@@ -11,7 +11,7 @@ local M = {_NAME = 'vbscript'}
 local ws = token(l.WHITESPACE, l.space^1)
 
 -- Comments.
-local comment = token(l.COMMENT, (P("'") + 'Rem ') * l.nonnewline^0)
+local comment = token(l.COMMENT, (P("'") + word_match({'rem'}, nil, true)) * l.nonnewline^0)
 
 -- Strings.
 local string = token(l.STRING, l.delimited_range('"', true, true))
@@ -20,7 +20,7 @@ local string = token(l.STRING, l.delimited_range('"', true, true))
 local number = token(l.NUMBER, (l.float + l.integer) * S('LlUuFf')^-2)
 
 -- Keywords.
-local keyword = token(l.KEYWORD, word_match{
+local keyword = token(l.KEYWORD, word_match({
   -- Control.
   'If', 'Then', 'Else', 'ElseIf', 'While', 'Wend', 'For', 'To', 'Each',
   'In', 'Step', 'Case', 'Select', 'Return', 'Continue', 'Do',
@@ -35,13 +35,13 @@ local keyword = token(l.KEYWORD, word_match{
   'Private', 'Public', 'Default',
   -- Constants.
   'Empty', 'False', 'Nothing', 'Null', 'True'
-})
+}, nil, true))
 
 -- Types.
-local type = token(l.TYPE, word_match{
+local type = token(l.TYPE, word_match({
   'Boolean', 'Byte', 'Char', 'Date', 'Decimal', 'Double', 'Long', 'Object',
   'Short', 'Single', 'String'
-})
+}, nil, true))
 
 -- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
