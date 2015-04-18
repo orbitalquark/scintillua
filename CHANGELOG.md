@@ -4,6 +4,32 @@
 
 [Atom Feed]: feed
 
+## 3.5.5-1 (18 Apr 2015)
+
+Download:
+
+* [Scintillua 3.5.5-1][]
+
+Bugfixes:
+
+* Fixed Perl lexer corner-case.
+* VB lexer keywords are case-insensitive now.
+
+Changes:
+
+* Renamed Nimrod lexer to Nim.
+* Added Rust lexer.
+* Added TOML lexer.
+* Lexers that fold by indentation should make use of [`_FOLDBYINDENTATION`][]
+  field now.
+* Added PowerShell lexer.
+* Updated to [Scintilla][]/[SciTE][] 3.5.5.
+
+[Scintillua 3.5.5-1]: download/scintillua_3.5.5-1.zip
+[`_FOLDBYINDENTATION`]: api.html#lexer.Fold.by.Indentation
+[Scintilla]: http://scintilla.org
+[SciTE]: http://scintilla.org/SciTE.html
+
 ## 3.5.4-1 (09 Mar 2015)
 
 Download:
