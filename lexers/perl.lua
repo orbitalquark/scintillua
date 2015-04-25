@@ -34,7 +34,9 @@ local literal_delimitted = P(function(input, index) -- for single delimiter sets
 end)
 local literal_delimitted2 = P(function(input, index) -- for 2 delimiter sets
   local delimiter = input:sub(index, index)
-  if not delimiter:find('%w') then -- only non alpha-numerics
+  -- Only consider non-alpha-numerics and non-spaces as delimiters. The
+  -- non-spaces are used to ignore operators like "-s".
+  if not delimiter:find('[%w ]') then
     local match_pos, patt
     if delimiter_matches[delimiter] then
       -- Handle nested delimiter/matches in strings.
@@ -67,16 +69,15 @@ end)
 local lit_str = 'q' * P('q')^-1 * literal_delimitted
 local lit_array = 'qw' * literal_delimitted
 local lit_cmd = 'qx' * literal_delimitted
-local lit_match = 'm' * literal_delimitted * S('cgimosx')^0
-local lit_sub = 's' * literal_delimitted2 * S('ecgimosx')^0
 local lit_tr = (P('tr') + 'y') * literal_delimitted2 * S('cds')^0
 local regex_str = l.last_char_includes('-<>+*!~\\=%&|^?:;([{') *
                   l.delimited_range('/', true) * S('imosx')^0
 local lit_regex = 'qr' * literal_delimitted * S('imosx')^0
+local lit_match = 'm' * literal_delimitted * S('cgimosx')^0
+local lit_sub = 's' * literal_delimitted2 * S('ecgimosx')^0
 local string = token(l.STRING, sq_str + dq_str + cmd_str + heredoc + lit_str +
-                               lit_array + lit_cmd + lit_match + lit_sub +
-                               lit_tr) +
-               token(l.REGEX, regex_str + lit_regex)
+                               lit_array + lit_cmd + lit_tr) +
+               token(l.REGEX, regex_str + lit_regex + lit_match + lit_sub)
 
 -- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
