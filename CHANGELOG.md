@@ -4,6 +4,26 @@
 
 [Atom Feed]: feed
 
+## 3.5.6-1 (26 May 2015)
+
+Download:
+
+* [Scintillua 3.5.6-1][]
+
+Bugfixes:
+
+* Fixed ASP, Applescript, and Perl lexers.
+* Fixed segfault in parsing some instances of style definitions.
+
+Changes:
+
+* Added Elixir lexer.
+* Updated to [Scintilla][]/[SciTE][] 3.5.6.
+
+[Scintillua 3.5.6-1]: download/scintillua_3.5.6-1.zip
+[Scintilla]: http://scintilla.org
+[SciTE]: http://scintilla.org/SciTE.html
+
 ## 3.5.5-1 (18 Apr 2015)
 
 Download:
