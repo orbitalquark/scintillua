@@ -218,7 +218,8 @@ class LexerLPeg : public ILexer {
 	 * @param style The style string containing properties to set.
 	 */
 	void SetStyle(int num, const char *style) {
-		char *option = const_cast<char *>(style), *next = NULL, *p = NULL;
+		char *style_copy = static_cast<char *>(malloc(strlen(style) + 1));
+		char *option = strcpy(style_copy, style), *next = NULL, *p = NULL;
 		while (option) {
 			if ((next = strchr(option, ','))) *next++ = '\0';
 			if ((p = strchr(option, ':'))) *p++ = '\0';
@@ -280,6 +281,7 @@ class LexerLPeg : public ILexer {
 				SS(sci, SCI_STYLESETHOTSPOT, num, *option == 'h');
 			option = next;
 		}
+		free(style_copy);
 	}
 
 	/**
