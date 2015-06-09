@@ -103,6 +103,7 @@ see `lexers/lpeg.properties`.
 1. Verilog`*`
 1. VHDL
 1. Visual Basic
+1. Windows Script File`*`
 1. XML`*`
 1. Xtend`*`
 1. YAML
