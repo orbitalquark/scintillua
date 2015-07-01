@@ -70,7 +70,7 @@ local lit_str = 'q' * P('q')^-1 * literal_delimitted
 local lit_array = 'qw' * literal_delimitted
 local lit_cmd = 'qx' * literal_delimitted
 local lit_tr = (P('tr') + 'y') * literal_delimitted2 * S('cds')^0
-local regex_str = l.last_char_includes('-<>+*!~\\=%&|^?:;([{') *
+local regex_str = #P('/') * l.last_char_includes('-<>+*!~\\=%&|^?:;([{') *
                   l.delimited_range('/', true) * S('imosx')^0
 local lit_regex = 'qr' * literal_delimitted * S('imosx')^0
 local lit_match = 'm' * literal_delimitted * S('cgimosx')^0

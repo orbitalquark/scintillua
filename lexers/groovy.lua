@@ -20,7 +20,7 @@ local sq_str = l.delimited_range("'")
 local dq_str = l.delimited_range('"')
 local triple_sq_str = "'''" * (l.any - "'''")^0 * P("'''")^-1
 local triple_dq_str = '"""' * (l.any - '"""')^0 * P('"""')^-1
-local regex_str = l.last_char_includes('=~|!<>+-*?&,:;([{') *
+local regex_str = #P('/') * l.last_char_includes('=~|!<>+-*?&,:;([{') *
                   l.delimited_range('/', true)
 local string = token(l.STRING, triple_sq_str + triple_dq_str + sq_str +
                                dq_str) +

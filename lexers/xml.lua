@@ -17,7 +17,8 @@ local cdata = token('cdata', '<![CDATA[' * (l.any - ']]>')^0 * P(']]>')^-1)
 -- Strings.
 local sq_str = l.delimited_range("'", false, true)
 local dq_str = l.delimited_range('"', false, true)
-local string = l.last_char_includes('=') * token(l.STRING, sq_str + dq_str)
+local string = #S('\'"') * l.last_char_includes('=') *
+               token(l.STRING, sq_str + dq_str)
 
 local in_tag = P(function(input, index)
   local before = input:sub(1, index - 1)
@@ -28,7 +29,7 @@ local in_tag = P(function(input, index)
 end)
 
 -- Numbers.
-local number = l.last_char_includes('=') *
+local number = #l.digit * l.last_char_includes('=') *
                token(l.NUMBER, l.digit^1 * P('%')^-1) * in_tag
 
 local alpha = R('az', 'AZ', '\127\255')
@@ -37,15 +38,14 @@ local identifier = (l.alpha + S('_-:.??')) * word_char^0
 local namespace = token(l.OPERATOR, ':') * token('namespace', identifier)
 
 -- Elements.
-local element = l.last_char_includes('</') * token('element', identifier) *
-                namespace^-1
+local element = token('element', '<' * P('/')^-1 * identifier) * namespace^-1
 
 -- Attributes.
 local attribute = token('attribute', identifier) * namespace^-1 *
                   #(l.space^0 * '=')
 
--- Tags.
-local tag = token('tag', '<' * P('/')^-1 + P('/')^-1 * '>')
+-- Closing tags.
+local close_tag = token('element', P('/')^-1 * '>')
 
 -- Equals.
 local equals = token(l.OPERATOR, '=') * in_tag
@@ -69,8 +69,8 @@ M._rules = {
   {'cdata', cdata},
   {'doctype', doctype},
   {'proc_insn', proc_insn},
-  {'tag', tag},
   {'element', element},
+  {'close_tag', close_tag},
   {'attribute', attribute},
   {'equals', equals},
   {'string', string},
@@ -79,7 +79,6 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  tag = l.STYLE_KEYWORD,
   element = l.STYLE_KEYWORD,
   namespace = l.STYLE_CLASS,
   attribute = l.STYLE_TYPE,
@@ -92,7 +91,7 @@ M._tokenstyles = {
 
 M._foldsymbols = {
   _patterns = {'</?', '/>', '<!%-%-', '%-%->', '<!%[CDATA%[', '%]%]>'},
-  tag = {['<'] = 1, ['/>'] = -1, ['</'] = -1},
+  element = {['<'] = 1, ['/>'] = -1, ['</'] = -1},
   [l.COMMENT] = {['<!--'] = 1, ['-->'] = -1},
   cdata = {['<![CDATA['] = 1, [']]>'] = -1}
 }

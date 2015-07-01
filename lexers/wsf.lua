@@ -17,7 +17,8 @@ local comment = token(l.COMMENT, '<!--' * (l.any - '-->')^0 * P('-->')^-1)
 -- Strings.
 local sq_str = l.delimited_range("'", false, true)
 local dq_str = l.delimited_range('"', false, true)
-local string = l.last_char_includes('=') * token(l.STRING, sq_str + dq_str)
+local string = #S('\'"') * l.last_char_includes('=') *
+               token(l.STRING, sq_str + dq_str)
 
 local in_tag = P(function(input, index)
   local before = input:sub(1, index - 1)
@@ -28,7 +29,7 @@ local in_tag = P(function(input, index)
 end)
 
 -- Numbers.
-local number = l.last_char_includes('=') *
+local number = #l.digit * l.last_char_includes('=') *
                token(l.NUMBER, l.digit^1 * P('%')^-1) * in_tag
 
 local alpha = R('az', 'AZ', '\127\255')
@@ -36,13 +37,13 @@ local word_char = l.alnum + S('_-:.??')
 local identifier = (l.alpha + S('_-:.??')) * word_char^0
 
 -- Elements.
-local element = l.last_char_includes('</') * token('element', identifier)
+local element = token('element', '<' * P('/')^-1 * identifier)
 
 -- Attributes.
 local attribute = token('attribute', identifier) * #(l.space^0 * '=')
 
--- Tags.
-local tag = token('tag', '<' * P('/')^-1 + P('/')^-1 * '>')
+-- Closing tags.
+local tag_close = token('element', P('/')^-1 * '>')
 
 -- Equals.
 local equals = token(l.OPERATOR, '=') * in_tag
@@ -55,8 +56,8 @@ local entity = token('entity', '&' * word_match{
 M._rules = {
   {'whitespace', ws},
   {'comment', comment},
-  {'tag', tag},
   {'element', element},
+  {'tag_close', tag_close},
   {'attribute', attribute},
   {'equals', equals},
   {'string', string},
@@ -65,7 +66,6 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  tag = l.STYLE_KEYWORD,
   element = l.STYLE_KEYWORD,
   attribute = l.STYLE_TYPE,
   entity = l.STYLE_OPERATOR
@@ -73,17 +73,17 @@ M._tokenstyles = {
 
 M._foldsymbols = {
   _patterns = {'</?', '/>', '<!%-%-', '%-%->'},
-  tag = {['<'] = 1, ['/>'] = -1, ['</'] = -1},
+  element = {['<'] = 1, ['/>'] = -1, ['</'] = -1},
   [l.COMMENT] = {['<!--'] = 1, ['-->'] = -1},
 }
 
 -- Finally, add JavaScript and VBScript as embedded languages
 
 -- Tags that start embedded languages.
-M.embed_start_tag = tag * element *
+M.embed_start_tag = element *
                     (ws^1 * attribute * ws^0 * equals * ws^0 * string)^0 *
-                    ws^0 * tag
-M.embed_end_tag = tag * element * tag
+                    ws^0 * tag_close
+M.embed_end_tag = element * tag_close
 
 -- Embedded JavaScript.
 local js = l.load('javascript')

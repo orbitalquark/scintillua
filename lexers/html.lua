@@ -18,7 +18,8 @@ local comment = token(l.COMMENT, '<!--' * (l.any - '-->')^0 * P('-->')^-1)
 -- Strings.
 local sq_str = l.delimited_range("'")
 local dq_str = l.delimited_range('"')
-local string = l.last_char_includes('=') * token(l.STRING, sq_str + dq_str)
+local string = #S('\'"') * l.last_char_includes('=') *
+               token(l.STRING, sq_str + dq_str)
 
 -- TODO: performance is terrible on large files.
 local in_tag = P(function(input, index)
@@ -30,11 +31,11 @@ local in_tag = P(function(input, index)
 end)
 
 -- Numbers.
-local number = l.last_char_includes('=') *
+local number = #l.digit * l.last_char_includes('=') *
                token(l.NUMBER, l.digit^1 * P('%')^-1) --* in_tag
 
 -- Elements.
-local known_element = token('element', word_match({
+local known_element = token('element', '<' * P('/')^-1 * word_match({
   'a', 'abbr', 'address', 'area', 'article', 'aside', 'audio', 'b', 'base',
   'bdi', 'bdo', 'blockquote', 'body', 'br', 'button', 'canvas', 'caption',
   'cite', 'code', 'col', 'colgroup', 'content', 'data', 'datalist', 'dd',
@@ -50,10 +51,10 @@ local known_element = token('element', word_match({
   'textarea', 'tfoot', 'th', 'thead', 'time', 'title', 'tr', 'track', 'u', 'ul',
   'var', 'video', 'wbr'
 }, nil, case_insensitive_tags))
-local unknown_element = token('unknown_element', l.word)
-local element = l.last_char_includes('</') * (known_element + unknown_element)
+local unknown_element = token('unknown_element', '<' * P('/')^-1 * l.word)
+local element = known_element + unknown_element
 
--- Attributes
+-- Attributes.
 local known_attribute = token('attribute', word_match({
   'accept', 'accept-charset', 'accesskey', 'action', 'align', 'alt', 'async',
   'autocomplete', 'autofocus', 'autoplay', 'bgcolor', 'border', 'buffered',
@@ -75,8 +76,8 @@ local known_attribute = token('attribute', word_match({
 local unknown_attribute = token('unknown_attribute', l.word)
 local attribute = (known_attribute + unknown_attribute) * #(l.space^0 * '=')
 
--- Tags.
-local tag = token('tag', '<' * P('/')^-1 + P('/')^-1 * '>')
+-- Closing tags.
+local tag_close = token('element', P('/')^-1 * '>')
 
 -- Equals.
 local equals = token(l.OPERATOR, '=') --* in_tag
@@ -93,8 +94,8 @@ M._rules = {
   {'whitespace', ws},
   {'comment', comment},
   {'doctype', doctype},
-  {'tag', tag},
   {'element', element},
+  {'tag_close', tag_close},
   {'attribute', attribute},
 --  {'equals', equals},
   {'string', string},
@@ -103,7 +104,6 @@ M._rules = {
 }
 
 M._tokenstyles = {
-  tag = l.STYLE_KEYWORD,
   element = l.STYLE_KEYWORD,
   unknown_element = l.STYLE_KEYWORD..',italics',
   attribute = l.STYLE_TYPE,
@@ -113,10 +113,10 @@ M._tokenstyles = {
 }
 
 -- Tags that start embedded languages.
-M.embed_start_tag = tag * element *
+M.embed_start_tag = element *
                     (ws^1 * attribute * ws^0 * equals * ws^0 * string)^0 *
-                    ws^0 * tag
-M.embed_end_tag = tag * element * tag
+                    ws^0 * tag_close
+M.embed_end_tag = element * tag_close
 
 -- Embedded CSS.
 local css = l.load('css')
@@ -158,7 +158,8 @@ l.embed_lexer(M, cs, cs_start_rule, cs_end_rule)
 
 M._foldsymbols = {
   _patterns = {'</?', '/>', '<!%-%-', '%-%->'},
-  tag = {['<'] = 1, ['/>'] = -1, ['</'] = -1},
+  element = {['<'] = 1, ['/>'] = -1, ['</'] = -1},
+  unknown_element = {['<'] = 1, ['/>'] = -1, ['</'] = -1},
   [l.COMMENT] = {['<!--'] = 1, ['-->'] = -1}
 }
 
