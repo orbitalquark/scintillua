@@ -4,6 +4,26 @@
 
 [Atom Feed]: feed
 
+## 3.6.0-1 (03 Aug 2015)
+
+Download:
+
+* [Scintillua 3.6.0-1][]
+
+Bugfixes:
+
+* None.
+
+Changes:
+
+* Improved performance in some scripting-language lexers.
+* Updated Python lexer.
+* Updated to [Scintilla][]/[SciTE][] 3.6.0.
+
+[Scintillua 3.6.0-1]: download/scintillua_3.6.0-1.zip
+[Scintilla]: http://scintilla.org
+[SciTE]: http://scintilla.org/SciTE.html
+
 ## 3.5.7-1 (23 Jun 2015)
 
 Download:
