@@ -97,6 +97,9 @@ local constant = token(l.CONSTANT, word_match{
   'ValueError', 'Warning', 'ZeroDivisionError'
 })
 
+-- Self.
+local self = token('self', P('self'))
+
 -- Identifiers.
 local identifier = token(l.IDENTIFIER, l.word)
 
@@ -111,6 +114,7 @@ M._rules = {
   {'keyword', keyword},
   {'function', func},
   {'constant', constant},
+  {'self', self},
   {'identifier', identifier},
   {'comment', comment},
   {'string', string},
@@ -121,6 +125,7 @@ M._rules = {
 
 
 M._tokenstyles = {
+  self = l.STYLE_TYPE,
   decorator = l.STYLE_PREPROCESSOR
 }
 
