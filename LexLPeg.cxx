@@ -76,7 +76,7 @@ using namespace Scintilla;
 #define l_openlib(f, s) (luaL_requiref(L, s, f, 1), lua_pop(L, 1))
 #define LUA_BASELIBNAME "_G"
 #endif
-#define l_setconstant(l, c, k) (lua_pushnumber(l, c), lua_setfield(l, -2, k))
+#define l_setconstant(l, c, k) (lua_pushinteger(l, c), lua_setfield(l, -2, k))
 
 #if CURSES
 #define A_COLORCHAR (A_COLOR | A_CHARTEXT)
@@ -156,13 +156,13 @@ class LexerLPeg : public ILexer {
 			luaL_argcheck(L, !newindex, 3, "read-only property");
 			if (is_lexer) {
 				l_pushlexerp(L, llexer_property);
-			} else lua_pushnumber(L, buffer->GetLevel(luaL_checkinteger(L, 2)));
+			} else lua_pushinteger(L, buffer->GetLevel(luaL_checkinteger(L, 2)));
 		} else if (strcmp(key, "indent_amount") == 0) {
 			luaL_argcheck(L, !newindex, 3, "read-only property");
 			if (is_lexer) {
 				l_pushlexerp(L, llexer_property);
 			} else
-				lua_pushnumber(L, buffer->GetLineIndentation(luaL_checkinteger(L, 2)));
+				lua_pushinteger(L, buffer->GetLineIndentation(luaL_checkinteger(L, 2)));
 		} else if (strcmp(key, "property") == 0) {
 			luaL_argcheck(L, !is_lexer || !newindex, 3, "read-only property");
 			if (is_lexer) {
@@ -177,7 +177,7 @@ class LexerLPeg : public ILexer {
 				l_pushlexerp(L, llexer_property);
 			} else {
 				lua_pushstring(L, props->Get(luaL_checkstring(L, 2)));
-				lua_pushnumber(L, lua_tonumber(L, -1));
+				lua_pushinteger(L, lua_tointeger(L, -1));
 			}
 		} else if (strcmp(key, "style_at") == 0) {
 			luaL_argcheck(L, !newindex, 3, "read-only property");
@@ -522,8 +522,8 @@ public:
 	 * @param initStyle The initial style at position *startPos* in the document.
 	 * @param buffer The document interface.
 	 */
-	void SCI_METHOD Lex(unsigned int startPos, int lengthDoc, int initStyle,
-	                    IDocument *buffer) {
+	void SCI_METHOD Lex(Sci_PositionU startPos, Sci_Position lengthDoc,
+	                    int initStyle, IDocument *buffer) {
 		if ((reinit && !Init()) || !L) return;
 		lua_pushlightuserdata(L, reinterpret_cast<void *>(&props));
 		lua_setfield(L, LUA_REGISTRYINDEX, "sci_props");
@@ -551,14 +551,14 @@ public:
 		// [lang]_whitespace styles. This is so LPeg can start matching child
 		// languages instead of parent ones if necessary.
 		if (startPos > 0) {
-			int i = startPos;
+			Sci_PositionU i = startPos;
 			while (i > 0 && styler.StyleAt(i - 1) == initStyle) i--;
 			if (multilang)
         while (i > 0 && !ws[static_cast<size_t>(styler.StyleAt(i))]) i--;
 			lengthDoc += startPos - i, startPos = i;
 		}
 
-		unsigned int startSeg = startPos, endSeg = startPos + lengthDoc;
+		Sci_PositionU startSeg = startPos, endSeg = startPos + lengthDoc;
 		int style = 0;
 		l_getlexerfield(L, "lex")
 		if (lua_isfunction(L, -1)) {
@@ -603,8 +603,8 @@ public:
 	 * @param initStyle The initial style at position *startPos* in the document.
 	 * @param buffer The document interface.
 	 */
-	void SCI_METHOD Fold(unsigned int startPos, int lengthDoc, int initStyle,
-	                     IDocument *buffer) {
+	void SCI_METHOD Fold(Sci_PositionU startPos, Sci_Position lengthDoc,
+	                     int initStyle, IDocument *buffer) {
 		if ((reinit && !Init()) || !L) return;
 		lua_pushlightuserdata(L, reinterpret_cast<void *>(&props));
 		lua_setfield(L, LUA_REGISTRYINDEX, "sci_props");
@@ -615,11 +615,11 @@ public:
 		l_getlexerfield(L, "fold");
 		if (lua_isfunction(L, -1)) {
 			l_getlexerobj(L);
-			int currentLine = styler.GetLine(startPos);
+			Sci_Position currentLine = styler.GetLine(startPos);
 			lua_pushlstring(L, buffer->BufferPointer() + startPos, lengthDoc);
-			lua_pushnumber(L, startPos);
-			lua_pushnumber(L, currentLine);
-			lua_pushnumber(L, styler.LevelAt(currentLine) & SC_FOLDLEVELNUMBERMASK);
+			lua_pushinteger(L, startPos);
+			lua_pushinteger(L, currentLine);
+			lua_pushinteger(L, styler.LevelAt(currentLine) & SC_FOLDLEVELNUMBERMASK);
 			if (lua_pcall(L, 5, 1, 0) != LUA_OK) l_error(L);
 			// Fold the text from the fold table returned.
 			if (lua_istable(L, -1)) {
@@ -648,7 +648,7 @@ public:
 	 * @param key The string keyword.
 	 * @param val The string value.
 	 */
-	int SCI_METHOD PropertySet(const char *key, const char *value) {
+	Sci_Position SCI_METHOD PropertySet(const char *key, const char *value) {
 		props.Set(key, *value ? value : " "); // ensure property is cleared
 		if (reinit)
 			Init();
@@ -668,7 +668,7 @@ public:
 	/** Returning keyword list descriptions is not implemented. */
 	const char * SCI_METHOD DescribeWordListSets() { return ""; }
 	/** Setting keyword lists is not applicable. */
-	int SCI_METHOD WordListSet(int n, const char *wl) { return -1; }
+	Sci_Position SCI_METHOD WordListSet(int n, const char *wl) { return -1; }
 
 	/**
 	 * Allows for direct communication between the application and the lexer.
