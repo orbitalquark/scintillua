@@ -32,7 +32,7 @@ local blockcode = token('code', l.starts_line(P(' ')^4 + P('\t')) * -P('<') *
 
 local hr = token('hr', lpeg.Cmt(l.starts_line(S(' \t')^0 * lpeg.C(S('*-_'))),
                                 function(input, index, c)
-                                  local line = input:match('[^\n]+', index)
+                                  local line = input:match('[^\n]*', index)
                                   line = line:gsub('[ \t]', '')
                                   if line:find('[^'..c..']') or #line < 2 then
                                     return nil
