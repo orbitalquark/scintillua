@@ -8,8 +8,7 @@ local P, R, S = lpeg.P, lpeg.R, lpeg.S
 local M = {_NAME = 'markdown'}
 
 -- Whitespace.
-local ws = token(l.WHITESPACE, S(' \t\v')^1)
-local newline = token(l.WHITESPACE, S('\r\n\f')^1)
+local ws = token(l.WHITESPACE, l.space^1)
 
 -- Block elements.
 local header = token('h6', l.starts_line('######') * l.nonnewline^0) +
@@ -50,8 +49,8 @@ local link = token('link', P('!')^-1 * l.delimited_range('[]') *
                              l.delimited_range('"', false, true))^-1 * ')' +
                             S(' \t')^0 * l.delimited_range('[]')) +
                            P('http://') * (l.any - l.space)^1)
-local link_label = ws^0 * token('link_label', l.delimited_range('[]') * ':') *
-                   ws * token('link_url', (l.any - l.space)^1) *
+local link_label = token('link_label', l.delimited_range('[]') * ':') * ws *
+                   token('link_url', (l.any - l.space)^1) *
                    (ws * (dq_str + sq_str + paren_str))^-1
 
 local strong = token('strong', (P('**') * (l.any - '**')^0 * P('**')^-1) +
@@ -59,7 +58,7 @@ local strong = token('strong', (P('**') * (l.any - '**')^0 * P('**')^-1) +
 local em = token('em',
                  l.delimited_range('*', true) + l.delimited_range('_', true))
 local code = token('code', (P('``') * (l.any - '``')^0 * P('``')^-1) +
-                           l.delimited_range('`', true))
+                           l.delimited_range('`', true, true))
 
 local escape = token(l.DEFAULT, P('\\') * 1)
 
@@ -73,7 +72,7 @@ M._rules = {
   {'blockcode', blockcode},
   {'hr', hr},
   {'list', list},
-  {'whitespace', ws + newline},
+  {'whitespace', ws},
   {'link_label', link_label},
   {'escape', escape},
   {'link', link},
