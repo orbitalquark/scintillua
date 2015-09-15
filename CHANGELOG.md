@@ -4,6 +4,25 @@
 
 [Atom Feed]: feed
 
+## 3.6.1-1 (15 Sep 2015)
+
+Download:
+
+* [Scintillua 3.6.1-1][]
+
+Bugfixes:
+
+* Fixed Markdown lexer bugs and corner-cases.
+* Fixed multiple key highlighting on a single YAML line.
+
+Changes:
+
+* Updated to [Scintilla][]/[SciTE][] 3.6.1.
+
+[Scintillua 3.6.1-1]: download/scintillua_3.6.1-1.zip
+[Scintilla]: http://scintilla.org
+[SciTE]: http://scintilla.org/SciTE.html
+
 ## 3.6.0-1 (03 Aug 2015)
 
 Download:
