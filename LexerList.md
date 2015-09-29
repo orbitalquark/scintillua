@@ -40,6 +40,7 @@ see `lexers/lpeg.properties`.
 1. Fortran
 1. GAP`*`
 1. gettext
+1. Gherkin
 1. GLSL`*`
 1. Gnuplot
 1. Go`*`
