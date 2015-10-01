@@ -17,10 +17,10 @@ local tag = token('tag', '@' * l.word^0)
 local comment = token(l.COMMENT, '#' * l.nonnewline^0)
 
 -- Strings.
-local sq_str = l.delimited_range("'", false, true)
+local doc_str = '"""' * (l.any - '"""')^0 * P('"""')^-1
 local dq_str = l.delimited_range('"')
 
-local string = token(l.STRING, sq_str + dq_str)
+local string = token(l.STRING, doc_str + dq_str)
 
 -- Placeholders.
 local placeholder = token('placeholder', l.nested_pair('<', '>'))
@@ -38,6 +38,9 @@ local identifier = token(l.KEYWORD, P('Scenario Outline') + word_match{
 -- Examples.
 local example = token('example', '|' * l.nonnewline^0)
 
+-- Numbers.
+local number = token(l.NUMBER, l.float + l.integer)
+
 M._rules = {
   {'whitespace', ws},
   {'comment', comment},
@@ -47,6 +50,7 @@ M._rules = {
   {'identifier', identifier},
   {'example', example},
   {'string', string},
+  {'number', number}
 }
 
 M._tokenstyles = {
