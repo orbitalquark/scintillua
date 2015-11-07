@@ -4,6 +4,27 @@
 
 [Atom Feed]: feed
 
+## 3.6.2-1 (07 Nov 2015)
+
+Download:
+
+* [Scintillua 3.6.2-1][]
+
+Bugfixes:
+
+* None.
+
+Changes:
+
+* Added Gherkin lexer.
+* Updated to [Scintilla][]/[SciTE][] 3.6.2.
+* Updated to [LPeg][] 1.0.0.
+
+[Scintillua 3.6.2-1]: download/scintillua_3.6.2-1.zip
+[Scintilla]: http://scintilla.org
+[SciTE]: http://scintilla.org/SciTE.html
+[LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
+
 ## 3.6.1-1 (15 Sep 2015)
 
 Download:
