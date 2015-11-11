@@ -53,6 +53,11 @@ _Warning_: nightly builds are untested, may have bugs, and are the absolute
 cutting-edge versions of Scintillua. Do not use them in production, but for
 testing purposes only.
 
+If necessary, you can obtain PGP signatures from the [download page][] along
+with a public key in order to verify download integrity. For example on Linux,
+after importing the public key via `gpg --import foicica.pgp` and downloading
+the appropriate signature, run `gpg --verify [signature]`.
+
 [download page]: http://foicica.com/scintillua/download
 [Win32 and Linux]: download/scintillua_LATEST.zip
 [Win32 and Linux Nightly]: download/scintillua_NIGHTLY.zip

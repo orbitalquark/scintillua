@@ -68,13 +68,14 @@ endif
 
 $(basedir): ; hg archive $@ -X ".hg*"
 release: $(basedir)
-	make deps doc
+	make deps doc sign-deps
 	make -j4
 	make -j4 clean
 	make -j4 CC=i586-mingw32msvc-gcc CPP=i586-mingw32msvc-g++ win32
 	cp -r doc $<
 	cp lexers/*.so lexers/*.dll $</lexers/
-	zip -r /tmp/$<.zip $< && rm -rf $<
+	cp *.asc $</
+	zip -r /tmp/$<.zip $< && rm -rf $< && gpg -ab /tmp/$<.zip
 
 # External dependencies.
 
@@ -95,3 +96,7 @@ $(bombay_zip):
 doc/bombay: | $(bombay_zip)
 	mkdir $(notdir $@) && unzip -d $(notdir $@) $| && \
 		mv $(notdir $@)/*/* $(dir $@)
+sign-deps: | $(scintilla_tgz) $(lua_tgz) $(lpeg_tgz) $(bombay_zip)
+	@for file in $|; do gpg -ab $$file; done
+verify-deps: | $(wildcard $(basename $(wildcard *.asc)))
+	@for file in $|; do echo "$$file"; gpg --verify $$file.asc || return 1; done
