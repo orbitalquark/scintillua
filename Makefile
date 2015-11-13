@@ -96,7 +96,7 @@ $(bombay_zip):
 doc/bombay: | $(bombay_zip)
 	mkdir $(notdir $@) && unzip -d $(notdir $@) $| && \
 		mv $(notdir $@)/*/* $(dir $@)
-sign-deps: | $(scintilla_tgz) $(lua_tgz) $(lpeg_tgz) $(bombay_zip)
+sign-deps: | $(scintilla_tgz) $(lua_tgz) $(lpeg_tgz)
 	@for file in $|; do gpg -ab $$file; done
 verify-deps: | $(wildcard $(basename $(wildcard *.asc)))
 	@for file in $|; do echo "$$file"; gpg --verify $$file.asc || return 1; done
