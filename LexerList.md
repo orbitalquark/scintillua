@@ -93,6 +93,7 @@ see `lexers/lpeg.properties`.
 1. Scheme`*`
 1. Shell`*`
 1. Smalltalk`*`
+1. SNOBOL4
 1. SQL
 1. Tcl`*`
 1. TeX`*`
