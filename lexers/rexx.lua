@@ -67,7 +67,7 @@ local func = token(l.FUNCTION, word_match({
 }, '2', true))
 
 -- Identifiers.
-local word = l.alpha * (l.alnum + S('@#$\\.!?_')^0)
+local word = l.alpha * (l.alnum + S('@#$\\.!?_'))^0
 local identifier = token(l.IDENTIFIER, word)
 
 -- Operators.
