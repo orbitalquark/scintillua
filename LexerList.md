@@ -48,6 +48,7 @@ see `lexers/lpeg.properties`.
 1. Gtkrc`*`
 1. Haskell
 1. HTML`*`
+1. Icon`*`
 1. IDL
 1. Inform
 1. ini
