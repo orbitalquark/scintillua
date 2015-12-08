@@ -12,6 +12,7 @@ see `lexers/lpeg.properties`.
 1. Applescript
 1. ASM`*` (NASM)
 1. ASP`*`
+1. AutoIt
 1. AWK`*`
 1. Batch`*`
 1. BibTeX`*`
