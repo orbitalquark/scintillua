@@ -1,4 +1,4 @@
-# Copyright 2010-2015 Mitchell mitchell.att.foicica.com
+# Copyright 2010-2016 Mitchell mitchell.att.foicica.com. See LICENSE.
 # Make file for LexLPeg external lexer for Scintilla.
 
 ifeq (win, $(findstring win, $(MAKECMDGOALS)))
