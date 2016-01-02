@@ -36,7 +36,7 @@ local keyword_token = token(l.KEYWORD, word_match{
   "is_port", "is_record", "is_reference", "is_tuple", "is_exception", "case",
   "when", "cond", "for", "if", "unless", "try", "receive", "send", "exit",
   "raise", "throw", "after", "rescue", "catch", "else", "do", "end", "quote",
-  "unquote", "super", "import", "require", "alias", "use", "self"
+  "unquote", "super", "import", "require", "alias", "use", "self", "with", "fn"
 })
 
 -- Functions
