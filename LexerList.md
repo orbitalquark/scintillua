@@ -9,6 +9,7 @@ see `lexers/lpeg.properties`.
 1. Ada
 1. ANTLR`*`
 1. APDL`*`
+1. APL
 1. Applescript
 1. ASM`*` (NASM)
 1. ASP`*`
@@ -36,6 +37,7 @@ see `lexers/lpeg.properties`.
 1. Elixir
 1. Erlang`*`
 1. F#
+1. Faust
 1. Fish`*`
 1. Forth
 1. Fortran
@@ -59,12 +61,14 @@ see `lexers/lpeg.properties`.
 1. JSON`*`
 1. JSP`*`
 1. LaTeX`*`
+1. Ledger
 1. LESS`*`
 1. LilyPond
 1. Lisp`*`
 1. Literate Coffeescript
 1. Lua`*`
 1. Makefile
+1. Man Page
 1. Markdown
 1. MATLAB`*`
 1. Nemerle`*`
@@ -81,6 +85,7 @@ see `lexers/lpeg.properties`.
 1. PowerShell`*`
 1. Prolog
 1. Properties
+1. Pure
 1. Python
 1. R
 1. REBOL`*`

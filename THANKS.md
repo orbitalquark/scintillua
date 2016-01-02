@@ -10,11 +10,13 @@ Scintillua better and better over the years.
 * Brian Schott
 * Carl Sturtivant
 * Chris Emerson
+* David B. Lamkins
 * Jason Schindler
 * Jeff Stone
 * Joshua Krämer
 * Klaus Borges
 * M Rawash
+* Marc André Tanner
 * Martin Morawetz
 * Michael T. Richter
 * Neil Hodgson
