@@ -4,6 +4,7 @@ local format, concat = string.format, table.concat
 
 -- Do not glob these files. (e.g. *.foo)
 local noglobs = {
+  Dockerfile = true,
   GNUmakefile = true,
   Makefile = true,
   makefile = true,

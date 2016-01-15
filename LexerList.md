@@ -32,6 +32,7 @@ see `lexers/lpeg.properties`.
 1. Desktop Entry
 1. Diff
 1. Django`*`
+1. Dockerfile
 1. Dot`*`
 1. Eiffel`*`
 1. Elixir
@@ -71,6 +72,7 @@ see `lexers/lpeg.properties`.
 1. Man Page
 1. Markdown
 1. MATLAB`*`
+1. MoonScript
 1. Nemerle`*`
 1. Nim
 1. NSIS
