@@ -5,6 +5,28 @@
 [Atom Feed]: feed
 [PGP Public Key]: https://foicica.com/foicica.pgp
 
+## 3.6.3-1 (23 Jan 2016)
+
+Download:
+
+* [Scintillua 3.6.3-1][] | [PGP -- 3.6.3-1][]
+
+Bugfixes:
+
+* Fixed bug in Rexx lexer with identifiers.
+
+Changes:
+
+* Added SNOBOL4, Icon, AutoIt, APL, Faust, Ledger, man/roff, Pure, Dockerfile,
+  MoonScript, and PICO-8 lexers.
+* Updated Elixir lexer.
+* Updated to [Scintilla][]/[SciTE][] 3.6.3.
+
+[Scintillua 3.6.3-1]: download/scintillua_3.6.3-1.zip
+[PGP -- 3.6.3-1]: download/scintillua_3.6.3-1.zip.asc
+[Scintilla]: http://scintilla.org
+[SciTE]: http://scintilla.org/SciTE.html
+
 ## 3.6.2-1 (07 Nov 2015)
 
 Download:
