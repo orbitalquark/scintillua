@@ -500,10 +500,10 @@ public:
 	}
 
 	/** Destructor. */
-	~LexerLPeg() {}
+	virtual ~LexerLPeg() {}
 
 	/** Destroys the lexer object. */
-	void SCI_METHOD Release() {
+	virtual void SCI_METHOD Release() {
 		if (own_lua && L)
 			lua_close(L);
 		else if (!own_lua) {
@@ -522,8 +522,8 @@ public:
 	 * @param initStyle The initial style at position *startPos* in the document.
 	 * @param buffer The document interface.
 	 */
-	void SCI_METHOD Lex(Sci_PositionU startPos, Sci_Position lengthDoc,
-	                    int initStyle, IDocument *buffer) {
+	virtual void SCI_METHOD Lex(Sci_PositionU startPos, Sci_Position lengthDoc,
+	                            int initStyle, IDocument *buffer) {
 		if ((reinit && !Init()) || !L) return;
 		lua_pushlightuserdata(L, reinterpret_cast<void *>(&props));
 		lua_setfield(L, LUA_REGISTRYINDEX, "sci_props");
@@ -603,8 +603,8 @@ public:
 	 * @param initStyle The initial style at position *startPos* in the document.
 	 * @param buffer The document interface.
 	 */
-	void SCI_METHOD Fold(Sci_PositionU startPos, Sci_Position lengthDoc,
-	                     int initStyle, IDocument *buffer) {
+	virtual void SCI_METHOD Fold(Sci_PositionU startPos, Sci_Position lengthDoc,
+	                             int initStyle, IDocument *buffer) {
 		if ((reinit && !Init()) || !L) return;
 		lua_pushlightuserdata(L, reinterpret_cast<void *>(&props));
 		lua_setfield(L, LUA_REGISTRYINDEX, "sci_props");
@@ -634,13 +634,15 @@ public:
 	}
 
 	/** Returning the version of the lexer is not implemented. */
-	int SCI_METHOD Version() const { return 0; }
+	virtual int SCI_METHOD Version() const { return 0; }
 	/** Returning property names is not implemented. */
-	const char * SCI_METHOD PropertyNames() { return ""; }
+	virtual const char * SCI_METHOD PropertyNames() { return ""; }
 	/** Returning property types is not implemented. */
-	int SCI_METHOD PropertyType(const char *name) { return 0; }
+	virtual int SCI_METHOD PropertyType(const char *name) { return 0; }
 	/** Returning property descriptions is not implemented. */
-	const char * SCI_METHOD DescribeProperty(const char *name) { return ""; }
+	virtual const char * SCI_METHOD DescribeProperty(const char *name) {
+		return "";
+	}
 
 	/**
 	 * Sets the *key* lexer property to *value*.
@@ -648,7 +650,8 @@ public:
 	 * @param key The string keyword.
 	 * @param val The string value.
 	 */
-	Sci_Position SCI_METHOD PropertySet(const char *key, const char *value) {
+	virtual Sci_Position SCI_METHOD PropertySet(const char *key,
+	                                            const char *value) {
 		props.Set(key, *value ? value : " "); // ensure property is cleared
 		if (reinit)
 			Init();
@@ -666,9 +669,11 @@ public:
 	}
 
 	/** Returning keyword list descriptions is not implemented. */
-	const char * SCI_METHOD DescribeWordListSets() { return ""; }
+	virtual const char * SCI_METHOD DescribeWordListSets() { return ""; }
 	/** Setting keyword lists is not applicable. */
-	Sci_Position SCI_METHOD WordListSet(int n, const char *wl) { return -1; }
+	virtual Sci_Position SCI_METHOD WordListSet(int n, const char *wl) {
+		return -1;
+	}
 
 	/**
 	 * Allows for direct communication between the application and the lexer.
@@ -678,7 +683,7 @@ public:
 	 * @param arg The argument.
 	 * @return void *data
 	 */
-	void * SCI_METHOD PrivateCall(int code, void *arg) {
+	virtual void * SCI_METHOD PrivateCall(int code, void *arg) {
 		sptr_t lParam = reinterpret_cast<sptr_t>(arg);
 		const char *val = NULL;
 		switch(code) {

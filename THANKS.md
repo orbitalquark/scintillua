@@ -17,6 +17,7 @@ Scintillua better and better over the years.
 * Klaus Borges
 * M Rawash
 * Marc André Tanner
+* Markus F.X.J. Oberhumer
 * Martin Morawetz
 * Michael T. Richter
 * Neil Hodgson
