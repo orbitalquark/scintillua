@@ -227,9 +227,15 @@ class LexerLPeg : public ILexer {
 				SS(sci, SCI_STYLESETFONT, num, reinterpret_cast<sptr_t>(p));
 			else if (streq(option, "size"))
 				SS(sci, SCI_STYLESETSIZE, num, static_cast<int>(atoi(p)));
-			else if (streq(option, "bold") || streq(option, "notbold")) {
+			else if (streq(option, "bold") || streq(option, "notbold") ||
+			         streq(option, "weight")) {
 #if !CURSES
-				SS(sci, SCI_STYLESETBOLD, num, *option == 'b');
+				int weight = SC_WEIGHT_NORMAL;
+				if (*option == 'b')
+					weight = SC_WEIGHT_BOLD;
+				else if (*option == 'w')
+					weight = atoi(p);
+				SS(sci, SCI_STYLESETWEIGHT, num, weight);
 #else
 				// Scinterm requires font attributes to be stored in the "font weight"
 				// style attribute.
