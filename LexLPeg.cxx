@@ -223,9 +223,9 @@ class LexerLPeg : public ILexer {
 		while (option) {
 			if ((next = strchr(option, ','))) *next++ = '\0';
 			if ((p = strchr(option, ':'))) *p++ = '\0';
-			if (streq(option, "font"))
+			if (streq(option, "font") && p)
 				SS(sci, SCI_STYLESETFONT, num, reinterpret_cast<sptr_t>(p));
-			else if (streq(option, "size"))
+			else if (streq(option, "size") && p)
 				SS(sci, SCI_STYLESETSIZE, num, static_cast<int>(atoi(p)));
 			else if (streq(option, "bold") || streq(option, "notbold") ||
 			         streq(option, "weight")) {
@@ -233,7 +233,7 @@ class LexerLPeg : public ILexer {
 				int weight = SC_WEIGHT_NORMAL;
 				if (*option == 'b')
 					weight = SC_WEIGHT_BOLD;
-				else if (*option == 'w')
+				else if (*option == 'w' && p)
 					weight = atoi(p);
 				SS(sci, SCI_STYLESETWEIGHT, num, weight);
 #else
@@ -261,7 +261,7 @@ class LexerLPeg : public ILexer {
 				SS(sci, SCI_STYLESETWEIGHT, num,
 				   (*option == 'u') ? weight | A_UNDERLINE : weight & ~A_UNDERLINE);
 #endif
-			} else if (streq(option, "fore") || streq(option, "back")) {
+			} else if ((streq(option, "fore") || streq(option, "back")) && p) {
 				int msg = (*option == 'f') ? SCI_STYLESETFORE : SCI_STYLESETBACK;
 				int color = static_cast<int>(strtol(p, NULL, 0));
 				if (*p == '#') { // #RRGGBB format; Scintilla format is 0xBBGGRR
@@ -272,7 +272,7 @@ class LexerLPeg : public ILexer {
 				SS(sci, msg, num, color);
 			} else if (streq(option, "eolfilled") || streq(option, "noteolfilled"))
 				SS(sci, SCI_STYLESETEOLFILLED, num, *option == 'e');
-			else if (streq(option, "characterset"))
+			else if (streq(option, "characterset") && p)
 				SS(sci, SCI_STYLESETCHARACTERSET, num, static_cast<int>(atoi(p)));
 			else if (streq(option, "case") && p) {
 				if (*p == 'u')
