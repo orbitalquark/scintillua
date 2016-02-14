@@ -243,8 +243,10 @@ class LexerLPeg : public ILexer {
 				// SC_WEIGHT_BOLD values stored in the lower 16 bits. Then set the
 				// appropriate curses attr.
 				sptr_t weight = SS(sci, SCI_STYLEGETWEIGHT, num, 0) & ~A_COLORCHAR;
+				int bold = *option == 'b' ||
+				           (*option == 'w' && p && atoi(p) > SC_WEIGHT_NORMAL);
 				SS(sci, SCI_STYLESETWEIGHT, num,
-				   (*option == 'b') ? weight | A_BOLD : weight & ~A_BOLD);
+				   bold ? weight | A_BOLD : weight & ~A_BOLD);
 #endif
 			} else if (streq(option, "italics") || streq(option, "notitalics"))
 				SS(sci, SCI_STYLESETITALIC, num, *option == 'i');
