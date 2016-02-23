@@ -43,27 +43,24 @@ LUALIB_API int luaopen_lpeg(lua_State *L);
 using namespace Scintilla;
 #endif
 
-#define l_setmetatable(l, k, mtf) { \
+#define l_setmetatable(l, k, mtf) \
 	if (luaL_newmetatable(l, k)) { \
 		lua_pushcfunction(l, mtf), lua_setfield(l, -2, "__index"); \
 		lua_pushcfunction(l, mtf), lua_setfield(l, -2, "__newindex"); \
 	} \
-	lua_setmetatable(l, -2); \
-}
-#define l_pushlexerp(l, mtf) { \
+	lua_setmetatable(l, -2);
+#define l_pushlexerp(l, mtf) do { \
 	lua_newtable(l); \
 	lua_pushvalue(l, 2), lua_setfield(l, -2, "property"); \
 	l_setmetatable(l, "sci_lexerp", mtf); \
-}
-#define l_getlexerobj(l) { \
+} while(0)
+#define l_getlexerobj(l) \
 	lua_getfield(l, LUA_REGISTRYINDEX, "sci_lexers"); \
 	lua_pushlightuserdata(l, reinterpret_cast<void *>(this)); \
-	lua_gettable(l, -2), lua_replace(l, -2); \
-}
-#define l_getlexerfield(l, k) { \
+	lua_gettable(l, -2), lua_replace(l, -2);
+#define l_getlexerfield(l, k) \
 	l_getlexerobj(l); \
-	lua_getfield(l, -1, k), lua_replace(l, -2); \
-}
+	lua_getfield(l, -1, k), lua_replace(l, -2);
 #if LUA_VERSION_NUM < 502
 #define l_openlib(f, s) \
 	(lua_pushcfunction(L, f), lua_pushstring(L, s), lua_call(L, 1, 0))
@@ -154,36 +151,37 @@ class LexerLPeg : public ILexer {
 		const char *key = lua_tostring(L, -1);
 		if (strcmp(key, "fold_level") == 0) {
 			luaL_argcheck(L, !newindex, 3, "read-only property");
-			if (is_lexer) {
+			if (is_lexer)
 				l_pushlexerp(L, llexer_property);
-			} else lua_pushinteger(L, buffer->GetLevel(luaL_checkinteger(L, 2)));
+			else
+				lua_pushinteger(L, buffer->GetLevel(luaL_checkinteger(L, 2)));
 		} else if (strcmp(key, "indent_amount") == 0) {
 			luaL_argcheck(L, !newindex, 3, "read-only property");
-			if (is_lexer) {
+			if (is_lexer)
 				l_pushlexerp(L, llexer_property);
-			} else
+			else
 				lua_pushinteger(L, buffer->GetLineIndentation(luaL_checkinteger(L, 2)));
 		} else if (strcmp(key, "property") == 0) {
 			luaL_argcheck(L, !is_lexer || !newindex, 3, "read-only property");
-			if (is_lexer) {
+			if (is_lexer)
 				l_pushlexerp(L, llexer_property);
-			} else if (!newindex)
+			else if (!newindex)
 				lua_pushstring(L, props->Get(luaL_checkstring(L, 2)));
 			else
 				props->Set(luaL_checkstring(L, 2), luaL_checkstring(L, 3));
 		} else if (strcmp(key, "property_int") == 0) {
 			luaL_argcheck(L, !newindex, 3, "read-only property");
-			if (is_lexer) {
+			if (is_lexer)
 				l_pushlexerp(L, llexer_property);
-			} else {
+			else {
 				lua_pushstring(L, props->Get(luaL_checkstring(L, 2)));
 				lua_pushinteger(L, lua_tointeger(L, -1));
 			}
 		} else if (strcmp(key, "style_at") == 0) {
 			luaL_argcheck(L, !newindex, 3, "read-only property");
-			if (is_lexer) {
+			if (is_lexer)
 				l_pushlexerp(L, llexer_property);
-			} else {
+			else {
 				int style = buffer->StyleAt(luaL_checkinteger(L, 2) - 1);
 				lua_getfield(L, LUA_REGISTRYINDEX, "sci_lexer_obj");
 				lua_getfield(L, -1, "_TOKENSTYLES"), lua_replace(L, -2);
@@ -405,7 +403,6 @@ class LexerLPeg : public ILexer {
 			lua_getglobal(L, "require");
 			lua_pushstring(L, "lexer");
 			if (lua_pcall(L, 1, 1, 0) != LUA_OK) return (l_error(L), false);
-			lua_pushvalue(L, -1), lua_setglobal(L, "lexer"); // for Textadept 7 compat
 			l_setconstant(L, SC_FOLDLEVELBASE, "FOLD_BASE");
 			l_setconstant(L, SC_FOLDLEVELWHITEFLAG, "FOLD_BLANK");
 			l_setconstant(L, SC_FOLDLEVELHEADERFLAG, "FOLD_HEADER");
@@ -562,7 +559,7 @@ public:
 			Sci_PositionU i = startPos;
 			while (i > 0 && styler.StyleAt(i - 1) == initStyle) i--;
 			if (multilang)
-        while (i > 0 && !ws[static_cast<size_t>(styler.StyleAt(i))]) i--;
+				while (i > 0 && !ws[static_cast<size_t>(styler.StyleAt(i))]) i--;
 			lengthDoc += startPos - i, startPos = i;
 		}
 
