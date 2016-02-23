@@ -841,6 +841,9 @@ local M = {}
 -- @field indent_amount (table, Read-only)
 --   Table of indentation amounts in character columns, for line numbers
 --   starting from zero.
+-- @field line_state (table)
+--   Table of integer line states for line numbers starting from zero.
+--   Line states can be used by lexers for keeping track of persistent states.
 -- @field property (table)
 --   Map of key-value string pairs.
 -- @field property_expanded (table, Read-only)
@@ -850,7 +853,7 @@ local M = {}
 --   Map of key-value pairs with values interpreted as numbers, or `0` if not
 --   found.
 -- @field style_at (table, Read-only)
---   Table of style names at positions in the buffer starting from zero.
+--   Table of style names at positions in the buffer starting from 1.
 module('lexer')]=]
 
 local lpeg = require('lpeg')
@@ -1126,7 +1129,8 @@ end
 -- `fold.by.indentation` property is set, folding by indentation is done.
 -- @param lexer The lexer object to fold with.
 -- @param text The text in the buffer to fold.
--- @param start_pos The position in the buffer *text* starts at.
+-- @param start_pos The position in the buffer *text* starts at, starting at
+--   zero.
 -- @param start_line The line number *text* starts on.
 -- @param start_level The fold level *text* starts on.
 -- @return table of fold levels.
@@ -1537,6 +1541,13 @@ M.property_expanded = setmetatable({}, {
 })
 
 --[[ The functions and fields below were defined in C.
+
+---
+-- Returns the line number of the line that contains position *pos*, which
+-- starts from 1.
+-- @param pos The position to get the line number of.
+-- @return number
+local function line_from_position(pos) end
 
 ---
 -- Individual fields for a lexer instance.

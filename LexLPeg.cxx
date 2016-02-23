@@ -73,6 +73,7 @@ using namespace Scintilla;
 #define l_openlib(f, s) (luaL_requiref(L, s, f, 1), lua_pop(L, 1))
 #define LUA_BASELIBNAME "_G"
 #endif
+#define l_setfunction(l, f, k) (lua_pushcfunction(l, f), lua_setfield(l, -2, k))
 #define l_setconstant(l, c, k) (lua_pushinteger(l, c), lua_setfield(l, -2, k))
 
 #if CURSES
@@ -128,6 +129,14 @@ class LexerLPeg : public ILexer {
 	static void l_error(lua_State *L, const char *str=NULL) {
 		fprintf(stderr, "Lua Error: %s.\n", str ? str : lua_tostring(L, -1));
 		lua_settop(L, 0);
+	}
+
+	/** The lexer's `line_from_position` Lua function. */
+	static int l_line_from_position(lua_State *L) {
+		lua_getfield(L, LUA_REGISTRYINDEX, "sci_buffer");
+		IDocument *buffer = static_cast<IDocument *>(lua_touserdata(L, -1));
+		lua_pushinteger(L, buffer->LineFromPosition(luaL_checkinteger(L, 1) - 1));
+		return 1;
 	}
 
 	/** The lexer's `__index` Lua metatable. */
@@ -192,6 +201,15 @@ class LexerLPeg : public ILexer {
 				}
 				lua_pop(L, 1); // style_num
 			}
+		} else if (strcmp(key, "line_state") == 0) {
+			luaL_argcheck(L, !is_lexer || !newindex, 3, "read-only property");
+			if (is_lexer)
+				l_pushlexerp(L, llexer_property);
+			else if (!newindex)
+				lua_pushinteger(L, buffer->GetLineState(luaL_checkinteger(L, 2)));
+			else
+				buffer->SetLineState(luaL_checkinteger(L, 2),
+														 luaL_checkinteger(L, 3));
 		} else return !newindex ? (lua_rawget(L, 1), 1) : (lua_rawset(L, 1), 0);
 		return 1;
 	}
@@ -403,6 +421,7 @@ class LexerLPeg : public ILexer {
 			lua_getglobal(L, "require");
 			lua_pushstring(L, "lexer");
 			if (lua_pcall(L, 1, 1, 0) != LUA_OK) return (l_error(L), false);
+			l_setfunction(L, l_line_from_position, "line_from_position");
 			l_setconstant(L, SC_FOLDLEVELBASE, "FOLD_BASE");
 			l_setconstant(L, SC_FOLDLEVELWHITEFLAG, "FOLD_BLANK");
 			l_setconstant(L, SC_FOLDLEVELHEADERFLAG, "FOLD_HEADER");
