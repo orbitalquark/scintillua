@@ -516,6 +516,20 @@ local M = {}
 --     local php_end_rule = token('php_tag', '?>')
 --     l.embed_lexer(html, M, php_start_rule, php_end_rule)
 --
+-- ### Lexers with Complex State
+--
+-- A vast majority of lexers are not stateful and can operate on any chunk of
+-- text in a document. However, there may be rare cases where a lexer does need
+-- to keep track of some sort of persistent state. Rather than using `lpeg.P`
+-- function patterns that set state variables, it is recommended to make use of
+-- Scintilla's built-in, per-line state integers via [`lexer.line_state`](). It
+-- was designed to accommodate up to 32 bit flags for tracking state.
+-- [`lexer.line_from_position()`]() will return the line for any position given
+-- to an `lpeg.P` function pattern. (Any positions derived from that position
+-- argument will also work.)
+--
+-- Writing stateful lexers is beyond the scope of this document.
+--
 -- ## Code Folding
 --
 -- When reading source code, it is occasionally helpful to temporarily hide

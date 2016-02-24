@@ -209,7 +209,7 @@ class LexerLPeg : public ILexer {
 				lua_pushinteger(L, buffer->GetLineState(luaL_checkinteger(L, 2)));
 			else
 				buffer->SetLineState(luaL_checkinteger(L, 2),
-														 luaL_checkinteger(L, 3));
+				                     luaL_checkinteger(L, 3));
 		} else return !newindex ? (lua_rawget(L, 1), 1) : (lua_rawset(L, 1), 0);
 		return 1;
 	}
