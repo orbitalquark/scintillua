@@ -338,6 +338,7 @@ local M = {}
 -- font:_name_    | The name of the font the style uses.
 -- size:_int_     | The size of the font the style uses.
 -- [not]bold      | Whether or not the font face is bold.
+-- weight:_int_   | The weight or boldness of a font, between 1 and 999.
 -- [not]italics   | Whether or not the font face is italic.
 -- [not]underlined| Whether or not the font face is underlined.
 -- fore:_color_   | The foreground color of the font face.
