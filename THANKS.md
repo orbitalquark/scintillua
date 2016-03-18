@@ -11,6 +11,7 @@ Scintillua better and better over the years.
 * Carl Sturtivant
 * Chris Emerson
 * David B. Lamkins
+* Heck Fy
 * Jason Schindler
 * Jeff Stone
 * Joshua Krämer
