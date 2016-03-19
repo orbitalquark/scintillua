@@ -5,6 +5,34 @@
 [Atom Feed]: feed
 [PGP Public Key]: https://foicica.com/foicica.pgp
 
+## 3.6.4-1 (19 Mar 2016)
+
+Download:
+
+* [Scintillua 3.6.4-1][] | [PGP -- 3.6.4-1][]
+
+Bugfixes:
+
+* Fixed potential crash with malformed styles.
+* Fixed string highlighting in Rexx.
+
+Changes:
+
+* Recognize `weight` [style property][].
+* Added [`lexer.line_state`][] and [`lexer.line_from_position()`][] for
+  [stateful lexers][].
+* Updated Elixir and JavaScript lexers.
+* Updated to [Scintilla][]/[SciTE][] 3.6.4.
+
+[Scintillua 3.6.4-1]: download/scintillua_3.6.4-1.zip
+[PGP -- 3.6.4-1]: download/scintillua_3.6.4-1.zip.asc
+[style property]: api.html#lexer.Styles.and.Styling
+[`lexer.line_state`]: api.html#lexer.line_state
+[`lexer.line_from_position()`]: api.html#lexer.line_from_position
+[stateful lexers]: api.html#lexer.Lexers.with.Complex.State
+[Scintilla]: http://scintilla.org
+[SciTE]: http://scintilla.org/SciTE.html
+
 ## 3.6.3-1 (23 Jan 2016)
 
 Download:
