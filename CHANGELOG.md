@@ -5,6 +5,24 @@
 [Atom Feed]: feed
 [PGP Public Key]: https://foicica.com/foicica.pgp
 
+## 3.6.4-2 (04 Apr 2016)
+
+Download:
+
+* [Scintillua 3.6.4-2][] | [PGP -- 3.6.4-2][]
+
+Bugfixes:
+
+* Fixed bug with loading default themes in 3.6.4-1.
+
+Changes:
+
+* Themes must `require('lexer')` now (if they are not already), and cannot rely
+  on `lexer` to be globally defined. **This is a breaking change.**
+
+[Scintillua 3.6.4-2]: download/scintillua_3.6.4-2.zip
+[PGP -- 3.6.4-2]: download/scintillua_3.6.4-2.zip.asc
+
 ## 3.6.4-1 (19 Mar 2016)
 
 Download:
