@@ -2,7 +2,7 @@
 -- Dark lexer theme for Scintillua.
 -- Contributions by Ana Balan.
 
-local property = lexer.property
+local property = require('lexer').property
 
 -- Greyscale colors.
 --property['color.dark_black'] = '#000000'

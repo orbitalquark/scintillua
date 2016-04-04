@@ -1,7 +1,7 @@
 -- Copyright 2006-2016 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- SciTE lexer theme for Scintillua.
 
-local property = lexer.property
+local property = require('lexer').property
 
 property['color.red'] = '#7F0000'
 property['color.yellow'] = '#7F7F00'
