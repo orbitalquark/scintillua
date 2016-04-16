@@ -949,7 +949,8 @@ end
 local function add_lexer(grammar, lexer, token_rule)
   local token_rule = join_tokens(lexer)
   local lexer_name = lexer._NAME
-  for _, child in ipairs(lexer._CHILDREN) do
+  for i = 1, #lexer._CHILDREN do
+    local child = lexer._CHILDREN[i]
     if child._CHILDREN then add_lexer(grammar, child) end
     local child_name = child._NAME
     local rules = child._EMBEDDEDRULES[lexer_name]
@@ -991,16 +992,18 @@ local default = {
   'identifier', 'operator', 'error', 'preprocessor', 'constant', 'variable',
   'function', 'class', 'type', 'label', 'regex', 'embedded'
 }
-for _, v in ipairs(default) do
-  M[string_upper(v)], M['STYLE_'..string_upper(v)] = v, '$(style.'..v..')'
+for i = 1, #default do
+  local name, upper_name = default[i], string_upper(default[i])
+  M[upper_name], M['STYLE_'..upper_name] = name, '$(style.'..name..')'
 end
 -- Predefined styles.
 local predefined = {
   'default', 'linenumber', 'bracelight', 'bracebad', 'controlchar',
   'indentguide', 'calltip'
 }
-for _, v in ipairs(predefined) do
-  M[string_upper(v)], M['STYLE_'..string_upper(v)] = v, '$(style.'..v..')'
+for i = 1, #predefined do
+  local name, upper_name = predefined[i], string_upper(predefined[i])
+  M[upper_name], M['STYLE_'..upper_name] = name, '$(style.'..name..')'
 end
 
 ---
@@ -1055,20 +1058,28 @@ function M.load(name, alt_name)
   if lexer._lexer then
     local l, _r, _s = lexer._lexer, lexer._rules, lexer._tokenstyles
     if not l._tokenstyles then l._tokenstyles = {} end
-    for _, r in ipairs(_r or {}) do
-      -- Prevent rule id clashes.
-      l._rules[#l._rules + 1] = {lexer._NAME..'_'..r[1], r[2]}
+    if _r then
+      for i = 1, #_r do
+        -- Prevent rule id clashes.
+        l._rules[#l._rules + 1] = {lexer._NAME..'_'.._r[i][1], _r[i][2]}
+      end
     end
-    for token, style in pairs(_s or {}) do l._tokenstyles[token] = style end
+    if _s then
+      for token, style in pairs(_s) do l._tokenstyles[token] = style end
+    end
     lexer = l
   end
 
   -- Add the lexer's styles and build its grammar.
   if lexer._rules then
-    for token, style in pairs(lexer._tokenstyles or {}) do
-      add_style(lexer, token, style)
+    if lexer._tokenstyles then
+      for token, style in pairs(lexer._tokenstyles) do
+        add_style(lexer, token, style)
+      end
     end
-    for _, r in ipairs(lexer._rules) do add_rule(lexer, r[1], r[2]) end
+    for i = 1, #lexer._rules do
+      add_rule(lexer, lexer._rules[i][1], lexer._rules[i][2])
+    end
     build_grammar(lexer)
   end
   -- Add the lexer's unique whitespace style.
@@ -1434,8 +1445,8 @@ end
 -- @name word_match
 function M.word_match(words, word_chars, case_insensitive)
   local word_list = {}
-  for _, word in ipairs(words) do
-    word_list[case_insensitive and word:lower() or word] = true
+  for i = 1, #words do
+    word_list[case_insensitive and words[i]:lower() or words[i]] = true
   end
   local chars = M.alnum + '_'
   if word_chars then chars = chars + lpeg_S(word_chars) end
@@ -1463,7 +1474,9 @@ function M.embed_lexer(parent, child, start_rule, end_rule)
   if not child._EMBEDDEDRULES then child._EMBEDDEDRULES = {} end
   if not child._RULES then -- creating a child lexer to be embedded
     if not child._rules then error('Cannot embed language with no rules') end
-    for _, r in ipairs(child._rules) do add_rule(child, r[1], r[2]) end
+    for i = 1, #child._rules do
+      add_rule(child, child._rules[i][1], child._rules[i][2])
+    end
   end
   child._EMBEDDEDRULES[parent._NAME] = {
     ['start_rule'] = start_rule,
@@ -1477,8 +1490,10 @@ function M.embed_lexer(parent, child, start_rule, end_rule)
   if not parent._tokenstyles then parent._tokenstyles = {} end
   local tokenstyles = parent._tokenstyles
   tokenstyles[child._NAME..'_whitespace'] = M.STYLE_WHITESPACE
-  for token, style in pairs(child._tokenstyles or {}) do
-    tokenstyles[token] = style
+  if child._tokenstyles then
+    for token, style in pairs(child._tokenstyles) do
+      tokenstyles[token] = style
+    end
   end
   child._lexer = parent -- use parent's tokens if child is embedding itself
   parent_lexer = parent -- use parent's tokens if the calling lexer is a proxy
