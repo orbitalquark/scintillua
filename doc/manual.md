@@ -123,6 +123,11 @@ The following properties are optional and may or may not be set:
   application can define colors and styles manually through Scintilla
   properties. The theme files have examples.
 
+* `fold`
+
+  For LPeg lexers that have a folder, folding is turned on if `fold` is set to
+  `1`. The default is `0`.
+
 * `fold.by.indentation`
 
   For LPeg lexers that do not have a folder, if `fold.by.indentation` is set to
