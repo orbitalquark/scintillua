@@ -5,6 +5,26 @@
 [Atom Feed]: feed
 [PGP Public Key]: https://foicica.com/foicica.pgp
 
+## 3.6.5-1 (26 Apr 2016)
+
+Download:
+
+* [Scintillua 3.6.5-1][] | [PGP -- 3.6.5-1][]
+
+Bugfixes:
+
+* None.
+
+Changes:
+
+* Updated some documentation for clarity.
+* Updated to [Scintilla][]/[SciTE][] 3.6.4.
+
+[Scintillua 3.6.5-1]: download/scintillua_3.6.5-1.zip
+[PGP -- 3.6.5-1]: download/scintillua_3.6.5-1.zip.asc
+[Scintilla]: http://scintilla.org
+[SciTE]: http://scintilla.org/SciTE.html
+
 ## 3.6.4-2 (04 Apr 2016)
 
 Download:
