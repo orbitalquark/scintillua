@@ -18,7 +18,7 @@ Bugfixes:
 Changes:
 
 * Updated some documentation for clarity.
-* Updated to [Scintilla][]/[SciTE][] 3.6.4.
+* Updated to [Scintilla][]/[SciTE][] 3.6.5.
 
 [Scintillua 3.6.5-1]: download/scintillua_3.6.5-1.zip
 [PGP -- 3.6.5-1]: download/scintillua_3.6.5-1.zip.asc
