@@ -793,7 +793,8 @@ int EXT_LEXER_DECL GetLexerCount() { return 1; }
  */
 void EXT_LEXER_DECL GetLexerName(unsigned int index, char *name, int len) {
 	*name = '\0';
-	if ((index == 0) && (len > strlen("lpeg"))) strcpy(name, "lpeg");
+	if ((index == 0) && (len > static_cast<int>(strlen("lpeg"))))
+		strcpy(name, "lpeg");
 }
 /**
  * Returns the function that creates a new instance of the lexer.
