@@ -16,6 +16,7 @@ Scintillua better and better over the years.
 * Jeff Stone
 * Joshua Krämer
 * Klaus Borges
+* Larry Hynes
 * M Rawash
 * Marc André Tanner
 * Markus F.X.J. Oberhumer
