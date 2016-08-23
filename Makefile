@@ -21,7 +21,7 @@ endif
 
 # Scintilla.
 sci_flags = -g -pedantic $(plat_flag) -Iscintilla/include -Iscintilla/lexlib \
-            -DSCI_LEXER -Wall
+            -DSCI_LEXER -W -Wall -Wno-unused
 lex_objs = PropSetSimple.o WordList.o LexerModule.o LexerSimple.o LexerBase.o \
            Accessor.o
 
