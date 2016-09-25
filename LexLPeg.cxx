@@ -548,12 +548,19 @@ public:
 	 */
 	virtual void SCI_METHOD Lex(Sci_PositionU startPos, Sci_Position lengthDoc,
 	                            int initStyle, IDocument *buffer) {
-		if ((reinit && !Init()) || !L) return;
+		LexAccessor styler(buffer);
+		if ((reinit && !Init()) || !L) {
+			// Style everything in the default style.
+			styler.StartAt(startPos);
+			styler.StartSegment(startPos);
+			styler.ColourTo(startPos + lengthDoc - 1, STYLE_DEFAULT);
+			styler.Flush();
+			return;
+		}
 		lua_pushlightuserdata(L, reinterpret_cast<void *>(&props));
 		lua_setfield(L, LUA_REGISTRYINDEX, "sci_props");
 		lua_pushlightuserdata(L, reinterpret_cast<void *>(buffer));
 		lua_setfield(L, LUA_REGISTRYINDEX, "sci_buffer");
-		LexAccessor styler(buffer);
 
 		// Ensure the lexer has a grammar.
 		// This could be done in the lexer module's `lex()`, but for large files,
@@ -677,8 +684,7 @@ public:
 	virtual Sci_Position SCI_METHOD PropertySet(const char *key,
 	                                            const char *value) {
 		props.Set(key, *value ? value : " "); // ensure property is cleared
-		if (reinit)
-			Init();
+		if (reinit) Init();
 #if NO_SCITE
 		else if (L && SS && sci && strncmp(key, "style.", 6) == 0) {
 			l_getlexerfield(L, "_TOKENSTYLES");
