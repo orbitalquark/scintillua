@@ -58,8 +58,8 @@ local M = {}
 -- lower case followed by a *.lua* extension. For example, a new Lua lexer has
 -- the name *lua.lua*.
 --
--- Note: Try to refrain from using one-character language names like "b", "c",
--- or "d". For example, Scintillua uses "b_lang", "cpp", and "dmd",
+-- Note: Try to refrain from using one-character language names like "c", "d",
+-- or "r". For example, Scintillua uses "ansi_c", "dmd", and "rstats",
 -- respectively.
 --
 -- ### New Lexer Template
@@ -89,7 +89,7 @@ local M = {}
 --
 --     return M
 --
--- The first 4 lines of code simply define often used convenience variables. The
+-- The first 3 lines of code simply define often used convenience variables. The
 -- 5th and last lines define and return the lexer object Scintilla uses; they
 -- are very important and must be part of every lexer. The sixth line defines
 -- something called a "token", an essential building block of lexers. You will
@@ -1008,9 +1008,10 @@ end
 
 ---
 -- Initializes or loads and returns the lexer of string name *name*.
--- Scintilla calls this function to load a lexer. Parent lexers also call this
--- function to load child lexers and vice-versa. The user calls this function
--- to load a lexer when using Scintillua as a Lua library.
+-- Scintilla calls this function in order to load a lexer. Parent lexers also
+-- call this function in order to load child lexers and vice-versa. The user
+-- calls this function in order to load a lexer when using Scintillua as a Lua
+-- library.
 -- @param name The name of the lexing language.
 -- @param alt_name The alternate name of the lexing language. This is useful for
 --   embedding the same child lexer with multiple sets of start and end tokens.
@@ -1147,11 +1148,11 @@ function M.lex(lexer, text, init_style)
 end
 
 ---
--- Folds a chunk of text *text* with lexer *lexer*.
--- Folds *text* starting at position *start_pos* on line number *start_line*
--- with a beginning fold level of *start_level* in the buffer. If *lexer* has a
--- a `_fold` function or a `_foldsymbols` table, that field is used to perform
--- folding. Otherwise, if *lexer* has a `_FOLDBYINDENTATION` field set, or if a
+-- Determines fold points in a chunk of text *text* with lexer *lexer*.
+-- *text* starts at position *start_pos* on line number *start_line* with a
+-- beginning fold level of *start_level* in the buffer. If *lexer* has a `_fold`
+-- function or a `_foldsymbols` table, that field is used to perform folding.
+-- Otherwise, if *lexer* has a `_FOLDBYINDENTATION` field set, or if a
 -- `fold.by.indentation` property is set, folding by indentation is done.
 -- @param lexer The lexer object to fold with.
 -- @param text The text in the buffer to fold.
@@ -1435,7 +1436,7 @@ end
 -- @param word_chars Optional string of additional characters considered to be
 --   part of a word. By default, word characters are alphanumerics and
 --   underscores ("%w_" in Lua). This parameter may be `nil` or the empty string
---   to indicate no additional word characters.
+--   in order to indicate no additional word characters.
 -- @param case_insensitive Optional boolean flag indicating whether or not the
 --   word match is case-insensitive. The default is `false`.
 -- @return pattern
@@ -1584,7 +1585,7 @@ local function line_from_position(pos) end
 -- @field _NAME The string name of the lexer.
 -- @field _rules An ordered list of rules for a lexer grammar.
 --   Each rule is a table containing an arbitrary rule name and the LPeg pattern
---   associated with the rule. The order of rules is important as rules are
+--   associated with the rule. The order of rules is important, as rules are
 --   matched sequentially.
 --   Child lexers should not use this table to access and/or modify their
 --   parent's rules and vice-versa. Use the `_RULES` table instead.
