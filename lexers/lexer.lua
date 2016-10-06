@@ -1026,9 +1026,7 @@ function M.load(name, alt_name)
   -- prevent errors from occurring.
   if not M.property then
     M.property, M.property_int = {}, setmetatable({}, {
-      __index = function(t, k)
-        return tostring(tonumber(M.property[k]) or 0)
-      end,
+      __index = function(t, k) return tonumber(M.property[k]) or 0 end,
       __newindex = function() error('read-only property') end
     })
   end
