@@ -32,9 +32,9 @@ local number = token(l.NUMBER, l.float + l.integer)
 
 -- Keywords.
 local keyword = token(l.KEYWORD, word_match({
-  'patch', 'cd', 'make', 'patch', 'mkdir', 'cp', 'sed', 'install', 'rm',
-  'if', 'then', 'elif', 'else', 'fi', 'case', 'in', 'esac', 'while', 'for',
-  'do', 'done', 'continue', 'local', 'return', 'git', 'svn', 'co', 'clone',
+  'patch', 'cd', 'make', 'patch', 'mkdir', 'cp', 'sed', 'install', 'rm', 'if',
+  'then', 'elif', 'else', 'fi', 'case', 'in', 'esac', 'while', 'for', 'do',
+  'done', 'continue', 'local', 'return', 'git', 'svn', 'co', 'clone',
   'gconf-merge-schema', 'msg', 'echo', 'ln',
   -- Operators.
   '-a', '-b', '-c', '-d', '-e', '-f', '-g', '-h', '-k', '-p', '-r', '-s', '-t',
@@ -43,13 +43,19 @@ local keyword = token(l.KEYWORD, word_match({
 }, '-'))
 
 -- Functions.
-local func = token(l.FUNCTION, word_match{'build'})
+local func = token(l.FUNCTION, word_match{
+  'build', 'check', 'package', 'pkgver', 'prepare'
+} * '()')
 
+-- Constants.
 local constant = token(l.CONSTANT, word_match{
-  'pkgname', 'pkgver', 'pkgrel', 'pkgdesc', 'arch', 'url',
-  'license', 'optdepends', 'depends', 'makedepends', 'provides',
-  'conflicts', 'replaces', 'install', 'source', 'md5sums',
-  'pkgdir', 'srcdir'
+  -- We do *not* list pkgver, srcdir and startdir here.
+  -- These are defined by makepkg but user should not alter them.
+  'arch', 'backup', 'changelog', 'checkdepends', 'conflicts', 'depends',
+  'epoch', 'groups', 'install', 'license', 'makedepends', 'md5sums',
+  'noextract', 'optdepends', 'options', 'pkgbase', 'pkgdesc', 'pkgname',
+  'pkgrel', 'pkgver', 'provides', 'replaces', 'sha1sums', 'sha256sums',
+  'sha384sums', 'sha512sums', 'source', 'url', 'validpgpkeys'
 })
 
 -- Identifiers.

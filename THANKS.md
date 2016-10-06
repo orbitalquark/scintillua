@@ -10,6 +10,7 @@ Scintillua better and better over the years.
 * Brian Schott
 * Carl Sturtivant
 * Chris Emerson
+* Christian Hesse
 * David B. Lamkins
 * Heck Fy
 * Jason Schindler
@@ -22,6 +23,7 @@ Scintillua better and better over the years.
 * Markus F.X.J. Oberhumer
 * Martin Morawetz
 * Michael T. Richter
+* Michel Martens
 * Neil Hodgson
 * Olivier Guibé
 * Peter Odding
