@@ -1104,6 +1104,7 @@ end
 -- @return table of token names and positions.
 -- @name lex
 function M.lex(lexer, text, init_style)
+  if not lexer._GRAMMAR then return {M.DEFAULT, #text + 1} end
   if not lexer._LEXBYLINE then
     -- For multilang lexers, build a new grammar whose initial_rule is the
     -- current language.
