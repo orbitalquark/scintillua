@@ -566,13 +566,14 @@ local M = {}
 -- `_foldsymbols` table must have a `_patterns` field that contains a list of
 -- [Lua patterns][] that match fold points. If the lexer encounters text that
 -- matches one of those patterns, the lexer looks up the matched text in its
--- token's table to determine whether or not the text is a fold point. In the
--- example above, the first Lua pattern matches any '{' or '}' characters. When
--- the lexer comes across one of those characters, it checks if the match is an
--- `lexer.OPERATOR` token. If so, the lexer identifies the match as a fold
--- point. The same idea applies for the other patterns. (The '%' is in the other
--- patterns because '\*' is a special character in Lua patterns that needs
--- escaping.) How do you specify fold keywords? Here is an example for Lua:
+-- token's table in order to determine whether or not the text is a fold point.
+-- In the example above, the first Lua pattern matches any '{' or '}'
+-- characters. When the lexer comes across one of those characters, it checks if
+-- the match is an `lexer.OPERATOR` token. If so, the lexer identifies the match
+-- as a fold point. The same idea applies for the other patterns. (The '%' is in
+-- the other patterns because '\*' is a special character in Lua patterns that
+-- needs escaping.) How do you specify fold keywords? Here is an example for
+-- Lua:
 --
 --     M._foldsymbols = {
 --       [l.KEYWORD] = {
@@ -585,6 +586,10 @@ local M = {}
 -- Any time the lexer encounters a lower case word, if that word is a
 -- `lexer.KEYWORD` token and in the associated list of fold points, the lexer
 -- identifies the word as a fold point.
+--
+-- If your lexer has case-insensitive keywords as fold points, simply add a
+-- `_case_insensitive = true` option to the `_foldsymbols` table and specify
+-- keywords in lower-case.
 --
 -- If your lexer needs to do some additional processing to determine if a match
 -- is a fold point, assign a function that returns an integer. Returning `1` or
@@ -1172,12 +1177,14 @@ function M.fold(lexer, text, start_pos, start_line, start_level)
     local fold_zero_sum_lines = M.property_int['fold.on.zero.sum.lines'] > 0
     local fold_symbols = lexer._foldsymbols
     local fold_symbols_patterns = fold_symbols._patterns
+    local fold_symbols_case_insensitive = fold_symbols._case_insensitive
     local style_at, fold_level = M.style_at, M.fold_level
     local line_num, prev_level = start_line, start_level
     local current_level = prev_level
     for i = 1, #lines do
       local pos, line = lines[i][1], lines[i][2]
       if line ~= '' then
+        if fold_symbols_case_insensitive then line = line:lower() end
         local level_decreased = false
         for j = 1, #fold_symbols_patterns do
           for s, match in line:gmatch(fold_symbols_patterns[j]) do
