@@ -5,6 +5,33 @@
 [Atom Feed]: feed
 [PGP Public Key]: https://foicica.com/foicica.pgp
 
+## 3.7.0-1 (19 Oct 2016)
+
+Download:
+
+* [Scintillua 3.7.0-1][] | [PGP -- 3.7.0-1][]
+
+Bugfixes:
+
+* Throw an error if a lexer cannot be loaded or has errors.
+* Improved [`lexer.float`][] pattern.
+* Handle lexers with no rules/grammars gracefully.
+* Fixed bug in [`lexer.property_int`][] not returning a number in all cases.
+
+Changes:
+
+* Added `_foldsymbols._case_insensitive` option.
+* Added Protobuf and Crystal lexers.
+* Updated PKGBUILD lexer.
+* Updated to [Scintilla][]/[SciTE][] 3.7.0.
+
+[Scintillua 3.7.0-1]: download/scintillua_3.7.0-1.zip
+[PGP -- 3.7.0-1]: download/scintillua_3.7.0-1.zip.asc
+[`lexer.float`]: api.html#lexer.float
+[`lexer.property_int`]: api.html#lexer.property_int
+[Scintilla]: http://scintilla.org
+[SciTE]: http://scintilla.org/SciTE.html
+
 ## 3.6.7-1 (15 Sep 2016)
 
 Download:
