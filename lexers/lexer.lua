@@ -589,7 +589,7 @@ local M = {}
 --
 -- If your lexer has case-insensitive keywords as fold points, simply add a
 -- `_case_insensitive = true` option to the `_foldsymbols` table and specify
--- keywords in lower-case.
+-- keywords in lower case.
 --
 -- If your lexer needs to do some additional processing to determine if a match
 -- is a fold point, assign a function that returns an integer. Returning `1` or
@@ -1602,11 +1602,14 @@ local function line_from_position(pos) end
 --   point and a value of `-1` indicates an ending fold point. Values can also
 --   be functions that return `1`, `-1`, or `0` (indicating no fold point) for
 --   keys which need additional processing.
---   There is also a required `_pattern` key whose value is a table containing
+--   There is also a required `_patterns` key whose value is a table containing
 --   Lua pattern strings that match all fold points (the string keys contained
 --   in token name table values). When the lexer encounters text that matches
 --   one of those patterns, the matched text is looked up in its token's table
 --   to determine whether or not it is a fold point.
+--   There is also an optional `_case_insensitive` option that indicates whether
+--   or not fold point keys are case-insensitive. If `true`, fold point keys
+--   should be in lower case.
 -- @field _fold If this function exists in the lexer, it is called for folding
 --   the document instead of using `_foldsymbols` or indentation.
 -- @field _lexer The parent lexer object whose rules should be used. This field
