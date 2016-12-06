@@ -790,6 +790,8 @@ local M = {}
 -- @field STYLE_CALLTIP (string)
 --   The style used by call tips if [`buffer.call_tip_use_style`]() is set.
 --   Only the font name, size, and color attributes are used.
+-- @field STYLE_FOLDDISPLAYTEXT (string)
+--   The style used for fold display text.
 -- @field any (pattern)
 --   A pattern that matches any single character.
 -- @field ascii (pattern)
@@ -1004,7 +1006,7 @@ end
 -- Predefined styles.
 local predefined = {
   'default', 'linenumber', 'bracelight', 'bracebad', 'controlchar',
-  'indentguide', 'calltip'
+  'indentguide', 'calltip', 'folddisplaytext'
 }
 for i = 1, #predefined do
   local name, upper_name = predefined[i], string_upper(predefined[i])

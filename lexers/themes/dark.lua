@@ -91,3 +91,4 @@ property['style.indentguide'] = 'fore:$(color.light_black),'..
                                 'back:$(color.light_black)'
 property['style.calltip'] = 'fore:$(color.light_grey),'..
                             'back:$(color.light_black)'
+property['style.folddisplaytext'] = 'fore:$(color.dark_grey)'
