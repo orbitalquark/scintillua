@@ -5,6 +5,28 @@
 [Atom Feed]: feed
 [PGP Public Key]: https://foicica.com/foicica.pgp
 
+## 3.7.1-1 (05 Dec 2016)
+
+Download:
+
+* [Scintillua 3.7.1-1][] | [PGP -- 3.7.1-1][]
+
+Bugfixes:
+
+* None.
+
+Changes:
+
+* Added [`lexer.STYLE_FOLDDISPLAYTEXT`][] style (`style.folddisplaytext` in
+  themes) for fold display text.
+* Updated to [Scintilla][]/[SciTE][] 3.7.1.
+
+[Scintillua 3.7.1-1]: download/scintillua_3.7.1-1.zip
+[PGP -- 3.7.1-1]: download/scintillua_3.7.1-1.zip.asc
+[`lexer.STYLE_FOLDDISPLAYTEXT`]: api.html#lexer.STYLE_FOLDDISPLAYTEXT
+[Scintilla]: http://scintilla.org
+[SciTE]: http://scintilla.org/SciTE.html
+
 ## 3.7.0-1 (19 Oct 2016)
 
 Download:
