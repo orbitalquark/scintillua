@@ -185,8 +185,8 @@ directory in your Lua path (or modify Lua's `package.path` accordingly),
 
 For native LPeg support, developers can add the included `LexLPeg.cxx` Scintilla
 lexer and download and include [Lua][] and [LPeg][] sources files to their
-toolchains for compiling Scintilla. Scintillua supports both Lua 5.1 and
-Lua 5.2. A sample portion of a `Makefile` with Lua 5.2 is shown below.
+toolchains for compiling Scintilla. Scintillua supports Lua 5.1, 5.2, and 5.3.
+A sample portion of a `Makefile` with Lua 5.3 is shown below.
 
     # Sample Makefile portion for compiling Scintillua with Scintilla
 
@@ -197,11 +197,11 @@ Lua 5.2. A sample portion of a `Makefile` with Lua 5.2 is shown below.
     SCINTILLUA_SRC = LexLPeg.cxx
     LUAFLAGS = -Iscintillua/lua/src
     LUA_OBJS = lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o \
-      linit.o llex.o lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o \
-      ltable.o ltm.o lundump.o lvm.o lzio.o \
-      lauxlib.o lbaselib.o lbitlib.o lcorolib.o ldblib.o liolib.o lmathlib.o \
-      loadlib.o loslib.o ltablib.o lstrlib.o \
-      lpeg.o
+               linit.o llex.o lmem.o lobject.o lopcodes.o lparser.o lstate.o \
+               lstring.o ltable.o ltm.o lundump.o lvm.o lzio.o \
+               lauxlib.o lbaselib.o lbitlib.o lcorolib.o ldblib.o liolib.o \
+               lmathlib.o loadlib.o loslib.o lstrlib.o ltablib.o lutf8lib.o \
+               lpcap.o lpcode.o lpprint.o lptree.o lpvm.o
     LUA_SRCS = scintillua/lua/src/*.c scintillua/lua/src/lib/*.c
     $(SCINTILLUA_LEXER): $(SCINTILLUA_SRC)
     	g++ $(SCIFLAGS) $(LUAFLAGS) -DLPEG_LEXER -c $< -o $@
