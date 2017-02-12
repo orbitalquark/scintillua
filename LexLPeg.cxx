@@ -122,11 +122,17 @@ class LexerLPeg : public ILexer {
 	bool ws[STYLE_MAX + 1];
 
 	/**
-	 * Prints the given message or a Lua error message and clears the stack.
-	 * @param str The error message to print. If `NULL`, prints the Lua error
-	 *   message at the top of the stack.
+	 * Logs the given error message or a Lua error message, prints it, and clears
+	 * the stack.
+	 * Error messages are logged to the "lexer.lpeg.error" property.
+	 * @param str The error message to log and print. If `NULL`, logs and prints
+	 *   the Lua error message at the top of the stack.
 	 */
 	static void l_error(lua_State *L, const char *str=NULL) {
+		lua_getfield(L, LUA_REGISTRYINDEX, "sci_props");
+		PropSetSimple *props = static_cast<PropSetSimple *>(lua_touserdata(L, -1));
+		lua_pop(L, 1); // props
+		props->Set("lexer.lpeg.error", str ? str : lua_tostring(L, -1));
 		fprintf(stderr, "Lua Error: %s.\n", str ? str : lua_tostring(L, -1));
 		lua_settop(L, 0);
 	}
@@ -476,6 +482,7 @@ class LexerLPeg : public ILexer {
 		lua_pop(L, 2); // _CHILDREN and lexer object
 
 		reinit = false;
+		props.Set("lexer.lpeg.error", "");
 		return true;
 	}
 
@@ -737,6 +744,7 @@ public:
 			props.GetExpanded("lexer.name", lexer_name);
 			if (strcmp(lexer_name, reinterpret_cast<const char *>(arg)) != 0) {
 				reinit = true;
+				props.Set("lexer.lpeg.error", "");
 				PropertySet("lexer.name", reinterpret_cast<const char *>(arg));
 			} else if (L)
 				own_lua ? SetStyles() : Init();
@@ -762,6 +770,8 @@ public:
 				lua_pop(L, 1); // lexer_name or lexer language string
 			}
 			return StringResult(lParam, val ? val : "null");
+		case SCI_GETSTATUS:
+			return StringResult(lParam, props.Get("lexer.lpeg.error"));
 		default: // style-related
 			if (code >= -STYLE_MAX && code < 0) { // retrieve SciTE style strings
 #if !NO_SCITE
@@ -817,6 +827,7 @@ GetProperty "lexer.lpeg.home"
 GetProperty "lexer.lpeg.color.theme"
 GetProperty "fold.by.indentation"
 GetProperty "fold.line.comments"
+GetProperty "fold.on.zero.sum.lines"
 */
 #else
 LexerModule lmLPeg(SCLEX_AUTOMATIC - 1, LexerLPeg::LexerFactoryLPeg, "lpeg");

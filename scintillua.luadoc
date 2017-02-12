@@ -169,3 +169,15 @@ function SCI_PRIVATELEXERCALL(SCI_GETLEXERLANGUAGE, languageName) end
 -- @usage SendScintilla(sci, SCI_PRIVATELEXERCALL, style, token)
 -- @usage // token now contains the name of the style at pos
 function SCI_PRIVATELEXERCALL(styleNum, style) end
+
+---
+-- Returns the error message of the Scintillua or Lua LPeg lexer error that
+-- occurred (if any).
+--
+-- If no error occurred, the returned message will be empty.
+--
+-- Since Scintillua does not throw errors as they occur, errors can only be
+-- handled passively. Note that Scintillua does print all errors to stderr.
+-- @usage SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_GETSTATUS, errmsg)
+-- @usage if (strlen(errmsg) > 0) { /* handle error */ }
+function SCI_PRIVATELEXERCALL(SCI_GETSTATUS) end
