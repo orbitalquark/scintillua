@@ -180,4 +180,5 @@ function SCI_PRIVATELEXERCALL(styleNum, style) end
 -- handled passively. Note that Scintillua does print all errors to stderr.
 -- @usage SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_GETSTATUS, errmsg)
 -- @usage if (strlen(errmsg) > 0) { /* handle error */ }
+-- @name SCI_GETSTATUS
 function SCI_PRIVATELEXERCALL(SCI_GETSTATUS) end
