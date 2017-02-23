@@ -5,6 +5,29 @@
 [Atom Feed]: feed
 [PGP Public Key]: https://foicica.com/foicica.pgp
 
+## 3.7.3-1 (22 Feb 2017)
+
+Download:
+
+* [Scintillua 3.7.3-1][] | [PGP -- 3.7.3-1][]
+
+Bugfixes:
+
+* Fixed child fold symbols not being copied to parent.
+* Fixed detection of `</script>` even within a JavaScript comment.
+
+Changes:
+
+* Updated the JavaScript lexer.
+* Applications can [query for lexer errors][].
+* Updated to [Scintilla][]/[SciTE][] 3.7.3.
+
+[Scintillua 3.7.3-1]: download/scintillua_3.7.3-1.zip
+[PGP -- 3.7.3-1]: download/scintillua_3.7.3-1.zip.asc
+[query for lexer errors]: api.html#SCI_GETSTATUS
+[Scintilla]: http://scintilla.org
+[SciTE]: http://scintilla.org/SciTE.html
+
 ## 3.7.1-1 (05 Dec 2016)
 
 Download:
