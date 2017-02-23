@@ -79,7 +79,7 @@ release: $(basedir)
 
 # External dependencies.
 
-scintilla_tgz = scintilla371.tgz
+scintilla_tgz = scintilla373.tgz
 lua_tgz = lua-5.1.4.tar.gz
 lpeg_tgz = lpeg-1.0.0.tar.gz
 bombay_zip = bombay.zip
