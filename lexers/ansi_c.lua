@@ -28,11 +28,14 @@ local number = token(l.NUMBER, l.float + l.integer)
 
 -- Preprocessor.
 local preproc_word = word_match{
-  'define', 'elif', 'else', 'endif', 'error', 'if', 'ifdef', 'ifndef',
-  'include', 'line', 'pragma', 'undef', 'warning'
+  'define', 'elif', 'else', 'endif', 'error', 'if', 'ifdef', 'ifndef', 'line',
+  'pragma', 'undef', 'warning'
 }
-local preproc = token(l.PREPROCESSOR,
-                      l.starts_line('#') * S('\t ')^0 * preproc_word)
+local preproc = #l.starts_line('#') *
+                (token(l.PREPROCESSOR, '#' * S('\t ')^0 * preproc_word) +
+                 token(l.PREPROCESSOR, '#' * S('\t ')^0 * 'include') *
+                 (token(l.WHITESPACE, S('\t ')^1) *
+                  token(l.STRING, l.delimited_range("<>", true, true)))^-1)
 
 -- Keywords.
 local keyword = token(l.KEYWORD, word_match{
