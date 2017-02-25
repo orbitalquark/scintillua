@@ -81,6 +81,7 @@ local entity = token('entity', '&' * word)
 M._rules = {
   {'whitespace', ws},
   {'keyword', keyword},
+  {'func', func},
   {'identifier', identifier},
   {'string', string},
   {'comment', comment},

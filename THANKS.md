@@ -22,8 +22,10 @@ Scintillua better and better over the years.
 * Marc André Tanner
 * Markus F.X.J. Oberhumer
 * Martin Morawetz
+* Michael Forney
 * Michael T. Richter
 * Michel Martens
+* Murray Calavera
 * Neil Hodgson
 * Olivier Guibé
 * Peter Odding
@@ -31,6 +33,7 @@ Scintillua better and better over the years.
 * Richard Philips
 * Robert Gieseke
 * Roberto Ierusalimschy
+* S. Gilles
 * Stéphane Rivière
 * Tymur Gubayev
 * Wolfgang Seeberg
