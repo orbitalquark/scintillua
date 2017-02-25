@@ -456,8 +456,8 @@ class LexerLPeg : public ILexer {
 		// Load the language lexer.
 		lua_getfield(L, -1, "load");
 		if (lua_isfunction(L, -1)) {
-			lua_pushstring(L, lexer);
-			if (lua_pcall(L, 1, 1, 0) != LUA_OK) return (l_error(L), false);
+			lua_pushstring(L, lexer), lua_pushnil(L), lua_pushboolean(L, 1);
+			if (lua_pcall(L, 3, 1, 0) != LUA_OK) return (l_error(L), false);
 		} else return (l_error(L, "'lexer.load' function not found"), false);
 		lua_getfield(L, LUA_REGISTRYINDEX, "sci_lexers");
 		lua_pushlightuserdata(L, reinterpret_cast<void *>(this));
