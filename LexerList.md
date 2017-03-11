@@ -67,6 +67,7 @@ see `lexers/lpeg.properties`.
 1. LilyPond
 1. Lisp`*`
 1. Literate Coffeescript
+1. Logtalk
 1. Lua`*`
 1. Makefile
 1. Man Page
