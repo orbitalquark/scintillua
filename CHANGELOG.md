@@ -5,6 +5,29 @@
 [Atom Feed]: feed
 [PGP Public Key]: https://foicica.com/foicica.pgp
 
+## 3.7.4-1 (30 Apr 2017)
+
+Download:
+
+* [Scintillua 3.7.4-1][] | [PGP -- 3.7.4-1][]
+
+Bugfixes:
+
+* Allow nested `{}` in Shell lexer variables.
+* Fixed accidental editing of cached lexers.
+* Fixed Moonscript file association.
+
+Changes:
+
+* Added rc, StandardML, and Logtalk lexers.
+* Improved Scheme, ANSI C, Prolog, and Moonscript lexers.
+* Updated to [Scintilla][]/[SciTE][] 3.7.4.
+
+[Scintillua 3.7.4-1]: download/scintillua_3.7.4-1.zip
+[PGP -- 3.7.4-1]: download/scintillua_3.7.4-1.zip.asc
+[Scintilla]: http://scintilla.org
+[SciTE]: http://scintilla.org/SciTE.html
+
 ## 3.7.3-1 (22 Feb 2017)
 
 Download:
