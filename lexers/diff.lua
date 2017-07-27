@@ -19,7 +19,7 @@ local location = token(l.NUMBER, ('@@' + l.digit^1 + '****') * l.any^1)
 -- Additions, deletions, and changes.
 local addition = token('addition', S('>+') * l.any^0)
 local deletion = token('deletion', S('<-') * l.any^0)
-local change   = token('change', '! ' * l.any^0)
+local change   = token('change', '!' * l.any^0)
 
 M._rules = {
   {'index', index},
