@@ -15,6 +15,7 @@ Scintillua better and better over the years.
 * Heck Fy
 * Jason Schindler
 * Jeff Stone
+* Joseph Eib
 * Joshua Krämer
 * Klaus Borges
 * Larry Hynes
