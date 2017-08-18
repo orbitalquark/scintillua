@@ -51,14 +51,14 @@ property['color.light_red'] = '#C08080'
 property['color.light_blue'] = '#80CCFF'
 
 -- Default style.
-local font, size = 'Bitstream Vera Sans Mono', 10
+property['font'], property['fontsize'] = 'Bitstream Vera Sans Mono', 10
 if WIN32 then
-  font = 'Courier New'
+  property['font'] = 'Courier New'
 elseif OSX then
-  font, size = 'Monaco', 12
+  property['font'], property['fontsize'] = 'Monaco', 12
 end
-property['style.default'] = 'font:'..font..',size:'..size..
-                            ',fore:$(color.light_black),back:$(color.white)'
+property['style.default'] = 'font:$(font),size:$(fontsize),'..
+                            'fore:$(color.light_black),back:$(color.white)'
 
 -- Token styles.
 property['style.nothing'] = ''

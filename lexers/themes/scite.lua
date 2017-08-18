@@ -15,14 +15,14 @@ property['color.grey'] = '#808080'
 property['color.white'] = '#FFFFFF'
 
 -- Default style.
-local font, size = 'Monospace', 11
+property['font'], property['fontsize'] = 'Monospace', 11
 if WIN32 then
-  font = 'Courier New'
+  property['font'] = 'Courier New'
 elseif OSX then
-  font, size = 'Monaco', 12
+  property['font'], property['fontsize'] = 'Monaco', 12
 end
-property['style.default'] = 'font:'..font..',size:'..size..
-                            ',fore:$(color.black),back:$(color.white)'
+property['style.default'] = 'font:$(font),size:$(fontsize),'..
+                            'fore:$(color.black),back:$(color.white)'
 
 -- Token styles.
 property['style.nothing'] = ''

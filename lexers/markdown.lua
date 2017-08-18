@@ -81,7 +81,8 @@ M._rules = {
   {'code', code},
 }
 
-local font_size = 10
+local font_size = l.property_int['fontsize'] > 0 and
+                  l.property_int['fontsize'] or 10
 local hstyle = 'fore:$(color.red)'
 M._tokenstyles = {
   h6 = hstyle,
