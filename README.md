@@ -7,6 +7,9 @@ quickest way to add new or customized syntax highlighting and code folding for
 programming languages to any Scintilla-based text editor or IDE. Scintillua was
 designed to be dropped into or compiled with any Scintilla environment.
 
+At this time, Scintillua only supports the long-term Scintilla 3.x branch, not
+4.x.
+
 Scintillua may also be used as a Lua library for obtaining syntax highlighting
 information of source code snippets.
 
