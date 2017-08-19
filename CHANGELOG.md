@@ -5,6 +5,28 @@
 [Atom Feed]: feed
 [PGP Public Key]: https://foicica.com/foicica.pgp
 
+## 3.7.5-1 (19 Aug 2017)
+
+Download:
+
+* [Scintillua 3.7.5-1][] | [PGP -- 3.7.5-1][]
+
+Bugfixes:
+
+* None
+
+Changes:
+
+* Updated diff lexer, Forth, and Elixir lexers.
+* Added Myrddin lexer.
+* Updated themes to add `font` and `fontsize` properties.
+* Updated to [Scintilla][]/[SciTE][] 3.7.5.
+
+[Scintillua 3.7.5-1]: download/scintillua_3.7.5-1.zip
+[PGP -- 3.7.5-1]: download/scintillua_3.7.5-1.zip.asc
+[Scintilla]: http://scintilla.org
+[SciTE]: http://scintilla.org/SciTE.html
+
 ## 3.7.4-1 (30 Apr 2017)
 
 Download:
