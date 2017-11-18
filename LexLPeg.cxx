@@ -448,7 +448,7 @@ class LexerLPeg : public ILexer {
 
 			// Restore `package.path`.
 			lua_getglobal(L, "package");
-			lua_getfield(L, -1, "path"), lua_setfield(L, -3, "LEXERPATH");
+			lua_getfield(L, -1, "path"), lua_setfield(L, -3, "path"); // lexer.path =
 			lua_rawgeti(L, LUA_REGISTRYINDEX, orig_path), lua_setfield(L, -2, "path");
 			luaL_unref(L, LUA_REGISTRYINDEX, orig_path), lua_pop(L, 1); // package
 		} else lua_remove(L, -2); // _LOADED
