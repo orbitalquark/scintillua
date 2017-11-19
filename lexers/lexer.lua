@@ -1727,6 +1727,8 @@ end
 -- words.
 -- This is a convenience function for simplifying a set of ordered choice word
 -- patterns.
+-- If *words* is a multi-line string, it may contain Lua line comments (`--`)
+-- that will ultimately be ignored.
 -- @param words A string list of words separated by spaces.
 -- @param case_insensitive Optional boolean flag indicating whether or not the
 --   word match is case-insensitive. The default value is `false`.
