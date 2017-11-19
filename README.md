@@ -8,7 +8,7 @@ programming languages to any Scintilla-based text editor or IDE. Scintillua was
 designed to be dropped into or compiled with any Scintilla environment.
 
 At this time, Scintillua only supports the long-term Scintilla 3.x branch, not
-4.x.
+the 4.x main line.
 
 Scintillua may also be used as a Lua library for obtaining syntax highlighting
 information of source code snippets.
@@ -21,7 +21,7 @@ information of source code snippets.
 
 * Drop-in installation in most Scintilla environments -- no modifications to
   Scintilla are necessary.
-* Support for over 90 programming languages.
+* Support for over 100 programming languages.
 * Easy lexer embedding for multi-language lexers.
 * Universal color themes.
 * Comparable speed to native Scintilla lexers.
@@ -29,10 +29,10 @@ information of source code snippets.
 
 ## Requirements
 
-Scintillua only requires Scintilla 2.25 or greater. Lua and LPeg have been
-pre-compiled into the external lexer and you can download their source files
-using the links above should you choose to compile Scintillua directly into a
-Scintilla-based application.
+Scintillua only requires Scintilla 2.25 or greater (but less than 4.0). Lua and
+LPeg have been pre-compiled into the external lexer and you can download their
+source files using the links above should you choose to compile Scintillua
+directly into a Scintilla-based application.
 
 When used a Lua library, Scintillua requires Lua 5.1 or greater and
 [LPeg][] 0.12 or greater.
