@@ -169,6 +169,20 @@ local M = {}
 --       keyword-1 keyword-2 ... keyword-n
 --     ]])
 --
+-- In order to more easily separate or categorize keyword sets, you can use Lua
+-- line comments within keyword strings. Such comments will be ignored. For
+-- example:
+--
+--     local keyword = token(lexer.KEYWORD, lexer.word_match[[
+--       -- Version 1 keywords.
+--       keyword_11, keyword_12 ... keyword_1n
+--       -- Version 2 keywords.
+--       keyword_21, keyword_22 ... keyword_2n
+--       ...
+--       -- Version N keywords.
+--       keyword_m1, keyword_m2 ... keyword_mn
+--     ]])
+--
 -- **Comments**
 --
 -- Line-style comments with a prefix character(s) are easy to express with LPeg:
