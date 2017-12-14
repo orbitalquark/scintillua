@@ -13,6 +13,7 @@ Scintillua better and better over the years.
 * Christian Hesse
 * David B. Lamkins
 * Heck Fy
+* Ivan Baidakou
 * Jason Schindler
 * Jeff Stone
 * Joseph Eib
