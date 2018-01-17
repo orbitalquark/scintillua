@@ -7,6 +7,7 @@ Scintillua better and better over the years.
 
 * Alejandro Baez
 * Alex Saraci
+* Alexey Melnichuk
 * Brian Schott
 * Carl Sturtivant
 * Chris Emerson
@@ -30,6 +31,7 @@ Scintillua better and better over the years.
 * Murray Calavera
 * Neil Hodgson
 * Olivier Guibé
+* Paul Kulchenko
 * Peter Odding
 * Piotr Orzechowski
 * Richard Philips
