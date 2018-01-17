@@ -1325,6 +1325,7 @@ function M.fold(lexer, text, start_pos, start_line, start_level)
       lines[#lines + 1] = {p, l}
     end
     local fold_zero_sum_lines = M.property_int['fold.on.zero.sum.lines'] > 0
+    local fold_compact = M.property_int['fold.compact'] > 0
     local fold_points = lexer._FOLDPOINTS
     local fold_point_symbols = fold_points._SYMBOLS
     local style_at, fold_level = M.style_at, M.fold_level
@@ -1379,7 +1380,7 @@ function M.fold(lexer, text, start_pos, start_line, start_level)
         if current_level < FOLD_BASE then current_level = FOLD_BASE end
         prev_level = current_level
       else
-        folds[line_num] = prev_level + FOLD_BLANK
+        folds[line_num] = prev_level + (fold_compact and FOLD_BLANK or 0)
       end
       line_num = line_num + 1
     end

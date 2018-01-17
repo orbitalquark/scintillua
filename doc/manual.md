@@ -147,6 +147,11 @@ The following properties are optional and may or may not be set:
   and starting fold point are marked as fold points. For example, the C line
   `} else {` would be marked as a fold point. The default is `0`.
 
+* `fold.compact`
+
+  If `fold.compact` is set to `1`, blank lines after an ending fold point are
+  folded as well.
+
 ### Using Scintillua as a Lua Library
 
 In order to use Scintillua as a Lua library, simply place the `lexers/`
