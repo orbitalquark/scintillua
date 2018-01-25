@@ -1,5 +1,5 @@
 /**
- * Copyright 2006-2017 Mitchell mitchell.att.foicica.com.
+ * Copyright 2006-2018 Mitchell mitchell.att.foicica.com.
  * This file is distributed under Scintilla's license.
  *
  * Lua-powered dynamic language lexer for Scintillua.

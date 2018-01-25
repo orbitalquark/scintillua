@@ -1,4 +1,4 @@
--- Copyright 2016-2017 Alejandro Baez (https://keybase.io/baez). See LICENSE.
+-- Copyright 2016-2018 Alejandro Baez (https://keybase.io/baez). See LICENSE.
 -- PICO-8 lexer.
 -- http://www.lexaloffle.com/pico-8.php
 

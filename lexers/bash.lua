@@ -1,4 +1,4 @@
--- Copyright 2006-2017 Mitchell mitchell.att.foicica.com. See LICENSE.
+-- Copyright 2006-2018 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- Shell LPeg lexer.
 
 local lexer = require('lexer')

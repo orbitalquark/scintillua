@@ -1,4 +1,4 @@
--- Copyright 2015-2017 David B. Lamkins <david@lamkins.net>. See LICENSE.
+-- Copyright 2015-2018 David B. Lamkins <david@lamkins.net>. See LICENSE.
 -- pure LPeg lexer, see http://purelang.bitbucket.org/
 
 local lexer = require('lexer')

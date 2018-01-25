@@ -1,4 +1,4 @@
--- Copyright 2015-2017 Mitchell mitchell.att.foicica.com. See LICENSE.
+-- Copyright 2015-2018 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- Contributed by Richard Philips.
 -- Elixir LPeg lexer.
 
