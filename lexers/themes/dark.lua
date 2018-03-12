@@ -1,5 +1,5 @@
 -- Copyright 2006-2018 Mitchell mitchell.att.foicica.com. See LICENSE.
--- Dark lexer theme for Scintillua.
+-- Dark theme for Scintillua.
 -- Contributions by Ana Balan.
 
 local property = require('lexer').property
@@ -57,38 +57,33 @@ if WIN32 then
 elseif OSX then
   property['font'], property['fontsize'] = 'Monaco', 12
 end
+
+-- Predefined styles.
 property['style.default'] = 'font:$(font),size:$(fontsize),'..
                             'fore:$(color.light_grey),back:$(color.black)'
+property['style.linenumber'] = 'fore:$(color.dark_grey),back:$(color.black)'
+property['style.bracelight'] = 'fore:$(color.light_blue)'
+property['style.bracebad'] = 'fore:$(color.light_red)'
+property['style.controlchar'] = ''
+property['style.indentguide'] = 'fore:$(color.light_black)'
+property['style.calltip'] = 'fore:$(color.light_grey),back:$(color.light_black)'
+property['style.folddisplaytext'] = 'fore:$(color.dark_grey)'
 
 -- Token styles.
-property['style.nothing'] = ''
 property['style.class'] = 'fore:$(color.light_yellow)'
 property['style.comment'] = 'fore:$(color.dark_grey)'
 property['style.constant'] = 'fore:$(color.red)'
-property['style.definition'] = 'fore:$(color.light_yellow)'
+property['style.embedded'] = '$(style.keyword),back:$(color.light_black)'
 property['style.error'] = 'fore:$(color.red),italics'
 property['style.function'] = 'fore:$(color.blue)'
+property['style.identifier'] = ''
 property['style.keyword'] = 'fore:$(color.dark_white)'
 property['style.label'] = 'fore:$(color.orange)'
 property['style.number'] = 'fore:$(color.teal)'
 property['style.operator'] = 'fore:$(color.yellow)'
+property['style.preprocessor'] = 'fore:$(color.purple)'
 property['style.regex'] = 'fore:$(color.light_green)'
 property['style.string'] = 'fore:$(color.green)'
-property['style.preprocessor'] = 'fore:$(color.purple)'
-property['style.tag'] = 'fore:$(color.dark_white)'
 property['style.type'] = 'fore:$(color.lavender)'
 property['style.variable'] = 'fore:$(color.light_blue)'
 property['style.whitespace'] = ''
-property['style.embedded'] = '$(style.tag),back:$(color.light_black)'
-property['style.identifier'] = '$(style.nothing)'
-
--- Predefined styles.
-property['style.linenumber'] = 'fore:$(color.dark_grey),back:$(color.black)'
-property['style.bracelight'] = 'fore:$(color.light_blue)'
-property['style.bracebad'] = 'fore:$(color.light_red)'
-property['style.controlchar'] = '$(style.nothing)'
-property['style.indentguide'] = 'fore:$(color.light_black),'..
-                                'back:$(color.light_black)'
-property['style.calltip'] = 'fore:$(color.light_grey),'..
-                            'back:$(color.light_black)'
-property['style.folddisplaytext'] = 'fore:$(color.dark_grey)'

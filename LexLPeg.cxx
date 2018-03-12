@@ -1,20 +1,18 @@
 /**
- * Copyright 2006-2018 Mitchell mitchell.att.foicica.com.
- * This file is distributed under Scintilla's license.
+ * Copyright 2006-2018 Mitchell mitchell.att.foicica.com. See LICENSE.
  *
  * Lua-powered dynamic language lexer for Scintillua.
- * http://foicica.com/scintillua
  *
  * For documentation on writing lexers, see *lexers/lexer.lua*.
  */
 
 #if LPEG_LEXER || LPEG_LEXER_EXTERNAL
 
-#include <assert.h>
-#include <ctype.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+#include <assert.h>
+#include <ctype.h>
 #if CURSES
 #include <curses.h>
 #endif
@@ -259,8 +257,8 @@ class LexerLPeg : public ILexer {
 					weight = atoi(p);
 				SS(sci, SCI_STYLESETWEIGHT, num, weight);
 #else
-				// Scinterm requires font attributes to be stored in the "font weight"
-				// style attribute.
+				// Scintilla curses requires font attributes to be stored in the "font
+				// weight" style attribute.
 				// First, clear any existing SC_WEIGHT_NORMAL, SC_WEIGHT_SEMIBOLD, or
 				// SC_WEIGHT_BOLD values stored in the lower 16 bits. Then set the
 				// appropriate curses attr.
@@ -276,8 +274,8 @@ class LexerLPeg : public ILexer {
 #if !CURSES
 				SS(sci, SCI_STYLESETUNDERLINE, num, *option == 'u');
 #else
-				// Scinterm requires font attributes to be stored in the "font weight"
-				// style attribute.
+				// Scintilla curses requires font attributes to be stored in the "font
+				// weight" style attribute.
 				// First, clear any existing SC_WEIGHT_NORMAL, SC_WEIGHT_SEMIBOLD, or
 				// SC_WEIGHT_BOLD values stored in the lower 16 bits. Then set the
 				// appropriate curses attr.
@@ -691,7 +689,8 @@ public:
 	virtual Sci_Position SCI_METHOD PropertySet(const char *key,
 	                                            const char *value) {
 		props.Set(key, *value ? value : " "); // ensure property is cleared
-		if (reinit) Init();
+		if (reinit)
+			Init();
 #if NO_SCITE
 		else if (L && SS && sci && strncmp(key, "style.", 6) == 0) {
 			l_getlexerfield(L, "_TOKENSTYLES");
