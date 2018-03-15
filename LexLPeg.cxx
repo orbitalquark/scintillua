@@ -37,9 +37,7 @@ LUALIB_API int luaopen_lpeg(lua_State *L);
 #endif
 #define streq(s1, s2) (strcasecmp((s1), (s2)) == 0)
 
-#if SCI_NAMESPACE
 using namespace Scintilla;
-#endif
 
 #define l_setmetatable(l, k, mtf) \
 	if (luaL_newmetatable(l, k)) { \
