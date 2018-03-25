@@ -691,11 +691,19 @@ public:
 			Init();
 #if NO_SCITE
 		else if (L && SS && sci && strncmp(key, "style.", 6) == 0) {
+			lua_pushlightuserdata(L, reinterpret_cast<void *>(&props));
+			lua_setfield(L, LUA_REGISTRYINDEX, "sci_props");
 			l_getlexerfield(L, "_TOKENSTYLES");
 			lua_pushstring(L, key + 6), lua_rawget(L, -2);
 			lua_pushstring(L, key), lL_getexpanded(L, -1), lua_replace(L, -2);
-			if (lua_isnumber(L, -2))
-				SetStyle(lua_tointeger(L, -2), lua_tostring(L, -1));
+			if (lua_isnumber(L, -2)) {
+				int style_num = lua_tointeger(L, -2);
+				SetStyle(style_num, lua_tostring(L, -1));
+				if (style_num == STYLE_DEFAULT)
+					// Assume a theme change, with the default style being set first.
+					// Subsequent style settings will be based on the default.
+					SS(sci, SCI_STYLECLEARALL, 0, 0);
+			}
 			lua_pop(L, 3); // style, style number, _TOKENSTYLES
 		}
 #endif
