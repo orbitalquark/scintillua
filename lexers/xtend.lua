@@ -1,4 +1,4 @@
--- Copyright (c) 2014-2018 Piotr Orzechowski [drzewo.org]. See LICENSE.
+-- Copyright (c) 2014-2019 Piotr Orzechowski [drzewo.org]. See LICENSE.
 -- Xtend LPeg lexer.
 
 local lexer = require('lexer')

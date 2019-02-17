@@ -1,4 +1,4 @@
--- Copyright 2006-2018 Mitchell mitchell.att.foicica.com. See LICENSE.
+-- Copyright 2006-2019 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- SQL LPeg lexer.
 
 local lexer = require('lexer')

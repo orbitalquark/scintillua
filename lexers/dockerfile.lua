@@ -1,4 +1,4 @@
--- Copyright 2016-2018 Alejandro Baez (https://keybase.io/baez). See LICENSE.
+-- Copyright 2016-2019 Alejandro Baez (https://keybase.io/baez). See LICENSE.
 -- Dockerfile LPeg lexer.
 
 local lexer = require('lexer')
