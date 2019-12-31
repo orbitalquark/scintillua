@@ -1,4 +1,4 @@
--- Copyright 2013-2019 Mitchell mitchell.att.foicica.com. See LICENSE.
+-- Copyright 2013-2020 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- Dart LPeg lexer.
 -- Written by Brian Schott (@Hackerpilot on Github).
 

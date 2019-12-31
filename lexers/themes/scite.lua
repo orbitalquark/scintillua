@@ -1,4 +1,4 @@
--- Copyright 2006-2019 Mitchell mitchell.att.foicica.com. See LICENSE.
+-- Copyright 2006-2020 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- SciTE theme for Scintillua.
 
 local property = require('lexer').property

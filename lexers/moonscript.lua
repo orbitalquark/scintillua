@@ -1,4 +1,4 @@
--- Copyright 2016-2019 Alejandro Baez (https://keybase.io/baez). See LICENSE.
+-- Copyright 2016-2020 Alejandro Baez (https://keybase.io/baez). See LICENSE.
 -- Moonscript LPeg lexer.
 
 local lexer = require('lexer')
