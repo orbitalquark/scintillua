@@ -33,13 +33,13 @@
 --       doc = SendScintilla(sci, SCI_CREATEDOCUMENT)
 --       SendScintilla(sci, SCI_SETDOCPOINTER, 0, doc)
 --       SendScintilla(sci, SCI_SETLEXERLANGUAGE, 0, "lpeg")
---       home = "/home/mitchell/app/lexers"
---       SendScintilla(sci, SCI_SETPROPERTY, "lexer.lpeg.home", home)
 --       SendScintilla(sci, SCI_SETPROPERTY, "lexer.lpeg.color.theme", "light")
 --       fn = SendScintilla(sci, SCI_GETDIRECTFUNCTION)
 --       SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_GETDIRECTFUNCTION, fn)
 --       psci = SendScintilla(sci, SCI_GETDIRECTPOINTER)
 --       SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETDOCPOINTER, psci)
+--       home = "/home/mitchell/app/lexers"
+--       SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_LOADLEXERLIBRARY, home)
 --       SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETLEXERLANGUAGE, "lua")
 --     }
 --
@@ -122,6 +122,7 @@ function SCI_PRIVATELEXERCALL(SCI_CHANGELEXERSTATE, lua) end
 -- @param languageName (`const char*`) The name of the Lua LPeg lexer to use.
 -- @usage SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETLEXERLANGUAGE, "lua")
 -- @see SCI_SETDOCPOINTER
+-- @see SCI_PROPERTYNAMES
 -- @name SCI_SETLEXERLANGUAGE
 function SCI_PRIVATELEXERCALL(SCI_SETLEXERLANGUAGE, languageName) end
 
@@ -182,3 +183,26 @@ function SCI_PRIVATELEXERCALL(styleNum, style) end
 -- @usage if (strlen(errmsg) > 0) { /* handle error */ }
 -- @name SCI_GETSTATUS
 function SCI_PRIVATELEXERCALL(SCI_GETSTATUS) end
+
+---
+-- Tells Scintillua that the given path is where Scintillua's lexers are
+-- located, or is a path that contains additional lexers and/or themes to load
+-- (e.g. user-defined lexers/themes).
+--
+-- This call may be made multiple times in order to support lexers and themes
+-- across multiple directories.
+-- @usage SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_LOADLEXERLIBRARY,
+--   "path/to/lexers")
+function SCI_PRIVATELEXERCALL(SCI_LOADLEXERLIBRARY, path) end
+
+---
+-- Returns the length of a '\n'-separated list of known lexer names, or stores
+-- the lexer list into the given buffer. If the buffer is long enough, the
+-- string is terminated by a `0` character.
+--
+-- The lexers in this list can be passed to the
+-- [`SCI_SETLEXERLANGUAGE`](#SCI_SETLEXERLANGUAGE) Scintillua API call.
+-- @usage SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_PROPERTYNAMES, lexers)
+--   // lexers now contains a '\n'-separated list of known lexer names
+-- @see SCI_SETLEXERLANGUAGE
+function SCI_PRIVATELEXERCALL(SCI_PROPERTYNAMES, names) end
