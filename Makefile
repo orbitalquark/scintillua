@@ -23,7 +23,7 @@ endif
 sci_flags = -g -pedantic $(plat_flag) -Iscintilla/include -Iscintilla/lexlib \
             -DSCI_LEXER -W -Wall -Wno-unused
 lex_objs = PropSetSimple.o WordList.o LexerModule.o LexerSimple.o LexerBase.o \
-           Accessor.o
+           Accessor.o DefaultLexer.o
 
 # Lua.
 lua_objs = lapi.o lcode.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o \

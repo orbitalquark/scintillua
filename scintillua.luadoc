@@ -144,13 +144,9 @@ function SCI_PRIVATELEXERCALL(SCI_SETLEXERLANGUAGE, languageName) end
 function SCI_PRIVATELEXERCALL(SCI_GETLEXERLANGUAGE, languageName) end
 
 ---
--- Depending on the sign of `styleNum`, returns the length of the associated
--- string for the given style number or stores the string into the given buffer.
--- If the buffer is long enough, the string is terminated by a `0` character.
---
--- For negative `styleNum`, the associated string is a SciTE-formatted style
--- definition. Otherwise, the associated string is the name of the token for the
--- given style number.
+-- Returns the length of the associated SciTE-formatted style definition for the
+-- given style number or stores that string into the given buffer. If the buffer
+-- is long enough, the string is terminated by a `0` character.
 --
 -- Please see the [SciTE documentation][] for the style definition format
 -- specified by `style.*.stylenumber`. You can parse these definitions to set
@@ -162,13 +158,8 @@ function SCI_PRIVATELEXERCALL(SCI_GETLEXERLANGUAGE, languageName) end
 -- @param styleNum (`int`) For the range `-STYLE_MAX <= styleNum < 0`, uses the
 --   Scintilla style number `-styleNum - 1` for returning SciTE-formatted style
 --   definitions. (Style `0` would be `-1`, style `1` would be `-2`, and so on.)
---   For the range `0 <= styleNum < STYLE_MAX`, uses the normal Scintilla style
---   number for returning token names.
 -- @param style (`char *`) If `0`, returns the length that should be allocated
 --   to store the associated string. Otherwise fills the buffer with the string.
--- @usage style = SendScintilla(sci, SCI_GETSTYLEAT, pos)
--- @usage SendScintilla(sci, SCI_PRIVATELEXERCALL, style, token)
--- @usage // token now contains the name of the style at pos
 function SCI_PRIVATELEXERCALL(styleNum, style) end
 
 ---
@@ -203,6 +194,6 @@ function SCI_PRIVATELEXERCALL(SCI_LOADLEXERLIBRARY, path) end
 -- The lexers in this list can be passed to the
 -- [`SCI_SETLEXERLANGUAGE`](#SCI_SETLEXERLANGUAGE) Scintillua API call.
 -- @usage SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_PROPERTYNAMES, lexers)
---   // lexers now contains a '\n'-separated list of known lexer names
+-- @usage // lexers now contains a '\n'-separated list of known lexer names
 -- @see SCI_SETLEXERLANGUAGE
 function SCI_PRIVATELEXERCALL(SCI_PROPERTYNAMES, names) end
