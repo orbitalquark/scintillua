@@ -100,7 +100,7 @@ static int lexer_property_index(lua_State *L) {
     lua_getfield(L, 4, "_TOKENSTYLES");
     lua_pushnil(L);
     while (lua_next(L, -2)) {
-      if (luaL_checkinteger(L, -1) == style) break;
+      if (luaL_checkinteger(L, -1) - 1 == style) break;
       lua_pop(L, 1); // value
     }
     lua_pop(L, 1); // style_num, leaving name on top
@@ -420,10 +420,10 @@ class LexerLPeg : public DefaultLexer {
     lua_pushnil(L);
     while (lua_next(L, -2)) {
       if (lua_isstring(L, -2) && lua_isnumber(L, -1) &&
-          lua_tointeger(L, -1) != STYLE_DEFAULT) {
+          lua_tointeger(L, -1) - 1 != STYLE_DEFAULT) {
         lua_pushstring(L, "style."), lua_pushvalue(L, -3), lua_concat(L, 2);
         expand_property(L);
-        SetStyle(lua_tointeger(L, -2), lua_tostring(L, -1));
+        SetStyle(lua_tointeger(L, -2) - 1, lua_tostring(L, -1));
         lua_pop(L, 1); // style
       }
       lua_pop(L, 1); // value
@@ -713,7 +713,7 @@ public:
       for (int i = 1; i < len; i += 2) {
         style = STYLE_DEFAULT;
         if (lua_rawgeti(L, -2, i), lua_rawget(L, -2))
-          style = lua_tointeger(L, -1);
+          style = lua_tointeger(L, -1) - 1;
         lua_pop(L, 1); // _TOKENSTYLES[token]
         lua_rawgeti(L, -2, i + 1); // pos
         unsigned int position = lua_tointeger(L, -1) - 1;
@@ -800,7 +800,7 @@ public:
         lua_pushstring(L, key + 6);
         if (lua_rawget(L, -2) == LUA_TNUMBER) {
           lua_pushstring(L, key), expand_property(L);
-          int style_num = lua_tointeger(L, -2);
+          int style_num = lua_tointeger(L, -2) - 1;
           SetStyle(style_num, lua_tostring(L, -1));
           if (style_num == STYLE_DEFAULT)
             // Assume a theme change, with the default style being set first.
@@ -909,7 +909,7 @@ public:
     lua_getfield(L, -1, "_TOKENSTYLES");
     lua_pushnil(L);
     while (lua_next(L, -2))
-      if (lua_tointeger(L, -1) == style) {
+      if (lua_tointeger(L, -1) - 1 == style) {
       styleName = lua_tostring(L, -2);
       lua_pop(L, 2); // value and key
       break;
