@@ -917,7 +917,33 @@ function test_php()
   assert_default_styles(php)
   assert_extra_styles(php, {'php_whitespace', 'php_tag'})
 
-  -- Lexing tests.
+  -- Lexing tests
+  -- Starting in HTML.
+  local code = [[<h1><?php echo "hi"; ?></h1>]]
+  local tokens = {
+    {'element', '<h1'},
+    {'element', '>'},
+    {'php_tag', '<?php '},
+    {lexer.KEYWORD, 'echo'},
+    {lexer.STRING, '"hi"'},
+    {lexer.OPERATOR, ';'},
+    {'php_tag', '?>'},
+    {'element', '</h1'},
+    {'element', '>'}
+  }
+  local initial_style = php._TOKENSTYLES['html_whitespace']
+  assert_lex(php, code, tokens, initial_style)
+  initial_style = php._TOKENSTYLES['default'] -- also test non-ws init style
+  assert_lex(php, code, tokens, initial_style)
+  -- Starting in PHP.
+  code = [[echo "hi";]]
+  initial_style = php._TOKENSTYLES['php_whitespace']
+  tokens = {
+    {lexer.KEYWORD, 'echo'},
+    {lexer.STRING, '"hi"'},
+    {lexer.OPERATOR, ';'},
+  }
+  assert_lex(php, code, tokens, initial_style)
 
   -- Folding tests.
   local symbols = {'<?', '?>', '/*', '*/', '//', '#', '{', '}', '(', ')'}
