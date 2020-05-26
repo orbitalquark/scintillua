@@ -197,3 +197,10 @@ function SCI_PRIVATELEXERCALL(SCI_LOADLEXERLIBRARY, path) end
 -- @usage // lexers now contains a '\n'-separated list of known lexer names
 -- @see SCI_SETLEXERLANGUAGE
 function SCI_PRIVATELEXERCALL(SCI_PROPERTYNAMES, names) end
+
+---
+-- Returns the style number associated with `styleName`.
+-- @usage SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_GETNAMEDSTYLES, "error")
+-- @usage SendScintilla(sci, SCI_ANNOTATIONSETSTYLE, line, style) // match error
+--   style
+function SCI_PRIVATELEXERCALL(SCI_GETNAMEDSTYLES, styleName) end
