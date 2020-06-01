@@ -39,6 +39,7 @@ see `lexers/lpeg.properties`.
 1. Erlang`*`
 1. F#
 1. Faust
+1. Fennel
 1. Fish`*`
 1. Forth
 1. Fortran

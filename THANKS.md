@@ -8,6 +8,7 @@ Scintillua better and better over the years.
 * Alejandro Baez
 * Alex Saraci
 * Alexey Melnichuk
+* Alexander Misel
 * Brian Schott
 * Carl Sturtivant
 * Chris Emerson
@@ -17,10 +18,13 @@ Scintillua better and better over the years.
 * Ivan Baidakou
 * Jason Schindler
 * Jeff Stone
+* Jonathon Levi
 * Joseph Eib
 * Joshua Krämer
+* Julien L.
 * Klaus Borges
 * Larry Hynes
+* Lars Otter
 * M Rawash
 * Marc André Tanner
 * Markus F.X.J. Oberhumer
@@ -28,6 +32,7 @@ Scintillua better and better over the years.
 * Michael Forney
 * Michael T. Richter
 * Michel Martens
+* Momohime Honda
 * Murray Calavera
 * Neil Hodgson
 * Olivier Guibé
