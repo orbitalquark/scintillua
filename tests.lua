@@ -919,12 +919,10 @@ function test_html()
   assert_lex(html, code, tokens)
 
   -- Folding tests.
-  local symbols = {'<', '/>', '<!--', '-->', '{', '}', '/*', '*/', '//'}
+  local symbols = {'<', '<!--', '-->', '{', '}', '/*', '*/', '//'}
   for i = 1, #symbols do assert(html._FOLDPOINTS._SYMBOLS[symbols[i]]) end
   assert(html._FOLDPOINTS['element']['<'])
-  assert(html._FOLDPOINTS['element']['/>'])
   assert(html._FOLDPOINTS['unknown_element']['<'])
-  assert(html._FOLDPOINTS['unknown_element']['/>'])
   assert(html._FOLDPOINTS[lexer.COMMENT]['<!--'])
   assert(html._FOLDPOINTS[lexer.COMMENT]['-->'])
   assert(html._FOLDPOINTS[lexer.OPERATOR]['{'])
@@ -1144,6 +1142,35 @@ function test_ruby_and_rails()
   ruby2 = lexer.load('ruby')
   assert_lex(ruby, code, ruby_tokens)
   assert(ruby ~= ruby2)
+end
+
+-- Tests the RHTML lexer, which is a proxy for HTML and Rails.
+function test_rhtml()
+  local rhtml = lexer.load('rhtml')
+
+  -- Lexing tests.
+  -- Start in HTML.
+  local code = [[<h1><% puts "hi" %></h1>]]
+  local rhtml_tokens = {
+    {'element', '<h1'},
+    {'element', '>'},
+    {'rhtml_tag', '<%'},
+    {lexer.FUNCTION, 'puts'},
+    {lexer.STRING, '"hi"'},
+    {'rhtml_tag', '%>'},
+    {'element', '</h1'},
+    {'element', '>'}
+  }
+  local initial_style = rhtml._TOKENSTYLES['html_whitespace']
+  assert_lex(rhtml, code, rhtml_tokens, initial_style)
+  -- Start in Ruby.
+  code = [[puts "hi"]]
+  rhtml_tokens = {
+    {lexer.FUNCTION, 'puts'},
+    {lexer.STRING, '"hi"'}
+  }
+  initial_style = rhtml._TOKENSTYLES['rails_whitespace']
+  assert_lex(rhtml, code, rhtml_tokens, initial_style)
 end
 
 -- Tests that the `lexer.colors` table reads and writes properties with a

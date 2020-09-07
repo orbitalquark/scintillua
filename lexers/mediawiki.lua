@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Mitchell mitchell.att.foicica.com. See License.txt.
+-- Copyright 2006-2020 Mitchell mitchell.att.foicica.com. See LICENSE.
 -- MediaWiki LPeg lexer.
 -- Contributed by Alexander Misel.
 
