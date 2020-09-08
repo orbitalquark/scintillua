@@ -506,9 +506,10 @@ void LexerLPeg::SetStyles() {
     }
   lua_pop(L, 1); // _EXTRASTYLES
 
+  lua_getfield(L, -1, "_TOKENSTYLES");
 #if NO_SCITE
   if (!SS || !sci) {
-    lua_pop(L, 1); // lexer object
+    lua_pop(L, 2); // _TOKENSTYLES, lexer object
     // Skip, but do not report an error since `reinit` would remain `false`
     // and subsequent calls to `Lex()` and `Fold()` would repeatedly call this
     // function and error.
@@ -519,7 +520,6 @@ void LexerLPeg::SetStyles() {
   SetStyle(STYLE_DEFAULT, lua_tostring(L, -1));
   lua_pop(L, 1); // style
   SS(sci, SCI_STYLECLEARALL, 0, 0); // set default styles
-  lua_getfield(L, -1, "_TOKENSTYLES");
   for (lua_pushnil(L); lua_next(L, -2); lua_pop(L, 1))
     if (lua_isstring(L, -2) && lua_isnumber(L, -1) &&
         lua_tointeger(L, -1) - 1 != STYLE_DEFAULT) {
@@ -841,7 +841,7 @@ Sci_Position SCI_METHOD LexerLPeg::PropertySet(
   if (reinit &&
       (strcmp(key, LexerHomeKey) == 0 || strcmp(key, LexerNameKey) == 0))
     Init();
-#if !NO_SCITE
+#if NO_SCITE
   else if (L && SS && sci && strncmp(key, "style.", 6) == 0) {
     // The container is managing styles manually.
     RECORD_STACK_TOP(L);
@@ -934,12 +934,12 @@ void * SCI_METHOD LexerLPeg::PrivateCall(int code, void *arg) {
   case SCI_GETSTATUS:
     return StringResult(lParam, props.Get(LexerErrorKey));
 #if !NO_SCITE
-    default: // style-related
-      if (code >= -STYLE_MAX && code < 0) { // retrieve SciTE style strings
-        char prop_name[32];
-        sprintf(prop_name, "style.lpeg.%0d", code + STYLE_MAX);
-        return StringResult(lParam, props.Get(prop_name));
-      } else return nullptr;
+  default: // style-related
+    if (code >= -STYLE_MAX && code < 0) { // retrieve SciTE style strings
+      char prop_name[32];
+      sprintf(prop_name, "style.lpeg.%0d", code + STYLE_MAX);
+      return StringResult(lParam, props.Get(prop_name));
+    } else return nullptr;
 #endif
   }
   return nullptr;
@@ -994,7 +994,7 @@ void EXT_LEXER_DECL GetLexerName(unsigned int index, char *name, int len) {
  * @return factory function
  */
 LexerFactoryFunction EXT_LEXER_DECL GetLexerFactory(unsigned int index) {
-  return (index == 0) ? LexerLPeg::LexerFactoryLPeg : 0;
+  return (index == 0) ? LexerLPeg::LexerFactoryLPeg : nullptr;
 }
 }
 /*
