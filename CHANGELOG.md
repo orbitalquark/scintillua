@@ -5,6 +5,254 @@
 [Atom Feed]: feed
 [PGP Public Key]: https://foicica.com/foicica.pgp
 
+## ? (?)
+
+Download:
+
+* ?
+
+Bugfixes:
+
+* Fixed potential crashes the lexer has not yet been fully initialized.
+
+Changes:
+
+* Deprecated `lexer.fold_line_comments()` in favor of
+  [`lexer.fold_consecutive_lines()`][].
+* Added `fold.line.groups` property and [`lexer.fold_line_groups`][] alias.
+
+[`lexer.fold_consecutive_lines()`]: api.html#lexer.fold_consecutive_lines
+[`lexer.fold_line_groups`]: api.html#lexer.fold_line_groups
+
+## 3.21.0 (27 July 2020)
+
+Download:
+
+* Released in [Scintilla 3.21.0][]
+
+Bugfixes:
+
+* Fixed crash when *lexer.lua* cannot be found.
+* Fixed assertion error when setting a style with no token.
+
+Changes:
+
+* Added [SCI\_GETNAMEDSTYLES][] for retrieving the style number associated with
+  a style name.
+* Added Fennel lexer.
+* Updated Markdown lexer to handle code blocks and spans better.
+* Added [`lexer.colors`][] and [`lexer.styles`][] tables for themes and lexers
+  in order to have a more table-oriented approach to defining and using colors
+  and styles.
+* Deprecated `lexer.ascii`, `lexer.extend`, `lexer.cntrl`, `lexer.print`, and
+  `lexer.nonnewline_esc` patterns.
+* Alias [`lexer.fold*`][] to `lexer.property['fold*']`.
+* Updated C lexer with C99 bool, true, and false.
+
+[Scintilla 3.21.0]: https://sourceforge.net/projects/scintilla/files/scintilla/3.21.0/scintilla3210.zip/download
+[SCI\_GETNAMEDSTYLES]: api.html#SCI_GETNAMEDSTYLES
+[`lexer.colors`]: api.html#lexer.colors
+[`lexer.styles`]: api.html#lexer.styles
+[`lexer.fold*`]: api.html#lexer.folding
+
+## 3.20.0 (9 May 2020)
+
+Download:
+
+* Released in [Scintilla 3.20.0][]
+
+Bugfixes:
+
+* Fixed incorrect grammar building for lexers that embed themselves.
+
+Changes:
+
+* Added txt2tags lexer.
+* Always use string property values in themes.
+* Updated Rust lexer.
+* Style property settings are now case-sensitive.
+* Lua state is safer, without requiring or giving access to the `io` and
+  `package` modules.
+* `lexer.lpeg.home` property can contain multiple paths separated by `;`.
+* Added [SCI\_LOADLEXERLIBRARY][] for appending paths to `lexer.lpeg.home`.
+* Added [SCI\_PROPERTYNAMES][] for retrieving a list of known lexer names.
+* Implement Scintilla's `SCI_NAMEOFSTYLE` for retrieving style names. Retrieving
+  by number via SCI\_PRIVATECALL is no longer supported.
+* Switched to 1-based indices. The only 3rd party lexers affected are those
+  implementing their own fold functions.
+* Added [`lexer.range()`][] and [`lexer.to_eol()`][] convenience functions,
+  replacing `lexer.delimited_range()`, `lexer.nested_pair()`, and
+  `patt * lexer.nonnewline^0`.
+* Added [`lexer.number`][] convenience pattern, replacing
+  `lexer.float + lexer.integer`.
+
+[Scintilla 3.20.0]: https://sourceforge.net/projects/scintilla/files/scintilla/3.20.0/scintilla3200.zip/download
+[SCI\_LOADLEXERLIBRARY]: api.html#SCI_LOADLEXERLIBRARY
+[SCI\_PROPERTYNAMES]: api.html#SCI_PROPERTYNAMES
+[`lexer.range()`]: api.html#lexer.range
+[`lexer.to_eol()`]: api.html#lexer.to_eol
+[`lexer.number`]: api.html#lexer.number
+
+## 3.11.1 (26 Oct 2019)
+
+Download:
+
+* Released in [Scintilla 3.11.1][]
+
+Bugfixes:
+
+* Prevent double-counting of fold points on a single line.
+
+Changes:
+
+* Updated Prolog, Logtalk, Rust, and C lexers.
+* Added MediaWiki lexer.
+
+[Scintilla 3.11.1]: https://sourceforge.net/projects/scintilla/files/scintilla/3.11.1/scintilla3111.zip/download
+
+## 3.10.6 (11 Jun 2019)
+
+Download:
+
+* Released in [Scintilla 3.10.6][]
+
+Bugfixes:
+
+* None.
+
+Changes:
+
+* Updated Markdown lexer.
+* Updated C++ lexer with support for quotes in C++14 integer literals.
+
+[Scintilla 3.10.6]: https://sourceforge.net/projects/scintilla/files/scintilla/3.10.6/scintilla3106.zip/download
+
+## 3.10.4 (17 Apr 2019)
+
+Download:
+
+* Released in [Scintilla 3.10.4][]
+
+Bugfixes:
+
+* Fixed lack of highlighting strings in YAML.
+
+Changes:
+
+* Added support for CSS3.
+
+[Scintilla 3.10.4]: https://sourceforge.net/projects/scintilla/files/scintilla/3.10.4/scintilla3104.zip/download
+
+## 3.10.3 (09 Mar 2019)
+
+Download:
+
+* Released in [Scintilla 3.10.3][]
+
+Bugfixes:
+
+* None.
+
+Changes:
+
+* Do not match '..' on the trailing end of `lexer.float`.
+* Updated dmd lexer.
+
+[Scintilla 3.10.3]: https://sourceforge.net/projects/scintilla/files/scintilla/3.10.3/scintilla3103.zip/download
+
+## 3.10.2 (12 Jan 2019)
+
+Download:
+
+* Released in [Scintilla 3.10.2][]
+
+Bugfixes:
+
+* None.
+
+Changes:
+
+* Updated ConTeXt lexer.
+
+[Scintilla 3.10.2]: https://sourceforge.net/projects/scintilla/files/scintilla/3.10.2/scintilla3102.zip/download
+
+## 3.10.1 (31 Oct 2018)
+
+Download:
+
+* Released in [Scintilla 3.10.1][]
+
+Bugfixes:
+
+* None.
+
+Changes:
+
+* Updated ConTeXt and Markdown lexers.
+* Improved HTML folding of traditionally single elements.
+* Tweaked newline pattern to be more syntactically accurate.
+
+[Scintilla 3.10.1]: https://sourceforge.net/projects/scintilla/files/scintilla/3.10.1/scintilla3101.zip/download
+
+## 3.10.0 (30 Jun 2018)
+
+Download:
+
+* Released in [Scintilla 3.10.0][]
+
+Bugfixes:
+
+* Handle legacy `_fold` functions.
+* Fixed child lexers that embed themselves into parents and fixed proxy lexers.
+* Fixed incorrect highlighting of indented markdown lists.
+
+Changes:
+
+* Updated C# lexer.
+
+[Scintilla 3.10.0]: https://sourceforge.net/projects/scintilla/files/scintilla/3.10.0/scintilla3100.zip/download
+
+## 3.8.0 (28 Mar 2018)
+
+Download:
+
+* Released in [Scintilla 3.8.0][]
+
+Bugfixes:
+
+* Handle embedded JavaScript in other HTML-based languages like JSP.
+* Fixed incorrectly applying style changes to stale property sets.
+
+Changes:
+
+* Renamed `lexer.LEXERPATH` to [`lexer.path`][].
+* Added [`lexer.new()`][].
+* Replaced `lexer._rules`, `lexer._tokenstyles`, and `lexer._foldsymbols` with
+  [`lexer.add_rule()`][], [`lexer.add_style()`][], and
+  [`lexer.add_fold_point()`][], respectively.
+* Renamed `lexer.embed_lexer()` to [`lexer.embed()`][].
+* Changed [`lexer.word_match()`][] arguments to accept a word string and
+  case-sensitivity flag, eliminating word chars argument.
+* Replaced `lexer._RULES[]` and `lexer._RULES[] =` with [`lexer.get_rule()`][]
+  and [`lexer.modify_rule()`][], respectively.
+* Refactored lexers to be more [object-oriented][]. Legacy lexers will still
+  work, but it's recommended to [migrate them][].
+* Updated lexer template.
+* Added `fold.compact` property for folding trailing blank lines.
+
+[Scintilla 3.8.0]: https://sourceforge.net/projects/scintilla/files/scintilla/3.8.0/scintilla380.zip/download
+[`lexer.path`]: api.html#lexer.path
+[`lexer.new()`]: api.html#lexer.new
+[`lexer.add_rule()`]: api.html#lexer.add_rule
+[`lexer.add_style()`]: api.html#lexer.add_style
+[`lexer.add_fold_point()`]: api.html#lexer.add_fold_point
+[`lexer.embed()`]: api.html#lexer.embed
+[`lexer.word_match()`]: api.html#lexer.word_match
+[`lexer.get_rule()`]: api.html#lexer.get_rule
+[`lexer.modify_rule()`]: api.html#lexer.modify_rule
+[object-oriented]: api.html#lexer.New.Lexer.Template
+[migrate them]: api.html#lexer.Migrating.Legacy.Lexers
+
 ## 3.7.5-1 (19 Aug 2017)
 
 Download:

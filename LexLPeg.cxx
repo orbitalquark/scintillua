@@ -6,8 +6,6 @@
  * For documentation on writing lexers, see *lexers/lexer.lua*.
  */
 
-#if LPEG_LEXER || LPEG_LEXER_EXTERNAL
-
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -67,15 +65,10 @@ using namespace Scintilla;
 #define lua_getfield(l, i, k) (lua_getfield(l, i, k), lua_type(l, -1))
 #define lua_rawget(l, i) (lua_rawget(l, i), lua_type(l, -1))
 #endif
+#define SCLEX_LPEG -1
 
 /** The LPeg Scintilla lexer. */
 class LexerLPeg : public DefaultLexer {
-  // Lexer property keys.
-  const char * const LexerErrorKey = "lexer.lpeg.error";
-  const char * const LexerHomeKey = "lexer.lpeg.home";
-  const char * const LexerNameKey = "lexer.lpeg.name";
-  const char * const LexerThemeKey = "lexer.lpeg.color.theme";
-
   /**
    * The lexer's Lua state.
    * It is cleared each time the lexer language changes unless `ownLua` is
@@ -170,6 +163,12 @@ class LexerLPeg : public DefaultLexer {
   void *StringResult(long lparam, const char *str);
 
 public:
+  // Lexer property keys.
+  static constexpr const char *LexerErrorKey = "lexer.lpeg.error";
+  static constexpr const char *LexerHomeKey = "lexer.lpeg.home";
+  static constexpr const char *LexerNameKey = "lexer.lpeg.name";
+  static constexpr const char *LexerThemeKey = "lexer.lpeg.color.theme";
+
   /** Constructor. */
   LexerLPeg();
 
@@ -236,7 +235,7 @@ public:
   const char * SCI_METHOD PropertyGet(const char *key) override;
 
   /** Constructs a new instance of the lexer. */
-  static ILexer *LexerFactoryLPeg();
+  static ILexer5 *LexerFactoryLPeg();
 };
 
 /** Lua pcall error message handler that adds a traceback. */
@@ -976,48 +975,106 @@ const char * SCI_METHOD LexerLPeg::PropertyGet(const char *key) {
   return props.Get(key);
 }
 
-ILexer *LexerLPeg::LexerFactoryLPeg() { return new LexerLPeg(); }
+ILexer5 *LexerLPeg::LexerFactoryLPeg() { return new LexerLPeg(); }
 
-#if LPEG_LEXER_EXTERNAL
+LexerModule lmLPeg(SCLEX_LPEG, LexerLPeg::LexerFactoryLPeg, "lpeg");
+
 #if _WIN32
-#define EXT_LEXER_DECL __declspec( dllexport ) __stdcall
+#define EXPORT_FUNCTION __declspec( dllexport )
+#define CALLING_CONVENTION __stdcall
 #else
-#define EXT_LEXER_DECL
+#define EXPORT_FUNCTION __attribute__((visibility("default")))
+#define CALLING_CONVENTION
 #endif // _WIN32
+
 extern "C" {
+
 /** Returns 1, the number of lexers defined in this file. */
-int EXT_LEXER_DECL GetLexerCount() { return 1; }
+EXPORT_FUNCTION int CALLING_CONVENTION GetLexerCount() { return 1; }
+
 /**
  * Copies the name of the lexer into buffer *name* of size *len*.
  * @param index 0, the lexer number to get the name of.
  * @param name The buffer to copy the name of the lexer into.
  * @param len The size of *name*.
  */
-void EXT_LEXER_DECL GetLexerName(unsigned int index, char *name, int len) {
+EXPORT_FUNCTION void CALLING_CONVENTION GetLexerName(
+  unsigned int index, char *name, int len)
+{
   *name = '\0';
   if ((index == 0) && (len > static_cast<int>(strlen("lpeg"))))
     strcpy(name, "lpeg");
 }
+
 /**
  * Returns the function that creates a new instance of the lexer.
  * @param index 0, the number of the lexer to create a new instance of.
  * @return factory function
  */
-LexerFactoryFunction EXT_LEXER_DECL GetLexerFactory(unsigned int index) {
+EXPORT_FUNCTION LexerFactoryFunction CALLING_CONVENTION GetLexerFactory(
+  unsigned int index)
+{
   return (index == 0) ? LexerLPeg::LexerFactoryLPeg : nullptr;
 }
+
+static std::string lpegHome, lpegColorTheme;
+
+/**
+ * Returns a newline-separated list of context properties Scintillua uses for
+ * creating lexers via `CreateLexer()`.
+ * @see SetLibraryProperty
+ */
+EXPORT_FUNCTION const char * CALLING_CONVENTION GetLibraryPropertyNames() {
+  return "lpeg.home\nlpeg.color.theme";
 }
+
+/**
+ * Sets a context property for lexer creation.
+ * The list of known context properties is given by `GetLibraryPropertyNames()`.
+ * @param key String context key.
+ * @param value String context value.
+ * @see GetLibraryPropertyNames
+ */
+EXPORT_FUNCTION void CALLING_CONVENTION SetLibraryProperty(
+  const char *key, const char *value)
+{
+  if (strcmp(key, "lpeg.home") == 0)
+    lpegHome = value;
+  else if (strcmp(key, "lpeg.color.theme") == 0)
+    lpegColorTheme = value;
+}
+
+/**
+ * Creates and returns a new Scintillua lexer for language *name*.
+ * If all context properties have been set, the returned lexer is available for
+ * use immediately. Otherwise, the `LexerLPeg::LexerHomeKey` property needs to
+ * be set first. If the  container application is not manually managing styles,
+ * the the `LexerLPeg::LexerThemeKey` property should also be set.
+ * @param name Optional lexer name to initially load. It can be specified later
+ *   using the `LexerLPeg::LexerNameKey` property.
+ */
+EXPORT_FUNCTION ILexer5* CALLING_CONVENTION CreateLexer(const char *name) {
+  ILexer5* lpegLexer = LexerLPeg::LexerFactoryLPeg();
+  if (!lpegHome.empty()) {
+    lpegLexer->PrivateCall(
+      SCI_LOADLEXERLIBRARY, const_cast<char *>(lpegHome.c_str()));
+  }
+  if (!lpegColorTheme.empty()) {
+    lpegLexer->PropertySet(LexerLPeg::LexerThemeKey, lpegColorTheme.c_str());
+  }
+  if (name) {
+    if (strncmp(name, "lpeg_", 5) == 0) name += 5; // prefix used in SciTE
+    lpegLexer->PrivateCall(SCI_SETLEXERLANGUAGE, const_cast<char *>(name));
+  }
+  return lpegLexer;
+}
+
+}
+
 /*
 Forward the following properties from SciTE.
-GetProperty "lexer.lpeg.home"
-GetProperty "lexer.lpeg.color.theme"
 GetProperty "fold.by.indentation"
 GetProperty "fold.line.comments"
 GetProperty "fold.on.zero.sum.lines"
 GetProperty "fold.compact"
 */
-#else
-LexerModule lmLPeg(SCLEX_AUTOMATIC - 1, LexerLPeg::LexerFactoryLPeg, "lpeg");
-#endif // LPEG_LEXER_EXTERNAL
-
-#endif // LPEG_LEXER || LPEG_LEXER_EXTERNAL

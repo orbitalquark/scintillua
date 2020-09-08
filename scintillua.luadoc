@@ -4,10 +4,11 @@
 ---
 -- ## Overview
 --
--- The Scintillua Scintilla lexer has its own API to avoid any modifications to
--- Scintilla itself. It is invoked using [`SCI_PRIVATELEXERCALL`][]. Please note
--- that some of the names of the API calls do not make perfect sense. This is a
--- tradeoff in order to keep Scintilla unmodified.
+-- The Scintillua Scintilla lexer has its own API in order to avoid any
+-- modifications to Scintilla itself. It is invoked using
+-- [`SCI_PRIVATELEXERCALL`][]. Please note that some of the names of the API
+-- calls do not make perfect sense. This is a tradeoff in order to keep
+-- Scintilla unmodified.
 --
 -- [`SCI_PRIVATELEXERCALL`]: http://scintilla.org/ScintillaDoc.html#LexerObjects
 --
@@ -96,9 +97,8 @@ function SCI_PRIVATELEXERCALL(SCI_SETDOCPOINTER, sci) end
 -- Tells Scintillua to use `lua` as its Lua state instead of creating a separate
 -- state.
 --
--- `lua` must have already opened the "base", "string", "table", "package", and
--- "lpeg" libraries. If `lua` is a Lua 5.1 state, it must have also opened the
--- "io" library.
+-- `lua` must have already opened the "base", "string", "table", and "lpeg"
+-- libraries.
 --
 -- Scintillua will create a single `lexer` package (that can be used with Lua's
 -- `require()`), as well as a number of other variables in the
@@ -137,7 +137,7 @@ function SCI_PRIVATELEXERCALL(SCI_SETLEXERLANGUAGE, languageName) end
 -- position. In order for this to work, you must have called
 -- [`SCI_GETDIRECTFUNCTION`](#SCI_GETDIRECTFUNCTION) and
 -- [`SCI_SETDOCPOINTER`](#SCI_SETDOCPOINTER).
--- @param languageName (`char *`) If `0`, returns the length that should be
+-- @param languageName (`char *`) If `NULL`, returns the length that should be
 --   allocated to store the string Lua LPeg lexer name. Otherwise fills the
 --   buffer with the name.
 -- @name SCI_GETLEXERLANGUAGE
@@ -158,8 +158,9 @@ function SCI_PRIVATELEXERCALL(SCI_GETLEXERLANGUAGE, languageName) end
 -- @param styleNum (`int`) For the range `-STYLE_MAX <= styleNum < 0`, uses the
 --   Scintilla style number `-styleNum - 1` for returning SciTE-formatted style
 --   definitions. (Style `0` would be `-1`, style `1` would be `-2`, and so on.)
--- @param style (`char *`) If `0`, returns the length that should be allocated
---   to store the associated string. Otherwise fills the buffer with the string.
+-- @param style (`char *`) If `NULL`, returns the length that should be
+--   allocated to store the associated string. Otherwise fills the buffer with
+--   the string.
 function SCI_PRIVATELEXERCALL(styleNum, style) end
 
 ---
@@ -182,6 +183,8 @@ function SCI_PRIVATELEXERCALL(SCI_GETSTATUS) end
 --
 -- This call may be made multiple times in order to support lexers and themes
 -- across multiple directories.
+-- @param path (`const char *`) A path containing Scintillua lexers and/or
+--   themes.
 -- @usage SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_LOADLEXERLIBRARY,
 --   "path/to/lexers")
 function SCI_PRIVATELEXERCALL(SCI_LOADLEXERLIBRARY, path) end
@@ -193,13 +196,18 @@ function SCI_PRIVATELEXERCALL(SCI_LOADLEXERLIBRARY, path) end
 --
 -- The lexers in this list can be passed to the
 -- [`SCI_SETLEXERLANGUAGE`](#SCI_SETLEXERLANGUAGE) Scintillua API call.
+-- @param names (`char *`) If `NULL`, returns the length that should be
+--   allocated to store the list of lexer names. Otherwise fills the buffer with
+--   the names.
 -- @usage SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_PROPERTYNAMES, lexers)
 -- @usage // lexers now contains a '\n'-separated list of known lexer names
 -- @see SCI_SETLEXERLANGUAGE
 function SCI_PRIVATELEXERCALL(SCI_PROPERTYNAMES, names) end
 
 ---
--- Returns the style number associated with `styleName`.
+-- Returns the style number associated with *styleName*, or `STYLE_DEFAULT`
+-- if *styleName* is not known.
+-- @param styleName (`const char *`) Style name to get the style number of.
 -- @usage SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_GETNAMEDSTYLES, "error")
 -- @usage SendScintilla(sci, SCI_ANNOTATIONSETSTYLE, line, style) // match error
 --   style

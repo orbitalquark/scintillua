@@ -3,7 +3,7 @@
 
 ifeq (win, $(findstring win, $(MAKECMDGOALS)))
   CC = i686-w64-mingw32-gcc
-  CPP = i686-w64-mingw32-g++
+  CXX = i686-w64-mingw32-g++
   plat_flag =
   LUA_CFLAGS = -D_WIN32 -DWIN32
   LDFLAGS = -g -static -mwindows -s LexLPeg.def -Wl,--enable-stdcall-fixup
@@ -11,7 +11,7 @@ ifeq (win, $(findstring win, $(MAKECMDGOALS)))
   luadoc = luadoc_start.bat
 else
   CC = gcc -fPIC
-  CPP = g++ -fPIC
+  CXX = g++ -fPIC
   plat_flag = -DGTK
   LUA_CFLAGS = -DLUA_USE_LINUX
   LDFLAGS = -g -Wl,-soname,liblexlpeg.so.0 -Wl,-fvisibility=hidden
@@ -20,17 +20,17 @@ else
 endif
 
 # Scintilla.
-sci_flags = -g -pedantic $(plat_flag) -Iscintilla/include -Iscintilla/lexlib \
-            -DSCI_LEXER -W -Wall -Wno-unused
+sci_flags = --std=c++17 -g -pedantic $(plat_flag) -Iscintilla/include \
+            -Iscintilla/lexlib -DSCI_LEXER -W -Wall -Wno-unused
 lex_objs = PropSetSimple.o WordList.o LexerModule.o LexerSimple.o LexerBase.o \
            Accessor.o DefaultLexer.o
 
 # Lua.
-lua_objs = lapi.o lcode.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o \
-           lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o \
-           lundump.o lvm.o lzio.o \
-           lauxlib.o lbaselib.o ldblib.o liolib.o lmathlib.o ltablib.o \
-           lstrlib.o loadlib.o loslib.o linit.o
+lua_objs = lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o \
+           lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o \
+           ltm.o lundump.o lvm.o lzio.o \
+           lauxlib.o lbaselib.o lbitlib.o lcorolib.o ldblib.o liolib.o \
+           lmathlib.o ltablib.o lstrlib.o loadlib.o loslib.o lutf8lib.o linit.o
 lua_lib_objs = lpcap.o lpcode.o lpprint.o lptree.o lpvm.o
 
 # Build.
@@ -39,13 +39,16 @@ all: $(lexer)
 win32: $(lexer)
 deps: scintilla lua lua/src/lib/lpeg doc/bombay
 
-$(lex_objs): %.o: scintilla/lexlib/%.cxx ; $(CPP) $(sci_flags) -c $<
-$(lua_objs): %.o: lua/src/%.c ; $(CC) -Os -Ilua/src $(LUA_CFLAGS) -c $<
-$(lua_lib_objs): %.o: lua/src/lib/%.c ; $(CC) -Os -Ilua/src $(LUA_CFLAGS) -c $<
+$(lex_objs): %.o: scintilla/lexlib/%.cxx
+	$(CXX) $(sci_flags) -c $<
+$(lua_objs): %.o: lua/src/%.c
+	$(CC) -Os -std=c99 -Ilua/src $(LUA_CFLAGS) -c $<
+$(lua_lib_objs): %.o: lua/src/lib/%.c
+	$(CC) -std=c99 -Os -Ilua/src $(LUA_CFLAGS) -c $<
 LexLPeg.o: LexLPeg.cxx
-	$(CPP) $(sci_flags) $(LUA_CFLAGS) -DLPEG_LEXER_EXTERNAL -Ilua/src -c $<
+	$(CXX) $(sci_flags) $(LUA_CFLAGS) -Ilua/src -c $<
 $(lexer): $(lex_objs) $(lua_objs) $(lua_lib_objs) LexLPeg.o
-	$(CPP) -shared $(LDFLAGS) -o $@ $^
+	$(CXX) -shared $(LDFLAGS) -o $@ $^
 clean: ; rm -f *.o
 
 # Documentation.
@@ -71,7 +74,7 @@ release: $(basedir)
 	make deps doc sign-deps
 	make -j4
 	make -j4 clean
-	make -j4 CC=i586-mingw32msvc-gcc CPP=i586-mingw32msvc-g++ win32
+	make -j4 CC=i586-mingw32msvc-gcc CXX=i586-mingw32msvc-g++ win32
 	cp -r doc $<
 	cp lexers/*.so lexers/*.dll $</lexers/
 	cp *.asc $</
