@@ -131,8 +131,9 @@ class LexerLPeg : public DefaultLexer {
    * @param L The Lua State.
    * @param str The error message to log and print. If `nullptr`, logs and
    *   prints the Lua error message at the top of the stack.
+   * @param print Whether or not to print the error to stderr.
    */
-  void LogError(lua_State *L, const char *str = nullptr);
+  void LogError(lua_State *L, const char *str = nullptr, bool print = true);
 
   /**
    * Parses the given style string to set the properties for the given style
@@ -400,10 +401,10 @@ void LexerLPeg::ReadLexerNames(const char *path) {
 #endif
 }
 
-void LexerLPeg::LogError(lua_State *L, const char *str) {
+void LexerLPeg::LogError(lua_State *L, const char *str, bool print) {
   const char *value = str ? str : lua_tostring(L, -1);
   PropertySet(LexerErrorKey, value);
-  fprintf(stderr, "Lua Error: %s.\n", value);
+  if (print) fprintf(stderr, "Lua Error: %s.\n", value);
   lua_settop(L, 0);
 }
 
@@ -598,7 +599,7 @@ bool LexerLPeg::Init() {
       return (LogError(L), false);
     }
     if (lua_isnil(L, -1))
-      return (LogError(L, "'lexer.lua' module not found"), false);
+      return (LogError(L, "'lexer.lua' module not found", false), false);
     lua_remove(L, -2); // lua_error_handler
     lua_replace(L, -2); // nil
     lua_pushinteger(L, SC_FOLDLEVELBASE);
