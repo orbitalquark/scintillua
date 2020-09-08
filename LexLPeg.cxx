@@ -979,7 +979,7 @@ ILexer5 *LexerLPeg::LexerFactoryLPeg() { return new LexerLPeg(); }
 
 LexerModule lmLPeg(SCLEX_LPEG, LexerLPeg::LexerFactoryLPeg, "lpeg");
 
-#if _WIN32
+#if (_WIN32 && !NO_DLL)
 #define EXPORT_FUNCTION __declspec( dllexport )
 #define CALLING_CONVENTION __stdcall
 #else

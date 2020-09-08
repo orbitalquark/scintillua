@@ -180,6 +180,9 @@ A sample portion of a *Makefile* with Lua 5.3 is shown below.
 
     [your app]: [your dependencies] $(SCINTILLUA_LEXER) $(LUA_OBJS)
 
+**Win32 note:** when cross-compiling for Windows statically, you will need to
+pass `-DNO_DLL` when compiling *LexLPeg.cxx*.
+
 [Lua]: http://lua.org
 [LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
 
