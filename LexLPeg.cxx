@@ -493,9 +493,14 @@ void LexerLPeg::SetStyle(int num, const char *style) {
 
 void LexerLPeg::SetStyles() {
   RECORD_STACK_TOP(L);
+  if (!lua_rawgetp(L, LUA_REGISTRYINDEX, reinterpret_cast<void *>(this))) {
+    lua_pop(L, 1); // lexer object
+    ASSERT_STACK_TOP(L);
+    return;
+  }
+
   // If the lexer defines additional styles, set their properties first (if
   // the user has not already defined them).
-  lua_rawgetp(L, LUA_REGISTRYINDEX, reinterpret_cast<void *>(this));
   lua_getfield(L, -1, "_EXTRASTYLES");
   for (lua_pushnil(L); lua_next(L, -2); lua_pop(L, 1))
     if (lua_isstring(L, -2) && lua_isstring(L, -1)) {
@@ -901,16 +906,20 @@ void * SCI_METHOD LexerLPeg::PrivateCall(int code, void *arg) {
       reinit = true;
       PropertySet(LexerErrorKey, "");
       PropertySet(LexerNameKey, reinterpret_cast<const char *>(arg));
-    } else if (L)
-      ownLua ? SetStyles() : static_cast<void>(Init());
+    } else if (L && ownLua)
+      SetStyles();
+    else
+      Init();
     return nullptr;
   case SCI_GETLEXERLANGUAGE: {
-    if (!L) return StringResult(lParam, "null");
+    std::string val("null");
+    if (!L) return StringResult(lParam, val.c_str());
     RECORD_STACK_TOP(L);
-    lua_rawgetp(L, LUA_REGISTRYINDEX, reinterpret_cast<void *>(this));
-    lua_getfield(L, -1, "_NAME");
-    std::string val(lua_tostring(L, -1));
-    lua_pop(L, 2); // lexer name, lexer object
+    if (lua_rawgetp(L, LUA_REGISTRYINDEX, reinterpret_cast<void *>(this))) {
+      lua_getfield(L, -1, "_NAME");
+      val = lua_tostring(L, -1);
+      lua_pop(L, 2); // lexer name, lexer object
+    } else lua_pop(L, 1); // lexer object
     ASSERT_STACK_TOP(L);
     if (!SS || !sci || !multilang) return StringResult(lParam, val.c_str());
     val.push_back('/');
