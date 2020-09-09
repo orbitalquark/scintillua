@@ -37,7 +37,7 @@ lua_lib_objs = lpcap.o lpcode.o lpprint.o lptree.o lpvm.o
 
 all: $(lexer)
 win32: $(lexer)
-deps: scintilla lua lua/src/lib/lpeg doc/bombay
+deps: scintilla lua lua/src/lib/lpeg
 
 $(lex_objs): %.o: scintilla/lexlib/%.cxx
 	$(CXX) $(sci_flags) -c $<
@@ -53,52 +53,54 @@ clean: ; rm -f *.o
 
 # Documentation.
 
-doc: manual luadoc
-manual: doc/*.md *.md | doc/bombay
-	$| -d doc -t doc --title Scintillua $^
-luadoc: lexers/lexer.lua scintillua.luadoc
-	$(luadoc) -d doc -t doc --doclet doc/markdowndoc $^
-cleandoc: ; rm -rf doc/manual.html doc/api.html
+docs: docs/api.md README.md $(wildcard docs/*.md) | docs/_layouts/default.html
+	for file in $(basename $^); do \
+		cat $| | docs/fill_layout.lua $$file.md > $$file.html; \
+	done
+	mv README.html docs
+docs/api.md: lexers/lexer.lua scintillua.luadoc
+	$(luadoc) --doclet docs/markdowndoc $^ > $@
+cleandocs: ; rm -f docs/*.html docs/api.md
 
 # Releases.
 
 ifndef NIGHTLY
-  basedir = scintillua_$(shell grep '^\#\#' CHANGELOG.md | head -1 | \
+  basedir = scintillua_$(shell grep '^\#\#' docs/changelog.md | head -1 | \
                                cut -d ' ' -f 2)
 else
-  basedir = scintillua_NIGHTLY_$(shell date +"%F")
+  basedir = scintillua_nightly_$(shell date +"%F")
 endif
 
-$(basedir): ; hg archive $@ -X ".hg*"
+ifneq (, $(shell hg summary 2>/dev/null))
+  archive = hg archive -X ".hg*" $(1)
+else
+  archive = git archive HEAD --prefix $(1)/ | tar -xf -
+endif
+
+$(basedir): ; $(call archive,$@)
 release: $(basedir)
-	make deps doc sign-deps
+	make deps docs sign-deps
 	make -j4
 	make -j4 clean
-	make -j4 CC=i586-mingw32msvc-gcc CXX=i586-mingw32msvc-g++ win32
-	cp -r doc $<
+	make -j4 win32
+	cp -r docs $<
 	cp lexers/*.so lexers/*.dll $</lexers/
 	cp *.asc $</
-	zip -r /tmp/$<.zip $< && rm -rf $< && gpg -ab /tmp/$<.zip
+	zip -r $<.zip $< && rm -r $< && gpg -ab $<.zip
 
 # External dependencies.
 
 scintilla_tgz = scintilla375.tgz
 lua_tgz = lua-5.1.4.tar.gz
 lpeg_tgz = lpeg-1.0.0.tar.gz
-bombay_zip = bombay.zip
 
-$(scintilla_tgz): ; wget "http://prdownloads.sourceforge.net/scintilla/$@"
-scintilla: | $(scintilla_tgz) ; mkdir $@ && tar xzf $| -C $@ && mv $@/*/* $@
-$(lua_tgz): ; wget "http://www.lua.org/ftp/$@"
-$(lpeg_tgz): ; wget "http://www.inf.puc-rio.br/~roberto/lpeg/$@"
+$(scintilla_tgz): ; wget https://www.scintilla.org/$@
+scintilla: | $(scintilla_tgz) ; tar xzf $|
+$(lua_tgz): ; wget http://www.lua.org/ftp/$@
+$(lpeg_tgz): ; wget http://www.inf.puc-rio.br/~roberto/lpeg/$@
 lua: | $(lua_tgz) ; mkdir $@ && tar xzf $| -C $@ && mv $@/*/* $@
 lua/src/lib/lpeg: | $(lpeg_tgz)
 	mkdir -p $@ && tar xzf $| -C $@ && mv $@/*/*.c $@/*/*.h $(dir $@)
-$(bombay_zip):
-	wget "http://foicica.com/hg/bombay/archive/tip.zip" && mv tip.zip $@
-doc/bombay: | $(bombay_zip)
-	mkdir $(notdir $@) && unzip -d $(notdir $@) $| && \
-		mv $(notdir $@)/*/* $(dir $@)
 sign-deps: | $(scintilla_tgz) $(lua_tgz) $(lpeg_tgz)
 	@for file in $|; do gpg -ab $$file; done
 verify-deps: | $(wildcard $(basename $(wildcard *.asc)))

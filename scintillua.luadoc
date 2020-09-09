@@ -2,7 +2,7 @@
 -- This is a DUMMY FILE used for making LuaDoc for the Scintillua API.
 
 ---
--- ## Overview
+-- ### Overview
 --
 -- The Scintillua Scintilla lexer has its own API in order to avoid any
 -- modifications to Scintilla itself. It is invoked using
@@ -20,7 +20,7 @@
 --
 --     SendScintilla(sci, SCI_PRIVATELEXERCALL, operation, pointer);
 --
--- ## Scintillua Usage Example
+-- ### Scintillua Usage Example
 --
 -- Here is a pseudo-code example:
 --

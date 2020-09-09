@@ -6,7 +6,7 @@ local M = {}
 ---
 -- Lexes Scintilla documents and source code with Lua and LPeg.
 --
--- ## Writing Lua Lexers
+-- ### Writing Lua Lexers
 --
 -- Lexers highlight the syntax of source code. Scintilla (the editing component
 -- behind [Textadept][] and [SciTE][]) traditionally uses static, compiled C++
@@ -48,7 +48,7 @@ local M = {}
 -- [Textadept]: http://foicica.com/textadept
 -- [SciTE]: http://scintilla.org/SciTE.html
 --
--- ### Lexer Basics
+-- #### Lexer Basics
 --
 -- The *lexers/* directory contains all lexers, including your new one. Before
 -- attempting to write one from scratch though, first determine if your
@@ -62,7 +62,7 @@ local M = {}
 -- or "r". For example, Scintillua uses "ansi_c", "dmd", and "rstats",
 -- respectively.
 --
--- #### New Lexer Template
+-- ##### New Lexer Template
 --
 -- There is a *lexers/template.txt* file that contains a simple template for a
 -- new lexer. Feel free to use it, replacing the '?'s with the name of your
@@ -95,7 +95,7 @@ local M = {}
 -- so-as not to affect Lua's global environment. All in all, this is a minimal,
 -- working lexer that you can build on.
 --
--- #### Tokens
+-- ##### Tokens
 --
 -- Take a moment to think about your programming language's structure. What kind
 -- of key elements does it have? In the template shown earlier, one predefined
@@ -145,7 +145,7 @@ local M = {}
 -- token names is that your lexer's tokens will inherit the universal syntax
 -- highlighting color theme used by your text editor.
 --
--- ##### Example Tokens
+-- ###### Example Tokens
 --
 -- So, how might you define other tokens like keywords, comments, and strings?
 -- Here are some examples.
@@ -232,7 +232,7 @@ local M = {}
 -- want your highlighting to be. After all, you are not writing a compiler or
 -- interpreter!
 --
--- #### Rules
+-- ##### Rules
 --
 -- Programming languages have grammars, which specify valid token structure. For
 -- example, comments usually cannot appear within a string. Grammars consist of
@@ -291,7 +291,7 @@ local M = {}
 -- Note however that lexers with complex rules like these are more prone to lose
 -- track of their state, especially if they span multiple lines.
 --
--- #### Summary
+-- ##### Summary
 --
 -- Lexers primarily consist of tokens and grammar rules. At your disposal are a
 -- number of convenience patterns and functions for rapidly creating a lexer. If
@@ -299,9 +299,9 @@ local M = {}
 -- define how the lexer highlights them. The tokens will inherit the default
 -- syntax highlighting color theme your editor uses.
 --
--- ### Advanced Techniques
+-- #### Advanced Techniques
 --
--- #### Styles and Styling
+-- ##### Styles and Styling
 --
 -- The most basic form of syntax highlighting is assigning different colors to
 -- different tokens. Instead of highlighting with just colors, Scintilla allows
@@ -323,7 +323,7 @@ local M = {}
 -- tokens use the existing `lexer.styles.string` style instead of defining a new
 -- one.
 --
--- ##### Example Styles
+-- ###### Example Styles
 --
 -- Defining styles is pretty straightforward. An empty style that inherits the
 -- default theme settings is simply an empty table:
@@ -344,7 +344,7 @@ local M = {}
 -- The color theme files in the *lexers/themes/* folder give more examples of
 -- style definitions.
 --
--- #### Token Styles
+-- ##### Token Styles
 --
 -- Lexers use the [`lexer.add_style()`]() function to assign styles to
 -- particular tokens. Recall the token definition and from the lexer template:
@@ -375,7 +375,7 @@ local M = {}
 -- Remember to refrain from assigning specific colors in styles, but in this
 -- case, all user color themes probably define `colors.grey`.
 --
--- #### Line Lexers
+-- ##### Line Lexers
 --
 -- By default, lexers match the arbitrary chunks of text passed to them by
 -- Scintilla. These chunks may be a full document, only the visible part of a
@@ -390,7 +390,7 @@ local M = {}
 -- Now the input text for the lexer is a single line at a time. Keep in mind
 -- that line lexers do not have the ability to look ahead at subsequent lines.
 --
--- #### Embedded Lexers
+-- ##### Embedded Lexers
 --
 -- Lexers embed within one another very easily, requiring minimal effort. In the
 -- following sections, the lexer being embedded is called the "child" lexer and
@@ -405,7 +405,7 @@ local M = {}
 -- embeds other child lexers in it (like HTML embedding CSS), and a child lexer
 -- that embeds itself into a parent lexer (like PHP embedding itself in HTML).
 --
--- ##### Parent Lexer
+-- ###### Parent Lexer
 --
 -- Before embedding a child lexer into a parent lexer, the parent lexer needs to
 -- load the child lexer. This is done with the [`lexer.load()`]() function. For
@@ -448,7 +448,7 @@ local M = {}
 --
 --     lex:embed(css, css_start_rule, css_end_rule)
 --
--- ##### Child Lexer
+-- ###### Child Lexer
 --
 -- The process for instructing a child lexer to embed itself into a parent is
 -- very similar to embedding a child into a parent: first, load the parent lexer
@@ -462,7 +462,7 @@ local M = {}
 --     lex:add_style('php_tag', lexer.styles.embedded)
 --     html:embed(lex, php_start_rule, php_end_rule)
 --
--- #### Lexers with Complex State
+-- ##### Lexers with Complex State
 --
 -- A vast majority of lexers are not stateful and can operate on any chunk of
 -- text in a document. However, there may be rare cases where a lexer does need
@@ -476,7 +476,7 @@ local M = {}
 --
 -- Writing stateful lexers is beyond the scope of this document.
 --
--- ### Code Folding
+-- #### Code Folding
 --
 -- When reading source code, it is occasionally helpful to temporarily hide
 -- blocks of code like functions, classes, comments, etc. This is the concept of
@@ -539,7 +539,7 @@ local M = {}
 -- the current line's text, the position in the current line the fold point text
 -- starts at, and the fold point text itself.
 --
--- #### Fold by Indentation
+-- ##### Fold by Indentation
 --
 -- Some languages have significant whitespace and/or no delimiters that indicate
 -- fold points. If your lexer falls into this category and you would like to
@@ -548,9 +548,9 @@ local M = {}
 --
 --     local lex = lexer.new('?', {fold_by_indentation = true})
 --
--- ### Using Lexers
+-- #### Using Lexers
 --
--- #### Textadept
+-- ##### Textadept
 --
 -- Put your lexer in your *~/.textadept/lexers/* directory so you do not
 -- overwrite it when upgrading Textadept. Also, lexers in this directory
@@ -560,7 +560,7 @@ local M = {}
 --
 -- [file type]: textadept.file_types.html
 --
--- #### SciTE
+-- ##### SciTE
 --
 -- Create a *.properties* file for your lexer and `import` it in either your
 -- *SciTEUser.properties* or *SciTEGlobal.properties*. The contents of the
@@ -576,7 +576,7 @@ local M = {}
 -- files. Your theme file in the *lexers/themes/* directory contains styling
 -- information.
 --
--- ### Migrating Legacy Lexers
+-- #### Migrating Legacy Lexers
 --
 -- Legacy lexers are of the form:
 --
@@ -696,9 +696,9 @@ local M = {}
 --
 --     return lex
 --
--- ### Considerations
+-- #### Considerations
 --
--- #### Performance
+-- ##### Performance
 --
 -- There might be some slight overhead when initializing a lexer, but loading a
 -- file from disk into Scintilla is usually more expensive. On modern computer
@@ -714,7 +714,7 @@ local M = {}
 -- overriding `lexer.fold()` with your own implementation, or simply eliminating
 -- folding support from your lexer.
 --
--- #### Limitations
+-- ##### Limitations
 --
 -- Embedded preprocessor languages like PHP cannot completely embed in their
 -- parent languages in that the parent's tokens do not support start and end
@@ -724,13 +724,13 @@ local M = {}
 --
 -- will not style correctly.
 --
--- #### Troubleshooting
+-- ##### Troubleshooting
 --
 -- Errors in lexers can be tricky to debug. Lexers print Lua errors to
 -- `io.stderr` and `_G.print()` statements to `io.stdout`. Running your editor
 -- from a terminal is the easiest way to see errors as they occur.
 --
--- #### Risks
+-- ##### Risks
 --
 -- Poorly written lexers have the ability to crash Scintilla (and thus its
 -- containing application), so unsaved data might be lost. However, I have only
@@ -739,7 +739,7 @@ local M = {}
 -- (either correctly or incorrectly, it does not matter), I have not observed
 -- any crashes.
 --
--- #### Acknowledgements
+-- ##### Acknowledgements
 --
 -- Thanks to Peter Odding for his [lexer post][] on the Lua mailing list
 -- that provided inspiration, and thanks to Roberto Ierusalimschy for LPeg.
