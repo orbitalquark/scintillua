@@ -1,8 +1,6 @@
 /**
  * Copyright 2006-2020 Mitchell mitchell.att.foicica.com. See LICENSE.
- *
  * Lua-powered dynamic language lexer for Scintillua.
- *
  * For documentation on writing lexers, see *lexers/lexer.lua*.
  */
 
@@ -1066,6 +1064,8 @@ EXPORT_FUNCTION ILexer5* CALLING_CONVENTION CreateLexer(const char *name) {
     if (strncmp(name, "lpeg_", 5) == 0) name += 5; // prefix used in SciTE
     lpegLexer->PrivateCall(SCI_SETLEXERLANGUAGE, const_cast<char *>(name));
   }
+  if (strlen(lpegLexer->PropertyGet(LexerLPeg::LexerErrorKey)) > 0)
+    return nullptr;
   return lpegLexer;
 }
 
