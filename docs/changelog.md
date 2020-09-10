@@ -5,24 +5,29 @@
 [Atom Feed]: feed
 [PGP Public Key]: https://foicica.com/foicica.pgp
 
-## ? (?)
+## 4.4.5 (?)
 
 Download:
 
-* ?
+* [Scintillua 4.4.5-1][] | [PGP -- 4.4.5-1][]
 
 Bugfixes:
 
-* Fixed potential crashes the lexer has not yet been fully initialized.
+* Fixed potential crashes if the lexer has not yet been fully initialized.
 
 Changes:
 
 * Deprecated `lexer.fold_line_comments()` in favor of
   [`lexer.fold_consecutive_lines()`][].
 * Added `fold.line.groups` property and [`lexer.fold_line_groups`][] alias.
+* Updated to [Scintilla][]/[SciTE][] 4.4.5.
 
+[Scintillua 4.4.5-1]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_4.4.5-1/scintillua_4.4.5-1.zip
+[PGP -- 4.4.5-1]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_4.4.5-1/scintillua_4.4.5-1.zip.asc
 [`lexer.fold_consecutive_lines()`]: api.html#lexer.fold_consecutive_lines
 [`lexer.fold_line_groups`]: api.html#lexer.fold_line_groups
+[Scintilla]: http://scintilla.org
+[SciTE]: http://scintilla.org/SciTE.html
 
 ## 3.21.0 (27 July 2020)
 

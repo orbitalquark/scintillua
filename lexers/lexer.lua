@@ -864,7 +864,7 @@ local M = {}
 -- @field style_at (table, Read-only)
 --   Table of style names at positions in the buffer starting from 1.
 -- @field folding (boolean)
---   Whether or not folding is enabled.
+--   Whether or not folding is enabled for the lexers that support it.
 --   This option is disabled by default.
 --   This is an alias for `lexer.property['fold'] = '1|0'`.
 -- @field fold_on_zero_sum_lines (boolean)

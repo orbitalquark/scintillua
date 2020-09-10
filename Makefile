@@ -26,11 +26,11 @@ lex_objs = PropSetSimple.o WordList.o LexerModule.o LexerSimple.o LexerBase.o \
            Accessor.o DefaultLexer.o
 
 # Lua.
-lua_objs = lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o \
-           lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o \
-           ltm.o lundump.o lvm.o lzio.o \
-           lauxlib.o lbaselib.o lbitlib.o lcorolib.o ldblib.o liolib.o \
-           lmathlib.o ltablib.o lstrlib.o loadlib.o loslib.o lutf8lib.o linit.o
+lua_objs = lapi.o lcode.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o \
+           lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o \
+           lundump.o lvm.o lzio.o \
+           lauxlib.o lbaselib.o ldblib.o liolib.o lmathlib.o ltablib.o \
+          lstrlib.o loadlib.o loslib.o linit.o
 lua_lib_objs = lpcap.o lpcode.o lpprint.o lptree.o lpvm.o
 
 # Build.
@@ -53,11 +53,12 @@ clean: ; rm -f *.o
 
 # Documentation.
 
-docs: docs/api.md README.md $(wildcard docs/*.md) | docs/_layouts/default.html
+docs: docs/index.md docs/api.md $(wildcard docs/*.md) | \
+      docs/_layouts/default.html
 	for file in $(basename $^); do \
 		cat $| | docs/fill_layout.lua $$file.md > $$file.html; \
 	done
-	mv README.html docs
+docs/index.md: README.md ; cp $< $@
 docs/api.md: lexers/lexer.lua scintillua.luadoc
 	$(luadoc) --doclet docs/markdowndoc $^ > $@
 cleandocs: ; rm -f docs/*.html docs/api.md
