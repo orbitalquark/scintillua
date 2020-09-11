@@ -61,7 +61,7 @@ docs: docs/index.md docs/api.md $(wildcard docs/*.md) | \
 docs/index.md: README.md ; cp $< $@
 docs/api.md: lexers/lexer.lua scintillua.luadoc
 	$(luadoc) --doclet docs/markdowndoc $^ > $@
-cleandocs: ; rm -f docs/*.html docs/api.md
+cleandocs: ; rm -f docs/*.html docs/index.md docs/api.md
 
 # Releases.
 

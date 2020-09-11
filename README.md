@@ -11,7 +11,7 @@ that case.
 
 [Lua]: http://lua.org
 [LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
-[Scintilla]: http://scintilla.org
+[Scintilla]: https://scintilla.org
 
 ## Features
 
@@ -37,7 +37,7 @@ When used a standalone Lua library, Scintillua requires Lua 5.1 or greater and
 
 Scintillua releases can be found [here][].
 
-[here]: http://github.com/orbitalquark/scintillua/releases
+[here]: https://github.com/orbitalquark/scintillua/releases
 
 ## Installation and Usage
 
@@ -60,9 +60,9 @@ located in *docs/* and available [online][2]. It provides information on how
 your Scintilla-based application can utilize Scintillua and communicate with it,
 and also how to write and utilize Lua lexers.
 
-[1]: http://orbitalquark.github.io/scintillua/manual.html
+[1]: https://orbitalquark.github.io/scintillua/manual.html
 [SciTE]: https://scintilla.org/SciTE.html
-[2]: http://orbitalquark.github.io/scintillua/api.html
+[2]: https://orbitalquark.github.io/scintillua/api.html
 
 ## Compile
 
@@ -100,4 +100,4 @@ help, and discuss features either on the [mailing list][], or with me personally
 (mitchell.att.foicica.com).
 
 [open source]: https://github.com/orbitalquark/scintillua
-[mailing list]: http://foicica.com/lists
+[mailing list]: https://foicica.com/lists

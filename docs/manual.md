@@ -9,7 +9,7 @@ Scintillua can be used in the following ways:
 
 These usages are discussed in the following sections.
 
-## Drop-in External Lexer
+### Drop-in External Lexer
 
 Scintillua can be dropped into any existing installation of a Scintilla-based
 application as long as that application supports the [Lexilla][] interface as
@@ -17,7 +17,7 @@ defined in Scintilla 4.4.5.
 
 [Lexilla]: https://scintilla.org/ScintillaDoc.html#Lexilla
 
-### Using Scintillua with SciTE
+#### Using Scintillua with SciTE
 
 [SciTE][] is the SCIntilla based Text Editor. Scintillua can be dropped into any
 SciTE installation version 4.4.5 or higher with or without administrator
@@ -88,11 +88,11 @@ Scintillua's lexers. These include, but are not limited to:
 * Python colon matching.
 * HTML/XML tag auto-completion.
 
-[SciTE]: http://scintilla.org/SciTE.html
+[SciTE]: https://scintilla.org/SciTE.html
 [write one]: api.html#lexer
 [contribute]: README.html#Contribute
 
-### Using Scintillua with Other Apps
+#### Using Scintillua with Other Apps
 
 In order to drop Scintillua into any other existing installation of a
 Scintilla-based application that supports the Lexilla interface, that
@@ -132,7 +132,7 @@ Scintillua's lexers support the following properties:
 [API]: api.html
 [read]: api.html#styleNum
 
-## Compiling Scintillua Directly into an App
+### Compiling Scintillua Directly into an App
 
 You can compile Scintillua directly (statically) into your Scintilla-based
 application by:
@@ -202,7 +202,7 @@ work with styles, please see the [API][] Documentation.
 [SCI_SETLEXERLANGUAGE]: api.html#SCI_SETLEXERLANGUAGE
 [API Documentation]: api.html
 
-## Using Scintillua as a Lua Library
+### Using Scintillua as a Lua Library
 
 In order to use Scintillua as a Lua library, simply place the *lexers/*
 directory in your Lua path (or modify Lua's `package.path` accordingly),

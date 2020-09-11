@@ -1,4 +1,4 @@
-# Language Lexers
+## Language Lexers
 
 Scintillua has lexers for the languages below. Languages denoted by a `*` have
 native [folders][]. For languages without native folding support, folding based
