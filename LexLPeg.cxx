@@ -1053,19 +1053,19 @@ EXPORT_FUNCTION void CALLING_CONVENTION SetLibraryProperty(
  */
 EXPORT_FUNCTION ILexer5* CALLING_CONVENTION CreateLexer(const char *name) {
   ILexer5* lpegLexer = LexerLPeg::LexerFactoryLPeg();
-  if (!lpegHome.empty()) {
+  if (!lpegHome.empty())
     lpegLexer->PrivateCall(
       SCI_LOADLEXERLIBRARY, const_cast<char *>(lpegHome.c_str()));
-  }
-  if (!lpegColorTheme.empty()) {
+  if (!lpegColorTheme.empty())
     lpegLexer->PropertySet(LexerLPeg::LexerThemeKey, lpegColorTheme.c_str());
-  }
   if (name) {
-    if (strncmp(name, "lpeg_", 5) == 0) name += 5; // prefix used in SciTE
+    if (strncmp(name, "lpeg_", 5) == 0) name += 5; // prefix used for SciTE
     lpegLexer->PrivateCall(SCI_SETLEXERLANGUAGE, const_cast<char *>(name));
   }
-  if (strlen(lpegLexer->PropertyGet(LexerLPeg::LexerErrorKey)) > 0)
+  if (strlen(lpegLexer->PropertyGet(LexerLPeg::LexerErrorKey)) > 0) {
+    lpegLexer->Release();
     return nullptr;
+  }
   return lpegLexer;
 }
 
