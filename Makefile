@@ -1,9 +1,9 @@
 # Copyright 2010-2020 Mitchell mitchell.att.foicica.com. See LICENSE.
 # Make file for LexLPeg external lexer for Scintilla.
 
-ifeq (win, $(findstring win, $(MAKECMDGOALS)))
-  CC = i686-w64-mingw32-gcc
-  CXX = i686-w64-mingw32-g++
+ifeq (win, $(MAKECMDGOALS))
+  CC = x86_64-w64-mingw32-gcc
+  CXX = x86_64-w64-mingw32-g++
   plat_flag =
   LUA_CFLAGS = -D_WIN32 -DWIN32
   LDFLAGS = -g -static -mwindows -s LexLPeg.def -Wl,--enable-stdcall-fixup
@@ -30,13 +30,13 @@ lua_objs = lapi.o lcode.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o \
            lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o \
            lundump.o lvm.o lzio.o \
            lauxlib.o lbaselib.o ldblib.o liolib.o lmathlib.o ltablib.o \
-          lstrlib.o loadlib.o loslib.o linit.o
+           lstrlib.o loadlib.o loslib.o linit.o
 lua_lib_objs = lpcap.o lpcode.o lpprint.o lptree.o lpvm.o
 
 # Build.
 
 all: $(lexer)
-win32: $(lexer)
+win: $(lexer)
 deps: scintilla lua lua/src/lib/lpeg
 
 $(lex_objs): %.o: scintilla/lexlib/%.cxx
@@ -66,7 +66,7 @@ cleandocs: ; rm -f docs/*.html docs/index.md docs/api.md
 # Releases.
 
 ifndef NIGHTLY
-  basedir = scintillua_$(shell grep '^\#\#' docs/changelog.md | head -1 | \
+  basedir = scintillua_$(shell grep '^\#\#\#' docs/changelog.md | head -1 | \
                                cut -d ' ' -f 2)
 else
   basedir = scintillua_nightly_$(shell date +"%F")
@@ -80,18 +80,18 @@ endif
 
 $(basedir): ; $(call archive,$@)
 release: $(basedir)
-	make deps docs sign-deps
+	make clean deps docs sign-deps
 	make -j4
-	make -j4 clean
-	make -j4 win32
-	cp -r docs $<
+	make clean && make -j4 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ \
+		win && mv lexers/LexLPeg.dll lexers/LexLPeg32.dll
+	make clean && make -j4 win
+	cp -r docs *.asc $<
 	cp lexers/*.so lexers/*.dll $</lexers/
-	cp *.asc $</
 	zip -r $<.zip $< && rm -r $< && gpg -ab $<.zip
 
 # External dependencies.
 
-scintilla_tgz = scintilla375.tgz
+scintilla_tgz = scintilla445.tgz
 lua_tgz = lua-5.1.4.tar.gz
 lpeg_tgz = lpeg-1.0.0.tar.gz
 

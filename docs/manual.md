@@ -15,6 +15,10 @@ Scintillua can be dropped into any existing installation of a Scintilla-based
 application as long as that application supports the [Lexilla][] interface as
 defined in Scintilla 4.4.5.
 
+Scintillua releases come with three external lexers in the *lexers/* directory:
+*liblexlpeg.so*, which is a 64-bit Linux shared library; *LexLPeg.cxx*, which is
+a 64-bit Windows DLL, and *LexLPeg32.dll*, which is a 32-bit Windows DLL.
+
 [Lexilla]: https://scintilla.org/ScintillaDoc.html#Lexilla
 
 #### Using Scintillua with SciTE
@@ -45,6 +49,9 @@ administrator privileges:
        lexilla.context.lpeg.home=/path/to/lexers
 
    where `/path/to/lexers` is the full path of *lexers/* from step 1.
+
+**Win32 note:** if you are on a 32-bit Windows system, you will need to replace
+*lexers/LexLPeg.dll* with *lexers/LexLPeg32.dll*.
 
 With Scintillua installed, SciTE will use Scintillua's Lua lexers whenever
 possible (as indicated in *lexers/lpeg.properties*). If a Lua lexer is loaded
