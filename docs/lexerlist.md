@@ -60,6 +60,7 @@ see *lexers/lpeg.properties*.
 1. Io`*`
 1. Java`*`
 1. Javascript`*`
+1. jq`*`
 1. JSON`*`
 1. JSP`*`
 1. LaTeX`*`
