@@ -1,15 +1,10 @@
 ## Changelog
 
-[Atom Feed][] | [PGP Public Key][]
-
-[Atom Feed]: feed
-[PGP Public Key]: https://foicica.com/foicica.pgp
-
-### 4.4.5 (?)
+### 4.4.5-1 (?)
 
 Download:
 
-* [Scintillua 4.4.5-1][] | [PGP -- 4.4.5-1][]
+* [Scintillua 4.4.5-1][]
 
 Bugfixes:
 
@@ -20,16 +15,17 @@ Changes:
 * Deprecated `lexer.fold_line_comments()` in favor of
   [`lexer.fold_consecutive_lines()`][].
 * Added `fold.line.groups` property and [`lexer.fold_line_groups`][] alias.
+* Added 64-bit and 32-bit Windows DLLs.
+* Added jq lexer.
 * Updated to [Scintilla][]/[SciTE][] 4.4.5.
 
 [Scintillua 4.4.5-1]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_4.4.5-1/scintillua_4.4.5-1.zip
-[PGP -- 4.4.5-1]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_4.4.5-1/scintillua_4.4.5-1.zip.asc
 [`lexer.fold_consecutive_lines()`]: api.html#lexer.fold_consecutive_lines
 [`lexer.fold_line_groups`]: api.html#lexer.fold_line_groups
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
-### 3.21.0 (27 July 2020)
+### 3.21.0-1 (27 July 2020)
 
 Download:
 
@@ -60,7 +56,7 @@ Changes:
 [`lexer.styles`]: api.html#lexer.styles
 [`lexer.fold*`]: api.html#lexer.folding
 
-### 3.20.0 (9 May 2020)
+### 3.20.0-1 (9 May 2020)
 
 Download:
 
@@ -98,7 +94,7 @@ Changes:
 [`lexer.to_eol()`]: api.html#lexer.to_eol
 [`lexer.number`]: api.html#lexer.number
 
-### 3.11.1 (26 Oct 2019)
+### 3.11.1-1 (26 Oct 2019)
 
 Download:
 
@@ -115,7 +111,7 @@ Changes:
 
 [Scintilla 3.11.1]: https://sourceforge.net/projects/scintilla/files/scintilla/3.11.1/scintilla3111.zip/download
 
-### 3.10.6 (11 Jun 2019)
+### 3.10.6-1 (11 Jun 2019)
 
 Download:
 
@@ -132,7 +128,7 @@ Changes:
 
 [Scintilla 3.10.6]: https://sourceforge.net/projects/scintilla/files/scintilla/3.10.6/scintilla3106.zip/download
 
-### 3.10.4 (17 Apr 2019)
+### 3.10.4-1 (17 Apr 2019)
 
 Download:
 
@@ -148,7 +144,7 @@ Changes:
 
 [Scintilla 3.10.4]: https://sourceforge.net/projects/scintilla/files/scintilla/3.10.4/scintilla3104.zip/download
 
-### 3.10.3 (09 Mar 2019)
+### 3.10.3-1 (09 Mar 2019)
 
 Download:
 
@@ -165,7 +161,7 @@ Changes:
 
 [Scintilla 3.10.3]: https://sourceforge.net/projects/scintilla/files/scintilla/3.10.3/scintilla3103.zip/download
 
-### 3.10.2 (12 Jan 2019)
+### 3.10.2-1 (12 Jan 2019)
 
 Download:
 
@@ -181,7 +177,7 @@ Changes:
 
 [Scintilla 3.10.2]: https://sourceforge.net/projects/scintilla/files/scintilla/3.10.2/scintilla3102.zip/download
 
-### 3.10.1 (31 Oct 2018)
+### 3.10.1-1 (31 Oct 2018)
 
 Download:
 
@@ -199,7 +195,7 @@ Changes:
 
 [Scintilla 3.10.1]: https://sourceforge.net/projects/scintilla/files/scintilla/3.10.1/scintilla3101.zip/download
 
-### 3.10.0 (30 Jun 2018)
+### 3.10.0-1 (30 Jun 2018)
 
 Download:
 
@@ -217,7 +213,7 @@ Changes:
 
 [Scintilla 3.10.0]: https://sourceforge.net/projects/scintilla/files/scintilla/3.10.0/scintilla3100.zip/download
 
-### 3.8.0 (28 Mar 2018)
+### 3.8.0-1 (28 Mar 2018)
 
 Download:
 
@@ -262,7 +258,7 @@ Changes:
 
 Download:
 
-* [Scintillua 3.7.5-1][] | [PGP -- 3.7.5-1][]
+* [Scintillua 3.7.5-1][]
 
 Bugfixes:
 
@@ -275,16 +271,15 @@ Changes:
 * Updated themes to add `font` and `fontsize` properties.
 * Updated to [Scintilla][]/[SciTE][] 3.7.5.
 
-[Scintillua 3.7.5-1]: download/scintillua_3.7.5-1.zip
-[PGP -- 3.7.5-1]: download/scintillua_3.7.5-1.zip.asc
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintillua 3.7.5-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.7.5-1.zip
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 3.7.4-1 (30 Apr 2017)
 
 Download:
 
-* [Scintillua 3.7.4-1][] | [PGP -- 3.7.4-1][]
+* [Scintillua 3.7.4-1][]
 
 Bugfixes:
 
@@ -298,16 +293,15 @@ Changes:
 * Improved Scheme, ANSI C, Prolog, and Moonscript lexers.
 * Updated to [Scintilla][]/[SciTE][] 3.7.4.
 
-[Scintillua 3.7.4-1]: download/scintillua_3.7.4-1.zip
-[PGP -- 3.7.4-1]: download/scintillua_3.7.4-1.zip.asc
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintillua 3.7.4-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.7.4-1.zip
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 3.7.3-1 (22 Feb 2017)
 
 Download:
 
-* [Scintillua 3.7.3-1][] | [PGP -- 3.7.3-1][]
+* [Scintillua 3.7.3-1][]
 
 Bugfixes:
 
@@ -320,17 +314,16 @@ Changes:
 * Applications can [query for lexer errors][].
 * Updated to [Scintilla][]/[SciTE][] 3.7.3.
 
-[Scintillua 3.7.3-1]: download/scintillua_3.7.3-1.zip
-[PGP -- 3.7.3-1]: download/scintillua_3.7.3-1.zip.asc
+[Scintillua 3.7.3-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.7.3-1.zip
 [query for lexer errors]: api.html#SCI_GETSTATUS
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 3.7.1-1 (05 Dec 2016)
 
 Download:
 
-* [Scintillua 3.7.1-1][] | [PGP -- 3.7.1-1][]
+* [Scintillua 3.7.1-1][]
 
 Bugfixes:
 
@@ -342,17 +335,16 @@ Changes:
   themes) for fold display text.
 * Updated to [Scintilla][]/[SciTE][] 3.7.1.
 
-[Scintillua 3.7.1-1]: download/scintillua_3.7.1-1.zip
-[PGP -- 3.7.1-1]: download/scintillua_3.7.1-1.zip.asc
+[Scintillua 3.7.1-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.7.1-1.zip
 [`lexer.STYLE_FOLDDISPLAYTEXT`]: api.html#lexer.STYLE_FOLDDISPLAYTEXT
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 3.7.0-1 (19 Oct 2016)
 
 Download:
 
-* [Scintillua 3.7.0-1][] | [PGP -- 3.7.0-1][]
+* [Scintillua 3.7.0-1][]
 
 Bugfixes:
 
@@ -368,18 +360,17 @@ Changes:
 * Updated PKGBUILD lexer.
 * Updated to [Scintilla][]/[SciTE][] 3.7.0.
 
-[Scintillua 3.7.0-1]: download/scintillua_3.7.0-1.zip
-[PGP -- 3.7.0-1]: download/scintillua_3.7.0-1.zip.asc
+[Scintillua 3.7.0-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.7.0-1.zip
 [`lexer.float`]: api.html#lexer.float
 [`lexer.property_int`]: api.html#lexer.property_int
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 3.6.7-1 (15 Sep 2016)
 
 Download:
 
-* [Scintillua 3.6.7-1][] | [PGP -- 3.6.7-1][]
+* [Scintillua 3.6.7-1][]
 
 Bugfixes:
 
@@ -390,16 +381,15 @@ Changes:
 * Added TaskPaper lexer.
 * Updated to [Scintilla][]/[SciTE][] 3.6.7.
 
-[Scintillua 3.6.7-1]: download/scintillua_3.6.7-1.zip
-[PGP -- 3.6.7-1]: download/scintillua_3.6.7-1.zip.asc
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintillua 3.6.7-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.6.7-1.zip
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 3.6.5-1 (26 Apr 2016)
 
 Download:
 
-* [Scintillua 3.6.5-1][] | [PGP -- 3.6.5-1][]
+* [Scintillua 3.6.5-1][]
 
 Bugfixes:
 
@@ -410,16 +400,15 @@ Changes:
 * Updated some documentation for clarity.
 * Updated to [Scintilla][]/[SciTE][] 3.6.5.
 
-[Scintillua 3.6.5-1]: download/scintillua_3.6.5-1.zip
-[PGP -- 3.6.5-1]: download/scintillua_3.6.5-1.zip.asc
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintillua 3.6.5-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.6.5-1.zip
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 3.6.4-2 (04 Apr 2016)
 
 Download:
 
-* [Scintillua 3.6.4-2][] | [PGP -- 3.6.4-2][]
+* [Scintillua 3.6.4-2][]
 
 Bugfixes:
 
@@ -430,14 +419,13 @@ Changes:
 * Themes must `require('lexer')` now (if they are not already), and cannot rely
   on `lexer` to be globally defined. **This is a breaking change.**
 
-[Scintillua 3.6.4-2]: download/scintillua_3.6.4-2.zip
-[PGP -- 3.6.4-2]: download/scintillua_3.6.4-2.zip.asc
+[Scintillua 3.6.4-2]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.6.4-2.zip
 
 ### 3.6.4-1 (19 Mar 2016)
 
 Download:
 
-* [Scintillua 3.6.4-1][] | [PGP -- 3.6.4-1][]
+* [Scintillua 3.6.4-1][]
 
 Bugfixes:
 
@@ -452,20 +440,19 @@ Changes:
 * Updated Elixir and JavaScript lexers.
 * Updated to [Scintilla][]/[SciTE][] 3.6.4.
 
-[Scintillua 3.6.4-1]: download/scintillua_3.6.4-1.zip
-[PGP -- 3.6.4-1]: download/scintillua_3.6.4-1.zip.asc
+[Scintillua 3.6.4-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.6.4-1.zip
 [style property]: api.html#lexer.Styles.and.Styling
 [`lexer.line_state`]: api.html#lexer.line_state
 [`lexer.line_from_position()`]: api.html#lexer.line_from_position
 [stateful lexers]: api.html#lexer.Lexers.with.Complex.State
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 3.6.3-1 (23 Jan 2016)
 
 Download:
 
-* [Scintillua 3.6.3-1][] | [PGP -- 3.6.3-1][]
+* [Scintillua 3.6.3-1][]
 
 Bugfixes:
 
@@ -478,16 +465,15 @@ Changes:
 * Updated Elixir lexer.
 * Updated to [Scintilla][]/[SciTE][] 3.6.3.
 
-[Scintillua 3.6.3-1]: download/scintillua_3.6.3-1.zip
-[PGP -- 3.6.3-1]: download/scintillua_3.6.3-1.zip.asc
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintillua 3.6.3-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.6.3-1.zip
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 3.6.2-1 (07 Nov 2015)
 
 Download:
 
-* [Scintillua 3.6.2-1][] | [PGP -- 3.6.2-1][]
+* [Scintillua 3.6.2-1][]
 
 Bugfixes:
 
@@ -499,17 +485,16 @@ Changes:
 * Updated to [Scintilla][]/[SciTE][] 3.6.2.
 * Updated to [LPeg][] 1.0.0.
 
-[Scintillua 3.6.2-1]: download/scintillua_3.6.2-1.zip
-[PGP -- 3.6.2-1]: download/scintillua_3.6.2-1.zip.asc
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintillua 3.6.2-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.6.2-1.zip
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 [LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
 
 ### 3.6.1-1 (15 Sep 2015)
 
 Download:
 
-* [Scintillua 3.6.1-1][] | [PGP -- 3.6.1-1][]
+* [Scintillua 3.6.1-1][]
 
 Bugfixes:
 
@@ -520,16 +505,15 @@ Changes:
 
 * Updated to [Scintilla][]/[SciTE][] 3.6.1.
 
-[Scintillua 3.6.1-1]: download/scintillua_3.6.1-1.zip
-[PGP -- 3.6.1-1]: download/scintillua_3.6.1-1.zip.asc
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintillua 3.6.1-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.6.1-1.zip
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 3.6.0-1 (03 Aug 2015)
 
 Download:
 
-* [Scintillua 3.6.0-1][] | [PGP -- 3.6.0-1][]
+* [Scintillua 3.6.0-1][]
 
 Bugfixes:
 
@@ -541,16 +525,15 @@ Changes:
 * Updated Python lexer.
 * Updated to [Scintilla][]/[SciTE][] 3.6.0.
 
-[Scintillua 3.6.0-1]: download/scintillua_3.6.0-1.zip
-[PGP -- 3.6.0-1]: download/scintillua_3.6.0-1.zip.asc
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintillua 3.6.0-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.6.0-1.zip
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 3.5.7-1 (23 Jun 2015)
 
 Download:
 
-* [Scintillua 3.5.7-1][] | [PGP -- 3.5.7-1][]
+* [Scintillua 3.5.7-1][]
 
 Bugfixes:
 
@@ -561,16 +544,15 @@ Changes:
 * Added Windows Script File lexer.
 * Updated to [Scintilla][]/[SciTE][] 3.5.7.
 
-[Scintillua 3.5.7-1]: download/scintillua_3.5.7-1.zip
-[PGP -- 3.5.7-1]: download/scintillua_3.5.7-1.zip.asc
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintillua 3.5.7-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.5.7-1.zip
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 3.5.6-1 (26 May 2015)
 
 Download:
 
-* [Scintillua 3.5.6-1][] | [PGP -- 3.5.6-1][]
+* [Scintillua 3.5.6-1][]
 
 Bugfixes:
 
@@ -582,16 +564,15 @@ Changes:
 * Added Elixir lexer.
 * Updated to [Scintilla][]/[SciTE][] 3.5.6.
 
-[Scintillua 3.5.6-1]: download/scintillua_3.5.6-1.zip
-[PGP -- 3.5.6-1]: download/scintillua_3.5.6-1.zip.asc
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintillua 3.5.6-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.5.6-1.zip
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 3.5.5-1 (18 Apr 2015)
 
 Download:
 
-* [Scintillua 3.5.5-1][] | [PGP -- 3.5.5-1][]
+* [Scintillua 3.5.5-1][]
 
 Bugfixes:
 
@@ -608,17 +589,16 @@ Changes:
 * Added PowerShell lexer.
 * Updated to [Scintilla][]/[SciTE][] 3.5.5.
 
-[Scintillua 3.5.5-1]: download/scintillua_3.5.5-1.zip
-[PGP -- 3.5.5-1]: download/scintillua_3.5.5-1.zip.asc
+[Scintillua 3.5.5-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.5.5-1.zip
 [`_FOLDBYINDENTATION`]: api.html#lexer.Fold.by.Indentation
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 3.5.4-1 (09 Mar 2015)
 
 Download:
 
-* [Scintillua 3.5.4-1][] | [PGP -- 3.5.4-1][]
+* [Scintillua 3.5.4-1][]
 
 Bugfixes:
 
@@ -632,17 +612,16 @@ Changes:
 * Updated to [LPeg][] 0.12.2.
 * Updated to [Scintilla][]/[SciTE][] 3.5.4.
 
-[Scintillua 3.5.4-1]: download/scintillua_3.5.4-1.zip
-[PGP -- 3.5.4-1]: download/scintillua_3.5.4-1.zip.asc
+[Scintillua 3.5.4-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.5.4-1.zip
 [LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 3.5.3-1 (20 Jan 2015)
 
 Download:
 
-* [Scintillua 3.5.3-1][] | [PGP -- 3.5.3-1][]
+* [Scintillua 3.5.3-1][]
 
 Bugfixes:
 
@@ -655,16 +634,15 @@ Changes:
 * Updated Lua lexer for Lua 5.3.
 * Updated to [Scintilla][]/[SciTE][] 3.5.3.
 
-[Scintillua 3.5.3-1]: download/scintillua_3.5.3-1.zip
-[PGP -- 3.5.3-1]: download/scintillua_3.5.3-1.zip.asc
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintillua 3.5.3-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.5.3-1.zip
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 3.5.2-1 (10 Dec 2014)
 
 Download:
 
-* [Scintillua 3.5.2-1][] | [PGP -- 3.5.2-1][]
+* [Scintillua 3.5.2-1][]
 
 Bugfixes:
 
@@ -676,16 +654,15 @@ Changes:
 * Added `fold.on.zero.sum.line` property for folding on `} else {`-style lines.
 * Updated to [Scintilla][]/[SciTE][] 3.5.2.
 
-[Scintillua 3.5.2-1]: download/scintillua_3.5.2-1.zip
-[PGP -- 3.5.2-1]: download/scintillua_3.5.2-1.zip.asc
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintillua 3.5.2-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.5.2-1.zip
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 3.5.1-1 (01 Oct 2014)
 
 Download:
 
-* [Scintillua 3.5.1-1][] | [PGP -- 3.5.1-1][]
+* [Scintillua 3.5.1-1][]
 
 Bugfixes:
 
@@ -697,16 +674,15 @@ Changes:
 * Improved performance for lexers with no grammars and no fold rules.
 * Updated to [Scintilla][]/[SciTE][] 3.5.1.
 
-[Scintillua 3.5.1-1]: download/scintillua_3.5.1-1.zip
-[PGP -- 3.5.1-1]: download/scintillua_3.5.1-1.zip.asc
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintillua 3.5.1-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.5.1-1.zip
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 3.5.0-1 (01 Sep 2014)
 
 Download:
 
-* [Scintillua 3.5.0-1][] | [PGP -- 3.5.0-1][]
+* [Scintillua 3.5.0-1][]
 
 Bugfixes:
 
@@ -717,17 +693,16 @@ Changes:
 * Updated to [LPeg][] 0.12.
 * Updated to [Scintilla][]/[SciTE][] 3.5.0.
 
-[Scintillua 3.5.0-1]: download/scintillua_3.5.0-1.zip
-[PGP -- 3.5.0-1]: download/scintillua_3.5.0-1.zip.asc
+[Scintillua 3.5.0-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.5.0-1.zip
 [LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 3.4.4-1 (04 Jul 2014)
 
 Download:
 
-* [Scintillua 3.4.4-1][] | [PGP -- 3.4.4-1][]
+* [Scintillua 3.4.4-1][]
 
 Bugfixes:
 
@@ -742,16 +717,15 @@ Changes:
 * Updated D lexer.
 * Updated to [Scintilla][]/[SciTE][] 3.4.4.
 
-[Scintillua 3.4.4-1]: download/scintillua_3.4.4-1.zip
-[PGP -- 3.4.4-1]: download/scintillua_3.4.4-1.zip.asc
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintillua 3.4.4-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.4.4-1.zip
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 3.3.9-1 (05 Feb 2014)
 
 Download:
 
-* [Scintillua 3.3.9-1][] | [PGP -- 3.3.9-1][]
+* [Scintillua 3.3.9-1][]
 
 Bugfixes:
 
@@ -763,8 +737,7 @@ Changes:
 * Enable Scintillua to be used as a stand-alone [Lua library][].
 * Scintillua can accept and use [external Lua states][].
 
-[Scintillua 3.3.9-1]: download/scintillua3.3.9-1.zip
-[PGP -- 3.3.9-1]: download/scintillua3.3.9-1.zip.asc
+[Scintillua 3.3.9-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.3.9-1.zip
 [Lua library]: manual.html#Using.Scintillua.as.a.Lua.Library
 [external Lua states]: api.html#SCI_CHANGELEXERSTATE
 
@@ -776,7 +749,7 @@ and themes will need to be updated.
 
 Download:
 
-* [Scintillua 3.3.7-1][] | [PGP -- 3.3.7-1][]
+* [Scintillua 3.3.7-1][]
 
 Bugfixes:
 
@@ -814,8 +787,7 @@ Changes:
 * Renamed "hypertext" and "Io" lexers to "html" and "io\_lang" internally.
 
 [theme implementation]: api.html#lexer.Styles.and.Styling
-[Scintillua 3.3.7-1]: download/scintillua3.3.7-1.zip
-[PGP -- 3.3.7-1]: download/scintillua3.3.7-1.zip.asc
+[Scintillua 3.3.7-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.3.7-1.zip
 [`lexer._tokenstyles`]: api.html#lexer.Token.Styles
 [`lexer.fold_level`]: api.html#lexer.fold_level
 [`lexer.indent_amount`]: api.html#lexer.indent_amount
@@ -833,7 +805,7 @@ Changes:
 
 Download:
 
-* [Scintillua 3.3.2-1][] | [PGP -- 3.3.2-1][]
+* [Scintillua 3.3.2-1][]
 
 Bugfixes:
 
@@ -846,15 +818,14 @@ Changes:
 * [SCI\_GETLEXERLANGUAGE][] returns "lexer/current" for multi-lang lexers.
 * Updated D lexer.
 
-[Scintillua 3.3.2-1]: download/scintillua3.3.2-1.zip
-[PGP -- 3.3.2-1]: download/scintillua3.3.2-1.zip.asc
+[Scintillua 3.3.2-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.3.2-1.zip
 [SCI\_GETLEXERLANGUAGE]: api.html#SCI_GETLEXERLANGUAGE
 
 ### 3.3.0-1 (31 Mar 2013)
 
 Download:
 
-* [Scintillua 3.3.0-1][] | [PGP -- 3.3.0-1][]
+* [Scintillua 3.3.0-1][]
 
 Bugfixes:
 
@@ -865,14 +836,13 @@ Changes:
 
 * Added Less, Literal Coffeescript, and Sass lexers.
 
-[Scintillua 3.3.0-1]: download/scintillua3.3.0-1.zip
-[PGP -- 3.3.0-1]: download/scintillua3.3.0-1.zip.asc
+[Scintillua 3.3.0-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.3.0-1.zip
 
 ### 3.2.4-1 (18 Jan 2013)
 
 Download:
 
-* [Scintillua 3.2.4-1][] | [PGP -- 3.2.4-1][]
+* [Scintillua 3.2.4-1][]
 
 Bugfixes:
 
@@ -884,14 +854,13 @@ Changes:
 * Rewrote documentation.
 * Improved speed and memory usage of lexers.
 
-[Scintillua 3.2.4-1]: download/scintillua3.2.4-1.zip
-[PGP -- 3.2.4-1]: download/scintillua3.2.4-1.zip.asc
+[Scintillua 3.2.4-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.2.4-1.zip
 
 ### 3.2.3-1 (22 Oct 2012)
 
 Download:
 
-* [Scintillua 3.2.3-1][] | [PGP -- 3.2.3-1][]
+* [Scintillua 3.2.3-1][]
 
 Bugfixes:
 
@@ -903,14 +872,13 @@ Changes:
   use the latter.
 * Added SciTE usage note on themes.
 
-[Scintillua 3.2.3-1]: download/scintillua3.2.3-1.zip
-[PGP -- 3.2.3-1]: download/scintillua3.2.3-1.zip.asc
+[Scintillua 3.2.3-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.2.3-1.zip
 
 ### 3.2.2-1 (31 Aug 2012)
 
 Download:
 
-* [Scintillua 3.2.2-1][] | [PGP -- 3.2.2-1][]
+* [Scintillua 3.2.2-1][]
 
 Bugfixes:
 
@@ -924,16 +892,15 @@ Changes:
   detection.
 * Updated AWK lexer.
 
-[Scintillua 3.2.2-1]: download/scintillua3.2.2-1.zip
-[PGP -- 3.2.2-1]: download/scintillua3.2.2-1.zip.asc
-[scinterm]: http://foicica.com/scinterm
+[Scintillua 3.2.2-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.2.2-1.zip
+[scinterm]: https://foicica.com/scinterm
 [`lexer.last_char_includes()`]: api.html#lexer.last_char_includes
 
 ### 3.2.1-1 (15 Jul 2012)
 
 Download:
 
-* [Scintillua 3.2.1-1][] | [PGP -- 3.2.1-1][]
+* [Scintillua 3.2.1-1][]
 
 Bugfixes:
 
@@ -944,14 +911,13 @@ Changes:
 * Updated AWK lexer.
 * Updated HTML lexer to recognize HTML5 'script' and 'style' tags.
 
-[Scintillua 3.2.1-1]: download/scintillua3.2.1-1.zip
-[PGP -- 3.2.1-1]: download/scintillua3.2.1-1.zip.asc
+[Scintillua 3.2.1-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.2.1-1.zip
 
 ### 3.2.0-1 (01 Jun 2012)
 
 Download:
 
-* [Scintillua 3.2.0-1][] | [PGP -- 3.2.0-1][]
+* [Scintillua 3.2.0-1][]
 
 Bugfixes:
 
@@ -962,14 +928,13 @@ Changes:
 * Identify more file extensions.
 * Updated Batch lexer.
 
-[Scintillua 3.2.0-1]: download/scintillua3.2.0-1.zip
-[PGP -- 3.2.0-1]: download/scintillua3.2.0-1.zip.asc
+[Scintillua 3.2.0-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.2.0-1.zip
 
 ### 3.1.0-1 (23 Apr 2012)
 
 Download:
 
-* [Scintillua 3.1.0-1][] | [PGP -- 3.1.0-1][]
+* [Scintillua 3.1.0-1][]
 
 Bugfixes:
 
@@ -980,14 +945,13 @@ Changes:
 * Improved the speed of simple code folding.
 * Check for lexer grammar before lexing.
 
-[Scintillua 3.1.0-1]: download/scintillua3.1.0-1.zip
-[PGP -- 3.1.0-1]: download/scintillua3.1.0-1.zip.asc
+[Scintillua 3.1.0-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.1.0-1.zip
 
 ### 3.0.4-1 (11 Mar 2012)
 
 Download:
 
-* [Scintillua 3.0.4-1][] | [PGP -- 3.0.4-1][]
+* [Scintillua 3.0.4-1][]
 
 Bugfixes:
 
@@ -999,14 +963,13 @@ Changes:
 * Updated VB and VBScript lexers.
 * All new documentation in the `doc/` directory.
 
-[Scintillua 3.0.4-1]: download/scintillua3.0.4-1.zip
-[PGP -- 3.0.4-1]: download/scintillua3.0.4-1.zip.asc
+[Scintillua 3.0.4-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.0.4-1.zip
 
 ### 3.0.3-1 (28 Jan 2012)
 
 Download:
 
-* [Scintillua 3.0.3-1][] | [PGP -- 3.0.3-1][]
+* [Scintillua 3.0.3-1][]
 
 Bugfixes:
 
@@ -1018,14 +981,13 @@ Changes:
 * Updated D lexer.
 * Added ChucK lexer.
 
-[Scintillua 3.0.3-1]: download/scintillua3.0.3-1.zip
-[PGP -- 3.0.3-1]: download/scintillua3.0.3-1.zip.asc
+[Scintillua 3.0.3-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.0.3-1.zip
 
 ### 3.0.2-1 (08 Dec 2011)
 
 Download:
 
-* [Scintillua 3.0.2-1][] | [PGP -- 3.0.2-1][]
+* [Scintillua 3.0.2-1][]
 
 Bugfixes:
 
@@ -1044,17 +1006,16 @@ Changes:
 * Added Lua libraries and library functions to Lua lexer.
 * Updated lexers and [API documentation][] to [Lua 5.2][].
 
-[Scintillua 3.0.2-1]: download/scintillua3.0.2-1.zip
-[PGP -- 3.0.2-1]: download/scintillua3.0.2-1.zip.asc
+[Scintillua 3.0.2-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.0.2-1.zip
 [tokens]: api.html#lexer.Tokens
 [API documentation]: api.html#lexer
-[Lua 5.2]: http://www.lua.org/manual/5.2/
+[Lua 5.2]: https://www.lua.org/manual/5.2/
 
 ### 3.0.0-1 (01 Nov 2011)
 
 Download:
 
-* [Scintillua 3.0.0-1][] | [PGP -- 3.0.0-1][]
+* [Scintillua 3.0.0-1][]
 
 Bugfixes:
 
@@ -1064,14 +1025,13 @@ Changes:
 
 * None.
 
-[Scintillua 3.0.0-1]: download/scintillua3.0.0-1.zip
-[PGP -- 3.0.0-1]: download/scintillua3.0.0-1.zip.asc
+[Scintillua 3.0.0-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.0.0-1.zip
 
 ### 2.29-1 (19 Sep 2011)
 
 Download:
 
-* [Scintillua 2.29-1][] | [PGP -- 2.29-1][]
+* [Scintillua 2.29-1][]
 
 Bugfixes:
 
@@ -1092,14 +1052,13 @@ Changes:
 * Updated LaTeX and TeX lexers.
 * Added `l.style_embedded` to `themes/scite.lua` theme.
 
-[Scintillua 2.29-1]: download/scintillua229-1.zip
-[PGP -- 2.29-1]: download/scintillua229-1.zip.asc
+[Scintillua 2.29-1]: https://github.com/orbitalquark/scintillua/archive/scintillua229-1.zip
 
 ### 2.27-1 (20 Jun 2011)
 
 Download:
 
-* [Scintillua 2.27-1][] | [PGP -- 2.27-1][]
+* [Scintillua 2.27-1][]
 
 Bugfixes:
 
@@ -1109,14 +1068,13 @@ Changes:
 
 * Added Scala lexer.
 
-[Scintillua 2.27-1]: download/scintillua227-1.zip
-[PGP -- 2.27-1]: download/scintillua227-1.zip.asc
+[Scintillua 2.27-1]: https://github.com/orbitalquark/scintillua/archive/scintillua227-1.zip
 
 ### 2.26-1 (10 Jun 2011)
 
 Download:
 
-* [Scintillua 2.26-1][] | [PGP -- 2.26-1][]
+* [Scintillua 2.26-1][]
 
 Bugfixes:
 
@@ -1131,8 +1089,7 @@ Changes:
 * Added native folding for more than 60% of existing lexers. The rest still use
   folding by indentation by default.
 
-[Scintillua 2.26-1]: download/scintillua226-1.zip
-[PGP -- 2.26-1]: download/scintillua226-1.zip.asc
+[Scintillua 2.26-1]: https://github.com/orbitalquark/scintillua/archive/scintillua226-1.zip
 [`get_style_at()`]: api.html#lexer.style_at
 [easier]: api.html#lexer.Code.Folding
 
@@ -1140,7 +1097,7 @@ Changes:
 
 Download:
 
-* [Scintillua 2.25-1][] | [PGP -- 2.25-1][]
+* [Scintillua 2.25-1][]
 
 Bugfixes:
 
@@ -1155,14 +1112,13 @@ Changes:
 * Added Ruby on Rails lexer, use it instead of Ruby lexer in RHTML lexer.
 * Updated `lpeg.properties` file with SciTE changes.
 
-[Scintillua 2.25-1]: download/scintillua225-1.zip
-[PGP -- 2.25-1]: download/scintillua225-1.zip.asc
+[Scintillua 2.25-1]: https://github.com/orbitalquark/scintillua/archive/scintillua225-1.zip
 
 ### 2.24-1 (03 Feb 2011)
 
 Download:
 
-* [Scintillua 2.24-1][] | [PGP -- 2.24-1][]
+* [Scintillua 2.24-1][]
 
 Bugfixes:
 
@@ -1175,14 +1131,13 @@ Changes:
 * HTML lexer is more flexible.
 * Update Lua functions and constants to Lua 5.1.
 
-[Scintillua 2.24-1]: download/scintillua224-1.zip
-[PGP -- 2.24-1]: download/scintillua224-1.zip.asc
+[Scintillua 2.24-1]: https://github.com/orbitalquark/scintillua/archive/scintillua224-1.zip
 
 ### 2.23-1 (07 Dec 2010)
 
 Download:
 
-* [Scintillua 2.23-1][] | [PGP -- 2.23-1][]
+* [Scintillua 2.23-1][]
 
 Bugfixes:
 
@@ -1193,14 +1148,13 @@ Changes:
 * Renamed `MAC` flag to `OSX`.
 * Removed unused Errorlist and Maxima lexers.
 
-[Scintillua 2.23-1]: download/scintillua223-1.zip
-[PGP -- 2.23-1]: download/scintillua223-1.zip.asc
+[Scintillua 2.23-1]: https://github.com/orbitalquark/scintillua/archive/scintillua223-1.zip
 
 ### 2.22-1 (27 Oct 2010)
 
 Download:
 
-* [Scintillua 2.22-1][] | [PGP -- 2.22-1][]
+* [Scintillua 2.22-1][]
 
 Bugfixes:
 
@@ -1216,15 +1170,14 @@ Changes:
 * Updated XML lexer.
 * Scintillua can be dropped into a [SciTE][] install.
 
-[Scintillua 2.22-1]: download/scintillua222-1.zip
-[PGP -- 2.22-1]: download/scintillua222-1.zip.asc
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintillua 2.22-1]: https://github.com/orbitalquark/scintillua/archive/scintillua222-1.zip
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 2.22-pre-1 (13 Sep 2010)
 
 Download:
 
-* [Scintillua 2.22-pre-1][] | [PGP -- 2.22-pre-1][]
+* [Scintillua 2.22-pre-1][]
 
 Bugfixes:
 
@@ -1236,8 +1189,7 @@ Changes:
 * Renamed `lexers/ocaml.lua` to `lexers/caml.lua` and `lexers/postscript.lua` to
   `lexers/ps.lua` to conform to Scintilla names.
 
-[Scintillua 2.22-pre-1]: download/scintillua222-pre-1.zip
-[PGP -- 2.22-pre-1]: download/scintillua222-pre-1.zip.asc
+[Scintillua 2.22-pre-1]: https://github.com/orbitalquark/scintillua/archive/scintillua222-pre-1.zip
 
 ### 2.21-1 (01 Sep 2010)
 
@@ -1253,7 +1205,7 @@ Changes:
 
 Download:
 
-* [Scintillua 2.20-1][] | [PGP -- 2.20-1][]
+* [Scintillua 2.20-1][]
 
 Bugfixes:
 
@@ -1268,16 +1220,15 @@ Changes:
 * Only highlight C/C++ preprocessor words, not the whole line.
 * Updated to [Scintilla][]/[SciTE][] 2.20.
 
-[Scintillua 2.20-1]: download/scintillua220-1.zip
-[PGP -- 2.20-1]: download/scintillua220-1.zip.asc
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintillua 2.20-1]: https://github.com/orbitalquark/scintillua/archive/scintillua220-1.zip
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 2.12-1 (15 Jun 2010)
 
 Download:
 
-* [Scintillua 2.12-1][] | [PGP -- 2.12-1][]
+* [Scintillua 2.12-1][]
 
 Bugfixes:
 
@@ -1289,16 +1240,15 @@ Changes:
 * Updated D lexer.
 * Updated to [Scintilla][]/[SciTE][] 2.12.
 
-[Scintillua 2.12-1]: download/scintillua212-1.zip
-[PGP -- 2.12-1]: download/scintillua212-1.zip.asc
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintillua 2.12-1]: https://github.com/orbitalquark/scintillua/archive/scintillua212-1.zip
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 2.11-1 (30 Apr 2010)
 
 Download:
 
-* [Scintillua 2.11-1][] | [PGP -- 2.11-1][]
+* [Scintillua 2.11-1][]
 
 Bugfixes:
 
@@ -1322,16 +1272,15 @@ Changes:
 * Updated LaTeX lexer.
 * Updated to [Scintilla][]/[SciTE][] 2.11.
 
-[Scintillua 2.11-1]: download/scintillua211-1.zip
-[PGP -- 2.11-1]: download/scintillua211-1.zip.asc
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintillua 2.11-1]: https://github.com/orbitalquark/scintillua/archive/scintillua211-1.zip
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 2.03-1 (22 Feb 2010)
 
 Download:
 
-* [Scintillua 2.03-1][] | [PGP -- 2.03-1][]
+* [Scintillua 2.03-1][]
 
 Bugfixes:
 
@@ -1342,16 +1291,15 @@ Changes:
 
 * Updated to [Scintilla][]/[SciTE][] 2.03.
 
-[Scintillua 2.03-1]: download/scintillua203-1.zip
-[PGP -- 2.03-1]: download/scintillua203-1.zip.asc
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintillua 2.03-1]: https://github.com/orbitalquark/scintillua/archive/scintillua203-1.zip
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 2.02-1 (26 Jan 2010)
 
 Download:
 
-* [Scintillua 2.02-1][] | [PGP -- 2.02-1][]
+* [Scintillua 2.02-1][]
 
 Bugfixes:
 
@@ -1365,15 +1313,14 @@ Changes:
 * Call `ruby.LoadStyles()` from RHTML lexer.
 * Updated to [Scintilla][]/[SciTE][] 2.02.
 
-[Scintillua 2.02-1]: download/scintillua202-1.zip
-[PGP -- 2.02-1]: download/scintillua202-1.zip.asc
+[Scintillua 2.02-1]: https://github.com/orbitalquark/scintillua/archive/scintillua202-1.zip
 [MinGW]: http://mingw.org
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html
 
 ### 2.01-1 (13 Jan 2010)
 
 * Initial release for [Scintilla][]/[SciTE][] 2.01.
 
-[Scintilla]: http://scintilla.org
-[SciTE]: http://scintilla.org/SciTE.html
+[Scintilla]: https://scintilla.org
+[SciTE]: https://scintilla.org/SciTE.html

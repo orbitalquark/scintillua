@@ -42,7 +42,7 @@ Scintillua better and better over the years.
 * Richard Philips
 * Robert Gieseke
 * Roberto Ierusalimschy
-* S. Gilles
+* S\. Gilles
 * Stéphane Rivière
 * Tymur Gubayev
 * Wolfgang Seeberg

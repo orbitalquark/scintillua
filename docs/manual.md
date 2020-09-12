@@ -203,7 +203,7 @@ For example, using the GTK platform:
 For more information on how to communicate with Scintillua, including how to
 work with styles, please see the [API][] Documentation.
 
-[Lua]: http://lua.org
+[Lua]: https://lua.org
 [LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
 [SCI_SETILEXER]: https://scintilla.org/ScintillaDoc.html#SCI_SETILEXER
 [SCI_SETLEXERLANGUAGE]: api.html#SCI_SETLEXERLANGUAGE

@@ -1,4 +1,4 @@
-# Scintillua
+## Introduction
 
 Scintillua adds dynamic [Lua][] [LPeg][] lexers to [Scintilla][]. It is the
 quickest way to add new or customized syntax highlighting and code folding for
@@ -9,19 +9,21 @@ Scintillua may also be used as a standalone Lua library for obtaining syntax
 highlighting information of source code snippets. Scintilla is not required in
 that case.
 
-[Lua]: http://lua.org
+[Lua]: https://lua.org
 [LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
-[Scintilla]: http://scintilla.org
+[Scintilla]: https://scintilla.org
 
 ## Features
 
 * Drop-in installation in most Scintilla environments -- no modifications to
   Scintilla are necessary.
-* Support for over 100 programming languages.
+* Support for [over 120][] programming languages.
 * Easy lexer embedding for multi-language lexers.
 * Universal color themes.
 * Comparable speed to native Scintilla lexers.
 * Can be used as a standalone Lua library (Scintilla is not required).
+
+[over 120]: lexerlist.html
 
 ## Requirements
 
@@ -35,17 +37,18 @@ When used a standalone Lua library, Scintillua requires Lua 5.1 or greater and
 
 ## Download
 
-Scintillua releases can be found [here][].
+Scintillua releases can be found [here][1]. A comprehensive list of changes
+between releases can be found [here][2].
 
-[here]: http://github.com/orbitalquark/scintillua/releases
+[1]: https://github.com/orbitalquark/scintillua/releases
+[2]: changelog.html
 
 ## Installation and Usage
 
-Scintillua comes with a user manual in its *docs/* directory. This manual is
-also available [online][1]. It covers how to drop Scintillua into an existing
-installation of a Scintilla-based application, how to compile Scintillua into
-your Scintilla-based application, and how to use Scintillua as a standalone Lua
-library.
+Scintillua comes with a [user manual][] in its *docs/* directory. It covers how
+to drop Scintillua into an existing installation of a Scintilla-based
+application, how to compile Scintillua into your Scintilla-based application,
+and how to use Scintillua as a standalone Lua library.
 
 As an example, you can drop Scintillua into an existing installation of
 [SciTE][], the SCIntilla based Text Editor, by moving Scintillua's *lexers/*
@@ -55,14 +58,14 @@ to your *SciTEUser.properties* (Windows), *.SciTEUser.properties* (Linux), or
 
     import lexers/lpeg
 
-Scintillua's Application Programming Interface (API) documentation is also
-located in *docs/* and available [online][2]. It provides information on how
-your Scintilla-based application can utilize Scintillua and communicate with it,
-and also how to write and utilize Lua lexers.
+Scintillua's Application Programming Interface [(API) documentation][] is also
+located in *docs/*. It provides information on how your Scintilla-based
+application can utilize Scintillua and communicate with it, and also how to
+write and utilize Lua lexers.
 
-[1]: http://orbitalquark.github.io/scintillua/manual.html
+[user manual]: manual.html
 [SciTE]: https://scintilla.org/SciTE.html
-[2]: http://orbitalquark.github.io/scintillua/api.html
+[(API) documentation]: api.html
 
 ## Compile
 
@@ -82,7 +85,7 @@ In order to build the external lexer:
 
 1. Place a copy of Scintilla in the root directory of Scintillua (the Scintilla
    directory should be called *scintilla/*).
-2. Run `make` or `make win32`.
+2. Run `make` or `make win`.
 3. The external lexer is either *lexers/liblexlpeg.so* or *lexers/LexLPeg.dll*.
 
 For more information on compiling Scintillua, including how to compile
@@ -91,13 +94,14 @@ Scintillua directly into your Scintilla-based application please see the
 
 [GNU C compiler]: https://gcc.gnu.org
 [mingw-w64]: https://mingw-w64.org/
-[manual]: https://orbitalquark.github.io/scintillua/manual.html#Compiling.Scintillua.Directly.into.an.App
+[manual]: manual.html#Compiling.Scintillua.Directly.into.an.App
 
 ## Contribute
 
 Scintillua is [open source][]. Feel free to submit new lexers, report bugs,
 help, and discuss features either on the [mailing list][], or with me personally
-(mitchell.att.foicica.com).
+(mitchell.att.foicica.com). Thanks to [everyone][] who has contributed.
 
 [open source]: https://github.com/orbitalquark/scintillua
-[mailing list]: http://foicica.com/lists
+[mailing list]: https://foicica.com/lists
+[everyone]: thanks.html
