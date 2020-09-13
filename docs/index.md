@@ -94,7 +94,7 @@ Scintillua directly into your Scintilla-based application please see the
 
 [GNU C compiler]: https://gcc.gnu.org
 [mingw-w64]: https://mingw-w64.org/
-[manual]: manual.html#Compiling.Scintillua.Directly.into.an.App
+[manual]: manual.html#compiling-scintillua-directly-into-an-app
 
 ## Contribute
 

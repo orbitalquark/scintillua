@@ -10,7 +10,7 @@
 -- calls do not make perfect sense. This is a tradeoff in order to keep
 -- Scintilla unmodified.
 --
--- [`SCI_PRIVATELEXERCALL`]: http://scintilla.org/ScintillaDoc.html#LexerObjects
+-- [`SCI_PRIVATELEXERCALL`]: https://scintilla.org/ScintillaDoc.html#LexerObjects
 --
 -- The following notation is used:
 --
@@ -62,8 +62,8 @@ module('Scintillua')
 -- was created using [`SCI_CREATEDOCUMENT`][]. You must also use the
 -- [`SCI_SETDOCPOINTER()`](#SCI_SETDOCPOINTER) Scintillua API call.
 --
--- [`SCI_GETDIRECTFUNCTION`]: http://scintilla.org/ScintillaDoc.html#SCI_GETDIRECTFUNCTION
--- [`SCI_CREATEDOCUMENT`]: http://scintilla.org/ScintillaDoc.html#SCI_CREATEDOCUMENT
+-- [`SCI_GETDIRECTFUNCTION`]: https://scintilla.org/ScintillaDoc.html#SCI_GETDIRECTFUNCTION
+-- [`SCI_CREATEDOCUMENT`]: https://scintilla.org/ScintillaDoc.html#SCI_CREATEDOCUMENT
 -- @param SciFnDirect The pointer returned by [`SCI_GETDIRECTFUNCTION`][].
 -- @usage fn = SendScintilla(sci, SCI_GETDIRECTFUNCTION)
 -- @usage SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_GETDIRECTFUNCTION, fn)
@@ -83,7 +83,7 @@ function SCI_PRIVATELEXERCALL(SCI_GETDIRECTFUNCTION, SciFnDirect) end
 -- [`SCI_SETLEXERLANGUAGE()`](#SCI_SETLEXERLANGUAGE) Scintillua API call.
 -- @param sci The pointer returned by [`SCI_GETDIRECTPOINTER`][].
 --
--- [`SCI_GETDIRECTPOINTER`]: http://scintilla.org/ScintillaDoc.html#SCI_GETDIRECTPOINTER
+-- [`SCI_GETDIRECTPOINTER`]: https://scintilla.org/ScintillaDoc.html#SCI_GETDIRECTPOINTER
 -- @usage SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETDOCPOINTER, sci)
 -- @see SCI_GETDIRECTFUNCTION
 -- @see SCI_SETLEXERLANGUAGE
@@ -151,7 +151,7 @@ function SCI_PRIVATELEXERCALL(SCI_GETLEXERLANGUAGE, languageName) end
 -- automatically using the [`SCI_GETDIRECTFUNCTION()`](#SCI_GETDIRECTFUNCTION)
 -- and [`SCI_SETDOCPOINTER()`](#SCI_SETDOCPOINTER) Scintillua API calls.
 --
--- [SciTE documentation]: http://scintilla.org/SciTEDoc.html
+-- [SciTE documentation]: https://scintilla.org/SciTEDoc.html
 -- @param styleNum (`int`) For the range `-STYLE_MAX <= styleNum < 0`, uses the
 --   Scintilla style number `-styleNum - 1` for returning SciTE-formatted style
 --   definitions. (Style `0` would be `-1`, style `1` would be `-2`, and so on.)

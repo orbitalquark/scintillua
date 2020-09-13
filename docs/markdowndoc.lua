@@ -27,13 +27,6 @@ local titles = {
 -- @param name The name of the module the description belongs to. Used for
 --   headers in module descriptions.
 local function write_description(f, description, name)
-  if name then
-    -- Add anchors for module description headers.
-    description = description:gsub('\n(#+%s+([^\n]+))', function(header, text)
-      return string.format(
-        '\n\n<a id="%s.%s"></a>\n\n%s', name, text:gsub(' ', '.'), header)
-    end)
-  end
   -- Substitute custom [`code`]() link convention with [`code`](#code) links.
   local self_link = '(%[`([^`(]+)%(?%)?`%])%(%)'
   description = description:gsub(self_link, function(link, id)

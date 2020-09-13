@@ -129,5 +129,5 @@ see *lexers/lpeg.properties*.
 1. Xtend`*`
 1. YAML
 
-[folders]: api.html#lexer.Code.Folding
-[`fold.by.indentation`]: manual.html#Using.Scintillua.with.Other.Apps
+[folders]: api.html#code-folding
+[`fold.by.indentation`]: manual.html#using-scintillua-with-other-apps

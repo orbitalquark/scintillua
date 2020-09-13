@@ -97,7 +97,7 @@ Scintillua's lexers. These include, but are not limited to:
 
 [SciTE]: https://scintilla.org/SciTE.html
 [write one]: api.html#lexer
-[contribute]: README.html#Contribute
+[contribute]: index.html#contribute
 
 #### Using Scintillua with Other Apps
 

@@ -12,7 +12,7 @@ modifications to Scintilla itself. It is invoked using
 calls do not make perfect sense. This is a tradeoff in order to keep
 Scintilla unmodified.
 
-[`SCI_PRIVATELEXERCALL`]: http://scintilla.org/ScintillaDoc.html#LexerObjects
+[`SCI_PRIVATELEXERCALL`]: https://scintilla.org/ScintillaDoc.html#LexerObjects
 
 The following notation is used:
 
@@ -21,9 +21,6 @@ The following notation is used:
 This means you would call Scintilla like this:
 
     SendScintilla(sci, SCI_PRIVATELEXERCALL, operation, pointer);
-
-
-<a id="Scintillua.Scintillua.Usage.Example"></a>
 
 ### Scintillua Usage Example
 
@@ -97,8 +94,8 @@ If you use this call, it *must* be made *once* for each Scintilla buffer that
 was created using [`SCI_CREATEDOCUMENT`][]. You must also use the
 [`SCI_SETDOCPOINTER()`](#SCI_SETDOCPOINTER) Scintillua API call.
 
-[`SCI_GETDIRECTFUNCTION`]: http://scintilla.org/ScintillaDoc.html#SCI_GETDIRECTFUNCTION
-[`SCI_CREATEDOCUMENT`]: http://scintilla.org/ScintillaDoc.html#SCI_CREATEDOCUMENT
+[`SCI_GETDIRECTFUNCTION`]: https://scintilla.org/ScintillaDoc.html#SCI_GETDIRECTFUNCTION
+[`SCI_CREATEDOCUMENT`]: https://scintilla.org/ScintillaDoc.html#SCI_CREATEDOCUMENT
 
 Fields:
 
@@ -237,7 +234,7 @@ Fields:
 * `SCI_SETDOCPOINTER`: 
 * `sci`: The pointer returned by [`SCI_GETDIRECTPOINTER`][].
 
-[`SCI_GETDIRECTPOINTER`]: http://scintilla.org/ScintillaDoc.html#SCI_GETDIRECTPOINTER
+[`SCI_GETDIRECTPOINTER`]: https://scintilla.org/ScintillaDoc.html#SCI_GETDIRECTPOINTER
 
 Usage:
 
@@ -284,7 +281,7 @@ Lua LPeg lexer styles manually if you chose not to have them set
 automatically using the [`SCI_GETDIRECTFUNCTION()`](#SCI_GETDIRECTFUNCTION)
 and [`SCI_SETDOCPOINTER()`](#SCI_SETDOCPOINTER) Scintillua API calls.
 
-[SciTE documentation]: http://scintilla.org/SciTEDoc.html
+[SciTE documentation]: https://scintilla.org/SciTEDoc.html
 
 Fields:
 
@@ -304,9 +301,6 @@ Fields:
 - - -
 
 Lexes Scintilla documents and source code with Lua and LPeg.
-
-
-<a id="lexer.Writing.Lua.Lexers"></a>
 
 ### Writing Lua Lexers
 
@@ -347,13 +341,10 @@ SciTE editors. Finally there are comments on lexer performance and
 limitations.
 
 [LPeg library]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
-[Textadept]: http://foicica.com/textadept
-[SciTE]: http://scintilla.org/SciTE.html
+[Textadept]: https://orbitalquark.github.io/textadept
+[SciTE]: https://scintilla.org/SciTE.html
 
-
-<a id="lexer.Lexer.Basics"></a>
-
-#### Lexer Basics
+### Lexer Basics
 
 The *lexers/* directory contains all lexers, including your new one. Before
 attempting to write one from scratch though, first determine if your
@@ -367,10 +358,7 @@ Note: Try to refrain from using one-character language names like "c", "d",
 or "r". For example, Scintillua uses "ansi_c", "dmd", and "rstats",
 respectively.
 
-
-<a id="lexer.New.Lexer.Template"></a>
-
-##### New Lexer Template
+#### New Lexer Template
 
 There is a *lexers/template.txt* file that contains a simple template for a
 new lexer. Feel free to use it, replacing the '?'s with the name of your
@@ -403,10 +391,7 @@ Note, however, the `local` prefix in front of variables, which is needed
 so-as not to affect Lua's global environment. All in all, this is a minimal,
 working lexer that you can build on.
 
-
-<a id="lexer.Tokens"></a>
-
-##### Tokens
+#### Tokens
 
 Take a moment to think about your programming language's structure. What kind
 of key elements does it have? In the template shown earlier, one predefined
@@ -456,10 +441,7 @@ none of the above fit your language, but an advantage to using predefined
 token names is that your lexer's tokens will inherit the universal syntax
 highlighting color theme used by your text editor.
 
-
-<a id="lexer.Example.Tokens"></a>
-
-###### Example Tokens
+##### Example Tokens
 
 So, how might you define other tokens like keywords, comments, and strings?
 Here are some examples.
@@ -546,10 +528,7 @@ Your language may need other tweaks, but it is up to you how fine-grained you
 want your highlighting to be. After all, you are not writing a compiler or
 interpreter!
 
-
-<a id="lexer.Rules"></a>
-
-##### Rules
+#### Rules
 
 Programming languages have grammars, which specify valid token structure. For
 example, comments usually cannot appear within a string. Grammars consist of
@@ -608,10 +587,7 @@ might look something like this:
 Note however that lexers with complex rules like these are more prone to lose
 track of their state, especially if they span multiple lines.
 
-
-<a id="lexer.Summary"></a>
-
-##### Summary
+#### Summary
 
 Lexers primarily consist of tokens and grammar rules. At your disposal are a
 number of convenience patterns and functions for rapidly creating a lexer. If
@@ -619,15 +595,9 @@ you choose to use predefined token names for your tokens, you do not have to
 define how the lexer highlights them. The tokens will inherit the default
 syntax highlighting color theme your editor uses.
 
+### Advanced Techniques
 
-<a id="lexer.Advanced.Techniques"></a>
-
-#### Advanced Techniques
-
-
-<a id="lexer.Styles.and.Styling"></a>
-
-##### Styles and Styling
+#### Styles and Styling
 
 The most basic form of syntax highlighting is assigning different colors to
 different tokens. Instead of highlighting with just colors, Scintilla allows
@@ -649,10 +619,7 @@ color-agnostic styles from predefined ones. For example, Lua "longstring"
 tokens use the existing `lexer.styles.string` style instead of defining a new
 one.
 
-
-<a id="lexer.Example.Styles"></a>
-
-###### Example Styles
+##### Example Styles
 
 Defining styles is pretty straightforward. An empty style that inherits the
 default theme settings is simply an empty table:
@@ -673,10 +640,7 @@ a "static variable" token whose style you wanted to base off of
 The color theme files in the *lexers/themes/* folder give more examples of
 style definitions.
 
-
-<a id="lexer.Token.Styles"></a>
-
-##### Token Styles
+#### Token Styles
 
 Lexers use the [`lexer.add_style()`](#lexer.add_style) function to assign styles to
 particular tokens. Recall the token definition and from the lexer template:
@@ -707,10 +671,7 @@ like:
 Remember to refrain from assigning specific colors in styles, but in this
 case, all user color themes probably define `colors.grey`.
 
-
-<a id="lexer.Line.Lexers"></a>
-
-##### Line Lexers
+#### Line Lexers
 
 By default, lexers match the arbitrary chunks of text passed to them by
 Scintilla. These chunks may be a full document, only the visible part of a
@@ -725,10 +686,7 @@ with an extra parameter:
 Now the input text for the lexer is a single line at a time. Keep in mind
 that line lexers do not have the ability to look ahead at subsequent lines.
 
-
-<a id="lexer.Embedded.Lexers"></a>
-
-##### Embedded Lexers
+#### Embedded Lexers
 
 Lexers embed within one another very easily, requiring minimal effort. In the
 following sections, the lexer being embedded is called the "child" lexer and
@@ -743,10 +701,7 @@ difference results in two types of embedded lexers: a parent lexer that
 embeds other child lexers in it (like HTML embedding CSS), and a child lexer
 that embeds itself into a parent lexer (like PHP embedding itself in HTML).
 
-
-<a id="lexer.Parent.Lexer"></a>
-
-###### Parent Lexer
+##### Parent Lexer
 
 Before embedding a child lexer into a parent lexer, the parent lexer needs to
 load the child lexer. This is done with the [`lexer.load()`](#lexer.load) function. For
@@ -789,10 +744,7 @@ rules, it embeds the child with the [`lexer.embed()`](#lexer.embed) function:
 
     lex:embed(css, css_start_rule, css_end_rule)
 
-
-<a id="lexer.Child.Lexer"></a>
-
-###### Child Lexer
+##### Child Lexer
 
 The process for instructing a child lexer to embed itself into a parent is
 very similar to embedding a child into a parent: first, load the parent lexer
@@ -806,10 +758,7 @@ start and end rules for the child lexer. However, in this case, call
     lex:add_style('php_tag', lexer.styles.embedded)
     html:embed(lex, php_start_rule, php_end_rule)
 
-
-<a id="lexer.Lexers.with.Complex.State"></a>
-
-##### Lexers with Complex State
+#### Lexers with Complex State
 
 A vast majority of lexers are not stateful and can operate on any chunk of
 text in a document. However, there may be rare cases where a lexer does need
@@ -823,10 +772,7 @@ argument will also work.)
 
 Writing stateful lexers is beyond the scope of this document.
 
-
-<a id="lexer.Code.Folding"></a>
-
-#### Code Folding
+### Code Folding
 
 When reading source code, it is occasionally helpful to temporarily hide
 blocks of code like functions, classes, comments, etc. This is the concept of
@@ -889,10 +835,7 @@ points in, the beginning position of the current line in the text to fold,
 the current line's text, the position in the current line the fold point text
 starts at, and the fold point text itself.
 
-
-<a id="lexer.Fold.by.Indentation"></a>
-
-##### Fold by Indentation
+#### Fold by Indentation
 
 Some languages have significant whitespace and/or no delimiters that indicate
 fold points. If your lexer falls into this category and you would like to
@@ -901,15 +844,9 @@ mark fold points based on changes in indentation, create the lexer with a
 
     local lex = lexer.new('?', {fold_by_indentation = true})
 
+### Using Lexers
 
-<a id="lexer.Using.Lexers"></a>
-
-#### Using Lexers
-
-
-<a id="lexer.Textadept"></a>
-
-##### Textadept
+#### Textadept
 
 Put your lexer in your *~/.textadept/lexers/* directory so you do not
 overwrite it when upgrading Textadept. Also, lexers in this directory
@@ -919,10 +856,7 @@ your liking. Then add a [file type][] for your lexer if necessary.
 
 [file type]: textadept.file_types.html
 
-
-<a id="lexer.SciTE"></a>
-
-##### SciTE
+#### SciTE
 
 Create a *.properties* file for your lexer and `import` it in either your
 *SciTEUser.properties* or *SciTEGlobal.properties*. The contents of the
@@ -938,10 +872,7 @@ Please note that Lua lexers ignore any styling information in *.properties*
 files. Your theme file in the *lexers/themes/* directory contains styling
 information.
 
-
-<a id="lexer.Migrating.Legacy.Lexers"></a>
-
-#### Migrating Legacy Lexers
+### Migrating Legacy Lexers
 
 Legacy lexers are of the form:
 
@@ -1061,15 +992,9 @@ Following the migration steps would yield:
 
     return lex
 
+### Considerations
 
-<a id="lexer.Considerations"></a>
-
-#### Considerations
-
-
-<a id="lexer.Performance"></a>
-
-##### Performance
+#### Performance
 
 There might be some slight overhead when initializing a lexer, but loading a
 file from disk into Scintilla is usually more expensive. On modern computer
@@ -1085,10 +1010,7 @@ speeds things up, you can try reducing the number of fold points you added,
 overriding `lexer.fold()` with your own implementation, or simply eliminating
 folding support from your lexer.
 
-
-<a id="lexer.Limitations"></a>
-
-##### Limitations
+#### Limitations
 
 Embedded preprocessor languages like PHP cannot completely embed in their
 parent languages in that the parent's tokens do not support start and end
@@ -1098,19 +1020,13 @@ rules. This mostly goes unnoticed, but code like
 
 will not style correctly.
 
-
-<a id="lexer.Troubleshooting"></a>
-
-##### Troubleshooting
+#### Troubleshooting
 
 Errors in lexers can be tricky to debug. Lexers print Lua errors to
 `io.stderr` and `_G.print()` statements to `io.stdout`. Running your editor
 from a terminal is the easiest way to see errors as they occur.
 
-
-<a id="lexer.Risks"></a>
-
-##### Risks
+#### Risks
 
 Poorly written lexers have the ability to crash Scintilla (and thus its
 containing application), so unsaved data might be lost. However, I have only
@@ -1119,10 +1035,7 @@ pattern errors are present. Once the lexer actually starts styling text
 (either correctly or incorrectly, it does not matter), I have not observed
 any crashes.
 
-
-<a id="lexer.Acknowledgements"></a>
-
-##### Acknowledgements
+#### Acknowledgements
 
 Thanks to Peter Odding for his [lexer post][] on the Lua mailing list
 that provided inspiration, and thanks to Roberto Ierusalimschy for LPeg.
