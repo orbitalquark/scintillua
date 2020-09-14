@@ -2,7 +2,7 @@
 
 1. [Scintillua](#Scintillua)
 1. [lexer](#lexer)
-- - -
+---
 
 ### Overview
 
@@ -293,12 +293,10 @@ Fields:
   the string.
 
 
-- - -
-
+---
 <a id="lexer"></a>
 ## The `lexer` Module
-
-- - -
+---
 
 Lexes Scintilla documents and source code with Lua and LPeg.
 
@@ -1827,5 +1825,4 @@ Style definition tables may contain the following fields:
 * `changeable`: Whether the text is changeable instead of read-only. The
   default value is `true`.
 
-- - -
-
+---

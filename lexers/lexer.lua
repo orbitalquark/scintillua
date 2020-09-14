@@ -556,9 +556,8 @@ local M = {}
 -- overwrite it when upgrading Textadept. Also, lexers in this directory
 -- override default lexers. Thus, Textadept loads a user *lua* lexer instead of
 -- the default *lua* lexer. This is convenient for tweaking a default lexer to
--- your liking. Then add a [file type][] for your lexer if necessary.
---
--- [file type]: textadept.file_types.html
+-- your liking. Then add a [file type](#textadept.file_types) for your lexer if
+-- necessary.
 --
 -- #### SciTE
 --

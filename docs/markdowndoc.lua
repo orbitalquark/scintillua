@@ -5,7 +5,7 @@
 local M = {}
 
 local TOC = '1. [%s](%s)\n'
-local MODULE = '<a id="%s"></a>\n## The `%s` Module\n\n'
+local MODULE = '<a id="%s"></a>\n## The `%s` Module\n'
 local FIELD = '<a id="%s"></a>\n#### `%s` %s\n\n'
 local FUNCTION = '<a id="%s"></a>\n#### `%s`(%s)\n\n'
 local DESCRIPTION = '%s\n\n'
@@ -93,7 +93,7 @@ function M.start(doc)
     if name ~= 'Scintillua' then
       f:write(string.format(MODULE, name, name))
     end
-    f:write('- - -\n\n')
+    f:write('---\n\n')
     write_description(f, module.description, name)
 
     -- Write fields.
@@ -151,7 +151,7 @@ function M.start(doc)
         write_list(f, SEE, tbl.see, name)
       end
     end
-    f:write('- - -\n\n')
+    f:write('---\n')
   end
 end
 

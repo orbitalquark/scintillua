@@ -1,5 +1,7 @@
 ## Changelog
 
+[Atom Feed](https://github.com/orbitalquark/scintillua/releases.atom)
+
 ### 4.4.5-1 (?)
 
 Download:
@@ -38,7 +40,7 @@ Bugfixes:
 
 Changes:
 
-* Added [SCI\_GETNAMEDSTYLES][] for retrieving the style number associated with
+* Added [SCI_GETNAMEDSTYLES][] for retrieving the style number associated with
   a style name.
 * Added Fennel lexer.
 * Updated Markdown lexer to handle code blocks and spans better.
@@ -51,7 +53,7 @@ Changes:
 * Updated C lexer with C99 bool, true, and false.
 
 [Scintilla 3.21.0]: https://sourceforge.net/projects/scintilla/files/scintilla/3.21.0/scintilla3210.zip/download
-[SCI\_GETNAMEDSTYLES]: api.html#SCI_GETNAMEDSTYLES
+[SCI_GETNAMEDSTYLES]: api.html#SCI_GETNAMEDSTYLES
 [`lexer.colors`]: api.html#lexer.colors
 [`lexer.styles`]: api.html#lexer.styles
 [`lexer.fold*`]: api.html#lexer.folding
