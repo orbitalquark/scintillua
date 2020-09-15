@@ -1,0 +1,105 @@
+name: release
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Optional release tag (normally auto-detected)
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: ghcr.io/orbitalquark/textadept-build:v1.0
+    outputs:
+      version: ${{ steps.build.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Git init if necessary
+        shell: bash
+        run: |
+          # If git version is less than 2.18, a git clone will not be made in
+          # this container. In that case, make a temporary repository so
+          # "make release" can archive the repo's contents for release.
+          if [[ -d .git ]]; then exit 0; fi
+          git init
+          git add .
+          git config --global user.email "none@example.com"
+          git config --global user.name "none"
+          git commit -m 'none'
+      - name: Checkout textadept-build dependencies
+        uses: actions/checkout@v2
+        with:
+          repository: orbitalquark/textadept-build
+          path: textadept-build
+      - name: Build
+        id: build
+        shell: bash
+        run: |
+          # Move cached dependencies into current dir.
+          mv textadept-build/* .
+          rm -r textadept-build
+
+          # Build.
+          make release
+
+          # Output version information for use in later steps.
+          version="${{ github.event.inputs.tag }}"
+          if [[ -z $version ]]; then
+            version=`ls -1 scintillua_*.zip | head -1 |
+              sed 's/[^_]\+_\(.\+\)\.zip/\1/;'`
+          fi
+          echo "::set-output name=version::$version"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifacts
+          path: |
+            scintillua_*
+            docs/changelog.md
+  tag:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Tag
+        run: |
+          git tag scintillua_${{ needs.build.outputs.version }}
+          git push -f origin scintillua_${{ needs.build.outputs.version }}
+  release:
+    runs-on: ubuntu-latest
+    needs: [build, tag]
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: artifacts
+      - name: Create release log
+        shell: bash
+        run: |
+          echo -n "Scintillua " > log.md
+          echo -n "${{ needs.build.outputs.version }} " >> log.md
+          echo \(`date +"%d %b %Y"`\) >> log.md
+          prefix="https://orbitalquark.github.io/scintillua"
+          echoing=0
+          while read line; do
+            if [[ $line == \#\#\#* ]]; then
+              if [[ $echoing -eq 0 ]]; then
+                echoing=1
+              else
+                exit 0
+              fi
+            elif [[ $echoing -eq 1 ]]; then
+              echo "$line" | grep -v '\(\[Scintillua\|Download:\)' |
+                sed "s,\(manual\|api\)\.html,$prefix/\0,;" || continue
+            fi
+          done < docs/changelog.md >> log.md
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          name: ${{ needs.build.outputs.version }}
+          tag: scintillua_${{ needs.build.outputs.version }}
+          allowUpdates: true
+          bodyFile: log.md
+          artifacts: scintillua_*
+          token: ${{ secrets.GITHUB_TOKEN }}

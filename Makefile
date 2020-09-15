@@ -26,11 +26,11 @@ lex_objs = PropSetSimple.o WordList.o LexerModule.o LexerSimple.o LexerBase.o \
            Accessor.o DefaultLexer.o
 
 # Lua.
-lua_objs = lapi.o lcode.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o \
-           lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o \
-           lundump.o lvm.o lzio.o \
-           lauxlib.o lbaselib.o ldblib.o liolib.o lmathlib.o ltablib.o \
-           lstrlib.o loadlib.o loslib.o linit.o
+lua_objs = lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o \
+           linit.o llex.o lmem.o lobject.o lopcodes.o lparser.o lstate.o \
+           lstring.o ltable.o ltm.o lundump.o lvm.o lzio.o \
+           lauxlib.o lbaselib.o lbitlib.o lcorolib.o ldblib.o liolib.o \
+           lmathlib.o loadlib.o loslib.o lstrlib.o ltablib.o lutf8lib.o
 lua_lib_objs = lpcap.o lpcode.o lpprint.o lptree.o lpvm.o
 
 # Build.
@@ -67,12 +67,8 @@ cleandocs: ; rm -f docs/*.html docs/index.md docs/api.md
 
 # Releases.
 
-ifndef NIGHTLY
-  basedir = scintillua_$(shell grep '^\#\#\#' docs/changelog.md | head -1 | \
-                               cut -d ' ' -f 2)
-else
-  basedir = scintillua_nightly_$(shell date +"%F")
-endif
+basedir = scintillua_$(shell grep '^\#\#\#' docs/changelog.md | head -1 | \
+                             cut -d ' ' -f 2)
 
 ifneq (, $(shell hg summary 2>/dev/null))
   archive = hg archive -X ".hg*" $(1)
@@ -82,20 +78,20 @@ endif
 
 $(basedir): ; $(call archive,$@)
 release: $(basedir)
-	make clean deps docs sign-deps
+	make clean deps docs
 	make -j4
 	make clean && make -j4 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ \
 		win && mv lexers/LexLPeg.dll lexers/LexLPeg32.dll
 	make clean && make -j4 win
-	cp -r docs *.asc $<
+	cp -r docs $<
 	cp lexers/*.so lexers/*.dll $</lexers/
-	zip -r $<.zip $< && rm -r $< && gpg -ab $<.zip
+	zip -r $<.zip $< && rm -r $<
 
 # External dependencies.
 
 scintilla_tgz = scintilla445.tgz
-lua_tgz = lua-5.1.4.tar.gz
-lpeg_tgz = lpeg-1.0.0.tar.gz
+lua_tgz = lua-5.3.5.tar.gz
+lpeg_tgz = lpeg-1.0.2.tar.gz
 
 $(scintilla_tgz): ; wget https://www.scintilla.org/$@
 scintilla: | $(scintilla_tgz) ; tar xzf $|
@@ -104,7 +100,3 @@ $(lpeg_tgz): ; wget http://www.inf.puc-rio.br/~roberto/lpeg/$@
 lua: | $(lua_tgz) ; mkdir $@ && tar xzf $| -C $@ && mv $@/*/* $@
 lua/src/lib/lpeg: | $(lpeg_tgz)
 	mkdir -p $@ && tar xzf $| -C $@ && mv $@/*/*.c $@/*/*.h $(dir $@)
-sign-deps: | $(scintilla_tgz) $(lua_tgz) $(lpeg_tgz)
-	@for file in $|; do gpg -ab $$file; done
-verify-deps: | $(wildcard $(basename $(wildcard *.asc)))
-	@for file in $|; do echo "$$file"; gpg --verify $$file.asc || return 1; done
