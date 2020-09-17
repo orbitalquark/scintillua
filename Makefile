@@ -59,8 +59,8 @@ docs: docs/index.md docs/api.md $(wildcard docs/*.md) | \
 		cat $| | docs/fill_layout.lua $$file.md > $$file.html; \
 	done
 docs/index.md: README.md
-	sed 's/^\# [[:alpha:]]\+/## Introduction/;' $< > $@
-	sed -i 's|https://[[:alpha:]]\+\.github\.io/[[:alpha:]]\+/||;' $@
+	sed -e 's/^\# [[:alpha:]]\+/## Introduction/;' -e \
+		's|https://[[:alpha:]]\+\.github\.io/[[:alpha:]]\+/||;' $< > $@
 docs/api.md: lexers/lexer.lua scintillua.luadoc
 	$(luadoc) --doclet docs/markdowndoc $^ > $@
 cleandocs: ; rm -f docs/*.html docs/index.md docs/api.md
