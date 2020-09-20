@@ -621,7 +621,10 @@ bool LexerLPeg::Init() {
     return (LogError(L, "'lexer.load' function not found"), false);
   lua_pushcfunction(L, lua_error_handler), lua_insert(L, -2);
   lua_pushstring(L, lexer), lua_pushnil(L), lua_pushboolean(L, 1);
-  if (lua_pcall(L, 3, 1, -5) != LUA_OK) return (LogError(L), false);
+  if (lua_pcall(L, 3, 1, -5) != LUA_OK) {
+    bool print = !strstr(lua_tostring(L, -1), "no file");
+    return (LogError(L, nullptr, print), false);
+  }
   lua_remove(L, -2); // lua_error_handler
   lua_remove(L, -2); // lexer module
   lua_rawsetp(L, LUA_REGISTRYINDEX, reinterpret_cast<void *>(this));
