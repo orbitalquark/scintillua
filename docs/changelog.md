@@ -2,7 +2,7 @@
 
 [Atom Feed](https://github.com/orbitalquark/scintillua/releases.atom)
 
-### 4.4.5-1 (?)
+### 4.4.5-1 (19 Sep 2020)
 
 Download:
 
@@ -14,6 +14,7 @@ Bugfixes:
 
 Changes:
 
+* Scintillua supports the [Lexilla][] interface.
 * Deprecated `lexer.fold_line_comments()` in favor of
   [`lexer.fold_consecutive_lines()`][].
 * Added `fold.line.groups` property and [`lexer.fold_line_groups`][] alias.
@@ -22,6 +23,7 @@ Changes:
 * Updated to [Scintilla][]/[SciTE][] 4.4.5.
 
 [Scintillua 4.4.5-1]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_4.4.5-1/scintillua_4.4.5-1.zip
+[Lexilla]: https://scintilla.org/ScintillaDoc.html#Lexilla
 [`lexer.fold_consecutive_lines()`]: api.html#lexer.fold_consecutive_lines
 [`lexer.fold_line_groups`]: api.html#lexer.fold_line_groups
 [Scintilla]: https://scintilla.org
