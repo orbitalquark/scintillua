@@ -87,6 +87,28 @@ release: $(basedir)
 	cp lexers/*.so lexers/*.dll $</lexers/
 	zip -r $<.zip $< && rm -r $<
 
+# Tests.
+
+tests: test-lexers test-scite test-wscite
+test-lexers: tests.lua ; lua5.1 $<
+# Tests SciTE GTK using ~/.SciTEUser.properties.
+test-scite: scintilla
+	make -C scintilla/gtk -j4
+	make -C scite/gtk -j4
+	scite/bin/SciTE
+# Tests, via Wine, SciTE Win64 using SciTEGlobal.properties.
+wscite_zip = wscite445.zip
+/tmp/$(wscite_zip): ; wget -O $@ https://www.scintilla.org/$(wscite_zip)
+/tmp/wscite: /tmp/$(wscite_zip)
+	unzip -d /tmp $<
+	ln -s `pwd`/lexers /tmp/wscite
+	sed -i 's/technology=1/technology=0/;' /tmp/wscite/SciTEGlobal.properties
+	echo "import lexers/lpeg" >> /tmp/wscite/SciTEGlobal.properties
+	echo "lexilla.context.lpeg.color.theme=light" >> \
+		/tmp/wscite/SciTEGlobal.properties
+test-wscite: /tmp/wscite
+	cd /tmp/wscite && WINEPREFIX=`pwd`/.wine WINEARCH=win64 wine SciTE
+
 # External dependencies.
 
 scintilla_tgz = scintilla445.tgz
