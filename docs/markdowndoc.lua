@@ -1,7 +1,7 @@
 -- Copyright 2007-2020 Mitchell mitchell.att.foicica.com. See LICENSE.
 
 -- Markdown doclet for Luadoc.
--- @usage luadoc -d [output_path] -doclet path/to/markdowndoc [file(s)]
+-- @usage luadoc -doclet path/to/markdowndoc [file(s)] > api.md
 local M = {}
 
 local TOC = '1. [%s](%s)\n'
@@ -30,7 +30,7 @@ local function write_description(f, description, name)
   -- Substitute custom [`code`]() link convention with [`code`](#code) links.
   local self_link = '(%[`([^`(]+)%(?%)?`%])%(%)'
   description = description:gsub(self_link, function(link, id)
-    return string.format("%s(#%s)", link, id:gsub(':', '.'))
+    return string.format('%s(#%s)', link, id:gsub(':', '.'))
   end)
   f:write(string.format(DESCRIPTION, description))
 end
@@ -74,11 +74,6 @@ function M.start(doc)
   local f = io.stdout
   f:write('## Scintillua API Documentation\n\n')
 
-  -- Create the table of contents.
-  for _, name in ipairs(modules) do
-    f:write(string.format(TOC, name, '#' .. name))
-  end
-
   -- Create a map of doc objects to file names so their Markdown doc comments
   -- can be extracted.
   local filedocs = {}
@@ -87,13 +82,12 @@ function M.start(doc)
   -- Loop over modules, writing the Markdown document to stdout.
   for _, name in ipairs(modules) do
     local module = modules[name]
-    local filename = filedocs[module.doc]
 
     -- Write the header and description.
     if name ~= 'Scintillua' then
       f:write(string.format(MODULE, name, name))
+      f:write('---\n\n')
     end
-    f:write('---\n\n')
     write_description(f, module.description, name)
 
     -- Write fields.

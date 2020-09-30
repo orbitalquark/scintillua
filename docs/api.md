@@ -1,9 +1,5 @@
 ## Scintillua API Documentation
 
-1. [Scintillua](#Scintillua)
-1. [lexer](#lexer)
----
-
 ### Overview
 
 The Scintillua Scintilla lexer has its own API in order to avoid any
