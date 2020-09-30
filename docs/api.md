@@ -291,7 +291,7 @@ Fields:
 
 ---
 <a id="lexer"></a>
-## The `lexer` Module
+## The `lexer` Lua Module
 ---
 
 Lexes Scintilla documents and source code with Lua and LPeg.

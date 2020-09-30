@@ -47,5 +47,5 @@ Scintillua better and better over the years.
 * Tymur Gubayev
 * Wolfgang Seeberg
 
-If I have left off your name, please contact me (mitchell.att.foicica.com). I am
-very sorry about that.
+If I have left off your name, please contact me (see README.md). I am very sorry
+about that.

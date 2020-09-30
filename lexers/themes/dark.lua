@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Mitchell mitchell.att.foicica.com. See LICENSE.
+-- Copyright 2006-2020 Mitchell. See LICENSE.
 -- Dark theme for Scintillua.
 -- Contributions by Ana Balan.
 

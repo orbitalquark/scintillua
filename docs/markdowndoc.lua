@@ -1,11 +1,11 @@
--- Copyright 2007-2020 Mitchell mitchell.att.foicica.com. See LICENSE.
+-- Copyright 2007-2020 Mitchell. See LICENSE.
 
 -- Markdown doclet for Luadoc.
 -- @usage luadoc -doclet path/to/markdowndoc [file(s)] > api.md
 local M = {}
 
 local TOC = '1. [%s](%s)\n'
-local MODULE = '<a id="%s"></a>\n## The `%s` Module\n'
+local MODULE = '<a id="%s"></a>\n## The `%s` Lua Module\n'
 local FIELD = '<a id="%s"></a>\n#### `%s` %s\n\n'
 local FUNCTION = '<a id="%s"></a>\n#### `%s`(%s)\n\n'
 local DESCRIPTION = '%s\n\n'
