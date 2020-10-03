@@ -840,7 +840,7 @@ mark fold points based on changes in indentation, create the lexer with a
 
 ### Using Lexers
 
-#### Textadept
+**Textadept**
 
 Put your lexer in your *~/.textadept/lexers/* directory so you do not
 overwrite it when upgrading Textadept. Also, lexers in this directory
@@ -849,7 +849,7 @@ the default *lua* lexer. This is convenient for tweaking a default lexer to
 your liking. Then add a [file type](#textadept.file_types) for your lexer if
 necessary.
 
-#### SciTE
+**SciTE**
 
 Create a *.properties* file for your lexer and `import` it in either your
 *SciTEUser.properties* or *SciTEGlobal.properties*. The contents of the
