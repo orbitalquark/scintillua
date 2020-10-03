@@ -129,7 +129,7 @@ local plain_var = ('$#' + S('$@%')) * P('$')^0 * lexer.word + '$#'
 lex:add_rule('variable', token(lexer.VARIABLE, special_var + plain_var))
 
 -- Operators.
-lex:add_rule('operator', token(lexer.OPERATOR, S('-<>+*!~\\=/%&|^.?:;()[]{}')))
+lex:add_rule('operator', token(lexer.OPERATOR, S('-<>+*!~\\=/%&|^.,?:;()[]{}')))
 
 -- Fold points.
 lex:add_fold_point(lexer.OPERATOR, '[', ']')
