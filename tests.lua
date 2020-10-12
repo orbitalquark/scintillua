@@ -1256,3 +1256,4 @@ for i = 1, #tests do
   end)
 end
 print(string.format('%d/%d tests passed', #tests - failed, #tests))
+os.exit(failed == 0 and 0 or 1)
