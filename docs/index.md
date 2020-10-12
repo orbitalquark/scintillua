@@ -100,7 +100,7 @@ Scintillua directly into your Scintilla-based application please see the
 
 Scintillua is [open source][]. Feel free to submit new lexers, report bugs,
 help, and discuss features either on the [mailing list][], or with me personally
-(mitchell.att.foicica.com). Thanks to [everyone][] who has contributed.
+(orbitalquark.att.triplequasar.com). Thanks to [everyone][] who has contributed.
 
 [open source]: https://github.com/orbitalquark/scintillua
 [mailing list]: https://foicica.com/lists
