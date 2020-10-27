@@ -994,6 +994,9 @@ function style_obj.__tostring(self) return self.prop_string end
 --   `regex`, `string`, `type`, `variable`, `whitespace`: Some token names used
 --   by lexers. Some lexers may define more token names, so this list is not
 --   exhaustive.
+-- * *`lang`*`_whitespace`: A special style for whitespace tokens in lexer name
+--   *lang*. It inherits from `whitespace`, and is used in place of it for all
+--   lexers.
 --
 -- Style definition tables may contain the following fields:
 --
