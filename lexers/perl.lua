@@ -75,6 +75,9 @@ local literal_delimited2 = P(function(input, index) -- for 2 delimiter sets
       patt = lexer.range(delimiter)
     end
     first_match_pos = lpeg.match(patt, input, index)
+    if not first_match_pos then
+      return #input + 1
+    end
     final_match_pos = lpeg.match(patt, input, first_match_pos - 1)
     if not final_match_pos then -- using (), [], {}, or <> notation
       final_match_pos = lpeg.match(lexer.space^0 * patt, input, first_match_pos)
