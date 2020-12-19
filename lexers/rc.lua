@@ -12,7 +12,7 @@ lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
 lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
-  for in while if not switch fn builtin cd eval exec exit flag rfork shift
+  for in while if not switch case fn builtin cd eval exec exit flag rfork shift
   ulimit umask wait whatis . ~
 ]]))
 
