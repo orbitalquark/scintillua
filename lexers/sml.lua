@@ -4,7 +4,7 @@
 local lexer = require('lexer')
 local token = lexer.token
 
-function mlword(words)
+local function mlword(words)
   return lexer.word_match(words, "'")
 end
 
