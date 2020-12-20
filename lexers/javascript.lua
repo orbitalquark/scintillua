@@ -12,12 +12,12 @@ lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
 lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
-  abstract boolean break byte case catch char class const continue debugger
-  default delete do double else enum export extends false final finally float
-  for function get goto if implements import in instanceof int interface let
-  long native new null of package private protected public return set short
-  static super switch synchronized this throw throws transient true try typeof
-  var void volatile while with yield
+  abstract async await boolean break byte case catch char class const continue
+  debugger default delete do double else enum export extends false final
+  finally float for function get goto if implements import in instanceof int
+  interface let long native new null of package private protected public return
+  set short static super switch synchronized this throw throws transient true
+  try typeof var void volatile while with yield
 ]]))
 
 -- Identifiers.
