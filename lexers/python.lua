@@ -12,9 +12,9 @@ lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
 lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
-  and as assert break class continue def del elif else except exec finally for
-  from global if import in is lambda nonlocal not or pass print raise return try
-  while with yield
+  and as assert async await break class continue def del elif else except exec
+  finally for from global if import in is lambda nonlocal not or pass print
+  raise return try while with yield
   -- Descriptors/attr access.
   __get__ __set__ __delete__ __slots__
   -- Class.
