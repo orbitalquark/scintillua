@@ -30,13 +30,7 @@ lex:add_rule('close_tag', lex:tag(lexer.TAG, P('/')^-1 * '>'))
 
 -- Equals.
 -- TODO: performance is terrible on large files.
-local in_tag = P(function(input, index)
-	local before = input:sub(1, index - 1)
-	local s, e = before:find('<[^>]-$'), before:find('>[^<]-$')
-	if s and e then return s > e end
-	if s then return true end
-	return input:find('^[^<]->', index) ~= nil
-end)
+local in_tag = #P((1 - S'><')^0 * '>')
 
 local equals = lex:tag(lexer.OPERATOR, '=') -- * in_tag
 -- lex:add_rule('equal', equals)
