@@ -32,6 +32,7 @@ Scintillua better and better over the years.
 * Michael Forney
 * Michael T. Richter
 * Michel Martens
+* Miles Canfield
 * Momohime Honda
 * Murray Calavera
 * Neil Hodgson
