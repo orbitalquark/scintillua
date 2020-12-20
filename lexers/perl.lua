@@ -49,7 +49,7 @@ local delimiter_matches = {['('] = ')', ['['] = ']', ['{'] = '}', ['<'] = '>'}
 local literal_delimited = P(function(input, index) -- for single delimiter sets
   local delimiter = input:sub(index, index)
   if not delimiter:find('%w') then -- only non alpha-numerics
-    local match_pos, patt
+    local patt
     if delimiter_matches[delimiter] then
       -- Handle nested delimiter/matches in strings.
       local s, e = delimiter, delimiter_matches[delimiter]
@@ -57,7 +57,7 @@ local literal_delimited = P(function(input, index) -- for single delimiter sets
     else
       patt = lexer.range(delimiter)
     end
-    match_pos = lpeg.match(patt, input, index)
+    local match_pos = lpeg.match(patt, input, index)
     return match_pos or #input + 1
   end
 end)
@@ -66,7 +66,7 @@ local literal_delimited2 = P(function(input, index) -- for 2 delimiter sets
   -- Only consider non-alpha-numerics and non-spaces as delimiters. The
   -- non-spaces are used to ignore operators like "-s".
   if not delimiter:find('[%w ]') then
-    local match_pos, patt
+    local patt
     if delimiter_matches[delimiter] then
       -- Handle nested delimiter/matches in strings.
       local s, e = delimiter, delimiter_matches[delimiter]
@@ -74,8 +74,8 @@ local literal_delimited2 = P(function(input, index) -- for 2 delimiter sets
     else
       patt = lexer.range(delimiter)
     end
-    first_match_pos = lpeg.match(patt, input, index)
-    final_match_pos = lpeg.match(patt, input, first_match_pos - 1)
+    local first_match_pos = lpeg.match(patt, input, index)
+    local final_match_pos = lpeg.match(patt, input, first_match_pos - 1)
     if not final_match_pos then -- using (), [], {}, or <> notation
       final_match_pos = lpeg.match(lexer.space^0 * patt, input, first_match_pos)
     end
