@@ -8,11 +8,8 @@ local P, S = lpeg.P, lpeg.S
 local lex = lexer.new('toml', {fold_by_indentation = true})
 
 -- Whitespace
-lex:add_rule('indent', #lexer.starts_line(S(' \t')) *
-  (token(lexer.WHITESPACE, ' ') + token('indent_error', '\t'))^1)
 lex:add_rule('whitespace', token(lexer.WHITESPACE, S(' \t')^1 +
   lexer.newline^1))
-lex:add_style('indent_error', {back = lexer.colors.red})
 
 -- kewwords.
 lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[true false]]))
@@ -29,7 +26,7 @@ lex:add_rule('string', token(lexer.STRING, sq_str + dq_str))
 lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('#')))
 
 -- Operators.
-lex:add_rule('operator', token(lexer.OPERATOR, S('#=+-,.{}[]()')))
+lex:add_rule('operator', token(lexer.OPERATOR, S('=+-,.{}[]()')))
 
 -- Datetime.
 local year = lexer.digit * lexer.digit * lexer.digit * lexer.digit
