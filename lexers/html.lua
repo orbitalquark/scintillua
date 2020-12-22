@@ -81,7 +81,7 @@ lex:add_rule('string', string)
 
 -- Numbers.
 lex:add_rule('number', #lexer.digit * lexer.last_char_includes('=') *
-  token(lexer.NUMBER, lexer.dec_num * P('%')^-1)) * in_tag)
+  token(lexer.NUMBER, lexer.dec_num * P('%')^-1) * in_tag)
 
 -- Entities.
 lex:add_rule('entity', token('entity', '&' * (lexer.any - lexer.space - ';')^1 *
