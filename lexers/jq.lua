@@ -10,7 +10,7 @@ local P = lpeg.P
 -- Define the lexer's tokens.
 local whitespace = lexer.token(lexer.WHITESPACE, lexer.space^1)
 local comment = lexer.token(lexer.COMMENT, '#' * lexer.nonnewline^0)
-local string = lexer.token(lexer.STRING, lexer.delimited_range('"', true))
+local string = lexer.token(lexer.STRING, lexer.range('"', true))
 local literal = lexer.token(lexer.STRING, P('null')+P('false')+P('true'))
 local number = lexer.token(lexer.NUMBER, lexer.float + lexer.integer)
 local keyword = lexer.token(lexer.KEYWORD, lexer.word_match[[
