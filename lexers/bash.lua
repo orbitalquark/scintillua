@@ -43,7 +43,8 @@ lex:add_rule('number', token(lexer.NUMBER, lexer.number))
 
 -- Variables.
 lex:add_rule('variable', token(lexer.VARIABLE, '$' * (
-  S('!#?*@$') + lexer.digit^1 + lexer.word + lexer.range('{', '}', true)
+  S('!#?*@$') + lexer.digit^1 + lexer.word +
+    lexer.range('{', '}', true, false, true)
 )))
 
 -- Operators.
