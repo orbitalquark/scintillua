@@ -5,7 +5,7 @@ package.path = 'lexers/?.lua;'..package.path
 
 local lexer = require('lexer')
 local token, word_match = lexer.token, lexer.word_match
-local lpeg = require('lpeg')
+lpeg = require('lpeg') -- not local for use by lexers in Lua 5.2+
 -- Scintilla normally defines these.
 lexer.FOLD_BASE, lexer.FOLD_HEADER, lexer.FOLD_BLANK = 0x400, 0x2000, 0x1000
 
