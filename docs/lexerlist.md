@@ -119,7 +119,6 @@ see *lexers/lpeg.properties*.
 1. txt2tags
 1. TOML
 1. Vala`*`
-1. VBScript
 1. vCard`*`
 1. Verilog`*`
 1. VHDL
