@@ -103,6 +103,7 @@ see *lexers/lpeg.properties*.
 1. Python
 1. R
 1. rc`*`
+1. Reason
 1. REBOL`*`
 1. Rexx`*`
 1. ReStructuredText`*`

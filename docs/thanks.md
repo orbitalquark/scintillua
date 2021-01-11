@@ -17,6 +17,7 @@ Scintillua better and better over the years.
 * David B. Lamkins
 * Florian Fischer
 * Heck Fy
+* Hugo O. Rivera
 * Ivan Baidakou
 * Jason Schindler
 * Jeff Stone
