@@ -37,6 +37,7 @@ see *lexers/lpeg.properties*.
 1. Dot`*`
 1. Eiffel`*`
 1. Elixir
+1. Elm
 1. Erlang`*`
 1. F#
 1. Faust
