@@ -15,6 +15,7 @@ Scintillua better and better over the years.
 * Christian Hesse
 * Christos Chatzifountas
 * David B. Lamkins
+* Florian Fischer
 * Heck Fy
 * Ivan Baidakou
 * Jason Schindler

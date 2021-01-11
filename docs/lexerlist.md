@@ -80,6 +80,7 @@ see *lexers/lpeg.properties*.
 1. Markdown
 1. MATLAB`*`
 1. MediaWiki
+1. Meson
 1. MoonScript
 1. Myrddin
 1. Nemerle`*`
