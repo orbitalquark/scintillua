@@ -13,6 +13,7 @@ Scintillua better and better over the years.
 * Carl Sturtivant
 * Chris Emerson
 * Christian Hesse
+* Christos Chatzifountas
 * David B. Lamkins
 * Heck Fy
 * Ivan Baidakou

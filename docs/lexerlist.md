@@ -22,6 +22,7 @@ see *lexers/lpeg.properties*.
 1. C++`*`
 1. C#`*`
 1. ChucK
+1. Clojure`*`
 1. CMake`*`
 1. Coffeescript
 1. ConTeXt`*`
