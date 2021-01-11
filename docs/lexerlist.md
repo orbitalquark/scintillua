@@ -94,6 +94,7 @@ see *lexers/lpeg.properties*.
 1. PICO-8`*`
 1. Pike`*`
 1. PKGBUILD`*`
+1. Pony
 1. Postscript
 1. PowerShell`*`
 1. Prolog
