@@ -40,6 +40,7 @@ see *lexers/lpeg.properties*.
 1. Elm
 1. Erlang`*`
 1. F#
+1. Fantom`*`
 1. Faust
 1. Fennel
 1. Fish`*`

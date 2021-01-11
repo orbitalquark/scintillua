@@ -46,6 +46,7 @@ Scintillua better and better over the years.
 * Robert Gieseke
 * Roberto Ierusalimschy
 * S\. Gilles
+* Simeon Maryasin
 * Stéphane Rivière
 * Tymur Gubayev
 * Wolfgang Seeberg
