@@ -66,6 +66,7 @@ see *lexers/lpeg.properties*.
 1. jq`*`
 1. JSON`*`
 1. JSP`*`
+1. Julia
 1. LaTeX`*`
 1. Ledger
 1. LESS`*`

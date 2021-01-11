@@ -48,6 +48,7 @@ Scintillua better and better over the years.
 * S\. Gilles
 * Simeon Maryasin
 * Stéphane Rivière
+* Tobias Frilling
 * Tymur Gubayev
 * Wolfgang Seeberg
 
