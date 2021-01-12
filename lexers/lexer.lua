@@ -1804,8 +1804,8 @@ end
 -- beginning of a line.
 -- @param patt The LPeg pattern to match on the beginning of a line.
 -- @return pattern
--- @usage local preproc = token(lexer.PREPROCESSOR, lexer.starts_line('#') *
---   lexer.nonnewline^0)
+-- @usage local preproc = token(lexer.PREPROCESSOR,
+--   lexer.starts_line(lexer.to_eol('#')))
 -- @name starts_line
 function M.starts_line(patt)
   return lpeg_Cmt(lpeg_C(patt), function(input, index, match, ...)
