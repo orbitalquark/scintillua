@@ -137,6 +137,7 @@ see *lexers/lpeg.properties*.
 1. Visual Basic
 1. Windows Script File`*`
 1. XML`*`
+1. Xs`*`
 1. Xtend`*`
 1. YAML
 1. Zig`*`
