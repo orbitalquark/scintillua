@@ -123,6 +123,7 @@ see *lexers/lpeg.properties*.
 1. SNOBOL4
 1. Spin
 1. SQL
+1. Systemd
 1. TaskPaper
 1. Tcl`*`
 1. TeX`*`
