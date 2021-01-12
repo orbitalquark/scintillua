@@ -84,6 +84,7 @@ see *lexers/lpeg.properties*.
 1. MoonScript
 1. Myrddin
 1. Nemerle`*`
+1. Networkd
 1. Nim
 1. NSIS
 1. Objective-C`*`
