@@ -134,6 +134,7 @@ see *lexers/lpeg.properties*.
 1. XML`*`
 1. Xtend`*`
 1. YAML
+1. Zig`*`
 
 [folders]: api.html#code-folding
 [`fold.by.indentation`]: manual.html#using-scintillua-with-other-apps

@@ -25,6 +25,7 @@ Scintillua better and better over the years.
 * Joseph Eib
 * Joshua Krämer
 * Julien L.
+* Karchnu
 * Karl Schultheisz
 * Klaus Borges
 * Larry Hynes
