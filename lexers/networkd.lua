@@ -73,18 +73,19 @@ lex:add_rule('option', token(lexer.PREPROCESSOR, word_match[[
 ]]))
 
 -- Identifiers.
-lex:add_rule('identifier', token(lexer.IDENTIFIER, (lexer.alpha + '_') *
-  (lexer.alnum + S('_.'))^0))
+local word = (lexer.alpha + '_') * (lexer.alnum + S('_.'))^0
+lex:add_rule('identifier', token(lexer.IDENTIFIER, word))
 
 -- Strings.
 local sq_str = lexer.range("'")
 local dq_str = lexer.range('"')
-local section_word = word_match[[
+lex:add_rule('string', token(lexer.STRING, sq_str + dq_str))
+
+-- Sections.
+lex:add_rule('section', token(lexer.LABEL, '[' * word_match[[
   Address Link Match Network Route DHCP DHCPServer Bridge BridgeFDB NetDev VLAN
   MACVLAN MACVTAP IPVLAN VXLAN Tunnel Peer Tun Tap Bond
-]]
-lex:add_rule('string', token(lexer.STRING, sq_str + dq_str + '[' *
-  section_word * ']'))
+]] * ']'))
 
 -- Comments.
 lex:add_rule('comment', token(lexer.COMMENT,
