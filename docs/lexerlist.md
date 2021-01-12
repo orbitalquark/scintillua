@@ -46,6 +46,7 @@ see *lexers/lpeg.properties*.
 1. Fish`*`
 1. Forth
 1. Fortran
+1. fstab
 1. GAP`*`
 1. gettext
 1. Gherkin
