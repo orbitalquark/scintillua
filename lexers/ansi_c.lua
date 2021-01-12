@@ -56,13 +56,13 @@ lex:add_rule('constants', token(lexer.CONSTANT, word_match[[
 -- Labels.
 lex:add_rule('label', token(lexer.LABEL, lexer.starts_line(lexer.word * ':')))
 
--- Identifiers.
-lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
-
 -- Strings.
 local sq_str = P('L')^-1 * lexer.range("'", true)
 local dq_str = P('L')^-1 * lexer.range('"', true)
 lex:add_rule('string', token(lexer.STRING, sq_str + dq_str))
+
+-- Identifiers.
+lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
 
 -- Comments.
 local line_comment = lexer.to_eol('//', true)
