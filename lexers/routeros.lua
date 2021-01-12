@@ -1,7 +1,7 @@
 -- Copyright 2020 Christian Hesse. See LICENSE.
 -- Mikrotik RouterOS script LPeg lexer.
 
-local l = require('lexer')
+local lexer = require('lexer')
 local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
