@@ -110,6 +110,7 @@ see *lexers/lpeg.properties*.
 1. Rexx`*`
 1. ReStructuredText`*`
 1. RHTML`*`
+1. RouterOS`*`
 1. Ruby`*`
 1. Ruby on Rails`*`
 1. Rust`*`
