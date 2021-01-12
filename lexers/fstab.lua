@@ -114,7 +114,7 @@ lex:add_rule('comment', token(lexer.COMMENT,
   lexer.starts_line(lexer.to_eol('#'))))
 
 -- Directories.
-lex:add_rule('directory', token(lexer.TYPE, '/' * (1 - lexer.space)^0))
+lex:add_rule('directory', token(lexer.VARIABLE, '/' * (1 - lexer.space)^0))
 
 -- Operators.
 lex:add_rule('operator', token(lexer.OPERATOR, S('=,')))
