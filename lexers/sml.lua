@@ -23,8 +23,9 @@ lex:add_rule('struct_alias', struct_dec * token(lexer.CLASS, longid))
 lex:add_rule('structure', token(lexer.CLASS, aid * '.'))
 
 -- Open.
-lex:add_rule('open', token(lexer.KEYWORD,
-  word_match[[open structure functor]]) * ws * token(lexer.CLASS, longid))
+lex:add_rule('open',
+  token(lexer.KEYWORD, word_match('open structure functor')) * ws *
+  token(lexer.CLASS, longid))
 
 -- Keywords.
 lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
@@ -49,7 +50,7 @@ lex:add_rule('function', token(lexer.FUNCTION, word_match[[
 ]]))
 
 -- Constants.
-lex:add_rule('constant', token(lexer.CONSTANT, word_match[[true false nil]] +
+lex:add_rule('constant', token(lexer.CONSTANT, word_match('true false nil') +
   lexer.upper * id))
 
 -- Indentifiers (non-symbolic).
@@ -74,10 +75,14 @@ local exp = lpeg.S('eE') * minus * int
 local real = int * frac^-1 * exp + int * frac * exp^-1
 local hex = num(lexer.xdigit)
 local bin = num(lpeg.S('01'))
-lex:add_rule('number', token(lexer.NUMBER, '0w' * int +
+lex:add_rule('number', token(lexer.NUMBER,
+  '0w' * int +
   (P('0wx') + '0xw') * hex +
-  (P('0wb') + '0bw') * bin + minus * '0x' * hex +
-  minus * '0b' * bin + minus * real + minus * int))
+  (P('0wb') + '0bw') * bin +
+  minus * '0x' * hex +
+  minus * '0b' * bin +
+  minus * real +
+  minus * int))
 
 -- Type variables.
 lex:add_rule('typevar', token(lexer.VARIABLE, "'" * id))

@@ -19,7 +19,7 @@ lex:add_rule('key', token('key', word_match[[
 lex:add_style('key', lexer.styles.keyword)
 
 -- Values.
-lex:add_rule('value', token('value', word_match[[true false]]))
+lex:add_rule('value', token('value', word_match('true false')))
 lex:add_style('value', lexer.styles.constant)
 
 -- Identifiers.

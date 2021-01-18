@@ -14,15 +14,12 @@ local directives = [[
   protected synchronized private module if elif else endif category protocol
   end_object end_category end_protocol meta_predicate
 ]]
-lex:modify_rule('directive',
-  (
-    token(lexer.WHITESPACE, lexer.starts_line(S(' \t'))^0) *
-    token(lexer.OPERATOR, P':-') *
-    token(lexer.WHITESPACE, (S(' \t')^0)) *
-    token(lexer.PREPROCESSOR, P(word_match(directives)))
-  ) +
-  lex:get_rule('directive')
-)
+lex:modify_rule('directive', (
+  token(lexer.WHITESPACE, lexer.starts_line(S(' \t'))^0) *
+  token(lexer.OPERATOR, P':-') *
+  token(lexer.WHITESPACE, (S(' \t')^0)) *
+  token(lexer.PREPROCESSOR, P(word_match(directives)))
+) + lex:get_rule('directive'))
 
 -- Whitespace.
 lex:modify_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
@@ -54,11 +51,10 @@ local one_plus_arity_keywords = [[
   term_expansion goal_expansion numbervars put_code put_byte current_op op
   ignore repeat number_codes current_prolog_flag set_prolog_flag keysort sort
 ]]
-lex:modify_rule('keyword', token(lexer.KEYWORD,
-  word_match(zero_arity_keywords) +
-  (word_match(one_plus_arity_keywords) * #(P'('))) +
-  lex:get_rule('keyword')
-)
+lex:modify_rule('keyword',
+  token(lexer.KEYWORD, word_match(zero_arity_keywords) +
+    (word_match(one_plus_arity_keywords) * #P('('))) +
+  lex:get_rule('keyword'))
 
 local operators = [[
   -- extracted from test document in logtalk distribution

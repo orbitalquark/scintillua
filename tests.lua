@@ -211,9 +211,9 @@ function test_last_char_includes()
 end
 
 function test_word_match()
-  assert(lpeg.match(lexer.word_match[[foo bar baz]], 'foo') == 4)
-  assert(not lpeg.match(lexer.word_match[[foo bar baz]], 'foo_bar'))
-  assert(lpeg.match(lexer.word_match([[foo! bar? baz.]], true), 'FOO!') == 5)
+  assert(lpeg.match(lexer.word_match('foo bar baz'), 'foo') == 4)
+  assert(not lpeg.match(lexer.word_match('foo bar baz'), 'foo_bar'))
+  assert(lpeg.match(lexer.word_match('foo! bar? baz.', true), 'FOO!') == 5)
 end
 
 -- Tests a basic lexer with a few simple rules and no custom styles.
@@ -221,7 +221,7 @@ function test_basics()
   local lex = lexer.new('test')
   assert_default_styles(lex)
   lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
-  lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[foo bar baz]]))
+  lex:add_rule('keyword', token(lexer.KEYWORD, word_match('foo bar baz')))
   lex:add_rule('string', token(lexer.STRING, lexer.range('"')))
   lex:add_rule('number', token(lexer.NUMBER, lexer.integer))
   local code = [[foo bar baz "foo bar baz" 123]]
@@ -264,7 +264,7 @@ function test_add_style()
   local lex = lexer.new('test')
   assert_default_styles(lex)
   lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
-  lex:add_rule('keyword', token('custom', word_match[[foo bar baz]]))
+  lex:add_rule('keyword', token('custom', word_match('foo bar baz')))
   lex:add_style('custom', lexer.STYLE_KEYWORD)
   assert_default_styles(lex)
   assert_style(lex, 'custom', lexer.STYLE_KEYWORD)
@@ -539,7 +539,7 @@ end
 function test_inherits_rules()
   local lex = lexer.new('test')
   lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
-  lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[foo bar baz]]))
+  lex:add_rule('keyword', token(lexer.KEYWORD, word_match('foo bar baz')))
 
   -- Verify inherited rules are used.
   local sublexer = lexer.new('test2', {inherit = lex})
@@ -567,7 +567,7 @@ end
 -- of others (e.g. "if" and "endif").
 function test_fold_words()
   local lex = lexer.new('test')
-  lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[if endif]]))
+  lex:add_rule('keyword', token(lexer.KEYWORD, word_match('if endif')))
   lex:add_fold_point(lexer.KEYWORD, 'if', 'endif')
 
   local code = [[
@@ -683,7 +683,7 @@ function test_lua()
     ::begin::
     local a = 1 + 2.0e3 - 0x40
     local b = "two"..[[three]]
-    _G.print(a, string.upper(b))
+    print(_G.print, a, string.upper(b))
   ]=]
   local tokens = {
     {lexer.COMMENT, '-- Comment.'},
@@ -702,10 +702,12 @@ function test_lua()
     {lexer.STRING, '"two"'},
     {lexer.OPERATOR, '..'},
     {'longstring', '[[three]]'},
-    {lexer.CONSTANT, '_G'},
-    {lexer.OPERATOR, '.'},
     {lexer.FUNCTION, 'print'},
     {lexer.OPERATOR, '('},
+    {lexer.CONSTANT, '_G'},
+    {lexer.OPERATOR, '.'},
+    {lexer.IDENTIFIER, 'print'},
+    {lexer.OPERATOR, ','},
     {lexer.IDENTIFIER, 'a'},
     {lexer.OPERATOR, ','},
     {'library', 'string.upper'},

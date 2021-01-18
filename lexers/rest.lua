@@ -143,8 +143,8 @@ local substitution = #prefix * token('substitution',
 local line_comment = l.to_eol(prefix)
 local bprefix = any_indent * '..'
 local block_comment = bprefix * l.newline * indented_block
-local comment = #bprefix * token(l.COMMENT,
-  starts_line(line_comment + block_comment))
+local comment = #bprefix * token(l.COMMENT, starts_line(line_comment +
+  block_comment))
 
 -- Inline markup.
 local em = token('em', l.range('*'))

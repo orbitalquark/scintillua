@@ -33,7 +33,7 @@ lex:add_rule('version', token(lexer.KEYWORD, 'version') * ws^-1 *
 lex:add_style('versions', lexer.styles.constant)
 
 -- Scopes.
-local scope = word_match[[exit success failure]]
+local scope = word_match('exit success failure')
 lex:add_rule('scope', token(lexer.KEYWORD, 'scope') * ws^-1 *
   token(lexer.OPERATOR, '(') * ws^-1 * token('scopes', scope))
 lex:add_style('scopes', lexer.styles.constant)
@@ -54,7 +54,7 @@ lex:add_style('traits', {fore = lexer.colors.yellow})
 
 -- Function names.
 lex:add_rule('function', token(lexer.FUNCTION, lexer.word) *
-  #(ws^-1 * ('!' * lexer.word^-1 * ws^-1)^-1 * P('(')))
+  #(ws^-1 * ('!' * lexer.word^-1 * ws^-1)^-1 * '('))
 
 -- Keywords.
 lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[

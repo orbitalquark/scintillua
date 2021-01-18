@@ -20,14 +20,14 @@ lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
 ]] + 'abstract type' + 'mutable struct' + 'primitive type'))
 
 -- Constant
-local const_bool = word_match[[true false]]
+local const_bool = word_match('true false')
 local const_numerical = (P('Inf') + 'NaN') * (P('16') + '32' + '64')^-1 *
   -lexer.alnum
-local const_special = word_match[[nothing undef missing]]
+local const_special = word_match('nothing undef missing')
 local const_env = word_match[[
   ARGS ENV ENDIAN_BOM LOAD_PATH VERSION PROGRAM_FILE DEPOT_PATH
 ]]
-local const_io = word_match[[stdout stdin stderr devnull]]
+local const_io = word_match('stdout stdin stderr devnull')
 lex:add_rule('constant', token(lexer.CONSTANT, const_bool + const_numerical +
   const_special + const_env + const_io))
 
@@ -89,8 +89,8 @@ local integer = binary + hexadecimal + decimal
 
 local float_dec_coeff = decimal^0 * '.' * decimal + decimal * '.' * decimal^0
 local float_dec_expon = S('eEf') * S('+-')^-1 * lexer.digit^1
-local float_dec = float_dec_coeff * float_dec_expon^-1 + decimal *
-  float_dec_expon
+local float_dec = float_dec_coeff * float_dec_expon^-1 +
+  decimal * float_dec_expon
 
 local float_hex_coeff = '0x' * (hex_digits^0 * '.' * hex_digits +
   hex_digits * '.' * hex_digits^0)
@@ -102,8 +102,8 @@ local float = float_dec + float_hex
 
 local imaginary = (float_dec + decimal) * 'im'
 
-lex:add_rule('number', token(lexer.NUMBER, S('+-')^-1 * (imaginary + float +
-  integer) * -lexer.alpha))
+lex:add_rule('number', token(lexer.NUMBER, S('+-')^-1 *
+  (imaginary + float + integer) * -lexer.alpha))
 
 -- String & Character
 local doc_str = lexer.range('"""')

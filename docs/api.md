@@ -1645,7 +1645,7 @@ Fields:
 * `s`: String or pattern start of a range.
 * `e`: Optional string or pattern end of a range. The default value is *s*.
 * `single_line`: Optional flag indicating whether or not the range must be
-  on a single line.
+  on a single line. The default value is `false`.
 * `escapes`: Optional flag indicating whether or not the range end may
   be escaped by a '\' character.
   The default value is `false` unless *s* and *e* are identical,
@@ -1701,7 +1701,7 @@ Fields:
 Usage:
 
 * `local line_comment = lexer.to_eol('//')`
-* `local line_comment = lexer.to_eol(P('#') + ';')`
+* `local line_comment = lexer.to_eol(S('#;'))`
 
 Return:
 

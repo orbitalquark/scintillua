@@ -20,7 +20,7 @@ lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
 ]]))
 
 -- Error words.
-lex:add_rule('error', token(lexer.ERROR, word_match[[function end]]))
+lex:add_rule('error', token(lexer.ERROR, word_match('function end')))
 
 -- Self reference.
 lex:add_rule('self_ref', token('self_ref', '@' * lexer.word + 'self'))

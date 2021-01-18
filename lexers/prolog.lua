@@ -72,9 +72,9 @@ directives.swipl = directives.iso .. [[
 ]]
 lex:add_rule('directive',
   token(lexer.WHITESPACE, lexer.starts_line(S(' \t'))^0) *
-  token(lexer.OPERATOR, P':-') *
+  token(lexer.OPERATOR, P(':-')) *
   token(lexer.WHITESPACE, S(' \t')^0) *
-  token(lexer.PREPROCESSOR, P(word_match(directives[dialect]))))
+  token(lexer.PREPROCESSOR, word_match(directives[dialect])))
 
 -- Whitespace.
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
@@ -280,7 +280,7 @@ one_plus_arity_keywords.swipl = [[
 ]]
 lex:add_rule('keyword', token(lexer.KEYWORD,
   word_match(zero_arity_keywords[dialect]) +
-  (word_match(one_plus_arity_keywords[dialect]) * #(P'('))))
+  word_match(one_plus_arity_keywords[dialect]) * #P('(')))
 
 -- BIFs.
 local bifs = {}
@@ -303,7 +303,7 @@ bifs.swipl = [[
   nan pi popcount powm random random_float rational rationalize rdiv rem round
   sign sin sinh sqrt tan tanh truncate xor
 ]]
-lex:add_rule('bif', token(lexer.FUNCTION, word_match(bifs[dialect]) * #(P'(')))
+lex:add_rule('bif', token(lexer.FUNCTION, word_match(bifs[dialect]) * #P('(')))
 
 -- Numbers.
 local decimal_group = S('+-')^-1 * (lexer.digit + '_')^1

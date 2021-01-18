@@ -33,7 +33,7 @@ lex:add_style('link_article', lexer.styles.string .. {underlined = true})
 -- Templates and parser functions.
 lex:add_rule('template', token(lexer.OPERATOR, S('{}')))
 lex:add_rule('parser_func', B('{{') *
-  token('parser_func', P('#') * lexer.alpha^1 + lexer.upper^1 * ':'))
+  token('parser_func', '#' * lexer.alpha^1 + lexer.upper^1 * ':'))
 lex:add_rule('template_name', B('{{') *
   token('template_name', (lexer.any - S('{}|'))^1))
 lex:add_style('parser_func', lexer.styles['function'])
@@ -45,9 +45,9 @@ lex:add_rule('operator', token(lexer.OPERATOR, S('-=|#~!')))
 -- Behavior switches
 local start_pat = P(function(_, pos) return pos == 1 end)
 lex:add_rule('behavior_switch', (B(lexer.space) + start_pat) *
-  token('behavior_switch', '__' *
-    (P('TOC') + 'FORCETOC' + 'NOTOC' + 'NOEDITSECTION' + 'NOCC' + 'NOINDEX') *
-    '__') * #lexer.space)
+  token('behavior_switch', word_match[[
+    __TOC__ __FORCETOC__ __NOTOC__ __NOEDITSECTION__ __NOCC__ __NOINDEX__
+  ]]) * #lexer.space)
 lex:add_style('behavior_switch', lexer.styles.keyword)
 
 return lex

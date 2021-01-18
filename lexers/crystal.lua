@@ -83,10 +83,10 @@ lex:add_rule('number', token(lexer.NUMBER, lexer.float * S('ri')^-1 + integer +
 
 -- Variables.
 local global_var = '$' * (
-  word + S('!@L+`\'=~/\\,.;<>_*"$?:') +
+  word +
+  S('!@L+`\'=~/\\,.;<>_*"$?:') +
   lexer.digit +
-  '-' * S('0FadiIKlpvw')
-)
+  '-' * S('0FadiIKlpvw'))
 local class_var = '@@' * word
 local inst_var = '@' * word
 lex:add_rule('variable', token(lexer.VARIABLE, global_var + class_var +

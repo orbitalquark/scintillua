@@ -133,8 +133,8 @@ lex:add_rule('directive', token(lexer.PREPROCESSOR, P('#!fold-case') +
 -- Comments.
 local line_comment = lexer.to_eol(';')
 local block_comment = lexer.range('#|', '|#', false, false, true)
-local datum_comment = '#;' * lexer.space^0 * (lexer.range('(', ')', false, true,
-  true) * (lexer.any - lexer.space)^0)
+local datum_comment = '#;' * lexer.space^0 *
+  lexer.range('(', ')', false, true, true) * (lexer.any - lexer.space)^0
 lex:add_rule('comment', token(lexer.COMMENT, line_comment + block_comment +
   datum_comment))
 
@@ -151,14 +151,20 @@ local function num(r)
   local prefix = radix * exactness + exactness * radix
   local suffix = ('e' * S('+-')^-1 * lexer.digit^1)^-1
   local infnan = S('+-') * word_match[[inf nan]] * '.0'
-  local decimal = lexer.digit^1 * suffix + '.' * lexer.digit^1 * suffix +
+  local decimal = lexer.digit^1 * suffix +
+    '.' * lexer.digit^1 * suffix +
     lexer.digit^1 * '.' * lexer.digit^0 * suffix
-  local ureal = digit^1 * '/' * digit^1 + (r == 10 and decimal or P(false)) +
+  local ureal = digit^1 * '/' * digit^1 +
+    (r == 10 and decimal or P(false)) +
     digit^1
   local real = S('+-')^-1 * ureal + infnan
   local i = P('i')
-  local complex = real * '@' * real + real * S('+-') * ureal^-1 * i +
-    real * infnan * i + infnan * i + real + S('+-') * ureal^-1 * i
+  local complex = real * '@' * real +
+    real * S('+-') * ureal^-1 * i +
+    real * infnan * i +
+    infnan * i +
+    real +
+    S('+-') * ureal^-1 * i
   return prefix * complex
 end
 lex:add_rule('number', token(lexer.NUMBER, num(2) + num(8) + num(10) + num(16)))

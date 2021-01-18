@@ -12,7 +12,7 @@ lex:add_rule('whitespace', token(lexer.WHITESPACE, S(' \t')^1 +
   lexer.newline^1))
 
 -- kewwords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[true false]]))
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match('true false')))
 
 -- Identifiers.
 lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))

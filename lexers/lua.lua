@@ -4,7 +4,7 @@
 
 local lexer = require('lexer')
 local token, word_match = lexer.token, lexer.word_match
-local P, S = lpeg.P, lpeg.S
+local B, P, S = lpeg.B, lpeg.P, lpeg.S
 
 local lex = lexer.new('lua')
 
@@ -31,12 +31,12 @@ local deprecated_func = token('deprecated_function', word_match[[
   -- Deprecated in 5.2.
   getfenv loadstring module setfenv unpack
 ]])
-lex:add_rule('function', func + deprecated_func)
+lex:add_rule('function', -B('.') * (func + deprecated_func))
 lex:add_style(
   'deprecated_function', lexer.styles['function'] .. {italics = true})
 
 -- Constants.
-lex:add_rule('constant', token(lexer.CONSTANT, word_match[[
+lex:add_rule('constant', token(lexer.CONSTANT, -B('.') * word_match[[
   _G _VERSION
   -- Added in 5.2.
   _ENV
@@ -102,7 +102,7 @@ local deprecated_library = token('deprecated_library', word_match[[
   -- Debug deprecated in 5.2.
   debug.getfenv debug.setfenv
 ]])
-lex:add_rule('library', library + deprecated_library)
+lex:add_rule('library', -B('.') * (library + deprecated_library))
 lex:add_style('library', lexer.styles.type)
 lex:add_style('deprecated_library', lexer.styles.type .. {italics = true})
 

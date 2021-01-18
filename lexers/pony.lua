@@ -12,7 +12,7 @@ local ws = token(lexer.WHITESPACE, lexer.space^1)
 lex:add_rule('whitespace', ws)
 
 -- Capabilities.
-local capability = token(lexer.LABEL, word_match[[box iso ref tag trn val]])
+local capability = token(lexer.LABEL, word_match('box iso ref tag trn val'))
 lex:add_rule('capability', capability)
 
 -- Annotations.
@@ -21,9 +21,9 @@ lex:add_rule('annotation', annotation)
 
 -- Functions.
 -- Highlight functions with syntax sugar at declaration.
-lex:add_rule('function', token(lexer.KEYWORD, word_match[[fun new be]]) *
-  ws^-1 * annotation^-1 * ws^-1 * capability^-1 * ws^-1 * token(lexer.FUNCTION,
-  word_match[[
+lex:add_rule('function', token(lexer.KEYWORD, word_match('fun new be')) *
+  ws^-1 * annotation^-1 * ws^-1 * capability^-1 * ws^-1 *
+  token(lexer.FUNCTION, word_match[[
     create dispose _final apply update
     add sub mul div mod add_unsafe sub_unsafe mul_unsafe div_unsafe mod_unsafe
     shl shr shl_unsafe shr_unsafe op_and op_or op_xor eq ne lt le ge gt
@@ -42,7 +42,7 @@ lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
 ]]))
 
 -- Constants.
-lex:add_rule('constant', token(lexer.CONSTANT, word_match[[true false]]))
+lex:add_rule('constant', token(lexer.CONSTANT, word_match('true false')))
 
 -- Operators.
 local ops = {
@@ -54,8 +54,10 @@ local ops = {
   ['>~'] = true
 }
 lex:add_rule('operator', token(lexer.OPERATOR,
-  word_match[[and or xor not addressof digestof]] + lpeg.Cmt(S('+-*/%<>=!~')^1,
-  function(input, index, op) return ops[op] and index or nil end)))
+  word_match('and or xor not addressof digestof') +
+  lpeg.Cmt(S('+-*/%<>=!~')^1, function(input, index, op)
+    return ops[op] and index or nil
+  end)))
 
 -- Identifiers.
 local id_suffix = (lexer.alnum + "'" + '_')^0

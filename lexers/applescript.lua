@@ -46,8 +46,8 @@ lex:add_rule('constant', token(lexer.CONSTANT, word_match[[
 ]], true))
 
 -- Identifiers.
-lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.alpha *
-  (lexer.alnum + '_')^0))
+local word = lexer.alpha * (lexer.alnum + '_')^0
+lex:add_rule('identifier', token(lexer.IDENTIFIER, word))
 
 -- Strings.
 lex:add_rule('string', token(lexer.STRING, lexer.range('"', true)))

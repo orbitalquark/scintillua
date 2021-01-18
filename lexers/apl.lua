@@ -11,8 +11,7 @@ local lex = lexer.new('apl')
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Comments.
-lex:add_rule('comment', token(lexer.COMMENT, (P('⍝') + '#') *
-  lexer.nonnewline^0))
+lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol(P('⍝') + '#')))
 
 -- Strings.
 local sq_str = lexer.range("'", false, false)

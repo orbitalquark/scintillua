@@ -2,23 +2,25 @@
 -- jq 1.6 Lua lexer -- https://stedolan.github.io/jq/wiki
 -- Anonymously contributed.
 
--- Basic definitions.
 local lexer = require('lexer')
-local P = lpeg.P
+local token, word_match = lexer.token, lexer.word_match
+local P, S = lpeg.P, lpeg.S
 
--- Define the lexer's tokens.
-local whitespace = lexer.token(lexer.WHITESPACE, lexer.space^1)
-local comment = lexer.token(lexer.COMMENT, '#' * lexer.nonnewline^0)
-local string = lexer.token(lexer.STRING, lexer.range('"', true))
-local literal = lexer.token(lexer.STRING, P('null')+P('false')+P('true'))
-local number = lexer.token(lexer.NUMBER, lexer.float + lexer.integer)
-local keyword = lexer.token(lexer.KEYWORD, lexer.word_match[[
+local lex = lexer.new('jq')
+
+-- Whitespace.
+lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+
+-- Keywords.
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
   -- keywords not listed by jq's "builtins", minus
   -- operators 'and' and 'or', plus the '?' shorthand
   as break catch def elif else end foreach if import include label module reduce
   then try
-]] + P('?'))
-local funxion = lexer.token(lexer.FUNCTION, lexer.word_match[[
+]] + '?'))
+
+-- Functions.
+lex:add_rule('function', token(lexer.FUNCTION, word_match[[
   -- jq 1.6 built-in functions (SQL in upper caisse)
   acos acosh add all any arrays ascii_downcase ascii_upcase asin asinh atan
   atan2 atanh booleans bsearch builtins capture cbrt ceil combinations contains
@@ -39,46 +41,44 @@ local funxion = lexer.token(lexer.FUNCTION, lexer.word_match[[
   test tgamma to_entries todate todateiso8601 tojson tonumber tostream tostring
   transpose trunc truncate_stream type unique unique_by until utf8bytelength
   values walk while with_entries y0 y1 yn
-]])
--- 'not' isn't an operator but a function (filter)
-local op = P('.[]') + P('?//') + P('//=') + P('and') + P('[]') + P('//') +
-  P('==') + P('!=') + P('>=') + P('<=') + P('|=') + P('+=') + P('-=') +
-  P('*=') + P('/=') + P('%=') + P('or') + lpeg.S('=+-*/%<>()[]{}') +
-  lpeg.S('.,') + P('|') + P(';')
-local operator = lexer.token(lexer.OPERATOR, op)
-local format = lexer.token('format', P('@') * lexer.word_match[[
-    text  json  html  uri  csv  tsv  sh  base64  base64d
-]])
-local sysvar = lexer.token('sysvar', P('$') * lexer.word_match[[
-    ENV  ORIGIN  __loc__
-]])
-local variable = lexer.token(lexer.VARIABLE, P('$') * lexer.word)
-local identifier = lexer.token(lexer.IDENTIFIER, lexer.word)
+]]))
 
--- Specify the lexer's name.
-local lex = lexer.new('jq')
-
--- Define the rules for the lexer's grammar.
-lex:add_rule('whitespace', whitespace)
-lex:add_rule('comment', comment)
+-- Strings.
+local string = token(lexer.STRING, lexer.range('"', true))
+local literal = token(lexer.STRING, word_match('null false true'))
 lex:add_rule('string', string + literal)
-lex:add_rule('number', number)
-lex:add_rule('keyword', keyword)
-lex:add_rule('function', funxion)
-lex:add_rule('operator', operator)
-lex:add_rule('identifier', identifier)
-lex:add_rule('format', format)
-lex:add_rule('sysvar', sysvar)
-lex:add_rule('variable', variable)
 
--- Define styles for the lexer's custom tokens.
-lex:add_style('format', lexer.STYLE_CONSTANT)
-lex:add_style('sysvar', lexer.STYLE_CONSTANT .. {bold = true})
+-- Operators.
+-- 'not' isn't an operator but a function (filter)
+lex:add_rule('operator', token(lexer.OPERATOR, P('.[]') + '?//' + '//=' +
+  'and' + '[]' + '//' + '==' + '!=' + '>=' + '<=' + '|=' + '+=' + '-=' + '*=' +
+  '/=' + '%=' + 'or' + S('=+-*/%<>()[]{}.,') + '|' + ';'))
 
--- Specify how the lexer folds code.
-lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('#'))
+-- Identifiers.
+lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
+
+-- Comments.
+lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('#')))
+
+-- Numbers.
+lex:add_rule('number', token(lexer.NUMBER, lexer.number))
+
+-- Formats.
+lex:add_rule('format', token('format', '@' * word_match[[
+  text  json  html  uri  csv  tsv  sh  base64  base64d
+]]))
+lex:add_style('format', lexer.styles.constant)
+
+-- Variables.
+lex:add_rule('sysvar', token('sysvar', '$' *
+  word_match('ENV  ORIGIN  __loc__')))
+lex:add_style('sysvar', lexer.styles.constant .. {bold = true})
+lex:add_rule('variable', token(lexer.VARIABLE, '$' * lexer.word))
+
+-- Fold points.
+lex:add_fold_point(lexer.KEYWORD, 'if', 'end')
 lex:add_fold_point(lexer.OPERATOR, '[', ']')
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
-lex:add_fold_point(lexer.KEYWORD, 'if', 'end')
+lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('#'))
 
 return lex

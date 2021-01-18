@@ -16,8 +16,8 @@ lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
 ]]))
 
 -- Identifiers.
-lex:add_rule('identifier', token(lexer.IDENTIFIER, (lexer.alpha + '_') *
-  (lexer.alnum + S('_.'))^0))
+local word = (lexer.alpha + '_') * (lexer.alnum + S('_.'))^0
+lex:add_rule('identifier', token(lexer.IDENTIFIER, word))
 
 -- Strings.
 local sq_str = lexer.range("'")

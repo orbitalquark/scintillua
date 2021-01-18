@@ -12,25 +12,19 @@ lex:modify_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Functions.
 
--- ActionPack.
 lex:modify_rule('function', token(lexer.FUNCTION, word_match[[
+  -- ActionPack.
   before_filter skip_before_filter skip_after_filter after_filter around_filter
   filter filter_parameter_logging layout require_dependency render render_action
   render_text render_file render_template render_nothing render_component
   render_without_layout rescue_from url_for redirect_to redirect_to_path
   redirect_to_url respond_to helper helper_method model service observer
   serialize scaffold verify hide_action
-]]) +
-
--- View helpers.
-token(lexer.FUNCTION, word_match[[
+  -- View helpers.
   check_box content_for error_messages_for form_for fields_for file_field
   hidden_field image_submit_tag label link_to password_field radio_button submit
   text_field text_area
-]]) +
-
--- ActiveRecord
-token(lexer.FUNCTION, word_match[[
+  -- ActiveRecord.
   after_create after_destroy after_save after_update after_validation
   after_validation_on_create after_validation_on_update before_create
   before_destroy before_save before_update before_validation
@@ -43,10 +37,7 @@ token(lexer.FUNCTION, word_match[[
   validates_uniqueness_of
   attr_protected attr_accessible attr_readonly accepts_nested_attributes_for
   default_scope scope
-]]) +
-
--- ActiveSupport
-token(lexer.FUNCTION, word_match[[
+  -- ActiveSupport.
   alias_method_chain alias_attribute delegate cattr_accessor mattr_accessor
   returning memoize
 ]]) + lex:get_rule('function'))

@@ -21,7 +21,7 @@ lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
 
 -- Variable.
 lex:add_rule('variable', token(lexer.VARIABLE, S('$')^1 *
-  (S('{')^1 * lexer.word * S('}')^1 + lexer.word)))
+  (P('{')^1 * lexer.word * P('}')^1 + lexer.word)))
 
 -- Strings.
 local sq_str = lexer.range("'", false, false)

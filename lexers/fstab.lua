@@ -106,8 +106,8 @@ local integer = S('+-')^-1 * (lexer.hex_num + oct_num + dec)
 lex:add_rule('number', token(lexer.NUMBER, uuid + lexer.float + integer))
 
 -- Identifiers.
-lex:add_rule('identifier', token(lexer.IDENTIFIER, (lexer.alpha + '_') *
-  (lexer.alnum + S('_.'))^0))
+local word = (lexer.alpha + '_') * (lexer.alnum + S('_.'))^0
+lex:add_rule('identifier', token(lexer.IDENTIFIER, word))
 
 -- Comments.
 lex:add_rule('comment', token(lexer.COMMENT,

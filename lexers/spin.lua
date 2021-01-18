@@ -57,6 +57,11 @@ local flt = dec * (rad * dec)^-1 * exp + dec^-1 * rad * dec * exp
 lex:add_rule('number', token(lexer.NUMBER, flt + int))
 
 -- Operators.
-lex:add_rule('operator', token(lexer.OPERATOR, S('+-/*<>~!&=^|?:.()[]@#\\')))
+lex:add_rule('operator', token(lexer.OPERATOR, P('--') + '++' + '^^' + '||' +
+  '~~' + '|<' + '>|' + '@@' + ':=' + '+=' + '-=' + '*=' + '/=' + '**' + '**=' +
+  '//' + '//=' + '#>' + '#>=' + '<#' + '<#=' + '~>' + '~>=' + '<<' + '<<=' +
+  '>>' + '>>=' + '<-' + '<-=' + '->' + '->=' + '><' + '><=' + '&=' + '|=' +
+  'and=' + 'or=' + '==' + '===' + '<>' + '<>=' + '<=' + '>=' + '=<' + '=<=' +
+  '=>' + '=>=' + '..' + S('+-/*<>~!&=^|?:.()[]@#\\')))
 
 return lex

@@ -1700,7 +1700,7 @@ end
 --  by a '\' character. The default value is `false`.
 -- @return pattern
 -- @usage local line_comment = lexer.to_eol('//')
--- @usage local line_comment = lexer.to_eol(P('#') + ';')
+-- @usage local line_comment = lexer.to_eol(S('#;'))
 -- @name to_eol
 function M.to_eol(prefix, escape)
   return prefix * (not escape and M.nonnewline or M.nonnewline_esc)^0
@@ -1719,7 +1719,7 @@ end
 -- @param s String or pattern start of a range.
 -- @param e Optional string or pattern end of a range. The default value is *s*.
 -- @param single_line Optional flag indicating whether or not the range must be
---   on a single line.
+--   on a single line. The default value is `false`.
 -- @param escapes Optional flag indicating whether or not the range end may
 --   be escaped by a '\' character.
 --   The default value is `false` unless *s* and *e* are identical,

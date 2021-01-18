@@ -45,10 +45,8 @@ lex:add_rule('number', token(lexer.NUMBER, lexer.number))
 lex:add_rule('string', token(lexer.STRING, lexer.range('"')))
 
 -- Variables.
-lex:add_rule('variable', token(lexer.VARIABLE, '$' * (
-  S('!#?*@$') + lexer.digit^1 + lexer.word +
-    lexer.range('{', '}', true, false, true)
-)))
+lex:add_rule('variable', token(lexer.VARIABLE, '$' * (S('!#?*@$') +
+  lexer.digit^1 + lexer.word + lexer.range('{', '}', true, false, true))))
 
 -- Operators.
 lex:add_rule('operator', token(lexer.OPERATOR, S('=!%<>+-/*&|~.,;()[]{}')))

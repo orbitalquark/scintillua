@@ -76,8 +76,7 @@ lex:add_rule('string', token(lexer.STRING, sq_str + dq_str))
 lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
 
 -- Comments.
-lex:add_rule('doc_comment', token('doc_comment', lexer.to_eol('///',
-  true)))
+lex:add_rule('doc_comment', token('doc_comment', lexer.to_eol('///', true)))
 lex:add_style('doc_comment', lexer.styles.comment)
 lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('//', true)))
 

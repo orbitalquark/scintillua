@@ -44,8 +44,8 @@ local block_comment = lexer.range('(*', '*)', false, false, true)
 lex:add_rule('comment', token(lexer.COMMENT, line_comment + block_comment))
 
 -- Numbers.
-lex:add_rule('number', token(lexer.NUMBER,
-  (lexer.float + lexer.integer * S('uUlL')^-1)))
+lex:add_rule('number', token(lexer.NUMBER, lexer.float +
+  lexer.integer * S('uUlL')^-1))
 
 -- Preprocessor.
 local preproc_word = word_match[[

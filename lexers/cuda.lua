@@ -66,6 +66,6 @@ token(lexer.FUNCTION, word_match[[
 ]]) +
 
 -- Variables.
-token(lexer.VARIABLE, word_match[[gridDim blockIdx blockDim threadIdx]]))
+token(lexer.VARIABLE, word_match('gridDim blockIdx blockDim threadIdx')))
 
 return lex

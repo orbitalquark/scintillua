@@ -50,8 +50,9 @@ lex:add_rule('constants', token(lexer.CONSTANT, word_match[[
   -- stdint.h.
   PTRDIFF_MIN PTRDIFF_MAX SIZE_MAX SIG_ATOMIC_MIN SIG_ATOMIC_MAX WINT_MIN
   WINT_MAX WCHAR_MIN WCHAR_MAX
-]] + P('U')^-1 * 'INT' * ((P('_LEAST') + '_FAST')^-1 * lexer.digit^1 + 'PTR' +
-  'MAX') * (P('_MIN') + '_MAX')))
+]] + P('U')^-1 * 'INT' *
+  ((P('_LEAST') + '_FAST')^-1 * lexer.digit^1 + 'PTR' + 'MAX') *
+  (P('_MIN') + '_MAX')))
 
 -- Labels.
 lex:add_rule('label', token(lexer.LABEL, lexer.starts_line(lexer.word * ':')))

@@ -78,8 +78,8 @@ lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
 ]]))
 
 -- Identifiers.
-lex:add_rule('identifier', token(lexer.IDENTIFIER, (lexer.alpha + '-') *
-  (lexer.alnum + '-')^0))
+local word = (lexer.alpha + '-') * (lexer.alnum + '-')^0
+lex:add_rule('identifier', token(lexer.IDENTIFIER, word))
 
 -- Strings.
 local dq_str = lexer.range('"', true)

@@ -12,26 +12,26 @@ local lex = lexer.new('elixir', {fold_by_indentation = true})
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Sigils.
-local sigil11 = P("~") * S("CRSW") * lexer.range('<', '>', false)
-local sigil12 = P("~") * S("CRSW") * lexer.range('{', '}', false)
-local sigil13 = P("~") * S("CRSW") * lexer.range('[', ']', false)
-local sigil14 = P("~") * S("CRSW") * lexer.range('(', ')', false)
-local sigil15 = P("~") * S("CRSW") * lexer.range('|', false, false)
-local sigil16 = P("~") * S("CRSW") * lexer.range('/', false, false)
-local sigil17 = P("~") * S("CRSW") * lexer.range('"', false, false)
-local sigil18 = P("~") * S("CRSW") * lexer.range("'", false, false)
-local sigil19 = P("~") * S("CRSW") * lexer.range('"""')
-local sigil10 = P("~") * S("CRSW") * lexer.range("'''")
-local sigil21 = P("~") * S("crsw") * lexer.range('<', '>', false, true)
-local sigil22 = P("~") * S("crsw") * lexer.range('{', '}', false, true)
-local sigil23 = P("~") * S("crsw") * lexer.range('[', ']', false, true)
-local sigil24 = P("~") * S("crsw") * lexer.range('(', ')', false, true)
-local sigil25 = P("~") * S("crsw") * lexer.range('|', false)
-local sigil26 = P("~") * S("crsw") * lexer.range('/', false)
-local sigil27 = P("~") * S("crsw") * lexer.range('"', false)
-local sigil28 = P("~") * S("crsw") * lexer.range("'", false)
-local sigil29 = P("~") * S("crsw") * lexer.range('"""')
-local sigil20 = P("~") * S("crsw") * lexer.range("'''")
+local sigil11 = '~' * S('CRSW') * lexer.range('<', '>')
+local sigil12 = '~' * S('CRSW') * lexer.range('{', '}')
+local sigil13 = '~' * S('CRSW') * lexer.range('[', ']')
+local sigil14 = '~' * S('CRSW') * lexer.range('(', ')')
+local sigil15 = '~' * S('CRSW') * lexer.range('|', false, false)
+local sigil16 = '~' * S('CRSW') * lexer.range('/', false, false)
+local sigil17 = '~' * S('CRSW') * lexer.range('"', false, false)
+local sigil18 = '~' * S('CRSW') * lexer.range("'", false, false)
+local sigil19 = '~' * S('CRSW') * lexer.range('"""')
+local sigil10 = '~' * S('CRSW') * lexer.range("'''")
+local sigil21 = '~' * S('crsw') * lexer.range('<', '>')
+local sigil22 = '~' * S('crsw') * lexer.range('{', '}')
+local sigil23 = '~' * S('crsw') * lexer.range('[', ']')
+local sigil24 = '~' * S('crsw') * lexer.range('(', ')')
+local sigil25 = '~' * S('crsw') * lexer.range('|')
+local sigil26 = '~' * S('crsw') * lexer.range('/')
+local sigil27 = '~' * S('crsw') * lexer.range('"')
+local sigil28 = '~' * S('crsw') * lexer.range("'")
+local sigil29 = '~' * S('crsw') * lexer.range('"""')
+local sigil20 = '~' * S('crsw') * lexer.range("'''")
 local sigil_token = token(lexer.REGEX, sigil10 + sigil19 + sigil11 + sigil12 +
   sigil13 + sigil14 + sigil15 + sigil16 + sigil17 + sigil18 + sigil20 +
   sigil29 + sigil21 + sigil22 + sigil23 + sigil24 + sigil25 + sigil26 +
@@ -40,8 +40,8 @@ local sigiladdon_token = token(lexer.EMBEDDED, R('az', 'AZ')^0)
 lex:add_rule('sigil', sigil_token * sigiladdon_token)
 
 -- Atoms.
-local atom1 = B(1 - P(':')) * P(':') * lexer.range('"', false)
-local atom2 = B(1 - P(':')) * P(':') * R('az', 'AZ') *
+local atom1 = B(1 - P(':')) * ':' * lexer.range('"')
+local atom2 = B(1 - P(':')) * ':' * R('az', 'AZ') *
   R('az', 'AZ', '__', '@@', '09')^0 * S('?!')^-1
 local atom3 = B(1 - R('az', 'AZ', '__', '09', '::')) *
   R('AZ') * R('az', 'AZ', '__', '@@', '09')^0 * S('?!')^-1
@@ -61,7 +61,7 @@ lex:add_rule('attribute', token(lexer.LABEL, B(1 - R('az', 'AZ', '__')) *
 
 -- Booleans.
 lex:add_rule('boolean', token(lexer.NUMBER, P(':')^-1 *
-  word_match[[true false nil]]))
+  word_match('true false nil')))
 
 -- Functions.
 lex:add_rule('function', token(lexer.FUNCTION, word_match[[
@@ -79,7 +79,7 @@ lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
 ]]))
 
 -- Operators
-local operator1 = word_match[[and or not when xor in]]
+local operator1 = word_match('and or not when xor in')
 local operator2 = P('!==') + '!=' + '!' + '=~' + '===' + '==' + '=' + '<<<' +
   '<<' + '<=' + '<-' + '<' + '>>>' + '>>' + '>=' + '>' + '->' + '--' + '-' +
   '++' + '+' + '&&&' + '&&' + '&' + '|||' + '||' + '|>' + '|' + '..' + '.' +
@@ -91,11 +91,11 @@ lex:add_rule('identifier', token(lexer.IDENTIFIER, R('az', '__') *
   R('az', 'AZ', '__', '09')^0 * S('?!')^-1))
 
 -- Numbers
-local dec = lexer.digit * (lexer.digit + P("_"))^0
+local dec = lexer.digit * (lexer.digit + '_')^0
 local bin = '0b' * S('01')^1
 local oct = '0o' * R('07')^1
 local integer = bin + lexer.hex_num + oct + dec
-local float = lexer.digit^1 * P(".") * lexer.digit^1 * S("eE") *
+local float = lexer.digit^1 * '.' * lexer.digit^1 * S('eE') *
   (S('+-')^-1 * lexer.digit^1)^-1
 lex:add_rule('number', B(1 - R('az', 'AZ', '__')) * S('+-')^-1 *
   token(lexer.NUMBER, float + integer))

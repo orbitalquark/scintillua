@@ -18,8 +18,8 @@ lex:add_rule('end_sequence', token(lexer.KEYWORD, P('END')) *
 
 -- vCard version (in v3.0 and v4.0 must appear immediately after BEGIN:VCARD).
 lex:add_rule('version_sequence', token(lexer.KEYWORD, P('VERSION')) *
-  token(lexer.OPERATOR, P(':')) * token(lexer.CONSTANT, lexer.digit^1 *
-  (P('.') * lexer.digit^1)^-1))
+  token(lexer.OPERATOR, P(':')) *
+  token(lexer.CONSTANT, lexer.digit^1 * ('.' * lexer.digit^1)^-1))
 
 -- Required properties.
 local required_property = token(lexer.KEYWORD, word_match([[
@@ -47,18 +47,20 @@ lex:add_rule('supported_property', supported_property)
 local identifier = lexer.alpha^1 * lexer.digit^0 * ('-' * lexer.alnum^1)^0
 
 -- Group and property.
-lex:add_rule('group_sequence', token(lexer.CONSTANT,
-  lexer.starts_line(identifier)) * token(lexer.OPERATOR, P('.')) *
-  (required_property + supported_property + lexer.token(lexer.TYPE, S('xX') *
-    '-' * identifier) * #S(':;')))
+lex:add_rule('group_sequence',
+  token(lexer.CONSTANT, lexer.starts_line(identifier)) *
+  token(lexer.OPERATOR, P('.')) *
+  (required_property + supported_property +
+    lexer.token(lexer.TYPE, S('xX') * '-' * identifier) * #S(':;')))
 
 -- Extension.
 lex:add_rule('extension', token(lexer.TYPE, lexer.starts_line(S('xX') * '-' *
   identifier * #S(':;'))))
 
 -- Parameter.
-lex:add_rule('parameter', token(lexer.IDENTIFIER, lexer.starts_line(identifier *
-  #S(':='))) + token(lexer.STRING, identifier) * #S(':='))
+lex:add_rule('parameter',
+  token(lexer.IDENTIFIER, lexer.starts_line(identifier * #S(':='))) +
+  token(lexer.STRING, identifier) * #S(':='))
 
 -- Operators.
 lex:add_rule('operator', token(lexer.OPERATOR, S('.:;=')))

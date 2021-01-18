@@ -27,7 +27,7 @@ lex:add_style('project', lexer.styles.label)
 
 -- Tags.
 lex:add_rule('extended_tag', token('extended_tag', '@' * lexer.word * '(' *
-  (lexer.word + lexer.digit + P('-'))^1 * ')'))
+  (lexer.word + lexer.digit + '-')^1 * ')'))
 lex:add_style('extended_tag', lexer.styles.comment)
 lex:add_rule('day_tag', token('day_tag', (P('@today') + '@tomorrow')))
 lex:add_style('day_tag', lexer.styles.class)

@@ -72,7 +72,7 @@ local method_names = word_match[[
   compiled returncode stderr stdout
 ]]
 -- A method call must be followed by an opening parenthesis.
-lex:add_rule('method', token('method', method_names * #P(lexer.space^0 * '(')))
+lex:add_rule('method', token('method', method_names * #(lexer.space^0 * '(')))
 lex:add_style('method', lexer.styles['function'])
 
 -- Function.
@@ -94,7 +94,7 @@ local func_names = word_match[[
 -- For example 'include_directories' can be a function call itself or a keyword
 -- argument of an 'executable' or 'library' function call.
 lex:add_rule('function', token(lexer.FUNCTION, func_names *
-  #P(lexer.space^0 * '(')))
+  #(lexer.space^0 * '(')))
 
 -- Builtin objects.
 -- https://mesonbuild.com/Reference-manual.html#builtin-objects
@@ -104,7 +104,7 @@ lex:add_rule('object', token('object', word_match[[
 lex:add_style('object', lexer.styles.type)
 
 -- Constants.
-lex:add_rule('constant', token(lexer.CONSTANT, word_match[[false true]]))
+lex:add_rule('constant', token(lexer.CONSTANT, word_match('false true')))
 
 -- Identifiers.
 lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))

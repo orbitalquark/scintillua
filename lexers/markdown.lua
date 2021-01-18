@@ -15,8 +15,8 @@ lex:add_rule('header', h(6) + h(5) + h(4) + h(3) + h(2) + h(1))
 local font_size =
   tonumber(lexer.property_expanded['style.default']:match('size:(%d+)')) or 10
 local function add_header_style(n)
-  lex:add_style(
-    'h' .. n, {fore = lexer.colors.red, size = (font_size + (6 - n))})
+  lex:add_style('h' .. n,
+    {fore = lexer.colors.red, size = (font_size + (6 - n))})
 end
 for i = 1, 6 do add_header_style(i) end
 
@@ -35,8 +35,8 @@ local blank_line = '\n' * hspace^0 * ('\n' + P(-1))
 
 local code_line = lexer.to_eol(lexer.starts_line(P(' ')^4 + '\t') * -P('<')) *
   lexer.newline^-1
-local code_block = lexer.range(
-  lexer.starts_line('```'), '\n```' * hspace^0 * ('\n' + P(-1)))
+local code_block = lexer.range(lexer.starts_line('```'),
+  '\n```' * hspace^0 * ('\n' + P(-1)))
 local code_inline = lpeg.Cmt(lpeg.C(P('`')^1), function(input, index, bt)
   -- `foo`, ``foo``, ``foo`bar``, `foo``bar` are all allowed.
   local _, e = input:find('[^`]' .. bt .. '%f[^`]', index)
@@ -70,7 +70,7 @@ lex:add_style('link_label', lexer.styles.label)
 lex:add_style('link_url', {underlined = true})
 
 local link_label = P('!')^-1 * lexer.range('[', ']', true)
-local link_target = P('(') * (lexer.any - S(') \t'))^0 *
+local link_target = '(' * (lexer.any - S(') \t'))^0 *
   (S(' \t')^1 * lexer.range('"', false, false))^-1 * ')'
 local link_ref = S(' \t')^0 * lexer.range('[', ']', true)
 local link_url = 'http' * P('s')^-1 * '://' * (lexer.any - lexer.space)^1
@@ -89,8 +89,9 @@ local function flanked_range(s, not_inword)
     s * #(fl_char - lexer.punct)
   local right_fl = lpeg.B(lexer.punct) * s * #(punct_space - s) +
     lpeg.B(fl_char) * s
-  return left_fl * (lexer.any - blank_line -
-    (not_inword and s * #punct_space or s))^0 * right_fl
+  return left_fl *
+    (lexer.any - blank_line - (not_inword and s * #punct_space or s))^0 *
+    right_fl
 end
 
 lex:add_rule('strong', token('strong', flanked_range('**') +

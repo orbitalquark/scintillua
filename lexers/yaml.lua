@@ -19,8 +19,8 @@ lex:add_rule('whitespace', token(lexer.WHITESPACE, S(' \t')^1 +
 local word = (lexer.alpha + '-' * -lexer.space) * (lexer.alnum + '-')^0
 
 -- Keys.
-lex:add_rule('key', token(lexer.KEYWORD, word * (S(' \t_')^1 * word^-1)^0 *
-  #(':' * lexer.space)))
+lex:add_rule('key', token(lexer.KEYWORD, word * (S(' \t_')^1 * word^-1)^0) *
+  #(':' * lexer.space))
 
 -- Constants.
 lex:add_rule('constant', B(lexer.space) * token(lexer.CONSTANT,

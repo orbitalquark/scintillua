@@ -22,7 +22,7 @@ local op = lexer.punct - S('()[]{}')
 
 -- Types & type constructors.
 lex:add_rule('type', token(lexer.TYPE, (lexer.upper * word) +
-  (":" * (op^1 - ":"))))
+  (':' * (op^1 - ':'))))
 
 -- Identifiers.
 lex:add_rule('identifier', token(lexer.IDENTIFIER, (lexer.alpha + '_') * word))

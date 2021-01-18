@@ -16,7 +16,7 @@ lex:add_rule('comment', token(lexer.COMMENT, lexer.range('<!--', '-->')))
 
 -- Doctype.
 lex:add_rule('doctype', token('doctype',
-  lexer.range('<!' * word_match([[doctype]], true), '>')))
+  lexer.range('<!' * word_match('doctype', true), '>')))
 lex:add_style('doctype', lexer.styles.comment)
 
 -- Elements.
@@ -116,7 +116,7 @@ lex.embed_end_tag = element * tag_close
 
 -- Embedded CSS (<style type="text/css"> ... </style>).
 local css = lexer.load('css')
-local style_element = word_match([[style]], true)
+local style_element = word_match('style', true)
 local css_start_rule = #('<' * style_element * ('>' + P(function(input, index)
   if input:find('^%s+type%s*=%s*(["\'])text/css%1', index) then
     return index
@@ -127,7 +127,7 @@ lex:embed(css, css_start_rule, css_end_rule)
 
 -- Embedded JavaScript (<script type="text/javascript"> ... </script>).
 local js = lexer.load('javascript')
-local script_element = word_match([[script]], true)
+local script_element = word_match('script', true)
 local js_start_rule = #('<' * script_element * ('>' + P(function(input, index)
   if input:find('^%s+type%s*=%s*(["\'])text/javascript%1', index) then
     return index
@@ -142,7 +142,7 @@ lex:embed(js, js_start_rule, js_end_rule)
 
 -- Embedded CoffeeScript (<script type="text/coffeescript"> ... </script>).
 local cs = lexer.load('coffeescript')
-local script_element = word_match([[script]], true)
+local script_element = word_match('script', true)
 local cs_start_rule = #('<' * script_element * P(function(input, index)
   if input:find('^[^>]+type%s*=%s*(["\'])text/coffeescript%1', index) then
     return index

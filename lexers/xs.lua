@@ -46,8 +46,8 @@ local number = token(lexer.NUMBER, lexer.number)
 lex:add_rule('constant', token(lexer.CONSTANT, '$&' * lexer.word))
 
 -- Variables.
-lex:add_rule('variable', token(lexer.VARIABLE, '$' * S('"#')^-1 *
-  ('*' + lexer.digit^1 + lexer.word)))
+lex:add_rule('variable', token(lexer.VARIABLE, '$' * S('"#')^-1 * ('*' +
+  lexer.digit^1 + lexer.word)))
 
 -- Operators.
 lex:add_rule('operator', token(lexer.OPERATOR, S('@`=!<>*&^|;?()[]{}') +

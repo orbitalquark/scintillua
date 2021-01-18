@@ -26,7 +26,7 @@ lex:modify_rule('type', token(lexer.TYPE, S('bdiu')^-1 * 'vec' * R('24') +
   S('iu')^-1 * 'sampler' * (R('12') * 'DArray' + word_match[[
     Cube 2DRect Buffer 2DMS 2DMSArray 2DMSCubeArray
   ]]) +
-  word_match[[samplerCubeShadow sampler2DRectShadow samplerCubeArrayShadow]]) +
+  word_match('samplerCubeShadow sampler2DRectShadow samplerCubeArrayShadow')) +
   lex:get_rule('type') +
 
 -- Functions.

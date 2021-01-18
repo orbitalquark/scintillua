@@ -32,8 +32,8 @@ lex:add_rule('type', token(lexer.TYPE, word_match([[
 ]], true)))
 
 -- Comments.
-lex:add_rule('comment', token(lexer.COMMENT,
-  lexer.to_eol("'" + word_match([[rem]], true))))
+lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol("'" +
+  word_match('rem', true))))
 
 -- Identifiers.
 lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))

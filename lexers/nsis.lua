@@ -12,7 +12,7 @@ local lex = lexer.new('nsis')
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Comments (4.1).
-local line_comment = lexer.to_eol(P(';') + '#')
+local line_comment = lexer.to_eol(S(';#'))
 local block_comment = lexer.range('/*', '*/')
 lex:add_rule('comment', token(lexer.COMMENT, line_comment + block_comment))
 
