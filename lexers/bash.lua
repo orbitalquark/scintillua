@@ -27,11 +27,20 @@ local sq_str = lexer.range("'", false, false)
 local dq_str = lexer.range('"')
 local ex_str = lexer.range('`')
 local heredoc = '<<' * P(function(input, index)
-  local _, e, _, delimiter = input:find(
-    '^%-?(["\']?)([%a_][%w_]*)%1[\n\r\f;]+', index)
-  if not delimiter then return end
-  _, e = input:find('[\n\r\f]+' .. delimiter, e)
-  return e and e + 1 or #input + 1
+  local s, e, minus, _, delimiter =
+    input:find('(-?)(["\']?)([%a_][%w_]*)%2[\n\r\f;]+', index)
+  if s == index and delimiter then
+    -- If the starting delimiter of a here-doc begins with "-", then
+    -- spaces are allowed to come before the closing delimiter.
+    local close_pattern
+    if minus == '-' then
+      close_pattern = '[\n\r\f%s]+'..delimiter..'\n'
+    else
+      close_pattern = '[\n\r\f]+'..delimiter..'\n'
+    end
+    local _, e = input:find(close_pattern, e)
+    return e and e + 1 or #input + 1
+  end
 end)
 lex:add_rule('string', token(lexer.STRING, sq_str + dq_str + ex_str + heredoc))
 
