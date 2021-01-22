@@ -1253,7 +1253,7 @@ local failed = 0
 for i = 1, #tests do
   print(string.format('Running %s.', tests[i]))
   local ok, errmsg = xpcall(_G[tests[i]], function(errmsg)
-    print(string.format('Failed! %s', debug.traceback(errmsg, 3)))
+    print(string.format('Failed!\n%s', debug.traceback(errmsg, 3)))
     failed = failed + 1
   end)
 end
