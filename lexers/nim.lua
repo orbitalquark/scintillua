@@ -79,7 +79,9 @@ lex:add_rule('string', token(lexer.STRING, tq_str + sq_str + dq_str + raw_str))
 lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
 
 -- Comments.
-lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('#', true)))
+local line_comment = lexer.to_eol('#', true)
+local block_comment = lexer.range('#[', ']#')
+lex:add_rule('comment', token(lexer.COMMENT, block_comment + line_comment))
 
 -- Numbers.
 local dec = lexer.digit^1 * ('_' * lexer.digit^1)^0
