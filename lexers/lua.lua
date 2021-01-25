@@ -26,6 +26,8 @@ local func = token(lexer.FUNCTION, word_match[[
   tostring type xpcall
   -- Added in 5.2.
   rawlen
+  -- Added in 5.4.
+  warn
 ]])
 local deprecated_func = token('deprecated_function', word_match[[
   -- Deprecated in 5.2.
@@ -49,6 +51,8 @@ local library = token('library', word_match[[
   coroutine.wrap coroutine.yield
   -- Coroutine added in 5.3.
   coroutine.isyieldable
+  -- Coroutine added in 5.4.
+  coroutine.close
   -- Module.
   package package.cpath package.loaded package.loadlib package.path
   package.preload
@@ -133,6 +137,11 @@ lex:add_rule('number', token(lexer.NUMBER, lexer.float + lua_integer))
 
 -- Labels.
 lex:add_rule('label', token(lexer.LABEL, '::' * lexer.word * '::'))
+
+-- Attributes.
+lex:add_rule('attribute', token('attribute', '<' * lexer.space^0 *
+  word_match('const close') * lexer.space^0 * '>'))
+lex:add_style('attribute', lexer.styles.class)
 
 -- Operators.
 lex:add_rule('operator', token(lexer.OPERATOR, '..' +
