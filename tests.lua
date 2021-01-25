@@ -668,11 +668,12 @@ function test_lua()
   assert_default_styles(lua)
   local rules = {
     'whitespace', 'keyword', 'function', 'constant', 'library', 'identifier',
-    'string', 'comment', 'number', 'label', 'operator'
+    'string', 'comment', 'number', 'label', 'attribute', 'operator'
   }
   assert_rules(lua, rules)
   local styles = {
     'deprecated_function', 'library', 'deprecated_library', 'longstring',
+    'attribute',
     'lua_whitespace' -- language-specific whitespace for multilang lexers
   }
   assert_extra_styles(lua, styles)
