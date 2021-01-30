@@ -36,7 +36,7 @@ local word = lexer.alpha * (lexer.alnum + '_' + '-')^0
 lex:add_rule('identifier', token(lexer.IDENTIFIER, word))
 
 -- Strings.
-lex:add_rule('string', token(lexer.STRING, "'" * word + lexer.range('"')))
+lex:add_rule('string', token(lexer.STRING, "'" * word + lexer.range('"') + P"#\\" * P(1)))
 
 -- Comments.
 local line_comment = lexer.to_eol(';')
