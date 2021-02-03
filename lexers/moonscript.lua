@@ -10,6 +10,10 @@ local lex = lexer.new('moonscript', {fold_by_indentation = true})
 -- Whitespace.
 lex:add_rule('whitspace', token(lexer.WHITESPACE, lexer.space^1))
 
+-- Table keys.
+lex:add_rule('tbl_key', token('tbl_key', lexer.word * ':' + ':' * lexer.word))
+lex:add_style('tbl_key', lexer.STYLE_REGEX)
+
 -- Keywords.
 lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
   -- Lua.
@@ -23,7 +27,7 @@ lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
 lex:add_rule('error', token(lexer.ERROR, word_match('function end')))
 
 -- Self reference.
-lex:add_rule('self_ref', token('self_ref', '@' * lexer.word + 'self'))
+lex:add_rule('self_ref', token('self_ref', '@' * lexer.word^-1 + 'self'))
 lex:add_style('self_ref', lexer.styles.label)
 
 -- Functions.
@@ -104,10 +108,8 @@ lex:add_style('library', lexer.styles.type)
 -- Identifiers.
 local identifier = token(lexer.IDENTIFIER, lexer.word)
 local proper_ident = token('proper_ident', lexer.upper * lexer.word)
-local tbl_key = token('tbl_key', lexer.word * ':' + ':' * lexer.word )
-lex:add_rule('identifier', tbl_key + proper_ident + identifier)
+lex:add_rule('identifier', proper_ident + identifier)
 lex:add_style('proper_ident', lexer.styles.class)
-lex:add_style('tbl_key', lexer.styles.regex)
 
 local longstring = lpeg.Cmt('[' * lpeg.C(P('=')^0) * '[',
   function(input, index, eq)
