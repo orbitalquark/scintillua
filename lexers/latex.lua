@@ -40,7 +40,7 @@ lex:add_style('section', lexer.styles.class)
 
 -- Commands.
 lex:add_rule('command', token('command', '\\' * (lexer.alpha^1 +
-  S('#$&~_^%{}'))))
+  S('#$&~_^%{}\\'))))
 lex:add_style('command', lexer.styles.keyword)
 
 -- Operators.
