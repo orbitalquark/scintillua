@@ -128,8 +128,9 @@ see *lexers/lpeg.properties*.
 1. Tcl`*`
 1. TeX`*`
 1. Texinfo`*`
-1. txt2tags
 1. TOML
+1. txt2tags
+1. TypeScript`*`
 1. Vala`*`
 1. vCard`*`
 1. Verilog`*`
