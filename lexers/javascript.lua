@@ -20,6 +20,44 @@ lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
   var void volatile while with yield
 ]]))
 
+-- Types.
+lex:add_rule('type', token(lexer.TYPE, word_match[[
+  -- Fundamental objects.
+  Object Function Boolean Symbol
+  -- Error Objects.
+  Error AggregateError EvalError InternalError RangeError ReferenceError
+  SyntaxError TypeError URIError
+  -- Numbers and dates.
+  Number BigInt Math Date
+  -- Text Processing.
+  String RegExp
+  -- Indexed collections.
+  Array Int8Array Uint8Array Uint8ClampedArray Int16Array Uint16Array Int32Array
+  Uint32Array Float32Array Float64Array BigInt64Array BigUint64Array
+  -- Keyed collections.
+  Map Set WeakMap WeakSet
+  -- Structured data.
+  ArrayBuffer SharedArrayBuffer Atomics DataView JSON
+  -- Control abstraction objects.
+  GeneratorFunction AsyncGeneratorFunction Generator AsyncGenerator
+  AsyncFunction Promise
+  -- Reflection.
+  Reflect Proxy
+  -- Other.
+  Intl WebAssembly
+]]))
+
+-- Functions.
+lex:add_rule('function', token(lexer.FUNCTION, word_match[[
+  eval isFinite isNaN parseFloat parseInt decodeURI decodeURIComponent encodeURI
+  encodeURIComponent
+]]))
+
+-- Constants.
+lex:add_rule('constant', token(lexer.CONSTANT, word_match[[
+  Infinity NaN undefined globalThis arguments
+]]))
+
 -- Identifiers.
 lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
 
