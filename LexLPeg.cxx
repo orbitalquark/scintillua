@@ -396,6 +396,7 @@ void LexerLPeg::ReadLexerNames(const char *path) {
   } while (_findnext(handle, &file) != -1);
   _findclose(handle);
 #endif
+  lexerNames.erase("lexer");
 }
 
 void LexerLPeg::LogError(lua_State *L, const char *str, bool print) {
