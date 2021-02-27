@@ -22,6 +22,7 @@ see *lexers/lpeg.properties*.
 1. C++`*`
 1. C#`*`
 1. ChucK
+1. Clojure`*`
 1. CMake`*`
 1. Coffeescript
 1. ConTeXt`*`
@@ -36,13 +37,16 @@ see *lexers/lpeg.properties*.
 1. Dot`*`
 1. Eiffel`*`
 1. Elixir
+1. Elm
 1. Erlang`*`
 1. F#
+1. Fantom`*`
 1. Faust
 1. Fennel
 1. Fish`*`
 1. Forth
 1. Fortran
+1. fstab
 1. GAP`*`
 1. gettext
 1. Gherkin
@@ -63,6 +67,7 @@ see *lexers/lpeg.properties*.
 1. jq`*`
 1. JSON`*`
 1. JSP`*`
+1. Julia
 1. LaTeX`*`
 1. Ledger
 1. LESS`*`
@@ -76,9 +81,11 @@ see *lexers/lpeg.properties*.
 1. Markdown
 1. MATLAB`*`
 1. MediaWiki
+1. Meson
 1. MoonScript
 1. Myrddin
 1. Nemerle`*`
+1. Networkd
 1. Nim
 1. NSIS
 1. Objective-C`*`
@@ -89,6 +96,7 @@ see *lexers/lpeg.properties*.
 1. PICO-8`*`
 1. Pike`*`
 1. PKGBUILD`*`
+1. Pony
 1. Postscript
 1. PowerShell`*`
 1. Prolog
@@ -97,10 +105,12 @@ see *lexers/lpeg.properties*.
 1. Python
 1. R
 1. rc`*`
+1. Reason
 1. REBOL`*`
 1. Rexx`*`
 1. ReStructuredText`*`
 1. RHTML`*`
+1. RouterOS`*`
 1. Ruby`*`
 1. Ruby on Rails`*`
 1. Rust`*`
@@ -111,13 +121,16 @@ see *lexers/lpeg.properties*.
 1. Smalltalk`*`
 1. Standard ML
 1. SNOBOL4
+1. Spin
 1. SQL
+1. Systemd
 1. TaskPaper
 1. Tcl`*`
 1. TeX`*`
 1. Texinfo`*`
-1. txt2tags
 1. TOML
+1. txt2tags
+1. TypeScript`*`
 1. Vala`*`
 1. vCard`*`
 1. Verilog`*`
@@ -125,8 +138,10 @@ see *lexers/lpeg.properties*.
 1. Visual Basic
 1. Windows Script File`*`
 1. XML`*`
+1. Xs`*`
 1. Xtend`*`
 1. YAML
+1. Zig`*`
 
 [folders]: api.html#code-folding
 [`fold.by.indentation`]: manual.html#using-scintillua-with-other-apps

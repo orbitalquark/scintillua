@@ -13,8 +13,11 @@ Scintillua better and better over the years.
 * Carl Sturtivant
 * Chris Emerson
 * Christian Hesse
+* Christos Chatzifountas
 * David B. Lamkins
+* Florian Fischer
 * Heck Fy
+* Hugo O. Rivera
 * Ivan Baidakou
 * Jason Schindler
 * Jeff Stone
@@ -22,6 +25,8 @@ Scintillua better and better over the years.
 * Joseph Eib
 * Joshua Krämer
 * Julien L.
+* Karchnu
+* Karl Schultheisz
 * Klaus Borges
 * Larry Hynes
 * Lars Otter
@@ -44,7 +49,9 @@ Scintillua better and better over the years.
 * Robert Gieseke
 * Roberto Ierusalimschy
 * S\. Gilles
+* Simeon Maryasin
 * Stéphane Rivière
+* Tobias Frilling
 * Tymur Gubayev
 * Wolfgang Seeberg
 

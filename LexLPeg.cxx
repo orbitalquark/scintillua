@@ -1,5 +1,5 @@
 /**
- * Copyright 2006-2020 Mitchell. See LICENSE.
+ * Copyright 2006-2021 Mitchell. See LICENSE.
  * Lua-powered dynamic language lexer for Scintillua.
  * For documentation on writing lexers, see *lexers/lexer.lua*.
  */
@@ -396,6 +396,7 @@ void LexerLPeg::ReadLexerNames(const char *path) {
   } while (_findnext(handle, &file) != -1);
   _findclose(handle);
 #endif
+  lexerNames.erase("lexer");
 }
 
 void LexerLPeg::LogError(lua_State *L, const char *str, bool print) {

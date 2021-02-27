@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Mitchell. See LICENSE.
+-- Copyright 2006-2021 Mitchell. See LICENSE.
 -- C LPeg lexer.
 
 local lexer = require('lexer')
@@ -50,19 +50,20 @@ lex:add_rule('constants', token(lexer.CONSTANT, word_match[[
   -- stdint.h.
   PTRDIFF_MIN PTRDIFF_MAX SIZE_MAX SIG_ATOMIC_MIN SIG_ATOMIC_MAX WINT_MIN
   WINT_MAX WCHAR_MIN WCHAR_MAX
-]] + P('U')^-1 * 'INT' * ((P('_LEAST') + '_FAST')^-1 * lexer.digit^1 + 'PTR' +
-  'MAX') * (P('_MIN') + '_MAX')))
+]] + P('U')^-1 * 'INT' *
+  ((P('_LEAST') + '_FAST')^-1 * lexer.digit^1 + 'PTR' + 'MAX') *
+  (P('_MIN') + '_MAX')))
 
 -- Labels.
 lex:add_rule('label', token(lexer.LABEL, lexer.starts_line(lexer.word * ':')))
-
--- Identifiers.
-lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
 
 -- Strings.
 local sq_str = P('L')^-1 * lexer.range("'", true)
 local dq_str = P('L')^-1 * lexer.range('"', true)
 lex:add_rule('string', token(lexer.STRING, sq_str + dq_str))
+
+-- Identifiers.
+lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
 
 -- Comments.
 local line_comment = lexer.to_eol('//', true)

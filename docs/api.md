@@ -1645,7 +1645,7 @@ Fields:
 * `s`: String or pattern start of a range.
 * `e`: Optional string or pattern end of a range. The default value is *s*.
 * `single_line`: Optional flag indicating whether or not the range must be
-  on a single line.
+  on a single line. The default value is `false`.
 * `escapes`: Optional flag indicating whether or not the range end may
   be escaped by a '\' character.
   The default value is `false` unless *s* and *e* are identical,
@@ -1677,8 +1677,8 @@ Fields:
 
 Usage:
 
-* `local preproc = token(lexer.PREPROCESSOR, lexer.starts_line('#') *
-  lexer.nonnewline^0)`
+* `local preproc = token(lexer.PREPROCESSOR,
+  lexer.starts_line(lexer.to_eol('#')))`
 
 Return:
 
@@ -1701,7 +1701,7 @@ Fields:
 Usage:
 
 * `local line_comment = lexer.to_eol('//')`
-* `local line_comment = lexer.to_eol(P('#') + ';')`
+* `local line_comment = lexer.to_eol(S('#;'))`
 
 Return:
 
@@ -1799,6 +1799,9 @@ defined by lexers.
   `regex`, `string`, `type`, `variable`, `whitespace`: Some token names used
   by lexers. Some lexers may define more token names, so this list is not
   exhaustive.
+* *`lang`*`_whitespace`: A special style for whitespace tokens in lexer name
+  *lang*. It inherits from `whitespace`, and is used in place of it for all
+  lexers.
 
 Style definition tables may contain the following fields:
 

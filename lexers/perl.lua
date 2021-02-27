@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Mitchell. See LICENSE.
+-- Copyright 2006-2021 Mitchell. See LICENSE.
 -- Perl LPeg lexer.
 
 local lexer = require('lexer')
@@ -20,7 +20,7 @@ lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
 ]]))
 
 -- Markers.
-lex:add_rule('marker', token(lexer.COMMENT, word_match[[__DATA__ __END__]] *
+lex:add_rule('marker', token(lexer.COMMENT, word_match('__DATA__ __END__') *
   lexer.any^0))
 
 -- Functions.
@@ -123,8 +123,11 @@ lex:add_rule('number', token(lexer.NUMBER, lexer.number))
 
 -- Variables.
 local special_var = '$' * (
-  '^' * S('ADEFHILMOPSTWX')^-1 + S('\\"[]\'&`+*.,;=%~?@<>(|/!-') +
-  ':' * (lexer.any - ':') + P('$') * -lexer.word + lexer.digit^1)
+  '^' * S('ADEFHILMOPSTWX')^-1 +
+  S('\\"[]\'&`+*.,;=%~?@<>(|/!-') +
+  ':' * (lexer.any - ':') +
+  P('$') * -lexer.word +
+  lexer.digit^1)
 local plain_var = ('$#' + S('$@%')) * P('$')^0 * lexer.word + '$#'
 lex:add_rule('variable', token(lexer.VARIABLE, special_var + plain_var))
 

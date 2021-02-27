@@ -1,4 +1,4 @@
-# Copyright 2010-2020 Mitchell. See LICENSE.
+# Copyright 2010-2021 Mitchell. See LICENSE.
 # Make file for LexLPeg external lexer for Scintilla.
 
 ifeq (win, $(MAKECMDGOALS))

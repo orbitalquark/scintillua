@@ -1,4 +1,4 @@
--- Copyright 2015-2020 David B. Lamkins <david@lamkins.net>. See LICENSE.
+-- Copyright 2015-2021 David B. Lamkins <david@lamkins.net>. See LICENSE.
 -- Faust LPeg lexer, see http://faust.grame.fr/
 
 local lexer = require('lexer')
@@ -36,8 +36,8 @@ local flt = int * (rad * int)^-1 * exp + int^-1 * rad * int * exp
 lex:add_rule('number', token(lexer.NUMBER, flt + int))
 
 -- Pragmas.
-lex:add_rule('pragma', token(lexer.PREPROCESSOR, P('<mdoc>') *
-  (lexer.any - P('</mdoc>'))^0 * P('</mdoc>')^-1))
+lex:add_rule('pragma', token(lexer.PREPROCESSOR, lexer.range('<mdoc>',
+  '</mdoc>')))
 
 -- Operators.
 lex:add_rule('operator', token(lexer.OPERATOR,

@@ -1,5 +1,5 @@
 /**
- * Copyright 2006-2020 Mitchell. See LICENSE.
+ * Copyright 2006-2021 Mitchell. See LICENSE.
  * Include file for directly (statically) compiling Scintillua into a
  * Scintilla-based application.
  */

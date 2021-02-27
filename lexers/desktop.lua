@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Mitchell. See LICENSE.
+-- Copyright 2006-2021 Mitchell. See LICENSE.
 -- Desktop Entry LPeg lexer.
 
 local lexer = require('lexer')
@@ -19,7 +19,7 @@ lex:add_rule('key', token('key', word_match[[
 lex:add_style('key', lexer.styles.keyword)
 
 -- Values.
-lex:add_rule('value', token('value', word_match[[true false]]))
+lex:add_rule('value', token('value', word_match('true false')))
 lex:add_style('value', lexer.styles.constant)
 
 -- Identifiers.

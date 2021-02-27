@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Mitchell. See LICENSE.
+-- Copyright 2006-2021 Mitchell. See LICENSE.
 -- Erlang LPeg lexer.
 
 local lexer = require('lexer')
@@ -41,8 +41,8 @@ lex:add_rule('function', token(lexer.FUNCTION, word_match[[
 ]]))
 
 -- Identifiers.
-lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.lower *
-  ('_' + lexer.alnum)^0))
+local word = lexer.lower * ('_' + lexer.alnum)^0
+lex:add_rule('identifier', token(lexer.IDENTIFIER, word))
 
 -- Variables.
 lex:add_rule('variable', token(lexer.VARIABLE, P('_')^0 * lexer.upper *

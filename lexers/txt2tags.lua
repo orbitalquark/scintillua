@@ -1,4 +1,4 @@
--- Copyright 2019-2020 Julien L. See LICENSE.
+-- Copyright 2019-2021 Julien L. See LICENSE.
 -- txt2tags LPeg lexer.
 -- (developed and tested with Txt2tags Markup Rules
 -- [https://txt2tags.org/doc/english/rules.t2t])
@@ -34,9 +34,9 @@ local comment = token(lexer.COMMENT, block_comment + line_comment)
 
 -- Inline.
 local function span(name, delimiter)
-  return token(name, (delimiter * nonspace * delimiter * S(delimiter)^0) + (
-    delimiter * nonspace * (lexer.nonnewline - nonspace * delimiter)^0 *
-    nonspace * delimiter * S(delimiter)^0))
+  return token(name, (delimiter * nonspace * delimiter * S(delimiter)^0) +
+    (delimiter * nonspace * (lexer.nonnewline - nonspace * delimiter)^0 *
+      nonspace * delimiter * S(delimiter)^0))
 end
 local bold = span('bold', '**')
 local italic = span('italic', '//')
@@ -49,15 +49,13 @@ local inline = bold + italic + underline + strike + mono + raw + tagged
 
 -- Link.
 local email = token('email', (nonspace - '@')^1 * '@' * (nonspace - '.')^1 *
-  ('.' * (nonspace - '.' - '?')^1)^1 * ('?' * nonspace^1)^-1)
-local host = token('host', (P('www') + P('WWW') + P('ftp') + P('FTP')) *
-  (nonspace - '.')^0 * '.' * (nonspace - '.')^1 * '.' *
-  (nonspace - ',' - '.')^1)
+  ('.' * (nonspace - S('.?'))^1)^1 * ('?' * nonspace^1)^-1)
+local host = token('host', word_match('www ftp', true) * (nonspace - '.')^0 *
+  '.' * (nonspace - '.')^1 * '.' * (nonspace - S(',.'))^1)
 local url = token('url', (nonspace - '://')^1 * '://' *
   (nonspace - ',' - '.')^1 *
-  ('.' * (nonspace - ',' - '.' - '/' - '?' - '#')^1)^1 *
-  ('/' * (nonspace - '.' - '/' - '?' - '#')^0 *
-    ('.' * (nonspace - ',' - '.' - '?' - '#')^1)^0)^0 *
+  ('.' * (nonspace - S(',./?#'))^1)^1 *
+  ('/' * (nonspace - S('./?#'))^0 * ('.' * (nonspace - S(',.?#'))^1)^0)^0 *
   ('?' * (nonspace - '#')^1)^-1 * ('#' * nonspace^0)^-1)
 local label_with_address = token('label_start', '[') * lexer.space^0 *
   token('address_label', ((nonspace - ']')^1 * lexer.space^1)^1) *
@@ -65,7 +63,7 @@ local label_with_address = token('label_start', '[') * lexer.space^0 *
 local link = label_with_address + url + host + email
 
 -- Line.
-local line = token('line', (P('-') + P('=') + P('_'))^20)
+local line = token('line', S('-=_')^20)
 
 -- Image.
 local image_only = token('image_start', '[') *

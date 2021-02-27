@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Mitchell. See LICENSE.
+-- Copyright 2006-2021 Mitchell. See LICENSE.
 -- Latex LPeg lexer.
 -- Modified by Brian Schott.
 -- Modified by Robert Gieseke.
@@ -28,8 +28,8 @@ lex:add_rule('math', token('math', '$' + '\\' * (S('[]()') + math_begin_end)))
 lex:add_style('math', lexer.styles['function'])
 
 -- LaTeX environments.
-lex:add_rule('environment', token('environment', '\\' *
-  (P('begin') + P('end')) * P(' ')^0 * '{' * lexer.word * P('*')^-1 * '}'))
+lex:add_rule('environment', token('environment', '\\' * (P('begin') + 'end') *
+  P(' ')^0 * '{' * lexer.word * P('*')^-1 * '}'))
 lex:add_style('environment', lexer.styles.keyword)
 
 -- Sections.
@@ -39,8 +39,8 @@ lex:add_rule('section', token('section', '\\' * word_match[[
 lex:add_style('section', lexer.styles.class)
 
 -- Commands.
-lex:add_rule('command', token('command', '\\' *
-  (lexer.alpha^1 + S('#$&~_^%{}'))))
+lex:add_rule('command', token('command', '\\' * (lexer.alpha^1 +
+  S('#$&~_^%{}\\'))))
 lex:add_style('command', lexer.styles.keyword)
 
 -- Operators.

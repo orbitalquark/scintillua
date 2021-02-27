@@ -1,4 +1,4 @@
--- Copyright 2016-2020 Alejandro Baez (https://keybase.io/baez). See LICENSE.
+-- Copyright 2016-2021 Alejandro Baez (https://keybase.io/baez). See LICENSE.
 -- Dockerfile LPeg lexer.
 
 local lexer = require('lexer')
@@ -21,7 +21,7 @@ lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
 
 -- Variable.
 lex:add_rule('variable', token(lexer.VARIABLE, S('$')^1 *
-  (S('{')^1 * lexer.word * S('}')^1 + lexer.word)))
+  (P('{')^1 * lexer.word * P('}')^1 + lexer.word)))
 
 -- Strings.
 local sq_str = lexer.range("'", false, false)

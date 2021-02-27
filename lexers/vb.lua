@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Mitchell. See LICENSE.
+-- Copyright 2006-2021 Mitchell. See LICENSE.
 -- VisualBasic LPeg lexer.
 
 local lexer = require('lexer')
@@ -32,8 +32,8 @@ lex:add_rule('type', token(lexer.TYPE, word_match([[
 ]], true)))
 
 -- Comments.
-lex:add_rule('comment', token(lexer.COMMENT,
-  lexer.to_eol("'" + word_match([[rem]], true))))
+lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol("'" +
+  word_match('rem', true))))
 
 -- Identifiers.
 lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))

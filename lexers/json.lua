@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Brian "Sir Alaran" Schott. See LICENSE.
+-- Copyright 2006-2021 Brian "Sir Alaran" Schott. See LICENSE.
 -- JSON LPeg lexer.
 -- Based off of lexer code by Mitchell.
 
@@ -17,7 +17,7 @@ local dq_str = lexer.range('"', true)
 lex:add_rule('string', token(lexer.STRING, sq_str + dq_str))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[true false null]]))
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match('true false null')))
 
 -- Comments.
 local line_comment = lexer.to_eol('//', true)

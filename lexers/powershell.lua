@@ -1,4 +1,4 @@
--- Copyright 2015-2020 Mitchell. See LICENSE.
+-- Copyright 2015-2021 Mitchell. See LICENSE.
 -- PowerShell LPeg lexer.
 -- Contributed by Jeff Stone.
 
@@ -44,8 +44,8 @@ lex:add_rule('type', token(lexer.KEYWORD, '[' * word_match([[
 ]], true) * ']'))
 
 -- Variables.
-lex:add_rule('variable', token(lexer.VARIABLE, '$' *
-  (lexer.digit^1 + lexer.word + lexer.range('{', '}', true))))
+lex:add_rule('variable', token(lexer.VARIABLE, '$' * (lexer.digit^1 +
+  lexer.word + lexer.range('{', '}', true))))
 
 -- Strings.
 lex:add_rule('string', token(lexer.STRING, lexer.range('"', true)))

@@ -1,4 +1,4 @@
--- Copyright 2014-2020 Joshua Krämer. See LICENSE.
+-- Copyright 2014-2021 Joshua Krämer. See LICENSE.
 -- Tcl LPeg lexer.
 -- This lexer follows the TCL dodekalogue (http://wiki.tcl.tk/10259).
 -- It is based on the previous lexer by Mitchell.
@@ -32,8 +32,8 @@ lex:add_rule('quotes', token(lexer.FUNCTION, '"'))
 lex:add_rule('brackets', token(lexer.VARIABLE, S('[]')))
 
 -- Variable substitution.
-lex:add_rule('variable', token(lexer.STRING, '$' *
-  (lexer.alnum + '_' + P(':')^2)^0))
+lex:add_rule('variable', token(lexer.STRING, '$' * (lexer.alnum + '_' +
+  P(':')^2)^0))
 
 -- Backslash substitution.
 local oct = lexer.digit * lexer.digit^-2

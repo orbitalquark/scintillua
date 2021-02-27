@@ -1,4 +1,4 @@
--- Copyright 2006-2020 gwash. See LICENSE.
+-- Copyright 2006-2021 gwash. See LICENSE.
 -- Archlinux PKGBUILD LPeg lexer.
 
 local lexer = require('lexer')
@@ -65,8 +65,8 @@ local brackets = lexer.range('[', ']', true)
 local braces = lexer.range('{', '}', true)
 local backticks = lexer.range('`', true, false)
 local number = lexer.dec_num
-lex:add_rule('variable', token(lexer.VARIABLE, '$' *
-  (symbol + parens + brackets + braces + backticks + number + lexer.word)))
+lex:add_rule('variable', token(lexer.VARIABLE, '$' * (symbol + parens +
+  brackets + braces + backticks + number + lexer.word)))
 
 -- Operators.
 lex:add_rule('operator', token(lexer.OPERATOR, S('=!<>+-/*^~.,:;?()[]{}')))

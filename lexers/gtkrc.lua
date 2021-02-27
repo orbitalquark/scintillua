@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Mitchell. See LICENSE.
+-- Copyright 2006-2021 Mitchell. See LICENSE.
 -- Gtkrc LPeg lexer.
 
 local lexer = require('lexer')
@@ -34,8 +34,8 @@ lex:add_rule('function', token(lexer.FUNCTION, word_match[[
 ]]))
 
 -- Identifiers.
-lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.alpha *
-  (lexer.alnum + S('_-'))^0))
+local word = lexer.alpha * (lexer.alnum + S('_-'))^0
+lex:add_rule('identifier', token(lexer.IDENTIFIER, word))
 
 -- Strings.
 local sq_str = lexer.range("'", true)

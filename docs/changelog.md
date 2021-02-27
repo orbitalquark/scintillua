@@ -2,6 +2,39 @@
 
 [Atom Feed](https://github.com/orbitalquark/scintillua/releases.atom)
 
+### 4.4.5-2 (29 Jan 2021)
+
+Download:
+
+* [Scintillua 4.4.5-2][]
+
+Bugfixes:
+
+* Fixed bug in ReST lexer with badly-formatted adornment.
+* Fixed StandardML lexer code to make global function local.
+* Fixed jq lexer to not use deprecated function.
+* Fixed lack of handling nested braces in bash '${}' variables.
+* Fixed minor extension mapping issues.
+* Fixed C lexer string highlighting with 'L' prefix.
+
+Changes:
+
+* Updated Perl, Ruby, TOML, C, and Scheme lexers.
+* Updated ASM lexer with new instructions.
+* Updated rc lexer with 'case' keyword.
+* Updated Python lexer with new Python 3 keywords.
+* Updated JavaScript lexer with new ECMAScript 2017 keywords.
+* Updated text lexer to style whitespace separately.
+* Updated PHP lexer with keywords, types, and constants.
+* Refactored legacy D, SML, SNOBOL4, Taskpaper, and YAML lexers.
+* Removed vbscript lexer in favor of using the vb lexer as vbscript.
+* Added Clojure, Elm, Fantom, fstab, Julia, Meson, Pony, Reason, RouterOS, Spin,
+  systemd, systemd-networkd, Xs, and Zig lexers.
+* Updated Nim lexer to support block comments.
+* Updated Lua lexer with Lua 5.4 additions.
+
+[Scintillua 4.4.5-2]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_4.4.5-2/scintillua_4.4.5-2.zip
+
 ### 4.4.5-1 (19 Sep 2020)
 
 Download:

@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Robert Gieseke. See LICENSE.
+-- Copyright 2006-2021 Robert Gieseke. See LICENSE.
 -- NSIS LPeg lexer
 -- Based on NSIS 2.46 docs: http://nsis.sourceforge.net/Docs/.
 
@@ -12,7 +12,7 @@ local lex = lexer.new('nsis')
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Comments (4.1).
-local line_comment = lexer.to_eol(P(';') + '#')
+local line_comment = lexer.to_eol(S(';#'))
 local block_comment = lexer.range('/*', '*/')
 lex:add_rule('comment', token(lexer.COMMENT, line_comment + block_comment))
 

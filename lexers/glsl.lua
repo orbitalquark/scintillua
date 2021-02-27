@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Mitchell. See LICENSE.
+-- Copyright 2006-2021 Mitchell. See LICENSE.
 -- GLSL LPeg lexer.
 
 local lexer = require('lexer')
@@ -26,7 +26,7 @@ lex:modify_rule('type', token(lexer.TYPE, S('bdiu')^-1 * 'vec' * R('24') +
   S('iu')^-1 * 'sampler' * (R('12') * 'DArray' + word_match[[
     Cube 2DRect Buffer 2DMS 2DMSArray 2DMSCubeArray
   ]]) +
-  word_match[[samplerCubeShadow sampler2DRectShadow samplerCubeArrayShadow]]) +
+  word_match('samplerCubeShadow sampler2DRectShadow samplerCubeArrayShadow')) +
   lex:get_rule('type') +
 
 -- Functions.

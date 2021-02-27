@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Mitchell. See LICENSE.
+-- Copyright 2006-2021 Mitchell. See LICENSE.
 -- Lisp LPeg lexer.
 
 local lexer = require('lexer')
@@ -36,7 +36,8 @@ local word = lexer.alpha * (lexer.alnum + '_' + '-')^0
 lex:add_rule('identifier', token(lexer.IDENTIFIER, word))
 
 -- Strings.
-lex:add_rule('string', token(lexer.STRING, "'" * word + lexer.range('"')))
+lex:add_rule('string', token(lexer.STRING, "'" * word + lexer.range('"') +
+  '#\\' * lexer.any))
 
 -- Comments.
 local line_comment = lexer.to_eol(';')

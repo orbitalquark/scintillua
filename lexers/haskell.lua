@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Mitchell. See LICENSE.
+-- Copyright 2006-2021 Mitchell. See LICENSE.
 -- Haskell LPeg lexer.
 -- Modified by Alex Suraci.
 
@@ -22,7 +22,7 @@ local op = lexer.punct - S('()[]{}')
 
 -- Types & type constructors.
 lex:add_rule('type', token(lexer.TYPE, (lexer.upper * word) +
-  (":" * (op^1 - ":"))))
+  (':' * (op^1 - ':'))))
 
 -- Identifiers.
 lex:add_rule('identifier', token(lexer.IDENTIFIER, (lexer.alpha + '_') * word))

@@ -1,4 +1,4 @@
--- Copyright 2010-2020 Martin Morawetz. See LICENSE.
+-- Copyright 2010-2021 Martin Morawetz. See LICENSE.
 -- ChucK LPeg lexer.
 
 local lexer = require('lexer')
@@ -37,7 +37,7 @@ lex:add_rule('class', token(lexer.CLASS, word_match[[
 ]]))
 
 -- Global ugens.
-lex:add_rule('ugen', token('ugen', word_match[[dac adc blackhole]]))
+lex:add_rule('ugen', token('ugen', word_match('dac adc blackhole')))
 lex:add_style('ugen', lexer.styles.constant)
 
 -- Times.

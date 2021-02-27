@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Mitchell. See LICENSE.
+-- Copyright 2006-2021 Mitchell. See LICENSE.
 -- Ruby LPeg lexer.
 
 local lexer = require('lexer')
@@ -72,8 +72,9 @@ local heredoc = '<<' * P(function(input, index)
     return e and e + 1 or #input + 1
   end
 end)
-local string = token(lexer.STRING, (sq_str + dq_str + lit_str + heredoc +
-  cmd_str + lit_cmd + lit_array) * S('f')^-1)
+local string = token(lexer.STRING,
+  (sq_str + dq_str + lit_str + heredoc + cmd_str + lit_cmd + lit_array) *
+  S('f')^-1)
 -- TODO: regex_str fails with `obj.method /patt/` syntax.
 local regex_str = #P('/') * lexer.last_char_includes('!%^&*([{-=+|:;,?<>~') *
   lexer.range('/', true) * S('iomx')^0

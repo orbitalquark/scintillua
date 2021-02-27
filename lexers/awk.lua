@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Mitchell. See LICENSE.
+-- Copyright 2006-2021 Mitchell. See LICENSE.
 -- AWK LPeg lexer.
 -- Modified by Wolfgang Seeberg 2012, 2013.
 
@@ -281,8 +281,8 @@ lex:add_rule('gawkBuiltInVariable', token('gawkBuiltInVariable', word_match[[
   ARGIND BINMODE ERRNO FIELDWIDTHS FPAT FUNCTAB IGNORECASE LINT PREC PROCINFO
   ROUNDMODE RT SYMTAB TEXTDOMAIN
 ]]))
-lex:add_style(
-  'gawkBuiltInVariable', lexer.styles.constant .. {underlined = true})
+lex:add_style('gawkBuiltInVariable', lexer.styles.constant ..
+  {underlined = true})
 
 -- Functions.
 lex:add_rule('function', token(lexer.FUNCTION, lexer.word * #P('(')))

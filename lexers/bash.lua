@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Mitchell. See LICENSE.
+-- Copyright 2006-2021 Mitchell. See LICENSE.
 -- Shell LPeg lexer.
 
 local lexer = require('lexer')
@@ -51,10 +51,8 @@ lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('#')))
 lex:add_rule('number', token(lexer.NUMBER, lexer.number))
 
 -- Variables.
-lex:add_rule('variable', token(lexer.VARIABLE, '$' * (
-  S('!#?*@$') + lexer.digit^1 + lexer.word +
-    lexer.range('{', '}', true, false, true)
-)))
+lex:add_rule('variable', token(lexer.VARIABLE, '$' * (S('!#?*@$') +
+  lexer.digit^1 + lexer.word + lexer.range('{', '}', true, false, true))))
 
 -- Operators.
 lex:add_rule('operator', token(lexer.OPERATOR, S('=!<>+-/*^&|~.,:;?()[]{}')))

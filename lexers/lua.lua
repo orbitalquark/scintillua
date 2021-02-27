@@ -1,10 +1,10 @@
--- Copyright 2006-2020 Mitchell. See LICENSE.
+-- Copyright 2006-2021 Mitchell. See LICENSE.
 -- Lua LPeg lexer.
 -- Original written by Peter Odding, 2007/04/04.
 
 local lexer = require('lexer')
 local token, word_match = lexer.token, lexer.word_match
-local P, S = lpeg.P, lpeg.S
+local B, P, S = lpeg.B, lpeg.P, lpeg.S
 
 local lex = lexer.new('lua')
 
@@ -26,17 +26,19 @@ local func = token(lexer.FUNCTION, word_match[[
   tostring type xpcall
   -- Added in 5.2.
   rawlen
+  -- Added in 5.4.
+  warn
 ]])
 local deprecated_func = token('deprecated_function', word_match[[
   -- Deprecated in 5.2.
   getfenv loadstring module setfenv unpack
 ]])
-lex:add_rule('function', func + deprecated_func)
+lex:add_rule('function', -B('.') * (func + deprecated_func))
 lex:add_style(
   'deprecated_function', lexer.styles['function'] .. {italics = true})
 
 -- Constants.
-lex:add_rule('constant', token(lexer.CONSTANT, word_match[[
+lex:add_rule('constant', token(lexer.CONSTANT, -B('.') * word_match[[
   _G _VERSION
   -- Added in 5.2.
   _ENV
@@ -49,6 +51,8 @@ local library = token('library', word_match[[
   coroutine.wrap coroutine.yield
   -- Coroutine added in 5.3.
   coroutine.isyieldable
+  -- Coroutine added in 5.4.
+  coroutine.close
   -- Module.
   package package.cpath package.loaded package.loadlib package.path
   package.preload
@@ -102,7 +106,7 @@ local deprecated_library = token('deprecated_library', word_match[[
   -- Debug deprecated in 5.2.
   debug.getfenv debug.setfenv
 ]])
-lex:add_rule('library', library + deprecated_library)
+lex:add_rule('library', -B('.') * (library + deprecated_library))
 lex:add_style('library', lexer.styles.type)
 lex:add_style('deprecated_library', lexer.styles.type .. {italics = true})
 
@@ -133,6 +137,11 @@ lex:add_rule('number', token(lexer.NUMBER, lexer.float + lua_integer))
 
 -- Labels.
 lex:add_rule('label', token(lexer.LABEL, '::' * lexer.word * '::'))
+
+-- Attributes.
+lex:add_rule('attribute', token('attribute', '<' * lexer.space^0 *
+  word_match('const close') * lexer.space^0 * '>'))
+lex:add_style('attribute', lexer.styles.class)
 
 -- Operators.
 lex:add_rule('operator', token(lexer.OPERATOR, '..' +

@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Mitchell. See LICENSE.
+-- Copyright 2006-2021 Mitchell. See LICENSE.
 -- CUDA LPeg lexer.
 
 local lexer = require('lexer')
@@ -66,6 +66,6 @@ token(lexer.FUNCTION, word_match[[
 ]]) +
 
 -- Variables.
-token(lexer.VARIABLE, word_match[[gridDim blockIdx blockDim threadIdx]]))
+token(lexer.VARIABLE, word_match('gridDim blockIdx blockDim threadIdx')))
 
 return lex

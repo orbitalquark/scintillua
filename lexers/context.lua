@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Robert Gieseke, Lars Otter. See LICENSE.
+-- Copyright 2006-2021 Robert Gieseke, Lars Otter. See LICENSE.
 -- ConTeXt LPeg lexer.
 
 local lexer = require('lexer')
@@ -22,8 +22,7 @@ local wm_section = word_match[[
   chapter part section subject subsection subsubject subsubsection subsubsubject
   subsubsubsection subsubsubsubject title
 ]]
-local section = token(lexer.CLASS, '\\' *
-  (wm_section + (startstop * wm_section)))
+local section = token(lexer.CLASS, '\\' * startstop^-1 * wm_section)
 lex:add_rule('section', section)
 
 -- TeX and ConTeXt mkiv environments.
@@ -35,8 +34,7 @@ lex:add_rule('environment', environment)
 local command = token(lexer.KEYWORD, '\\' * (
   lexer.alpha^1 * P('\\') * lexer.space^1 +
   lexer.alpha^1 +
-  S('!"#$%&\',./;=[\\]_{|}~`^-')
-))
+  S('!"#$%&\',./;=[\\]_{|}~`^-')))
 lex:add_rule('command', command)
 
 -- Operators.

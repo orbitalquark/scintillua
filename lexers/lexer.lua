@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Mitchell. See LICENSE.
+-- Copyright 2006-2021 Mitchell. See LICENSE.
 
 local M = {}
 
@@ -1700,7 +1700,7 @@ end
 --  by a '\' character. The default value is `false`.
 -- @return pattern
 -- @usage local line_comment = lexer.to_eol('//')
--- @usage local line_comment = lexer.to_eol(P('#') + ';')
+-- @usage local line_comment = lexer.to_eol(S('#;'))
 -- @name to_eol
 function M.to_eol(prefix, escape)
   return prefix * (not escape and M.nonnewline or M.nonnewline_esc)^0
@@ -1719,7 +1719,7 @@ end
 -- @param s String or pattern start of a range.
 -- @param e Optional string or pattern end of a range. The default value is *s*.
 -- @param single_line Optional flag indicating whether or not the range must be
---   on a single line.
+--   on a single line. The default value is `false`.
 -- @param escapes Optional flag indicating whether or not the range end may
 --   be escaped by a '\' character.
 --   The default value is `false` unless *s* and *e* are identical,
@@ -1804,8 +1804,8 @@ end
 -- beginning of a line.
 -- @param patt The LPeg pattern to match on the beginning of a line.
 -- @return pattern
--- @usage local preproc = token(lexer.PREPROCESSOR, lexer.starts_line('#') *
---   lexer.nonnewline^0)
+-- @usage local preproc = token(lexer.PREPROCESSOR,
+--   lexer.starts_line(lexer.to_eol('#')))
 -- @name starts_line
 function M.starts_line(patt)
   return lpeg_Cmt(lpeg_C(patt), function(input, index, match, ...)

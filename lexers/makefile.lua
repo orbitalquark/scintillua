@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Mitchell. See LICENSE.
+-- Copyright 2006-2021 Mitchell. See LICENSE.
 -- Makefile LPeg lexer.
 
 local lexer = require('lexer')
@@ -51,6 +51,8 @@ local implicit_var = word_match[[
   -- Other.
   DESTDIR MAKE MAKEFLAGS MAKEOVERRIDES MFLAGS
 ]] * #(ws^0 * assign)
+local variable = token(lexer.VARIABLE, expanded_var + auto_var + special_var +
+  implicit_var)
 local computed_var = token(lexer.OPERATOR, '$' * S('({')) *
   token(lexer.FUNCTION, word_match[[
     -- Functions for String Substitution and Analysis.
@@ -66,9 +68,7 @@ local computed_var = token(lexer.OPERATOR, '$' * S('({')) *
     -- Functions That Control Make.
     error warning info
   ]])
-local variable = token(lexer.VARIABLE, expanded_var + auto_var + special_var +
-  implicit_var) + computed_var
-lex:add_rule('variable', variable)
+lex:add_rule('variable', variable + computed_var)
 
 -- Operators.
 lex:add_rule('operator', token(lexer.OPERATOR, assign + S(':$(){}')))

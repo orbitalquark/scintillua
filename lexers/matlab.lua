@@ -1,4 +1,4 @@
--- Copyright 2006-2020 Martin Morawetz. See LICENSE.
+-- Copyright 2006-2021 Martin Morawetz. See LICENSE.
 -- Matlab LPeg lexer.
 -- Based off of lexer code by Mitchell.
 
@@ -60,7 +60,7 @@ local bq_str = lexer.range('`')
 lex:add_rule('string', token(lexer.STRING, sq_str + dq_str + bq_str))
 
 -- Comments.
-local line_comment = lexer.to_eol(P('%') + '#')
+local line_comment = lexer.to_eol(S('%#'))
 local block_comment = lexer.range('%{', '%}')
 lex:add_rule('comment', token(lexer.COMMENT, block_comment + line_comment))
 
