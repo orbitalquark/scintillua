@@ -12,14 +12,14 @@ These usages are discussed in the following sections.
 ### Drop-in External Lexer
 
 Scintillua can be dropped into any existing installation of a Scintilla-based
-application as long as that application supports the [Lexilla][] interface as
-defined in Scintilla 4.4.5.
+application as long as that application supports the [Lexilla][] protocol as
+defined in Scintilla 4.4.5 and 5.0.0.
 
 Scintillua releases come with three external lexers in the *lexers/* directory:
 *liblexlpeg.so*, which is a 64-bit Linux shared library; *LexLPeg.cxx*, which is
 a 64-bit Windows DLL, and *LexLPeg32.dll*, which is a 32-bit Windows DLL.
 
-[Lexilla]: https://scintilla.org/ScintillaDoc.html#Lexilla
+[Lexilla]: https://scintilla.org/LexillaDoc.html
 
 #### Using Scintillua with SciTE
 
@@ -102,13 +102,13 @@ Scintillua's lexers. These include, but are not limited to:
 #### Using Scintillua with Other Apps
 
 In order to drop Scintillua into any other existing installation of a
-Scintilla-based application that supports the Lexilla interface, that
-application must allow you to:
+Scintilla-based application that supports the Lexilla protocol, that application
+must allow you to:
 
 * Define the location of Scintillua's *LexLPeg.dll* (Windows) or *liblexlpeg.so*
   (Linux) library.
 * Specify the path to Scintillua's *lexers/* via an internal call to the Lexilla
-  interface's `SetLibraryProperty()` function using the "lpeg.home" key.
+  protocol's `SetLibraryProperty()` function using the "lpeg.home" key.
 
 Scintillua's lexers support the following properties:
 

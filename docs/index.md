@@ -20,19 +20,22 @@ that case.
 * Support for [over 120][] programming languages.
 * Easy lexer embedding for multi-language lexers.
 * Universal color themes.
-* Comparable speed to native Scintilla lexers.
+* Comparable speed to native Scintilla/Lexilla lexers.
 * Can be used as a standalone Lua library (Scintilla is not required).
 
 [over 120]: lexerlist.html
 
 ## Requirements
 
-Scintillua requires Scintilla 4.4.5 or greater. The drop-in external lexer
-already has Lua and LPeg are pre-compiled into it.
+Scintillua requires Scintilla 4.4.5 or greater for a drop-in installation. When
+compiling Scintillua, Scintilla 5.0.0 or greater and [Lexilla][] 5.0.0 are
+required. The drop-in external lexer already has Lua and LPeg are pre-compiled
+into it.
 
 When used a standalone Lua library, Scintillua requires Lua 5.1 or greater and
 [LPeg][] 1.0.0 or greater. Scintilla is not required.
 
+[Lexilla]: https://www.scintilla.org/Lexilla.html
 [LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/
 
 ## Download
@@ -85,8 +88,10 @@ In order to build the external lexer:
 
 1. Place a copy of Scintilla in the root directory of Scintillua (the Scintilla
    directory should be called *scintilla/*).
-2. Run `make` or `make win`.
-3. The external lexer is either *lexers/liblexlpeg.so* or *lexers/LexLPeg.dll*.
+2. Place a copy of Lexilla in the root directory of Scintillua (the Lexilla
+   directory should be called *lexilla/*).
+3. Run `make` or `make win`.
+4. The external lexer is either *lexers/liblexlpeg.so* or *lexers/LexLPeg.dll*.
 
 For more information on compiling Scintillua, including how to compile
 Scintillua directly into your Scintilla-based application please see the
