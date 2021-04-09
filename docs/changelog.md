@@ -28,8 +28,8 @@ Changes:
 * Updated PHP lexer with keywords, types, and constants.
 * Refactored legacy D, SML, SNOBOL4, Taskpaper, and YAML lexers.
 * Removed vbscript lexer in favor of using the vb lexer as vbscript.
-* Added Clojure, Elm, Fantom, fstab, Julia, Meson, Pony, Reason, RouterOS, Spin,
-  systemd, systemd-networkd, Xs, and Zig lexers.
+* Added Clojure, Elm, Fantom, fstab, Julia, Meson, Pony, Reason, RouterOS, Spin, systemd,
+  systemd-networkd, Xs, and Zig lexers.
 * Updated Nim lexer to support block comments.
 * Updated Lua lexer with Lua 5.4 additions.
 
@@ -48,8 +48,7 @@ Bugfixes:
 Changes:
 
 * Scintillua supports the [Lexilla][] interface.
-* Deprecated `lexer.fold_line_comments()` in favor of
-  [`lexer.fold_consecutive_lines()`][].
+* Deprecated `lexer.fold_line_comments()` in favor of [`lexer.fold_consecutive_lines()`][].
 * Added `fold.line.groups` property and [`lexer.fold_line_groups`][] alias.
 * Added 64-bit and 32-bit Windows DLLs.
 * Added jq lexer.
@@ -75,13 +74,11 @@ Bugfixes:
 
 Changes:
 
-* Added [SCI_GETNAMEDSTYLES][] for retrieving the style number associated with
-  a style name.
+* Added [SCI_GETNAMEDSTYLES][] for retrieving the style number associated with a style name.
 * Added Fennel lexer.
 * Updated Markdown lexer to handle code blocks and spans better.
-* Added [`lexer.colors`][] and [`lexer.styles`][] tables for themes and lexers
-  in order to have a more table-oriented approach to defining and using colors
-  and styles.
+* Added [`lexer.colors`][] and [`lexer.styles`][] tables for themes and lexers in order to have
+  a more table-oriented approach to defining and using colors and styles.
 * Deprecated `lexer.ascii`, `lexer.extend`, `lexer.cntrl`, `lexer.print`, and
   `lexer.nonnewline_esc` patterns.
 * Alias [`lexer.fold*`][] to `lexer.property['fold*']`.
@@ -114,15 +111,13 @@ Changes:
 * `lexer.lpeg.home` property can contain multiple paths separated by `;`.
 * Added [SCI\_LOADLEXERLIBRARY][] for appending paths to `lexer.lpeg.home`.
 * Added [SCI\_PROPERTYNAMES][] for retrieving a list of known lexer names.
-* Implement Scintilla's `SCI_NAMEOFSTYLE` for retrieving style names. Retrieving
-  by number via SCI\_PRIVATECALL is no longer supported.
-* Switched to 1-based indices. The only 3rd party lexers affected are those
-  implementing their own fold functions.
-* Added [`lexer.range()`][] and [`lexer.to_eol()`][] convenience functions,
-  replacing `lexer.delimited_range()`, `lexer.nested_pair()`, and
-  `patt * lexer.nonnewline^0`.
-* Added [`lexer.number`][] convenience pattern, replacing
-  `lexer.float + lexer.integer`.
+* Implement Scintilla's `SCI_NAMEOFSTYLE` for retrieving style names. Retrieving by number via
+  SCI\_PRIVATECALL is no longer supported.
+* Switched to 1-based indices. The only 3rd party lexers affected are those implementing their
+  own fold functions.
+* Added [`lexer.range()`][] and [`lexer.to_eol()`][] convenience functions, replacing
+  `lexer.delimited_range()`, `lexer.nested_pair()`, and `patt * lexer.nonnewline^0`.
+* Added [`lexer.number`][] convenience pattern, replacing `lexer.float + lexer.integer`.
 
 [Scintilla 3.20.0]: https://sourceforge.net/projects/scintilla/files/scintilla/3.20.0/scintilla3200.zip/download
 [SCI\_LOADLEXERLIBRARY]: api.html#SCI_LOADLEXERLIBRARY
@@ -266,15 +261,14 @@ Changes:
 * Renamed `lexer.LEXERPATH` to `lexer.path`.
 * Added [`lexer.new()`][].
 * Replaced `lexer._rules`, `lexer._tokenstyles`, and `lexer._foldsymbols` with
-  [`lexer.add_rule()`][], [`lexer.add_style()`][], and
-  [`lexer.add_fold_point()`][], respectively.
+  [`lexer.add_rule()`][], [`lexer.add_style()`][], and [`lexer.add_fold_point()`][], respectively.
 * Renamed `lexer.embed_lexer()` to [`lexer.embed()`][].
-* Changed [`lexer.word_match()`][] arguments to accept a word string and
-  case-sensitivity flag, eliminating word chars argument.
-* Replaced `lexer._RULES[]` and `lexer._RULES[] =` with [`lexer.get_rule()`][]
-  and [`lexer.modify_rule()`][], respectively.
-* Refactored lexers to be more [object-oriented][]. Legacy lexers will still
-  work, but it's recommended to [migrate them][].
+* Changed [`lexer.word_match()`][] arguments to accept a word string and case-sensitivity flag,
+  eliminating word chars argument.
+* Replaced `lexer._RULES[]` and `lexer._RULES[] =` with [`lexer.get_rule()`][] and
+  [`lexer.modify_rule()`][], respectively.
+* Refactored lexers to be more [object-oriented][]. Legacy lexers will still work, but it's
+  recommended to [migrate them][].
 * Updated lexer template.
 * Added `fold.compact` property for folding trailing blank lines.
 
@@ -367,8 +361,8 @@ Bugfixes:
 
 Changes:
 
-* Added [`lexer.STYLE_FOLDDISPLAYTEXT`][] style (`style.folddisplaytext` in
-  themes) for fold display text.
+* Added [`lexer.STYLE_FOLDDISPLAYTEXT`][] style (`style.folddisplaytext` in themes) for fold
+  display text.
 * Updated to [Scintilla][]/[SciTE][] 3.7.1.
 
 [Scintillua 3.7.1-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.7.1-1.zip
@@ -452,8 +446,8 @@ Bugfixes:
 
 Changes:
 
-* Themes must `require('lexer')` now (if they are not already), and cannot rely
-  on `lexer` to be globally defined. **This is a breaking change.**
+* Themes must `require('lexer')` now (if they are not already), and cannot rely on `lexer`
+  to be globally defined. **This is a breaking change.**
 
 [Scintillua 3.6.4-2]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.6.4-2.zip
 
@@ -471,8 +465,7 @@ Bugfixes:
 Changes:
 
 * Recognize `weight` [style property][].
-* Added [`lexer.line_state`][] and [`lexer.line_from_position()`][] for
-  [stateful lexers][].
+* Added [`lexer.line_state`][] and [`lexer.line_from_position()`][] for [stateful lexers][].
 * Updated Elixir and JavaScript lexers.
 * Updated to [Scintilla][]/[SciTE][] 3.6.4.
 
@@ -496,8 +489,8 @@ Bugfixes:
 
 Changes:
 
-* Added SNOBOL4, Icon, AutoIt, APL, Faust, Ledger, man/roff, Pure, Dockerfile,
-  MoonScript, and PICO-8 lexers.
+* Added SNOBOL4, Icon, AutoIt, APL, Faust, Ledger, man/roff, Pure, Dockerfile, MoonScript,
+  and PICO-8 lexers.
 * Updated Elixir lexer.
 * Updated to [Scintilla][]/[SciTE][] 3.6.3.
 
@@ -620,8 +613,7 @@ Changes:
 * Renamed Nimrod lexer to Nim.
 * Added Rust lexer.
 * Added TOML lexer.
-* Lexers that fold by indentation should make use of [`_FOLDBYINDENTATION`][]
-  field now.
+* Lexers that fold by indentation should make use of [`_FOLDBYINDENTATION`][] field now.
 * Added PowerShell lexer.
 * Updated to [Scintilla][]/[SciTE][] 3.5.5.
 
@@ -779,9 +771,8 @@ Changes:
 
 ### 3.3.7-1 (21 Dec 2013)
 
-Scintillua 3.3.7-1 is a major change from 3.3.2-1. It has a completely new
-[theme implementation][] and many lexer structure and API changes. Custom lexers
-and themes will need to be updated.
+Scintillua 3.3.7-1 is a major change from 3.3.2-1. It has a completely new [theme implementation][]
+and many lexer structure and API changes. Custom lexers and themes will need to be updated.
 
 Download:
 
@@ -789,8 +780,7 @@ Download:
 
 Bugfixes:
 
-* Ensure the default style is not considered a whitespace style in
-  multi-language lexers.
+* Ensure the default style is not considered a whitespace style in multi-language lexers.
 * Fixed occasional crash when getting the lexer name in a multi-language lexer.
 * Disable folding when `fold` property is `0`.
 * HTML and XML lexers maintain their states better.
@@ -799,24 +789,21 @@ Bugfixes:
 
 Changes:
 
-* Completely new [theme implementation][]; removed `lexer.style()` and
-  `lexer.color()` functions.
+* Completely new [theme implementation][]; removed `lexer.style()` and `lexer.color()` functions.
 * Changed [`lexer._tokenstyles`][] to be a map instead of a list.
-* Changed `lexer.get_fold_level()`, `lexer.get_indent_amount()`,
-  `lexer.get_property()`, and `lexer.get_style_at()` functions to be
-  [`lexer.fold_level`][], [`lexer.indent_amount`][], [`lexer.property`][], and
-  [`lexer.style_at`][] tables, respectively.
+* Changed `lexer.get_fold_level()`, `lexer.get_indent_amount()`, `lexer.get_property()`, and
+  `lexer.get_style_at()` functions to be [`lexer.fold_level`][], [`lexer.indent_amount`][],
+  [`lexer.property`][], and [`lexer.style_at`][] tables, respectively.
 * Added [`lexer.property_int`][] and [`lexer.property_expanded`][] tables.
 * Changed API for `lexer.delimited_range()` and `lexer.nested_pair()`.
-* Only enable `fold.by.indentation` property by default in
-  whitespace-significant languages.
+* Only enable `fold.by.indentation` property by default in whitespace-significant languages.
 * Updated D lexer.
 * Added Nimrod lexer.
-* Added additional parameter to [`lexer.load()`][] to allow child lexers to be
-  embedded multiple times with different start/end tokens.
+* Added additional parameter to [`lexer.load()`][] to allow child lexers to be embedded multiple
+  times with different start/end tokens.
 * Lexers do not need an "any\_char" [rule][] anymore; it is included by default.
-* [Child lexers][] do not need an explicit `M._lexer = parent` declaration
-  anymore; it is done automatically.
+* [Child lexers][] do not need an explicit `M._lexer = parent` declaration anymore; it is done
+  automatically.
 * Added NASM Assembly lexer.
 * Separated C/C++ lexer into ANSI C and C++ lexers.
 * Added Dart lexer.
@@ -902,8 +889,7 @@ Bugfixes:
 
 Changes:
 
-* Copied `container` lexer to a new `text` lexer for containers that prefer to
-  use the latter.
+* Copied `container` lexer to a new `text` lexer for containers that prefer to use the latter.
 * Added SciTE usage note on themes.
 
 [Scintillua 3.2.3-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.2.3-1.zip
@@ -922,8 +908,7 @@ Changes:
 
 * Added support for ncurses via [scinterm][].
 * Added `__DATA__` and `__END__` markers to Perl lexer.
-* Added new [`lexer.last_char_includes()`][] function for better regex
-  detection.
+* Added new [`lexer.last_char_includes()`][] function for better regex detection.
 * Updated AWK lexer.
 
 [Scintillua 3.2.2-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.2.2-1.zip
@@ -1080,8 +1065,7 @@ Changes:
 
 * Updated Coffeescript lexer.
 * Added HTML5 data attributes to HTML lexer.
-* Multiple single-line comments can be folded with the `fold.line.comments`
-  property set to 1.
+* Multiple single-line comments can be folded with the `fold.line.comments` property set to 1.
 * Added ConTeXt lexer.
 * Updated LaTeX and TeX lexers.
 * Added `l.style_embedded` to `themes/scite.lua` theme.
@@ -1120,8 +1104,8 @@ Changes:
 * Added regex support for Coffeescript lexer.
 * Embed Coffeescript lexer in HTML lexer.
 * Writing custom folding for lexers is much [easier][] now.
-* Added native folding for more than 60% of existing lexers. The rest still use
-  folding by indentation by default.
+* Added native folding for more than 60% of existing lexers. The rest still use folding by
+  indentation by default.
 
 [Scintillua 2.26-1]: https://github.com/orbitalquark/scintillua/archive/scintillua226-1.zip
 [`get_style_at()`]: api.html#lexer.style_at
@@ -1160,8 +1144,7 @@ Bugfixes:
 
 Changes:
 
-* Added Markdown, BibTeX, CMake, CUDA, Desktop Entry, F#, GLSL, and Nemerle
-  lexers.
+* Added Markdown, BibTeX, CMake, CUDA, Desktop Entry, F#, GLSL, and Nemerle lexers.
 * HTML lexer is more flexible.
 * Update Lua functions and constants to Lua 5.1.
 
@@ -1220,8 +1203,8 @@ Bugfixes:
 Changes:
 
 * No need to modify parent `_RULES` from child lexer.
-* Renamed `lexers/ocaml.lua` to `lexers/caml.lua` and `lexers/postscript.lua` to
-  `lexers/ps.lua` to conform to Scintilla names.
+* Renamed `lexers/ocaml.lua` to `lexers/caml.lua` and `lexers/postscript.lua` to `lexers/ps.lua`
+  to conform to Scintilla names.
 
 [Scintillua 2.22-pre-1]: https://github.com/orbitalquark/scintillua/archive/scintillua222-pre-1.zip
 
@@ -1298,8 +1281,7 @@ Changes:
 * Added Matlab/Octave lexer.
 * Improve speed by using `SCI_GETCHARACTERPOINTER` instead of copying strings.
 * Updated D lexer.
-* Renamed `lexers/b.lua` to `lexers/b_lang.lua`and `lexers/r.lua` to
-  `lexers/rstats.lua`.
+* Renamed `lexers/b.lua` to `lexers/b_lang.lua`and `lexers/r.lua` to `lexers/rstats.lua`.
 * Allow multiple character escape sequences.
 * Added Inform lexer.
 * Added Lilypond and NSIS lexers.

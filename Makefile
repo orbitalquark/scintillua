@@ -20,17 +20,16 @@ else
 endif
 
 # Scintilla and Lexilla.
-sci_flags = --std=c++17 -g -pedantic $(plat_flag) -Iscintilla/include \
-            -Ilexilla/include -Ilexilla/lexlib -DSCI_LEXER -W -Wall -Wno-unused
-lex_objs = PropSetSimple.o WordList.o LexerModule.o LexerSimple.o LexerBase.o \
-           Accessor.o DefaultLexer.o
+sci_flags = --std=c++17 -g -pedantic $(plat_flag) -Iscintilla/include -Ilexilla/include \
+  -Ilexilla/lexlib -DSCI_LEXER -W -Wall -Wno-unused
+lex_objs = PropSetSimple.o WordList.o LexerModule.o LexerSimple.o LexerBase.o Accessor.o \
+  DefaultLexer.o
 
 # Lua.
-lua_objs = lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o \
-           linit.o llex.o lmem.o lobject.o lopcodes.o lparser.o lstate.o \
-           lstring.o ltable.o ltm.o lundump.o lvm.o lzio.o \
-           lauxlib.o lbaselib.o lbitlib.o lcorolib.o ldblib.o liolib.o \
-           lmathlib.o loadlib.o loslib.o lstrlib.o ltablib.o lutf8lib.o
+lua_objs = lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o linit.o llex.o lmem.o \
+  lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o lundump.o lvm.o lzio.o \
+  lauxlib.o lbaselib.o lbitlib.o lcorolib.o ldblib.o liolib.o lmathlib.o loadlib.o loslib.o \
+  lstrlib.o ltablib.o lutf8lib.o
 lua_lib_objs = lpcap.o lpcode.o lpprint.o lptree.o lpvm.o
 
 # Build.
@@ -53,11 +52,8 @@ clean: ; rm -f *.o
 
 # Documentation.
 
-docs: docs/index.md docs/api.md $(wildcard docs/*.md) | \
-      docs/_layouts/default.html
-	for file in $(basename $^); do \
-		cat $| | docs/fill_layout.lua $$file.md > $$file.html; \
-	done
+docs: docs/index.md docs/api.md $(wildcard docs/*.md) | docs/_layouts/default.html
+	for file in $(basename $^); do cat $| | docs/fill_layout.lua $$file.md > $$file.html; done
 docs/index.md: README.md
 	sed -e 's/^\# [[:alpha:]]\+/## Introduction/;' -e \
 		's|https://[[:alpha:]]\+\.github\.io/[[:alpha:]]\+/||;' $< > $@
@@ -67,8 +63,7 @@ cleandocs: ; rm -f docs/*.html docs/index.md docs/api.md
 
 # Releases.
 
-basedir = scintillua_$(shell grep '^\#\#\#' docs/changelog.md | head -1 | \
-                             cut -d ' ' -f 2)
+basedir = scintillua_$(shell grep '^\#\#\#' docs/changelog.md | head -1 | cut -d ' ' -f 2)
 
 ifneq (, $(shell hg summary 2>/dev/null))
   archive = hg archive -X ".hg*" $(1)
@@ -80,8 +75,8 @@ $(basedir): ; $(call archive,$@)
 release: $(basedir)
 	make clean deps docs
 	make -j4
-	make clean && make -j4 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ \
-		win && mv lexers/LexLPeg.dll lexers/LexLPeg32.dll
+	make clean && make -j4 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ win && \
+		mv lexers/LexLPeg.dll lexers/LexLPeg32.dll
 	make clean && make -j4 win
 	cp -r docs $<
 	cp lexers/*.so lexers/*.dll $</lexers/
@@ -105,8 +100,7 @@ wscite_zip = wscite500.zip
 	ln -s `pwd`/lexers /tmp/wscite
 	sed -i 's/technology=1/technology=0/;' /tmp/wscite/SciTEGlobal.properties
 	echo "import lexers/lpeg" >> /tmp/wscite/SciTEGlobal.properties
-	echo "lexilla.context.lpeg.color.theme=light" >> \
-		/tmp/wscite/SciTEGlobal.properties
+	echo "lexilla.context.lpeg.color.theme=light" >> /tmp/wscite/SciTEGlobal.properties
 test-wscite: /tmp/wscite
 	cd /tmp/wscite && WINEPREFIX=/tmp/wscite/.wine WINEARCH=win64 wine SciTE
 
@@ -124,5 +118,4 @@ lexilla: | $(lexilla_tgz) ; tar xzf $|
 $(lua_tgz): ; wget http://www.lua.org/ftp/$@
 $(lpeg_tgz): ; wget http://www.inf.puc-rio.br/~roberto/lpeg/$@
 lua: | $(lua_tgz) ; mkdir $@ && tar xzf $| -C $@ && mv $@/*/* $@
-lua/src/lib/lpeg: | $(lpeg_tgz)
-	mkdir -p $@ && tar xzf $| -C $@ && mv $@/*/*.c $@/*/*.h $(dir $@)
+lua/src/lib/lpeg: | $(lpeg_tgz) ; mkdir -p $@ && tar xzf $| -C $@ && mv $@/*/*.c $@/*/*.h $(dir $@)

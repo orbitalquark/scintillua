@@ -17,15 +17,15 @@ local SEE = '* [`%s`](#%s)\n'
 local TABLE = '<a id="%s"></a>\n#### `%s`\n\n'
 local TFIELD = '* `%s`: %s\n'
 local titles = {
-  [PARAM] = 'Parameters', [USAGE] = 'Usage', [RETURN] = 'Return',
-  [SEE] = 'See also', [TFIELD] = 'Fields'
+  [PARAM] = 'Parameters', [USAGE] = 'Usage', [RETURN] = 'Return', [SEE] = 'See also',
+  [TFIELD] = 'Fields'
 }
 
 -- Writes a LuaDoc description to the given file.
 -- @param f The markdown file being written to.
 -- @param description The description.
--- @param name The name of the module the description belongs to. Used for
---   headers in module descriptions.
+-- @param name The name of the module the description belongs to. Used for headers in module
+--   descriptions.
 local function write_description(f, description, name)
   -- Substitute custom [`code`]() link convention with [`code`](#code) links.
   local self_link = '(%[`([^`(]+)%(?%)?`%])%(%)'
@@ -61,9 +61,7 @@ end
 local function write_hashmap(f, fmt, hashmap)
   if not hashmap or #hashmap == 0 then return end
   f:write(string.format(LIST_TITLE, titles[fmt]))
-  for _, name in ipairs(hashmap) do
-    f:write(string.format(fmt, name, hashmap[name] or ''))
-  end
+  for _, name in ipairs(hashmap) do f:write(string.format(fmt, name, hashmap[name] or '')) end
   f:write('\n')
 end
 
@@ -74,8 +72,7 @@ function M.start(doc)
   local f = io.stdout
   f:write('## Scintillua API Documentation\n\n')
 
-  -- Create a map of doc objects to file names so their Markdown doc comments
-  -- can be extracted.
+  -- Create a map of doc objects to file names so their Markdown doc comments can be extracted.
   local filedocs = {}
   for _, name in ipairs(files) do filedocs[files[name].doc] = name end
 
@@ -114,12 +111,9 @@ function M.start(doc)
         local func = funcs[fname]
         local params = table.concat(func.param, ', '):gsub('_', '\\_')
         if name == 'Scintillua' then
-          f:write(
-            string.format(FUNCTION, func.name, 'SCI_PRIVATELEXERCALL', params))
+          f:write(string.format(FUNCTION, func.name, 'SCI_PRIVATELEXERCALL', params))
         else
-          if not func.name:find('%.') then
-            func.name = name .. '.' .. func.name
-          end
+          if not func.name:find('%.') then func.name = name .. '.' .. func.name end
           f:write(string.format(FUNCTION, func.name, func.name, params))
         end
         write_description(f, func.description)

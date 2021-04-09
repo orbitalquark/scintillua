@@ -1,7 +1,7 @@
 ## Thanks
 
-Thank you everyone for your contributions and feedback. They have helped make
-Scintillua better and better over the years.
+Thank you everyone for your contributions and feedback. They have helped make Scintillua better
+and better over the years.
 
 ### Code Contributors
 
@@ -55,5 +55,4 @@ Scintillua better and better over the years.
 * Tymur Gubayev
 * Wolfgang Seeberg
 
-If I have left off your name, please contact me (see README.md). I am very sorry
-about that.
+If I have left off your name, please contact me (see README.md). I am very sorry about that.
