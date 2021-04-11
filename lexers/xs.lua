@@ -12,12 +12,13 @@ local lex = lexer.new('xs')
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
-  access alias catch cd dirs echo else escape eval exec exit false fn- fn for
-  forever fork history if jobs let limit local map omap popd printf pushd read
-  result set- switch throw time true umask until unwind-protect var vars wait
-  whats while :lt :le :gt :ge :eq :ne ~ ~~ ... .
-]]))
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+  'access', 'alias', 'catch', 'cd', 'dirs', 'echo', 'else', 'escape', 'eval', 'exec', 'exit',
+  'false', 'fn-', 'fn', 'for', 'forever', 'fork', 'history', 'if', 'jobs', 'let', 'limit', 'local',
+  'map', 'omap', 'popd', 'printf', 'pushd', 'read', 'result', 'set-', 'switch', 'throw', 'time',
+  'true', 'umask', 'until', 'unwind-protect', 'var', 'vars', 'wait', 'whats', 'while', ':lt', ':le',
+  ':gt', ':ge', ':eq', ':ne', '~', '~~', '...', '.'
+}))
 
 -- Identifiers.
 lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
@@ -26,8 +27,7 @@ lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
 local str = lexer.range("'", false, true)
 local herestr = '<<<' * str
 local heredoc = '<<' * P(function(input, index)
-  local s, e, _, delimiter = input:find('[ \t]*(["\']?)([%w!"%%+,-./:?@_~]+)%1',
-    index)
+  local s, e, _, delimiter = input:find('[ \t]*(["\']?)([%w!"%%+,-./:?@_~]+)%1', index)
   if s == index and delimiter then
     delimiter = delimiter:gsub('[%%+-.?]', '%%%1')
     local _, e = input:find('[\n\r]' .. delimiter .. '[\n\r]', e)
@@ -40,18 +40,17 @@ lex:add_rule('string', token(lexer.STRING, str + herestr + heredoc))
 lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('#')))
 
 -- Numbers.
-local number = token(lexer.NUMBER, lexer.number)
+-- lex:add_rule('number', token(lexer.NUMBER, lexer.number))
 
 -- Constants.
 lex:add_rule('constant', token(lexer.CONSTANT, '$&' * lexer.word))
 
 -- Variables.
-lex:add_rule('variable', token(lexer.VARIABLE, '$' * S('"#')^-1 * ('*' +
-  lexer.digit^1 + lexer.word)))
+lex:add_rule('variable',
+  token(lexer.VARIABLE, '$' * S('"#')^-1 * ('*' + lexer.digit^1 + lexer.word)))
 
 -- Operators.
-lex:add_rule('operator', token(lexer.OPERATOR, S('@`=!<>*&^|;?()[]{}') +
-  '\\\n'))
+lex:add_rule('operator', token(lexer.OPERATOR, S('@`=!<>*&^|;?()[]{}') + '\\\n'))
 
 -- Fold points.
 lex:add_fold_point(lexer.OPERATOR, '{', '}')

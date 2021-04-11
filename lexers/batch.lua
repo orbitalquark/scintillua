@@ -11,19 +11,20 @@ local lex = lexer.new('batch', {case_insensitive_fold_points = true})
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match([[
-  cd chdir md mkdir cls for if echo echo. move copy ren del set call exit
-  setlocal shift endlocal pause defined exist errorlevel else in do NUL AUX PRN
-  not goto pushd popd
-]], true)))
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match({
+  'cd', 'chdir', 'md', 'mkdir', 'cls', 'for', 'if', 'echo', 'echo.', 'move', 'copy', 'ren', 'del',
+  'set', 'call', 'exit', 'setlocal', 'shift', 'endlocal', 'pause', 'defined', 'exist', 'errorlevel',
+  'else', 'in', 'do', 'NUL', 'AUX', 'PRN', 'not', 'goto', 'pushd', 'popd'
+}, true)))
 
 -- Functions.
-lex:add_rule('function', token(lexer.FUNCTION, word_match([[
-  APPEND ATTRIB CHKDSK CHOICE DEBUG DEFRAG DELTREE DISKCOMP DISKCOPY DOSKEY
-  DRVSPACE EMM386 EXPAND FASTOPEN FC FDISK FIND FORMAT GRAPHICS KEYB LABEL
-  LOADFIX MEM MODE MORE MOVE MSCDEX NLSFUNC POWER PRINT RD REPLACE RESTORE
-  SETVER SHARE SORT SUBST SYS TREE UNDELETE UNFORMAT VSAFE XCOPY
-]], true)))
+lex:add_rule('function', token(lexer.FUNCTION, word_match({
+  'APPEND', 'ATTRIB', 'CHKDSK', 'CHOICE', 'DEBUG', 'DEFRAG', 'DELTREE', 'DISKCOMP', 'DISKCOPY',
+  'DOSKEY', 'DRVSPACE', 'EMM386', 'EXPAND', 'FASTOPEN', 'FC', 'FDISK', 'FIND', 'FORMAT', 'GRAPHICS',
+  'KEYB', 'LABEL', 'LOADFIX', 'MEM', 'MODE', 'MORE', 'MOVE', 'MSCDEX', 'NLSFUNC', 'POWER', 'PRINT',
+  'RD', 'REPLACE', 'RESTORE', 'SETVER', 'SHARE', 'SORT', 'SUBST', 'SYS', 'TREE', 'UNDELETE',
+  'UNFORMAT', 'VSAFE', 'XCOPY'
+}, true)))
 
 -- Comments.
 local rem = (P('REM') + 'rem') * #lexer.space

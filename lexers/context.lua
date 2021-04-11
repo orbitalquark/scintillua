@@ -18,23 +18,20 @@ lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('%')))
 
 -- Sections.
-local wm_section = word_match[[
-  chapter part section subject subsection subsubject subsubsection subsubsubject
-  subsubsubsection subsubsubsubject title
-]]
+local wm_section = word_match{
+  'chapter', 'part', 'section', 'subject', 'subsection', 'subsubject', 'subsubsection',
+  'subsubsubject', 'subsubsubsection', 'subsubsubsubject', 'title'
+}
 local section = token(lexer.CLASS, '\\' * startstop^-1 * wm_section)
 lex:add_rule('section', section)
 
 -- TeX and ConTeXt mkiv environments.
-local environment = token(lexer.STRING, '\\' * (beginend + startstop) *
-  lexer.alpha^1)
+local environment = token(lexer.STRING, '\\' * (beginend + startstop) * lexer.alpha^1)
 lex:add_rule('environment', environment)
 
 -- Commands.
-local command = token(lexer.KEYWORD, '\\' * (
-  lexer.alpha^1 * P('\\') * lexer.space^1 +
-  lexer.alpha^1 +
-  S('!"#$%&\',./;=[\\]_{|}~`^-')))
+local command = token(lexer.KEYWORD, '\\' *
+  (lexer.alpha^1 * P('\\') * lexer.space^1 + lexer.alpha^1 + S('!"#$%&\',./;=[\\]_{|}~`^-')))
 lex:add_rule('command', command)
 
 -- Operators.

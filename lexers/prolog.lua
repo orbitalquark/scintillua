@@ -26,7 +26,7 @@
 local lexer = require('lexer')
 
 local token, word_match = lexer.token, lexer.word_match
-local P, S, B, V, C = lpeg.P, lpeg.S, lpeg.B, lpeg.V, lpeg.C
+local P, S = lpeg.P, lpeg.S
 
 local lex = lexer.new('prolog')
 
@@ -72,7 +72,7 @@ directives.swipl = directives.iso .. [[
 ]]
 lex:add_rule('directive',
   token(lexer.WHITESPACE, lexer.starts_line(S(' \t'))^0) *
-  token(lexer.OPERATOR, P(':-')) *
+  token(lexer.OPERATOR, ':-') *
   token(lexer.WHITESPACE, S(' \t')^0) *
   token(lexer.PREPROCESSOR, word_match(directives[dialect])))
 

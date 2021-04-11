@@ -13,24 +13,24 @@ local ws = token(lexer.WHITESPACE, lexer.space^1)
 lex:add_rule('whitespace', ws)
 
 -- Classes.
-lex:add_rule('classdef', token(lexer.KEYWORD, P('class')) * ws *
-  token(lexer.CLASS, lexer.word))
+lex:add_rule('classdef', token(lexer.KEYWORD, 'class') * ws * token(lexer.CLASS, lexer.word))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
-  abstract assert break case catch class const continue default do else enum
-  extends final finally for goto if implements import instanceof interface
-  native new package private protected public return static strictfp super
-  switch synchronized this throw throws transient try while volatile
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+  'abstract', 'assert', 'break', 'case', 'catch', 'class', 'const', 'continue', 'default', 'do',
+  'else', 'enum', 'extends', 'final', 'finally', 'for', 'goto', 'if', 'implements', 'import',
+  'instanceof', 'interface', 'native', 'new', 'package', 'private', 'protected', 'public', 'return',
+  'static', 'strictfp', 'super', 'switch', 'synchronized', 'this', 'throw', 'throws', 'transient',
+  'try', 'while', 'volatile',
   -- Literals.
-  true false null
-]]))
+  'true', 'false', 'null'
+}))
 
 -- Types.
-lex:add_rule('type', token(lexer.TYPE, word_match[[
-  boolean byte char double float int long short void
-  Boolean Byte Character Double Float Integer Long Short String
-]]))
+lex:add_rule('type', token(lexer.TYPE, word_match{
+  'boolean', 'byte', 'char', 'double', 'float', 'int', 'long', 'short', 'void', 'Boolean', 'Byte',
+  'Character', 'Double', 'Float', 'Integer', 'Long', 'Short', 'String'
+}))
 
 -- Functions.
 lex:add_rule('function', token(lexer.FUNCTION, lexer.word) * #P('('))

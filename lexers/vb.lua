@@ -11,29 +11,27 @@ local lex = lexer.new('vb')
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match([[
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match({
   -- Control.
-  If Then Else ElseIf While Wend For To Each In Step Case Select Return Continue
-  Do Until Loop Next With Exit
+  'If', 'Then', 'Else', 'ElseIf', 'While', 'Wend', 'For', 'To', 'Each', 'In', 'Step', 'Case',
+  'Select', 'Return', 'Continue', 'Do', 'Until', 'Loop', 'Next', 'With', 'Exit',
   -- Operators.
-  Mod And Not Or Xor Is
+  'Mod', 'And', 'Not', 'Or', 'Xor', 'Is',
   -- Storage types.
-  Call Class Const Dim ReDim Preserve Function Sub Property End Set Let Get New
-  Randomize Option Explicit On Error Execute
+  'Call', 'Class', 'Const', 'Dim', 'ReDim', 'Preserve', 'Function', 'Sub', 'Property', 'End', 'Set',
+  'Let', 'Get', 'New', 'Randomize', 'Option', 'Explicit', 'On', 'Error', 'Execute',
   -- Storage modifiers.
-  Private Public Default
+  'Private', 'Public', 'Default',
   -- Constants.
-  Empty False Nothing Null True
-]], true)))
+  'Empty', 'False', 'Nothing', 'Null', 'True'
+}, true)))
 
 -- Types.
-lex:add_rule('type', token(lexer.TYPE, word_match([[
-  Boolean Byte Char Date Decimal Double Long Object Short Single String
-]], true)))
+lex:add_rule('type', token(lexer.TYPE, word_match(
+  'Boolean Byte Char Date Decimal Double Long Object Short Single String', true)))
 
 -- Comments.
-lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol("'" +
-  word_match('rem', true))))
+lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol("'" + word_match('rem', true))))
 
 -- Identifiers.
 lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))

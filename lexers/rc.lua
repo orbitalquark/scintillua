@@ -11,10 +11,10 @@ local lex = lexer.new('rc')
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
-  for in while if not switch case fn builtin cd eval exec exit flag rfork shift
-  ulimit umask wait whatis . ~
-]]))
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+  'for', 'in', 'while', 'if', 'not', 'switch', 'case', 'fn', 'builtin', 'cd', 'eval', 'exec',
+  'exit', 'flag', 'rfork', 'shift', 'ulimit', 'umask', 'wait', 'whatis', '.', '~'
+}))
 
 -- Identifiers.
 lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
@@ -22,8 +22,7 @@ lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
 -- Strings.
 local str = lexer.range("'", false, false)
 local heredoc = '<<' * P(function(input, index)
-  local s, e, _, delimiter = input:find('[ \t]*(["\']?)([%w!"%%+,-./:?@_~]+)%1',
-    index)
+  local s, e, _, delimiter = input:find('[ \t]*(["\']?)([%w!"%%+,-./:?@_~]+)%1', index)
   if s == index and delimiter then
     delimiter = delimiter:gsub('[%%+-.?]', '%%%1')
     local _, e = input:find('[\n\r]' .. delimiter .. '[\n\r]', e)
@@ -39,12 +38,11 @@ lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('#')))
 lex:add_rule('number', token(lexer.NUMBER, lexer.number))
 
 -- Variables.
-lex:add_rule('variable', token(lexer.VARIABLE, '$' * S('"#')^-1 *
-  ('*' + lexer.digit^1 + lexer.word)))
+lex:add_rule('variable',
+  token(lexer.VARIABLE, '$' * S('"#')^-1 * ('*' + lexer.digit^1 + lexer.word)))
 
 -- Operators.
-lex:add_rule('operator', token(lexer.OPERATOR, S('@`=!<>*&^|;?()[]{}') +
-  '\\\n'))
+lex:add_rule('operator', token(lexer.OPERATOR, S('@`=!<>*&^|;?()[]{}') + '\\\n'))
 
 -- Fold points.
 lex:add_fold_point(lexer.OPERATOR, '{', '}')

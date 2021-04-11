@@ -11,27 +11,26 @@ local lex = lexer.new('go')
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
-  break case chan const continue default defer else fallthrough for func go goto
-  if import interface map package range return select struct switch type var
-]]))
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+  'break', 'case', 'chan', 'const', 'continue', 'default', 'defer', 'else', 'fallthrough', 'for',
+  'func', 'go', 'goto', 'if', 'import', 'interface', 'map', 'package', 'range', 'return', 'select',
+  'struct', 'switch', 'type', 'var'
+}))
 
 -- Constants.
-lex:add_rule('constant', token(lexer.CONSTANT, word_match[[
-  true false iota nil
-]]))
+lex:add_rule('constant', token(lexer.CONSTANT, word_match('true false iota nil')))
 
 -- Types.
-lex:add_rule('type', token(lexer.TYPE, word_match[[
-  bool byte complex64 complex128 error float32 float64 int int8 int16 int32
-  int64 rune string uint uint8 uint16 uint32 uint64 uintptr
-]]))
+lex:add_rule('type', token(lexer.TYPE, word_match{
+  'bool', 'byte', 'complex64', 'complex128', 'error', 'float32', 'float64', 'int', 'int8', 'int16',
+  'int32', 'int64', 'rune', 'string', 'uint', 'uint8', 'uint16', 'uint32', 'uint64', 'uintptr'
+}))
 
 -- Functions.
-lex:add_rule('function', token(lexer.FUNCTION, word_match[[
-  append cap close complex copy delete imag len make new panic print println
-  real recover
-]]))
+lex:add_rule('function', token(lexer.FUNCTION, word_match{
+  'append', 'cap', 'close', 'complex', 'copy', 'delete', 'imag', 'len', 'make', 'new', 'panic',
+  'print', 'println', 'real', 'recover'
+}))
 
 -- Identifiers.
 lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))

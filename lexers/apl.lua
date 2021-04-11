@@ -24,13 +24,12 @@ local rad = P('.')
 local exp = S('eE')
 local img = S('jJ')
 local sgn = P('¯')^-1
-local float = sgn * (dig^0 * rad * dig^1 + dig^1 * rad * dig^0 + dig^1) *
-  (exp * sgn *dig^1)^-1
+local float = sgn * (dig^0 * rad * dig^1 + dig^1 * rad * dig^0 + dig^1) * (exp * sgn * dig^1)^-1
 lex:add_rule('number', token(lexer.NUMBER, float * img * float + float))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, P('⍞') + 'χ' + '⍺' + '⍶' + '⍵' +
-  '⍹' + '⎕' * lexer.alpha^0))
+lex:add_rule('keyword', token(lexer.KEYWORD,
+  P('⍞') + 'χ' + '⍺' + '⍶' + '⍵' + '⍹' + '⎕' * lexer.alpha^0))
 
 -- Names.
 local n1l = lexer.alpha

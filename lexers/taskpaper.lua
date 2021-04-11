@@ -21,8 +21,8 @@ lex:add_style('task', lexer.styles['function'])
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Projects.
-lex:add_rule('project', token('project',
-  lexer.range(lexer.starts_line(lexer.alnum), ':') * lexer.newline))
+lex:add_rule('project',
+  token('project', lexer.range(lexer.starts_line(lexer.alnum), ':') * lexer.newline))
 lex:add_style('project', lexer.styles.label)
 
 -- Tags.
@@ -31,7 +31,7 @@ lex:add_rule('extended_tag', token('extended_tag', '@' * lexer.word * '(' *
 lex:add_style('extended_tag', lexer.styles.comment)
 lex:add_rule('day_tag', token('day_tag', (P('@today') + '@tomorrow')))
 lex:add_style('day_tag', lexer.styles.class)
-lex:add_rule('overdue_tag', token('overdue_tag', P('@overdue')))
+lex:add_rule('overdue_tag', token('overdue_tag', '@overdue'))
 lex:add_style('overdue_tag', lexer.styles.preprocessor)
 lex:add_rule('plain_tag', token('plain_tag', '@' * lexer.word))
 lex:add_style('plain_tag', lexer.styles.comment)

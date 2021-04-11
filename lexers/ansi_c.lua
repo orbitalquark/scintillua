@@ -12,46 +12,46 @@ local ws = token(lexer.WHITESPACE, lexer.space^1)
 lex:add_rule('whitespace', ws)
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
-  auto break case const continue default do else enum extern for goto if inline
-  register restrict return sizeof static switch typedef volatile while
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+  'auto', 'break', 'case', 'const', 'continue', 'default', 'do', 'else', 'enum', 'extern', 'for',
+  'goto', 'if', 'inline', 'register', 'restrict', 'return', 'sizeof', 'static', 'switch', 'typedef',
+  'volatile', 'while',
   -- C99.
-  false true
+  'false', 'true',
   -- C11.
-  _Alignas _Alignof _Atomic _Generic _Noreturn _Static_assert _Thread_local
+  '_Alignas', '_Alignof', '_Atomic', '_Generic', '_Noreturn', '_Static_assert', '_Thread_local',
   -- Compiler.
-  asm __asm __asm__ __restrict__ __inline __inline__ __attribute__ __declspec
-]]))
+  'asm', '__asm', '__asm__', '__restrict__', '__inline', '__inline__', '__attribute__', '__declspec'
+}))
 
 -- Types.
-lex:add_rule('type', token(lexer.TYPE, word_match[[
-  bool char double float int long short signed struct union unsigned void
-  _Bool _Complex _Imaginary
+lex:add_rule('type', token(lexer.TYPE, word_match{
+  'bool', 'char', 'double', 'float', 'int', 'long', 'short', 'signed', 'struct', 'union',
+  'unsigned', 'void', '_Bool', '_Complex', '_Imaginary',
   -- Stdlib types.
-  ptrdiff_t size_t max_align_t wchar_t intptr_t uintptr_t intmax_t uintmax_t
-]] + P('u')^-1 * 'int' * (P('_least') + '_fast')^-1 * lexer.digit^1 * '_t'))
+  'ptrdiff_t', 'size_t', 'max_align_t', 'wchar_t', 'intptr_t', 'uintptr_t', 'intmax_t', 'uintmax_t'
+} + P('u')^-1 * 'int' * (P('_least') + '_fast')^-1 * lexer.digit^1 * '_t'))
 
 -- Constants.
-lex:add_rule('constants', token(lexer.CONSTANT, word_match[[
-  NULL
+lex:add_rule('constants', token(lexer.CONSTANT, word_match{
+  'NULL',
   -- Preprocessor.
-  __DATE__ __FILE__ __LINE__ __TIME__ __func__
+  '__DATE__', '__FILE__', '__LINE__', '__TIME__', '__func__',
   -- errno.h.
-  E2BIG EACCES EADDRINUSE EADDRNOTAVAIL EAFNOSUPPORT EAGAIN EALREADY EBADF
-  EBADMSG EBUSY ECANCELED ECHILD ECONNABORTED ECONNREFUSED ECONNRESET EDEADLK
-  EDESTADDRREQ EDOM EDQUOT EEXIST EFAULT EFBIG EHOSTUNREACH EIDRM EILSEQ
-  EINPROGRESS EINTR EINVAL EIO EISCONN EISDIR ELOOP EMFILE EMLINK EMSGSIZE
-  EMULTIHOP ENAMETOOLONG ENETDOWN ENETRESET ENETUNREACH ENFILE ENOBUFS ENODATA
-  ENODEV ENOENT ENOEXEC ENOLCK ENOLINK ENOMEM ENOMSG ENOPROTOOPT ENOSPC ENOSR
-  ENOSTR ENOSYS ENOTCONN ENOTDIR ENOTEMPTY ENOTRECOVERABLE ENOTSOCK ENOTSUP
-  ENOTTY ENXIO EOPNOTSUPP EOVERFLOW EOWNERDEAD EPERM EPIPE EPROTO
-  EPROTONOSUPPORT EPROTOTYPE ERANGE EROFS ESPIPE ESRCH ESTALE ETIME ETIMEDOUT
-  ETXTBSY EWOULDBLOCK EXDEV
+  'E2BIG', 'EACCES', 'EADDRINUSE', 'EADDRNOTAVAIL', 'EAFNOSUPPORT', 'EAGAIN', 'EALREADY', 'EBADF',
+  'EBADMSG', 'EBUSY', 'ECANCELED', 'ECHILD', 'ECONNABORTED', 'ECONNREFUSED', 'ECONNRESET',
+  'EDEADLK', 'EDESTADDRREQ', 'EDOM', 'EDQUOT', 'EEXIST', 'EFAULT', 'EFBIG', 'EHOSTUNREACH', 'EIDRM',
+  'EILSEQ', 'EINPROGRESS', 'EINTR', 'EINVAL', 'EIO', 'EISCONN', 'EISDIR', 'ELOOP', 'EMFILE',
+  'EMLINK', 'EMSGSIZE', 'EMULTIHOP', 'ENAMETOOLONG', 'ENETDOWN', 'ENETRESET', 'ENETUNREACH',
+  'ENFILE', 'ENOBUFS', 'ENODATA', 'ENODEV', 'ENOENT', 'ENOEXEC', 'ENOLCK', 'ENOLINK', 'ENOMEM',
+  'ENOMSG', 'ENOPROTOOPT', 'ENOSPC', 'ENOSR', 'ENOSTR', 'ENOSYS', 'ENOTCONN', 'ENOTDIR',
+  'ENOTEMPTY', 'ENOTRECOVERABLE', 'ENOTSOCK', 'ENOTSUP', 'ENOTTY', 'ENXIO', 'EOPNOTSUPP',
+  'EOVERFLOW', 'EOWNERDEAD', 'EPERM', 'EPIPE', 'EPROTO', 'EPROTONOSUPPORT', 'EPROTOTYPE', 'ERANGE',
+  'EROFS', 'ESPIPE', 'ESRCH', 'ESTALE', 'ETIME', 'ETIMEDOUT', 'ETXTBSY', 'EWOULDBLOCK', 'EXDEV',
   -- stdint.h.
-  PTRDIFF_MIN PTRDIFF_MAX SIZE_MAX SIG_ATOMIC_MIN SIG_ATOMIC_MAX WINT_MIN
-  WINT_MAX WCHAR_MIN WCHAR_MAX
-]] + P('U')^-1 * 'INT' *
-  ((P('_LEAST') + '_FAST')^-1 * lexer.digit^1 + 'PTR' + 'MAX') *
+  'PTRDIFF_MIN', 'PTRDIFF_MAX', 'SIZE_MAX', 'SIG_ATOMIC_MIN', 'SIG_ATOMIC_MAX', 'WINT_MIN',
+  'WINT_MAX', 'WCHAR_MIN', 'WCHAR_MAX'
+} + P('U')^-1 * 'INT' * ((P('_LEAST') + '_FAST')^-1 * lexer.digit^1 + 'PTR' + 'MAX') *
   (P('_MIN') + '_MAX')))
 
 -- Labels.
@@ -79,9 +79,8 @@ lex:add_rule('number', token(lexer.NUMBER, float + integer))
 -- Preprocessor.
 local include = token(lexer.PREPROCESSOR, '#' * S('\t ')^0 * 'include') *
   (ws * token(lexer.STRING, lexer.range('<', '>', true)))^-1
-local preproc = token(lexer.PREPROCESSOR, '#' * S('\t ')^0 * word_match[[
-  define elif else endif if ifdef ifndef line pragma undef
-]])
+local preproc = token(lexer.PREPROCESSOR, '#' * S('\t ')^0 *
+  word_match('define elif else endif if ifdef ifndef line pragma undef'))
 lex:add_rule('preprocessor', include + preproc)
 
 -- Operators.

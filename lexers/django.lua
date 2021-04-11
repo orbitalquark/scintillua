@@ -11,22 +11,23 @@ local lex = lexer.new('django')
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
-  as block blocktrans by endblock endblocktrans comment endcomment cycle date
-  debug else extends filter endfilter firstof for endfor if endif ifchanged
-  endifchanged ifnotequal endifnotequal in load not now or parsed regroup ssi
-  trans with widthratio
-]]))
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+  'as', 'block', 'blocktrans', 'by', 'endblock', 'endblocktrans', 'comment', 'endcomment', 'cycle',
+  'date', 'debug', 'else', 'extends', 'filter', 'endfilter', 'firstof', 'for', 'endfor', 'if',
+  'endif', 'ifchanged', 'endifchanged', 'ifnotequal', 'endifnotequal', 'in', 'load', 'not', 'now',
+  'or', 'parsed', 'regroup', 'ssi', 'trans', 'with', 'widthratio'
+}))
 
 -- Functions.
-lex:add_rule('function', token(lexer.FUNCTION, word_match[[
-  add addslashes capfirst center cut date default dictsort dictsortreversed
-  divisibleby escape filesizeformat first fix_ampersands floatformat get_digit
-  join length length_is linebreaks linebreaksbr linenumbers ljust lower
-  make_list phone2numeric pluralize pprint random removetags rjust slice slugify
-  stringformat striptags time timesince title truncatewords unordered_list upper
-  urlencode urlize urlizetrunc wordcount wordwrap yesno
-]]))
+lex:add_rule('function', token(lexer.FUNCTION, word_match{
+  'add', 'addslashes', 'capfirst', 'center', 'cut', 'date', 'default', 'dictsort',
+  'dictsortreversed', 'divisibleby', 'escape', 'filesizeformat', 'first', 'fix_ampersands',
+  'floatformat', 'get_digit', 'join', 'length', 'length_is', 'linebreaks', 'linebreaksbr',
+  'linenumbers', 'ljust', 'lower', 'make_list', 'phone2numeric', 'pluralize', 'pprint', 'random',
+  'removetags', 'rjust', 'slice', 'slugify', 'stringformat', 'striptags', 'time', 'timesince',
+  'title', 'truncatewords', 'unordered_list', 'upper', 'urlencode', 'urlize', 'urlizetrunc',
+  'wordcount', 'wordwrap', 'yesno'
+}))
 
 -- Identifiers.
 lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))

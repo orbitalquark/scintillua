@@ -11,11 +11,11 @@ local lex = lexer.new('desktop')
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keys.
-lex:add_rule('key', token('key', word_match[[
-  Type Version Name GenericName NoDisplay Comment Icon Hidden OnlyShowIn
-  NotShowIn TryExec Exec Exec Path Terminal MimeType Categories StartupNotify
-  StartupWMClass URL
-]]))
+lex:add_rule('key', token('key', word_match{
+  'Type', 'Version', 'Name', 'GenericName', 'NoDisplay', 'Comment', 'Icon', 'Hidden', 'OnlyShowIn',
+  'NotShowIn', 'TryExec', 'Exec', 'Exec', 'Path', 'Terminal', 'MimeType', 'Categories',
+  'StartupNotify', 'StartupWMClass', 'URL'
+}))
 lex:add_style('key', lexer.styles.keyword)
 
 -- Values.
@@ -23,12 +23,10 @@ lex:add_rule('value', token('value', word_match('true false')))
 lex:add_style('value', lexer.styles.constant)
 
 -- Identifiers.
-local word = lexer.alpha * (lexer.alnum + S('_-'))^0
-lex:add_rule('identifier', lexer.token(lexer.IDENTIFIER, word))
-
-local bracketed = lexer.range('[', ']')
+lex:add_rule('identifier', lexer.token(lexer.IDENTIFIER, lexer.alpha * (lexer.alnum + S('_-'))^0))
 
 -- Group headers.
+local bracketed = lexer.range('[', ']')
 lex:add_rule('header', lexer.starts_line(token('header', bracketed)))
 lex:add_style('header', lexer.styles.label)
 
@@ -46,7 +44,7 @@ lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('#')))
 lex:add_rule('number', token(lexer.NUMBER, lexer.number))
 
 -- Field codes.
-lex:add_rule('code', lexer.token('code', P('%') * S('fFuUdDnNickvm')))
+lex:add_rule('code', lexer.token('code', '%' * S('fFuUdDnNickvm')))
 lex:add_style('code', lexer.styles.variable)
 
 -- Operators.

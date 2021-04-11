@@ -12,15 +12,16 @@ local lex = lexer.new('fennel', {inherit = lexer.load('lua')})
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
-lex:modify_rule('keyword', token(lexer.KEYWORD, word_match[[
-  % * + - ->> -> -?>> -?> .. . // / : <= < = >= > ^ ~= λ
-  and comment do doc doto each eval-compiler fn for global hashfn if include
-  lambda length let local lua macro macros match not not= or partial quote
-  require-macros set set-forcibly! tset values var when while
-]]))
+lex:modify_rule('keyword', token(lexer.KEYWORD, word_match{
+  '%', '*', '+', '-', '->>', '->', '-?>>', '-?>', '..', '.', '//', '/', ':', '<=', '<', '=', '>=',
+  '>', '^', '~=', 'λ', 'and', 'comment', 'do', 'doc', 'doto', 'each', 'eval-compiler', 'fn', 'for',
+  'global', 'hashfn', 'if', 'include', 'lambda', 'length', 'let', 'local', 'lua', 'macro', 'macros',
+  'match', 'not', 'not=', 'or', 'partial', 'quote', 'require-macros', 'set', 'set-forcibly!',
+  'tset', 'values', 'var', 'when', 'while'
+}))
 
 -- Identifiers.
-local initial = lexer.alpha + S"|$%&#*+-./:<=>?~^_λ!"
+local initial = lexer.alpha + S('|$%&#*+-./:<=>?~^_λ!')
 local subsequent = initial + lexer.digit
 lex:modify_rule('identifier', token(lexer.IDENTIFIER, initial * subsequent^0))
 

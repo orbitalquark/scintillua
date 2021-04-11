@@ -8,8 +8,7 @@ local P, S = lpeg.P, lpeg.S
 local lex = lexer.new('toml', {fold_by_indentation = true})
 
 -- Whitespace
-lex:add_rule('whitespace', token(lexer.WHITESPACE, S(' \t')^1 +
-  lexer.newline^1))
+lex:add_rule('whitespace', token(lexer.WHITESPACE, S(' \t')^1 + lexer.newline^1))
 
 -- kewwords.
 lex:add_rule('keyword', token(lexer.KEYWORD, word_match('true false')))
