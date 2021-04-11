@@ -188,6 +188,11 @@ function test_last_char_includes()
 end
 
 function test_word_match()
+  assert(lpeg.match(lexer.word_match{'foo', 'bar', 'baz'}, 'foo') == 4)
+  assert(not lpeg.match(lexer.word_match{'foo', 'bar', 'baz'}, 'foo_bar'))
+  assert(lpeg.match(lexer.word_match({'foo!', 'bar?', 'baz.'}, true), 'FOO!') == 5)
+  assert(not lpeg.match(lexer.word_match{'foo '}, 'foo ')) -- spaces not allowed
+  -- Test string list style.
   assert(lpeg.match(lexer.word_match('foo bar baz'), 'foo') == 4)
   assert(not lpeg.match(lexer.word_match('foo bar baz'), 'foo_bar'))
   assert(lpeg.match(lexer.word_match('foo! bar? baz.', true), 'FOO!') == 5)
@@ -589,7 +594,7 @@ function test_legacy()
   local lex = {_NAME = 'test'}
   lex._rules = {
     {'whitespace', token(lexer.WHITESPACE, lexer.space^1)},
-    {'keyword', token(lexer.KEYWORD, word_match{'foo', 'bar', 'baz'})},
+    {'keyword', token(lexer.KEYWORD, word_match({'foo', 'bar-', 'baz'}, '-'))},
     {'custom', token('custom', lpeg.P('quux'))}
   }
   lex._tokenstyles = {custom = lexer.STYLE_CONSTANT}
@@ -615,14 +620,14 @@ function test_legacy()
 
   local code = [[
     foo
-      bar
+      bar-
     baz
     quux
   ]]
   -- LuaFormatter off
   local tokens = {
     {'keyword', 'foo'},
-    {'keyword', 'bar'},
+    {'keyword', 'bar-'},
     {'keyword', 'baz'},
     {'custom', 'quux'}
   }

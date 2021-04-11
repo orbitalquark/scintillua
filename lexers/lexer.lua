@@ -140,30 +140,21 @@ local M = {}
 -- convenience function: [`lexer.word_match()`](). It is much easier and more efficient to
 -- write word matches like:
 --
---     local keyword = token(lexer.KEYWORD, lexer.word_match[[
---       keyword_1 keyword_2 ... keyword_n
---     ]])
+--     local keyword = token(lexer.KEYWORD, lexer.word_match{
+--       'keyword_1', 'keyword_2', ..., 'keyword_n'
+--     })
 --
---     local case_insensitive_keyword = token(lexer.KEYWORD, lexer.word_match([[
---       KEYWORD_1 keyword_2 ... KEYword_n
---     ]], true))
+--     local case_insensitive_keyword = token(lexer.KEYWORD, lexer.word_match({
+--       'KEYWORD_1', 'keyword_2', ..., 'KEYword_n'
+--     }, true))
 --
---     local hyphened_keyword = token(lexer.KEYWORD, lexer.word_match[[
---       keyword-1 keyword-2 ... keyword-n
---     ]])
+--     local hyphened_keyword = token(lexer.KEYWORD, lexer.word_match{
+--       'keyword-1', 'keyword-2', ..., 'keyword-n'
+--     })
 --
--- In order to more easily separate or categorize keyword sets, you can use Lua line comments
--- within keyword strings. Such comments will be ignored. For example:
+-- For short keyword lists, you can use a single string of words. For example:
 --
---     local keyword = token(lexer.KEYWORD, lexer.word_match[[
---       -- Version 1 keywords.
---       keyword_11, keyword_12 ... keyword_1n
---       -- Version 2 keywords.
---       keyword_21, keyword_22 ... keyword_2n
---       ...
---       -- Version N keywords.
---       keyword_m1, keyword_m2 ... keyword_mn
---     ]])
+--     local keyword = token(lexer.KEYWORD, lexer.word_match('key_1 key_2 ... key_n'))
 --
 -- **Comments**
 --
@@ -557,8 +548,8 @@ local M = {}
 --    your tokens and patterns using [`lex:add_rule()`](#lexer.add_rule).
 -- 4. Similarly, any custom token names should have their styles immediately defined using
 --    [`lex:add_style()`](#lexer.add_style).
--- 5. Convert any table arguments passed to [`lexer.word_match()`]() to a space-separated string
---    of words.
+-- 5. Optionally convert any table arguments passed to [`lexer.word_match()`]() to a
+--    space-separated string of words.
 -- 6. Replace any calls to `lexer.embed(M, child, ...)` and `lexer.embed(parent, M, ...)` with
 --    [`lex:embed`](#lexer.embed)`(child, ...)` and `parent:embed(lex, ...)`, respectively.
 -- 7. Define fold points with simple calls to [`lex:add_fold_point()`](#lexer.add_fold_point). No
@@ -616,8 +607,8 @@ local M = {}
 --     local lex = lexer.new('legacy')
 --
 --     lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
---     lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[foo bar baz]]))
---     lex:add_rule('custom', token('custom', P('quux')))
+--     lex:add_rule('keyword', token(lexer.KEYWORD, word_match('foo bar baz')))
+--     lex:add_rule('custom', token('custom', 'quux'))
 --     lex:add_style('custom', lexer.styles.keyword .. {bold = true})
 --     lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
 --     lex:add_rule('string', token(lexer.STRING, lexer.range('"')))
@@ -1691,37 +1682,37 @@ function M.nested_pair(start_chars, end_chars)
 end
 
 ---
--- Creates and returns a pattern that matches any single word in string *words*.
+-- Creates and returns a pattern that matches any single word in list or string *words*.
 -- *case_insensitive* indicates whether or not to ignore case when matching words.
 -- This is a convenience function for simplifying a set of ordered choice word patterns.
--- If *words* is a multi-line string, it may contain Lua line comments (`--`) that will ultimately
--- be ignored.
--- @param words A string list of words separated by spaces.
+-- @param word_list A list of words or a string list of words separated by spaces.
 -- @param case_insensitive Optional boolean flag indicating whether or not the word match is
 --   case-insensitive. The default value is `false`.
 -- @param word_chars Unused legacy parameter.
 -- @return pattern
--- @usage local keyword = token(lexer.KEYWORD, word_match[[foo bar baz]])
--- @usage local keyword = token(lexer.KEYWORD, word_match([[foo-bar foo-baz bar-foo bar-baz
---   baz-foo baz-bar]], true))
+-- @usage local keyword = token(lexer.KEYWORD, word_match{'foo', 'bar', 'baz'})
+-- @usage local keyword = token(lexer.KEYWORD, word_match({'foo-bar', 'foo-baz', 'bar-foo',
+--   'bar-baz', 'baz-foo', 'baz-bar'}, true))
+-- @usage local keyword = token(lexer.KEYWORD, word_match('foo bar baz'))
 -- @name word_match
-function M.word_match(words, case_insensitive, word_chars)
-  local word_list = {}
-  if type(words) == 'table' then
+function M.word_match(word_list, case_insensitive, word_chars)
+  if type(case_insensitive) == 'string' or type(word_chars) == 'boolean' then
     -- Legacy `word_match(word_list, word_chars, case_insensitive)` form.
-    words = table.concat(words, ' ')
     word_chars, case_insensitive = case_insensitive, word_chars
+  elseif type(word_list) == 'string' then
+    local words = word_list -- space-separated list of words
+    word_list = {}
+    for word in words:gsub('%-%-[^\n]+', ''):gmatch('%S+') do word_list[#word_list + 1] = word end
   end
-  for word in words:gsub('%-%-[^\n]+', ''):gmatch('%S+') do
+  if not word_chars then word_chars = '' end
+  for _, word in ipairs(word_list) do
     word_list[case_insensitive and word:lower() or word] = true
-    for char in word:gmatch('[^%w_]') do
-      if not (word_chars or ''):find(char, 1, true) then
-        word_chars = (word_chars or '') .. char
-      end
+    for char in word:gmatch('[^%w_%s]') do
+      if not word_chars:find(char, 1, true) then word_chars = word_chars .. char end
     end
   end
   local chars = M.alnum + '_'
-  if (word_chars or '') ~= '' then chars = chars + lpeg_S(word_chars) end
+  if word_chars ~= '' then chars = chars + lpeg_S(word_chars) end
   return lpeg_Cmt(chars^1, function(input, index, word)
     if case_insensitive then word = word:lower() end
     return word_list[word] and index or nil
