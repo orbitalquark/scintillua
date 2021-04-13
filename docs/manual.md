@@ -169,9 +169,9 @@ In order to use Scintillua's lexers in your application:
    if you want to manage Scintilla styles yourself.
 3. Call Scintillua's `CreateLexer()` with either `NULL` or the name of a Lua lexer to use in
    your application.
-4. Call Scintilla's [SCI_SETILEXER][], passing the lexer returned in step 3.  5. If you called
-   `CreateLexer()` with `NULL`, then call Scintillua's [SCI_SETLEXERLANGUAGE][] [API][] to use
-   the given Lua lexer in your application.
+4. Call [Scintilla's SCI_SETILEXER][], passing the lexer returned in step 3.
+5. If you called `CreateLexer()` with `NULL`, then call Scintillua's [SCI_SETILEXER][] [API][]
+   to use the given Lua lexer in your application.
 
 For example, using the GTK platform:
 
@@ -186,8 +186,8 @@ please see the [API][] Documentation.
 
 [Lua]: https://lua.org
 [LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
-[SCI_SETILEXER]: https://scintilla.org/ScintillaDoc.html#SCI_SETILEXER
-[SCI_SETLEXERLANGUAGE]: api.html#SCI_SETLEXERLANGUAGE
+[Scintilla's SCI_SETILEXER]: https://scintilla.org/ScintillaDoc.html#SCI_SETILEXER
+[SCI_SETILEXER]: api.html#SCI_SETILEXER
 [API Documentation]: api.html
 
 ### Using Scintillua as a Lua Library

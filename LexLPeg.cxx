@@ -789,7 +789,7 @@ void SCI_METHOD LexerLPeg::Fold(
 Sci_Position SCI_METHOD LexerLPeg::PropertySet(const char *key, const char *value) {
   props.Set(key, value, strlen(key), strlen(value));
   if (strcmp(key, LexerHomeKey) == 0 && lexerNames.empty())
-    ReadLexerNames(value); // not using SCI_LOADLEXERLIBRARY private call
+    ReadLexerNames(value); // not using SCI_CREATELOADER private call
   if (reinit && (strcmp(key, LexerHomeKey) == 0 || strcmp(key, LexerNameKey) == 0)) Init();
 #if NO_SCITE
   else if (L && SS && sci && strncmp(key, "style.", 6) == 0) {
@@ -828,7 +828,7 @@ void *SCI_METHOD LexerLPeg::PrivateCall(int code, void *arg) {
     if (ownLua) lua_close(L);
     L = reinterpret_cast<lua_State *>(arg), ownLua = false;
     return nullptr;
-  case SCI_LOADLEXERLIBRARY: {
+  case SCI_CREATELOADER: {
     const char *path = reinterpret_cast<const char *>(arg);
     ReadLexerNames(path);
     std::string home(props.Get(LexerHomeKey));
@@ -837,12 +837,12 @@ void *SCI_METHOD LexerLPeg::PrivateCall(int code, void *arg) {
     PropertySet(LexerHomeKey, home.c_str());
     return nullptr;
   }
-  case SCI_PROPERTYNAMES: {
+  case SCI_GETLEXERLANGUAGE: {
     std::stringstream names;
     for (const std::string &name : lexerNames) names << name << '\n';
     return StringResult(lParam, names.str().c_str());
   }
-  case SCI_SETLEXERLANGUAGE:
+  case SCI_SETILEXER:
     if (strcmp(props.Get(LexerNameKey), reinterpret_cast<const char *>(arg)) != 0) {
       reinit = true;
       PropertySet(LexerErrorKey, "");
@@ -852,7 +852,7 @@ void *SCI_METHOD LexerLPeg::PrivateCall(int code, void *arg) {
     else
       Init();
     return nullptr;
-  case SCI_GETLEXERLANGUAGE: {
+  case SCI_GETLEXER: {
     std::string val("null");
     if (!L) return StringResult(lParam, val.c_str());
     RECORD_STACK_TOP(L);
@@ -990,12 +990,12 @@ EXPORT_FUNCTION void CALLING_CONVENTION SetLibraryProperty(const char *key, cons
 EXPORT_FUNCTION ILexer5 *CALLING_CONVENTION CreateLexer(const char *name) {
   ILexer5 *lpegLexer = LexerLPeg::LexerFactoryLPeg();
   if (!lpegHome.empty())
-    lpegLexer->PrivateCall(SCI_LOADLEXERLIBRARY, const_cast<char *>(lpegHome.c_str()));
+    lpegLexer->PrivateCall(SCI_CREATELOADER, const_cast<char *>(lpegHome.c_str()));
   if (!lpegColorTheme.empty())
     lpegLexer->PropertySet(LexerLPeg::LexerThemeKey, lpegColorTheme.c_str());
   if (name) {
     if (strncmp(name, "lpeg_", 5) == 0) name += 5; // prefix used for SciTE
-    lpegLexer->PrivateCall(SCI_SETLEXERLANGUAGE, const_cast<char *>(name));
+    lpegLexer->PrivateCall(SCI_SETILEXER, const_cast<char *>(name));
   }
   if (strlen(lpegLexer->PropertyGet(LexerLPeg::LexerErrorKey)) > 0) {
     lpegLexer->Release();

@@ -35,13 +35,13 @@ Here is a pseudo-code example:
       SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_GETDIRECTFUNCTION, fn)
       psci = SendScintilla(sci, SCI_GETDIRECTPOINTER)
       SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETDOCPOINTER, psci)
-      SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETLEXERLANGUAGE, "lua")
+      SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETILEXER, "lua")
     }
 
     set_lexer(lang) {
       psci = SendScintilla(sci, SCI_GETDIRECTPOINTER)
       SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETDOCPOINTER, psci)
-      SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETLEXERLANGUAGE, lang)
+      SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETILEXER, lang)
     }
 
 ### Functions defined by `Scintillua`
@@ -69,6 +69,24 @@ Usage:
 
 * `lua = luaL_newstate()`
 * `SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_CHANGELEXERSTATE, lua)`
+
+<a id="SCI_CREATELOADER"></a>
+#### `SCI_PRIVATELEXERCALL`(SCI\_CREATELOADER, path)
+
+Tells Scintillua that the given path is where Scintillua's lexers are located, or is a path
+that contains additional lexers and/or themes to load (e.g. user-defined lexers/themes).
+
+This call may be made multiple times in order to support lexers and themes across multiple
+directories.
+
+Fields:
+
+* `SCI_CREATELOADER`: 
+* `path`: (`const char *`) A path containing Scintillua lexers and/or themes.
+
+Usage:
+
+* `SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_CREATELOADER, "path/to/lexers")`
 
 <a id="SCI_GETDIRECTFUNCTION"></a>
 #### `SCI_PRIVATELEXERCALL`(SCI\_GETDIRECTFUNCTION, SciFnDirect)
@@ -102,8 +120,8 @@ See also:
 
 * [`SCI_SETDOCPOINTER`](#SCI_SETDOCPOINTER)
 
-<a id="SCI_GETLEXERLANGUAGE"></a>
-#### `SCI_PRIVATELEXERCALL`(SCI\_GETLEXERLANGUAGE, languageName)
+<a id="SCI_GETLEXER"></a>
+#### `SCI_PRIVATELEXERCALL`(SCI\_GETLEXER, languageName)
 
 Returns the length of the string name of the current Lua LPeg lexer or stores the name into
 the given buffer. If the buffer is long enough, the name is terminated by a `0` character.
@@ -115,9 +133,33 @@ or child lexer at the current caret position. In order for this to work, you mus
 
 Fields:
 
-* `SCI_GETLEXERLANGUAGE`: 
+* `SCI_GETLEXER`: 
 * `languageName`: (`char *`) If `NULL`, returns the length that should be allocated to
   store the string Lua LPeg lexer name. Otherwise fills the buffer with the name.
+
+<a id="SCI_GETLEXERLANGUAGE"></a>
+#### `SCI_PRIVATELEXERCALL`(SCI\_GETLEXERLANGUAGE, names)
+
+Returns the length of a '\n'-separated list of known lexer names, or stores the lexer list into
+the given buffer. If the buffer is long enough, the string is terminated by a `0` character.
+
+The lexers in this list can be passed to the [`SCI_SETILEXER`](#SCI_SETILEXER) Scintillua
+API call.
+
+Fields:
+
+* `SCI_GETLEXERLANGUAGE`: 
+* `names`: (`char *`) If `NULL`, returns the length that should be allocated to store the
+  list of lexer names. Otherwise fills the buffer with the names.
+
+Usage:
+
+* `SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_GETLEXERLANGUAGE, lexers)`
+* `// lexers now contains a '\n'-separated list of known lexer names`
+
+See also:
+
+* [`SCI_SETILEXER`](#SCI_SETILEXER)
 
 <a id="SCI_GETNAMEDSTYLES"></a>
 #### `SCI_PRIVATELEXERCALL`(SCI\_GETNAMEDSTYLES, styleName)
@@ -154,48 +196,6 @@ Usage:
 * `SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_GETSTATUS, errmsg)`
 * `if (strlen(errmsg) > 0) { /* handle error */ }`
 
-<a id="SCI_LOADLEXERLIBRARY"></a>
-#### `SCI_PRIVATELEXERCALL`(SCI\_LOADLEXERLIBRARY, path)
-
-Tells Scintillua that the given path is where Scintillua's lexers are located, or is a path
-that contains additional lexers and/or themes to load (e.g. user-defined lexers/themes).
-
-This call may be made multiple times in order to support lexers and themes across multiple
-directories.
-
-Fields:
-
-* `SCI_LOADLEXERLIBRARY`: 
-* `path`: (`const char *`) A path containing Scintillua lexers and/or themes.
-
-Usage:
-
-* `SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_LOADLEXERLIBRARY, "path/to/lexers")`
-
-<a id="SCI_PROPERTYNAMES"></a>
-#### `SCI_PRIVATELEXERCALL`(SCI\_PROPERTYNAMES, names)
-
-Returns the length of a '\n'-separated list of known lexer names, or stores the lexer list into
-the given buffer. If the buffer is long enough, the string is terminated by a `0` character.
-
-The lexers in this list can be passed to the [`SCI_SETLEXERLANGUAGE`](#SCI_SETLEXERLANGUAGE)
-Scintillua API call.
-
-Fields:
-
-* `SCI_PROPERTYNAMES`: 
-* `names`: (`char *`) If `NULL`, returns the length that should be allocated to store the
-  list of lexer names. Otherwise fills the buffer with the names.
-
-Usage:
-
-* `SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_PROPERTYNAMES, lexers)`
-* `// lexers now contains a '\n'-separated list of known lexer names`
-
-See also:
-
-* [`SCI_SETLEXERLANGUAGE`](#SCI_SETLEXERLANGUAGE)
-
 <a id="SCI_SETDOCPOINTER"></a>
 #### `SCI_PRIVATELEXERCALL`(SCI\_SETDOCPOINTER, sci)
 
@@ -205,7 +205,7 @@ Despite the name `SCI_SETDOCPOINTER`, it has no relationship to Scintilla docume
 
 Use this call only if you are using the [`SCI_GETDIRECTFUNCTION()`](#SCI_GETDIRECTFUNCTION)
 Scintillua API call. It *must* be made *before* each call to the
-[`SCI_SETLEXERLANGUAGE()`](#SCI_SETLEXERLANGUAGE) Scintillua API call.
+[`SCI_SETILEXER()`](#SCI_SETILEXER) Scintillua API call.
 
 Fields:
 
@@ -221,10 +221,10 @@ Usage:
 See also:
 
 * [`SCI_GETDIRECTFUNCTION`](#SCI_GETDIRECTFUNCTION)
-* [`SCI_SETLEXERLANGUAGE`](#SCI_SETLEXERLANGUAGE)
+* [`SCI_SETILEXER`](#SCI_SETILEXER)
 
-<a id="SCI_SETLEXERLANGUAGE"></a>
-#### `SCI_PRIVATELEXERCALL`(SCI\_SETLEXERLANGUAGE, languageName)
+<a id="SCI_SETILEXER"></a>
+#### `SCI_PRIVATELEXERCALL`(SCI\_SETILEXER, languageName)
 
 Sets the current Lua LPeg lexer to `languageName`.
 
@@ -233,17 +233,17 @@ sure you call the [`SCI_SETDOCPOINTER()`](#SCI_SETDOCPOINTER) Scintillua API *fi
 
 Fields:
 
-* `SCI_SETLEXERLANGUAGE`: 
+* `SCI_SETILEXER`: 
 * `languageName`: (`const char*`) The name of the Lua LPeg lexer to use.
 
 Usage:
 
-* `SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETLEXERLANGUAGE, "lua")`
+* `SendScintilla(sci, SCI_PRIVATELEXERCALL, SCI_SETILEXER, "lua")`
 
 See also:
 
 * [`SCI_SETDOCPOINTER`](#SCI_SETDOCPOINTER)
-* [`SCI_PROPERTYNAMES`](#SCI_PROPERTYNAMES)
+* [`SCI_GETLEXERLANGUAGE`](#SCI_GETLEXERLANGUAGE)
 
 <a id="styleNum"></a>
 #### `SCI_PRIVATELEXERCALL`(styleNum, style)

@@ -93,7 +93,7 @@ test-scite: scintilla
 	make -C scite/gtk -j4
 	scite/bin/SciTE
 # Tests, via Wine, SciTE Win64 using SciTEGlobal.properties.
-wscite_zip = wscite500.zip
+wscite_zip = wscite501.zip
 /tmp/$(wscite_zip): ; wget -O $@ https://www.scintilla.org/$(wscite_zip)
 /tmp/wscite: /tmp/$(wscite_zip)
 	unzip -d /tmp $<
@@ -106,7 +106,7 @@ test-wscite: /tmp/wscite
 
 # External dependencies.
 
-scintilla_tgz = scintilla500.tgz
+scintilla_tgz = scintilla501.tgz
 lexilla_tgz = lexilla500.tgz
 lua_tgz = lua-5.3.5.tar.gz
 lpeg_tgz = lpeg-1.0.2.tar.gz
