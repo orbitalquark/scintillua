@@ -53,6 +53,7 @@ and better over the years.
 * Stéphane Rivière
 * Tobias Frilling
 * Tymur Gubayev
+* Tynan Beatty
 * Wolfgang Seeberg
 
 If I have left off your name, please contact me (see README.md). I am very sorry about that.

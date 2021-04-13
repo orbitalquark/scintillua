@@ -49,6 +49,7 @@ used if [`fold.by.indentation`][] is enabled. For SciTE, see *lexers/lpeg.proper
 1. GAP`*`
 1. gettext
 1. Gherkin
+1. Gleam`*`
 1. GLSL`*`
 1. Gnuplot
 1. Go`*`
