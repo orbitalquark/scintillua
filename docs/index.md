@@ -27,7 +27,7 @@ information of source code snippets. Scintilla is not required in that case.
 ## Requirements
 
 Scintillua requires Scintilla 4.4.5 or greater for a drop-in installation. When compiling
-Scintillua, Scintilla 5.0.0 or greater and [Lexilla][] 5.0.0 are required. The drop-in external
+Scintillua, Scintilla 5.0.1 or greater and [Lexilla][] 5.0.0 are required. The drop-in external
 lexer already has Lua and LPeg are pre-compiled into it.
 
 When used a standalone Lua library, Scintillua requires Lua 5.1 or greater and [LPeg][] 1.0.0
