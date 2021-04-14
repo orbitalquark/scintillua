@@ -138,7 +138,7 @@ lex:embed(js, js_start_rule, js_end_rule)
 
 -- Embedded CoffeeScript (<script type="text/coffeescript"> ... </script>).
 local cs = lexer.load('coffeescript')
-local script_element = word_match('script', true)
+script_element = word_match('script', true)
 local cs_start_rule = #('<' * script_element * P(function(input, index)
   if input:find('^[^>]+type%s*=%s*(["\'])text/coffeescript%1', index) then return index end
 end)) * lex.embed_start_tag

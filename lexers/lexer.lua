@@ -1184,13 +1184,13 @@ function M.lex(lexer, text, init_style)
     end
     return lpeg_match(lexer._GRAMMAR, text)
   else
-    local tokens = {}
     local function append(tokens, line_tokens, offset)
       for i = 1, #line_tokens, 2 do
         tokens[#tokens + 1] = line_tokens[i]
         tokens[#tokens + 1] = line_tokens[i + 1] + offset
       end
     end
+    local tokens = {}
     local offset = 0
     local grammar = lexer._GRAMMAR
     for line in text:gmatch('[^\r\n]*\r?\n?') do

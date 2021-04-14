@@ -31,7 +31,7 @@ lex:add_rule('function', token(lexer.FUNCTION, word_match{
 -- Identifiers.
 local word_char = lexer.alnum + S('_!?')
 local word = (lexer.alpha + '_') * word_char^0
-local identifier = token(lexer.IDENTIFIER, word)
+lex:add_rule('identifier', token(lexer.IDENTIFIER, word))
 
 -- Comments.
 lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('#', true)))

@@ -63,7 +63,7 @@ local bq_str = lexer.range('`')
 local heredoc = '<<<' * P(function(input, index)
   local _, e, delimiter = input:find('([%a_][%w_]*)[\n\r\f]+', index)
   if delimiter then
-    local _, e = input:find('[\n\r\f]+' .. delimiter, e)
+    e = select(2, input:find('[\n\r\f]+' .. delimiter, e))
     return e and e + 1
   end
 end)

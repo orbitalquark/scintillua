@@ -30,7 +30,7 @@ local heredoc = '<<' * P(function(input, index)
   local s, e, _, delimiter = input:find('[ \t]*(["\']?)([%w!"%%+,-./:?@_~]+)%1', index)
   if s == index and delimiter then
     delimiter = delimiter:gsub('[%%+-.?]', '%%%1')
-    local _, e = input:find('[\n\r]' .. delimiter .. '[\n\r]', e)
+    e = select(2, input:find('[\n\r]' .. delimiter .. '[\n\r]', e))
     return e and e + 1 or #input + 1
   end
 end)
