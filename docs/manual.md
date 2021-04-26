@@ -22,7 +22,7 @@ which is a 64-bit Linux shared library; *LexLPeg.cxx*, which is a 64-bit Windows
 #### Using Scintillua with SciTE
 
 [SciTE][] is the SCIntilla based Text Editor. Scintillua can be dropped into any SciTE
-installation version 4.4.5 or higher with or without administrator privileges.
+installation version 5.0.3 or higher with or without administrator privileges.
 
 In order to install Scintillua for all users (likely requiring administrator privileges):
 

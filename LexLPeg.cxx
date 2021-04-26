@@ -495,10 +495,11 @@ void LexerLPeg::SetStyles() {
       lua_pop(L, 1); // style
     }
 #else
-  char prop_name[32];
+  char prop_name[64];
   for (lua_pushnil(L); lua_next(L, -2); lua_pop(L, 1))
     if (lua_isstring(L, -2) && lua_isnumber(L, -1)) {
-      sprintf(prop_name, "style.lpeg.%0d", static_cast<int>(lua_tointeger(L, -1)) - 1);
+      snprintf(prop_name, 64, "style.lpeg.%s.%0d", props.Get(LexerNameKey),
+        static_cast<int>(lua_tointeger(L, -1)) - 1);
       lua_pushstring(L, "style."), lua_pushvalue(L, -3), lua_concat(L, 2);
       expand_property(L);
       PropertySet(prop_name, lua_tostring(L, -1));
@@ -887,8 +888,8 @@ void *SCI_METHOD LexerLPeg::PrivateCall(int code, void *arg) {
 #if !NO_SCITE
   default: // style-related
     if (code >= -STYLE_MAX && code < 0) { // retrieve SciTE style strings
-      char prop_name[32];
-      sprintf(prop_name, "style.lpeg.%0d", code + STYLE_MAX);
+      char prop_name[64];
+      snprintf(prop_name, 64, "style.lpeg.%s.%0d", props.Get(LexerNameKey), code + STYLE_MAX);
       return StringResult(lParam, props.Get(prop_name));
     } else
       return nullptr;
@@ -978,6 +979,9 @@ EXPORT_FUNCTION void CALLING_CONVENTION SetLibraryProperty(const char *key, cons
     lpegColorTheme = value;
 }
 
+/** Returns the lexer namespace used by Scintillua. */
+EXPORT_FUNCTION const char *CALLING_CONVENTION GetNameSpace() { return "lpeg"; }
+
 /**
  * Creates and returns a new Scintillua lexer for language *name*.
  * If all context properties have been set, the returned lexer is available for use
@@ -993,10 +997,7 @@ EXPORT_FUNCTION ILexer5 *CALLING_CONVENTION CreateLexer(const char *name) {
     lpegLexer->PrivateCall(SCI_CREATELOADER, const_cast<char *>(lpegHome.c_str()));
   if (!lpegColorTheme.empty())
     lpegLexer->PropertySet(LexerLPeg::LexerThemeKey, lpegColorTheme.c_str());
-  if (name) {
-    if (strncmp(name, "lpeg_", 5) == 0) name += 5; // prefix used for SciTE
-    lpegLexer->PrivateCall(SCI_SETILEXER, const_cast<char *>(name));
-  }
+  if (name) lpegLexer->PrivateCall(SCI_SETILEXER, const_cast<char *>(name));
   if (strlen(lpegLexer->PropertyGet(LexerLPeg::LexerErrorKey)) > 0) {
     lpegLexer->Release();
     return nullptr;

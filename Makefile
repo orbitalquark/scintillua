@@ -93,7 +93,7 @@ test-scite: scintilla
 	make -C scite/gtk -j4
 	scite/bin/SciTE
 # Tests, via Wine, SciTE Win64 using SciTEGlobal.properties.
-wscite_zip = wscite501.zip
+wscite_zip = wscite503.zip
 /tmp/$(wscite_zip): ; wget -O $@ https://www.scintilla.org/$(wscite_zip)
 /tmp/wscite: /tmp/$(wscite_zip)
 	unzip -d /tmp $<
