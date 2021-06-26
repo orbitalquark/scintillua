@@ -30,7 +30,7 @@ Changes:
 
 [Scintillua 5.0]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_5.0/scintillua_5.0.zip
 [SCI\_SETILEXER]: api.html#SCI_SETILEXER
-[SCI\_CREATELOADER]: api.html#SCI_CREATELOADED
+[SCI\_CREATELOADER]: api.html#SCI_CREATELOADER
 [SCI\_GETLEXER]: api.html#SCI_GETLEXER
 [SCI\_GETLEXERLANGUAGE]: api.html#SCI_GETLEXERLANGUAGE
 [Scintilla]: https://scintilla.org
