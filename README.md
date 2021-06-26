@@ -96,7 +96,7 @@ your Scintilla-based application please see the [manual][].
 ## Contribute
 
 Scintillua is [open source][]. Feel free to submit new lexers, report bugs, ask for help, and
-discuss features. You can also contact me personally (orbitalquark.att.triplequasar.com). Thanks
+discuss features. You can also contact me personally (orbitalquark att triplequasar.com). Thanks
 to [everyone][] who has contributed.
 
 [open source]: https://github.com/orbitalquark/scintillua
