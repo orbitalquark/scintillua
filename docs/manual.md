@@ -130,7 +130,7 @@ You can compile Scintillua directly (statically) into your Scintilla-based appli
 
 1. Adding *LexLPeg.h* and *LexLPeg.cxx* to your project's sources.
 2. Downloading and adding [Lua][] and [LPeg][] to your project's sources.  Scintillua supports
-   Lua 5.1, 5.2, and 5.3.
+   Lua 5.1, 5.2, 5.3, and 5.4.
 3. Adding infrastructure to build Lua, LPeg, *LexLPeg.cxx*, and link them all into your
    application.
 
