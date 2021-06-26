@@ -2,6 +2,41 @@
 
 [Atom Feed](https://github.com/orbitalquark/scintillua/releases.atom)
 
+### 5.0 (26 Jun 2021)
+
+Download:
+
+* [Scintillua 5.0][]
+
+Bugfixes:
+
+* Fixed incorrect LaTeX highlighting of '\\' manual breaks.
+* Do not return "lexer" in the list of known lexer names.
+
+Changes:
+
+* Updated Lisp lexer to match character strings.
+* Updated Markdown lexer to highlight `<https://foo.bar>`-style links.
+* Updated JavaScript lexer with types, functions, and constants.
+* Added TypeScript and Gleam lexers.
+* Prefer table of words in `lexer.word_match()`.
+* Renamed SCI\_SETLEXERLANGUAGE to [SCI\_SETILEXER][] due to removal of the former in Scintilla.
+* Renamed SCI\_LOADLEXERLIBRARY to [SCI\_CREATELOADER][] due to removal of the former in Scintilla.
+* Renamed SCI\_GETLEXERLANGUAGE to [SCI\_GETLEXER][] for more consistency.
+* Renamed SCI\_PROPERTYNAMES to [SCI\_GETLEXERLANGUAGE][] because it sounds a bit better.
+* Updated to [Scintilla][] 5.0.1.
+* Support [Lexilla][] 5.0.3's `GetNamespace()` API.
+* Support [SciTE][] 5.0.3.
+
+[Scintillua 5.0]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_5.0/scintillua_5.0.zip
+[SCI\_SETILEXER]: api.html#SCI_SETILEXER
+[SCI\_CREATELOADER]: api.html#SCI_CREATELOADED
+[SCI\_GETLEXER]: api.html#SCI_GETLEXER
+[SCI\_GETLEXERLANGUAGE]: api.html#SCI_GETLEXERLANGUAGE
+[Scintilla]: https://scintilla.org
+[Lexilla]: https://scintilla.org/Lexilla.html
+[SciTE]: https://scintilla.org/SciTE.html
+
 ### 4.4.5-2 (29 Jan 2021)
 
 Download:
@@ -55,7 +90,7 @@ Changes:
 * Updated to [Scintilla][]/[SciTE][] 4.4.5.
 
 [Scintillua 4.4.5-1]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_4.4.5-1/scintillua_4.4.5-1.zip
-[Lexilla]: https://scintilla.org/ScintillaDoc.html#Lexilla
+[Lexilla]: https://scintilla.org/Lexilla.html
 [`lexer.fold_consecutive_lines()`]: api.html#lexer.fold_consecutive_lines
 [`lexer.fold_line_groups`]: api.html#lexer.fold_line_groups
 [Scintilla]: https://scintilla.org
@@ -109,8 +144,8 @@ Changes:
 * Lua state is safer, without requiring or giving access to the `io` and
   `package` modules.
 * `lexer.lpeg.home` property can contain multiple paths separated by `;`.
-* Added [SCI\_LOADLEXERLIBRARY][] for appending paths to `lexer.lpeg.home`.
-* Added [SCI\_PROPERTYNAMES][] for retrieving a list of known lexer names.
+* Added SCI\_LOADLEXERLIBRARY for appending paths to `lexer.lpeg.home`.
+* Added SCI\_PROPERTYNAMES for retrieving a list of known lexer names.
 * Implement Scintilla's `SCI_NAMEOFSTYLE` for retrieving style names. Retrieving by number via
   SCI\_PRIVATECALL is no longer supported.
 * Switched to 1-based indices. The only 3rd party lexers affected are those implementing their
@@ -120,8 +155,6 @@ Changes:
 * Added [`lexer.number`][] convenience pattern, replacing `lexer.float + lexer.integer`.
 
 [Scintilla 3.20.0]: https://sourceforge.net/projects/scintilla/files/scintilla/3.20.0/scintilla3200.zip/download
-[SCI\_LOADLEXERLIBRARY]: api.html#SCI_LOADLEXERLIBRARY
-[SCI\_PROPERTYNAMES]: api.html#SCI_PROPERTYNAMES
 [`lexer.range()`]: api.html#lexer.range
 [`lexer.to_eol()`]: api.html#lexer.to_eol
 [`lexer.number`]: api.html#lexer.number
@@ -836,11 +869,10 @@ Changes:
 
 * No need for '!' in front of font faces in GTK anymore.
 * Scintillua supports multiple curses platforms, not just ncurses.
-* [SCI\_GETLEXERLANGUAGE][] returns "lexer/current" for multi-lang lexers.
+* SCI\_GETLEXERLANGUAGE returns "lexer/current" for multi-lang lexers.
 * Updated D lexer.
 
 [Scintillua 3.3.2-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.3.2-1.zip
-[SCI\_GETLEXERLANGUAGE]: api.html#SCI_GETLEXERLANGUAGE
 
 ### 3.3.0-1 (31 Mar 2013)
 
