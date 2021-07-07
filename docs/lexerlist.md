@@ -135,7 +135,7 @@ used if [`fold.by.indentation`][] is enabled. For SciTE, see *lexers/lpeg.proper
 1. vCard`*`
 1. Verilog`*`
 1. VHDL
-1. Visual Basic
+1. Visual Basic`*`
 1. Windows Script File`*`
 1. XML`*`
 1. Xs`*`
