@@ -144,8 +144,13 @@ function assert_fold_points(lex, code, expected_fold_points, initial_style)
   local levels = lex:fold(code, 1, 1, lexer.FOLD_BASE)
   local j = 1
   for i = 1, #levels do
-    if i == expected_fold_points[j] then
+    local line_num = expected_fold_points[j]
+    if i == line_num then
       assert(levels[i] >= lexer.FOLD_HEADER, string.format("line %i not a fold point", i))
+      j = j + 1
+    elseif line_num and i == -line_num then
+      assert(levels[i] > levels[i + 1] & ~(lexer.FOLD_HEADER | lexer.FOLD_BLANK),
+        string.format("line %i is not a fold end point", i))
       j = j + 1
     else
       assert(levels[i] <= lexer.FOLD_HEADER, string.format("line %i is a fold point", i))
@@ -434,7 +439,7 @@ function test_embed_into()
     ] bar
     baz
   ]]
-  local folds = {1}
+  local folds = {1, -3}
   local levels = assert_fold_points(child, code, folds)
   assert(levels[3] > levels[4]) -- verify ']' is fold end point
 end
@@ -517,7 +522,7 @@ function test_proxy()
     ] bar
     baz
   ]]
-  local folds = {1}
+  local folds = {1, -3}
   local levels = assert_fold_points(proxy, code, folds)
   assert(levels[3] > levels[4]) -- verify ']' is fold end point
 end
@@ -568,7 +573,7 @@ function test_fold_words()
     ifbaz
     quuxif
   ]]
-  local folds = {1}
+  local folds = {1, -3}
   local levels = assert_fold_points(lex, code, folds)
   assert(levels[2] == lexer.FOLD_BASE + 1)
   assert(levels[3] == lexer.FOLD_BASE + 1)
@@ -586,7 +591,7 @@ function test_fold_by_indentation()
   ]]
   lexer.fold_level = {lexer.FOLD_BASE} -- Scintilla normally creates this
   lexer.indent_amount = {0} -- Scintilla normally creates this
-  local folds = {1, 3}
+  local folds = {1, -2, 3}
   assert_fold_points(lex, code, folds)
 end
 
@@ -734,7 +739,7 @@ function test_lua()
      bar,
      baz}
   ]=]
-  local folds = {1, 4, 7, 10, 13, 16, 19}
+  local folds = {1, -3, 4, -6, 7, -9, 10, -12, 13, -15, 16, -18, 19}
   assert_fold_points(lua, code, folds)
 end
 
@@ -798,7 +803,7 @@ function test_c()
       bar;
     #endif
   ]]):gsub('    ', '') -- strip indent
-  local folds = {1, 4, 7}
+  local folds = {1, -3, 4, -6, 7}
   assert_fold_points(c, code, folds)
 end
 
@@ -950,7 +955,7 @@ function test_html()
       bar;
     }
   ]]
-  local folds = {1, 5, 6, 10, 11}
+  local folds = {1, -3, 5, 6, -8, -9, 10, 11, -13}
   local levels = assert_fold_points(html, code, folds)
   assert(levels[3] > levels[4]) -- </html> is ending fold point
 end
@@ -1090,7 +1095,7 @@ function test_ruby()
      bar,
      baz}
   ]=]
-  local folds = {1, 4, 7, 10, 13, 16, 19}
+  local folds = {1, -3, 4, -6, 7, -9, 10, -12, 13, -15, 16, -18, 19, -21}
   assert_fold_points(ruby, code, folds)
 end
 
@@ -1183,6 +1188,25 @@ function test_rhtml()
   -- LuaFormatter on
   initial_style = rhtml._TOKENSTYLES['rails_whitespace']
   assert_lex(rhtml, code, rhtml_tokens, initial_style)
+end
+
+-- Tests folding with complex keywords and case-insensitivity.
+function test_vb_folding()
+  local vb = lexer.load('vb')
+
+  local code = [[
+    Sub Foo()
+      If bar Then
+
+      End If
+    End Sub
+
+    sub baz()
+
+    end sub
+  ]]
+  local folds = {1, 2, -4, -5, 7, -9}
+  assert_fold_points(vb, code, folds)
 end
 
 -- Tests that the `lexer.colors` table reads and writes properties with a 'color.' prefix and

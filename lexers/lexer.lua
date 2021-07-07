@@ -1058,16 +1058,20 @@ end
 function M.add_fold_point(lexer, token_name, start_symbol, end_symbol)
   if not lexer._FOLDPOINTS then lexer._FOLDPOINTS = {_SYMBOLS = {}} end
   local symbols = lexer._FOLDPOINTS._SYMBOLS
-  if not symbols[start_symbol] then
-    symbols[#symbols + 1], symbols[start_symbol] = start_symbol, true
-  end
   if not lexer._FOLDPOINTS[token_name] then lexer._FOLDPOINTS[token_name] = {} end
+  if lexer._CASEINSENSITIVEFOLDPOINTS then
+    start_symbol = start_symbol:lower()
+    if type(end_symbol) == 'string' then end_symbol = end_symbol:lower() end
+  end
   if type(end_symbol) == 'string' then
     if not symbols[end_symbol] then symbols[#symbols + 1], symbols[end_symbol] = end_symbol, true end
     lexer._FOLDPOINTS[token_name][start_symbol] = 1
     lexer._FOLDPOINTS[token_name][end_symbol] = -1
   else
     lexer._FOLDPOINTS[token_name][start_symbol] = end_symbol -- function or int
+  end
+  if not symbols[start_symbol] then
+    symbols[#symbols + 1], symbols[start_symbol] = start_symbol, true
   end
   -- If the lexer is a proxy or a child that embedded itself, copy this fold point to the
   -- parent lexer.
@@ -1238,11 +1242,24 @@ function M.fold(lexer, text, start_pos, start_line, start_level)
       local pos, line = captures[1], captures[2]
       if line ~= '' then
         if lexer._CASEINSENSITIVEFOLDPOINTS then line = line:lower() end
+        local ranges = {}
+        local function is_valid_range(s, e)
+          if not s or not e then return false end
+          for i = 1, #ranges - 1, 2 do
+            local range_s, range_e = ranges[i], ranges[i + 1]
+            if s >= range_s and s <= range_e or e >= range_s and e <= range_e then
+              return false
+            end
+          end
+          ranges[#ranges + 1] = s
+          ranges[#ranges + 1] = e
+          return true
+        end
         local level_decreased = false
         for _, symbol in ipairs(fold_point_symbols) do
           local word = not symbol:find('[^%w_]')
           local s, e = line:find(symbol, 1, true)
-          while s and e do
+          while is_valid_range(s, e) do
             -- if not word or line:find('^%f[%w_]' .. symbol .. '%f[^%w_]', s) then
             local word_before = s > 1 and line:find('^[%w_]', s - 1)
             local word_after = line:find('^[%w_]', e + 1)
