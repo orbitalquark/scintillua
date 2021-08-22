@@ -5,6 +5,7 @@ and better over the years.
 
 ### Code Contributors
 
+* Aki
 * Alejandro Baez
 * Alex Saraci
 * Alexey Melnichuk

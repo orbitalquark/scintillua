@@ -28,7 +28,8 @@ local special_target = token(lexer.CONSTANT, word_match{
   '.NOTPARALLEL', '.ONESHELL', '.POSIX'
 })
 local normal_target = token('target', (lexer.any - lexer.space - S(':#='))^1)
-lex:add_rule('target', lexer.starts_line((special_target + normal_target) * ws^0 * #(':' * -P('='))))
+local target_list = normal_target * (ws * normal_target)^0
+lex:add_rule('target', lexer.starts_line((special_target + target_list) * ws^0 * #(':' * -P('='))))
 lex:add_style('target', lexer.styles.label)
 
 -- Variables.
