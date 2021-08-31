@@ -2,6 +2,28 @@
 
 [Atom Feed](https://github.com/orbitalquark/scintillua/releases.atom)
 
+### 5.1 (31 Aug 2021)
+
+Download:
+
+* [Scintillua 5.1][]
+
+Bugfixes:
+
+* Support complex keywords and improved case-insensitivity in `lex:add_fold_point()`.
+
+Changes:
+
+* Updated VB lexer to support folding.
+* Updated Makefile lexer to support multiple targets.
+* Require [Lexilla][] 5.1.0 minimum version due to its internal API changes.
+* [SciTE][] 5.1.0 is the minimum supported version with drop-in installation.
+
+[Scintillua 5.1]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_5.1/scintillua_5.1.zip
+[Scintilla]: https://scintilla.org
+[Lexilla]: https://scintilla.org/Lexilla.html
+[SciTE]: https://scintilla.org/SciTE.html
+
 ### 5.0 (26 Jun 2021)
 
 Download:
