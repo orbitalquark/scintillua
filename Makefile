@@ -85,7 +85,7 @@ release: $(basedir)
 # Tests.
 
 tests: test-lexers test-scite test-wscite
-test-lexers: tests.lua ; lua5.1 $<
+test-lexers: tests.lua ; lua $<
 # Tests SciTE GTK using ~/.SciTEUser.properties.
 test-scite: scintilla
 	make -C scintilla/gtk -j4
@@ -93,7 +93,7 @@ test-scite: scintilla
 	make -C scite/gtk -j4
 	scite/bin/SciTE
 # Tests, via Wine, SciTE Win64 using SciTEGlobal.properties.
-wscite_zip = wscite503.zip
+wscite_zip = wscite510.zip
 /tmp/$(wscite_zip): ; wget -O $@ https://www.scintilla.org/$(wscite_zip)
 /tmp/wscite: /tmp/$(wscite_zip)
 	unzip -d /tmp $<
@@ -107,7 +107,7 @@ test-wscite: /tmp/wscite
 # External dependencies.
 
 scintilla_tgz = scintilla501.tgz
-lexilla_tgz = lexilla500.tgz
+lexilla_tgz = lexilla510.tgz
 lua_tgz = lua-5.3.5.tar.gz
 lpeg_tgz = lpeg-1.0.2.tar.gz
 

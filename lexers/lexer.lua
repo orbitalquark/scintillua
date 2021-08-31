@@ -1454,8 +1454,9 @@ local lexers = {} -- cache of loaded lexers
 function M.load(name, alt_name, cache)
   if cache and lexers[alt_name or name] then return lexers[alt_name or name] end
 
-  -- When using Scintillua as a stand-alone module, the `property` and `property_int` tables
-  -- do not exist (they are not useful). Create them in order prevent errors from occurring.
+  -- When using Scintillua as a stand-alone module, the `property`, `property_int`, and
+  -- `property_expanded` tables do not exist (they are not useful). Create them in order prevent
+  -- errors from occurring.
   if not M.property then
     M.property = setmetatable({['lexer.lpeg.home'] = package.path:gsub('/%?%.lua', '')}, {
       __index = function() return '' end,
@@ -1464,6 +1465,11 @@ function M.load(name, alt_name, cache)
     M.property_int = setmetatable({}, {
       __index = function(t, k) return tonumber(M.property[k]) or 0 end,
       __newindex = function() error('read-only property') end
+    })
+    M.property_expanded = setmetatable({}, {
+      __index = function(t, key)
+        return M.property[key]:gsub('[$%%](%b())', function(key) return t[key:sub(2, -2)] end)
+      end, __newindex = function() error('read-only property') end
     })
   end
 
@@ -1826,14 +1832,6 @@ function M.fold_line_comments(prefix)
   print('lexer.fold_line_comments() is deprecated, use lexer.fold_consecutive_lines()')
   return select(2, M.fold_consecutive_lines(prefix))
 end
-
-M.property_expanded = setmetatable({}, {
-  -- Returns the string property value associated with string property *key*, replacing any
-  -- "$()" and "%()" expressions with the values of their keys.
-  __index = function(t, key)
-    return M.property[key]:gsub('[$%%]%b()', function(key) return t[key:sub(3, -2)] end)
-  end, __newindex = function() error('read-only property') end
-})
 
 --[[ The functions and fields below were defined in C.
 

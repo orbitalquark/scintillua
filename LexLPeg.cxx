@@ -39,6 +39,7 @@ LUALIB_API int luaopen_lpeg(lua_State *L);
 }
 
 using namespace Scintilla;
+using namespace Lexilla;
 
 #ifndef NDEBUG
 #define RECORD_STACK_TOP(l) int orig_stack_top = lua_gettop(l)
@@ -223,6 +224,29 @@ static int lua_error_handler(lua_State *L) {
   return 1;
 }
 
+/**
+ * Replaces the string property key the top of the stack with its expanded value.
+ * @param L The Lua State.
+ * @param lexer The LPeg lexer with properties.
+ */
+static void expand_property(lua_State *L, LexerLPeg *lexer) {
+  RECORD_STACK_TOP(L);
+  lua_getglobal(L, "string"), lua_getfield(L, -1, "gsub"), lua_replace(L, -2);
+  lua_pushstring(L, lexer->PropertyGet(luaL_checkstring(L, -2)));
+  lua_pushstring(L, "[$%%](%b())");
+  lua_pushlightuserdata(L, lexer);
+  static auto closure = [](lua_State *L) -> int {
+    lua_getglobal(L, "string"), lua_getfield(L, -1, "sub");
+    lua_pushvalue(L, 1), lua_pushnumber(L, -2), lua_pushnumber(L, 2), lua_call(L, 3, 1);
+    auto lexer = reinterpret_cast<LexerLPeg *>(lua_touserdata(L, lua_upvalueindex(1)));
+    lua_pushstring(L, lexer->PropertyGet(lua_tostring(L, -1)));
+    return 1;
+  };
+  lua_pushcclosure(L, closure, 1);
+  lua_call(L, 3, 1), lua_replace(L, -2);
+  ASSERT_STACK_TOP(L);
+}
+
 /** lexer.property[key] metamethod. */
 static int lexer_property_index(lua_State *L) {
   const char *property = lua_tostring(L, lua_upvalueindex(1));
@@ -242,6 +266,8 @@ static int lexer_property_index(lua_State *L) {
   } else if (strcmp(property, "property_int") == 0) {
     lua_pushstring(L, lexer->PropertyGet(luaL_checkstring(L, 2)));
     lua_pushinteger(L, lua_tointeger(L, -1));
+  } else if (strcmp(property, "property_expanded") == 0) {
+    expand_property(L, lexer);
   } else if (strcmp(property, "style_at") == 0) {
     luaL_argcheck(L, buffer, 1, "must be lexing or folding");
     int style = buffer->StyleAt(luaL_checkinteger(L, 2) - 1);
@@ -261,8 +287,8 @@ static int lexer_property_newindex(lua_State *L) {
   const char *property = lua_tostring(L, lua_upvalueindex(1));
   luaL_argcheck(L,
     strcmp(property, "fold_level") != 0 && strcmp(property, "indent_amount") != 0 &&
-      strcmp(property, "property_int") != 0 && strcmp(property, "style_at") != 0 &&
-      strcmp(property, "line_from_position") != 0,
+      strcmp(property, "property_int") != 0 && strcmp(property, "property_expanded") != 0 &&
+      strcmp(property, "style_at") != 0 && strcmp(property, "line_from_position") != 0,
     3, "read-only property");
   lua_getfield(L, LUA_REGISTRYINDEX, "sci_lexer_lpeg");
   LexerLPeg *lexer = reinterpret_cast<LexerLPeg *>(lua_touserdata(L, -1));
@@ -289,7 +315,8 @@ static int lexer_index(lua_State *L) {
   const char *key = lua_tostring(L, 2);
   if (strcmp(key, "fold_level") == 0 || strcmp(key, "indent_amount") == 0 ||
     strcmp(key, "property") == 0 || strcmp(key, "property_int") == 0 ||
-    strcmp(key, "style_at") == 0 || strcmp(key, "line_state") == 0) {
+    strcmp(key, "property_expanded") == 0 || strcmp(key, "style_at") == 0 ||
+    strcmp(key, "line_state") == 0) {
     lua_newtable(L);
     lua_createtable(L, 0, 2);
     lua_pushvalue(L, 2), lua_pushcclosure(L, lexer_property_index, 1);
@@ -336,20 +363,6 @@ static int lexer_newindex(lua_State *L) {
   } else
     lua_rawset(L, 1);
   return 0;
-}
-
-/**
- * Replaces the string property key the top of the stack with its expanded value.
- * Invokes `lexer.property_expanded[]` to perform the expansion.
- * @param L The Lua State.
- */
-static void expand_property(lua_State *L) {
-  RECORD_STACK_TOP(L);
-  lua_getfield(L, LUA_REGISTRYINDEX, "_LOADED"), lua_getfield(L, -1, "lexer");
-  lua_getfield(L, -1, "property_expanded");
-  lua_pushvalue(L, -4), lua_gettable(L, -2), lua_replace(L, -5);
-  lua_pop(L, 3); // property_expanded, lexer, _LOADED
-  ASSERT_STACK_TOP(L);
 }
 
 void LexerLPeg::ReadLexerNames(const char *path) {
@@ -483,14 +496,14 @@ void LexerLPeg::SetStyles() {
     ASSERT_STACK_TOP(L);
     return;
   }
-  lua_pushstring(L, "style.default"), expand_property(L);
+  lua_pushstring(L, "style.default"), expand_property(L, this);
   SetStyle(STYLE_DEFAULT, lua_tostring(L, -1));
   lua_pop(L, 1); // style
   SS(sci, SCI_STYLECLEARALL, 0, 0); // set default styles
   for (lua_pushnil(L); lua_next(L, -2); lua_pop(L, 1))
     if (lua_isstring(L, -2) && lua_isnumber(L, -1) && lua_tointeger(L, -1) - 1 != STYLE_DEFAULT) {
       lua_pushstring(L, "style."), lua_pushvalue(L, -3), lua_concat(L, 2);
-      expand_property(L);
+      expand_property(L, this);
       SetStyle(lua_tointeger(L, -2) - 1, lua_tostring(L, -1));
       lua_pop(L, 1); // style
     }
@@ -501,7 +514,7 @@ void LexerLPeg::SetStyles() {
       snprintf(prop_name, 64, "style.lpeg.%s.%0d", props.Get(LexerNameKey),
         static_cast<int>(lua_tointeger(L, -1)) - 1);
       lua_pushstring(L, "style."), lua_pushvalue(L, -3), lua_concat(L, 2);
-      expand_property(L);
+      expand_property(L, this);
       PropertySet(prop_name, lua_tostring(L, -1));
       lua_pop(L, 1); // style
     }
@@ -511,11 +524,11 @@ void LexerLPeg::SetStyles() {
 }
 
 bool LexerLPeg::Init() {
-  if (!props.GetExpanded(LexerHomeKey, nullptr) || !*props.Get(LexerNameKey) || !L) return false;
-  char *_home = reinterpret_cast<char *>(malloc(props.GetExpanded(LexerHomeKey, nullptr) + 1));
-  props.GetExpanded(LexerHomeKey, _home);
-  std::string home(_home);
-  free(_home);
+  if (!*props.Get(LexerHomeKey) || !*props.Get(LexerNameKey) || !L) return false;
+  lua_pushstring(L, LexerHomeKey), expand_property(L, this);
+  std::string home(lua_tostring(L, -1));
+  lua_pop(L, 1);
+  if (home.empty()) return false;
   const char *lexer = props.Get(LexerNameKey);
   RECORD_STACK_TOP(L);
 
@@ -587,14 +600,16 @@ bool LexerLPeg::Init() {
   lua_rawsetp(L, LUA_REGISTRYINDEX, reinterpret_cast<void *>(this));
 
   // Load the theme and set up styles.
-  if (props.GetExpanded(LexerThemeKey, nullptr)) {
-    char *theme = reinterpret_cast<char *>(malloc(props.GetExpanded(LexerThemeKey, nullptr) + 1));
-    props.GetExpanded(LexerThemeKey, theme);
-    if (!strstr(theme, "/") && !strstr(theme, "\\")) { // theme name
+  lua_pushstring(L, LexerThemeKey), expand_property(L, this);
+  std::string theme(lua_tostring(L, -1));
+  lua_pop(L, 1);
+  if (!theme.empty()) {
+    if (theme.find('/') == std::string::npos &&
+      theme.find('\\') == std::string::npos) { // theme name
       for (const std::string &dir : dirs) {
         lua_pushstring(L, dir.c_str());
         lua_pushstring(L, "/themes/");
-        lua_pushstring(L, theme);
+        lua_pushstring(L, theme.c_str());
         lua_pushstring(L, ".lua");
         lua_concat(L, 4);
         if (luaL_loadfile(L, lua_tostring(L, -1)) != LUA_ERRFILE || dir == dirs.back()) {
@@ -604,14 +619,13 @@ bool LexerLPeg::Init() {
         lua_pop(L, 2); // error message, filename
       }
     } else
-      lua_pushstring(L, theme); // path to theme
+      lua_pushstring(L, theme.c_str()); // path to theme
     lua_pushcfunction(L, lua_error_handler);
     lua_insert(L, -2);
     if (luaL_loadfile(L, lua_tostring(L, -1)) == LUA_OK && lua_pcall(L, 0, 0, -3) == LUA_OK)
       lua_pop(L, 2); // theme, lua_error_handler
     else
       LogError(L);
-    free(theme);
   }
   SetStyles();
 
@@ -788,7 +802,7 @@ void SCI_METHOD LexerLPeg::Fold(
 }
 
 Sci_Position SCI_METHOD LexerLPeg::PropertySet(const char *key, const char *value) {
-  props.Set(key, value, strlen(key), strlen(value));
+  props.Set(key, value);
   if (strcmp(key, LexerHomeKey) == 0 && lexerNames.empty())
     ReadLexerNames(value); // not using SCI_CREATELOADER private call
   if (reinit && (strcmp(key, LexerHomeKey) == 0 || strcmp(key, LexerNameKey) == 0)) Init();
@@ -802,7 +816,7 @@ Sci_Position SCI_METHOD LexerLPeg::PropertySet(const char *key, const char *valu
       lua_getfield(L, -1, "_TOKENSTYLES");
       lua_pushstring(L, key + 6);
       if (lua_rawget(L, -2) == LUA_TNUMBER) {
-        lua_pushstring(L, key), expand_property(L);
+        lua_pushstring(L, key), expand_property(L, this);
         int style_num = lua_tointeger(L, -2) - 1;
         SetStyle(style_num, lua_tostring(L, -1));
         if (style_num == STYLE_DEFAULT)

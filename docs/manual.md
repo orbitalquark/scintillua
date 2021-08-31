@@ -11,7 +11,7 @@ These usages are discussed in the following sections.
 ### Drop-in External Lexer
 
 Scintillua can be dropped into any existing installation of a Scintilla-based application as
-long as that application supports the [Lexilla][] protocol as defined in Scintilla 4.4.5 and 5.0.0.
+long as that application supports [Lexilla][] 5.1.0 or greater.
 
 Scintillua releases come with three external lexers in the *lexers/* directory: *liblexlpeg.so*,
 which is a 64-bit Linux shared library; *LexLPeg.cxx*, which is a 64-bit Windows DLL, and
@@ -22,7 +22,7 @@ which is a 64-bit Linux shared library; *LexLPeg.cxx*, which is a 64-bit Windows
 #### Using Scintillua with SciTE
 
 [SciTE][] is the SCIntilla based Text Editor. Scintillua can be dropped into any SciTE
-installation version 5.0.3 or higher with or without administrator privileges.
+installation version 5.1.0 or higher with or without administrator privileges.
 
 In order to install Scintillua for all users (likely requiring administrator privileges):
 
