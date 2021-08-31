@@ -251,7 +251,7 @@ static void expand_property(lua_State *L, LexerLPeg *lexer) {
 static int lexer_property_index(lua_State *L) {
   const char *property = lua_tostring(L, lua_upvalueindex(1));
   lua_getfield(L, LUA_REGISTRYINDEX, "sci_lexer_lpeg");
-  LexerLPeg *lexer = reinterpret_cast<LexerLPeg *>(lua_touserdata(L, -1));
+  auto lexer = reinterpret_cast<LexerLPeg *>(lua_touserdata(L, -1));
   lua_rawgetp(L, LUA_REGISTRYINDEX, lua_touserdata(L, -1));
   lua_getfield(L, -1, "_BUFFER");
   auto buffer = static_cast<IDocument *>(lua_touserdata(L, -1));
@@ -291,7 +291,7 @@ static int lexer_property_newindex(lua_State *L) {
       strcmp(property, "style_at") != 0 && strcmp(property, "line_from_position") != 0,
     3, "read-only property");
   lua_getfield(L, LUA_REGISTRYINDEX, "sci_lexer_lpeg");
-  LexerLPeg *lexer = reinterpret_cast<LexerLPeg *>(lua_touserdata(L, -1));
+  auto lexer = reinterpret_cast<LexerLPeg *>(lua_touserdata(L, -1));
   lua_rawgetp(L, LUA_REGISTRYINDEX, lua_touserdata(L, -1));
   if (strcmp(property, "property") == 0)
     lexer->PropertySet(luaL_checkstring(L, 2), luaL_checkstring(L, 3));
@@ -333,7 +333,7 @@ static int lexer_index(lua_State *L) {
     // Alias lexer.fold* to lexer.property['fold*'].
     if (strcmp(key, "folding") == 0) key = "fold"; // lexer.fold() exists
     lua_getfield(L, LUA_REGISTRYINDEX, "sci_lexer_lpeg");
-    LexerLPeg *lexer = reinterpret_cast<LexerLPeg *>(lua_touserdata(L, -1));
+    auto lexer = reinterpret_cast<LexerLPeg *>(lua_touserdata(L, -1));
     const char *value = lexer->PropertyGet(luaL_gsub(L, key, "_", "."));
     lua_pushboolean(L, strcmp(value, "1") == 0);
   } else
@@ -355,7 +355,7 @@ static int lexer_newindex(lua_State *L) {
     if (strcmp(key, "folding") == 0) key = "fold"; // lexer.fold() exists
     key = luaL_gsub(L, key, "_", ".");
     lua_getfield(L, LUA_REGISTRYINDEX, "sci_lexer_lpeg");
-    LexerLPeg *lexer = reinterpret_cast<LexerLPeg *>(lua_touserdata(L, -1));
+    auto lexer = reinterpret_cast<LexerLPeg *>(lua_touserdata(L, -1));
     if (lua_toboolean(L, 3))
       lexer->PropertySet(key, (!lua_isnumber(L, 3) || lua_tonumber(L, 3) == 1) ? "1" : "0");
     else
@@ -844,7 +844,7 @@ void *SCI_METHOD LexerLPeg::PrivateCall(int code, void *arg) {
     L = reinterpret_cast<lua_State *>(arg), ownLua = false;
     return nullptr;
   case SCI_CREATELOADER: {
-    const char *path = reinterpret_cast<const char *>(arg);
+    auto path = reinterpret_cast<const char *>(arg);
     ReadLexerNames(path);
     std::string home(props.Get(LexerHomeKey));
     if (!home.empty()) home.push_back(';');
