@@ -2,6 +2,22 @@
 
 [Atom Feed](https://github.com/orbitalquark/scintillua/releases.atom)
 
+### 5.2 (18 Sep 2021)
+
+Download:
+
+* [Scintillua 5.2][]
+
+Bugfixes:
+
+* Fixed crashing/lack of styling in some 64-bit drop-in installations (e.g. SciTE).
+
+Changes:
+
+* None.
+
+[Scintillua 5.2]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_5.2/scintillua_5.2.zip
+
 ### 5.1 (31 Aug 2021)
 
 Download:
