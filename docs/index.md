@@ -26,12 +26,11 @@ information of source code snippets. Scintilla is not required in that case.
 
 ## Requirements
 
-Scintillua requires Scintilla 4.4.5 or greater for a drop-in installation. When compiling
-Scintillua, Scintilla 5.0.1 or greater and [Lexilla][] 5.0.0 are required. The drop-in external
-lexer already has Lua and LPeg are pre-compiled into it.
+Scintillua requires Scintilla 5.0.1 or greater and [Lexilla][] 5.1.0 or greater for a drop-in
+installation. The drop-in external lexer already has Lua and LPeg pre-compiled into it.
 
-When used a standalone Lua library, Scintillua requires Lua 5.1 or greater and [LPeg][] 1.0.0
-or greater. Scintilla is not required.
+When used as a standalone Lua library, Scintillua requires Lua 5.1 or greater and [LPeg][]
+1.0.0 or greater. Scintilla is not required.
 
 [Lexilla]: https://www.scintilla.org/Lexilla.html
 [LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/
@@ -96,7 +95,7 @@ your Scintilla-based application please see the [manual][].
 ## Contribute
 
 Scintillua is [open source][]. Feel free to submit new lexers, report bugs, ask for help, and
-discuss features. You can also contact me personally (orbitalquark.att.triplequasar.com). Thanks
+discuss features. You can also contact me personally (orbitalquark att triplequasar.com). Thanks
 to [everyone][] who has contributed.
 
 [open source]: https://github.com/orbitalquark/scintillua
