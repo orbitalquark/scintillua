@@ -19,6 +19,7 @@ and better over the years.
 * Florian Fischer
 * Heck Fy
 * Hugo O. Rivera
+* ittegrat
 * Ivan Baidakou
 * Jason Schindler
 * Jeff Stone

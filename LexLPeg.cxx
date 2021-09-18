@@ -143,7 +143,7 @@ class LexerLPeg : public DefaultLexer {
    * @param str The string to copy.
    * @return number of bytes needed to hold *str*
    */
-  void *StringResult(long lparam, const char *str);
+  void *StringResult(sptr_t lparam, const char *str);
 
 public:
   // Lexer property keys.
@@ -646,7 +646,7 @@ bool LexerLPeg::Init() {
   return true;
 }
 
-void *LexerLPeg::StringResult(long lparam, const char *str) {
+void *LexerLPeg::StringResult(sptr_t lparam, const char *str) {
   if (lparam) strcpy(reinterpret_cast<char *>(lparam), str);
   return reinterpret_cast<void *>(strlen(str));
 }
