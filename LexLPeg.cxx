@@ -237,7 +237,7 @@ static void expand_property(lua_State *L, LexerLPeg *lexer) {
   lua_pushlightuserdata(L, lexer);
   static auto closure = [](lua_State *L) -> int {
     lua_getglobal(L, "string"), lua_getfield(L, -1, "sub");
-    lua_pushvalue(L, 1), lua_pushnumber(L, -2), lua_pushnumber(L, 2), lua_call(L, 3, 1);
+    lua_pushvalue(L, 1), lua_pushnumber(L, 2), lua_pushnumber(L, -2), lua_call(L, 3, 1);
     auto lexer = reinterpret_cast<LexerLPeg *>(lua_touserdata(L, lua_upvalueindex(1)));
     lua_pushstring(L, lexer->PropertyGet(lua_tostring(L, -1)));
     return 1;
@@ -267,7 +267,7 @@ static int lexer_property_index(lua_State *L) {
     lua_pushstring(L, lexer->PropertyGet(luaL_checkstring(L, 2)));
     lua_pushinteger(L, lua_tointeger(L, -1));
   } else if (strcmp(property, "property_expanded") == 0) {
-    expand_property(L, lexer);
+    lua_pushvalue(L, 2), expand_property(L, lexer);
   } else if (strcmp(property, "style_at") == 0) {
     luaL_argcheck(L, buffer, 1, "must be lexing or folding");
     int style = buffer->StyleAt(luaL_checkinteger(L, 2) - 1);
