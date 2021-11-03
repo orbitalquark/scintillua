@@ -2,6 +2,22 @@
 
 [Atom Feed](https://github.com/orbitalquark/scintillua/releases.atom)
 
+### 5.3 (03 Nov 2021)
+
+Download:
+
+* [Scintillua 5.3][]
+
+Bugfixes:
+
+* Fixed bug looking up custom styles introduced in 5.1.
+
+Changes:
+
+* None.
+
+[Scintillua 5.3]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_5.3/scintillua_5.3.zip
+
 ### 5.2 (18 Sep 2021)
 
 Download:
