@@ -52,6 +52,7 @@ and better over the years.
 * Roberto Ierusalimschy
 * S\. Gilles
 * Simeon Maryasin
+* Snoopy
 * Stéphane Rivière
 * Tobias Frilling
 * Tymur Gubayev
