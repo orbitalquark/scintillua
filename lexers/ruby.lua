@@ -81,7 +81,7 @@ lex:add_rule('string', string + regex)
 
 -- Numbers.
 local dec = lexer.digit^1 * ('_' * lexer.digit^1)^0 * S('ri')^-1
-local bin = '0b' * S('01')^1 * ('_' * S('01')^1)^0
+local bin = '0b' * S('01')^1 * ('_' * S('01')^1)^0 * -lexer.xdigit
 local integer = S('+-')^-1 * (bin + lexer.hex_num + lexer.oct_num + dec)
 -- TODO: meta, control, etc. for numeric_literal.
 local numeric_literal = '?' * (lexer.any - lexer.space) * -word_char
