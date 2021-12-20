@@ -120,7 +120,7 @@ lex:add_rule('comment', token(lexer.COMMENT, line_comment + block_comment + nest
 -- Numbers.
 local dec = lexer.digit^1 * ('_' * lexer.digit^1)^0
 local hex_num = lexer.hex_num * ('_' * lexer.xdigit^1)^0
-local bin_num = '0' * S('bB') * S('01_')^1
+local bin_num = '0' * S('bB') * S('01_')^1 * -lexer.xdigit
 local oct_num = '0' * S('01234567_')^1
 local integer = S('+-')^-1 * (hex_num + oct_num + bin_num + dec)
 lex:add_rule('number', token(lexer.NUMBER, (lexer.float + integer) * S('uULdDfFi')^-1))

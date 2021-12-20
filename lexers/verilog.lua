@@ -57,7 +57,7 @@ local block_comment = lexer.range('/*', '*/')
 lex:add_rule('comment', token(lexer.COMMENT, line_comment + block_comment))
 
 -- Numbers.
-local bin_suffix = S('bB') * S('01_xXzZ')^1
+local bin_suffix = S('bB') * S('01_xXzZ')^1 * -lexer.xdigit
 local oct_suffix = S('oO') * S('01234567_xXzZ')^1
 local dec_suffix = S('dD') * S('0123456789_xXzZ')^1
 local hex_suffix = S('hH') * S('0123456789abcdefABCDEF_xXzZ')^1

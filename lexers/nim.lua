@@ -88,7 +88,7 @@ lex:add_rule('comment', token(lexer.COMMENT, block_comment + line_comment))
 -- Numbers.
 local dec = lexer.digit^1 * ('_' * lexer.digit^1)^0
 local hex = '0' * S('xX') * lexer.xdigit^1 * ('_' * lexer.xdigit^1)^0
-local bin = '0' * S('bB') * S('01')^1 * ('_' * S('01')^1)^0
+local bin = '0' * S('bB') * S('01')^1 * ('_' * S('01')^1)^0 * -lexer.xdigit
 local oct = '0o' * lpeg.R('07')^1
 local integer = S('+-')^-1 * (bin + hex + oct + dec) *
   ("'" * S('iIuUfF') * (P('8') + '16' + '32' + '64'))^-1

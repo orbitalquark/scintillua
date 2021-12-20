@@ -50,7 +50,7 @@ lex:add_rule('comment', token(lexer.COMMENT, line_comment + block_comment))
 -- Numbers.
 local dec = lexer.digit^1 * ("'" * lexer.digit^1)^0
 local hex = '0' * S('xX') * lexer.xdigit^1 * ("'" * lexer.xdigit^1)^0
-local bin = '0' * S('bB') * S('01')^1 * ("'" * S('01')^1)^0
+local bin = '0' * S('bB') * S('01')^1 * ("'" * S('01')^1)^0 * -lexer.xdigit
 local integer = S('+-')^-1 * (hex + bin + dec)
 lex:add_rule('number', token(lexer.NUMBER, lexer.float + integer))
 

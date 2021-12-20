@@ -73,7 +73,7 @@ local function can_neg(patt) return (lpeg.B(lexer.space + S('+-/*%<>=&|:,.')) * 
 local function can_sep(patt) return (P('_')^-1 * patt^1)^1 end
 local dec = lexer.digit * can_sep(lexer.digit)^0
 local float = dec * '.' * dec^0
-local bin = '0' * S('bB') * can_sep(S('01'))
+local bin = '0' * S('bB') * can_sep(S('01')) * -lexer.xdigit
 local oct = '0' * S('oO') * can_sep(lpeg.R('07'))
 local hex = '0' * S('xX') * can_sep(lexer.xdigit)
 local num_tok = token(lexer.NUMBER, can_neg(float) + bin + oct + hex + can_neg(dec))
