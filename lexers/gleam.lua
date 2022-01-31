@@ -1,4 +1,4 @@
--- Copyright 2021 Mitchell. See LICENSE.
+-- Copyright 2021-2022 Mitchell. See LICENSE.
 -- Gleam LPeg lexer
 -- https://gleam.run/
 -- Contributed by Tynan Beatty

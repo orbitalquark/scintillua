@@ -1,4 +1,4 @@
--- Copyright 2006-2021 Mitchell. See LICENSE.
+-- Copyright 2006-2022 Mitchell. See LICENSE.
 -- D LPeg lexer.
 -- Heavily modified by Brian Schott (@Hackerpilot on Github).
 

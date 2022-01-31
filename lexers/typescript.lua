@@ -1,4 +1,4 @@
--- Copyright 2021 Mitchell. See LICENSE.
+-- Copyright 2021-2022 Mitchell. See LICENSE.
 -- TypeScript LPeg lexer.
 
 local lexer = require('lexer')

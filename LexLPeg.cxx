@@ -1,5 +1,5 @@
 /**
- * Copyright 2006-2021 Mitchell. See LICENSE.
+ * Copyright 2006-2022 Mitchell. See LICENSE.
  * Lua-powered dynamic language lexer for Scintillua.
  * For documentation on writing lexers, see *lexers/lexer.lua*.
  */

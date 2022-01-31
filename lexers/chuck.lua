@@ -1,4 +1,4 @@
--- Copyright 2010-2021 Martin Morawetz. See LICENSE.
+-- Copyright 2010-2022 Martin Morawetz. See LICENSE.
 -- ChucK LPeg lexer.
 
 local lexer = require('lexer')

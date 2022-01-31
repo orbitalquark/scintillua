@@ -1,4 +1,4 @@
--- Copyright 2017-2021 Mitchell. See LICENSE.
+-- Copyright 2017-2022 Mitchell. See LICENSE.
 -- Unit tests for Scintillua lexers.
 
 package.path = 'lexers/?.lua;' .. package.path

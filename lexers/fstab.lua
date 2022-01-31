@@ -1,4 +1,4 @@
--- Copyright 2016-2021 Christian Hesse. See LICENSE.
+-- Copyright 2016-2022 Christian Hesse. See LICENSE.
 -- fstab LPeg lexer.
 
 local lexer = require('lexer')
