@@ -46,6 +46,7 @@ and better over the years.
 * Olivier Guibé
 * Paul Kulchenko
 * Peter Odding
+* Phil Hagelberg
 * Piotr Orzechowski
 * Richard Philips
 * Robert Gieseke
