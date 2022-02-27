@@ -47,7 +47,7 @@ local implicit_var = word_match{
   'TEX', 'TEXI2DVI', 'WEAVE', 'CWEAVE', 'TANGLE', 'CTANGLE', 'RM',
   -- Some common flag variables.
   'ARFLAGS', 'ASFLAGS', 'CFLAGS', 'CXXFLAGS', 'COFLAGS', 'CPPFLAGS', 'FFLAGS', 'GFLAGS', 'LDFLAGS',
-  'LFLAGS', 'YFLAGS', 'PFLAGS', 'RFLAGS', 'LINTFLAGS',
+  'LDLIBS', 'LFLAGS', 'YFLAGS', 'PFLAGS', 'RFLAGS', 'LINTFLAGS',
   -- Other.
   'DESTDIR', 'MAKE', 'MAKEFLAGS', 'MAKEOVERRIDES', 'MFLAGS'
 } * #(ws^0 * assign)
