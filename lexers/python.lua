@@ -7,12 +7,17 @@ local P, S = lpeg.P, lpeg.S
 
 local lex = lexer.new('python', {fold_by_indentation = true})
 
+-- Use ws and classdef from Java for Python classes
 -- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+local ws = token(lexer.WHITESPACE, lexer.space^1)
+lex:add_rule('whitespace', ws)
+
+-- Classes.
+lex:add_rule('classdef', token(lexer.KEYWORD, 'class') * ws * token(lexer.CLASS, lexer.word))
 
 -- Keywords.
 lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
-  'and', 'as', 'assert', 'async', 'await', 'break', 'class', 'continue', 'def', 'del', 'elif',
+  'and', 'as', 'assert', 'async', 'await', 'break', 'continue', 'def', 'del', 'elif',
   'else', 'except', 'exec', 'finally', 'for', 'from', 'global', 'if', 'import', 'in', 'is',
   'lambda', 'nonlocal', 'not', 'or', 'pass', 'print', 'raise', 'return', 'try', 'while', 'with',
   'yield',
