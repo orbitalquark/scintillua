@@ -17,6 +17,7 @@ and better over the years.
 * Christos Chatzifountas
 * David B. Lamkins
 * Florian Fischer
+* Hao Chi Kiang
 * Heck Fy
 * Hugo O. Rivera
 * ittegrat

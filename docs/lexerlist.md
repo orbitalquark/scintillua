@@ -103,7 +103,7 @@ used if [`fold.by.indentation`][] is enabled. For SciTE, see *lexers/lpeg.proper
 1. Properties
 1. Pure
 1. Python
-1. R
+1. R`*`
 1. rc`*`
 1. Reason
 1. REBOL`*`
