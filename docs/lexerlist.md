@@ -55,6 +55,7 @@ used if [`fold.by.indentation`][] is enabled. For SciTE, see *lexers/lpeg.proper
 1. Go`*`
 1. Groovy`*`
 1. Gtkrc`*`
+1. Hare`*`
 1. Haskell
 1. HTML`*`
 1. Icon`*`

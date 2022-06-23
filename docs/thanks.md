@@ -49,6 +49,7 @@ and better over the years.
 * Peter Odding
 * Phil Hagelberg
 * Piotr Orzechowski
+* Qiu
 * Richard Philips
 * Robert Gieseke
 * Roberto Ierusalimschy
