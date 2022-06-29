@@ -24,7 +24,7 @@ local number = token(l.NUMBER, P('-')^-1 * l.digit^1 * (S('./') * l.digit^1)^-1)
 -- Keywords.
 local keyword = token(l.KEYWORD, word_match({
   'def', 'var', 'fn', 'do', 'quote', 'if', 'splice', 'while', 'break', 'set',
-  'quasiquote', 'unquote', 'upscope', 
+  'quasiquote', 'unquote', 'upscope', 'defn', 'defmacro'
 }, '-*!'))
 
 -- Functions.
