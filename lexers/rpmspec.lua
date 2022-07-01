@@ -18,11 +18,19 @@ lex:add_rule('comment', comment)
 local string = token(lexer.STRING, lexer.delimited_range('"'))
 lex:add_rule('string', string)
 
--- -- Keywords.
--- local keyword = token(lexer.KEYWORD, word_match({
---   ''
--- }, nil, true))
--- lex:add_rule('keyword', keyword)
+-- Keywords.
+local keyword = token(lexer.KEYWORD, word_match({
+  ''
+  'Prereq', 'Summary', 'Name', 'Version', 'Packager', 'Requires',
+  'Recommends', 'Suggests', 'Supplements', 'Enhances', 'Icon', 'URL',
+  'Source', 'Patch', 'Prefix', 'Packager', 'Group', 'License',
+  'Release', 'BuildRoot', 'Distribution', 'Vendor', 'Provides',
+  'ExclusiveArch', 'ExcludeArch', 'ExclusiveOS', 'Obsoletes',
+  'BuildArch', 'BuildArchitectures', 'BuildRequires', 'BuildConflicts',
+  'BuildPreReq', 'Conflicts', 'AutoRequires', 'AutoReq', 'AutoReqProv',
+  'AutoProv', 'Epoch'
+}, nil, true))
+lex:add_rule('keyword', keyword)
 
 -- Macros
 local command = token(lexer.FUNCTION, '%' * lexer.word)
@@ -35,14 +43,6 @@ lex:add_rule('command', command)
 
 -- Identifiers.
 local identifier = token(lexer.IDENTIFIER, word_match({
-  'Prereq', 'Summary', 'Name', 'Version', 'Packager', 'Requires',
-  'Recommends', 'Suggests', 'Supplements', 'Enhances', 'Icon', 'URL',
-  'Source', 'Patch', 'Prefix', 'Packager', 'Group', 'License',
-  'Release', 'BuildRoot', 'Distribution', 'Vendor', 'Provides',
-  'ExclusiveArch', 'ExcludeArch', 'ExclusiveOS', 'Obsoletes',
-  'BuildArch', 'BuildArchitectures', 'BuildRequires', 'BuildConflicts',
-  'BuildPreReq', 'Conflicts', 'AutoRequires', 'AutoReq', 'AutoReqProv',
-  'AutoProv', 'Epoch'
 }))
 lex:add_rule('identifier', identifier)
 
