@@ -37,6 +37,7 @@ and better over the years.
 * Marc André Tanner
 * Markus F.X.J. Oberhumer
 * Martin Morawetz
+* Matej Cepl
 * Michael Forney
 * Michael T. Richter
 * Michel Martens

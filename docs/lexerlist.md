@@ -112,6 +112,7 @@ used if [`fold.by.indentation`][] is enabled. For SciTE, see *lexers/lpeg.proper
 1. ReStructuredText`*`
 1. RHTML`*`
 1. RouterOS`*`
+1. RPM Spec
 1. Ruby`*`
 1. Ruby on Rails`*`
 1. Rust`*`
