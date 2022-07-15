@@ -12,6 +12,12 @@ lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 -- Comments.
 lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('#')))
 
+-- Numbers (including versions)
+lex:add_rule('number', token(lexer.NUMBER, lexer.number + S('.+~')))
+
+-- Operators
+lex:add_rule('operator', token(lexer.OPERATOR, S('&<>=|')))
+
 -- Strings.
 lex:add_rule('string', token(lexer.STRING, lexer.range('"')))
 
@@ -28,12 +34,11 @@ lex:add_rule('keyword', token(lexer.KEYWORD, word_match({
 }) + (P('Patch') + P('Source')) * R('09')^0))
 
 -- Macros
-lex:add_rule('command', token(lexer.FUNCTION, '%' * lexer.word +
-                                              '%{' * lexer.word * '}'))
+lex:add_rule('command', token(lexer.FUNCTION, S('%$')^1 * S('{')^0 * lexer.word * S('}')^0 ))
 
 -- Constants
 lex:add_rule('constant', token(lexer.CONSTANT, word_match({
-    'rhel', 'fedora', 'suse_version', 'sle_version'
+    'rhel', 'fedora', 'suse_version', 'sle_version', 'x86_64'
 })))
 
 lexer.property['scintillua.comment'] = '#'
