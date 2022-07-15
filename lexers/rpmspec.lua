@@ -16,7 +16,7 @@ lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('#')))
 lex:add_rule('string', token(lexer.STRING, lexer.range('"')))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match({
     'Prereq', 'Summary', 'Name', 'Version', 'Packager',
     'Requires', 'Recommends', 'Suggests', 'Supplements',
     'Enhances', 'Icon', 'URL', 'Prefix', 'Packager', 'Group',
@@ -25,7 +25,7 @@ lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
     'Obsoletes', 'BuildArch', 'BuildArchitectures', 'BuildRequires',
     'BuildConflicts', 'BuildPreReq', 'Conflicts', 'AutoRequires',
     'AutoReq', 'AutoReqProv', 'AutoProv', 'Epoch'
-}) + (P('Patch') + P('Source')) * R('09')^0)
+}) + (P('Patch') + P('Source')) * R('09')^0))
 
 -- Macros
 lex:add_rule('command', token(lexer.FUNCTION, '%' * lexer.word +
