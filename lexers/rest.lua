@@ -198,35 +198,35 @@ local sphinx_levels = {
   ['#'] = 0, ['*'] = 1, ['='] = 2, ['-'] = 3, ['^'] = 4, ['"'] = 5
 }
 
--- -- Section-based folding.
--- M._fold = function(text, start_pos, start_line, start_level)
---   local folds, line_starts = {}, {}
---   for pos in (text .. '\n'):gmatch('().-\r?\n') do
---     line_starts[#line_starts + 1] = pos
---   end
---   local style_at, CONSTANT, level = lexer.style_at, lexer.CONSTANT, start_level
---   local sphinx = lexer.property_int['fold.by.sphinx.convention'] > 0
---   local FOLD_BASE = lexer.FOLD_BASE
---   local FOLD_HEADER, FOLD_BLANK = lexer.FOLD_HEADER, lexer.FOLD_BLANK
---   for i = 1, #line_starts do
---     local pos, next_pos = line_starts[i], line_starts[i + 1]
---     local c = text:sub(pos, pos)
---     local line_num = start_line + i - 1
---     folds[line_num] = level
---     if style_at[start_pos + pos - 1] == CONSTANT and c:find('^[^%w%s]') then
---       local sphinx_level = FOLD_BASE + (sphinx_levels[c] or #sphinx_levels)
---       level = not sphinx and level - 1 or sphinx_level
---       if level < FOLD_BASE then level = FOLD_BASE end
---       folds[line_num - 1], folds[line_num] = level, level + FOLD_HEADER
---       level = (not sphinx and level or sphinx_level) + 1
---     elseif c == '\r' or c == '\n' then
---       folds[line_num] = level + FOLD_BLANK
---     end
---   end
---   return folds
--- end
+-- Section-based folding.
+lex.fold = function(text, start_pos, start_line, start_level)
+  local folds, line_starts = {}, {}
+  for pos in (text .. '\n'):gmatch('().-\r?\n') do
+    line_starts[#line_starts + 1] = pos
+  end
+  local style_at, CONSTANT, level = lexer.style_at, lexer.CONSTANT, start_level
+  local sphinx = lexer.property_int['fold.by.sphinx.convention'] > 0
+  local FOLD_BASE = lexer.FOLD_BASE
+  local FOLD_HEADER, FOLD_BLANK = lexer.FOLD_HEADER, lexer.FOLD_BLANK
+  for i = 1, #line_starts do
+    local pos, next_pos = line_starts[i], line_starts[i + 1]
+    local c = text:sub(pos, pos)
+    local line_num = start_line + i - 1
+    folds[line_num] = level
+    if style_at[start_pos + pos - 1] == CONSTANT and c:find('^[^%w%s]') then
+      local sphinx_level = FOLD_BASE + (sphinx_levels[c] or #sphinx_levels)
+      level = not sphinx and level - 1 or sphinx_level
+      if level < FOLD_BASE then level = FOLD_BASE end
+      folds[line_num - 1], folds[line_num] = level, level + FOLD_HEADER
+      level = (not sphinx and level or sphinx_level) + 1
+    elseif c == '\r' or c == '\n' then
+      folds[line_num] = level + FOLD_BLANK
+    end
+  end
+  return folds
+end
 
-lexer.property['fold.by.sphinx.convention'] = '0'
+-- lex.property['fold.by.sphinx.convention'] = '0'
 
 --[[ Embedded languages.
 local bash = lexer.load('bash')
