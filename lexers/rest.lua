@@ -7,32 +7,19 @@ local P, S = lpeg.P, lpeg.S
 
 local lex = lexer.new('rest')
 
--- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, S(' \t')^1 + lexer.newline^1))
-local any_indent = S(' \t')^0
-
--- Section titles (2 or more characters).
-local adornment_chars = lpeg.C(S('!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'))
-local adornment = lpeg.C(adornment_chars^2 * any_indent) * (lexer.newline + -1)
-local overline = lpeg.Cmt(starts_line(adornment), function(input, index, adm, c)
-  if not adm:find('^%' .. c .. '+%s*$') then return nil end
+-- Literal block.
+local block = P('::') * (lexer.newline + -1) * function(input, index)
   local rest = input:sub(index)
-  local lines = 1
-  for line, e in rest:gmatch('([^\r\n]+)()') do
-    if lines > 1 and line:match('^(%' .. c .. '+)%s*$') == adm then
-      return index + e - 1
-    end
-    if lines > 3 or #line > #adm then return nil end
-    lines = lines + 1
+  local level, quote = #rest:match('^([ \t]*)')
+  for pos, indent, line in rest:gmatch('()[ \t]*()([^\r\n]+)') do
+    local no_indent = (indent - pos < level and line ~= ' ' or level == 0)
+    local quoted = no_indent and line:find(quote or '^%s*%W')
+    if quoted and not quote then quote = '^%s*%' .. line:match('^%s*(%W)') end
+    if no_indent and not quoted and pos > 1 then return index + pos - 1 end
   end
   return #input + 1
-end)
-local underline = lpeg.Cmt(starts_line(adornment), function(_, index, adm, c)
-  local pos = adm:match('^%' .. c .. '+%s*()$')
-  return pos and index - #adm + pos - 1 or nil
-end)
--- Token needs to be a predefined one in order for folder to work.
-lex:add_rule('title', token(lexer.CONSTANT, overline + underline))
+end
+lex:add_rule('literal_block', token('literal_block', block))
 
 -- Lists.
 local bullet_list = S('*+-') -- TODO: '•‣⁃', as lpeg does not support UTF-8
@@ -48,26 +35,9 @@ local list = #(lexer.space^0 * (S('*+-:/') + enum_list)) *
     (option_list + bullet_list + enum_list + field_list) * lexer.space))
 lex:add_rule('list', list)
 
--- Literal block.
-local block = P('::') * (lexer.newline + -1) * function(input, index)
-  local rest = input:sub(index)
-  local level, quote = #rest:match('^([ \t]*)')
-  for pos, indent, line in rest:gmatch('()[ \t]*()([^\r\n]+)') do
-    local no_indent = (indent - pos < level and line ~= ' ' or level == 0)
-    local quoted = no_indent and line:find(quote or '^%s*%W')
-    if quoted and not quote then quote = '^%s*%' .. line:match('^%s*(%W)') end
-    if no_indent and not quoted and pos > 1 then return index + pos - 1 end
-  end
-  return #input + 1
-end
-lex:add_rule('literal_block', token('literal_block', block))
-
--- Line block.
-lex:add_rule('line_block_char', token(lexer.OPERATOR, starts_line(any_indent * '|')))
-
-local word = lexer.alpha * (lexer.alnum + S('-.+'))^0
-
 -- Explicit markup blocks.
+local word = lexer.alpha * (lexer.alnum + S('-.+'))^0
+local any_indent = S(' \t')^0
 local prefix = any_indent * '.. '
 local footnote_label = '[' * (lexer.digit^1 + '#' * word^-1 + '*') * ']'
 local footnote = token('footnote_block', prefix * footnote_label * lexer.space)
@@ -76,6 +46,22 @@ local citation = token('citation_block', prefix * citation_label * lexer.space)
 local link = token('link_block', prefix * '_' *
   (lexer.range('`') + (P('\\') * 1 + lexer.nonnewline - ':')^1) * ':' * lexer.space)
 lex:add_rule('markup_block', #prefix * starts_line(footnote + citation + link))
+
+-- Sphinx code block.
+local indented_block = function(input, index)
+  local rest = input:sub(index)
+  local level = #rest:match('^([ \t]*)')
+  for pos, indent, line in rest:gmatch('()[ \t]*()([^\r\n]+)') do
+    if indent - pos < level and line ~= ' ' or level == 0 and pos > 1 then
+      return index + pos - 1
+    end
+  end
+  return #input + 1
+end
+local code_block = prefix * 'code-block::' * S(' \t')^1 * lexer.nonnewline^0 *
+  (lexer.newline + -1) * indented_block
+local sphinx_block = #prefix * token('code_block', starts_line(code_block))
+lex:add_rule('code_block', sphinx_block)
 
 -- Directives.
 local directive_type = word_match({
@@ -122,22 +108,6 @@ local directive = #prefix * starts_line(known_directive + sphinx_directive +
   unknown_directive)
 lex:add_rule('directive', directive)
 
--- Sphinx code block.
-local indented_block = function(input, index)
-  local rest = input:sub(index)
-  local level = #rest:match('^([ \t]*)')
-  for pos, indent, line in rest:gmatch('()[ \t]*()([^\r\n]+)') do
-    if indent - pos < level and line ~= ' ' or level == 0 and pos > 1 then
-      return index + pos - 1
-    end
-  end
-  return #input + 1
-end
-local code_block = prefix * 'code-block::' * S(' \t')^1 * lexer.nonnewline^0 *
-  (lexer.newline + -1) * indented_block
-local sphinx_block = #prefix * token('code_block', starts_line(code_block))
-lex:add_rule('code_block', sphinx_block)
-
 -- Substitution definitions.
 local substitution = #prefix * token('substitution',
   starts_line(prefix * lexer.range('|') * lexer.space^1 * word * '::' * lexer.space))
@@ -150,6 +120,35 @@ local block_comment = bprefix * lexer.newline * indented_block
 local comment = #bprefix * token(lexer.COMMENT, starts_line(line_comment +
   block_comment))
 lex:add_rule('comment', comment)
+
+-- Section titles (2 or more characters).
+local adornment_chars = lpeg.C(S('!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'))
+local adornment = lpeg.C(adornment_chars^2 * any_indent) * (lexer.newline + -1)
+local overline = lpeg.Cmt(starts_line(adornment), function(input, index, adm, c)
+  if not adm:find('^%' .. c .. '+%s*$') then return nil end
+  local rest = input:sub(index)
+  local lines = 1
+  for line, e in rest:gmatch('([^\r\n]+)()') do
+    if lines > 1 and line:match('^(%' .. c .. '+)%s*$') == adm then
+      return index + e - 1
+    end
+    if lines > 3 or #line > #adm then return nil end
+    lines = lines + 1
+  end
+  return #input + 1
+end)
+local underline = lpeg.Cmt(starts_line(adornment), function(_, index, adm, c)
+  local pos = adm:match('^%' .. c .. '+%s*()$')
+  return pos and index - #adm + pos - 1 or nil
+end)
+-- Token needs to be a predefined one in order for folder to work.
+lex:add_rule('title', token(lexer.CONSTANT, overline + underline))
+
+-- Line block.
+lex:add_rule('line_block_char', token(lexer.OPERATOR, starts_line(any_indent * '|')))
+
+-- Whitespace.
+lex:add_rule('whitespace', token(lexer.WHITESPACE, S(' \t')^1 + lexer.newline^1))
 
 -- Inline markup.
 local em = token('em', lexer.range('*'))
