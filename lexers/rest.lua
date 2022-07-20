@@ -225,7 +225,7 @@ lex.fold = function(text, start_pos, start_line, start_level)
   return folds
 end
 
--- lex.property['fold.by.sphinx.convention'] = '0'
+lexer.property['fold.by.sphinx.convention'] = '0'
 
 --[[ Embedded languages.
 local bash = lexer.load('bash')
