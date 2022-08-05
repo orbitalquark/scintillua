@@ -20,7 +20,7 @@ local block = '::' * (lexer.newline + -1) * function(input, index)
   return #input + 1
 end
 lex:add_rule('literal_block', token('literal_block', block))
-lex:add_style('literal_block', lexer.STYLE_EMBEDDED .. {eolfilled = true})
+lex:add_style('literal_block', lexer.styles.embedded .. {eolfilled = true})
 
 -- Lists.
 local option_word = lexer.alnum * (lexer.alnum + '-')^0
@@ -33,7 +33,7 @@ local field_list = ':' * (lexer.any - ':')^1 * P(':')^-1
 lex:add_rule('list', #(lexer.space^0 * (S('*+-:/') + enum_list)) *
   starts_line(token('list', lexer.space^0 * (option_list + bullet_list + enum_list + field_list) *
     lexer.space)))
-lex:add_style('list', lexer.STYLE_TYPE)
+lex:add_style('list', lexer.styles.type)
 
 local any_indent = S(' \t')^0
 local word = lexer.alpha * (lexer.alnum + S('-.+'))^0
@@ -47,9 +47,9 @@ local citation = token('citation_block', prefix * citation_label * lexer.space)
 local link = token('link_block', prefix * '_' *
   (lexer.range('`') + (P('\\') * 1 + lexer.nonnewline - ':')^1) * ':' * lexer.space)
 lex:add_rule('markup_block', #prefix * starts_line(footnote + citation + link))
-lex:add_style('footnote_block', lexer.STYLE_LABEL)
-lex:add_style('citation_block', lexer.STYLE_LABEL)
-lex:add_style('link_block', lexer.STYLE_LABEL)
+lex:add_style('footnote_block', lexer.styles.label)
+lex:add_style('citation_block', lexer.styles.label)
+lex:add_style('link_block', lexer.styles.label)
 
 -- Sphinx code block.
 local indented_block = function(input, index)
@@ -63,7 +63,7 @@ end
 local code_block =
   prefix * 'code-block::' * S(' \t')^1 * lexer.nonnewline^0 * (lexer.newline + -1) * indented_block
 lex:add_rule('code_block', #prefix * token('code_block', starts_line(code_block)))
-lex:add_style('code_block', lexer.STYLE_EMBEDDED .. {eolfilled = true})
+lex:add_style('code_block', lexer.styles.embedded .. {eolfilled = true})
 
 -- Directives.
 local known_directive = token('directive', prefix * word_match{
@@ -102,14 +102,14 @@ local sphinx_directive = token('sphinx_directive', prefix * word_match{
 local unknown_directive = token('unknown_directive', prefix * word * '::' * lexer.space)
 lex:add_rule('directive',
   #prefix * starts_line(known_directive + sphinx_directive + unknown_directive))
-lex:add_style('directive', lexer.STYLE_KEYWORD)
-lex:add_style('sphinx_directive', lexer.STYLE_KEYWORD .. {bold = true})
-lex:add_style('unknown_directive', lexer.STYLE_KEYWORD .. {italics = true})
+lex:add_style('directive', lexer.styles.keyword)
+lex:add_style('sphinx_directive', lexer.styles.keyword .. {bold = true})
+lex:add_style('unknown_directive', lexer.styles.keyword .. {italics = true})
 
 -- Substitution definitions.
 lex:add_rule('substitution', #prefix * token('substitution', starts_line(prefix * lexer.range('|') *
   lexer.space^1 * word * '::' * lexer.space)))
-lex:add_style('substitution', lexer.STYLE_VARIABLE)
+lex:add_style('substitution', lexer.styles.variable)
 
 -- Comments.
 local line_comment = lexer.to_eol(prefix)
@@ -163,10 +163,10 @@ lex:add_rule('inline_markup',
     substitution_ref + link) * -lexer.alnum)
 lex:add_style('strong', {bold = true})
 lex:add_style('em', {italics = true})
-lex:add_style('inline_literal', lexer.STYLE_EMBEDDED)
+lex:add_style('inline_literal', lexer.styles.embedded)
 lex:add_style('link', {underlined = true})
-lex:add_style('role', lexer.STYLE_CLASS)
-lex:add_style('interpreted', lexer.STYLE_STRING)
+lex:add_style('role', lexer.styles.class)
+lex:add_style('interpreted', lexer.styles.string)
 lex:add_style('footnote', {underlined = true})
 lex:add_style('citation', {underlined = true})
 
