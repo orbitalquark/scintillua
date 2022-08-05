@@ -537,8 +537,8 @@ local M = {}
 --
 --     return M
 --
--- While Scintillua will handle such legacy lexers just fine without any changes, it is
--- recommended that you migrate yours. The migration process is fairly straightforward:
+-- Scintillua no longer supports legacy lexers. They must be migrated. The migration process
+-- is fairly straightforward:
 --
 -- 1. Replace all instances of `l` with `lexer`, as it's better practice and results in less
 --    confusion.
@@ -856,10 +856,10 @@ M.colors = setmetatable({}, {
 local style_obj = {}
 style_obj.__index = style_obj
 
--- Create a style object from a style name, property table, or legacy style string.
+-- Create a style object from a style name or property table.
 function style_obj.new(name_or_props)
   local prop_string = tostring(name_or_props)
-  if type(name_or_props) == 'string' and name_or_props:find('^[%w_]+$') then
+  if type(name_or_props) == 'string' then
     prop_string = string.format('$(style.%s)', name_or_props)
   elseif type(name_or_props) == 'table' then
     local settings = {}
@@ -933,19 +933,13 @@ local default = {
   'error', 'preprocessor', 'constant', 'variable', 'function', 'class', 'type', 'label', 'regex',
   'embedded'
 }
-for _, name in ipairs(default) do
-  M[name:upper()] = name
-  M['STYLE_' .. name:upper()] = style_obj.new(name) -- backward compatibility
-end
+for _, name in ipairs(default) do M[name:upper()] = name end
 -- Predefined styles.
 local predefined = {
   'default', 'line_number', 'brace_light', 'brace_bad', 'control_char', 'indent_guide', 'call_tip',
   'fold_display_text'
 }
-for _, name in ipairs(predefined) do
-  M[name:upper()] = name
-  M['STYLE_' .. name:upper()] = style_obj.new(name) -- backward compatibility
-end
+for _, name in ipairs(predefined) do M[name:upper()] = name end
 
 ---
 -- Adds pattern *rule* identified by string *id* to the ordered list of rules for lexer *lexer*.
@@ -1396,47 +1390,6 @@ function M.new(name, opts)
   })
 end
 
--- Legacy support for older lexers.
--- Processes the `lex._rules`, `lex._tokenstyles`, and `lex._foldsymbols` tables. Since legacy
--- lexers may be processed up to twice, ensure their default styles and rules are not processed
--- more than once.
-local function process_legacy_lexer(lexer)
-  local function warn(msg) --[[io.stderr:write(msg, "\n")]]end
-  if not lexer._LEGACY then
-    lexer._LEGACY = true
-    warn("lexers as tables are deprecated; use 'lexer.new()'")
-    local token_styles = {}
-    for i = 1, #default do token_styles[default[i]] = i end
-    for i = 1, #predefined do token_styles[predefined[i]] = i + 32 end
-    lexer._TOKENSTYLES, lexer._numstyles = token_styles, #default + 1
-    lexer._EXTRASTYLES = {}
-    setmetatable(lexer, getmetatable(M.new('')))
-    if lexer._rules then
-      warn("lexer '_rules' table is deprecated; use 'add_rule()'")
-      for _, rule in ipairs(lexer._rules) do lexer:add_rule(rule[1], rule[2]) end
-    end
-  end
-  if lexer._tokenstyles then
-    warn("lexer '_tokenstyles' table is deprecated; use 'add_style()'")
-    for token, style in pairs(lexer._tokenstyles) do
-      -- If this legacy lexer is being processed a second time, only add styles added since
-      -- the first processing.
-      if not lexer._TOKENSTYLES[token] then lexer:add_style(token, style) end
-    end
-  end
-  if lexer._foldsymbols then
-    warn("lexer '_foldsymbols' table is deprecated; use 'add_fold_point()'")
-    for token_name, symbols in pairs(lexer._foldsymbols) do
-      if type(symbols) == 'table' and token_name ~= '_patterns' then
-        for symbol, v in pairs(symbols) do lexer:add_fold_point(token_name, symbol, v) end
-      end
-    end
-    if lexer._foldsymbols._case_insensitive then lexer._CASEINSENSITIVEFOLDPOINTS = true end
-  elseif lexer._fold then
-    lexer.fold = function(self, ...) return lexer._fold(...) end
-  end
-end
-
 local lexers = {} -- cache of loaded lexers
 ---
 -- Initializes or loads and returns the lexer of string name *name*.
@@ -1483,14 +1436,6 @@ function M.load(name, alt_name, cache)
   local lexer = dofile(assert(searchpath(name, path)))
   assert(lexer, string.format("'%s.lua' did not return a lexer", name))
   if alt_name then lexer._NAME = alt_name end
-  if not getmetatable(lexer) or lexer._LEGACY then
-    -- A legacy lexer may need to be processed a second time in order to pick up any `_tokenstyles`
-    -- or `_foldsymbols` added after `lexer.embed_lexer()`.
-    process_legacy_lexer(lexer)
-    if lexer._lexer and lexer._lexer._LEGACY then
-      process_legacy_lexer(lexer._lexer) -- mainly for `_foldsymbols` edits
-    end
-  end
   lexer:add_style((alt_name or name) .. '_whitespace', M.styles.whitespace)
 
   -- If the lexer is a proxy or a child that embedded itself, set the parent to be the main
@@ -1534,13 +1479,6 @@ M.number = M.float + M.integer
 
 M.word = (M.alpha + '_') * (M.alnum + '_')^0
 
--- Deprecated.
-M.nonnewline_esc = 1 - (M.newline + '\\') + '\\' * M.any
-M.ascii = lpeg_R('\000\127')
-M.extend = lpeg_R('\000\255')
-M.cntrl = lpeg_R('\000\031')
-M.print = lpeg_R(' ~')
-
 ---
 -- Creates and returns a token pattern with token name *name* and pattern *patt*.
 -- If *name* is not a predefined token name, its style must be defined via `lexer.add_style()`.
@@ -1567,7 +1505,7 @@ end
 -- @usage local line_comment = lexer.to_eol(S('#;'))
 -- @name to_eol
 function M.to_eol(prefix, escape)
-  return prefix * (not escape and M.nonnewline or M.nonnewline_esc)^0
+  return prefix * (not escape and M.nonnewline or 1 - (M.newline + '\\') + '\\' * M.any)^0
 end
 
 ---
@@ -1613,48 +1551,6 @@ function M.range(s, e, single_line, escapes, balanced)
   end
 end
 
--- Deprecated function. Use `lexer.range()` instead.
--- Creates and returns a pattern that matches a range of text bounded by *chars* characters.
--- This is a convenience function for matching more complicated delimited ranges like strings
--- with escape characters and balanced parentheses. *single_line* indicates whether or not the
--- range must be on a single line, *no_escape* indicates whether or not to ignore '\' as an
--- escape character, and *balanced* indicates whether or not to handle balanced ranges like
--- parentheses and requires *chars* to be composed of two characters.
--- @param chars The character(s) that bound the matched range.
--- @param single_line Optional flag indicating whether or not the range must be on a single line.
--- @param no_escape Optional flag indicating whether or not the range end character may be
---   escaped by a '\\' character.
--- @param balanced Optional flag indicating whether or not to match a balanced range, like the
---   "%b" Lua pattern. This flag only applies if *chars* consists of two different characters
---   (e.g. "()").
--- @return pattern
--- @usage local dq_str_escapes = lexer.delimited_range('"')
--- @usage local dq_str_noescapes = lexer.delimited_range('"', false, true)
--- @usage local unbalanced_parens = lexer.delimited_range('()')
--- @usage local balanced_parens = lexer.delimited_range('()', false, false, true)
--- @see range
--- @name delimited_range
-function M.delimited_range(chars, single_line, no_escape, balanced)
-  print("lexer.delimited_range() is deprecated, use lexer.range()")
-  local s = chars:sub(1, 1)
-  local e = #chars == 2 and chars:sub(2, 2) or s
-  local range
-  local b = balanced and s or ''
-  local n = single_line and '\n' or ''
-  if no_escape then
-    local invalid = lpeg_S(e .. n .. b)
-    range = M.any - invalid
-  else
-    local invalid = lpeg_S(e .. n .. b) + '\\'
-    range = M.any - invalid + '\\' * M.any
-  end
-  if balanced and s ~= e then
-    return lpeg_P{s * (range + lpeg_V(1))^0 * e}
-  else
-    return s * range^0 * lpeg_P(e)^-1
-  end
-end
-
 ---
 -- Creates and returns a pattern that matches pattern *patt* only at the beginning of a line.
 -- @param patt The LPeg pattern to match on the beginning of a line.
@@ -1687,23 +1583,6 @@ function M.last_char_includes(s)
   end)
 end
 
--- Deprecated function. Use `lexer.range()` instead.
--- Returns a pattern that matches a balanced range of text that starts with string *start_chars*
--- and ends with string *end_chars*.
--- With single-character delimiters, this function is identical to `delimited_range(start_chars ..
--- end_chars, false, true, true)`.
--- @param start_chars The string starting a nested sequence.
--- @param end_chars The string ending a nested sequence.
--- @return pattern
--- @usage local nested_comment = lexer.nested_pair('/*', '*/')
--- @see range
--- @name nested_pair
-function M.nested_pair(start_chars, end_chars)
-  print("lexer.nested_pair() is deprecated, use lexer.range()")
-  local s, e = start_chars, lpeg_P(end_chars)^-1
-  return lpeg_P{s * (M.any - s - end_chars + lpeg_V(1))^0 * e}
-end
-
 ---
 -- Creates and returns a pattern that matches any single word in list or string *words*.
 -- *case_insensitive* indicates whether or not to ignore case when matching words.
@@ -1711,23 +1590,19 @@ end
 -- @param word_list A list of words or a string list of words separated by spaces.
 -- @param case_insensitive Optional boolean flag indicating whether or not the word match is
 --   case-insensitive. The default value is `false`.
--- @param word_chars Unused legacy parameter.
 -- @return pattern
 -- @usage local keyword = token(lexer.KEYWORD, word_match{'foo', 'bar', 'baz'})
 -- @usage local keyword = token(lexer.KEYWORD, word_match({'foo-bar', 'foo-baz', 'bar-foo',
 --   'bar-baz', 'baz-foo', 'baz-bar'}, true))
 -- @usage local keyword = token(lexer.KEYWORD, word_match('foo bar baz'))
 -- @name word_match
-function M.word_match(word_list, case_insensitive, word_chars)
-  if type(case_insensitive) == 'string' or type(word_chars) == 'boolean' then
-    -- Legacy `word_match(word_list, word_chars, case_insensitive)` form.
-    word_chars, case_insensitive = case_insensitive, word_chars
-  elseif type(word_list) == 'string' then
+function M.word_match(word_list, case_insensitive)
+  if type(word_list) == 'string' then
     local words = word_list -- space-separated list of words
     word_list = {}
     for word in words:gsub('%-%-[^\n]+', ''):gmatch('%S+') do word_list[#word_list + 1] = word end
   end
-  if not word_chars then word_chars = '' end
+  local word_chars = ''
   for _, word in ipairs(word_list) do
     word_list[case_insensitive and word:lower() or word] = true
     for char in word:gmatch('[^%w_%s]') do
@@ -1740,24 +1615,6 @@ function M.word_match(word_list, case_insensitive, word_chars)
     if case_insensitive then word = word:lower() end
     return word_list[word] and index or nil
   end)
-end
-
--- Deprecated legacy function. Use `parent:embed()` instead.
--- Embeds child lexer *child* in parent lexer *parent* using patterns *start_rule* and *end_rule*,
--- which signal the beginning and end of the embedded lexer, respectively.
--- @param parent The parent lexer.
--- @param child The child lexer.
--- @param start_rule The pattern that signals the beginning of the embedded lexer.
--- @param end_rule The pattern that signals the end of the embedded lexer.
--- @usage lexer.embed_lexer(M, css, css_start_rule, css_end_rule)
--- @usage lexer.embed_lexer(html, M, php_start_rule, php_end_rule)
--- @usage lexer.embed_lexer(html, ruby, ruby_start_rule, ruby_end_rule)
--- @see embed
--- @name embed_lexer
-function M.embed_lexer(parent, child, start_rule, end_rule)
-  if not getmetatable(parent) then process_legacy_lexer(parent) end
-  if not getmetatable(child) then process_legacy_lexer(child) end
-  parent:embed(child, start_rule, end_rule)
 end
 
 -- Determines if the previous line is a comment.
@@ -1819,18 +1676,6 @@ function M.fold_consecutive_lines(prefix)
     if prev_line_comment and not next_line_comment then return -1 end
     return 0
   end
-end
-
--- Deprecated legacy function. Use `lexer.fold_consecutive_lines()` instead.
--- Returns a fold function (to be passed to `lexer.add_fold_point()`) that folds consecutive
--- line comments that start with string *prefix*.
--- @param prefix The prefix string defining a line comment.
--- @usage lex:add_fold_point(lexer.COMMENT, '--', lexer.fold_line_comments('--'))
--- @usage lex:add_fold_point(lexer.COMMENT, '//', lexer.fold_line_comments('//'))
--- @name fold_line_comments
-function M.fold_line_comments(prefix)
-  print('lexer.fold_line_comments() is deprecated, use lexer.fold_consecutive_lines()')
-  return select(2, M.fold_consecutive_lines(prefix))
 end
 
 --[[ The functions and fields below were defined in C.

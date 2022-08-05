@@ -44,7 +44,7 @@ styles.label = {fore = colors.teal, bold = true}
 styles.number = {fore = colors.teal}
 styles.operator = {fore = colors.black, bold = true}
 styles.preprocessor = {fore = colors.yellow}
-styles.regex = lexer.STYLE_STRING
+styles.regex = lexer.styles.string
 styles.string = {fore = colors.purple}
 styles.type = {fore = colors.blue}
 styles.variable = {fore = colors.black}

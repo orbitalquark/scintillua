@@ -257,9 +257,9 @@ function test_add_style()
   assert_default_styles(lex)
   lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
   lex:add_rule('keyword', token('custom', word_match('foo bar baz')))
-  lex:add_style('custom', lexer.STYLE_KEYWORD)
+  lex:add_style('custom', lexer.styles.keyword)
   assert_default_styles(lex)
-  assert_style(lex, 'custom', lexer.STYLE_KEYWORD)
+  assert_style(lex, 'custom', lexer.styles.keyword)
   local code = [[foo bar baz]]
   -- LuaFormatter off
   local tokens = {
@@ -274,9 +274,9 @@ end
 -- Tests adding different kinds of lexer styles.
 function test_add_styles()
   local lex = lexer.new('test')
-  lex:add_style('foo', lexer.STYLE_KEYWORD)
-  assert_style(lex, 'foo', lexer.STYLE_KEYWORD)
-  lex:add_style('bar', lexer.STYLE_KEYWORD .. {italics = true})
+  lex:add_style('foo', lexer.styles.keyword)
+  assert_style(lex, 'foo', lexer.styles.keyword)
+  lex:add_style('bar', lexer.styles.keyword .. {italics = true})
   assert_style(lex, 'bar', '$(style.keyword),italics')
   lex:add_style('baz', 'fore:$(color.red)') -- legacy string
   assert_style(lex, 'baz', 'fore:$(color.red)')
@@ -290,24 +290,24 @@ function test_embed()
   local parent = lexer.new('parent')
   assert_default_styles(parent)
   lexer.WHITESPACE = parent._NAME .. '_whitespace'
-  parent:add_style(lexer.WHITESPACE, lexer.STYLE_WHITESPACE)
-  assert_style(parent, parent._NAME .. '_whitespace', lexer.STYLE_WHITESPACE)
+  parent:add_style(lexer.WHITESPACE, lexer.styles.whitespace)
+  assert_style(parent, parent._NAME .. '_whitespace', lexer.styles.whitespace)
   parent:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
   parent:add_rule('identifier', token('parent', lexer.word))
-  parent:add_style('parent', lexer.STYLE_IDENTIFIER)
-  assert_style(parent, 'parent', lexer.STYLE_IDENTIFIER)
+  parent:add_style('parent', lexer.styles.identifier)
+  assert_style(parent, 'parent', lexer.styles.identifier)
 
   -- Create the child lexer.
   -- Note: lexer.load() sets lexer.WHITESPACE and adds the custom whitespace style.
   local child = lexer.new('child')
   assert_default_styles(child)
   lexer.WHITESPACE = child._NAME .. '_whitespace'
-  child:add_style(lexer.WHITESPACE, lexer.STYLE_WHITESPACE)
-  assert_style(child, child._NAME .. '_whitespace', lexer.STYLE_WHITESPACE)
+  child:add_style(lexer.WHITESPACE, lexer.styles.whitespace)
+  assert_style(child, child._NAME .. '_whitespace', lexer.styles.whitespace)
   child:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
   child:add_rule('number', token('child', lexer.integer))
-  child:add_style('child', lexer.STYLE_NUMBER)
-  assert_style(child, 'child', lexer.STYLE_NUMBER)
+  child:add_style('child', lexer.styles.number)
+  assert_style(child, 'child', lexer.styles.number)
 
   -- Assert the child's styles are not embedded in the parent yet.
   assert(not parent._TOKENSTYLES[child._NAME .. '_whitespace'])
@@ -319,13 +319,13 @@ function test_embed()
   local start_rule = token('transition', lpeg.P('['))
   local end_rule = token('transition', lpeg.P(']'))
   parent:embed(child, start_rule, end_rule)
-  parent:add_style('transition', lexer.STYLE_EMBEDDED)
+  parent:add_style('transition', lexer.styles.embedded)
   assert_default_styles(parent)
-  assert_style(parent, parent._NAME .. '_whitespace', lexer.STYLE_WHITESPACE)
-  assert_style(parent, 'parent', lexer.STYLE_IDENTIFIER)
-  assert_style(parent, 'transition', lexer.STYLE_EMBEDDED)
-  assert_style(parent, child._NAME .. '_whitespace', lexer.STYLE_WHITESPACE)
-  assert_style(parent, 'child', lexer.STYLE_NUMBER)
+  assert_style(parent, parent._NAME .. '_whitespace', lexer.styles.whitespace)
+  assert_style(parent, 'parent', lexer.styles.identifier)
+  assert_style(parent, 'transition', lexer.styles.embedded)
+  assert_style(parent, child._NAME .. '_whitespace', lexer.styles.whitespace)
+  assert_style(parent, 'child', lexer.styles.number)
 
   -- Lex some parent -> child -> parent code.
   local code = [[foo [1, 2, 3] bar]]
@@ -366,35 +366,35 @@ function test_embed_into()
   -- Note: lexer.load() sets lexer.WHITESPACE and adds the custom whitespace style.
   local child = lexer.new('child')
   lexer.WHITESPACE = child._NAME .. '_whitespace'
-  child:add_style(lexer.WHITESPACE, lexer.STYLE_WHITESPACE)
+  child:add_style(lexer.WHITESPACE, lexer.styles.whitespace)
   child:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
   child:add_rule('number', token('child', lexer.integer))
-  child:add_style('child', lexer.STYLE_NUMBER)
+  child:add_style('child', lexer.styles.number)
 
   -- Create the parent lexer.
   -- Note: lexer.load() sets lexer.WHITESPACE and adds the custom whitespace style.
   local parent = lexer.new('parent')
   lexer.WHITESPACE = parent._NAME .. '_whitespace'
-  parent:add_style(lexer.WHITESPACE, lexer.STYLE_WHITESPACE)
+  parent:add_style(lexer.WHITESPACE, lexer.styles.whitespace)
   parent:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
   parent:add_rule('identifier', token('parent', lexer.word))
-  parent:add_style('parent', lexer.STYLE_IDENTIFIER)
+  parent:add_style('parent', lexer.styles.identifier)
 
   -- Embed the child within the parent and verify the child's custom styles were copied over.
   local start_rule = token('transition', lpeg.P('['))
   local end_rule = token('transition', lpeg.P(']'))
   parent:embed(child, start_rule, end_rule)
-  parent:add_style('transition', lexer.STYLE_EMBEDDED)
+  parent:add_style('transition', lexer.styles.embedded)
   assert_default_styles(parent)
-  assert_style(parent, parent._NAME .. '_whitespace', lexer.STYLE_WHITESPACE)
-  assert_style(parent, 'parent', lexer.STYLE_IDENTIFIER)
-  assert_style(parent, 'transition', lexer.STYLE_EMBEDDED)
-  assert_style(parent, child._NAME .. '_whitespace', lexer.STYLE_WHITESPACE)
-  assert_style(parent, 'child', lexer.STYLE_NUMBER)
+  assert_style(parent, parent._NAME .. '_whitespace', lexer.styles.whitespace)
+  assert_style(parent, 'parent', lexer.styles.identifier)
+  assert_style(parent, 'transition', lexer.styles.embedded)
+  assert_style(parent, child._NAME .. '_whitespace', lexer.styles.whitespace)
+  assert_style(parent, 'child', lexer.styles.number)
 
   -- Verify any subsequent style additions to the child are copied to the parent.
-  child:add_style('extra_style', lexer.STYLE_COMMENT)
-  assert_style(parent, 'extra_style', lexer.STYLE_COMMENT)
+  child:add_style('extra_style', lexer.styles.comment)
+  assert_style(parent, 'extra_style', lexer.styles.comment)
 
   -- Verify any subsequent fold point additions to the child are copied to the parent.
   child:add_fold_point('transition', '[', ']')
@@ -451,19 +451,19 @@ function test_proxy()
   -- Note: lexer.load() sets lexer.WHITESPACE and adds the custom whitespace style.
   local parent = lexer.new('parent')
   lexer.WHITESPACE = parent._NAME .. '_whitespace'
-  parent:add_style(lexer.WHITESPACE, lexer.STYLE_WHITESPACE)
+  parent:add_style(lexer.WHITESPACE, lexer.styles.whitespace)
   parent:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
   parent:add_rule('identifier', token('parent', lexer.word))
-  parent:add_style('parent', lexer.STYLE_IDENTIFIER)
+  parent:add_style('parent', lexer.styles.identifier)
 
   -- Create the child lexer.
   -- Note: lexer.load() sets lexer.WHITESPACE and adds the custom whitespace style.
   local child = lexer.new('child')
   lexer.WHITESPACE = child._NAME .. '_whitespace'
-  child:add_style(lexer.WHITESPACE, lexer.STYLE_WHITESPACE)
+  child:add_style(lexer.WHITESPACE, lexer.styles.whitespace)
   child:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
   child:add_rule('number', token('child', lexer.integer))
-  child:add_style('child', lexer.STYLE_NUMBER)
+  child:add_style('child', lexer.styles.number)
 
   -- Create the proxy lexer.
   local proxy = lexer.new('proxy', {inherit = parent})
@@ -472,12 +472,12 @@ function test_proxy()
   local start_rule = token('transition', lpeg.P('['))
   local end_rule = token('transition', lpeg.P(']'))
   proxy:embed(child, start_rule, end_rule)
-  proxy:add_style('transition', lexer.STYLE_EMBEDDED)
-  assert_style(parent, 'transition', lexer.STYLE_EMBEDDED)
+  proxy:add_style('transition', lexer.styles.embedded)
+  assert_style(parent, 'transition', lexer.styles.embedded)
 
   -- Verify any subsequent style additions to the proxy are copied to the parent.
-  proxy:add_style('extra_style', lexer.STYLE_COMMENT)
-  assert_style(parent, 'extra_style', lexer.STYLE_COMMENT)
+  proxy:add_style('extra_style', lexer.styles.comment)
+  assert_style(parent, 'extra_style', lexer.styles.comment)
 
   -- Lex some parent -> child -> parent code.
   local code = [[foo [1, 2, 3] bar]]
@@ -593,51 +593,6 @@ function test_fold_by_indentation()
   lexer.indent_amount = {0} -- Scintilla normally creates this
   local folds = {1, -2, 3}
   assert_fold_points(lex, code, folds)
-end
-
-function test_legacy()
-  local lex = {_NAME = 'test'}
-  lex._rules = {
-    {'whitespace', token(lexer.WHITESPACE, lexer.space^1)},
-    {'keyword', token(lexer.KEYWORD, word_match({'foo', 'bar-', 'baz'}, '-'))},
-    {'custom', token('custom', lpeg.P('quux'))}
-  }
-  lex._tokenstyles = {custom = lexer.STYLE_CONSTANT}
-  lex._foldsymbols = {_patterns = {'%l+'}, [lexer.KEYWORD] = {foo = 1, baz = -1}}
-  -- The following comes from `process_legacy_lexer()`.
-  local default = {
-    'nothing', 'whitespace', 'comment', 'string', 'number', 'keyword', 'identifier', 'operator',
-    'error', 'preprocessor', 'constant', 'variable', 'function', 'class', 'type', 'label', 'regex',
-    'embedded'
-  }
-  local predefined = {
-    'default', 'line_number', 'brace_light', 'brace_bad', 'control_char', 'indent_guide',
-    'call_tip', 'fold_display_text'
-  }
-  local token_styles = {}
-  for i = 1, #default do token_styles[default[i]] = i end
-  for i = 1, #predefined do token_styles[predefined[i]] = i + 32 end
-  lex._TOKENSTYLES, lex._numstyles = token_styles, #default
-  lex._EXTRASTYLES = {}
-  assert_default_styles(lex)
-  setmetatable(lex, getmetatable(lexer.new('')))
-  for i = 1, #lex._rules do lex:add_rule(lex._rules[i][1], lex._rules[i][2]) end
-
-  local code = [[
-    foo
-      bar-
-    baz
-    quux
-  ]]
-  -- LuaFormatter off
-  local tokens = {
-    {'keyword', 'foo'},
-    {'keyword', 'bar-'},
-    {'keyword', 'baz'},
-    {'custom', 'quux'}
-  }
-  -- LuaFormatter on
-  assert_lex(lex, code, tokens)
 end
 
 -- Tests that all lexers load and lex text.
@@ -1234,7 +1189,6 @@ function test_styles()
   if not lexer.property then lexer.load('text') end -- creates lexer.property
 
   assert(tostring(lexer.styles.default) == '$(style.default)')
-  assert(tostring(lexer.STYLE_DEFAULT) == '$(style.default)') -- legacy constant
   assert(lexer.property['style.default'] == '')
 
   assert(tostring(lexer.styles.keyword) == '$(style.keyword)')
@@ -1255,16 +1209,6 @@ function test_styles()
   lexer.styles.embedded = lexer.styles.keyword .. {italics = true}
   assert(lexer.property['style.embedded'] == '$(style.keyword),italics')
   assert(lexer.property['style.keyword'] == 'fore:#FFFF00') -- not modified
-
-  -- Verify legacy styles work.
-  lexer.property['style.macro'] = lexer.STYLE_PREPROCESSOR
-  assert(lexer.property['style.macro'] == '$(style.preprocessor)')
-  lexer.property['style.addition'] = 'fore:$(color.green)'
-  assert(lexer.property['style.addition'] == 'fore:$(color.green)')
-  lexer.property['style.unknown'] = lexer.STYLE_IDENTIFIER .. ',italics'
-  assert(lexer.property['style.unknown'] == '$(style.identifier),,italics')
-  lexer.styles.unknown = lexer.STYLE_IDENTIFIER .. ',italics'
-  assert(lexer.property['style.unknown'] == '$(style.identifier),,italics')
 end
 
 -- Run tests.

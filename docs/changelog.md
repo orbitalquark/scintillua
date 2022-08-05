@@ -448,12 +448,11 @@ Bugfixes:
 
 Changes:
 
-* Added [`lexer.STYLE_FOLDDISPLAYTEXT`][] style (`style.folddisplaytext` in themes) for fold
+* Added `lexer.STYLE_FOLDDISPLAYTEXT` style (`style.folddisplaytext` in themes) for fold
   display text.
 * Updated to [Scintilla][]/[SciTE][] 3.7.1.
 
 [Scintillua 3.7.1-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.7.1-1.zip
-[`lexer.STYLE_FOLDDISPLAYTEXT`]: api.html#lexer.STYLE_FOLDDISPLAYTEXT
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
