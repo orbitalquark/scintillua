@@ -12,8 +12,8 @@ lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 -- Comments.
 lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('#')))
 
--- Numbers (including versions)
-lex:add_rule('number', token(lexer.NUMBER, lexer.number + S('.+~')))
+-- -- Numbers (including versions)
+-- lex:add_rule('number', token(lexer.NUMBER, lexer.number + S('.+~')))
 
 -- Operators
 lex:add_rule('operator', token(lexer.OPERATOR, S('&<>=|')))
