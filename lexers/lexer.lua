@@ -1062,8 +1062,8 @@ function M.fold(lexer, text, start_pos, start_line, start_level)
   if fold and lexer._FOLDPOINTS then
     local lines = {}
     for p, l in (text .. '\n'):gmatch('()(.-)\r?\n') do lines[#lines + 1] = {p, l} end
-    local fold_zero_sum_lines = M.property_int['fold.on.zero.sum.lines'] > 0
-    local fold_compact = M.property_int['fold.compact'] > 0
+    local fold_zero_sum_lines = M.property_int['fold.scintillua.on.zero.sum.lines'] > 0
+    local fold_compact = M.property_int['fold.scintillua.compact'] > 0
     local fold_points = lexer._FOLDPOINTS
     local fold_point_symbols = fold_points._SYMBOLS
     local style_at, fold_level = M.style_at, M.fold_level
@@ -1134,7 +1134,7 @@ function M.fold(lexer, text, start_pos, start_line, start_level)
       end
       line_num = line_num + 1
     end
-  elseif fold and (lexer._FOLDBYINDENTATION or M.property_int['fold.by.indentation'] > 0) then
+  elseif fold and (lexer._FOLDBYINDENTATION or M.property_int['fold.scintillua.by.indentation'] > 0) then
     -- Indentation based folding.
     -- Calculate indentation per line.
     local indentation = {}
@@ -1500,7 +1500,7 @@ end
 function M.fold_consecutive_lines(prefix)
   local property_int = M.property_int
   return prefix, function(text, pos, line, s)
-    if property_int['fold.line.groups'] == 0 then return 0 end
+    if property_int['fold.scintillua.line.groups'] == 0 then return 0 end
     if s > 1 and line:match('^%s*()') < s then return 0 end
     local prev_line_comment = prev_line_is_comment(prefix, text, pos, line, s)
     local next_line_comment = next_line_is_comment(prefix, text, pos, line, s)
