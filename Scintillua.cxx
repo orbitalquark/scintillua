@@ -209,6 +209,8 @@ Scintillua::Scintillua(const std::string &lexersDir, const char *name)
   luaL_requiref(L.get(), LUA_TABLIBNAME, luaopen_table, 1), lua_pop(L.get(), 1);
   luaL_requiref(L.get(), LUA_STRLIBNAME, luaopen_string, 1), lua_pop(L.get(), 1);
   luaL_requiref(L.get(), "lpeg", luaopen_lpeg, 1), lua_pop(L.get(), 1);
+  luaL_requiref(L.get(), LUA_MATHLIBNAME, luaopen_math, 1), lua_pop(L.get(), 1);
+  luaL_requiref(L.get(), LUA_UTF8LIBNAME, luaopen_utf8, 1), lua_pop(L.get(), 1);
   lua_pushlightuserdata(L.get(), this),
     lua_setfield(L.get(), LUA_REGISTRYINDEX, "scintillua"); // REGISTRY.scintillua = this
 
