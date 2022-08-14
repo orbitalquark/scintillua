@@ -2,16 +2,16 @@
 -- Ruby on Rails LPeg lexer.
 
 local lexer = require('lexer')
-local token, word_match = lexer.token, lexer.word_match
+local word_match = lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
 local lex = lexer.new('rails', {inherit = lexer.load('ruby')})
 
 -- Whitespace
-lex:modify_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+lex:modify_rule('whitespace', lex:tag(lexer.WHITESPACE, lexer.space^1))
 
 -- Functions.
-lex:modify_rule('function', token(lexer.FUNCTION, word_match{
+lex:modify_rule('function', lex:tag(lexer.FUNCTION, word_match{
   -- ActionPack.
   'before_filter', 'skip_before_filter', 'skip_after_filter', 'after_filter', 'around_filter',
   'filter', 'filter_parameter_logging', 'layout', 'require_dependency', 'render', 'render_action',

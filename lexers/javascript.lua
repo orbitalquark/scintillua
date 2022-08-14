@@ -2,16 +2,16 @@
 -- JavaScript LPeg lexer.
 
 local lexer = require('lexer')
-local token, word_match = lexer.token, lexer.word_match
+local word_match = lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
 local lex = lexer.new('javascript')
 
 -- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+lex:add_rule('whitespace', lex:tag(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, word_match{
   'abstract', 'async', 'await', 'boolean', 'break', 'byte', 'case', 'catch', 'char', 'class',
   'const', 'continue', 'debugger', 'default', 'delete', 'do', 'double', 'else', 'enum', 'export',
   'extends', 'false', 'final', 'finally', 'float', 'for', 'function', 'get', 'goto', 'if',
@@ -22,7 +22,7 @@ lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
 }))
 
 -- Types.
-lex:add_rule('type', token(lexer.TYPE, word_match{
+lex:add_rule('type', lex:tag(lexer.TYPE, word_match{
   -- Fundamental objects.
   'Object', 'Function', 'Boolean', 'Symbol',
   -- Error Objects.
@@ -49,38 +49,38 @@ lex:add_rule('type', token(lexer.TYPE, word_match{
 }))
 
 -- Functions.
-lex:add_rule('function', token(lexer.FUNCTION, word_match{
+lex:add_rule('function', lex:tag(lexer.FUNCTION, word_match{
   'eval', 'isFinite', 'isNaN', 'parseFloat', 'parseInt', 'decodeURI', 'decodeURIComponent',
   'encodeURI', 'encodeURIComponent'
 }))
 
 -- Constants.
 lex:add_rule('constant',
-  token(lexer.CONSTANT, word_match('Infinity NaN undefined globalThis arguments')))
+  lex:tag(lexer.CONSTANT, word_match('Infinity NaN undefined globalThis arguments')))
 
 -- Identifiers.
-lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
+lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
 
 -- Comments.
 local line_comment = lexer.to_eol('//', true)
 local block_comment = lexer.range('/*', '*/')
-lex:add_rule('comment', token(lexer.COMMENT, line_comment + block_comment))
+lex:add_rule('comment', lex:tag(lexer.COMMENT, line_comment + block_comment))
 
 -- Strings.
 local sq_str = lexer.range("'")
 local dq_str = lexer.range('"')
 local bq_str = lexer.range('`')
-local string = token(lexer.STRING, sq_str + dq_str + bq_str)
+local string = lex:tag(lexer.STRING, sq_str + dq_str + bq_str)
 local regex_str =
   #P('/') * lexer.last_char_includes('+-*%^!=&|?:;,([{<>') * lexer.range('/', true) * S('igm')^0
-local regex = token(lexer.REGEX, regex_str)
+local regex = lex:tag(lexer.REGEX, regex_str)
 lex:add_rule('string', string + regex)
 
 -- Numbers.
-lex:add_rule('number', token(lexer.NUMBER, lexer.number))
+lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number))
 
 -- Operators.
-lex:add_rule('operator', token(lexer.OPERATOR, S('+-/*%^!=&|?:;,.()[]{}<>')))
+lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('+-/*%^!=&|?:;,.()[]{}<>')))
 
 -- Fold points.
 lex:add_fold_point(lexer.OPERATOR, '{', '}')

@@ -2,16 +2,16 @@
 -- Ruby LPeg lexer.
 
 local lexer = require('lexer')
-local token, word_match = lexer.token, lexer.word_match
+local word_match = lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
 local lex = lexer.new('ruby')
 
 -- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+lex:add_rule('whitespace', lex:tag(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, word_match{
   'BEGIN', 'END', 'alias', 'and', 'begin', 'break', 'case', 'class', 'def', 'defined?', 'do',
   'else', 'elsif', 'end', 'ensure', 'false', 'for', 'if', 'in', 'module', 'next', 'nil', 'not',
   'or', 'redo', 'rescue', 'retry', 'return', 'self', 'super', 'then', 'true', 'undef', 'unless',
@@ -19,7 +19,7 @@ lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
 }))
 
 -- Functions.
-lex:add_rule('function', token(lexer.FUNCTION, word_match{
+lex:add_rule('function', lex:tag(lexer.FUNCTION, word_match{
   'at_exit', 'autoload', 'binding', 'caller', 'catch', 'chop', 'chop!', 'chomp', 'chomp!', 'eval',
   'exec', 'exit', 'exit!', 'extend', 'fail', 'fork', 'format', 'gets', 'global_variables', 'gsub',
   'gsub!', 'include', 'iterator?', 'lambda', 'load', 'local_variables', 'loop', 'module_function',
@@ -31,12 +31,12 @@ lex:add_rule('function', token(lexer.FUNCTION, word_match{
 -- Identifiers.
 local word_char = lexer.alnum + S('_!?')
 local word = (lexer.alpha + '_') * word_char^0
-lex:add_rule('identifier', token(lexer.IDENTIFIER, word))
+lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, word))
 
 -- Comments.
 local line_comment = lexer.to_eol('#', true)
 local block_comment = lexer.range(lexer.starts_line('=begin'), lexer.starts_line('=end'))
-lex:add_rule('comment', token(lexer.COMMENT, block_comment + line_comment))
+lex:add_rule('comment', lex:tag(lexer.COMMENT, block_comment + line_comment))
 
 -- Strings.
 local delimiter_matches = {['('] = ')', ['['] = ']', ['{'] = '}'}
@@ -70,13 +70,13 @@ local heredoc = '<<' * P(function(input, index)
     return e and e + 1 or #input + 1
   end
 end)
-local string = token(lexer.STRING, (sq_str + dq_str + lit_str + heredoc + cmd_str + lit_cmd +
+local string = lex:tag(lexer.STRING, (sq_str + dq_str + lit_str + heredoc + cmd_str + lit_cmd +
   lit_array) * S('f')^-1)
 -- TODO: regex_str fails with `obj.method /patt/` syntax.
 local regex_str =
   #P('/') * lexer.last_char_includes('!%^&*([{-=+|:;,?<>~') * lexer.range('/', true) * S('iomx')^0
 local lit_regex = '%r' * literal_delimited * S('iomx')^0
-local regex = token(lexer.REGEX, regex_str + lit_regex)
+local regex = lex:tag(lexer.REGEX, regex_str + lit_regex)
 lex:add_rule('string', string + regex)
 
 -- Numbers.
@@ -85,23 +85,22 @@ local bin = '0b' * S('01')^1 * ('_' * S('01')^1)^0 * -lexer.xdigit
 local integer = S('+-')^-1 * (bin + lexer.hex_num + lexer.oct_num + dec)
 -- TODO: meta, control, etc. for numeric_literal.
 local numeric_literal = '?' * (lexer.any - lexer.space) * -word_char
-lex:add_rule('number', token(lexer.NUMBER, lexer.float * S('ri')^-1 + integer + numeric_literal))
+lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.float * S('ri')^-1 + integer + numeric_literal))
 
 -- Variables.
 local global_var = '$' *
   (word + S('!@L+`\'=~/\\,.;<>_*"$?:') + lexer.digit + '-' * S('0FadiIKlpvw'))
 local class_var = '@@' * word
 local inst_var = '@' * word
-lex:add_rule('variable', token(lexer.VARIABLE, global_var + class_var + inst_var))
+lex:add_rule('variable', lex:tag(lexer.VARIABLE, global_var + class_var + inst_var))
 
 -- Symbols.
-lex:add_rule('symbol', token('symbol', ':' * P(function(input, index)
+lex:add_rule('symbol', lex:tag('symbol', ':' * P(function(input, index)
   if input:sub(index - 2, index - 2) ~= ':' then return index end
 end) * (word_char^1 + sq_str + dq_str)))
-lex:add_style('symbol', lexer.styles.constant)
 
 -- Operators.
-lex:add_rule('operator', token(lexer.OPERATOR, S('!%^&*()[]{}-=+/|:;.,?<>~')))
+lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('!%^&*()[]{}-=+/|:;.,?<>~')))
 
 -- Fold points.
 local function disambiguate(text, pos, line, s)

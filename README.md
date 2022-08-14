@@ -1,7 +1,8 @@
 # Scintillua
 
-Scintillua adds dynamic [Lua][] [LPeg][] lexers to [Scintilla][]. It is the quickest way to
-add new or customized syntax highlighting and code folding for programming languages to any
+Scintillua enables lexers for [Scintilla][] to be written in the [Lua][] programming language,
+particularly in conjunction with the [LPeg][] pattern-matching library. It is the quickest way
+to add new or customized syntax highlighting and code folding for programming languages to any
 Scintilla-based text editor or IDE. Scintillua was designed to be dropped into or compiled with
 any Scintilla environment.
 
@@ -50,15 +51,14 @@ into an existing installation of a Scintilla-based application, how to compile S
 your Scintilla-based application, and how to use Scintillua as a standalone Lua library.
 
 As an example, you can drop Scintillua into an existing installation of [SciTE][], the SCIntilla
-based Text Editor, by moving Scintillua's *lexers/* directory into SciTE's installation directory,
-and then adding the following to your *SciTEUser.properties* (Windows), *.SciTEUser.properties*
-(Linux), or *SciTEGlobal.properties* (either) file:
+based Text Editor, by moving Scintillua's directory into SciTE's installation directory,
+renaming it simply *scintillua*, and then adding the following to your *SciTEUser.properties*
+(Windows), *.SciTEUser.properties* (Linux), or *SciTEGlobal.properties* (either) file:
 
-    import lexers/lpeg
+    import scintillua/scintillua
 
 Scintillua's Application Programming Interface [(API) documentation][] is also located in
-*docs/*. It provides information on how your Scintilla-based application can utilize Scintillua
-and communicate with it, and also how to write and utilize Lua lexers.
+*docs/*. It provides information on how to write and utilize Lua lexers.
 
 [user manual]: https://orbitalquark.github.io/scintillua/manual.html
 [SciTE]: https://scintilla.org/SciTE.html
@@ -69,11 +69,12 @@ and communicate with it, and also how to write and utilize Lua lexers.
 Scintillua can be built as an external Scintilla lexer, or it can be built directly into a
 Scintilla-based application. The standalone Lua library does not need to be compiled.
 
-Scintillua currently only builds on Linux and BSD, though it can be cross-compiled for Windows.
+Scintillua currently only builds on Linux, though it can be cross-compiled for Windows.
 
 Requirements:
 
 * [GNU C compiler][] (*gcc*) 7.1+ (circa mid-2017)
+* [GNU Make][] (*make*)
 * [mingw-w64][] 5.0+ with GCC 7.1+ when cross-compiling for Windows.
 
 In order to build the external lexer:
@@ -82,13 +83,15 @@ In order to build the external lexer:
    be called *scintilla/*).
 2. Place a copy of Lexilla in the root directory of Scintillua (the Lexilla directory should
    be called *lexilla/*).
-3. Run `make` or `make win`.
-4. The external lexer is either *lexers/liblexlpeg.so* or *lexers/LexLPeg.dll*.
+3. Run `make deps` to download Scintillua's core dependencies.
+4. Run `make` or `make win`.
+5. The external lexer is either *lexers/libscintillua.so* or *lexers/Scintillua.dll*.
 
 For more information on compiling Scintillua, including how to compile Scintillua directly into
 your Scintilla-based application please see the [manual][].
 
 [GNU C compiler]: https://gcc.gnu.org
+[GNU Make]: https://www.gnu.org/software/make/
 [mingw-w64]: https://mingw-w64.org/
 [manual]: https://orbitalquark.github.io/scintillua/manual.html#compiling-scintillua-directly-into-an-app
 

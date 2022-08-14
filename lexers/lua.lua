@@ -3,16 +3,16 @@
 -- Original written by Peter Odding, 2007/04/04.
 
 local lexer = require('lexer')
-local token, word_match = lexer.token, lexer.word_match
+local word_match = lexer.word_match
 local B, P, S = lpeg.B, lpeg.P, lpeg.S
 
 local lex = lexer.new('lua')
 
 -- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+lex:add_rule('whitespace', lex:tag(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, word_match{
   'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for', 'function', 'if', 'in', 'local',
   'nil', 'not', 'or', 'repeat', 'return', 'then', 'true', 'until', 'while',
   -- Added in 5.2.
@@ -20,7 +20,7 @@ lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
 }))
 
 -- Functions and deprecated functions.
-local func = token(lexer.FUNCTION, word_match{
+local func = lex:tag(lexer.FUNCTION, word_match{
   'assert', 'collectgarbage', 'dofile', 'error', 'getmetatable', 'ipairs', 'load', 'loadfile',
   'next', 'pairs', 'pcall', 'print', 'rawequal', 'rawget', 'rawset', 'require', 'select',
   'setmetatable', 'tonumber', 'tostring', 'type', 'xpcall',
@@ -29,22 +29,21 @@ local func = token(lexer.FUNCTION, word_match{
   -- Added in 5.4.
   'warn'
 })
-local deprecated_func = token('deprecated_function', word_match{
+local deprecated_func = lex:tag('deprecated_function', word_match{
   -- Deprecated in 5.2.
   'getfenv', 'loadstring', 'module', 'setfenv', 'unpack'
 })
 lex:add_rule('function', -B('.') * (func + deprecated_func))
-lex:add_style('deprecated_function', lexer.styles['function'] .. {italics = true})
 
 -- Constants.
-lex:add_rule('constant', token(lexer.CONSTANT, -B('.') * word_match{
+lex:add_rule('constant', lex:tag(lexer.CONSTANT, -B('.') * word_match{
   '_G', '_VERSION',
   -- Added in 5.2.
   '_ENV'
 }))
 
 -- Libraries and deprecated libraries.
-local library = token('library', word_match{
+local library = lex:tag('library', word_match{
   -- Coroutine.
   'coroutine', 'coroutine.create', 'coroutine.resume', 'coroutine.running', 'coroutine.status',
   'coroutine.wrap', 'coroutine.yield',
@@ -92,7 +91,7 @@ local library = token('library', word_match{
   -- Debug added in 5.2.
   'debug.getuservalue', 'debug.setuservalue', 'debug.upvalueid', 'debug.upvaluejoin'
 })
-local deprecated_library = token('deprecated_library', word_match{
+local deprecated_library = lex:tag('deprecated_library', word_match{
   -- Module deprecated in 5.2.
   'package.loaders', 'package.seeall',
   -- Table deprecated in 5.2.
@@ -108,11 +107,9 @@ local deprecated_library = token('deprecated_library', word_match{
   'debug.getfenv', 'debug.setfenv'
 })
 lex:add_rule('library', -B('.') * (library + deprecated_library))
-lex:add_style('library', lexer.styles.type)
-lex:add_style('deprecated_library', lexer.styles.type .. {italics = true})
 
 -- Identifiers.
-lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
+lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
 
 -- Strings.
 local sq_str = lexer.range("'")
@@ -121,28 +118,26 @@ local longstring = lpeg.Cmt('[' * lpeg.C(P('=')^0) * '[', function(input, index,
   local _, e = input:find(']' .. eq .. ']', index, true)
   return (e or #input) + 1
 end)
-lex:add_rule('string', token(lexer.STRING, sq_str + dq_str) + token('longstring', longstring))
-lex:add_style('longstring', lexer.styles.string)
+lex:add_rule('string', lex:tag(lexer.STRING, sq_str + dq_str) + lex:tag('longstring', longstring))
 
 -- Comments.
 local line_comment = lexer.to_eol('--')
 local block_comment = '--' * longstring
-lex:add_rule('comment', token(lexer.COMMENT, block_comment + line_comment))
+lex:add_rule('comment', lex:tag(lexer.COMMENT, block_comment + line_comment))
 
 -- Numbers.
 local lua_integer = P('-')^-1 * (lexer.hex_num + lexer.dec_num)
-lex:add_rule('number', token(lexer.NUMBER, lexer.float + lua_integer))
+lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.float + lua_integer))
 
 -- Labels.
-lex:add_rule('label', token(lexer.LABEL, '::' * lexer.word * '::'))
+lex:add_rule('label', lex:tag(lexer.LABEL, '::' * lexer.word * '::'))
 
 -- Attributes.
-lex:add_rule('attribute', token('attribute', '<' * lexer.space^0 * word_match('const close') *
+lex:add_rule('attribute', lex:tag('attribute', '<' * lexer.space^0 * word_match('const close') *
   lexer.space^0 * '>'))
-lex:add_style('attribute', lexer.styles.class)
 
 -- Operators.
-lex:add_rule('operator', token(lexer.OPERATOR, '..' + S('+-*/%^#=<>&|~;:,.{}[]()')))
+lex:add_rule('operator', lex:tag(lexer.OPERATOR, '..' + S('+-*/%^#=<>&|~;:,.{}[]()')))
 
 -- Fold points.
 local function fold_longcomment(text, pos, line, s, symbol)

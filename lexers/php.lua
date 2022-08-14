@@ -2,16 +2,16 @@
 -- PHP LPeg lexer.
 
 local lexer = require('lexer')
-local token, word_match = lexer.token, lexer.word_match
+local word_match = lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
 local lex = lexer.new('php')
 
 -- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+lex:add_rule('whitespace', lex:tag(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, word_match{
   -- Reserved words (http://php.net/manual/en/reserved.keywords.php)
   '__halt_compiler', 'abstract', 'and', 'array', 'as', 'break', 'callable', 'case', 'catch',
   'class', 'clone', 'const', 'continue', 'declare', 'default', 'die', 'do', 'echo', 'else',
@@ -28,11 +28,11 @@ lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
 }))
 
 -- Types.
-lex:add_rule('type', token(lexer.TYPE,
-  word_match('int float bool string true false null void iterable object')))
+lex:add_rule('type', lex:tag(lexer.TYPE, word_match(
+  'int float bool string true false null void iterable object')))
 
 -- Constants.
-lex:add_rule('constant', token(lexer.CONSTANT, word_match{
+lex:add_rule('constant', lex:tag(lexer.CONSTANT, word_match{
   -- Compile-time (https://www.php.net/manual/en/reserved.keywords.php)
   '__CLASS__', '__DIR__', '__FILE__', '__FUNCTION__', '__LINE__', '__METHOD__', '__NAMESPACE__',
   '__TRAIT__',
@@ -51,10 +51,10 @@ lex:add_rule('constant', token(lexer.CONSTANT, word_match{
 
 -- Identifiers.
 local word = (lexer.alpha + '_' + lpeg.R('\127\255')) * (lexer.alnum + '_' + lpeg.R('\127\255'))^0
-lex:add_rule('identifier', token(lexer.IDENTIFIER, word))
+lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, word))
 
 -- Variables.
-lex:add_rule('variable', token(lexer.VARIABLE, '$' * word))
+lex:add_rule('variable', lex:tag(lexer.VARIABLE, '$' * word))
 
 -- Strings.
 local sq_str = lexer.range("'")
@@ -67,28 +67,27 @@ local heredoc = '<<<' * P(function(input, index)
     return e and e + 1
   end
 end)
-lex:add_rule('string', token(lexer.STRING, sq_str + dq_str + bq_str + heredoc))
+lex:add_rule('string', lex:tag(lexer.STRING, sq_str + dq_str + bq_str + heredoc))
 -- TODO: interpolated code.
 
 -- Comments.
 local line_comment = lexer.to_eol(P('//') + '#')
 local block_comment = lexer.range('/*', '*/')
-lex:add_rule('comment', token(lexer.COMMENT, block_comment + line_comment))
+lex:add_rule('comment', lex:tag(lexer.COMMENT, block_comment + line_comment))
 
 -- Numbers.
-lex:add_rule('number', token(lexer.NUMBER, lexer.number))
+lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number))
 
 -- Operators.
-lex:add_rule('operator', token(lexer.OPERATOR, S('!@%^*&()-+=|/?.,;:<>[]{}')))
+lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('!@%^*&()-+=|/?.,;:<>[]{}')))
 
 -- Embedded in HTML.
 local html = lexer.load('html')
 
 -- Embedded PHP.
-local php_start_rule = token('php_tag', '<?' * ('php' * lexer.space)^-1)
-local php_end_rule = token('php_tag', '?>')
+local php_start_rule = lex:tag('php_tag', '<?' * ('php' * lexer.space)^-1)
+local php_end_rule = lex:tag('php_tag', '?>')
 html:embed(lex, php_start_rule, php_end_rule)
-lex:add_style('php_tag', lexer.styles.embedded)
 
 -- Fold points.
 lex:add_fold_point('php_tag', '<?', '?>')

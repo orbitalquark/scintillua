@@ -1,11 +1,8 @@
-/**
- * Copyright 2006-2022 Mitchell. See LICENSE.
- * Include file for directly (statically) compiling Scintillua into a
- * Scintilla-based application.
- */
+// Copyright 2006-2022 Mitchell. See LICENSE.
+// Include file for directly (statically) compiling Scintillua into a Scintilla-based application.
 
-#ifndef LEXLPEG_H
-#define LEXLPEG_H
+#ifndef SCINTILLUA_H
+#define SCINTILLUA_H
 
 #ifdef __cplusplus
 #include "ILexer.h"

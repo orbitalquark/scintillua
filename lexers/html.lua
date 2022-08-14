@@ -2,29 +2,28 @@
 -- HTML LPeg lexer.
 
 local lexer = require('lexer')
-local token, word_match = lexer.token, lexer.word_match
+local word_match = lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
 local lex = lexer.new('html')
 
 -- Whitespace.
-local ws = token(lexer.WHITESPACE, lexer.space^1)
+local ws = lex:tag(lexer.WHITESPACE, lexer.space^1)
 lex:add_rule('whitespace', ws)
 
 -- Comments.
-lex:add_rule('comment', token(lexer.COMMENT, lexer.range('<!--', '-->')))
+lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.range('<!--', '-->')))
 
 -- Doctype.
-lex:add_rule('doctype', token('doctype', lexer.range('<!' * word_match('doctype', true), '>')))
-lex:add_style('doctype', lexer.styles.comment)
+lex:add_rule('doctype', lex:tag('doctype', lexer.range('<!' * word_match('doctype', true), '>')))
 
 -- Elements.
-local single_element = token('single_element', '<' * P('/')^-1 * word_match(
+local single_element = lex:tag('single_element', '<' * P('/')^-1 * word_match(
   {
     'area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta',
     'param', 'source', 'track', 'wbr'
   }, true))
-local paired_element = token('element', '<' * P('/')^-1 * word_match({
+local paired_element = lex:tag('element', '<' * P('/')^-1 * word_match({
   'a', 'abbr', 'address', 'article', 'aside', 'audio', 'b', 'bdi', 'bdo', 'blockquote', 'body',
   'button', 'canvas', 'caption', 'cite', 'code', 'colgroup', 'content', 'data', 'datalist', 'dd',
   'decorator', 'del', 'details', 'dfn', 'div', 'dl', 'dt', 'element', 'em', 'fieldset',
@@ -36,19 +35,16 @@ local paired_element = token('element', '<' * P('/')^-1 * word_match({
   'template', 'textarea', 'tfoot', 'th', 'thead', 'time', 'title', 'tr', 'u', 'ul', 'var', 'video'
 }, true))
 local known_element = single_element + paired_element
-local unknown_element = token('unknown_element', '<' * P('/')^-1 * (lexer.alnum + '-')^1)
+local unknown_element = lex:tag('unknown_element', '<' * P('/')^-1 * (lexer.alnum + '-')^1)
 local element = (known_element + unknown_element) * -P(':')
 lex:add_rule('element', element)
-lex:add_style('single_element', lexer.styles.keyword)
-lex:add_style('element', lexer.styles.keyword)
-lex:add_style('unknown_element', lexer.styles.keyword .. {italics = true})
 
 -- Closing tags.
-local tag_close = token('element', P('/')^-1 * '>')
+local tag_close = lex:tag('element', P('/')^-1 * '>')
 lex:add_rule('tag_close', tag_close)
 
 -- Attributes.
-local known_attribute = token('attribute', word_match({
+local known_attribute = lex:tag('attribute', word_match({
   'accept', 'accept-charset', 'accesskey', 'action', 'align', 'alt', 'async', 'autocomplete',
   'autofocus', 'autoplay', 'bgcolor', 'border', 'buffered', 'challenge', 'charset', 'checked',
   'cite', 'class', 'code', 'codebase', 'color', 'cols', 'colspan', 'content', 'contenteditable',
@@ -63,11 +59,9 @@ local known_attribute = token('attribute', word_match({
   'step', 'style', 'summary', 'tabindppex', 'target', 'title', 'type', 'usemap', 'value', 'width',
   'wrap'
 }, true) + ((P('data-') + 'aria-') * (lexer.alnum + '-')^1))
-local unknown_attribute = token('unknown_attribute', (lexer.alnum + '-')^1)
+local unknown_attribute = lex:tag('unknown_attribute', (lexer.alnum + '-')^1)
 local attribute = (known_attribute + unknown_attribute) * #(lexer.space^0 * '=')
 lex:add_rule('attribute', attribute)
-lex:add_style('attribute', lexer.styles.type)
-lex:add_style('unknown_attribute', lexer.styles.type .. {italics = true})
 
 -- Equals.
 -- TODO: performance is terrible on large files.
@@ -79,21 +73,20 @@ local in_tag = P(function(input, index)
   return input:find('^[^<]->', index) and index or nil
 end)
 
-local equals = token(lexer.OPERATOR, '=') -- * in_tag
+local equals = lex:tag(lexer.OPERATOR, '=') -- * in_tag
 -- lex:add_rule('equals', equals)
 
 -- Strings.
 local string = #S('\'"') * lexer.last_char_includes('=') *
-  token(lexer.STRING, lexer.range("'") + lexer.range('"'))
+  lex:tag(lexer.STRING, lexer.range("'") + lexer.range('"'))
 lex:add_rule('string', string)
 
 -- Numbers.
-local number = token(lexer.NUMBER, lexer.dec_num * P('%')^-1)
+local number = lex:tag(lexer.NUMBER, lexer.dec_num * P('%')^-1)
 lex:add_rule('number', #lexer.digit * lexer.last_char_includes('=') * number) -- *in_tag)
 
 -- Entities.
-lex:add_rule('entity', token('entity', '&' * (lexer.any - lexer.space - ';')^1 * ';'))
-lex:add_style('entity', lexer.styles.comment)
+lex:add_rule('entity', lex:tag('entity', '&' * (lexer.any - lexer.space - ';')^1 * ';'))
 
 -- Fold points.
 local function disambiguate_lt(text, pos, line, s)
@@ -133,7 +126,7 @@ end))) * lex.embed_start_tag
 local js_end_rule = #('</' * script_element * ws^-1 * '>') * lex.embed_end_tag
 local js_line_comment = '//' * (lexer.nonnewline - js_end_rule)^0
 local js_block_comment = '/*' * (lexer.any - '*/' - js_end_rule)^0 * P('*/')^-1
-js:modify_rule('comment', token(lexer.COMMENT, js_line_comment + js_block_comment))
+js:modify_rule('comment', lex:tag(lexer.COMMENT, js_line_comment + js_block_comment))
 lex:embed(js, js_start_rule, js_end_rule)
 
 -- Embedded CoffeeScript (<script type="text/coffeescript"> ... </script>).

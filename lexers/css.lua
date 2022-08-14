@@ -2,16 +2,16 @@
 -- CSS LPeg lexer.
 
 local lexer = require('lexer')
-local token, word_match = lexer.token, lexer.word_match
+local word_match = lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
 local lex = lexer.new('css')
 
 -- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+lex:add_rule('whitespace', lex:tag(lexer.WHITESPACE, lexer.space^1))
 
 -- Properties.
-lex:add_rule('property', token('property', word_match{
+lex:add_rule('property', lex:tag('property', word_match{
   -- CSS 1.
   'color', 'background-color', 'background-image', 'background-repeat', 'background-attachment',
   'background-position', 'background', 'font-family', 'font-style', 'font-variant', 'font-weight',
@@ -43,10 +43,9 @@ lex:add_rule('property', token('property', word_match{
   'transition', 'transform', 'box-shadow', 'filter', 'opacity', 'resize', 'word-break', 'word-wrap',
   'box-sizing', 'animation', 'text-overflow'
 }))
-lex:add_style('property', lexer.styles.keyword)
 
 -- Values.
-lex:add_rule('value', token('value', word_match{
+lex:add_rule('value', lex:tag('value', word_match{
   -- CSS 1.
   'auto', 'none', 'normal', 'italic', 'oblique', 'small-caps', 'bold', 'bolder', 'lighter',
   'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large', 'larger', 'smaller',
@@ -83,10 +82,9 @@ lex:add_rule('value', token('value', word_match{
   -- CSS 3.
   'flex', 'row', 'column', 'ellipsis', 'inline-block'
 }))
-lex:add_style('value', lexer.styles.constant)
 
 -- Functions.
-lex:add_rule('function', token(lexer.FUNCTION, word_match{
+lex:add_rule('function', lex:tag(lexer.FUNCTION, word_match{
   'attr', 'blackness', 'blend', 'blenda', 'blur', 'brightness', 'calc', 'circle', 'color-mod',
   'contrast', 'counter', 'cubic-bezier', 'device-cmyk', 'drop-shadow', 'ellipse', 'gray',
   'grayscale', 'hsl', 'hsla', 'hue', 'hue-rotate', 'hwb', 'image', 'inset', 'invert', 'lightness',
@@ -99,7 +97,7 @@ lex:add_rule('function', token(lexer.FUNCTION, word_match{
 
 -- Colors.
 local xdigit = lexer.xdigit
-lex:add_rule('color', token('color', word_match{
+lex:add_rule('color', lex:tag('color', word_match{
   'aliceblue', 'antiquewhite', 'aqua', 'aquamarine', 'azure', 'beige', 'bisque', 'black',
   'blanchedalmond', 'blue', 'blueviolet', 'brown', 'burlywood', 'cadetblue', 'chartreuse',
   'chocolate', 'coral', 'cornflowerblue', 'cornsilk', 'crimson', 'cyan', 'darkblue', 'darkcyan',
@@ -122,44 +120,39 @@ lex:add_rule('color', token('color', word_match{
   'snow', 'springgreen', 'steelblue', 'tan', 'teal', 'thistle', 'tomato', 'transparent',
   'turquoise', 'violet', 'wheat', 'white', 'whitesmoke', 'yellow', 'yellowgreen'
 } + '#' * xdigit * xdigit * xdigit * (xdigit * xdigit * xdigit)^-1))
-lex:add_style('color', lexer.styles.number)
 
 -- Identifiers.
-lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.alpha * (lexer.alnum + S('_-'))^0))
+lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.alpha * (lexer.alnum + S('_-'))^0))
 
 -- Pseudo classes and pseudo elements.
-lex:add_rule('pseudoclass', ':' * token('pseudoclass', word_match{
+lex:add_rule('pseudoclass', ':' * lex:tag('pseudoclass', word_match{
   'active', 'checked', 'disabled', 'empty', 'enabled', 'first-child', 'first-of-type', 'focus',
   'hover', 'in-range', 'invalid', 'lang', 'last-child', 'last-of-type', 'link', 'not', 'nth-child',
   'nth-last-child', 'nth-last-of-type', 'nth-of-type', 'only-of-type', 'only-child', 'optional',
   'out-of-range', 'read-only', 'read-write', 'required', 'root', 'target', 'valid', 'visited'
 }))
-lex:add_style('pseudoclass', lexer.styles.constant)
 lex:add_rule('pseudoelement', '::' *
-  token('pseudoelement', word_match('after before first-letter first-line selection')))
-lex:add_style('pseudoelement', lexer.styles.constant)
+  lex:tag('pseudoelement', word_match('after before first-letter first-line selection')))
 
 -- Strings.
 local sq_str = lexer.range("'")
 local dq_str = lexer.range('"')
-lex:add_rule('string', token(lexer.STRING, sq_str + dq_str))
+lex:add_rule('string', lex:tag(lexer.STRING, sq_str + dq_str))
 
 -- Comments.
-lex:add_rule('comment', token(lexer.COMMENT, lexer.range('/*', '*/')))
+lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.range('/*', '*/')))
 
 -- Numbers.
-local unit = token('unit', word_match(
+local unit = lex:tag('unit', word_match(
   'ch cm deg dpcm dpi dppx em ex grad Hz in kHz mm ms pc pt px q rad rem s turn vh vmax vmin vw'))
-lex:add_style('unit', lexer.styles.number)
-lex:add_rule('number', token(lexer.NUMBER, lexer.dec_num) * unit^-1)
+lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.dec_num) * unit^-1)
 
 -- Operators.
-lex:add_rule('operator', token(lexer.OPERATOR, S('~!#*>+=|.,:;()[]{}')))
+lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('~!#*>+=|.,:;()[]{}')))
 
 -- At rule.
-lex:add_rule('at_rule', token('at_rule', '@' *
+lex:add_rule('at_rule', lex:tag('at_rule', '@' *
   word_match('charset font-face media page import namespace keyframes')))
-lex:add_style('at_rule', lexer.styles.preprocessor)
 
 -- Fold points.
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
