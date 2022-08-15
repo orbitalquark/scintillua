@@ -238,8 +238,12 @@ Scintillua::Scintillua(const std::string &lexersDir, const char *name)
     default: LogError(); return;
     }
   }
+  if (!lua_gettop(L.get())) {
+    LogError("could not find lexer.lua");
+    return;
+  }
   if (!lua_istable(L.get(), -1)) {
-    LogError("expected module return from lexer.lua", false);
+    LogError("expected module return from lexer.lua");
     return;
   }
 
@@ -257,7 +261,7 @@ Scintillua::Scintillua(const std::string &lexersDir, const char *name)
 
   // Call lexer.load(name, nil, true).
   if (lua_getfield(L.get(), -1, "load") != LUA_TFUNCTION) {
-    LogError("cannot find lexer.load()", false);
+    LogError("cannot find lexer.load()");
     return;
   }
   lua_pushcfunction(L.get(), lua_error_handler), lua_insert(L.get(), -2);
@@ -462,13 +466,20 @@ EXPORT_FUNCTION void CALLING_CONVENTION SetLibraryProperty(const char *key, cons
 
 EXPORT_FUNCTION const char *CALLING_CONVENTION GetNameSpace() { return "scintillua"; }
 
+std::string errorMessage;
+
 EXPORT_FUNCTION Scintilla::ILexer5 *CALLING_CONVENTION CreateLexer(const char *name) {
   auto lexer = new Scintillua(lexersDir, name);
-  if (strlen(lexer->PropertyGet(Scintillua::LexerErrorKey)) > 0) {
+  errorMessage = lexer->PropertyGet(Scintillua::LexerErrorKey);
+  if (errorMessage.length() > 0) {
     lexer->Release();
     return nullptr;
   }
   return lexer;
+}
+
+EXPORT_FUNCTION const char *CALLING_CONVENTION GetCreateLexerError() {
+  return errorMessage.c_str();
 }
 }
 

@@ -104,14 +104,17 @@ that supports the Lexilla protocol, that application must allow you to:
    a Lua lexer to load (without the *.lua* extension).
 * Give the resulting `ILexer5*` pointer to Scintilla, e.g. via Scintilla's [SCI_SETILEXER][]
    message.
+* Optionally handle errors when the returned pointer is null by calling Scintillua's
+   `GetCreateLexerError()` function to see what went wrong.
 
 The Scintillua lexer largely behaves like a normal Scintilla lexer. However, unlike most
 other lexers Scintillua does not have static style numbers, which makes styling a bit more
 complicated. Your application must call the lexer's `NamedStyles()` function (which is defined
-by the `ILexer5` interface), which returns the number of currently defined styles. It must then
-iterate over those style numbers, calling `NameOfStyle()`, in order to obtain a map of style
-names to numbers. With that information, your application can then specify style settings for
-style numbers. Here's an example of how [SciTE][] does it:
+by the `ILexer5` interface), which returns the number of currently defined styles. (Note that
+the returned number includes Scintilla's 8 predefined styles.) It must then iterate over those
+style numbers, calling `NameOfStyle()`, in order to obtain a map of style names to numbers. With
+that information, your application can then specify style settings for style numbers. Here's
+an example of how [SciTE][] does it:
 
     // Scintillua's style numbers are not constant, so ask it for names of styles
     // and create a mapping of style numbers to more constant style definitions.
@@ -160,6 +163,18 @@ Scintillua's lexers support the following properties:
 [SCI_SETILEXER]: https://scintilla.org/ScintillaDoc.html#SCI_SETILEXER
 [SciTE]: https://scintilla.org/SciTE.html
 
+#### Error Handling
+
+Scintillua reports errors in one of two ways:
+
+1. If the `CreateLexer()` call fails and returns a null pointer, you can retrieve the error
+  message using `GetCreateLexerError()`. This can happen when the "scintillua.lexers" property
+  is not correctly set or when there is an error loading a particular Lua lexer.
+2. If there is an error during a lex or fold operation, the error message is stored in the
+  "lexer.scintillua.error" property. This property only contains the most recent error (if any).
+
+Critical errors are also printed to stderr.
+
 ### Compiling Scintillua Directly into an App
 
 You can compile Scintillua directly (statically) into your Scintilla-based application by:
@@ -201,11 +216,14 @@ In order to use Scintillua's lexers in your application:
 2. Call Scintillua's `CreateLexer()` with the name of a Lua lexer (without the *.lua* extension)
    to load.
 3. Call Scintilla's [SCI_SETILEXER][] message, passing the lexer returned in step 2.
+4. Optionally handle errors when the returned pointer is null by calling Scintillua's
+   `GetCreateLexerError()` to see what went wrong.
 
 For example, using the GTK platform:
 
     SetLibraryProperty("scintillua.lexers", "/path/to/lexers/");
     ILEXER5* lua_lexer = CreateLexer("lua");
+    if (!lua_lexer) fprintf("error creating lexer: %s\n", GetCreateLexerError());
     GtkWidget *sci = scintilla_new();
     send_scintilla_message(SCINTILLA(sci), SCI_SETILEXER, 0, (sptr_t)lua_lexer);
 
@@ -218,6 +236,18 @@ an example of this process.
 [LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
 [Scintilla's SCI_SETILEXER]: https://scintilla.org/ScintillaDoc.html#SCI_SETILEXER
 [SCI_SETILEXER]: api.html#SCI_SETILEXER
+
+#### Error Handling
+
+Scintillua reports errors in one of two ways:
+
+1. If the `CreateLexer()` call fails and returns a null pointer, you can retrieve the error
+  message using `GetCreateLexerError()`. This can happen when the "scintillua.lexers" property
+  is not correctly set or when there is an error loading a particular Lua lexer.
+2. If there is an error during a lex or fold operation, the error message is stored in the
+  "lexer.scintillua.error" property. This property only contains the most recent error (if any).
+
+Critical errors are also printed to stderr.
 
 ### Using Scintillua as a Lua Library
 

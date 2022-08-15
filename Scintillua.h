@@ -16,6 +16,7 @@ const char *GetLibraryPropertyNames();
 void SetLibraryProperty(const char *key, const char *value);
 const char *GetNameSpace();
 ILEXER5 *CreateLexer(const char *name);
+const char *GetCreateLexerError();
 
 #ifdef __cplusplus
 }
