@@ -34,6 +34,7 @@ LUALIB_API int luaopen_lpeg(lua_State *L);
 namespace {
 
 class Scintillua : public Lexilla::DefaultLexer {
+  std::string name;
   std::unique_ptr<lua_State, decltype(&lua_close)> L; // cleared when lexer language changes
   Lexilla::PropSetSimple props;
   bool multilang = false;
@@ -84,6 +85,8 @@ public:
   const char *SCI_METHOD NameOfStyle(int style) override;
 
   const char *SCI_METHOD PropertyGet(const char *key) override;
+
+  const char *SCI_METHOD GetName() override;
 };
 
 Scintillua::PropertyDoc::PropertyDoc() {
@@ -197,7 +200,7 @@ int lexer_newindex(lua_State *L) {
 }
 
 Scintillua::Scintillua(const std::string &lexersDir, const char *name)
-    : DefaultLexer("scintillua", -1), L{luaL_newstate(), lua_close} {
+    : DefaultLexer("scintillua", -1), name(name), L{luaL_newstate(), lua_close} {
   if (lexersDir.empty()) {
     LogError("scintillua.lexers library property not set");
     return;
@@ -427,6 +430,8 @@ const char *Scintillua::NameOfStyle(int style) {
 }
 
 const char *Scintillua::PropertyGet(const char *key) { return props.Get(key); }
+
+const char *Scintillua::GetName() { return name.c_str(); }
 
 #if (_WIN32 && !NO_DLL)
 #define EXPORT_FUNCTION __declspec(dllexport)
