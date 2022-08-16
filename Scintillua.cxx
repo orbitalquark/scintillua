@@ -91,6 +91,7 @@ public:
 
 Scintillua::PropertyDoc::PropertyDoc() {
   DefineProperty(LexerErrorKey, &Placeholder::s, "Error message from most recent operation.");
+  DefineProperty("fold", &Placeholder::b, "Enable folding.");
   DefineProperty("fold.scintillua.by.indentation", &Placeholder::b,
     "Fold based on indentation level if a lexer does not have its own folder. Note some lexers "
     "automatically enable this.");
