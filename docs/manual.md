@@ -123,25 +123,28 @@ an example of how [SciTE][] does it:
     //   style.scintillua.cpp.2=$(scintillua.styles.comment)
     // That way the user can define 'scintillua.styles.comment' once and it will
     // be used for whatever the style number for comments is in any given lexer.
-    const auto setStyle = [this, &key, &languageName](int style) {
-      char styleName[64] = "";
-      char propStr[128] = "";
-      sprintf(key, "style.%s.%0d", languageName, style);
-      wEditor.NameOfStyle(style, styleName);
-      sprintf(propStr, "$(scintillua.styles.%s)", styleName);
-      props.Set(key, propStr);
-    };
-    const int namedStyles = wEditor.NamedStyles(); // includes predefined styles
-    const int LastPredefined = static_cast<int>(Scintilla::StylesCommon::LastPredefined);
-    const int numPredefined = LastPredefined - StyleDefault + 1;
-    for (int i = 0; i < std::min(namedStyles - numPredefined, StyleDefault); i++) {
-      setStyle(i);
-    }
-    for (int i = StyleDefault; i <= LastPredefined; i++) {
-      setStyle(i);
-    }
-    for (int i = LastPredefined + 1; i < namedStyles; i++) {
-      setStyle(i);
+    void SetScintilluaStyles(GUI::ScintillaWindow &wEditor, PropSetFile& props, const char *languageName) {
+      const auto setStyle = [&wEditor, &props, &languageName](int style) {
+        char key[256] = "";
+        char styleName[64] = "";
+        char propStr[128] = "";
+        sprintf(key, "style.%s.%0d", languageName, style);
+        wEditor.NameOfStyle(style, styleName);
+        sprintf(propStr, "$(scintillua.styles.%s)", styleName);
+        props.Set(key, propStr);
+      };
+      const int namedStyles = wEditor.NamedStyles(); // this count includes predefined styles
+      constexpr int LastPredefined = static_cast<int>(Scintilla::StylesCommon::LastPredefined);
+      constexpr int numPredefined = LastPredefined - StyleDefault + 1;
+      for (int i = 0; i < std::min(namedStyles - numPredefined, StyleDefault); i++) {
+        setStyle(i);
+      }
+      for (int i = StyleDefault; i <= LastPredefined; i++) {
+        setStyle(i);
+      }
+      for (int i = LastPredefined + 1; i < namedStyles; i++) {
+        setStyle(i);
+      }
     }
 
 Scintillua's lexers support the following properties:
