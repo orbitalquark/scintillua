@@ -43,12 +43,12 @@ end
 -- @param rules The ordered list of rule names the lexer should have.
 function assert_rules(lex, rules)
   local j = 1
-  for i = 1, #lex._RULES do
-    assert(lex._RULES[rules[j]], string.format("rule '%s' does not exist", rules[j]))
-    assert(lex._RULES[i] == rules[j], string.format("'%s' ~= '%s'", lex._RULES[i], rules[i] or ''))
+  for i = 1, #lex._rules do
+    assert(lex._rules[rules[j]], string.format("rule '%s' does not exist", rules[j]))
+    assert(lex._rules[i] == rules[j], string.format("'%s' ~= '%s'", lex._rules[i], rules[i] or ''))
     j = j + 1
   end
-  if #lex._RULES ~= #rules then error(string.format("'%s' rule not found", rules[j])) end
+  if #lex._rules ~= #rules then error(string.format("'%s' rule not found", rules[j])) end
 end
 
 -- Asserts the given lexer contains the given set of extra tags in addition to its defaults.
@@ -57,7 +57,7 @@ end
 function assert_extra_tags(lex, tags)
   for i = 1, #tags do
     assert(lex._TAGS[tags[i]], string.format("'%s' not found", tags[i]))
-    assert(lex._EXTRATAGS[tags[i]], string.format("'%s' not found", tags[i]))
+    assert(lex._extra_tags[tags[i]], string.format("'%s' not found", tags[i]))
   end
 end
 
@@ -67,8 +67,8 @@ end
 function assert_children(lex, children)
   local j = 1
   for i = 1, #lex._CHILDREN do
-    assert(lex._CHILDREN[i]._NAME == children[j],
-      string.format("'%s' ~= '%s'", lex._CHILDREN[i]._NAME, children[j] or ''))
+    assert(lex._CHILDREN[i]._name == children[j],
+      string.format("'%s' ~= '%s'", lex._CHILDREN[i]._name, children[j] or ''))
     j = j + 1
   end
   if #lex._CHILDREN ~= #children then error(string.format("child '%s' not found", children[j])) end
@@ -86,7 +86,7 @@ end
 --   {'string', "'hi'"}, {'operator', ')'}})
 function assert_lex(lex, code, expected_tags, initial_style)
   if lex._lexer then lex = lex._lexer end -- note: lexer.load() does this
-  local tags = lex:lex(code, initial_style or lex._TAGS['whitespace.' .. lex._NAME])
+  local tags = lex:lex(code, initial_style or lex._TAGS['whitespace.' .. lex._name])
   local j = 1
   for i = 1, #tags, 2 do
     if not tags[i]:find('^whitespace') then
@@ -115,7 +115,7 @@ function assert_fold_points(lex, code, expected_fold_points, initial_style)
   if lex._lexer then lex = lex._lexer end -- note: lexer.load() does this
   -- Since `M.style_at()` is provided by Scintilla and not available for tests, create it,
   -- using data from `lexer.lex()`.
-  local tags = lex:lex(code, initial_style or lex._TAGS['whitespace.' .. lex._NAME])
+  local tags = lex:lex(code, initial_style or lex._TAGS['whitespace.' .. lex._name])
   lexer.style_at = setmetatable({}, {
     __index = function(self, pos)
       for i = 2, #tags, 2 do if pos < tags[i] then return tags[i - 1] end end
@@ -183,7 +183,7 @@ function test_word_match()
   assert(lexer.word_match{'foo', 'bar', 'baz'}:match('foo') == 4)
   assert(not lexer.word_match{'foo', 'bar', 'baz'}:match('foo_bar'))
   assert(lexer.word_match({'foo!', 'bar?', 'baz.'}, true):match('FOO!') == 5)
-  assert(not lexer.word_match{'foo '}:match('foo ')) -- spaces not allowed
+  assert(lexer.word_match{'foo '}:match('foo')) -- spaces not allowed
   -- Test string list style.
   assert(lexer.word_match('foo bar baz'):match('foo') == 4)
   assert(not lexer.word_match('foo bar baz'):match('foo_bar'))
@@ -263,7 +263,7 @@ function test_embed()
   -- Note: lexer.load() sets lexer.WHITESPACE and adds the custom whitespace style.
   local parent = lexer.new('parent')
   assert_default_tags(parent)
-  lexer.WHITESPACE = 'whitespace.' .. parent._NAME
+  lexer.WHITESPACE = 'whitespace.' .. parent._name
   parent:add_rule('whitespace', parent:tag(lexer.WHITESPACE, lexer.space^1))
   parent:add_rule('identifier', parent:tag('parent', lexer.word))
 
@@ -271,15 +271,15 @@ function test_embed()
   -- Note: lexer.load() sets lexer.WHITESPACE and adds the custom whitespace tag.
   local child = lexer.new('child')
   assert_default_tags(child)
-  lexer.WHITESPACE = 'whitespace.' .. child._NAME
+  lexer.WHITESPACE = 'whitespace.' .. child._name
   child:add_rule('whitespace', child:tag(lexer.WHITESPACE, lexer.space^1))
   child:add_rule('number', child:tag('child', lexer.integer))
 
   -- Assert the child's tags are not embedded in the parent yet.
-  assert(not parent._TAGS['whitespace.' .. child._NAME])
-  assert(not parent._EXTRATAGS['whitespace.' .. child._NAME])
+  assert(not parent._TAGS['whitespace.' .. child._name])
+  assert(not parent._extra_tags['whitespace.' .. child._name])
   assert(not parent._TAGS['child'])
-  assert(not parent._EXTRATAGS['child'])
+  assert(not parent._extra_tags['child'])
 
   -- Embed the child into the parent and verify the child's tags were copied over.
   local start_rule = parent:tag('transition', lpeg.P('['))
@@ -315,7 +315,7 @@ function test_embed()
     {'parent', 'bar'}
   }
   -- LuaFormatter on
-  local initial_style = parent._TAGS['whitespace.' .. child._NAME]
+  local initial_style = parent._TAGS['whitespace.' .. child._name]
   assert_lex(parent, code, tags, initial_style)
 end
 
@@ -325,14 +325,14 @@ function test_embed_into()
   -- Create the child lexer.
   -- Note: lexer.load() sets lexer.WHITESPACE and adds the custom whitespace tag.
   local child = lexer.new('child')
-  lexer.WHITESPACE = 'whitespace.' .. child._NAME
+  lexer.WHITESPACE = 'whitespace.' .. child._name
   child:add_rule('whitespace', child:tag(lexer.WHITESPACE, lexer.space^1))
   child:add_rule('number', child:tag('child', lexer.integer))
 
   -- Create the parent lexer.
   -- Note: lexer.load() sets lexer.WHITESPACE and adds the custom whitespace tag.
   local parent = lexer.new('parent')
-  lexer.WHITESPACE = 'whitespace.' .. parent._NAME
+  lexer.WHITESPACE = 'whitespace.' .. parent._name
   parent:add_rule('whitespace', parent:tag(lexer.WHITESPACE, lexer.space^1))
   parent:add_rule('identifier', parent:tag('parent', lexer.word))
 
@@ -344,8 +344,8 @@ function test_embed_into()
 
   -- Verify any subsequent fold point additions to the child are copied to the parent.
   child:add_fold_point('transition', '[', ']')
-  assert(parent._FOLDPOINTS['transition']['['] == 1)
-  assert(parent._FOLDPOINTS['transition'][']'] == -1)
+  assert(parent._fold_points['transition']['['] == 1)
+  assert(parent._fold_points['transition'][']'] == -1)
 
   -- Lex some parent -> child -> parent code.
   local code = [[foo [1, 2, 3] bar]]
@@ -375,7 +375,7 @@ function test_embed_into()
     {'parent', 'bar'}
   }
   -- LuaFormatter on
-  local initial_style = parent._TAGS['whitespace.' .. child._NAME]
+  local initial_style = parent._TAGS['whitespace.' .. child._name]
   assert_lex(child, code, tags, initial_style)
 
   -- Fold some code.
@@ -396,14 +396,14 @@ function test_proxy()
   -- Create the parent lexer.
   -- Note: lexer.load() sets lexer.WHITESPACE and adds the custom whitespace tag.
   local parent = lexer.new('parent')
-  lexer.WHITESPACE = 'whitespace.' .. parent._NAME
+  lexer.WHITESPACE = 'whitespace.' .. parent._name
   parent:add_rule('whitespace', parent:tag(lexer.WHITESPACE, lexer.space^1))
   parent:add_rule('identifier', parent:tag('parent', lexer.word))
 
   -- Create the child lexer.
   -- Note: lexer.load() sets lexer.WHITESPACE and adds the custom whitespace tag.
   local child = lexer.new('child')
-  lexer.WHITESPACE = 'whitespace.' .. child._NAME
+  lexer.WHITESPACE = 'whitespace.' .. child._name
   child:add_rule('whitespace', child:tag(lexer.WHITESPACE, lexer.space^1))
   child:add_rule('number', child:tag('child', lexer.integer))
 
@@ -443,13 +443,13 @@ function test_proxy()
     {'parent', 'bar'}
   }
   -- LuaFormatter on
-  local initial_style = parent._TAGS['whitespace.' .. child._NAME]
+  local initial_style = parent._TAGS['whitespace.' .. child._name]
   assert_lex(proxy, code, tags, initial_style)
 
   -- Verify any subsequent fold point additions to the proxy are copied to the parent.
   proxy:add_fold_point('transition', '[', ']')
-  assert(parent._FOLDPOINTS['transition']['['] == 1)
-  assert(parent._FOLDPOINTS['transition'][']'] == -1)
+  assert(parent._fold_points['transition']['['] == 1)
+  assert(parent._fold_points['transition'][']'] == -1)
 
   -- Fold some code.
   code = [[
@@ -550,7 +550,7 @@ end
 -- Tests the Lua lexer.
 function test_lua()
   local lua = lexer.load('lua')
-  assert(lua._NAME == 'lua')
+  assert(lua._name == 'lua')
   assert_default_tags(lua)
   local rules = {
     'whitespace', 'keyword', 'function', 'constant', 'library', 'identifier', 'string', 'comment',
@@ -637,7 +637,7 @@ end
 -- Tests the C lexer.
 function test_c()
   local c = lexer.load('ansi_c')
-  assert(c._NAME == 'ansi_c')
+  assert(c._name == 'ansi_c')
   assert_default_tags(c)
 
   -- Lexing tests.
@@ -701,7 +701,7 @@ end
 -- Tests the HTML lexer and its embedded languages.
 function test_html()
   local html = lexer.load('html')
-  assert(html._NAME == 'html')
+  assert(html._name == 'html')
   assert_default_tags(html)
   local rules = {
     'whitespace', 'comment', 'doctype', 'element', 'tag_close', 'attribute', -- 'equals',
@@ -814,16 +814,16 @@ function test_html()
 
   -- Folding tests.
   local symbols = {'<', '<!--', '-->', '{', '}', '/*', '*/', '//'}
-  for i = 1, #symbols do assert(html._FOLDPOINTS._SYMBOLS[symbols[i]]) end
-  assert(html._FOLDPOINTS['element']['<'])
-  assert(html._FOLDPOINTS['unknown_element']['<'])
-  assert(html._FOLDPOINTS[lexer.COMMENT]['<!--'])
-  assert(html._FOLDPOINTS[lexer.COMMENT]['-->'])
-  assert(html._FOLDPOINTS[lexer.OPERATOR]['{'])
-  assert(html._FOLDPOINTS[lexer.OPERATOR]['}'])
-  assert(html._FOLDPOINTS[lexer.COMMENT]['/*'])
-  assert(html._FOLDPOINTS[lexer.COMMENT]['*/'])
-  assert(html._FOLDPOINTS[lexer.COMMENT]['//'])
+  for i = 1, #symbols do assert(html._fold_points._symbols[symbols[i]]) end
+  assert(html._fold_points['element']['<'])
+  assert(html._fold_points['unknown_element']['<'])
+  assert(html._fold_points[lexer.COMMENT]['<!--'])
+  assert(html._fold_points[lexer.COMMENT]['-->'])
+  assert(html._fold_points[lexer.OPERATOR]['{'])
+  assert(html._fold_points[lexer.OPERATOR]['}'])
+  assert(html._fold_points[lexer.COMMENT]['/*'])
+  assert(html._fold_points[lexer.COMMENT]['*/'])
+  assert(html._fold_points[lexer.COMMENT]['//'])
   code = [[
     <html>
       foo
@@ -854,7 +854,7 @@ end
 -- Tests the PHP lexer.
 function test_php()
   local php = lexer.load('php')
-  assert(php._NAME == 'php')
+  assert(php._name == 'php')
   assert_default_tags(php)
   assert_extra_tags(php, {'whitespace.php', 'php_tag'})
 
@@ -894,17 +894,17 @@ function test_php()
 
   -- Folding tests.
   local symbols = {'<?', '?>', '/*', '*/', '//', '#', '{', '}', '(', ')'}
-  for i = 1, #symbols do assert(php._FOLDPOINTS._SYMBOLS[symbols[i]]) end
-  assert(php._FOLDPOINTS['php_tag']['<?'])
-  assert(php._FOLDPOINTS['php_tag']['?>'])
-  assert(php._FOLDPOINTS[lexer.COMMENT]['/*'])
-  assert(php._FOLDPOINTS[lexer.COMMENT]['*/'])
-  assert(php._FOLDPOINTS[lexer.COMMENT]['//'])
-  assert(php._FOLDPOINTS[lexer.COMMENT]['#'])
-  assert(php._FOLDPOINTS[lexer.OPERATOR]['{'])
-  assert(php._FOLDPOINTS[lexer.OPERATOR]['}'])
-  assert(php._FOLDPOINTS[lexer.OPERATOR]['('])
-  assert(php._FOLDPOINTS[lexer.OPERATOR][')'])
+  for i = 1, #symbols do assert(php._fold_points._symbols[symbols[i]]) end
+  assert(php._fold_points['php_tag']['<?'])
+  assert(php._fold_points['php_tag']['?>'])
+  assert(php._fold_points[lexer.COMMENT]['/*'])
+  assert(php._fold_points[lexer.COMMENT]['*/'])
+  assert(php._fold_points[lexer.COMMENT]['//'])
+  assert(php._fold_points[lexer.COMMENT]['#'])
+  assert(php._fold_points[lexer.OPERATOR]['{'])
+  assert(php._fold_points[lexer.OPERATOR]['}'])
+  assert(php._fold_points[lexer.OPERATOR]['('])
+  assert(php._fold_points[lexer.OPERATOR][')'])
 end
 
 -- Tests the Ruby lexer.
@@ -951,17 +951,17 @@ function test_ruby()
     ['until'] = function() end, ['end'] = -1
   }
   for k, v in pairs(fold_keywords) do
-    assert(ruby._FOLDPOINTS._SYMBOLS[k])
+    assert(ruby._fold_points._symbols[k])
     if type(v) == 'number' then
-      assert(ruby._FOLDPOINTS[lexer.KEYWORD][k] == v)
+      assert(ruby._fold_points[lexer.KEYWORD][k] == v)
     else
-      assert(type(ruby._FOLDPOINTS[lexer.KEYWORD][k]) == 'function')
+      assert(type(ruby._fold_points[lexer.KEYWORD][k]) == 'function')
     end
   end
   local fold_operators = {'(', ')', '[', ']', '{', '}'}
   for i = 1, #fold_operators do
-    assert(ruby._FOLDPOINTS._SYMBOLS[fold_operators[i]])
-    assert(ruby._FOLDPOINTS[lexer.OPERATOR][fold_operators[i]])
+    assert(ruby._fold_points._symbols[fold_operators[i]])
+    assert(ruby._fold_points[lexer.OPERATOR][fold_operators[i]])
   end
   code = [=[
     class Foo

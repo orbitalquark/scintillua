@@ -789,16 +789,20 @@ M.DEFAULT = 'default'
 -- @name tag
 function M.tag(lexer, name, patt)
   if not lexer._TAGS[name] then
-    local num_styles = lexer._numstyles
+    local num_styles = lexer._num_styles
     if num_styles == 33 then num_styles = num_styles + 8 end -- skip predefined
     if num_styles > 256 then print('Too many styles defined (256 MAX)') end
-    lexer._TAGS[name], lexer._numstyles = num_styles, num_styles + 1
-    lexer._EXTRATAGS[name] = true
+    lexer._TAGS[name], lexer._num_styles = num_styles, num_styles + 1
+    lexer._extra_tags[name] = true
     -- If the lexer is a proxy or a child that embedded itself, make this tag name known to
     -- the parent lexer.
     if lexer._lexer then lexer._lexer:tag(name, true) end
   end
   return lpeg_Cc(name) * patt * lpeg_Cp()
+end
+
+function M.set_word_list(lexer, i, word_list)
+
 end
 
 ---
@@ -811,10 +815,10 @@ end
 -- @name add_rule
 function M.add_rule(lexer, id, rule)
   if lexer._lexer then lexer = lexer._lexer end -- proxy; get true parent
-  if not lexer._RULES then lexer._RULES = {} end
-  lexer._RULES[#lexer._RULES + 1] = id
-  lexer._RULES[id] = rule
-  lexer._GRAMMARTABLE = nil -- invalidate
+  if not lexer._rules then lexer._rules = {} end
+  lexer._rules[#lexer._rules + 1] = id
+  lexer._rules[id] = rule
+  lexer._grammar_table = nil -- invalidate
 end
 
 ---
@@ -825,8 +829,8 @@ end
 -- @name modify_rule
 function M.modify_rule(lexer, id, rule)
   if lexer._lexer then lexer = lexer._lexer end -- proxy; get true parent
-  lexer._RULES[id] = rule
-  lexer._GRAMMARTABLE = nil -- invalidate
+  lexer._rules[id] = rule
+  lexer._grammar_table = nil -- invalidate
 end
 
 ---
@@ -837,7 +841,7 @@ end
 -- @name get_rule
 function M.get_rule(lexer, id)
   if lexer._lexer then lexer = lexer._lexer end -- proxy; get true parent
-  return lexer._RULES[id]
+  return lexer._rules[id]
 end
 
 ---
@@ -854,21 +858,21 @@ function M.embed(lexer, child, start_rule, end_rule)
   if lexer._lexer then lexer = lexer._lexer end -- proxy; get true parent
 
   -- Add child rules.
-  if not child._RULES then error('cannot embed lexer with no rules') end
-  if not child._STARTRULES then child._STARTRULES = {} end
-  if not child._ENDRULES then child._ENDRULES = {} end
-  child._STARTRULES[lexer], child._ENDRULES[lexer] = start_rule, end_rule
+  if not child._rules then error('cannot embed lexer with no rules') end
+  if not child._start_rules then child._start_rules = {} end
+  if not child._end_rules then child._end_rules = {} end
+  child._start_rules[lexer], child._end_rules[lexer] = start_rule, end_rule
   if not lexer._CHILDREN then lexer._CHILDREN = {} end
   local children = lexer._CHILDREN
   children[#children + 1] = child
 
   -- Add child tags.
-  for name in pairs(child._EXTRATAGS) do lexer:tag(name, true) end
+  for name in pairs(child._extra_tags) do lexer:tag(name, true) end
 
   -- Add child fold symbols.
-  if child._FOLDPOINTS then
-    for tag_name, symbols in pairs(child._FOLDPOINTS) do
-      if tag_name ~= '_SYMBOLS' then
+  if child._fold_points then
+    for tag_name, symbols in pairs(child._fold_points) do
+      if tag_name ~= '_symbols' then
         for symbol, v in pairs(symbols) do lexer:add_fold_point(tag_name, symbol, v) end
       end
     end
@@ -902,19 +906,19 @@ end
 -- @usage lex:add_fold_point('custom', function(text, pos, line, s, symbol) ... end)
 -- @name add_fold_point
 function M.add_fold_point(lexer, tag_name, start_symbol, end_symbol)
-  if not lexer._FOLDPOINTS then lexer._FOLDPOINTS = {_SYMBOLS = {}} end
-  local symbols = lexer._FOLDPOINTS._SYMBOLS
-  if not lexer._FOLDPOINTS[tag_name] then lexer._FOLDPOINTS[tag_name] = {} end
-  if lexer._CASEINSENSITIVEFOLDPOINTS then
+  if not lexer._fold_points then lexer._fold_points = {_symbols = {}} end
+  local symbols = lexer._fold_points._symbols
+  if not lexer._fold_points[tag_name] then lexer._fold_points[tag_name] = {} end
+  if lexer._case_insensitive_fold_points then
     start_symbol = start_symbol:lower()
     if type(end_symbol) == 'string' then end_symbol = end_symbol:lower() end
   end
   if type(end_symbol) == 'string' then
     if not symbols[end_symbol] then symbols[#symbols + 1], symbols[end_symbol] = end_symbol, true end
-    lexer._FOLDPOINTS[tag_name][start_symbol] = 1
-    lexer._FOLDPOINTS[tag_name][end_symbol] = -1
+    lexer._fold_points[tag_name][start_symbol] = 1
+    lexer._fold_points[tag_name][end_symbol] = -1
   else
-    lexer._FOLDPOINTS[tag_name][start_symbol] = end_symbol -- function or int
+    lexer._fold_points[tag_name][start_symbol] = end_symbol -- function or int
   end
   if not symbols[start_symbol] then
     symbols[#symbols + 1], symbols[start_symbol] = start_symbol, true
@@ -931,40 +935,40 @@ local function add_lexer(grammar, lexer)
   local rule = lpeg_P(false)
 
   -- Add this lexer's rules.
-  for _, name in ipairs(lexer._RULES) do
-    local id = lexer._NAME .. '.' .. name
-    grammar[id], rule = lexer._RULES[name], rule + lpeg_V(id)
+  for _, name in ipairs(lexer._rules) do
+    local id = lexer._name .. '.' .. name
+    grammar[id], rule = lexer._rules[name], rule + lpeg_V(id)
   end
-  local any_id = lexer._NAME .. '_fallback'
+  local any_id = lexer._name .. '_fallback'
   grammar[any_id], rule = lexer:tag(M.DEFAULT, M.any), rule + lpeg_V(any_id)
 
   -- Add this child lexer's end rules.
-  if lexer._ENDRULES then
-    for parent, end_rule in pairs(lexer._ENDRULES) do
-      local back_id = lexer._NAME .. '_to_' .. parent._NAME
+  if lexer._end_rules then
+    for parent, end_rule in pairs(lexer._end_rules) do
+      local back_id = lexer._name .. '_to_' .. parent._name
       grammar[back_id], rule = end_rule,
-        rule - lpeg_V(back_id) + lpeg_V(back_id) * lpeg_V(parent._NAME)
+        rule - lpeg_V(back_id) + lpeg_V(back_id) * lpeg_V(parent._name)
     end
   end
 
   -- Add this child lexer's start rules.
-  if lexer._STARTRULES then
-    for parent, start_rule in pairs(lexer._STARTRULES) do
-      local to_id = parent._NAME .. '_to_' .. lexer._NAME
-      grammar[to_id] = start_rule * lpeg_V(lexer._NAME)
+  if lexer._start_rules then
+    for parent, start_rule in pairs(lexer._start_rules) do
+      local to_id = parent._name .. '_to_' .. lexer._name
+      grammar[to_id] = start_rule * lpeg_V(lexer._name)
     end
   end
 
   -- Finish adding this lexer's rules.
-  local rule_id = lexer._NAME .. '_rule'
+  local rule_id = lexer._name .. '_rule'
   grammar[rule_id] = rule -- matches one rule from list of rules
-  grammar[lexer._NAME] = lpeg_V(rule_id)^0
+  grammar[lexer._name] = lpeg_V(rule_id)^0
 
   -- Add this lexer's children's rules.
   if not lexer._CHILDREN then return end
   for _, child in ipairs(lexer._CHILDREN) do
     add_lexer(grammar, child)
-    local to_id = lexer._NAME .. '_to_' .. child._NAME
+    local to_id = lexer._name .. '_to_' .. child._name
     grammar[rule_id] = lpeg_V(to_id) + grammar[rule_id]
   end
 end
@@ -973,19 +977,19 @@ end
 -- @param init_style The current style. Multiple-language lexers use this to determine which
 --   language to start lexing in.
 local function build_grammar(lexer, init_style)
-  if not lexer._RULES then return end
-  if not lexer._INITIALRULE then lexer._INITIALRULE = lexer._PARENTNAME or lexer._NAME end
-  if not lexer._GRAMMARTABLE then
-    local grammar = {lexer._INITIALRULE}
-    if not lexer._PARENTNAME then
+  if not lexer._rules then return end
+  if not lexer._initial_rule then lexer._initial_rule = lexer._parent_name or lexer._name end
+  if not lexer._grammar_table then
+    local grammar = {lexer._initial_rule}
+    if not lexer._parent_name then
       add_lexer(grammar, lexer)
     else
-      local name = lexer._NAME
-      lexer._NAME = lexer._PARENTNAME
+      local name = lexer._name
+      lexer._name = lexer._parent_name
       add_lexer(grammar, lexer)
-      lexer._NAME = name
+      lexer._name = name
     end
-    lexer._GRAMMAR, lexer._GRAMMARTABLE = lpeg_Ct(lpeg_P(grammar)), grammar
+    lexer._grammar, lexer._grammar_table = lpeg_Ct(lpeg_P(grammar)), grammar
   end
 
   -- For multilang lexers, build a new grammar whose initial rule is the current language
@@ -993,17 +997,17 @@ local function build_grammar(lexer, init_style)
   if lexer._CHILDREN then
     for tag, style_num in pairs(lexer._TAGS) do
       if style_num ~= init_style then goto continue end
-      local lexer_name = tag:match('^whitespace%.(.+)$') or lexer._PARENTNAME or lexer._NAME
-      if lexer._INITIALRULE == lexer_name then break end
-      lexer._INITIALRULE = lexer_name
-      lexer._GRAMMARTABLE[1] = lexer._INITIALRULE
-      lexer._GRAMMAR = lpeg_Ct(lpeg_P(lexer._GRAMMARTABLE))
-      do return lexer._GRAMMAR end
+      local lexer_name = tag:match('^whitespace%.(.+)$') or lexer._parent_name or lexer._name
+      if lexer._initial_rule == lexer_name then break end
+      lexer._initial_rule = lexer_name
+      lexer._grammar_table[1] = lexer._initial_rule
+      lexer._grammar = lpeg_Ct(lpeg_P(lexer._grammar_table))
+      do return lexer._grammar end
       ::continue::
     end
   end
 
-  return lexer._GRAMMAR
+  return lexer._grammar
 end
 
 ---
@@ -1019,7 +1023,7 @@ function M.lex(lexer, text, init_style)
   local grammar = build_grammar(lexer, init_style)
   if not grammar then return {M.DEFAULT, #text + 1} end
 
-  if lexer._LEXBYLINE then
+  if lexer._lex_by_line then
     local function append(tags, line_tags, offset)
       for i = 1, #line_tags, 2 do
         tags[#tags + 1] = line_tags[i]
@@ -1059,20 +1063,20 @@ function M.fold(lexer, text, start_pos, start_line, start_level)
   local fold = M.property_int['fold'] > 0
   local FOLD_BASE = M.FOLD_BASE
   local FOLD_HEADER, FOLD_BLANK = M.FOLD_HEADER, M.FOLD_BLANK
-  if fold and lexer._FOLDPOINTS then
+  if fold and lexer._fold_points then
     local lines = {}
     for p, l in (text .. '\n'):gmatch('()(.-)\r?\n') do lines[#lines + 1] = {p, l} end
     local fold_zero_sum_lines = M.property_int['fold.scintillua.on.zero.sum.lines'] > 0
     local fold_compact = M.property_int['fold.scintillua.compact'] > 0
-    local fold_points = lexer._FOLDPOINTS
-    local fold_point_symbols = fold_points._SYMBOLS
+    local fold_points = lexer._fold_points
+    local fold_point_symbols = fold_points._symbols
     local style_at, fold_level = M.style_at, M.fold_level
     local line_num, prev_level = start_line, start_level
     local current_level = prev_level
     for _, captures in ipairs(lines) do
       local pos, line = captures[1], captures[2]
       if line ~= '' then
-        if lexer._CASEINSENSITIVEFOLDPOINTS then line = line:lower() end
+        if lexer._case_insensitive_fold_points then line = line:lower() end
         local ranges = {}
         local function is_valid_range(s, e)
           if not s or not e then return false end
@@ -1134,7 +1138,8 @@ function M.fold(lexer, text, start_pos, start_line, start_level)
       end
       line_num = line_num + 1
     end
-  elseif fold and (lexer._FOLDBYINDENTATION or M.property_int['fold.scintillua.by.indentation'] > 0) then
+  elseif fold and
+    (lexer._fold_by_indentation or M.property_int['fold.scintillua.by.indentation'] > 0) then
     -- Indentation based folding.
     -- Calculate indentation per line.
     local indentation = {}
@@ -1205,9 +1210,9 @@ end
 -- @name new
 function M.new(name, opts)
   local lexer = {
-    _NAME = assert(name, 'lexer name expected'), _LEXBYLINE = opts and opts['lex_by_line'],
-    _FOLDBYINDENTATION = opts and opts['fold_by_indentation'],
-    _CASEINSENSITIVEFOLDPOINTS = opts and opts['case_insensitive_fold_points'],
+    _name = assert(name, 'lexer name expected'), _lex_by_line = opts and opts['lex_by_line'],
+    _fold_by_indentation = opts and opts['fold_by_indentation'],
+    _case_insensitive_fold_points = opts and opts['case_insensitive_fold_points'],
     _lexer = opts and opts['inherit']
   }
 
@@ -1215,8 +1220,8 @@ function M.new(name, opts)
   local tags = {}
   for i = 1, #default do tags[default[i]] = i end
   for i = 1, #predefined do tags[predefined[i]] = i + 32 end
-  lexer._TAGS, lexer._numstyles = tags, #default + 1
-  lexer._EXTRATAGS = {}
+  lexer._TAGS, lexer._num_styles = tags, #default + 1
+  lexer._extra_tags = {}
 
   return setmetatable(lexer, {
     __index = {
@@ -1267,7 +1272,7 @@ function M.load(name, alt_name, cache)
   local path = M.property['scintillua.lexers']:gsub(';', '/?.lua;') .. '/?.lua'
   local lexer = dofile(assert(searchpath(name, path)))
   assert(lexer, string.format("'%s.lua' did not return a lexer", name))
-  if alt_name then lexer._NAME = alt_name end
+  if alt_name then lexer._name = alt_name end
   lexer:tag('whitespace.' .. (alt_name or name), true) -- ensure it is tagged
 
   -- If the lexer is a proxy or a child that embedded itself, set the parent to be the main
@@ -1275,7 +1280,7 @@ function M.load(name, alt_name, cache)
   -- reference and use that name.
   if lexer._lexer then
     lexer = lexer._lexer
-    lexer._PARENTNAME, lexer._NAME = lexer._NAME, alt_name or name
+    lexer._parent_name, lexer._name = lexer._name, alt_name or name
   end
 
   if cache then lexers[alt_name or name] = lexer end
@@ -1448,7 +1453,7 @@ function M.word_match(word_list, case_insensitive)
   -- Optimize small word sets as ordered choice.
   if #word_list < 5 and not case_insensitive then
     local choice = lpeg_P(false)
-    for _, word in ipairs(word_list) do choice = choice + word end
+    for _, word in ipairs(word_list) do choice = choice + word:match('%S+') end
     return choice * -chars
   end
 

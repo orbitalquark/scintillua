@@ -95,10 +95,10 @@ lex:add_fold_point(lexer.OPERATOR, '(', ')')
 
 -- Embedded Bit Strings.
 -- Mimic lexer.load() by creating a bitstring-specific whitespace style.
-local bitstring = lexer.new(lex._NAME .. '_bitstring')
-local bitstring_ws = token(bitstring._NAME .. '_whitespace', lexer.space^1)
+local bitstring = lexer.new(lex._name .. '_bitstring')
+local bitstring_ws = token(bitstring._name .. '_whitespace', lexer.space^1)
 bitstring:add_rule('whitespace', bitstring_ws)
-bitstring:add_style(bitstring._NAME .. '_whitespace', lexer.styles.whitespace)
+bitstring:add_style(bitstring._name .. '_whitespace', lexer.styles.whitespace)
 bitstring:add_rule('type', typ_tok)
 bitstring:add_rule('module', mod_tok(bitstring_ws))
 bitstring:add_rule('keyword', key_tok + token(KEY, word_match{
