@@ -1432,8 +1432,10 @@ function M.word_match(word_list, case_insensitive)
   if type(word_list) == 'string' then
     local words = word_list -- space-separated list of words
     word_list = {}
-    for word in words:gsub('%-%-[^\n]+', ''):gmatch('%S+') do word_list[#word_list + 1] = word end
+    for word in words:gmatch('%S+') do word_list[#word_list + 1] = word end
   end
+
+  local chars = M.alnum + '_'
   local word_chars = ''
   for _, word in ipairs(word_list) do
     word_list[case_insensitive and word:lower() or word] = true
@@ -1441,8 +1443,15 @@ function M.word_match(word_list, case_insensitive)
       if not word_chars:find(char, 1, true) then word_chars = word_chars .. char end
     end
   end
-  local chars = M.alnum + '_'
   if word_chars ~= '' then chars = chars + lpeg_S(word_chars) end
+
+  -- Optimize small word sets as ordered choice.
+  if #word_list < 5 and not case_insensitive then
+    local choice = lpeg_P(false)
+    for _, word in ipairs(word_list) do choice = choice + word end
+    return choice * -chars
+  end
+
   return lpeg_Cmt(chars^1, function(input, index, word)
     if case_insensitive then word = word:lower() end
     return word_list[word] and index or nil
