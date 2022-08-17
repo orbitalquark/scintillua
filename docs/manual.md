@@ -255,33 +255,32 @@ Critical errors are also printed to stderr.
 ### Using Scintillua as a Lua Library
 
 In order to use Scintillua as a Lua library, simply place the *lexers/* directory in your Lua
-path (or modify Lua's `package.path` accordingly), `require()` the `lexer` library, [`load()`][]
-a lexer, and call that lexer's [`lex()`][] function. Here is an example interactive Lua session
-doing this:
+path (or modify Lua's `package.path` accordingly), `require()` the `lpeg` and `lexer` libraries,
+[`load()`][] a lexer, and call that lexer's [`lex()`][] function. Here is an example interactive
+Lua session doing this:
 
     $> lua
     Lua 5.1.4  Copyright (C) 1994-2008 Lua.org, PUC-Rio
+    > lpeg = require('lpeg')
     > lexer_path = '/home/mitchell/code/scintillua/lexers/?.lua'
     > package.path = package.path .. ';' .. lexer_path
     > c = require('lexer').load('ansi_c')
-    > tokens = c:lex('int void main() { return 0; }')
+    > tokens = c:lex('int main() { return 0; }')
     > for i = 1, #tokens, 2 do print(tokens[i], tokens[i+1]) end
     type	4
     whitespace.ansi_c	5
-    type	9
-    whitespace.ansi_c	10
-    identifier	14
-    operator	15
-    operator	16
-    whitespace.ansi_c	17
-    operator	18
-    whitespace.ansi_c	19
-    keyword	25
-    whitespace.ansi_c	26
-    number	27
-    operator	28
-    whitespace.ansi_c	29
-    operator	30
+    function	9
+    operator	10
+    operator	11
+    whitespace.ansi_c	12
+    operator	13
+    whitespace.ansi_c	14
+    keyword	20
+    whitespace.ansi_c	21
+    number	22
+    operator	23
+    whitespace.ansi_c	24
+    operator	25
 
 [`load()`]: api.html#lexer.load
 [`lex()`]: api.html#lexer.lex
