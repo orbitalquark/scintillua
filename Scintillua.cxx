@@ -4,6 +4,7 @@
 #include <cstring>
 
 #include <string_view>
+#include <vector>
 #include <map>
 #include <memory>
 
@@ -42,6 +43,7 @@ class Scintillua : public Lexilla::DefaultLexer {
   // This is used in multi-language lexers when backtracking to whitespace to determine which
   // lexer grammar to use.
   bool ws[STYLE_MAX];
+  std::string wordListsDescription; // used by DescribeWordListSets() for persistence
   std::string styleName; // used by NameOfStyle() for persistence
 
   // Property documentation. Actual property data is set and handled in Lua.
@@ -73,13 +75,17 @@ public:
 
   Sci_Position SCI_METHOD PropertySet(const char *key, const char *value) override;
 
+  // Note: the returned value persists only until the next call.
+  const char *SCI_METHOD DescribeWordListSets() override;
+  Sci_Position SCI_METHOD WordListSet(int n, const char *wl) override;
+
   void SCI_METHOD Lex(Sci_PositionU startPos, Sci_Position lengthDoc, int initStyle,
     Scintilla::IDocument *buffer) override;
 
   void SCI_METHOD Fold(
     Sci_PositionU startPos, Sci_Position lengthDoc, int, Scintilla::IDocument *buffer) override;
 
-  // Note: does not include predefined styles.
+  // Note: includes predefined styles.
   int SCI_METHOD NamedStyles() override;
   // Note: the returned value persists only until the next call.
   const char *SCI_METHOD NameOfStyle(int style) override;
@@ -298,6 +304,39 @@ Sci_Position Scintillua::PropertySet(const char *key, const char *value) {
   const bool reLex = properties.PropertySet(&placeholder, key, value);
   props.Set(key, value);
   return reLex ? 0 : -1;
+}
+
+const char *SCI_METHOD Scintillua::DescribeWordListSets() {
+  RECORD_STACK_TOP(L.get());
+  wordListsDescription = "";
+  lua_rawgetp(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
+  if (lua_getfield(L.get(), -1, "_WORDLISTS") == LUA_TTABLE) { // lex._WORDLISTS
+    std::vector<std::string> names(lua_rawlen(L.get(), -1));
+    for (lua_pushnil(L.get()); lua_next(L.get(), -2); lua_pop(L.get(), 1))
+      if (lua_type(L.get(), -2) == LUA_TSTRING && lua_isnumber(L.get(), -1)) // {name = i}
+        names[lua_tointeger(L.get(), -1) - 1] = lua_tostring(L.get(), -2); // indices are 1-based
+    for (size_t i = 0; i < names.size(); i++)
+      wordListsDescription.append(names[i]), wordListsDescription.append("\n");
+  }
+  lua_pop(L.get(), 2); // lex._WORDLISTS, lex
+  ASSERT_STACK_TOP(L.get());
+  return wordListsDescription.c_str();
+}
+
+Sci_Position SCI_METHOD Scintillua::WordListSet(int n, const char *wl) {
+  RECORD_STACK_TOP(L.get());
+  lua_rawgetp(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
+  if (lua_getfield(L.get(), -1, "set_word_list") != LUA_TFUNCTION) // lex.set_word_list
+    return (LogError("cannot find lexer.set_word_list()"), 0);
+  lua_pushcfunction(L.get(), lua_error_handler), lua_insert(L.get(), -2);
+  lua_pushvalue(L.get(), -3);
+  lua_pushinteger(L.get(), n + 1); // convert to 1-based
+  lua_pushstring(L.get(), wl);
+  if (lua_pcall(L.get(), 3, 0, -5) != LUA_OK) // xpcall(lex.set_word_list, msgh, lex, n, wl)
+    return (LogError(), 0);
+  lua_pop(L.get(), 2); // lua_error_handler, lex
+  ASSERT_STACK_TOP(L.get());
+  return 1; // re-lex
 }
 
 // RAII for Lua registry fields.

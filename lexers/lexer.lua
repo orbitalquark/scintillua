@@ -801,8 +801,46 @@ function M.tag(lexer, name, patt)
   return lpeg_Cc(name) * patt * lpeg_Cp()
 end
 
-function M.set_word_list(lexer, i, word_list)
+-- Returns a unique grammar rule name for the given lexer's i-th word list.
+local function word_list_id(lexer, i) return lexer._name .. '.wordlist' .. i end
 
+---
+-- Returns a pattern for lexer *lexer* that matches one word in the word list identified by
+-- string *name*, ignoring case if *case_insensitive* is `true`.
+-- If there is ultimately no word list set via `set_word_list()`, no error will be raised,
+-- but the returned pattern will not match anything.
+-- @param lexer The lexer to get a word list pattern for.
+-- @param name The name of the word list to get.
+-- @param case_insensitive Whether or not words in the list should be case insensitive. The
+--   default value is `false`.
+-- @see set_word_list
+-- @usage lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD)))
+-- @name get_word_list
+function M.get_word_list(lexer, name, case_insensitive)
+  if not lexer._WORDLISTS then lexer._WORDLISTS = {case_insensitive = {}} end
+  local i = lexer._WORDLISTS[name] or #lexer._WORDLISTS + 1
+  lexer._WORDLISTS[name], lexer._WORDLISTS[i] = i, '' -- empty placeholder word list
+  lexer._WORDLISTS.case_insensitive[i] = case_insensitive
+  return lpeg_V(word_list_id(lexer, i))
+end
+
+---
+-- Sets in lexer *lexer* the word list identified by string or number *name* to string or
+-- table *word_list*.
+-- This only has an effect if *lexer* uses `get_word_list()` to reference the given list.
+-- Case-insensitivity is specified by `get_word_list()`.
+-- @param lexer The lexer to add the given word list to.
+-- @param name The string name or number of the word list to set.
+-- @param word_list A list of words or a string list of words separated by spaces.
+-- @see get_word_list
+-- @see word_match
+-- @name set_word_list
+function M.set_word_list(lexer, name, word_list)
+  if not lexer._WORDLISTS then return end -- lexer has no word lists
+  local i = tonumber(lexer._WORDLISTS[name]) or name -- lexer._WORDLISTS[name] --> i
+  if type(i) ~= 'number' or i > #lexer._WORDLISTS then return end
+  lexer._WORDLISTS[i] = word_list
+  lexer._grammar_table = nil -- invalidate
 end
 
 ---
@@ -934,6 +972,15 @@ end
 local function add_lexer(grammar, lexer)
   local rule = lpeg_P(false)
 
+  -- Add this lexer's word lists.
+  if lexer._WORDLISTS then
+    for i = 1, #lexer._WORDLISTS do
+      local id = word_list_id(lexer, i)
+      local list, case_insensitive = lexer._WORDLISTS[i], lexer._WORDLISTS.case_insensitive[i]
+      grammar[id] = list ~= '' and M.word_match(list, case_insensitive) or lpeg_P(false)
+    end
+  end
+
   -- Add this lexer's rules.
   for _, name in ipairs(lexer._rules) do
     local id = lexer._name .. '.' .. name
@@ -946,8 +993,8 @@ local function add_lexer(grammar, lexer)
   if lexer._end_rules then
     for parent, end_rule in pairs(lexer._end_rules) do
       local back_id = lexer._name .. '_to_' .. parent._name
-      grammar[back_id], rule = end_rule,
-        rule - lpeg_V(back_id) + lpeg_V(back_id) * lpeg_V(parent._name)
+      grammar[back_id] = end_rule
+      rule = rule - lpeg_V(back_id) + lpeg_V(back_id) * lpeg_V(parent._name)
     end
   end
 
@@ -1225,7 +1272,8 @@ function M.new(name, opts)
 
   return setmetatable(lexer, {
     __index = {
-      tag = M.tag, add_rule = M.add_rule, modify_rule = M.modify_rule, get_rule = M.get_rule,
+      tag = M.tag, get_word_list = M.get_word_list, set_word_list = M.set_word_list,
+      add_rule = M.add_rule, modify_rule = M.modify_rule, get_rule = M.get_rule,
       add_fold_point = M.add_fold_point, embed = M.embed, lex = M.lex, fold = M.fold, --
       add_style = function() end -- legacy
     }
@@ -1424,6 +1472,8 @@ end
 -- Creates and returns a pattern that matches any single word in list or string *words*.
 -- *case_insensitive* indicates whether or not to ignore case when matching words.
 -- This is a convenience function for simplifying a set of ordered choice word patterns.
+-- Note: if you are passing in a word list that could be configured by a downstream user,
+-- consider using `get_word_list()` and `set_word_list()` instead.
 -- @param word_list A list of words or a string list of words separated by spaces.
 -- @param case_insensitive Optional boolean flag indicating whether or not the word match is
 --   case-insensitive. The default value is `false`.
@@ -1432,6 +1482,8 @@ end
 -- @usage local keyword = lex:tag(lexer.KEYWORD, word_match({'foo-bar', 'foo-baz', 'bar-foo',
 --   'bar-baz', 'baz-foo', 'baz-bar'}, true))
 -- @usage local keyword = lex:tag(lexer.KEYWORD, word_match('foo bar baz'))
+-- @see get_word_list
+-- @see set_word_list
 -- @name word_match
 function M.word_match(word_list, case_insensitive)
   if type(word_list) == 'string' then

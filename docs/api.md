@@ -985,6 +985,29 @@ Return:
 
 * pattern
 
+<a id="lexer.get_word_list"></a>
+#### `lexer.get_word_list`(lexer, name, case\_insensitive)
+
+Returns a pattern for lexer *lexer* that matches one word in the word list identified by
+string *name*, ignoring case if *case_insensitive* is `true`.
+If there is ultimately no word list set via `set_word_list()`, no error will be raised,
+but the returned pattern will not match anything.
+
+Fields:
+
+* `lexer`: The lexer to get a word list pattern for.
+* `name`: The name of the word list to get.
+* `case_insensitive`: Whether or not words in the list should be case insensitive. The
+  default value is `false`.
+
+Usage:
+
+* `lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD)))`
+
+See also:
+
+* [`lexer.set_word_list`](#lexer.set_word_list)
+
 <a id="lexer.last_char_includes"></a>
 #### `lexer.last_char_includes`(s)
 
@@ -1124,6 +1147,25 @@ Return:
 
 * pattern
 
+<a id="lexer.set_word_list"></a>
+#### `lexer.set_word_list`(lexer, name, word\_list)
+
+Sets in lexer *lexer* the word list identified by string or number *name* to string or
+table *word_list*.
+This only has an effect if *lexer* uses `get_word_list()` to reference the given list.
+Case-insensitivity is specified by `get_word_list()`.
+
+Fields:
+
+* `lexer`: The lexer to add the given word list to.
+* `name`: The string name or number of the word list to set.
+* `word_list`: A list of words or a string list of words separated by spaces.
+
+See also:
+
+* [`lexer.get_word_list`](#lexer.get_word_list)
+* [`lexer.word_match`](#lexer.word_match)
+
 <a id="lexer.starts_line"></a>
 #### `lexer.starts_line`(patt)
 
@@ -1191,6 +1233,8 @@ Return:
 Creates and returns a pattern that matches any single word in list or string *words*.
 *case_insensitive* indicates whether or not to ignore case when matching words.
 This is a convenience function for simplifying a set of ordered choice word patterns.
+Note: if you are passing in a word list that could be configured by a downstream user,
+consider using `get_word_list()` and `set_word_list()` instead.
 
 Fields:
 
@@ -1208,6 +1252,11 @@ Usage:
 Return:
 
 * pattern
+
+See also:
+
+* [`lexer.get_word_list`](#lexer.get_word_list)
+* [`lexer.set_word_list`](#lexer.set_word_list)
 
 
 ---

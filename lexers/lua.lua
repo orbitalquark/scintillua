@@ -3,7 +3,6 @@
 -- Original written by Peter Odding, 2007/04/04.
 
 local lexer = require('lexer')
-local word_match = lexer.word_match
 local B, P, S = lpeg.B, lpeg.P, lpeg.S
 
 local lex = lexer.new('lua')
@@ -12,101 +11,19 @@ local lex = lexer.new('lua')
 lex:add_rule('whitespace', lex:tag(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, word_match{
-  'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for', 'function', 'if', 'in', 'local',
-  'nil', 'not', 'or', 'repeat', 'return', 'then', 'true', 'until', 'while',
-  -- Added in 5.2.
-  'goto'
-}))
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD)))
 
--- Functions and deprecated functions.
-local func = lex:tag(lexer.FUNCTION, word_match{
-  'assert', 'collectgarbage', 'dofile', 'error', 'getmetatable', 'ipairs', 'load', 'loadfile',
-  'next', 'pairs', 'pcall', 'print', 'rawequal', 'rawget', 'rawset', 'require', 'select',
-  'setmetatable', 'tonumber', 'tostring', 'type', 'xpcall',
-  -- Added in 5.2.
-  'rawlen',
-  -- Added in 5.4.
-  'warn'
-})
-local deprecated_func = lex:tag('deprecated_function', word_match{
-  -- Deprecated in 5.2.
-  'getfenv', 'loadstring', 'module', 'setfenv', 'unpack'
-})
-lex:add_rule('function', -B('.') * (func + deprecated_func))
+-- Functions.
+local non_field = -B('.') + B('_G.') + B('..')
+local builtin_func = lex:get_word_list(lexer.FUNCTION)
+local lib_func = lex:get_word_list('function.library')
+lex:add_rule('function', non_field * lex:tag(lexer.FUNCTION, builtin_func + lib_func) *
+  #(lexer.space^0 * S('({\'"')))
 
 -- Constants.
-lex:add_rule('constant', lex:tag(lexer.CONSTANT, -B('.') * word_match{
-  '_G', '_VERSION',
-  -- Added in 5.2.
-  '_ENV'
-}))
-
--- Libraries and deprecated libraries.
-local library = lex:tag('library', word_match{
-  -- Coroutine.
-  'coroutine', 'coroutine.create', 'coroutine.resume', 'coroutine.running', 'coroutine.status',
-  'coroutine.wrap', 'coroutine.yield',
-  -- Coroutine added in 5.3.
-  'coroutine.isyieldable',
-  -- Coroutine added in 5.4.
-  'coroutine.close',
-  -- Module.
-  'package', 'package.cpath', 'package.loaded', 'package.loadlib', 'package.path',
-  'package.preload',
-  -- Module added in 5.2.
-  'package.config', 'package.searchers', 'package.searchpath',
-  -- UTF-8 added in 5.3.
-  'utf8', 'utf8.char', 'utf8.charpattern', 'utf8.codepoint', 'utf8.codes', 'utf8.len',
-  'utf8.offset',
-  -- String.
-  'string', 'string.byte', 'string.char', 'string.dump', 'string.find', 'string.format',
-  'string.gmatch', 'string.gsub', 'string.len', 'string.lower', 'string.match', 'string.rep',
-  'string.reverse', 'string.sub', 'string.upper',
-  -- String added in 5.3.
-  'string.pack', 'string.packsize', 'string.unpack',
-  -- Table.
-  'table', 'table.concat', 'table.insert', 'table.remove', 'table.sort',
-  -- Table added in 5.2.
-  'table.pack', 'table.unpack',
-  -- Table added in 5.3.
-  'table.move',
-  -- Math.
-  'math', 'math.abs', 'math.acos', 'math.asin', 'math.atan', 'math.ceil', 'math.cos', 'math.deg',
-  'math.exp', 'math.floor', 'math.fmod', 'math.huge', 'math.log', 'math.max', 'math.min',
-  'math.modf', 'math.pi', 'math.rad', 'math.random', 'math.randomseed', 'math.sin', 'math.sqrt',
-  'math.tan',
-  -- Math added in 5.3.
-  'math.maxinteger', 'math.mininteger', 'math.tointeger', 'math.type', 'math.ult',
-  -- IO.
-  'io', 'io.close', 'io.flush', 'io.input', 'io.lines', 'io.open', 'io.output', 'io.popen',
-  'io.read', 'io.stderr', 'io.stdin', 'io.stdout', 'io.tmpfile', 'io.type', 'io.write',
-  -- OS.
-  'os', 'os.clock', 'os.date', 'os.difftime', 'os.execute', 'os.exit', 'os.getenv', 'os.remove',
-  'os.rename', 'os.setlocale', 'os.time', 'os.tmpname',
-  -- Debug.
-  'debug', 'debug.debug', 'debug.gethook', 'debug.getinfo', 'debug.getlocal', 'debug.getmetatable',
-  'debug.getregistry', 'debug.getupvalue', 'debug.sethook', 'debug.setlocal', 'debug.setmetatable',
-  'debug.setupvalue', 'debug.traceback',
-  -- Debug added in 5.2.
-  'debug.getuservalue', 'debug.setuservalue', 'debug.upvalueid', 'debug.upvaluejoin'
-})
-local deprecated_library = lex:tag('deprecated_library', word_match{
-  -- Module deprecated in 5.2.
-  'package.loaders', 'package.seeall',
-  -- Table deprecated in 5.2.
-  'table.maxn',
-  -- Math deprecated in 5.2.
-  'math.log10',
-  -- Math deprecated in 5.3.
-  'math.atan2', 'math.cosh', 'math.frexp', 'math.ldexp', 'math.pow', 'math.sinh', 'math.tanh',
-  -- Bit32 deprecated in 5.3.
-  'bit32', 'bit32.arshift', 'bit32.band', 'bit32.bnot', 'bit32.bor', 'bit32.btest', 'bit32.extract',
-  'bit32.lrotate', 'bit32.lshift', 'bit32.replace', 'bit32.rrotate', 'bit32.rshift', 'bit32.xor',
-  -- Debug deprecated in 5.2.
-  'debug.getfenv', 'debug.setfenv'
-})
-lex:add_rule('library', -B('.') * (library + deprecated_library))
+local builtin_const = lex:get_word_list(lexer.CONSTANT)
+local lib_const = lex:get_word_list('constant.library')
+lex:add_rule('constant', non_field * lex:tag(lexer.CONSTANT, builtin_const + lib_const))
 
 -- Identifiers.
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
@@ -133,8 +50,8 @@ lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.float + lua_integer))
 lex:add_rule('label', lex:tag(lexer.LABEL, '::' * lexer.word * '::'))
 
 -- Attributes.
-lex:add_rule('attribute', lex:tag('attribute', '<' * lexer.space^0 * word_match('const close') *
-  lexer.space^0 * '>'))
+lex:add_rule('attribute', lex:tag('attribute',
+  '<' * lexer.space^0 * lexer.word_match('const close') * lexer.space^0 * '>'))
 
 -- Operators.
 lex:add_rule('operator', lex:tag(lexer.OPERATOR, '..' + S('+-*/%^#=<>&|~;:,.{}[]()')))
@@ -159,5 +76,67 @@ lex:add_fold_point('longstring', '[', ']')
 lex:add_fold_point(lexer.OPERATOR, '(', ')')
 lex:add_fold_point(lexer.OPERATOR, '[', ']')
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
+
+-- Set word lists.
+lex:set_word_list(lexer.KEYWORD, {
+  'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for', 'function', 'if', 'in', 'local',
+  'nil', 'not', 'repeat', 'return', 'then', 'true', 'until', 'while', --
+  'goto' -- 5.2
+})
+
+lex:set_word_list(lexer.FUNCTION, {
+  'assert', 'collectgarbage', 'dofile', 'error', 'getmetatable', 'ipairs', 'load', 'loadfile',
+  'next', 'pairs', 'pcall', 'print', 'rawequal', 'rawget', 'rawset', 'require', 'select',
+  'setmetatable', 'tonumber', 'tostring', 'type', 'xpcall', --
+  'rawlen', -- 5.2
+  'warn' -- 5.4
+})
+
+lex:set_word_list('function.library', {
+  'coroutine.create', 'coroutine.resume', 'coroutine.running', 'coroutine.status', 'coroutine.wrap',
+  'coroutine.yield', --
+  'coroutine.isyieldable', -- 5.3
+  'coroutine.close', -- 5.4
+  'package.loadlib', --
+  'package.searchpath', -- 5.2
+  'utf8.char', 'utf8.codepoint', 'utf8.codes', 'utf8.len', 'utf8.offset', -- 5.3
+  'string.byte', 'string.char', 'string.dump', 'string.find', 'string.format', 'string.gmatch',
+  'string.gsub', 'string.len', 'string.lower', 'string.match', 'string.rep', 'string.reverse',
+  'string.sub', 'string.upper', --
+  'string.pack', 'string.packsize', 'string.unpack', -- 5.3
+  'table.concat', 'table.insert', 'table.remove', 'table.sort', --
+  'table.pack', 'table.unpack', -- 5.2
+  'table.move', -- 5.3
+  'math.abs', 'math.acos', 'math.asin', 'math.atan', 'math.ceil', 'math.cos', 'math.deg',
+  'math.exp', 'math.floor', 'math.fmod', 'math.log', 'math.max', 'math.min', 'math.modf',
+  'math.rad', 'math.random', 'math.randomseed', 'math.sin', 'math.sqrt', 'math.tan', --
+  'math.tointeger', 'math.type', 'math.ult', -- 5.3
+  'io.close', 'io.flush', 'io.input', 'io.lines', 'io.open', 'io.output', 'io.popen', 'io.read',
+  'io.tmpfile', 'io.type', 'io.write', --
+  'os.clock', 'os.date', 'os.difftime', 'os.execute', 'os.exit', 'os.getenv', 'os.remove',
+  'os.rename', 'os.setlocale', 'os.time', 'os.tmpname', --
+  'debug', 'debug.debug', 'debug.gethook', 'debug.getinfo', 'debug.getlocal', 'debug.getmetatable',
+  'debug.getregistry', 'debug.getupvalue', 'debug.sethook', 'debug.setlocal', 'debug.setmetatable',
+  'debug.setupvalue', 'debug.traceback', --
+  'debug.getuservalue', 'debug.setuservalue', 'debug.upvalueid', 'debug.upvaluejoin' -- 5.2
+})
+
+lex:set_word_list(lexer.CONSTANT, {
+  '_G', '_VERSION', --
+  '_ENV' -- 5.2
+})
+
+lex:set_word_list('constant.library', {
+  'coroutine', --
+  'package', 'package.cpath', 'package.loaded', 'package.path', 'package.preload', --
+  'package.config', 'package.searchers', -- 5.2
+  'utf8', 'utf8.charpattern', -- 5.3
+  'string', --
+  'table', --
+  'math', 'math.huge', 'math.pi', --
+  'math.maxinteger', 'math.mininteger', -- 5.3
+  'io', 'io.stderr', 'io.stdin', 'io.stdout', --
+  'os'
+})
 
 return lex

@@ -106,13 +106,16 @@ that supports the Lexilla protocol, that application must allow you to:
    message.
 * Optionally handle errors when the returned pointer is null by calling Scintillua's
    `GetCreateLexerError()` function to see what went wrong.
+* Optionally set keyword lists via Scintilla's [SCI_SETKEYWORDS][] message with the help of
+   [SCI_DESCRIBEKEYWORDSETS][]. Scintillua's lexers have built-in word lists, but they can
+   be overridden.
 
 The Scintillua lexer largely behaves like a normal Scintilla lexer. However, unlike most
 other lexers Scintillua does not have static style numbers, which makes styling a bit more
-complicated. Your application must call the lexer's `NamedStyles()` function (which is defined
-by the `ILexer5` interface), which returns the number of currently defined styles. (Note that
-the returned number includes Scintilla's 8 predefined styles.) It must then iterate over those
-style numbers, calling `NameOfStyle()`, in order to obtain a map of style names to numbers. With
+complicated. Your application must call the lexer's `NamedStyles()` function (defined by the
+`ILexer5` interface), which returns the number of currently defined styles. (Note that the
+returned number includes Scintilla's 8 predefined styles.) It must then iterate over those style
+numbers, calling `NameOfStyle()`, in order to obtain a map of style names to numbers. With
 that information, your application can then specify style settings for style numbers. Here's
 an example of how [SciTE][] does it:
 
@@ -147,6 +150,12 @@ an example of how [SciTE][] does it:
       }
     }
 
+In addition to not having static style numbers, Scintillua does not have static keyword lists
+should you wish to override the a given lexer's built-in list(s). Your application can call the
+lexer's `DescribeWordListSets()` function (defined by the `ILexer5` interface), which returns
+a list of keyword set identifier names. For the first set, call the lexer's `WordListSet()`
+function with an index of `0` and a list of overriding words. For the second, use `1`, and so on.
+
 Scintillua's lexers support the following properties:
 
 * `fold`: Whether or not folding is enabled for the lexers that support it. This option is
@@ -164,6 +173,8 @@ Scintillua's lexers support the following properties:
    in that fold. This option is disabled by default. Set to `1` to enable.
 
 [SCI_SETILEXER]: https://scintilla.org/ScintillaDoc.html#SCI_SETILEXER
+[SCI_SETKEYWORDS]: https://scintilla.org/ScintillaDoc.html#SCI_SETKEYWORDS
+[SCI_DESCRIBEKEYWORDSETS]: https://scintilla.org/ScintillaDoc.html#SCI_DESCRIBEKEYWORDSETS
 [SciTE]: https://scintilla.org/SciTE.html
 
 #### Error Handling

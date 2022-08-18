@@ -553,12 +553,12 @@ function test_lua()
   assert(lua._name == 'lua')
   assert_default_tags(lua)
   local rules = {
-    'whitespace', 'keyword', 'function', 'constant', 'library', 'identifier', 'string', 'comment',
-    'number', 'label', 'attribute', 'operator'
+    'whitespace', 'keyword', 'function', 'constant', 'identifier', 'string', 'comment', 'number',
+    'label', 'attribute', 'operator'
   }
   assert_rules(lua, rules)
   local tags = {
-    'deprecated_function', 'library', 'deprecated_library', 'longstring', 'attribute',
+    'longstring', 'attribute', --
     'whitespace.lua' -- language-specific whitespace for multilang lexers
   }
   assert_extra_tags(lua, tags)
@@ -597,7 +597,7 @@ function test_lua()
     {lexer.OPERATOR, ','},
     {lexer.IDENTIFIER, 'a'},
     {lexer.OPERATOR, ','},
-    {'library', 'string.upper'},
+    {lexer.FUNCTION, 'string.upper'},
     {lexer.OPERATOR, '('},
     {lexer.IDENTIFIER, 'b'},
     {lexer.OPERATOR, ')'},
