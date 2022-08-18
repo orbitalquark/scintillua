@@ -66,7 +66,6 @@ local M = {}
 --     -- ? LPeg lexer.
 --
 --     local lexer = require('lexer')
---     local word_match = lexer.word_match
 --     local P, S = lpeg.P, lpeg.S
 --
 --     local lex = lexer.new('?')
@@ -461,94 +460,45 @@ local M = {}
 --
 -- Legacy lexers are of the form:
 --
---     local l = require('lexer')
---     local token, word_match = l.token, l.word_match
---     local P, R, S = lpeg.P, lpeg.R, lpeg.S
+--     local lexer = require('lexer')
+--     local token, word_match = lexer.token, lexer.word_match
+--     local P, S = lpeg.P, lpeg.S
 --
---     local M = {_NAME = '?'}
+--     local lex = lexer.new('?')
 --
---     [... token and pattern definitions ...]
+--     -- Whitespace.
+--     lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 --
---     M._rules = {
---       {'rule', pattern},
+--     -- Keywords.
+--     lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
 --       [...]
---     }
+--     }))
 --
---     M._tokenstyles = {
---       'token' = 'style',
---       [...]
---     }
+--     [... other rule definitions ...]
 --
---     M._foldsymbols = {
---       _patterns = {...},
---       ['token'] = {['start'] = 1, ['end'] = -1},
---       [...]
---     }
+--     -- Custom.
+--     lex:add_rule('custom_rule', token('custom_token', ...))
+--     lex:add_style('custom_token', lexer.styles.keyword .. {bold = true})
 --
---     return M
+--     -- Fold points.
+--     lex:add_fold_point(lexer.OPERATOR, '{', '}')
 --
--- Scintillua no longer supports legacy lexers. They must be migrated. The migration process
--- is fairly straightforward:
+--     return lex
 --
--- 1. Replace all instances of `l` with `lexer`, as it's better practice and results in less
---    confusion.
--- 2. Replace `local M = {_NAME = '?'}` with `local lex = lexer.new('?')`, where `?` is the
---    name of your legacy lexer. At the end of the lexer, change `return M` to `return lex`.
--- 3. Instead of defining rules towards the end of your lexer, define your rules as you define
---    your patterns using [`lex:add_rule()`](#lexer.add_rule). The concept of tokens has been
---    replaced with tags. Instead of calling a `token()` function, call `lex:tag()` instead.
--- 4. Lexers no longer specify styling information. Remove any style definitions.
--- 5. Optionally convert any table arguments passed to [`lexer.word_match()`]() to a
---    space-separated string of words.
--- 6. Replace any calls to `lexer.embed(M, child, ...)` and `lexer.embed(parent, M, ...)` with
---    [`lex:embed`](#lexer.embed)`(child, ...)` and `parent:embed(lex, ...)`, respectively.
--- 7. Define fold points with simple calls to [`lex:add_fold_point()`](#lexer.add_fold_point). No
---    need to mess with Lua patterns anymore.
--- 8. Any legacy lexer options such as `M._FOLDBYINDENTATION`, `M._LEXBYLINE`, `M._lexer`,
---    etc. should be added as table options to [`lexer.new()`]().
--- 9. Any external lexer rule fetching and/or modifications via `lexer._RULES` should be changed
---    to use [`lexer.get_rule()`]() and [`lexer.modify_rule()`]().
+-- While Scintillua will handle such legacy lexers just fine without any changes, it is
+-- recommended that you migrate yours. The migration process is fairly straightforward:
+--
+-- 1. The concept of tokens has been replaced with tags. Instead of calling a `token()` function,
+--    call [`lex:tag()`](#lexer.tag) instead.
+-- 2. Lexers now support replaceable word lists. Instead of calling `lexer.word_match()` with large
+--    word lists, call [`lex:get_word_list()`](#lexer.get_word_list) with an identifier string
+--    (typically something like `lexer.KEYWORD`). Then at the end of the lexer (before `return
+--    lex`), call [`lex:set_word_list()`](#lexer.set_word_list) with the same identifier and the
+--    usual list of words to match. This allows users of your lexer to call `lex:set_word_list()`
+--    with their own set of words should they wish to.
+-- 3. Lexers no longer specify styling information. Remove any calls to `lex:add_style()`.
 --
 -- As an example, consider the following sample legacy lexer:
---
---     local l = require('lexer')
---     local token, word_match = l.token, l.word_match
---     local P, R, S = lpeg.P, lpeg.R, lpeg.S
---
---     local M = {_NAME = 'legacy'}
---
---     local ws = token(l.WHITESPACE, l.space^1)
---     local comment = token(l.COMMENT, '#' * l.nonnewline^0)
---     local string = token(l.STRING, l.delimited_range('"'))
---     local number = token(l.NUMBER, l.float + l.integer)
---     local keyword = token(l.KEYWORD, word_match{'foo', 'bar', 'baz'})
---     local custom = token('custom', P('quux'))
---     local identifier = token(l.IDENTIFIER, l.word)
---     local operator = token(l.OPERATOR, S('+-*/%^=<>,.()[]{}'))
---
---     M._rules = {
---       {'whitespace', ws},
---       {'keyword', keyword},
---       {'custom', custom},
---       {'identifier', identifier},
---       {'string', string},
---       {'comment', comment},
---       {'number', number},
---       {'operator', operator}
---     }
---
---     M._tokenstyles = {
---       'custom' = l.STYLE_KEYWORD .. ',bold'
---     }
---
---     M._foldsymbols = {
---       _patterns = {'[{}]'},
---       [l.OPERATOR] = {['{'] = 1, ['}'] = -1}
---     }
---
---     return M
---
--- Following the migration steps would yield:
 --
 --     local lexer = require('lexer')
 --     local word_match = lexer.word_match
@@ -567,6 +517,28 @@ local M = {}
 --     lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('+-*/%^=<>,.()[]{}')))
 --
 --     lex:add_fold_point(lexer.OPERATOR, '{', '}')
+--
+--     return lex
+--
+-- Following the migration steps would yield:
+--
+--     local lexer = require('lexer')
+--     local P, S = lpeg.P, lpeg.S
+--
+--     local lex = lexer.new('legacy')
+--
+--     lex:add_rule('whitespace', lex:tag(lexer.WHITESPACE, lexer.space^1))
+--     lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD)))
+--     lex:add_rule('custom', lex:tag('custom', 'quux'))
+--     lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
+--     lex:add_rule('string', lex:tag(lexer.STRING, lexer.range('"')))
+--     lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.to_eol('#')))
+--     lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number))
+--     lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('+-*/%^=<>,.()[]{}')))
+--
+--     lex:add_fold_point(lexer.OPERATOR, '{', '}')
+--
+--     lex:set_word_list(lexer.KEYWORD, {'foo', 'bar', 'baz'})
 --
 --     return lex
 --
