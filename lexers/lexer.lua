@@ -1258,12 +1258,6 @@ function M.new(name, opts)
 end
 
 local lexers = {} -- cache of loaded lexers
-local env = { -- lexer environment sandbox
-  'assert', 'error', 'ipairs', 'math', 'next', 'pairs', 'print', 'select', 'string', 'table',
-  'tonumber', 'tostring', 'type', 'utf8', '_VERSION', lpeg = lpeg, --
-  require = function() return M end -- legacy
-}
-for _, name in ipairs(env) do env[name] = _G[name] end
 ---
 -- Initializes or loads and then returns the lexer of string name *name*.
 -- Scintilla calls this function in order to load a lexer. Parent lexers also call this function
@@ -1296,7 +1290,16 @@ function M.load(name, alt_name, cache)
 
   -- Load the language lexer with its rules, tags, etc.
   local path = M.property['scintillua.lexers']:gsub(';', '/?.lua;') .. '/?.lua'
-  local lexer = assert(loadfile(assert(searchpath(name, path)), 't', env))()
+  local ro_lexer = setmetatable({
+    WHITESPACE = 'whitespace.' .. (alt_name or name) -- legacy
+  }, {__index = M})
+  local env = {
+    'assert', 'error', 'ipairs', 'math', 'next', 'pairs', 'print', 'select', 'string', 'table',
+    'tonumber', 'tostring', 'type', 'utf8', '_VERSION', lexer = ro_lexer, lpeg = lpeg, --
+    require = function() return ro_lexer end -- legacy
+  }
+  for _, name in ipairs(env) do env[name] = _G[name] end
+  local lexer = assert(loadfile(assert(searchpath(name, path)), 't', env))(alt_name or name)
   assert(lexer, string.format("'%s.lua' did not return a lexer", name))
 
   -- If the lexer is a proxy or a child that embedded itself, set the parent to be the main
