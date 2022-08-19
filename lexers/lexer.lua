@@ -844,6 +844,8 @@ function M.modify_rule(lexer, id, rule)
   lexer._grammar_table = nil -- invalidate
 end
 
+local function rule_id(lexer, id) return lexer._name .. '.' .. id end
+
 ---
 -- Returns the rule identified by string *id*.
 -- @param lexer The lexer to fetch a rule from.
@@ -852,7 +854,8 @@ end
 -- @name get_rule
 function M.get_rule(lexer, id)
   if lexer._lexer then lexer = lexer._lexer end -- proxy; get true parent
-  return lexer._rules[id]
+  if id == 'whitespace' then return lpeg_V(rule_id(lexer, id)) end -- special case
+  return assert(lexer._rules[id], 'rule does not exist')
 end
 
 ---
@@ -956,7 +959,7 @@ local function add_lexer(grammar, lexer)
 
   -- Add this lexer's rules.
   for _, name in ipairs(lexer._rules) do
-    local id = lexer._name .. '.' .. name
+    local id = rule_id(lexer, name)
     grammar[id], rule = lexer._rules[name], rule + lpeg_V(id)
   end
   local any_id = lexer._name .. '_fallback'
