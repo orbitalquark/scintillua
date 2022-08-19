@@ -36,6 +36,7 @@ function assert_default_tags(lex)
     assert(lex._TAGS[style], string.format("style '%s' does not exist", style))
     assert(lex._TAGS[style] == i + 32, 'predefined styles out of order')
   end
+  assert(lex._TAGS['whitespace.' .. lex._name]) -- auto-added by lexer.new()
 end
 
 -- Asserts the given lexer contains the given ordered list of rules.
@@ -194,7 +195,6 @@ end
 function test_basics()
   local lex = lexer.new('test')
   assert_default_tags(lex)
-  lex:add_rule('whitespace', lex:tag(lexer.WHITESPACE, lexer.space^1))
   lex:add_rule('keyword', lex:tag(lexer.KEYWORD, word_match('foo bar baz')))
   lex:add_rule('string', lex:tag(lexer.STRING, lexer.range('"')))
   lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.integer))
@@ -215,7 +215,6 @@ end
 -- works as expected.
 function test_rule_order()
   local lex = lexer.new('test')
-  lex:add_rule('whitespace', lex:tag(lexer.WHITESPACE, lexer.space^1))
   lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
   lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lpeg.P('foo')))
   local code = [[foo bar]]
@@ -242,7 +241,6 @@ end
 function test_add_tag()
   local lex = lexer.new('test')
   assert_default_tags(lex)
-  lex:add_rule('whitespace', lex:tag(lexer.WHITESPACE, lexer.space^1))
   lex:add_rule('keyword', lex:tag('custom', word_match('foo bar baz')))
   assert_default_tags(lex)
   local code = [[foo bar baz]]
@@ -260,19 +258,13 @@ end
 -- Ensures the child's custom tags are also copied over.
 function test_embed()
   -- Create the parent lexer.
-  -- Note: lexer.load() sets lexer.WHITESPACE and adds the custom whitespace style.
   local parent = lexer.new('parent')
   assert_default_tags(parent)
-  lexer.WHITESPACE = 'whitespace.' .. parent._name
-  parent:add_rule('whitespace', parent:tag(lexer.WHITESPACE, lexer.space^1))
   parent:add_rule('identifier', parent:tag('parent', lexer.word))
 
   -- Create the child lexer.
-  -- Note: lexer.load() sets lexer.WHITESPACE and adds the custom whitespace tag.
   local child = lexer.new('child')
   assert_default_tags(child)
-  lexer.WHITESPACE = 'whitespace.' .. child._name
-  child:add_rule('whitespace', child:tag(lexer.WHITESPACE, lexer.space^1))
   child:add_rule('number', child:tag('child', lexer.integer))
 
   -- Assert the child's tags are not embedded in the parent yet.
@@ -323,17 +315,11 @@ end
 -- Ensures the child's custom tags are also copied over.
 function test_embed_into()
   -- Create the child lexer.
-  -- Note: lexer.load() sets lexer.WHITESPACE and adds the custom whitespace tag.
   local child = lexer.new('child')
-  lexer.WHITESPACE = 'whitespace.' .. child._name
-  child:add_rule('whitespace', child:tag(lexer.WHITESPACE, lexer.space^1))
   child:add_rule('number', child:tag('child', lexer.integer))
 
   -- Create the parent lexer.
-  -- Note: lexer.load() sets lexer.WHITESPACE and adds the custom whitespace tag.
   local parent = lexer.new('parent')
-  lexer.WHITESPACE = 'whitespace.' .. parent._name
-  parent:add_rule('whitespace', parent:tag(lexer.WHITESPACE, lexer.space^1))
   parent:add_rule('identifier', parent:tag('parent', lexer.word))
 
   -- Embed the child within the parent and verify the child's custom tags were copied over.
@@ -394,17 +380,11 @@ end
 -- Ensures both the proxy's and child's custom tags are also copied over.
 function test_proxy()
   -- Create the parent lexer.
-  -- Note: lexer.load() sets lexer.WHITESPACE and adds the custom whitespace tag.
   local parent = lexer.new('parent')
-  lexer.WHITESPACE = 'whitespace.' .. parent._name
-  parent:add_rule('whitespace', parent:tag(lexer.WHITESPACE, lexer.space^1))
   parent:add_rule('identifier', parent:tag('parent', lexer.word))
 
   -- Create the child lexer.
-  -- Note: lexer.load() sets lexer.WHITESPACE and adds the custom whitespace tag.
   local child = lexer.new('child')
-  lexer.WHITESPACE = 'whitespace.' .. child._name
-  child:add_rule('whitespace', child:tag(lexer.WHITESPACE, lexer.space^1))
   child:add_rule('number', child:tag('child', lexer.integer))
 
   -- Create the proxy lexer.
@@ -466,7 +446,6 @@ end
 -- Tests a lexer that inherits from another one.
 function test_inherits_rules()
   local lex = lexer.new('test')
-  lex:add_rule('whitespace', lex:tag(lexer.WHITESPACE, lexer.space^1))
   lex:add_rule('keyword', lex:tag(lexer.KEYWORD, word_match('foo bar baz')))
 
   -- Verify inherited rules are used.

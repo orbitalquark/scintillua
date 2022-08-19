@@ -7,10 +7,6 @@ local P, S = lpeg.P, lpeg.S
 
 local lex = lexer.new('ansi_c')
 
--- Whitespace.
-local ws = token(lexer.WHITESPACE, lexer.space^1)
-lex:add_rule('whitespace', ws)
-
 -- Keywords.
 lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
   'auto', 'break', 'case', 'const', 'continue', 'default', 'do', 'else', 'enum', 'extern', 'for',
@@ -78,7 +74,7 @@ lex:add_rule('number', token(lexer.NUMBER, float + integer))
 
 -- Preprocessor.
 local include = token(lexer.PREPROCESSOR, '#' * S('\t ')^0 * 'include') *
-  (ws * token(lexer.STRING, lexer.range('<', '>', true)))^-1
+  (lex:get_rule('whitespace') * token(lexer.STRING, lexer.range('<', '>', true)))^-1
 local preproc = token(lexer.PREPROCESSOR, '#' * S('\t ')^0 *
   word_match('define elif else endif if ifdef ifndef line pragma undef'))
 lex:add_rule('preprocessor', include + preproc)

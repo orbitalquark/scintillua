@@ -5,10 +5,7 @@
 local lexer = require('lexer')
 local B, P, S = lpeg.B, lpeg.P, lpeg.S
 
-local lex = lexer.new('lua')
-
--- Whitespace.
-lex:add_rule('whitespace', lex:tag(lexer.WHITESPACE, lexer.space^1))
+local lex = lexer.new(...)
 
 -- Keywords.
 lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD)))
@@ -80,7 +77,7 @@ lex:add_fold_point(lexer.OPERATOR, '{', '}')
 -- Set word lists.
 lex:set_word_list(lexer.KEYWORD, {
   'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for', 'function', 'if', 'in', 'local',
-  'nil', 'not', 'repeat', 'return', 'then', 'true', 'until', 'while', --
+  'or', 'nil', 'not', 'repeat', 'return', 'then', 'true', 'until', 'while', --
   'goto' -- 5.2
 })
 

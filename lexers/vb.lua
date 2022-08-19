@@ -5,7 +5,7 @@ local lexer = require('lexer')
 local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new('vb', {case_insensitive_fold_points = true})
+local lex = lexer.new(..., {case_insensitive_fold_points = true})
 
 -- Whitespace.
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
