@@ -369,24 +369,32 @@ void Scintillua::Lex(
       while (i > 0 && !ws[static_cast<size_t>(styler.StyleAt(i))]) i--;
     lengthDoc += startPos - i, startPos = i;
   }
+  styler.StartAt(startPos);
+  styler.StartSegment(startPos);
 
   // Call lexer.lex(lex, text, init_style).
-  if (lua_getfield(L.get(), -1, "lex") != LUA_TFUNCTION) return LogError("cannot find lexer.lex()");
+  if (lua_getfield(L.get(), -1, "lex") != LUA_TFUNCTION) {
+    styler.ColourTo(startPos + lengthDoc - 1, initStyle), styler.Flush();
+    return LogError("cannot find lexer.lex()");
+  }
   lua_pushcfunction(L.get(), lua_error_handler), lua_insert(L.get(), -2);
   lua_pushvalue(L.get(), -3);
   lua_pushlstring(L.get(), buffer->BufferPointer() + startPos, lengthDoc);
   lua_pushinteger(L.get(), styler.StyleAt(startPos) + 1);
-  if (lua_pcall(L.get(), 3, 1, -5) != LUA_OK) // t = xpcall(lexer.lex, msgh, lex, text, init_style)
+  if (lua_pcall(L.get(), 3, 1, -5) != LUA_OK) { // t = xpcall(lexer.lex, msgh, lex, text, initStyle)
+    styler.ColourTo(startPos + lengthDoc - 1, initStyle), styler.Flush();
     return LogError();
+  }
   lua_remove(L.get(), -2); // lua_error_handler
-  if (!lua_istable(L.get(), -1)) return LogError("table of tokens expected from lexer.lex()");
+  if (!lua_istable(L.get(), -1)) {
+    styler.ColourTo(startPos + lengthDoc - 1, initStyle), styler.Flush();
+    return LogError("table of tokens expected from lexer.lex()");
+  }
 
   // Style the text from the returned table of tokens.
   const int len = lua_rawlen(L.get(), -1);
   if (len > 0) {
     int style = STYLE_DEFAULT;
-    styler.StartAt(startPos);
-    styler.StartSegment(startPos);
     lua_getfield(L.get(), -2, "_TAGS"); // lex._TAGS
     for (int i = 1; i < len; i += 2) { // for i = 1, #t, 2 do ... end
       style = STYLE_DEFAULT;
@@ -398,6 +406,7 @@ void Scintillua::Lex(
       const unsigned int position = lua_tointeger(L.get(), -1) - 1; // returned pos is 1-based
       lua_pop(L.get(), 1); // pos
       if (style < 0 || style >= STYLE_MAX) {
+        styler.ColourTo(startPos + lengthDoc - 1, initStyle), styler.Flush();
         lua_pushfstring(L.get(), "invalid style number: %d", style);
         return LogError();
       }
