@@ -30,9 +30,8 @@ local P, S = lpeg.P, lpeg.S
 
 local lex = lexer.new('prolog')
 
-local dialects = setmetatable({gprolog = 'gprolog', swipl = 'swipl'},
-  {__index = function(_, _) return 'iso' end})
-local dialect = dialects[lexer.property['prolog.dialect']]
+local dialect = lexer.property['prolog.dialect']
+if dialect ~= 'gprolog' and dialog ~= 'swipl' then dialect = 'iso' end
 
 -- Directives.
 local directives = {}

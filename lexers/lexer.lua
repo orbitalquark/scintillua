@@ -702,15 +702,7 @@ local M = {}
 --   Table of style names at positions in the buffer starting from 1.
 module('lexer')]=]
 
-if not require then
-  -- Substitute for Lua's require() function, which does not require the package module to
-  -- be loaded.
-  -- Note: all modules must be in the global namespace, which is the case in Scintillua's default
-  -- Lua State.
-  function require(name) return name == 'lexer' and M or _G[name] end
-end
-
-local lpeg = require('lpeg')
+local lpeg = lpeg or require('lpeg') -- Scintillua's Lua environment defines _G.lpeg
 local lpeg_P, lpeg_R, lpeg_S, lpeg_V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
 local lpeg_Ct, lpeg_Cc, lpeg_Cp, lpeg_Cmt, lpeg_C = lpeg.Ct, lpeg.Cc, lpeg.Cp, lpeg.Cmt, lpeg.C
 
@@ -1253,6 +1245,12 @@ function M.new(name, opts)
 end
 
 local lexers = {} -- cache of loaded lexers
+local env = { -- lexer environment sandbox
+  'assert', 'error', 'ipairs', 'math', 'next', 'pairs', 'print', 'select', 'string', 'table',
+  'tonumber', 'tostring', 'type', 'utf8', '_VERSION', lpeg = lpeg, --
+  require = function() return M end -- legacy
+}
+for _, name in ipairs(env) do env[name] = _G[name] end
 ---
 -- Initializes or loads and then returns the lexer of string name *name*.
 -- Scintilla calls this function in order to load a lexer. Parent lexers also call this function
@@ -1290,7 +1288,7 @@ function M.load(name, alt_name, cache)
   -- when adding it later, do not reference the potentially incorrect value.
   M.WHITESPACE = 'whitespace.' .. (alt_name or name)
   local path = M.property['scintillua.lexers']:gsub(';', '/?.lua;') .. '/?.lua'
-  local lexer = dofile(assert(searchpath(name, path)))
+  local lexer = assert(loadfile(assert(searchpath(name, path)), 't', env))()
   assert(lexer, string.format("'%s.lua' did not return a lexer", name))
   if alt_name then lexer._name = alt_name end
   lexer:tag('whitespace.' .. (alt_name or name), true) -- ensure it is tagged

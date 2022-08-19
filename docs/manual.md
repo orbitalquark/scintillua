@@ -266,13 +266,12 @@ Critical errors are also printed to stderr.
 ### Using Scintillua as a Lua Library
 
 In order to use Scintillua as a Lua library, simply place the *lexers/* directory in your Lua
-path (or modify Lua's `package.path` accordingly), `require()` the `lpeg` and `lexer` libraries,
-[`load()`][] a lexer, and call that lexer's [`lex()`][] function. Here is an example interactive
-Lua session doing this:
+path (or modify Lua's `package.path` accordingly), `require()` the `lexer` library, [`load()`][]
+a lexer, and call that lexer's [`lex()`][] function. Here is an example interactive Lua session
+doing this:
 
     $> lua
     Lua 5.1.4  Copyright (C) 1994-2008 Lua.org, PUC-Rio
-    > lpeg = require('lpeg')
     > lexer_path = '/home/mitchell/code/scintillua/lexers/?.lua'
     > package.path = package.path .. ';' .. lexer_path
     > c = require('lexer').load('ansi_c')
