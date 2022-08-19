@@ -767,7 +767,7 @@ function M.tag(lexer, name, patt)
     -- the parent lexer.
     if lexer._lexer then lexer._lexer:tag(name, true) end
   end
-  return lpeg_Cc(name) * patt * lpeg_Cp()
+  return lpeg_Cc(name) * (lpeg_P(patt) / 0) * lpeg_Cp()
 end
 
 -- Returns a unique grammar rule name for the given lexer's i-th word list.
