@@ -181,14 +181,14 @@ function test_last_char_includes()
 end
 
 function test_word_match()
-  assert(lexer.word_match{'foo', 'bar', 'baz'}:match('foo') == 4)
-  assert(not lexer.word_match{'foo', 'bar', 'baz'}:match('foo_bar'))
-  assert(lexer.word_match({'foo!', 'bar?', 'baz.'}, true):match('FOO!') == 5)
-  assert(lexer.word_match{'foo '}:match('foo')) -- spaces not allowed
+  assert(word_match{'foo', 'bar', 'baz'}:match('foo') == 4)
+  assert(not word_match{'foo', 'bar', 'baz'}:match('foo_bar'))
+  assert(word_match({'foo!', 'bar?', 'baz.'}, true):match('FOO!') == 5)
+  assert(word_match{'foo '}:match('foo')) -- spaces not allowed
   -- Test string list style.
-  assert(lexer.word_match('foo bar baz'):match('foo') == 4)
-  assert(not lexer.word_match('foo bar baz'):match('foo_bar'))
-  assert(lexer.word_match('foo! bar? baz.', true):match('FOO!') == 5)
+  assert(word_match('foo bar baz'):match('foo') == 4)
+  assert(not word_match('foo bar baz'):match('foo_bar'))
+  assert(word_match('foo! bar? baz.', true):match('FOO!') == 5)
 end
 
 -- Tests a basic lexer with a few simple rules and no custom styles.
@@ -249,6 +249,40 @@ function test_add_tag()
     {'custom', 'foo'},
     {'custom', 'bar'},
     {'custom', 'baz'}
+  }
+  -- LuaFormatter on
+  assert_lex(lex, code, tags)
+end
+
+-- Tests word lists.
+function test_word_list()
+  local lex = lexer.new('test')
+  lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD)))
+  lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
+  lex:add_rule('operator', lex:tag(lexer.OPERATOR, '.'))
+  local code = [[foo bar.baz quux]]
+  -- LuaFormatter off
+  local tags = {
+    {lexer.IDENTIFIER, 'foo'},
+    {lexer.IDENTIFIER, 'bar'},
+    {lexer.OPERATOR, '.'},
+    {lexer.IDENTIFIER, 'baz'},
+    {lexer.IDENTIFIER, 'quux'}
+  }
+  -- LuaFormatter on
+  assert_lex(lex, code, tags)
+
+  lex:set_word_list(lexer.KEYWORD, 'foo quux')
+  tags[1] = {lexer.KEYWORD, 'foo'}
+  tags[5] = {lexer.KEYWORD, 'quux'}
+  assert_lex(lex, code, tags)
+
+  lex:set_word_list(lexer.KEYWORD, {'bar.baz'})
+  -- LuaFormatter off
+  tags = {
+    {lexer.IDENTIFIER, 'foo'},
+    {lexer.KEYWORD, 'bar.baz'},
+    {lexer.IDENTIFIER, 'quux'}
   }
   -- LuaFormatter on
   assert_lex(lex, code, tags)
@@ -1077,6 +1111,29 @@ function test_vb_folding()
   ]]
   local folds = {1, 2, -4, -5, 7, -9}
   assert_fold_points(vb, code, folds)
+end
+
+function test_legacy()
+  local lex = lexer.new('test')
+  local ws = lexer.token(lexer.WHITESPACE, lexer.space^1)
+  lex:add_rule('whitespace', ws) -- should call lex:modify_rule()
+  assert(#lex._rules == 1)
+  assert(lex:get_rule('whitespace') == ws)
+  lex:add_rule('keyword', lexer.token(lexer.KEYWORD, lexer.word_match('foo bar baz')))
+  lex:add_rule('number', lexer.token(lexer.NUMBER, lexer.number))
+  lex:add_style('whatever', lexer.styles.keyword .. {fore = lexer.colors.red, italic = true})
+  local code = [[foo 1 bar 2 baz 3]]
+  -- LuaFormatter off
+  local tags = {
+    {lexer.KEYWORD, 'foo'},
+    {lexer.NUMBER, '1'},
+    {lexer.KEYWORD, 'bar'},
+    {lexer.NUMBER, '2'},
+    {lexer.KEYWORD, 'baz'},
+    {lexer.NUMBER, '3'},
+  }
+  -- LuaFormatter on
+  assert_lex(lex, code, tags)
 end
 
 -- Run tests.
