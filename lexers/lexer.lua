@@ -574,7 +574,8 @@ local M = {}
 --
 --     <div id="<?php echo $id; ?>">
 --
--- will not style correctly.
+-- will not style correctly. Also, these types of languages cannot currently embed themselves
+-- into their parent's child languages either.
 --
 -- A language cannot embed itself into something like an interpolated string because it is
 -- possible that if lexing starts within the embedded entity, it will not be detected as such,
@@ -771,7 +772,7 @@ function M.tag(lexer, name, patt)
 end
 
 -- Returns a unique grammar rule name for the given lexer's i-th word list.
-local function word_list_id(lexer, i) return lexer._name .. '.wordlist' .. i end
+local function word_list_id(lexer, i) return lexer._name .. '_wordlist' .. i end
 
 ---
 -- Returns a pattern for lexer *lexer* that matches one word in the word list identified by
@@ -949,29 +950,34 @@ end
 local function add_lexer(grammar, lexer)
   local rule = lpeg_P(false)
 
+  -- Add this lexer's rules.
+  for _, name in ipairs(lexer._rules) do
+    local id = rule_id(lexer, name)
+    grammar[id] = lexer._rules[name] -- ['lua.keyword'] = keyword_patt
+    rule = rule + lpeg_V(id) -- V('lua.keyword') + V('lua.function') + V('lua.constant') + ...
+  end
+  local any_id = lexer._name .. '_fallback'
+  grammar[any_id] = lexer:tag(M.DEFAULT, M.any) -- ['lua_fallback'] = any_char
+  rule = rule + lpeg_V(any_id) -- ... + V('lua.operator') + V('lua_fallback')
+
   -- Add this lexer's word lists.
   if lexer._WORDLISTS then
     for i = 1, #lexer._WORDLISTS do
       local id = word_list_id(lexer, i)
       local list, case_insensitive = lexer._WORDLISTS[i], lexer._WORDLISTS.case_insensitive[i]
-      grammar[id] = list ~= '' and M.word_match(list, case_insensitive) or lpeg_P(false)
+      local patt = list ~= '' and M.word_match(list, case_insensitive) or lpeg_P(false)
+      grammar[id] = patt -- ['lua_wordlist.1'] = word_match_patt or P(false)
     end
   end
-
-  -- Add this lexer's rules.
-  for _, name in ipairs(lexer._rules) do
-    local id = rule_id(lexer, name)
-    grammar[id], rule = lexer._rules[name], rule + lpeg_V(id)
-  end
-  local any_id = lexer._name .. '_fallback'
-  grammar[any_id], rule = lexer:tag(M.DEFAULT, M.any), rule + lpeg_V(any_id)
 
   -- Add this child lexer's end rules.
   if lexer._end_rules then
     for parent, end_rule in pairs(lexer._end_rules) do
       local back_id = lexer._name .. '_to_' .. parent._name
-      grammar[back_id] = end_rule
-      rule = rule - lpeg_V(back_id) + lpeg_V(back_id) * lpeg_V(parent._name)
+      grammar[back_id] = end_rule -- ['css_to_html'] = css_end_rule
+      rule =
+        rule - lpeg_V(back_id) + -- (V('css.property') + ... + V('css_fallback')) - V('css_to_html')
+        lpeg_V(back_id) * lpeg_V(parent._name) -- V('css_to_html') * V('html')
     end
   end
 
@@ -979,21 +985,23 @@ local function add_lexer(grammar, lexer)
   if lexer._start_rules then
     for parent, start_rule in pairs(lexer._start_rules) do
       local to_id = parent._name .. '_to_' .. lexer._name
-      grammar[to_id] = start_rule * lpeg_V(lexer._name)
+      grammar[to_id] = start_rule * lpeg_V(lexer._name) -- ['html_to_css'] = css_start_rule * V('css')
     end
   end
 
   -- Finish adding this lexer's rules.
   local rule_id = lexer._name .. '_rule'
-  grammar[rule_id] = rule -- matches one rule from list of rules
-  grammar[lexer._name] = lpeg_V(rule_id)^0
+  grammar[rule_id] = rule -- ['lua_rule'] = V('lua.keyword') + ... + V('lua_fallback')
+  grammar[lexer._name] = lpeg_V(rule_id)^0 -- ['lua'] = V('lua_rule')^0
 
   -- Add this lexer's children's rules.
+  -- TODO: preprocessor languages like PHP should also embed themselves into their parent's
+  -- children like HTML's CSS and Javascript.
   if not lexer._CHILDREN then return end
   for _, child in ipairs(lexer._CHILDREN) do
     add_lexer(grammar, child)
     local to_id = lexer._name .. '_to_' .. child._name
-    grammar[rule_id] = lpeg_V(to_id) + grammar[rule_id]
+    grammar[rule_id] = lpeg_V(to_id) + grammar[rule_id] -- ['html_rule'] = V('html_to_css') + V('html.comment') + ...
   end
 end
 
@@ -1007,11 +1015,43 @@ local function build_grammar(lexer, init_style)
     local grammar = {lexer._initial_rule}
     if not lexer._parent_name then
       add_lexer(grammar, lexer)
+      -- {'lua',
+      --   ['lua.keyword'] = patt, ['lua.function'] = patt, ...,
+      --   ['lua_wordlist.1'] = patt, ['lua_wordlist.2'] = patt, ...,
+      --   ['lua_rule'] = V('lua.keyword') + ... + V('lua_fallback'),
+      --   ['lua'] = V('lua_rule')^0
+      -- }
+      -- {'html'
+      --   ['html.comment'] = patt, ['html.doctype'] = patt, ...,
+      --   ['html_wordlist.1'] = patt, ['html_wordlist.2'] = patt, ...,
+      --   ['html_rule'] = V('html_to_css') * V('css') + V('html.comment') + ... + V('html_fallback'),
+      --   ['html'] = V('html')^0,
+      --   ['css.property'] = patt, ['css.value'] = patt, ...,
+      --   ['css_wordlist.1'] = patt, ['css_wordlist.2'] = patt, ...,
+      --   ['css_to_html'] = patt,
+      --   ['css_rule'] = ((V('css.property') + ... + V('css_fallback')) - V('css_to_html')) +
+      --     V('css_to_html') * V('html'),
+      --   ['html_to_css'] = patt,
+      --   ['css'] = V('css_rule')^0
+      -- }
     else
       local name = lexer._name
-      lexer._name = lexer._parent_name
+      lexer._name = lexer._parent_name -- ensure parent and transition rule names are correct
       add_lexer(grammar, lexer)
-      lexer._name = name
+      lexer._name = name -- restore
+      -- {'html',
+      --   ...
+      --   ['html_rule'] = V('html_to_php') * V('php') + V('html_to_css') * V('css') +
+      --     V('html.comment') + ... + V('html_fallback'),
+      --   ...
+      --   ['php.keyword'] = patt, ['php.type'] = patt, ...,
+      --   ['php_wordlist.1'] = patt, ['php_wordlist.2'] = patt, ...,
+      --   ['php_to_html'] = patt,
+      --   ['php_rule'] = ((V('php.keyword') + ... + V('php_fallback')) - V('php_to_html')) +
+      --     V('php_to_html') * V('html')
+      --   ['html_to_php'] = patt,
+      --   ['php'] = V('php_rule')^0
+      -- }
     end
     lexer._grammar, lexer._grammar_table = lpeg_Ct(lpeg_P(grammar)), grammar
   end
