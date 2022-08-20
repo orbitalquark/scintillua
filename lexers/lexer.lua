@@ -760,12 +760,12 @@ function M.tag(lexer, name, patt)
   if not lexer._TAGS[name] then
     local num_styles = lexer._num_styles
     if num_styles == 33 then num_styles = num_styles + 8 end -- skip predefined
-    if num_styles > 256 then print('Too many styles defined (256 MAX)') end
+    assert(num_styles <= 256, 'too many styles defined (256 MAX)')
     lexer._TAGS[name], lexer._num_styles = num_styles, num_styles + 1
     lexer._extra_tags[name] = true
     -- If the lexer is a proxy or a child that embedded itself, make this tag name known to
     -- the parent lexer.
-    if lexer._lexer then lexer._lexer:tag(name, true) end
+    if lexer._lexer then lexer._lexer:tag(name, false) end
   end
   return lpeg_Cc(name) * (lpeg_P(patt) / 0) * lpeg_Cp()
 end
@@ -827,8 +827,7 @@ function M.add_rule(lexer, id, rule)
     lexer:modify_rule(id, rule)
     return
   end
-  lexer._rules[#lexer._rules + 1] = id
-  lexer._rules[id] = rule
+  lexer._rules[#lexer._rules + 1], lexer._rules[id] = id, rule
   lexer._grammar_table = nil -- invalidate
 end
 
@@ -840,6 +839,7 @@ end
 -- @name modify_rule
 function M.modify_rule(lexer, id, rule)
   if lexer._lexer then lexer = lexer._lexer end -- proxy; get true parent
+  assert(lexer._rules[id], 'rule does not exist')
   lexer._rules[id] = rule
   lexer._grammar_table = nil -- invalidate
 end
@@ -872,13 +872,12 @@ function M.embed(lexer, child, start_rule, end_rule)
   if lexer._lexer then lexer = lexer._lexer end -- proxy; get true parent
 
   -- Add child rules.
-  if not child._rules then error('cannot embed lexer with no rules') end
+  assert(child._rules, 'cannot embed lexer with no rules')
   if not child._start_rules then child._start_rules = {} end
   if not child._end_rules then child._end_rules = {} end
   child._start_rules[lexer], child._end_rules[lexer] = start_rule, end_rule
   if not lexer._CHILDREN then lexer._CHILDREN = {} end
-  local children = lexer._CHILDREN
-  children[#children + 1] = child
+  lexer._CHILDREN[#lexer._CHILDREN + 1] = child
 
   -- Add child tags.
   for name in pairs(child._extra_tags) do lexer:tag(name, true) end
@@ -927,6 +926,7 @@ function M.add_fold_point(lexer, tag_name, start_symbol, end_symbol)
     start_symbol = start_symbol:lower()
     if type(end_symbol) == 'string' then end_symbol = end_symbol:lower() end
   end
+
   if type(end_symbol) == 'string' then
     if not symbols[end_symbol] then symbols[#symbols + 1], symbols[end_symbol] = end_symbol, true end
     lexer._fold_points[tag_name][start_symbol] = 1
@@ -937,6 +937,7 @@ function M.add_fold_point(lexer, tag_name, start_symbol, end_symbol)
   if not symbols[start_symbol] then
     symbols[#symbols + 1], symbols[start_symbol] = start_symbol, true
   end
+
   -- If the lexer is a proxy or a child that embedded itself, copy this fold point to the
   -- parent lexer.
   if lexer._lexer then lexer._lexer:add_fold_point(tag_name, start_symbol, end_symbol) end
@@ -1411,13 +1412,12 @@ function M.range(s, e, single_line, escapes, balanced)
     escapes = type(s) == 'string' and #s == 1 and s == e
   end
   if escapes then any = any - '\\' + '\\' * M.any end
-  if balanced and s ~= e then
-    return lpeg_P{s * (any + lpeg_V(1))^0 * lpeg_P(e)^-1}
-  else
-    return s * any^0 * lpeg_P(e)^-1
-  end
+  if balanced and s ~= e then return lpeg_P{s * (any + lpeg_V(1))^0 * lpeg_P(e)^-1} end
+  return s * any^0 * lpeg_P(e)^-1
 end
 
+local newline_chars = {}
+for _, byte in utf8.codes('\n\r\f') do newline_chars[byte] = true end
 ---
 -- Creates and returns a pattern that matches pattern *patt* only at the beginning of a line.
 -- @param patt The LPeg pattern to match on the beginning of a line.
@@ -1427,12 +1427,12 @@ end
 function M.starts_line(patt)
   return lpeg_Cmt(lpeg_C(patt), function(input, index, match, ...)
     local pos = index - #match
-    if pos == 1 then return index, ... end
-    local char = input:sub(pos - 1, pos - 1)
-    if char == '\n' or char == '\r' or char == '\f' then return index, ... end
+    if pos == 1 or newline_chars[input:byte(pos - 1)] then return index, ... end
   end)
 end
 
+local space_chars = {}
+for _, byte in utf8.codes(' \t\r\n\f') do space_chars[byte] = true end
 ---
 -- Creates and returns a pattern that verifies the first non-whitespace character behind the
 -- current match position is in string set *s*.
@@ -1445,7 +1445,7 @@ function M.last_char_includes(s)
   return lpeg_P(function(input, index)
     if index == 1 then return index end
     local i = index
-    while input:sub(i - 1, i - 1):match('[ \t\r\n\f]') do i = i - 1 end
+    while space_chars[input:byte(i - 1)] do i = i - 1 end
     if input:sub(i - 1, i - 1):match(s) then return index end
   end)
 end
@@ -1497,6 +1497,9 @@ function M.word_match(word_list, case_insensitive)
   end)
 end
 
+local LF, CR = string.byte('\n'), string.byte('\r')
+local indent_chars = {[string.byte(' ')] = true, [string.byte('\t')] = true}
+
 -- Determines if the previous line is a comment.
 -- This is used for determining if the current comment line is a fold point.
 -- @param prefix The prefix string defining a comment.
@@ -1508,12 +1511,12 @@ local function prev_line_is_comment(prefix, text, pos, line, s)
   local start = line:find('%S')
   if start < s and not line:find(prefix, start, true) then return false end
   local p = pos - 1
-  if text:sub(p, p) == '\n' then
+  if text:byte(p) == LF then
     p = p - 1
-    if text:sub(p, p) == '\r' then p = p - 1 end
-    if text:sub(p, p) ~= '\n' then
-      while p > 1 and text:sub(p - 1, p - 1) ~= '\n' do p = p - 1 end
-      while text:sub(p, p):find('^[\t ]$') do p = p + 1 end
+    if text:byte(p) == CR then p = p - 1 end
+    if text:byte(p) ~= LF then
+      while p > 1 and text:byte(p - 1) ~= LF do p = p - 1 end
+      while indent_chars[text:byte(p)] do p = p + 1 end
       return text:sub(p, p + #prefix - 1) == prefix
     end
   end
@@ -1531,7 +1534,7 @@ local function next_line_is_comment(prefix, text, pos, line, s)
   local p = text:find('\n', pos + s)
   if p then
     p = p + 1
-    while text:sub(p, p):find('^[\t ]$') do p = p + 1 end
+    while indent_chars[text:byte(p)] do p = p + 1 end
     return text:sub(p, p + #prefix - 1) == prefix
   end
   return false
