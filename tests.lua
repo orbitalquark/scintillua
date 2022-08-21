@@ -1049,20 +1049,6 @@ function test_ruby_and_rails()
   }
   -- LuaFormatter on
   assert_lex(rails, code, rails_tags)
-
-  -- Load from the cache.
-  local ruby2 = lexer.load('ruby', nil, true)
-  assert_lex(ruby, code, ruby_tags)
-  assert(ruby == ruby2)
-
-  -- Load without a cache and perform the same validations.
-  ruby = lexer.load('ruby')
-  assert_lex(ruby, code, ruby_tags)
-  rails = lexer.load('rails')
-  assert_lex(rails, code, rails_tags)
-  ruby2 = lexer.load('ruby')
-  assert_lex(ruby, code, ruby_tags)
-  assert(ruby ~= ruby2)
 end
 
 -- Tests the RHTML lexer, which is a proxy for HTML and Rails.

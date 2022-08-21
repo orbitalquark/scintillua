@@ -1328,7 +1328,6 @@ function M.new(name, opts)
   return lexer
 end
 
-local lexers = {} -- cache of loaded lexers
 ---
 -- Initializes or loads and then returns the lexer of string name *name*.
 -- Scintilla calls this function in order to load a lexer. Parent lexers also call this function
@@ -1337,14 +1336,9 @@ local lexers = {} -- cache of loaded lexers
 -- @param name The name of the lexing language.
 -- @param alt_name The alternate name of the lexing language. This is useful for embedding the
 --   same child lexer with multiple sets of start and end tags.
--- @param cache Flag indicating whether or not to load lexers from the cache. This should only
---   be `true` when initially loading a lexer (e.g. not from within another lexer for embedding
---   purposes). The default value is `false`.
 -- @return lexer object
 -- @name load
-function M.load(name, alt_name, cache)
-  if cache and lexers[alt_name or name] then return lexers[alt_name or name] end
-
+function M.load(name, alt_name)
   -- When using Scintillua as a stand-alone module, the `property` and `property_int` tables
   -- do not exist (they are not useful). Create them in order prevent errors from occurring.
   if not M.property then
@@ -1381,7 +1375,6 @@ function M.load(name, alt_name, cache)
     lexer._parent_name, lexer._name = lexer._name, alt_name or name
   end
 
-  if cache then lexers[alt_name or name] = lexer end
   return lexer
 end
 
