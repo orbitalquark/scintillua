@@ -739,9 +739,9 @@ M.styles = setmetatable({}, { -- legacy
 local default = {
   'nothing', 'whitespace', 'comment', 'string', 'number', 'keyword', 'identifier', 'operator',
   'error', 'preprocessor', 'constant', 'variable', 'function', 'class', 'type', 'label', 'regex',
-  'embedded'
+  'embedded', 'function.builtin', 'constant.builtin', 'function.method', 'tag', 'attribute'
 }
-for _, name in ipairs(default) do M[name:upper()] = name end
+for _, name in ipairs(default) do M[name:upper():gsub('%.', '_')] = name end
 -- Names for predefined Scintilla styles.
 -- Having these here simplifies style number handling between Scintillua and Scintilla.
 local predefined = {
@@ -1364,8 +1364,8 @@ function M.load(name, alt_name)
       __index = function(t, k) return tonumber(M.property[k]) or 0 end,
       __newindex = function() error('read-only property') end
     })
-    M.property_expanded = setmetatable({}, {__index = function() return '' end}) -- legacy
   end
+  M.property_expanded = setmetatable({}, {__index = function() return '' end}) -- legacy
 
   -- Load the language lexer with its rules, tags, etc.
   local path = M.property['scintillua.lexers']:gsub(';', '/?.lua;') .. '/?.lua'
