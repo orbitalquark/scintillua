@@ -32,7 +32,8 @@ local longstring = lpeg.Cmt('[' * lpeg.C(P('=')^0) * '[', function(input, index,
   local _, e = input:find(']' .. eq .. ']', index, true)
   return (e or #input) + 1
 end)
-lex:add_rule('string', lex:tag(lexer.STRING, sq_str + dq_str) + lex:tag('longstring', longstring))
+lex:add_rule('string', lex:tag(lexer.STRING, sq_str + dq_str) +
+  lex:tag(lexer.STRING .. '.longstring', longstring))
 
 -- Comments.
 local line_comment = lexer.to_eol('--')
@@ -74,7 +75,7 @@ lex:add_fold_point(lexer.OPERATOR, '(', ')')
 lex:add_fold_point(lexer.OPERATOR, '[', ']')
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
 
--- Set word lists.
+-- Word lists.
 lex:set_word_list(lexer.KEYWORD, {
   'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for', 'function', 'if', 'in', 'local',
   'or', 'nil', 'not', 'repeat', 'return', 'then', 'true', 'until', 'while', --

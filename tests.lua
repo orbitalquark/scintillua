@@ -575,7 +575,7 @@ function test_lua()
   }
   assert_rules(lua, rules)
   local tags = {
-    'longstring', 'attribute', --
+    'string.longstring', 'attribute', --
     'whitespace.lua' -- language-specific whitespace for multilang lexers
   }
   assert_extra_tags(lua, tags)
@@ -605,7 +605,7 @@ function test_lua()
     {lexer.OPERATOR, '='},
     {lexer.STRING, '"two"'},
     {lexer.OPERATOR, '..'},
-    {'longstring', '[[three]]'},
+    {lexer.STRING..'.longstring', '[[three]]'},
     {lexer.FUNCTION, 'print'},
     {lexer.OPERATOR, '('},
     {lexer.CONSTANT, '_G'},
