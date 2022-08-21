@@ -706,6 +706,10 @@ local M = {}
 --   Map of key-value pairs with values interpreted as numbers, or `0` if not found.
 -- @field style_at (table, Read-only)
 --   Table of style names at positions in the buffer starting from 1.
+-- @field num_user_word_lists (number)
+--   The number of word lists to add as rules to every lexer created by `lexer.new()`. These
+--   word lists are intended to be set by users outside the lexer. Each word in a list is tagged
+--   with the name `userlistN`, where N is the index of the list. The default value is `4`.
 module('lexer')]=]
 
 local lpeg = lpeg or require('lpeg') -- Scintillua's Lua environment defines _G.lpeg
@@ -745,6 +749,8 @@ local predefined = {
   'fold_display_text'
 }
 M.DEFAULT = 'default'
+
+M.num_user_word_lists = 4
 
 ---
 -- Creates and returns a pattern that tags pattern *patt* with name *name* in lexer *lexer*.
@@ -1324,6 +1330,14 @@ function M.new(name, opts)
   -- Add initial whitespace rule.
   -- Use a unique whitespace tag name since embedded lexing relies on these unique names.
   lexer:add_rule('whitespace', lexer:tag('whitespace.' .. name, M.space^1))
+
+  -- Add placeholders for user-defined word lists.
+  if not lexer._lexer then
+    for i = 1, M.num_user_word_lists do
+      local name = 'userlist' .. i
+      lexer:add_rule(name, lexer:tag(name, lexer:get_word_list(name)))
+    end
+  end
 
   return lexer
 end
