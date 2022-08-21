@@ -811,7 +811,7 @@ function M.set_word_list(lexer, name, word_list, append)
   if lexer._lexer then lexer = lexer._lexer end -- proxy; get true parent
   assert(lexer._WORDLISTS, 'lexer has no word lists')
   local i = tonumber(lexer._WORDLISTS[name]) or name -- lexer._WORDLISTS[name] --> i
-  assert(type(i) == 'number' and i <= #lexer._WORDLISTS, 'undefined word list: ' .. i)
+  if type(i) ~= 'number' or i > #lexer._WORDLISTS then return end -- silently return
 
   if type(word_list) == 'string' then
     local list = {}
