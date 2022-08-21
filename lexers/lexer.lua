@@ -709,8 +709,8 @@ local M = {}
 module('lexer')]=]
 
 local lpeg = lpeg or require('lpeg') -- Scintillua's Lua environment defines _G.lpeg
-local lpeg_P, lpeg_R, lpeg_S, lpeg_V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
-local lpeg_Ct, lpeg_Cc, lpeg_Cp, lpeg_Cmt, lpeg_C = lpeg.Ct, lpeg.Cc, lpeg.Cp, lpeg.Cmt, lpeg.C
+local P, R, S, V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
+local Ct, Cc, Cp, Cmt, C = lpeg.Ct, lpeg.Cc, lpeg.Cp, lpeg.Cmt, lpeg.C
 
 -- Searches for the given *name* in the given *path*.
 -- This is a safe implementation of Lua 5.2's `package.searchpath()` function that does not
@@ -768,7 +768,7 @@ function M.tag(lexer, name, patt)
     -- the parent lexer.
     if lexer._lexer then lexer._lexer:tag(name, false) end
   end
-  return lpeg_Cc(name) * (lpeg_P(patt) / 0) * lpeg_Cp()
+  return Cc(name) * (P(patt) / 0) * Cp()
 end
 
 -- Returns a unique grammar rule name for the given lexer's i-th word list.
@@ -791,7 +791,7 @@ function M.get_word_list(lexer, name, case_insensitive)
   local i = lexer._WORDLISTS[name] or #lexer._WORDLISTS + 1
   lexer._WORDLISTS[name], lexer._WORDLISTS[i] = i, '' -- empty placeholder word list
   lexer._WORDLISTS.case_insensitive[i] = case_insensitive
-  return lpeg_V(word_list_id(lexer, i))
+  return V(word_list_id(lexer, i))
 end
 
 ---
@@ -872,7 +872,7 @@ local function rule_id(lexer, name) return lexer._name .. '.' .. name end
 -- @name get_rule
 function M.get_rule(lexer, id)
   if lexer._lexer then lexer = lexer._lexer end -- proxy; get true parent
-  if id == 'whitespace' then return lpeg_V(rule_id(lexer, id)) end -- special case
+  if id == 'whitespace' then return V(rule_id(lexer, id)) end -- special case
   return assert(lexer._rules[id], 'rule does not exist')
 end
 
@@ -962,28 +962,28 @@ function M.add_fold_point(lexer, tag_name, start_symbol, end_symbol)
 end
 
 -- Recursively adds the rules for the given lexer and its children to the given grammar.
--- @param grammar The grammar to add rules to.
+-- @param g The grammar to add rules to.
 -- @param lexer The lexer whose rules to add.
-local function add_lexer(grammar, lexer)
-  local rule = lpeg_P(false)
+local function add_lexer(g, lexer)
+  local rule = P(false)
 
   -- Add this lexer's rules.
   for _, name in ipairs(lexer._rules) do
     local id = rule_id(lexer, name)
-    grammar[id] = lexer._rules[name] -- ['lua.keyword'] = keyword_patt
-    rule = rule + lpeg_V(id) -- V('lua.keyword') + V('lua.function') + V('lua.constant') + ...
+    g[id] = lexer._rules[name] -- ['lua.keyword'] = keyword_patt
+    rule = rule + V(id) -- V('lua.keyword') + V('lua.function') + V('lua.constant') + ...
   end
   local any_id = lexer._name .. '_fallback'
-  grammar[any_id] = lexer:tag(M.DEFAULT, M.any) -- ['lua_fallback'] = any_char
-  rule = rule + lpeg_V(any_id) -- ... + V('lua.operator') + V('lua_fallback')
+  g[any_id] = lexer:tag(M.DEFAULT, M.any) -- ['lua_fallback'] = any_char
+  rule = rule + V(any_id) -- ... + V('lua.operator') + V('lua_fallback')
 
   -- Add this lexer's word lists.
   if lexer._WORDLISTS then
     for i = 1, #lexer._WORDLISTS do
       local id = word_list_id(lexer, i)
       local list, case_insensitive = lexer._WORDLISTS[i], lexer._WORDLISTS.case_insensitive[i]
-      local patt = list ~= '' and M.word_match(list, case_insensitive) or lpeg_P(false)
-      grammar[id] = patt -- ['lua_wordlist.1'] = word_match_patt or P(false)
+      local patt = list ~= '' and M.word_match(list, case_insensitive) or P(false)
+      g[id] = patt -- ['lua_wordlist.1'] = word_match_patt or P(false)
     end
   end
 
@@ -991,10 +991,9 @@ local function add_lexer(grammar, lexer)
   if lexer._end_rules then
     for parent, end_rule in pairs(lexer._end_rules) do
       local back_id = lexer._name .. '_to_' .. parent._name
-      grammar[back_id] = end_rule -- ['css_to_html'] = css_end_rule
-      rule =
-        rule - lpeg_V(back_id) + -- (V('css.property') + ... + V('css_fallback')) - V('css_to_html')
-        lpeg_V(back_id) * lpeg_V(parent._name) -- V('css_to_html') * V('html')
+      g[back_id] = end_rule -- ['css_to_html'] = css_end_rule
+      rule = rule - V(back_id) + -- (V('css.property') + ... + V('css_fallback')) - V('css_to_html')
+      V(back_id) * V(parent._name) -- V('css_to_html') * V('html')
     end
   end
 
@@ -1002,32 +1001,32 @@ local function add_lexer(grammar, lexer)
   if lexer._start_rules then
     for parent, start_rule in pairs(lexer._start_rules) do
       local to_id = parent._name .. '_to_' .. lexer._name
-      grammar[to_id] = start_rule * lpeg_V(lexer._name) -- ['html_to_css'] = css_start_rule * V('css')
+      g[to_id] = start_rule * V(lexer._name) -- ['html_to_css'] = css_start_rule * V('css')
     end
   end
 
   -- Finish adding this lexer's rules.
   local rule_id = lexer._name .. '_rule'
-  grammar[rule_id] = rule -- ['lua_rule'] = V('lua.keyword') + ... + V('lua_fallback')
-  grammar[lexer._name] = lpeg_V(rule_id)^0 -- ['lua'] = V('lua_rule')^0
+  g[rule_id] = rule -- ['lua_rule'] = V('lua.keyword') + ... + V('lua_fallback')
+  g[lexer._name] = V(rule_id)^0 -- ['lua'] = V('lua_rule')^0
 
   -- Add this lexer's children's rules.
   -- TODO: preprocessor languages like PHP should also embed themselves into their parent's
   -- children like HTML's CSS and Javascript.
   if not lexer._CHILDREN then return end
   for _, child in ipairs(lexer._CHILDREN) do
-    add_lexer(grammar, child)
+    add_lexer(g, child)
     local to_id = lexer._name .. '_to_' .. child._name
-    grammar[rule_id] = lpeg_V(to_id) + grammar[rule_id] -- ['html_rule'] = V('html_to_css') + V('html.comment') + ...
+    g[rule_id] = V(to_id) + g[rule_id] -- ['html_rule'] = V('html_to_css') + V('html.comment') + ...
 
     -- Add a child's inherited parent's rules (e.g. rhtml parent with rails child inheriting ruby).
     if child._parent_name then
       local name = child._name
       child._name = child._parent_name -- ensure parent and transition rule names are correct
-      add_lexer(grammar, child)
+      add_lexer(g, child)
       child._name = name -- restore
       local to_id = lexer._name .. '_to_' .. child._parent_name
-      grammar[rule_id] = lpeg_V(to_id) + grammar[rule_id] -- ['html_rule'] = V('html_to_ruby') + V('html.comment') + ...
+      g[rule_id] = V(to_id) + g[rule_id] -- ['html_rule'] = V('html_to_ruby') + V('html.comment') + ...
     end
   end
 end
@@ -1081,7 +1080,7 @@ local function build_grammar(lexer, init_style)
       --   ['php'] = V('php_rule')^0
       -- }
     end
-    lexer._grammar, lexer._grammar_table = lpeg_Ct(lpeg_P(grammar)), grammar
+    lexer._grammar, lexer._grammar_table = Ct(P(grammar)), grammar
   end
 
   -- For multilang lexers, build a new grammar whose initial rule is the current language
@@ -1093,7 +1092,7 @@ local function build_grammar(lexer, init_style)
       if lexer._initial_rule == lexer_name then break end
       lexer._initial_rule = lexer_name
       lexer._grammar_table[1] = lexer._initial_rule
-      lexer._grammar = lpeg_Ct(lpeg_P(lexer._grammar_table))
+      lexer._grammar = Ct(P(lexer._grammar_table))
       do return lexer._grammar end
       ::continue::
     end
@@ -1389,28 +1388,26 @@ end
 -- The following are utility functions lexers will have access to.
 
 -- Common patterns.
-M.any = lpeg_P(1)
-M.alpha = lpeg_R('AZ', 'az')
-M.digit = lpeg_R('09')
-M.alnum = lpeg_R('AZ', 'az', '09')
-M.lower = lpeg_R('az')
-M.upper = lpeg_R('AZ')
-M.xdigit = lpeg_R('09', 'AF', 'af')
-M.graph = lpeg_R('!~')
-M.punct = lpeg_R('!/', ':@', '[\'', '{~')
-M.space = lpeg_S('\t\v\f\n\r ')
+M.any = P(1)
+M.alpha = R('AZ', 'az')
+M.digit = R('09')
+M.alnum = R('AZ', 'az', '09')
+M.lower = R('az')
+M.upper = R('AZ')
+M.xdigit = R('09', 'AF', 'af')
+M.graph = R('!~')
+M.punct = R('!/', ':@', '[\'', '{~')
+M.space = S('\t\v\f\n\r ')
 
-M.newline = lpeg_P('\r')^-1 * '\n'
+M.newline = P('\r')^-1 * '\n'
 M.nonnewline = 1 - M.newline
 
 M.dec_num = M.digit^1
-M.hex_num = '0' * lpeg_S('xX') * M.xdigit^1
-M.oct_num = '0' * lpeg_R('07')^1
-M.integer = lpeg_S('+-')^-1 * (M.hex_num + M.oct_num + M.dec_num)
-M.float = lpeg_S('+-')^-1 *
-  ((M.digit^0 * '.' * M.digit^1 + M.digit^1 * '.' * M.digit^0 * -lpeg_P('.')) *
-    (lpeg_S('eE') * lpeg_S('+-')^-1 * M.digit^1)^-1 +
-    (M.digit^1 * lpeg_S('eE') * lpeg_S('+-')^-1 * M.digit^1))
+M.hex_num = '0' * S('xX') * M.xdigit^1
+M.oct_num = '0' * R('07')^1
+M.integer = S('+-')^-1 * (M.hex_num + M.oct_num + M.dec_num)
+M.float = S('+-')^-1 * ((M.digit^0 * '.' * M.digit^1 + M.digit^1 * '.' * M.digit^0 * -P('.')) *
+  (S('eE') * S('+-')^-1 * M.digit^1)^-1 + (M.digit^1 * S('eE') * S('+-')^-1 * M.digit^1))
 M.number = M.float + M.integer
 
 M.word = (M.alpha + '_') * (M.alnum + '_')^0
@@ -1426,7 +1423,7 @@ M.word = (M.alpha + '_') * (M.alnum + '_')^0
 -- @name token
 -- @see tag
 function M.token(name, patt)
-  return lpeg_Cc(name) * (lpeg_P(patt) / 0) * lpeg_Cp()
+  return Cc(name) * (P(patt) / 0) * Cp()
 end
 
 ---
@@ -1480,8 +1477,8 @@ function M.range(s, e, single_line, escapes, balanced)
     escapes = type(s) == 'string' and #s == 1 and s == e
   end
   if escapes then any = any - '\\' + '\\' * M.any end
-  if balanced and s ~= e then return lpeg_P{s * (any + lpeg_V(1))^0 * lpeg_P(e)^-1} end
-  return s * any^0 * lpeg_P(e)^-1
+  if balanced and s ~= e then return P{s * (any + V(1))^0 * P(e)^-1} end
+  return s * any^0 * P(e)^-1
 end
 
 local newline_chars = {}
@@ -1493,7 +1490,7 @@ for _, byte in utf8.codes('\n\r\f') do newline_chars[byte] = true end
 -- @usage local preproc = lex:tag(lexer.PREPROCESSOR, lexer.starts_line(lexer.to_eol('#')))
 -- @name starts_line
 function M.starts_line(patt)
-  return lpeg_Cmt(lpeg_C(patt), function(input, index, match, ...)
+  return Cmt(C(patt), function(input, index, match, ...)
     local pos = index - #match
     if pos == 1 or newline_chars[input:byte(pos - 1)] then return index, ... end
   end)
@@ -1510,7 +1507,7 @@ for _, byte in utf8.codes(' \t\r\n\f') do space_chars[byte] = true end
 -- @name last_char_includes
 function M.last_char_includes(s)
   s = string.format('[%s]', s:gsub('[-%%%[]', '%%%1'))
-  return lpeg_P(function(input, index)
+  return P(function(input, index)
     if index == 1 then return index end
     local i = index
     while space_chars[input:byte(i - 1)] do i = i - 1 end
@@ -1550,16 +1547,16 @@ function M.word_match(word_list, case_insensitive)
       if not word_chars:find(char, 1, true) then word_chars = word_chars .. char end
     end
   end
-  if word_chars ~= '' then chars = chars + lpeg_S(word_chars) end
+  if word_chars ~= '' then chars = chars + S(word_chars) end
 
   -- Optimize small word sets as ordered choice.
   if #word_list < 5 and not case_insensitive then
-    local choice = lpeg_P(false)
+    local choice = P(false)
     for _, word in ipairs(word_list) do choice = choice + word:match('%S+') end
     return choice * -chars
   end
 
-  return lpeg_Cmt(chars^1, function(input, index, word)
+  return Cmt(chars^1, function(input, index, word)
     if case_insensitive then word = word:lower() end
     return word_list[word] and index or nil
   end)
