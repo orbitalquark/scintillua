@@ -273,7 +273,7 @@ Scintillua::Scintillua(const std::string &lexersDir, const char *name)
   }
   lua_pushcfunction(L.get(), lua_error_handler), lua_insert(L.get(), -2);
   lua_pushstring(L.get(), name);
-  if (lua_pcall(L.get(), 1, 1, -5) != LUA_OK) { // lex = xpcall(lexer.load, msgh, name)
+  if (lua_pcall(L.get(), 1, 1, -3) != LUA_OK) { // lex = xpcall(lexer.load, msgh, name)
     const bool print = !strstr(lua_tostring(L.get(), -1), "no file");
     LogError(nullptr, print);
     return;
