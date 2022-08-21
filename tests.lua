@@ -574,32 +574,35 @@ function test_lua()
   assert(lua._name == 'lua')
   assert_default_tags(lua)
   local rules = {
-    'whitespace', 'keyword', 'function', 'constant', 'identifier', 'string', 'comment', 'number',
-    'label', 'attribute', 'operator'
+    'keyword', 'function', 'constant', 'identifier', 'string', 'comment', 'number', 'label',
+    'attribute', 'operator'
   }
   assert_rules(lua, rules)
   local tags = {
-    'string.longstring', 'attribute', --
+    'string.longstring', --
     'whitespace.lua' -- language-specific whitespace for multilang lexers
   }
   assert_extra_tags(lua, tags)
 
   -- Lexing tests.
   local code = [=[
-    -- Comment.
+    --[[ Comment. ]]--
     ::begin::
-    local a = 1 + 2.0e3 - 0x40
-    local b = "two"..[[three]]
-    print(_G.print, a, string.upper(b))
+    local a <const> = -1 + 2.0e3 - 0x40
+    local b = "two"..[[three]] .. 'four\''
+    c ={_G.print, type = foo{math.pi}}
+    print(string.upper'a', b:upper())
   ]=]
   -- LuaFormatter off
   local tags = {
-    {lexer.COMMENT, '-- Comment.'},
+    {lexer.COMMENT, '--[[ Comment. ]]'},
+    {lexer.COMMENT, '--'},
     {lexer.LABEL, '::begin::'},
     {lexer.KEYWORD, 'local'},
     {lexer.IDENTIFIER, 'a'},
+    {lexer.ATTRIBUTE, '<const>'},
     {lexer.OPERATOR, '='},
-    {lexer.NUMBER, '1'},
+    {lexer.NUMBER, '-1'},
     {lexer.OPERATOR, '+'},
     {lexer.NUMBER, '2.0e3'},
     {lexer.OPERATOR, '-'},
@@ -610,17 +613,31 @@ function test_lua()
     {lexer.STRING, '"two"'},
     {lexer.OPERATOR, '..'},
     {lexer.STRING..'.longstring', '[[three]]'},
-    {lexer.FUNCTION, 'print'},
-    {lexer.OPERATOR, '('},
-    {lexer.CONSTANT, '_G'},
+    {lexer.OPERATOR, '..'},
+    {lexer.STRING, [['four\'']]},
+    {lexer.IDENTIFIER, 'c'},
+    {lexer.OPERATOR, '='},
+    {lexer.OPERATOR, '{'},
+    {lexer.CONSTANT_BUILTIN, '_G'},
     {lexer.OPERATOR, '.'},
     {lexer.IDENTIFIER, 'print'},
     {lexer.OPERATOR, ','},
-    {lexer.IDENTIFIER, 'a'},
-    {lexer.OPERATOR, ','},
-    {lexer.FUNCTION, 'string.upper'},
+    {lexer.IDENTIFIER, 'type'},
+    {lexer.OPERATOR, '='},
+    {lexer.FUNCTION, 'foo'},
+    {lexer.OPERATOR, '{'},
+    {lexer.CONSTANT_BUILTIN, 'math.pi'},
+    {lexer.OPERATOR, '}'},
+    {lexer.OPERATOR, '}'},
+    {lexer.FUNCTION_BUILTIN, 'print'},
     {lexer.OPERATOR, '('},
+    {lexer.FUNCTION_BUILTIN, 'string.upper'},
+    {lexer.STRING, "'a'"},
+    {lexer.OPERATOR, ','},
     {lexer.IDENTIFIER, 'b'},
+    {lexer.OPERATOR, ':'},
+    {lexer.FUNCTION_METHOD, 'upper'},
+    {lexer.OPERATOR, '('},
     {lexer.OPERATOR, ')'},
     {lexer.OPERATOR, ')'}
   }

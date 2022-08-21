@@ -12,15 +12,18 @@ lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD))
 
 -- Functions.
 local non_field = -B('.') + B('_G.') + B('..')
-local builtin_func = lex:get_word_list(lexer.FUNCTION)
-local lib_func = lex:get_word_list('function.library')
-lex:add_rule('function', non_field * lex:tag(lexer.FUNCTION, builtin_func + lib_func) *
-  #(lexer.space^0 * S('({\'"')))
+local builtin_func = lex:get_word_list(lexer.FUNCTION_BUILTIN)
+local lib_func = lex:get_word_list(lexer.FUNCTION_BUILTIN .. '.library')
+local func = lex:tag(lexer.FUNCTION, lexer.word)
+local method = B(':') * lex:tag(lexer.FUNCTION_METHOD, lexer.word)
+lex:add_rule('function',
+  method + ((non_field * lex:tag(lexer.FUNCTION_BUILTIN, builtin_func + lib_func)) + func) *
+    #(lexer.space^0 * S('({\'"')))
 
 -- Constants.
-local builtin_const = lex:get_word_list(lexer.CONSTANT)
-local lib_const = lex:get_word_list('constant.library')
-lex:add_rule('constant', non_field * lex:tag(lexer.CONSTANT, builtin_const + lib_const))
+local builtin_const = lex:get_word_list(lexer.CONSTANT_BUILTIN)
+local lib_const = lex:get_word_list(lexer.CONSTANT_BUILTIN .. '.library')
+lex:add_rule('constant', non_field * lex:tag(lexer.CONSTANT_BUILTIN, builtin_const + lib_const))
 
 -- Identifiers.
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
@@ -48,8 +51,8 @@ lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.float + lua_integer))
 lex:add_rule('label', lex:tag(lexer.LABEL, '::' * lexer.word * '::'))
 
 -- Attributes.
-lex:add_rule('attribute', lex:tag('attribute',
-  '<' * lexer.space^0 * lexer.word_match('const close') * lexer.space^0 * '>'))
+lex:add_rule('attribute', lex:tag(lexer.ATTRIBUTE, '<' * lexer.space^0 *
+  lexer.word_match('const close') * lexer.space^0 * '>'))
 
 -- Operators.
 lex:add_rule('operator', lex:tag(lexer.OPERATOR, '..' + S('+-*/%^#=<>&|~;:,.{}[]()')))
@@ -70,7 +73,7 @@ lex:add_fold_point(lexer.KEYWORD, 'repeat', 'until')
 lex:add_fold_point(lexer.COMMENT, '[', fold_longcomment)
 lex:add_fold_point(lexer.COMMENT, ']', fold_longcomment)
 lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('--'))
-lex:add_fold_point('longstring', '[', ']')
+lex:add_fold_point(lexer.FUNCTION .. '.longstring', '[', ']')
 lex:add_fold_point(lexer.OPERATOR, '(', ')')
 lex:add_fold_point(lexer.OPERATOR, '[', ']')
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
@@ -82,7 +85,7 @@ lex:set_word_list(lexer.KEYWORD, {
   'goto' -- 5.2
 })
 
-lex:set_word_list(lexer.FUNCTION, {
+lex:set_word_list(lexer.FUNCTION_BUILTIN, {
   'assert', 'collectgarbage', 'dofile', 'error', 'getmetatable', 'ipairs', 'load', 'loadfile',
   'next', 'pairs', 'pcall', 'print', 'rawequal', 'rawget', 'rawset', 'require', 'select',
   'setmetatable', 'tonumber', 'tostring', 'type', 'xpcall', --
@@ -90,7 +93,7 @@ lex:set_word_list(lexer.FUNCTION, {
   'warn' -- 5.4
 })
 
-lex:set_word_list('function.library', {
+lex:set_word_list(lexer.FUNCTION_BUILTIN .. '.library', {
   'coroutine.create', 'coroutine.resume', 'coroutine.running', 'coroutine.status', 'coroutine.wrap',
   'coroutine.yield', --
   'coroutine.isyieldable', -- 5.3
@@ -119,12 +122,12 @@ lex:set_word_list('function.library', {
   'debug.getuservalue', 'debug.setuservalue', 'debug.upvalueid', 'debug.upvaluejoin' -- 5.2
 })
 
-lex:set_word_list(lexer.CONSTANT, {
+lex:set_word_list(lexer.CONSTANT_BUILTIN, {
   '_G', '_VERSION', --
   '_ENV' -- 5.2
 })
 
-lex:set_word_list('constant.library', {
+lex:set_word_list(lexer.CONSTANT_BUILTIN .. '.library', {
   'coroutine', --
   'package', 'package.cpath', 'package.loaded', 'package.path', 'package.preload', --
   'package.config', 'package.searchers', -- 5.2
