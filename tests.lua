@@ -277,6 +277,10 @@ function test_word_list()
   tags[5] = {lexer.KEYWORD, 'quux'}
   assert_lex(lex, code, tags)
 
+  lex:set_word_list(lexer.KEYWORD, 'bar', true) -- append
+  tags[2] = {lexer.KEYWORD, 'bar'}
+  assert_lex(lex, code, tags)
+
   lex:set_word_list(lexer.KEYWORD, {'bar.baz'})
   -- LuaFormatter off
   tags = {

@@ -796,20 +796,36 @@ end
 
 ---
 -- Sets in lexer *lexer* the word list identified by string or number *name* to string or
--- table *word_list*.
+-- list *word_list*, appending to any existing word list if *append* is `true`.
 -- This only has an effect if *lexer* uses `get_word_list()` to reference the given list.
 -- Case-insensitivity is specified by `get_word_list()`.
 -- @param lexer The lexer to add the given word list to.
 -- @param name The string name or number of the word list to set.
 -- @param word_list A list of words or a string list of words separated by spaces.
+-- @param append Whether or not to append *word_list* to the existing word list (if any). The
+--   default value is `false`.
 -- @see get_word_list
 -- @see word_match
 -- @name set_word_list
-function M.set_word_list(lexer, name, word_list)
-  if not lexer._WORDLISTS then return end -- lexer has no word lists
+function M.set_word_list(lexer, name, word_list, append)
+  if lexer._lexer then lexer = lexer._lexer end -- proxy; get true parent
+  assert(lexer._WORDLISTS, 'lexer has no word lists')
   local i = tonumber(lexer._WORDLISTS[name]) or name -- lexer._WORDLISTS[name] --> i
-  if type(i) ~= 'number' or i > #lexer._WORDLISTS then return end
-  lexer._WORDLISTS[i] = word_list
+  assert(type(i) == 'number' and i <= #lexer._WORDLISTS, 'undefined word list: ' .. i)
+
+  if type(word_list) == 'string' then
+    local list = {}
+    for word in word_list:gmatch('%S+') do list[#list + 1] = word end
+    word_list = list
+  end
+
+  if not append or lexer._WORDLISTS[i] == '' then
+    lexer._WORDLISTS[i] = word_list
+  else
+    local list = lexer._WORDLISTS[i]
+    for _, word in ipairs(word_list) do list[#list + 1] = word end
+  end
+
   lexer._grammar_table = nil -- invalidate
 end
 
@@ -845,7 +861,8 @@ function M.modify_rule(lexer, id, rule)
   lexer._grammar_table = nil -- invalidate
 end
 
-local function rule_id(lexer, id) return lexer._name .. '.' .. id end
+-- Returns a unique grammar rule name for the given lexer's rule name.
+local function rule_id(lexer, name) return lexer._name .. '.' .. name end
 
 ---
 -- Returns the rule identified by string *id*.
@@ -1002,10 +1019,21 @@ local function add_lexer(grammar, lexer)
     add_lexer(grammar, child)
     local to_id = lexer._name .. '_to_' .. child._name
     grammar[rule_id] = lpeg_V(to_id) + grammar[rule_id] -- ['html_rule'] = V('html_to_css') + V('html.comment') + ...
+
+    -- Add a child's inherited parent's rules (e.g. rhtml parent with rails child inheriting ruby).
+    if child._parent_name then
+      local name = child._name
+      child._name = child._parent_name -- ensure parent and transition rule names are correct
+      add_lexer(grammar, child)
+      child._name = name -- restore
+      local to_id = lexer._name .. '_to_' .. child._parent_name
+      grammar[rule_id] = lpeg_V(to_id) + grammar[rule_id] -- ['html_rule'] = V('html_to_ruby') + V('html.comment') + ...
+    end
   end
 end
 
 -- Returns a grammar for the given lexer and initial rule, (re)constructing it if necessary.
+-- @param lexer The lexer to build a grammar for.
 -- @param init_style The current style. Multiple-language lexers use this to determine which
 --   language to start lexing in.
 local function build_grammar(lexer, init_style)
@@ -1076,12 +1104,12 @@ end
 
 ---
 -- Lexes a chunk of text *text* (that has an initial style number of *init_style*) using lexer
--- *lexer*, returning a table of tag names and positions.
+-- *lexer*, returning a list of tag names and positions.
 -- @param lexer The lexer to lex text with.
 -- @param text The text in the buffer to lex.
 -- @param init_style The current style. Multiple-language lexers use this to determine which
 --   language to start lexing in.
--- @return table of tag names and positions.
+-- @return list of tag names and positions.
 -- @name lex
 function M.lex(lexer, text, init_style)
   local grammar = build_grammar(lexer, init_style)
