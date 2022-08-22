@@ -1332,7 +1332,7 @@ function M.new(name, opts)
   lexer:add_rule('whitespace', lexer:tag('whitespace.' .. name, M.space^1))
 
   -- Add placeholders for user-defined word lists.
-  if not lexer._lexer then
+  if not lexer._lexer and not opts or not opts['no_user_word_lists'] then
     for i = 1, M.num_user_word_lists do
       local name = 'userlist' .. i
       lexer:add_rule(name, lexer:tag(name, lexer:get_word_list(name)))
