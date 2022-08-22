@@ -28,9 +28,9 @@ local sq_str = lexer.range("'", false, false)
 local dq_str = lexer.range('"')
 local ex_str = lexer.range('`')
 local heredoc = '<<' * P(function(input, index)
-  local s, e, minus, _, delimiter =
-    input:find('(-?)%s*(["\']?)([%w_]+)%2[^\n]*[\n\r\f;]+', index)
-  if s == index and delimiter then
+  local _, e, minus, _, delimiter =
+    input:find('^(-?)%s*(["\']?)([%w_]+)%2[^\n]*[\n\r\f;]+', index)
+  if delimiter then
     -- If the starting delimiter of a here-doc begins with "-", then
     -- spaces are allowed to come before the closing delimiter.
     local close_pattern
