@@ -1,4 +1,4 @@
--- Copyright 2015-2021 David B. Lamkins <david@lamkins.net>. See LICENSE.
+-- Copyright 2015-2022 David B. Lamkins <david@lamkins.net>. See LICENSE.
 -- pure LPeg lexer, see http://purelang.bitbucket.org/
 
 local lexer = require('lexer')
@@ -11,11 +11,11 @@ local lex = lexer.new('pure')
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
-  namespace with end using interface extern let const def type public private
-  nonfix outfix infix infixl infixr prefix postfix if otherwise when case of
-  then else
-]]))
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+  'namespace', 'with', 'end', 'using', 'interface', 'extern', 'let', 'const', 'def', 'type',
+  'public', 'private', 'nonfix', 'outfix', 'infix', 'infixl', 'infixr', 'prefix', 'postfix', 'if',
+  'otherwise', 'when', 'case', 'of', 'then', 'else'
+}))
 
 -- Identifiers.
 lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
@@ -43,7 +43,6 @@ local hashbang = lexer.starts_line('#!') * (lexer.nonnewline - '//')^0
 lex:add_rule('pragma', token(lexer.PREPROCESSOR, hashbang))
 
 -- Operators.
-lex:add_rule('operator', token(lexer.OPERATOR, '..' +
-  S('+-/*%<>~!=^&|?~:;,.()[]{}@#$`\\\'')))
+lex:add_rule('operator', token(lexer.OPERATOR, '..' + S('+-/*%<>~!=^&|?~:;,.()[]{}@#$`\\\'')))
 
 return lex

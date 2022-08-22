@@ -1,4 +1,4 @@
--- Copyright 2006-2021 Mitchell. See LICENSE.
+-- Copyright 2006-2022 Mitchell. See LICENSE.
 -- Gap LPeg lexer.
 
 local lexer = require('lexer')
@@ -11,10 +11,11 @@ local lex = lexer.new('gap')
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
-  and break continue do elif else end fail false fi for function if in infinity
-  local not od or rec repeat return then true until while
-]]))
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+  'and', 'break', 'continue', 'do', 'elif', 'else', 'end', 'fail', 'false', 'fi', 'for', 'function',
+  'if', 'in', 'infinity', 'local', 'not', 'od', 'or', 'rec', 'repeat', 'return', 'then', 'true',
+  'until', 'while'
+}))
 
 -- Identifiers.
 lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))

@@ -1,4 +1,4 @@
--- Copyright (c) 2014-2021 Piotr Orzechowski [drzewo.org]. See LICENSE.
+-- Copyright (c) 2014-2022 Piotr Orzechowski [drzewo.org]. See LICENSE.
 -- Xtend LPeg lexer.
 
 local lexer = require('lexer')
@@ -12,27 +12,27 @@ local ws = token(lexer.WHITESPACE, lexer.space^1)
 lex:add_rule('whitespace', ws)
 
 -- Classes.
-lex:add_rule('class', token(lexer.KEYWORD, P('class')) * ws^1 *
-  token(lexer.CLASS, lexer.word))
+lex:add_rule('class', token(lexer.KEYWORD, 'class') * ws^1 * token(lexer.CLASS, lexer.word))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
   -- General.
-  abstract annotation as case catch class create def default dispatch do else
-  enum extends extension final finally for if implements import interface
-  instanceof it new override package private protected public return self static
-  super switch synchronized this throw throws try typeof val var while
+  'abstract', 'annotation', 'as', 'case', 'catch', 'class', 'create', 'def', 'default', 'dispatch',
+  'do', 'else', 'enum', 'extends', 'extension', 'final', 'finally', 'for', 'if', 'implements',
+  'import', 'interface', 'instanceof', 'it', 'new', 'override', 'package', 'private', 'protected',
+  'public', 'return', 'self', 'static', 'super', 'switch', 'synchronized', 'this', 'throw',
+  'throws', 'try', 'typeof', 'val', 'var', 'while',
   -- Templates.
-  -- AFTER BEFORE ENDFOR ENDIF FOR IF SEPARATOR
+  'AFTER', 'BEFORE', 'ENDFOR', 'ENDIF', 'FOR', 'IF', 'SEPARATOR',
   -- Literals.
-  true false null
-]]))
+  'true', 'false', 'null'
+}))
 
 -- Types.
-lex:add_rule('type', token(lexer.TYPE, word_match[[
-  boolean byte char double float int long short void
-  Boolean Byte Character Double Float Integer Long Short String
-]]))
+lex:add_rule('type', token(lexer.TYPE, word_match{
+  'boolean', 'byte', 'char', 'double', 'float', 'int', 'long', 'short', 'void', 'Boolean', 'Byte',
+  'Character', 'Double', 'Float', 'Integer', 'Long', 'Short', 'String'
+}))
 
 -- Functions.
 lex:add_rule('function', token(lexer.FUNCTION, lexer.word) * #P('('))

@@ -17,9 +17,9 @@ jobs:
       - name: Git init if necessary
         shell: bash
         run: |
-          # If git version is less than 2.18, a git clone will not be made in
-          # this container. In that case, make a temporary repository so
-          # "make release" can archive the repo's contents for release.
+          # If git version is less than 2.18, a git clone will not be made in this container. In
+          # that case, make a temporary repository so "make release" can archive the repo's
+          # contents for release.
           if [[ -d .git ]]; then exit 0; fi
           git init
           git add .
@@ -45,8 +45,7 @@ jobs:
           # Output version information for use in later steps.
           version="${{ github.event.inputs.tag }}"
           if [[ -z $version ]]; then
-            version=`ls -1 scintillua_*.zip | head -1 |
-              sed 's/[^_]\+_\(.\+\)\.zip/\1/;'`
+            version=`ls -1 scintillua_*.zip | head -1 | sed 's/[^_]\+_\(.\+\)\.zip/\1/;'`
           fi
           echo "::set-output name=version::$version"
       - name: Upload artifacts

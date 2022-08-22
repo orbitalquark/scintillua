@@ -1,4 +1,4 @@
--- Copyright 2006-2021 Mitchell. See LICENSE.
+-- Copyright 2006-2022 Mitchell. See LICENSE.
 -- Shell LPeg lexer.
 
 local lexer = require('lexer')
@@ -11,13 +11,14 @@ local lex = lexer.new('bash')
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
-  if then elif else fi case in esac while for do done continue local return
-  select
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+  'if', 'then', 'elif', 'else', 'fi', 'case', 'in', 'esac', 'while', 'for', 'do', 'done',
+  'continue', 'local', 'return', 'select',
   -- Operators.
-  -a -b -c -d -e -f -g -h -k -p -r -s -t -u -w -x -O -G -L -S -N -nt -ot -ef -o
-  -z -n -eq -ne -lt -le -gt -ge
-]]))
+  '-a', '-b', '-c', '-d', '-e', '-f', '-g', '-h', '-k', '-p', '-r', '-s', '-t', '-u', '-w', '-x',
+  '-O', '-G', '-L', '-S', '-N', '-nt', '-ot', '-ef', '-o', '-z', '-n', '-eq', '-ne', '-lt', '-le',
+  '-gt', '-ge'
+}))
 
 -- Identifiers.
 lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
@@ -51,8 +52,8 @@ lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('#')))
 lex:add_rule('number', token(lexer.NUMBER, lexer.number))
 
 -- Variables.
-lex:add_rule('variable', token(lexer.VARIABLE, '$' * (S('!#?*@$') +
-  lexer.digit^1 + lexer.word + lexer.range('{', '}', true, false, true))))
+lex:add_rule('variable', token(lexer.VARIABLE, '$' *
+  (S('!#?*@$') + lexer.digit^1 + lexer.word + lexer.range('{', '}', true, false, true))))
 
 -- Operators.
 lex:add_rule('operator', token(lexer.OPERATOR, S('=!<>+-/*^&|~.,:;?()[]{}')))

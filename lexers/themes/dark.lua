@@ -1,4 +1,4 @@
--- Copyright 2006-2021 Mitchell. See LICENSE.
+-- Copyright 2006-2022 Mitchell. See LICENSE.
 -- Dark theme for Scintillua.
 -- Contributions by Ana Balan.
 
@@ -52,8 +52,7 @@ colors.light_lavender = '#CCCCFF'
 colors.light_blue = '#80CCFF'
 
 -- Default font.
-local font = WIN32 and 'Courier New' or OSX and 'Monaco' or
-  'Bitstream Vera Sans Mono'
+local font = WIN32 and 'Courier New' or OSX and 'Monaco' or 'Bitstream Vera Sans Mono'
 local size = not OSX and 10 or 12
 
 -- Predefined styles.

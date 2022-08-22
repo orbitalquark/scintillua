@@ -1,5 +1,5 @@
 /**
- * Copyright 2006-2021 Mitchell. See LICENSE.
+ * Copyright 2006-2022 Mitchell. See LICENSE.
  * Include file for directly (statically) compiling Scintillua into a
  * Scintilla-based application.
  */
@@ -17,7 +17,8 @@ extern "C" {
 
 const char *GetLibraryPropertyNames();
 void SetLibraryProperty(const char *key, const char *value);
-ILEXER5* CreateLexer(const char *name);
+const char *GetNameSpace();
+ILEXER5 *CreateLexer(const char *name);
 
 #ifdef __cplusplus
 }

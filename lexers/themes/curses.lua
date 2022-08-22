@@ -1,4 +1,4 @@
--- Copyright 2007-2021 Mitchell. See LICENSE.
+-- Copyright 2007-2022 Mitchell. See LICENSE.
 -- Curses theme for Lua lexers.
 -- Contributions by Ana Balan.
 
@@ -16,8 +16,8 @@ colors.cyan = '#008080'
 colors.white = '#C0C0C0'
 
 -- Light colors. (16 color terminals only.)
--- These only apply to 16 color terminals. For other terminals, set the
--- style's `bold` attribute to use the light color variant.
+-- These only apply to 16 color terminals. For other terminals, set the style's `bold` attribute
+-- to use the light color variant.
 colors.light_black = '#404040'
 colors.light_red = '#FF0000'
 colors.light_green = '#00FF00'

@@ -1,10 +1,11 @@
 ## Thanks
 
-Thank you everyone for your contributions and feedback. They have helped make
-Scintillua better and better over the years.
+Thank you everyone for your contributions and feedback. They have helped make Scintillua better
+and better over the years.
 
 ### Code Contributors
 
+* Aki
 * Alejandro Baez
 * Alex Saraci
 * Alexey Melnichuk
@@ -16,8 +17,10 @@ Scintillua better and better over the years.
 * Christos Chatzifountas
 * David B. Lamkins
 * Florian Fischer
+* Hao Chi Kiang
 * Heck Fy
 * Hugo O. Rivera
+* ittegrat
 * Ivan Baidakou
 * Jason Schindler
 * Jeff Stone
@@ -34,6 +37,7 @@ Scintillua better and better over the years.
 * Marc André Tanner
 * Markus F.X.J. Oberhumer
 * Martin Morawetz
+* Matej Cepl
 * Michael Forney
 * Michael T. Richter
 * Michel Martens
@@ -44,16 +48,19 @@ Scintillua better and better over the years.
 * Olivier Guibé
 * Paul Kulchenko
 * Peter Odding
+* Phil Hagelberg
 * Piotr Orzechowski
+* Qiu
 * Richard Philips
 * Robert Gieseke
 * Roberto Ierusalimschy
 * S\. Gilles
 * Simeon Maryasin
+* Snoopy
 * Stéphane Rivière
 * Tobias Frilling
 * Tymur Gubayev
+* Tynan Beatty
 * Wolfgang Seeberg
 
-If I have left off your name, please contact me (see README.md). I am very sorry
-about that.
+If I have left off your name, please contact me (see README.md). I am very sorry about that.

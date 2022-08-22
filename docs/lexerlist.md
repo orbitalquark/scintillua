@@ -1,9 +1,8 @@
 ## Language Lexers
 
-Scintillua has lexers for the languages below. Languages denoted by a `*` have
-native [folders][]. For languages without native folding support, folding based
-on indentation can be used if [`fold.by.indentation`][] is enabled. For SciTE,
-see *lexers/lpeg.properties*.
+Scintillua has lexers for the languages below. Languages denoted by a `*` have native
+[folders][]. For languages without native folding support, folding based on indentation can be
+used if [`fold.by.indentation`][] is enabled. For SciTE, see *lexers/lpeg.properties*.
 
 1. Actionscript`*`
 1. Ada
@@ -50,11 +49,13 @@ see *lexers/lpeg.properties*.
 1. GAP`*`
 1. gettext
 1. Gherkin
+1. Gleam`*`
 1. GLSL`*`
 1. Gnuplot
 1. Go`*`
 1. Groovy`*`
 1. Gtkrc`*`
+1. Hare`*`
 1. Haskell
 1. HTML`*`
 1. Icon`*`
@@ -103,7 +104,7 @@ see *lexers/lpeg.properties*.
 1. Properties
 1. Pure
 1. Python
-1. R
+1. R`*`
 1. rc`*`
 1. Reason
 1. REBOL`*`
@@ -111,6 +112,7 @@ see *lexers/lpeg.properties*.
 1. ReStructuredText`*`
 1. RHTML`*`
 1. RouterOS`*`
+1. RPM Spec
 1. Ruby`*`
 1. Ruby on Rails`*`
 1. Rust`*`
@@ -135,7 +137,7 @@ see *lexers/lpeg.properties*.
 1. vCard`*`
 1. Verilog`*`
 1. VHDL
-1. Visual Basic
+1. Visual Basic`*`
 1. Windows Script File`*`
 1. XML`*`
 1. Xs`*`

@@ -1,4 +1,4 @@
--- Copyright 2006-2021 Mitchell. See LICENSE.
+-- Copyright 2006-2022 Mitchell. See LICENSE.
 -- Plain TeX LPeg lexer.
 -- Modified by Robert Gieseke.
 
@@ -15,13 +15,11 @@ lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('%')))
 
 -- TeX environments.
-lex:add_rule('environment', token('environment', '\\' * (P('begin') + 'end') *
-  lexer.word))
+lex:add_rule('environment', token('environment', '\\' * (P('begin') + 'end') * lexer.word))
 lex:add_style('environment', lexer.styles.keyword)
 
 -- Commands.
-lex:add_rule('command', token(lexer.KEYWORD, '\\' * (lexer.alpha^1 +
-  S('#$&~_^%{}'))))
+lex:add_rule('command', token(lexer.KEYWORD, '\\' * (lexer.alpha^1 + S('#$&~_^%{}'))))
 
 -- Operators.
 lex:add_rule('operator', token(lexer.OPERATOR, S('$&#{}[]')))

@@ -1,4 +1,4 @@
--- Copyright 2006-2021 Mitchell. See LICENSE.
+-- Copyright 2006-2022 Mitchell. See LICENSE.
 -- Pike LPeg lexer.
 
 local lexer = require('lexer')
@@ -11,19 +11,17 @@ local lex = lexer.new('pike')
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
-  break case catch continue default do else for foreach gauge if lambda return
-  sscanf switch while import inherit
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+  'break', 'case', 'catch', 'continue', 'default', 'do', 'else', 'for', 'foreach', 'gauge', 'if',
+  'lambda', 'return', 'sscanf', 'switch', 'while', 'import', 'inherit',
   -- Type modifiers.
-  constant extern final inline local nomask optional private protected public
-  static variant
-]]))
+  'constant', 'extern', 'final', 'inline', 'local', 'nomask', 'optional', 'private', 'protected',
+  'public', 'static', 'variant'
+}))
 
 -- Types.
-lex:add_rule('type', token(lexer.TYPE, word_match[[
-  array class float function int mapping mixed multiset object program string
-  void
-]]))
+lex:add_rule('type', token(lexer.TYPE, word_match(
+  'array class float function int mapping mixed multiset object program string void')))
 
 -- Identifiers.
 lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
@@ -42,8 +40,7 @@ lex:add_rule('comment', token(lexer.COMMENT, line_comment + block_comment))
 lex:add_rule('number', token(lexer.NUMBER, lexer.number * S('lLdDfF')^-1))
 
 -- Preprocessors.
-lex:add_rule('preprocessor', token(lexer.PREPROCESSOR,
-  lexer.to_eol(lexer.starts_line('#'))))
+lex:add_rule('preprocessor', token(lexer.PREPROCESSOR, lexer.to_eol(lexer.starts_line('#'))))
 
 -- Operators.
 lex:add_rule('operator', token(lexer.OPERATOR, S('<>=!+-/*%&|^~@`.,:;()[]{}')))

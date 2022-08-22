@@ -1,4 +1,4 @@
--- Copyright 2006-2021 Mitchell. See LICENSE.
+-- Copyright 2006-2022 Mitchell. See LICENSE.
 -- ASP LPeg lexer.
 
 local lexer = require('lexer')
@@ -20,12 +20,9 @@ local vbs = lexer.load('vb', 'vbscript')
 local script_element = word_match('script', true)
 local vbs_start_rule = #(P('<') * script_element * (P(function(input, index)
   if input:find('^%s+language%s*=%s*(["\'])vbscript%1', index) or
-     input:find('^%s+type%s*=%s*(["\'])text/vbscript%1', index) then
-    return index
-  end
+    input:find('^%s+type%s*=%s*(["\'])text/vbscript%1', index) then return index end
 end) + '>')) * html.embed_start_tag -- <script language="vbscript">
-local vbs_end_rule = #('</' * script_element * lexer.space^0 * '>') *
-  html.embed_end_tag -- </script>
+local vbs_end_rule = #('</' * script_element * lexer.space^0 * '>') * html.embed_end_tag -- </script>
 lex:embed(vbs, vbs_start_rule, vbs_end_rule)
 
 -- Fold points.

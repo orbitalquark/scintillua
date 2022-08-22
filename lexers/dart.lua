@@ -1,4 +1,4 @@
--- Copyright 2013-2021 Mitchell. See LICENSE.
+-- Copyright 2013-2022 Mitchell. See LICENSE.
 -- Dart LPeg lexer.
 -- Written by Brian Schott (@Hackerpilot on Github).
 
@@ -12,17 +12,17 @@ local lex = lexer.new('dart')
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
-  assert break case catch class const continue default do else enum extends
-  false final finally for if in is new null rethrow return super switch this
-  throw true try var void while with
-]]))
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+  'assert', 'break', 'case', 'catch', 'class', 'const', 'continue', 'default', 'do', 'else', 'enum',
+  'extends', 'false', 'final', 'finally', 'for', 'if', 'in', 'is', 'new', 'null', 'rethrow',
+  'return', 'super', 'switch', 'this', 'throw', 'true', 'try', 'var', 'void', 'while', 'with'
+}))
 
 -- Built-ins.
-lex:add_rule('builtin', token(lexer.CONSTANT, word_match[[
-  abstract as dynamic export external factory get implements import library
-  operator part set static typedef
-]]))
+lex:add_rule('builtin', token(lexer.CONSTANT, word_match{
+  'abstract', 'as', 'dynamic', 'export', 'external', 'factory', 'get', 'implements', 'import',
+  'library', 'operator', 'part', 'set', 'static', 'typedef'
+}))
 
 -- Strings.
 local sq_str = S('r')^-1 * lexer.range("'", true)

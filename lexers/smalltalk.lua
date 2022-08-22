@@ -1,4 +1,4 @@
--- Copyright 2006-2021 Mitchell. See LICENSE.
+-- Copyright 2006-2022 Mitchell. See LICENSE.
 -- Smalltalk LPeg lexer.
 
 local lexer = require('lexer')
@@ -11,14 +11,12 @@ local lex = lexer.new('smalltalk')
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
-  true false nil self super isNil not Smalltalk Transcript
-]]))
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match(
+  'true false nil self super isNil not Smalltalk Transcript')))
 
 -- Types.
-lex:add_rule('type', token(lexer.TYPE, word_match[[
-  Date Time Boolean True False Character String Array Symbol Integer Object
-]]))
+lex:add_rule('type', token(lexer.TYPE, word_match(
+  'Date Time Boolean True False Character String Array Symbol Integer Object')))
 
 -- Identifiers.
 lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))

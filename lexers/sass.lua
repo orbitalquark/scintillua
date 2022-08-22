@@ -1,4 +1,4 @@
--- Copyright 2006-2021 Robert Gieseke. See LICENSE.
+-- Copyright 2006-2022 Robert Gieseke. See LICENSE.
 -- Sass CSS preprocessor LPeg lexer.
 -- http://sass-lang.com
 
@@ -15,7 +15,7 @@ lex:add_rule('line_comment', token(lexer.COMMENT, lexer.to_eol('//')))
 lex:add_rule('variable', token(lexer.VARIABLE, '$' * (lexer.alnum + S('_-'))^1))
 
 -- Mixins.
-lex:add_rule('mixin', token('mixin', P('@') * lexer.word))
+lex:add_rule('mixin', token('mixin', '@' * lexer.word))
 lex:add_style('mixin', lexer.styles['function'])
 
 -- Fold points.

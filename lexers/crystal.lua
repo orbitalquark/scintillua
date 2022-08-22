@@ -1,4 +1,4 @@
--- Copyright 2006-2021 Mitchell. See LICENSE.
+-- Copyright 2006-2022 Mitchell. See LICENSE.
 -- Copyright 2017 Michel Martens.
 -- Crystal LPeg lexer (based on Ruby).
 
@@ -12,42 +12,26 @@ local lex = lexer.new('crystal')
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match[[
-  alias begin break case class def defined? do else elsif end ensure false for
-  if in module next nil not redo rescue retry return self super then true undef
-  unless until when while yield __FILE__ __LINE__
-]]))
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+  'alias', 'begin', 'break', 'case', 'class', 'def', 'defined?', 'do', 'else', 'elsif', 'end',
+  'ensure', 'false', 'for', 'if', 'in', 'module', 'next', 'nil', 'not', 'redo', 'rescue', 'retry',
+  'return', 'self', 'super', 'then', 'true', 'undef', 'unless', 'until', 'when', 'while', 'yield',
+  '__FILE__', '__LINE__'
+}))
 
 -- Functions.
-lex:add_rule('function', token(lexer.FUNCTION, word_match[[
-  abort at_exit caller delay exit fork future get_stack_top gets lazy loop main
-  p print printf puts raise rand read_line require sleep spawn sprintf system
-  with_color
+lex:add_rule('function', token(lexer.FUNCTION, word_match{
+  'abort', 'at_exit', 'caller', 'delay', 'exit', 'fork', 'future', 'get_stack_top', 'gets', 'lazy',
+  'loop', 'main', 'p', 'print', 'printf', 'puts', 'raise', 'rand', 'read_line', 'require', 'sleep',
+  'spawn', 'sprintf', 'system', 'with_color',
   -- Macros.
-  assert_responds_to debugger parallel pp record redefine_main
-]]) * -S('.:|'))
+  'assert_responds_to', 'debugger', 'parallel', 'pp', 'record', 'redefine_main'
+}) * -S('.:|'))
 
 -- Identifiers.
 local word_char = lexer.alnum + S('_!?')
 local word = (lexer.alpha + '_') * word_char^0
-local identifier = token(lexer.IDENTIFIER, word)
-
-local delimiter_matches = {['('] = ')', ['['] = ']', ['{'] = '}'}
-local literal_delimitted = P(function(input, index)
-  local delimiter = input:sub(index, index)
-  if not delimiter:find('[%w\r\n\f\t ]') then -- only non alpha-numerics
-    local match_pos, patt
-    if delimiter_matches[delimiter] then
-      -- Handle nested delimiter/matches in strings.
-      local s, e = delimiter, delimiter_matches[delimiter]
-      patt = lexer.range(s, e, false, true, true)
-    else
-      patt = lexer.range(delimiter)
-    end
-    match_pos = lpeg.match(patt, input, index)
-    return match_pos or #input + 1
-  end
-end)
+lex:add_rule('identifier', token(lexer.IDENTIFIER, word))
 
 -- Comments.
 lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('#', true)))
@@ -57,18 +41,16 @@ local cmd_str = lexer.range('`')
 local sq_str = lexer.range("'")
 local dq_str = lexer.range('"')
 local heredoc = '<<' * P(function(input, index)
-  local _, e, indented, _, delimiter = input:find(
-    '^(%-?)(["`]?)([%a_][%w_]*)%2[\n\r\f;]+', index)
+  local _, e, indented, _, delimiter = input:find('^(%-?)(["`]?)([%a_][%w_]*)%2[\n\r\f;]+', index)
   if not delimiter then return end
   local end_heredoc = (#indented > 0 and '[\n\r\f]+ *' or '[\n\r\f]+')
   _, e = input:find(end_heredoc .. delimiter, e)
   return e and e + 1 or #input + 1
 end)
-local string = token(lexer.STRING, (sq_str + dq_str + heredoc + cmd_str) *
-  S('f')^-1)
+local string = token(lexer.STRING, (sq_str + dq_str + heredoc + cmd_str) * S('f')^-1)
 -- TODO: regex_str fails with `obj.method /patt/` syntax.
-local regex_str = #P('/') * lexer.last_char_includes('!%^&*([{-=+|:;,?<>~') *
-  lexer.range('/', true) * S('iomx')^0
+local regex_str =
+  #P('/') * lexer.last_char_includes('!%^&*([{-=+|:;,?<>~') * lexer.range('/', true) * S('iomx')^0
 local regex = token(lexer.REGEX, regex_str)
 lex:add_rule('string', string + regex)
 
@@ -78,19 +60,14 @@ local bin = '0b' * S('01')^1 * ('_' * S('01')^1)^0
 local integer = S('+-')^-1 * (bin + lexer.hex_num + lexer.oct_num + dec)
 -- TODO: meta, control, etc. for numeric_literal.
 local numeric_literal = '?' * (lexer.any - lexer.space) * -word_char
-lex:add_rule('number', token(lexer.NUMBER, lexer.float * S('ri')^-1 + integer +
-  numeric_literal))
+lex:add_rule('number', token(lexer.NUMBER, lexer.float * S('ri')^-1 + integer + numeric_literal))
 
 -- Variables.
-local global_var = '$' * (
-  word +
-  S('!@L+`\'=~/\\,.;<>_*"$?:') +
-  lexer.digit +
-  '-' * S('0FadiIKlpvw'))
+local global_var = '$' *
+  (word + S('!@L+`\'=~/\\,.;<>_*"$?:') + lexer.digit + '-' * S('0FadiIKlpvw'))
 local class_var = '@@' * word
 local inst_var = '@' * word
-lex:add_rule('variable', token(lexer.VARIABLE, global_var + class_var +
-  inst_var))
+lex:add_rule('variable', token(lexer.VARIABLE, global_var + class_var + inst_var))
 
 -- Symbols.
 lex:add_rule('symbol', token('symbol', ':' * P(function(input, index)
@@ -103,8 +80,8 @@ lex:add_rule('operator', token(lexer.OPERATOR, S('!%^&*()[]{}-=+/|:;.,?<>~')))
 
 -- Fold points.
 local function disambiguate(text, pos, line, s)
-  return line:sub(1, s - 1):match('^%s*$') and
-    not text:sub(1, pos - 1):match('\\[ \t]*\r?\n$') and 1 or 0
+  return line:sub(1, s - 1):match('^%s*$') and not text:sub(1, pos - 1):match('\\[ \t]*\r?\n$') and
+    1 or 0
 end
 lex:add_fold_point(lexer.KEYWORD, 'begin', 'end')
 lex:add_fold_point(lexer.KEYWORD, 'case', 'end')
