@@ -822,6 +822,7 @@ end
 -- @see word_match
 -- @name set_word_list
 function M.set_word_list(lexer, name, word_list, append)
+  if word_list == 'scintillua' then return end -- for SciTE
   if lexer._lexer then
     -- If this lexer is a proxy (e.g. rails), get the true parent (ruby) in order to set the
     -- parent's word list. If this lexer is a child embedding itself (e.g. php), continue
