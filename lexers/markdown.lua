@@ -97,7 +97,7 @@ lex:add_style('em', {italics = true})
 
 -- Embedded HTML.
 local html = lexer.load('html')
-local start_rule = lexer.starts_line(P(' ')^-3) * #P('<') * html:get_rule('element') -- P(' ')^4 starts code_line
+local start_rule = lexer.starts_line(P(' ')^-3) * #P('<') * html:get_rule('tag') -- P(' ')^4 starts code_line
 local end_rule = token(lexer.DEFAULT, blank_line) -- TODO: lexer.WHITESPACE errors
 lex:embed(html, start_rule, end_rule)
 

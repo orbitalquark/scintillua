@@ -1,62 +1,26 @@
 -- Copyright 2006-2022 Mitchell. See LICENSE.
 -- JavaScript LPeg lexer.
 
-local lexer = require('lexer')
-local word_match = lexer.word_match
-local P, S = lpeg.P, lpeg.S
+local lexer = lexer
+local P, S, B = lpeg.P, lpeg.S, lpeg.B
 
-local lex = lexer.new('javascript')
-
--- Whitespace.
-lex:add_rule('whitespace', lex:tag(lexer.WHITESPACE, lexer.space^1))
+local lex = lexer.new(...)
 
 -- Keywords.
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, word_match{
-  'abstract', 'async', 'await', 'boolean', 'break', 'byte', 'case', 'catch', 'char', 'class',
-  'const', 'continue', 'debugger', 'default', 'delete', 'do', 'double', 'else', 'enum', 'export',
-  'extends', 'false', 'final', 'finally', 'float', 'for', 'function', 'get', 'goto', 'if',
-  'implements', 'import', 'in', 'instanceof', 'int', 'interface', 'let', 'long', 'native', 'new',
-  'null', 'of', 'package', 'private', 'protected', 'public', 'return', 'set', 'short', 'static',
-  'super', 'switch', 'synchronized', 'this', 'throw', 'throws', 'transient', 'true', 'try',
-  'typeof', 'var', 'void', 'volatile', 'while', 'with', 'yield'
-}))
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD)))
 
 -- Types.
-lex:add_rule('type', lex:tag(lexer.TYPE, word_match{
-  -- Fundamental objects.
-  'Object', 'Function', 'Boolean', 'Symbol',
-  -- Error Objects.
-  'Error', 'AggregateError', 'EvalError', 'InternalError', 'RangeError', 'ReferenceError',
-  'SyntaxError', 'TypeError', 'URIError',
-  -- Numbers and dates.
-  'Number', 'BigInt', 'Math', 'Date',
-  -- Text Processing.
-  'String', 'RegExp',
-  -- Indexed collections.
-  'Array', 'Int8Array', 'Uint8Array', 'Uint8ClampedArray', 'Int16Array', 'Uint16Array',
-  'Int32Array', 'Uint32Array', 'Float32Array', 'Float64Array', 'BigInt64Array', 'BigUint64Array',
-  -- Keyed collections.
-  'Map', 'Set', 'WeakMap', 'WeakSet',
-  -- Structured data.
-  'ArrayBuffer', 'SharedArrayBuffer', 'Atomics', 'DataView', 'JSON',
-  -- Control abstraction objects.
-  'GeneratorFunction', 'AsyncGeneratorFunction', 'Generator', 'AsyncGenerator', 'AsyncFunction',
-  'Promise',
-  -- Reflection.
-  'Reflect', 'Proxy',
-  -- Other.
-  'Intl', 'WebAssembly'
-}))
+lex:add_rule('type', lex:tag(lexer.TYPE, lex:get_word_list(lexer.TYPE)))
 
 -- Functions.
-lex:add_rule('function', lex:tag(lexer.FUNCTION, word_match{
-  'eval', 'isFinite', 'isNaN', 'parseFloat', 'parseInt', 'decodeURI', 'decodeURIComponent',
-  'encodeURI', 'encodeURIComponent'
-}))
+local builtin_func = -B('.') *
+  lex:tag(lexer.FUNCTION_BUILTIN, lex:get_word_list(lexer.FUNCTION_BUILTIN))
+local func = lex:tag(lexer.FUNCTION, lexer.word)
+local method = B('.') * lex:tag(lexer.FUNCTION_METHOD, lexer.word)
+lex:add_rule('function', (builtin_func + method + func) * #(lexer.space^0 * '('))
 
 -- Constants.
-lex:add_rule('constant',
-  lex:tag(lexer.CONSTANT, word_match('Infinity NaN undefined globalThis arguments')))
+lex:add_rule('constant', lex:tag(lexer.CONSTANT_BUILTIN, lex:get_word_list(lexer.CONSTANT_BUILTIN)))
 
 -- Identifiers.
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
@@ -86,5 +50,49 @@ lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('+-/*%^!=&|?:;,.()[]{}<>')))
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
 lex:add_fold_point(lexer.COMMENT, '/*', '*/')
 lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('//'))
+
+-- Word lists.
+lex:set_word_list(lexer.KEYWORD, {
+  'abstract', 'async', 'await', 'boolean', 'break', 'byte', 'case', 'catch', 'char', 'class',
+  'const', 'continue', 'debugger', 'default', 'delete', 'do', 'double', 'else', 'enum', 'export',
+  'extends', 'false', 'final', 'finally', 'float', 'for', 'function', 'get', 'goto', 'if',
+  'implements', 'import', 'in', 'instanceof', 'int', 'interface', 'let', 'long', 'native', 'new',
+  'null', 'of', 'package', 'private', 'protected', 'public', 'return', 'set', 'short', 'static',
+  'super', 'switch', 'synchronized', 'this', 'throw', 'throws', 'transient', 'true', 'try',
+  'typeof', 'var', 'void', 'volatile', 'while', 'with', 'yield'
+})
+
+lex:set_word_list(lexer.TYPE, {
+  -- Fundamental objects.
+  'Object', 'Function', 'Boolean', 'Symbol',
+  -- Error Objects.
+  'Error', 'AggregateError', 'EvalError', 'InternalError', 'RangeError', 'ReferenceError',
+  'SyntaxError', 'TypeError', 'URIError',
+  -- Numbers and dates.
+  'Number', 'BigInt', 'Math', 'Date',
+  -- Text Processing.
+  'String', 'RegExp',
+  -- Indexed collections.
+  'Array', 'Int8Array', 'Uint8Array', 'Uint8ClampedArray', 'Int16Array', 'Uint16Array',
+  'Int32Array', 'Uint32Array', 'Float32Array', 'Float64Array', 'BigInt64Array', 'BigUint64Array',
+  -- Keyed collections.
+  'Map', 'Set', 'WeakMap', 'WeakSet',
+  -- Structured data.
+  'ArrayBuffer', 'SharedArrayBuffer', 'Atomics', 'DataView', 'JSON',
+  -- Control abstraction objects.
+  'GeneratorFunction', 'AsyncGeneratorFunction', 'Generator', 'AsyncGenerator', 'AsyncFunction',
+  'Promise',
+  -- Reflection.
+  'Reflect', 'Proxy',
+  -- Other.
+  'Intl', 'WebAssembly'
+})
+
+lex:set_word_list(lexer.FUNCTION_BUILTIN, {
+  'eval', 'isFinite', 'isNaN', 'parseFloat', 'parseInt', 'decodeURI', 'decodeURIComponent',
+  'encodeURI', 'encodeURIComponent'
+})
+
+lex:set_word_list(lexer.CONSTANT_BUILTIN, 'Infinity NaN undefined globalThis arguments')
 
 return lex

@@ -579,7 +579,7 @@ function test_lua()
   }
   assert_rules(lua, rules)
   local tags = {
-    'string.longstring', --
+    lexer.STRING .. '.longstring', --
     'whitespace.lua' -- language-specific whitespace for multilang lexers
   }
   assert_extra_tags(lua, tags)
@@ -618,9 +618,7 @@ function test_lua()
     {lexer.IDENTIFIER, 'c'},
     {lexer.OPERATOR, '='},
     {lexer.OPERATOR, '{'},
-    {lexer.CONSTANT_BUILTIN, '_G'},
-    {lexer.OPERATOR, '.'},
-    {lexer.IDENTIFIER, 'print'},
+    {lexer.CONSTANT_BUILTIN, '_G'}, {lexer.OPERATOR, '.'}, {lexer.IDENTIFIER, 'print'},
     {lexer.OPERATOR, ','},
     {lexer.IDENTIFIER, 'type'},
     {lexer.OPERATOR, '='},
@@ -637,8 +635,7 @@ function test_lua()
     {lexer.IDENTIFIER, 'b'},
     {lexer.OPERATOR, ':'},
     {lexer.FUNCTION_METHOD, 'upper'},
-    {lexer.OPERATOR, '('},
-    {lexer.OPERATOR, ')'},
+    {lexer.OPERATOR, '('}, {lexer.OPERATOR, ')'},
     {lexer.OPERATOR, ')'}
   }
   -- LuaFormatter on
@@ -681,40 +678,62 @@ function test_c()
   -- Lexing tests.
   local code = ([[
     /* Comment. */
-    #include <stdlib.h>
+    #include <stdio.h>
     #include "lua.h"
+    #  define INT_MAX_ 1
     int main(int argc, char **argv) {
-      if (NULL);
+    begin:
+      if (NULL) // comment
+        printf("%ld %f %s %i", 1l, 1.0e-1f, L"foo", INT_MAX);
+      uint8_t uint8_t0;
+      foo.free, foo->free(), free(foo);
       return 0;
     }
   ]]):gsub('    ', '') -- strip indent
   -- LuaFormatter off
   local tags = {
     {lexer.COMMENT, '/* Comment. */'},
-    {lexer.PREPROCESSOR, '#include'},
-    {lexer.STRING, '<stdlib.h>'},
-    {lexer.PREPROCESSOR, '#include'},
-    {lexer.STRING, '"lua.h"'},
-    {lexer.TYPE, 'int'},
-    {lexer.IDENTIFIER, 'main'},
+    {lexer.PREPROCESSOR, '#include'}, {lexer.STRING, '<stdio.h>'},
+    {lexer.PREPROCESSOR, '#include'}, {lexer.STRING, '"lua.h"'},
+    {lexer.PREPROCESSOR, '#  define'}, {lexer.IDENTIFIER, 'INT_MAX_'}, {lexer.NUMBER, '1'},
+    {lexer.TYPE, 'int'}, {lexer.FUNCTION, 'main'},
     {lexer.OPERATOR, '('},
-    {lexer.TYPE, 'int'},
-    {lexer.IDENTIFIER, 'argc'},
+    {lexer.TYPE, 'int'}, {lexer.IDENTIFIER, 'argc'},
     {lexer.OPERATOR, ','},
-    {lexer.TYPE, 'char'},
-    {lexer.OPERATOR, '*'},
-    {lexer.OPERATOR, '*'},
-    {lexer.IDENTIFIER, 'argv'},
+    {lexer.TYPE, 'char'}, {lexer.OPERATOR, '*'}, {lexer.OPERATOR, '*'}, {lexer.IDENTIFIER, 'argv'},
     {lexer.OPERATOR, ')'},
     {lexer.OPERATOR, '{'},
+    {lexer.LABEL, 'begin:'},
     {lexer.KEYWORD, 'if'},
+    {lexer.OPERATOR, '('}, {lexer.CONSTANT_BUILTIN, 'NULL'}, {lexer.OPERATOR, ')'},
+    {lexer.COMMENT, '// comment'},
+    {lexer.FUNCTION_BUILTIN, 'printf'},
     {lexer.OPERATOR, '('},
-    {lexer.CONSTANT, 'NULL'},
+    {lexer.STRING, '"%ld %f %s %i"'},
+    {lexer.OPERATOR, ','},
+    {lexer.NUMBER, '1l'},
+    {lexer.OPERATOR, ','},
+    {lexer.NUMBER, '1.0e-1f'},
+    {lexer.OPERATOR, ','},
+    {lexer.STRING, 'L"foo"'},
+    {lexer.OPERATOR, ','},
+    {lexer.CONSTANT_BUILTIN, 'INT_MAX'},
     {lexer.OPERATOR, ')'},
     {lexer.OPERATOR, ';'},
-    {lexer.KEYWORD, 'return'},
-    {lexer.NUMBER, '0'},
+    {lexer.TYPE, 'uint8_t'}, {lexer.IDENTIFIER, 'uint8_t0'}, {lexer.OPERATOR, ';'},
+    {lexer.IDENTIFIER, 'foo'}, {lexer.OPERATOR, '.'}, {lexer.IDENTIFIER, 'free'},
+    {lexer.OPERATOR, ','},
+    {lexer.IDENTIFIER, 'foo'},
+    {lexer.OPERATOR, '-'}, {lexer.OPERATOR, '>'},
+    {lexer.FUNCTION_METHOD, 'free'},
+    {lexer.OPERATOR, '('}, {lexer.OPERATOR, ')'},
+    {lexer.OPERATOR, ','},
+    {lexer.FUNCTION_BUILTIN, 'free'},
+    {lexer.OPERATOR, '('},
+    {lexer.IDENTIFIER, 'foo'},
+    {lexer.OPERATOR, ')'},
     {lexer.OPERATOR, ';'},
+    {lexer.KEYWORD, 'return'}, {lexer.NUMBER, '0'}, {lexer.OPERATOR, ';'},
     {lexer.OPERATOR, '}'}
   }
   -- LuaFormatter on
@@ -742,12 +761,12 @@ function test_html()
   assert(html._name == 'html')
   assert_default_tags(html)
   local rules = {
-    'whitespace', 'comment', 'doctype', 'element', 'tag_close', 'attribute', -- 'equals',
+    'comment', 'doctype', 'tag', 'tag_close', 'attribute', -- 'equals',
     'string', 'number', 'entity'
   }
   assert_rules(html, rules)
   local tags = {
-    'doctype', 'element', 'unknown_element', 'attribute', 'unknown_attribute', 'entity',
+    lexer.TAG .. '.doctype', lexer.TAG .. '.unknown', lexer.ATTRIBUTE .. '.unknown', 'entity', --
     'whitespace.html', -- HTML
     'value', 'color', 'unit', 'at_rule', 'whitespace.css', -- CSS
     'whitespace.javascript', -- JS
@@ -761,12 +780,14 @@ function test_html()
     <!DOCTYPE html>
     <!-- Comment. -->
     <html>
-      <head>
+      <HEAD>
         <style type="text/css">
+          @charset "utf8"
           /* Another comment. */
-          h1:hover {
-            color: red;
+          h1:hover, h2::first-line {
+            color: darkred;
             border: 1px solid #0000FF;
+            background: url("/images/image.jpg");
           }
         </style>
         <script type="text/javascript">
@@ -774,47 +795,48 @@ function test_html()
           var a = 1 + 2.0e3 - 0x40;
           var b = "two" + `three`;
           var c = /pattern/i;
-        //</script>
-      </head>
-      <bod/>
+          foo(eval(arguments), bar.baz(), Object);
+        </script>
+      </HEAD>
+      <bod clss="unknown">
+      <hr tabindex=1/> &copy;
     </html>
   ]]
+  local tag_chars = lexer.TAG .. '.chars'
   -- LuaFormatter off
   local tags = {
-    {'doctype', '<!DOCTYPE html>'},
+    {lexer.TAG .. '.doctype', '<!DOCTYPE html>'},
     {lexer.COMMENT, '<!-- Comment. -->'},
-    {'element', '<html'},
-    {'element', '>'},
-    {'element', '<head'},
-    {'element', '>'},
-    {'element', '<style'},
-    {'attribute', 'type'},
-    {lexer.OPERATOR, '='},
-    {lexer.STRING, '"text/css"'},
-    {'element', '>'},
+    {tag_chars, '<'}, {lexer.TAG, 'html'}, {tag_chars, '>'},
+    {tag_chars, '<'}, {lexer.TAG, 'HEAD'}, {tag_chars, '>'},
+    {tag_chars, '<'},
+    {lexer.TAG, 'style'},
+    {lexer.ATTRIBUTE, 'type'}, {lexer.OPERATOR, '='}, {lexer.STRING, '"text/css"'},
+    {tag_chars, '>'},
+    {'at_rule', '@charset'}, {lexer.STRING, '"utf8"'},
     {lexer.COMMENT, '/* Another comment. */'},
-    {lexer.IDENTIFIER, 'h1'},
-    {'pseudoclass', ':hover'},
+    {lexer.IDENTIFIER, 'h1'}, {'pseudoclass', ':hover'},
+    {lexer.OPERATOR, ','},
+    {lexer.IDENTIFIER, 'h2'}, {'pseudoelement', '::first-line'},
     {lexer.OPERATOR, '{'},
-    {'property', 'color'},
-    {lexer.OPERATOR, ':'},
-    {'value', 'red'},
-    {lexer.OPERATOR, ';'},
+    {'property', 'color'}, {lexer.OPERATOR, ':'}, {'color', 'darkred'}, {lexer.OPERATOR, ';'},
     {'property', 'border'},
     {lexer.OPERATOR, ':'},
-    {lexer.NUMBER, '1'},
-    {'unit', 'px'},
-    {'value', 'solid'},
-    {'color', '#0000FF'},
+    {lexer.NUMBER, '1'}, {'unit', 'px'}, {'value', 'solid'}, {'color', '#0000FF'},
+    {lexer.OPERATOR, ';'},
+    {'property', 'background'},
+    {lexer.OPERATOR, ':'},
+    {lexer.FUNCTION_BUILTIN, 'url'},
+    {lexer.OPERATOR, '('},
+    {lexer.STRING, '"/images/image.jpg"'},
+    {lexer.OPERATOR, ')'},
     {lexer.OPERATOR, ';'},
     {lexer.OPERATOR, '}'},
-    {'element', '</style'},
-    {'element', '>'},
-    {'element', '<script'},
-    {'attribute', 'type'},
-    {lexer.OPERATOR, '='},
-    {lexer.STRING, '"text/javascript"'},
-    {'element', '>'},
+    {tag_chars, '</'}, {lexer.TAG, 'style'}, {tag_chars, '>'},
+    {tag_chars, '<'},
+    {lexer.TAG, 'script'},
+    {lexer.ATTRIBUTE, 'type'}, {lexer.OPERATOR, '='}, {lexer.STRING, '"text/javascript"'},
+    {tag_chars, '>'},
     {lexer.COMMENT, '/* A third comment. */'},
     {lexer.KEYWORD, 'var'},
     {lexer.IDENTIFIER, 'a'},
@@ -837,15 +859,33 @@ function test_html()
     {lexer.OPERATOR, '='},
     {lexer.REGEX, '/pattern/i'},
     {lexer.OPERATOR, ';'},
-    {lexer.COMMENT, '//'},
-    {'element', '</script'},
-    {'element', '>'},
-    {'element', '</head'},
-    {'element', '>'},
-    {'unknown_element', '<bod'},
-    {'element', '/>'},
-    {'element', '</html'},
-    {'element', '>'}
+    {lexer.FUNCTION, 'foo'},
+    {lexer.OPERATOR, '('},
+    {lexer.FUNCTION_BUILTIN, 'eval'},
+    {lexer.OPERATOR, '('},
+    {lexer.CONSTANT_BUILTIN, 'arguments'},
+    {lexer.OPERATOR, ')'},
+    {lexer.OPERATOR, ','},
+    {lexer.IDENTIFIER, 'bar'},
+    {lexer.OPERATOR, '.'},
+    {lexer.FUNCTION_METHOD, 'baz'},
+    {lexer.OPERATOR, '('}, {lexer.OPERATOR, ')'},
+    {lexer.OPERATOR, ','},
+    {lexer.TYPE, 'Object'},
+    {lexer.OPERATOR, ')'},
+    {lexer.OPERATOR, ';'},
+    {tag_chars, '</'}, {lexer.TAG, 'script'}, {tag_chars, '>'},
+    {tag_chars, '</'}, {lexer.TAG, 'HEAD'}, {tag_chars, '>'},
+    {tag_chars, '<'},
+    {lexer.TAG .. '.unknown', 'bod'},
+    {lexer.ATTRIBUTE .. '.unknown', 'clss'}, {lexer.DEFAULT, '='}, {lexer.STRING, '"unknown"'},
+    {tag_chars, '>'},
+    {tag_chars, '<'},
+    {lexer.TAG .. '.single', 'hr'},
+    {lexer.ATTRIBUTE, 'tabindex'}, {lexer.DEFAULT, '='}, {lexer.NUMBER, '1'},
+    {tag_chars, '/>'},
+    {'entity', '&copy;'},
+    {tag_chars, '</'}, {lexer.TAG, 'html'}, {tag_chars, '>'}
   }
   -- LuaFormatter on
   assert_lex(html, code, tags)
@@ -853,8 +893,7 @@ function test_html()
   -- Folding tests.
   local symbols = {'<', '<!--', '-->', '{', '}', '/*', '*/', '//'}
   for i = 1, #symbols do assert(html._fold_points._symbols[symbols[i]]) end
-  assert(html._fold_points['element']['<'])
-  assert(html._fold_points['unknown_element']['<'])
+  assert(html._fold_points[lexer.TAG .. '.chars']['<'])
   assert(html._fold_points[lexer.COMMENT]['<!--'])
   assert(html._fold_points[lexer.COMMENT]['-->'])
   assert(html._fold_points[lexer.OPERATOR]['{'])
@@ -894,22 +933,30 @@ function test_php()
   local php = lexer.load('php')
   assert(php._name == 'php')
   assert_default_tags(php)
-  assert_extra_tags(php, {'whitespace.php', 'php_tag'})
+  assert_extra_tags(php, {'whitespace.php', lexer.TAG .. '.php'})
 
   -- Lexing tests
   -- Starting in HTML.
-  local code = [[<h1><?php echo "hi"; ?></h1>]]
+  local code = [[<h1><?php echo "hi" . PHP_OS . foo() . bar->baz(); ?></h1>]]
+  local tag_chars = lexer.TAG .. '.chars'
   -- LuaFormatter off
   local tags = {
-    {'element', '<h1'},
-    {'element', '>'},
-    {'php_tag', '<?php '},
+    {tag_chars, '<'}, {lexer.TAG, 'h1'}, {tag_chars, '>'},
+    {lexer.TAG .. '.php', '<?php '},
     {lexer.KEYWORD, 'echo'},
     {lexer.STRING, '"hi"'},
+    {lexer.OPERATOR, '.'},
+    {lexer.CONSTANT_BUILTIN, 'PHP_OS'},
+    {lexer.OPERATOR, '.'},
+    {lexer.FUNCTION, 'foo'}, {lexer.OPERATOR, '('}, {lexer.OPERATOR, ')'},
+    {lexer.OPERATOR, '.'},
+    {lexer.IDENTIFIER, 'bar'},
+    {lexer.OPERATOR, '-'}, {lexer.OPERATOR, '>'},
+    {lexer.FUNCTION_METHOD, 'baz'},
+    {lexer.OPERATOR, '('}, {lexer.OPERATOR, ')'},
     {lexer.OPERATOR, ';'},
-    {'php_tag', '?>'},
-    {'element', '</h1'},
-    {'element', '>'}
+    {lexer.TAG .. '.php', '?>'},
+    {tag_chars, '</'}, {lexer.TAG, 'h1'}, {tag_chars, '>'}
   }
   -- LuaFormatter on
   local initial_style = php._TAGS['whitespace.html']
@@ -933,8 +980,8 @@ function test_php()
   -- Folding tests.
   local symbols = {'<?', '?>', '/*', '*/', '//', '#', '{', '}', '(', ')'}
   for i = 1, #symbols do assert(php._fold_points._symbols[symbols[i]]) end
-  assert(php._fold_points['php_tag']['<?'])
-  assert(php._fold_points['php_tag']['?>'])
+  assert(php._fold_points[lexer.TAG .. '.php']['<?'])
+  assert(php._fold_points[lexer.TAG .. '.php']['?>'])
   assert(php._fold_points[lexer.COMMENT]['/*'])
   assert(php._fold_points[lexer.COMMENT]['*/'])
   assert(php._fold_points[lexer.COMMENT]['//'])
@@ -954,13 +1001,15 @@ function test_ruby()
     # Comment.
     require "foo"
     $a = 1 + 2.0e3 - 0x40 if true
-    b = "two" + %q[three]
-    puts :c
+    b = "two" + %q[three] + <<-FOUR
+      four
+    FOUR
+    puts :c, foo.puts
   ]]
   -- LuaFormatter off
   local tags = {
     {lexer.COMMENT, '# Comment.'},
-    {lexer.FUNCTION, 'require'},
+    {lexer.FUNCTION_BUILTIN, 'require'},
     {lexer.STRING, '"foo"'},
     {lexer.VARIABLE, '$a'},
     {lexer.OPERATOR, '='},
@@ -976,16 +1025,20 @@ function test_ruby()
     {lexer.STRING, '"two"'},
     {lexer.OPERATOR, '+'},
     {lexer.STRING, '%q[three]'},
-    {lexer.FUNCTION, 'puts'},
-    {'symbol', ':c'}
+    {lexer.OPERATOR, '+'},
+    {lexer.STRING, '<<-FOUR\n      four\n    FOUR'},
+    {lexer.FUNCTION_BUILTIN, 'puts'},
+    {'symbol', ':c'},
+    {lexer.OPERATOR, ','},
+    {lexer.IDENTIFIER, 'foo'}, {lexer.OPERATOR, '.'}, {lexer.IDENTIFIER, 'puts'}
   }
   -- LuaFormatter on
   assert_lex(ruby, code, tags)
 
   -- Folding tests.
   local fold_keywords = {
-    begin = 1, class = 1, def = 1, ['do'] = 1, ['for'] = 1, ['module'] = 1, case = 1,
-    ['if'] = function() end, ['while'] = function() end, ['unless'] = function() end,
+    begin = 1, class = 1, def = 1, ['do'] = 1, ['for'] = 1, module = 1, case = 1,
+    ['if'] = function() end, ['while'] = function() end, unless = function() end,
     ['until'] = function() end, ['end'] = -1
   }
   for k, v in pairs(fold_keywords) do
@@ -1028,7 +1081,7 @@ function test_ruby()
   assert_fold_points(ruby, code, folds)
 end
 
--- Tests the Ruby and Rails lexers and tests lexer caching and lack of caching.
+-- Tests the Ruby and Rails lexers.
 -- The Rails lexer inherits from Ruby and modifies some of its rules. Verify the Ruby lexer
 -- is unaffected.
 function test_ruby_and_rails()
@@ -1045,10 +1098,9 @@ function test_ruby_and_rails()
     {lexer.IDENTIFIER, 'Foo'},
     {lexer.OPERATOR, '<'},
     {lexer.IDENTIFIER, 'ActiveRecord'},
-    {lexer.OPERATOR, ':'},
-    {lexer.OPERATOR, ':'},
+    {lexer.OPERATOR, ':'}, {lexer.OPERATOR, ':'},
     {lexer.IDENTIFIER, 'Base'},
-    {lexer.IDENTIFIER, 'has_one'},
+    {lexer.IDENTIFIER, 'has_one'}, -- function.builtin in rails
     {'symbol', ':bar'},
     {lexer.KEYWORD, 'end'}
   }
@@ -1061,10 +1113,9 @@ function test_ruby_and_rails()
     {lexer.IDENTIFIER, 'Foo'},
     {lexer.OPERATOR, '<'},
     {lexer.IDENTIFIER, 'ActiveRecord'},
-    {lexer.OPERATOR, ':'},
-    {lexer.OPERATOR, ':'},
+    {lexer.OPERATOR, ':'}, {lexer.OPERATOR, ':'},
     {lexer.IDENTIFIER, 'Base'},
-    {lexer.FUNCTION, 'has_one'},
+    {lexer.FUNCTION_BUILTIN, 'has_one'},
     {'symbol', ':bar'},
     {lexer.KEYWORD, 'end'}
   }
@@ -1078,27 +1129,32 @@ function test_rhtml()
 
   -- Lexing tests.
   -- Start in HTML.
-  local code = [[<h1><% puts "hi" %></h1>]]
+  local code = [[<h1><% puts "hi" + link_to "foo" @foo %></h1>]]
+  local tag_chars = lexer.TAG .. '.chars'
   -- LuaFormatter off
   local rhtml_tags = {
-    {'element', '<h1'},
-    {'element', '>'},
+    {tag_chars,'<'}, {lexer.TAG, 'h1'}, {tag_chars, '>'},
     {'rhtml_tag', '<%'},
-    {lexer.FUNCTION, 'puts'},
-    {lexer.STRING, '"hi"'},
+    {lexer.FUNCTION_BUILTIN, 'puts'}, {lexer.STRING, '"hi"'},
+    {lexer.OPERATOR, '+'},
+    {lexer.FUNCTION_BUILTIN, 'link_to'},
+    {lexer.STRING, '"foo"'},
+    {lexer.VARIABLE, '@foo'},
     {'rhtml_tag', '%>'},
-    {'element', '</h1'},
-    {'element', '>'}
+    {tag_chars, '</'}, {lexer.TAG, 'h1'}, {tag_chars, '>'}
   }
   -- LuaFormatter on
   local initial_style = rhtml._TAGS['whitespace.html']
   assert_lex(rhtml, code, rhtml_tags, initial_style)
   -- Start in Ruby.
-  code = [[puts "hi"]]
+  code = [[puts "hi" + link_to "foo" @foo]]
   -- LuaFormatter off
   rhtml_tags = {
-    {lexer.FUNCTION, 'puts'},
-    {lexer.STRING, '"hi"'}
+    {lexer.FUNCTION_BUILTIN, 'puts'}, {lexer.STRING, '"hi"'},
+    {lexer.OPERATOR, '+'},
+    {lexer.FUNCTION_BUILTIN, 'link_to'},
+    {lexer.STRING, '"foo"'},
+    {lexer.VARIABLE, '@foo'},
   }
   -- LuaFormatter on
   initial_style = rhtml._TAGS['whitespace.rails']

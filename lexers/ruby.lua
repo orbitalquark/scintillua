@@ -1,32 +1,17 @@
 -- Copyright 2006-2022 Mitchell. See LICENSE.
 -- Ruby LPeg lexer.
 
-local lexer = require('lexer')
-local word_match = lexer.word_match
+local lexer = lexer
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new('ruby')
-
--- Whitespace.
-lex:add_rule('whitespace', lex:tag(lexer.WHITESPACE, lexer.space^1))
+local lex = lexer.new(...)
 
 -- Keywords.
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, word_match{
-  'BEGIN', 'END', 'alias', 'and', 'begin', 'break', 'case', 'class', 'def', 'defined?', 'do',
-  'else', 'elsif', 'end', 'ensure', 'false', 'for', 'if', 'in', 'module', 'next', 'nil', 'not',
-  'or', 'redo', 'rescue', 'retry', 'return', 'self', 'super', 'then', 'true', 'undef', 'unless',
-  'until', 'when', 'while', 'yield', '__FILE__', '__LINE__'
-}))
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD)))
 
 -- Functions.
-lex:add_rule('function', lex:tag(lexer.FUNCTION, word_match{
-  'at_exit', 'autoload', 'binding', 'caller', 'catch', 'chop', 'chop!', 'chomp', 'chomp!', 'eval',
-  'exec', 'exit', 'exit!', 'extend', 'fail', 'fork', 'format', 'gets', 'global_variables', 'gsub',
-  'gsub!', 'include', 'iterator?', 'lambda', 'load', 'local_variables', 'loop', 'module_function',
-  'open', 'p', 'print', 'printf', 'proc', 'putc', 'puts', 'raise', 'rand', 'readline', 'readlines',
-  'require', 'require_relative', 'select', 'sleep', 'split', 'sprintf', 'srand', 'sub', 'sub!',
-  'syscall', 'system', 'test', 'trace_var', 'trap', 'untrace_var'
-}) * -S('.:|'))
+local builtin_func = lex:tag(lexer.FUNCTION_BUILTIN, lex:get_word_list(lexer.FUNCTION_BUILTIN))
+lex:add_rule('function', -lpeg.B('.') * builtin_func * -S('.:|'))
 
 -- Identifiers.
 local word_char = lexer.alnum + S('_!?')
@@ -66,7 +51,7 @@ local heredoc = '<<' * P(function(input, index)
   local s, e, indented, _, delimiter = input:find('([%-~]?)(["`]?)([%a_][%w_]*)%2[\n\r\f;]+', index)
   if s == index and delimiter then
     local end_heredoc = (#indented > 0 and '[\n\r\f]+ *' or '[\n\r\f]+')
-    e = select(2, input:find(end_heredoc .. delimiter, e))
+    s, e = input:find(end_heredoc .. delimiter, e)
     return e and e + 1 or #input + 1
   end
 end)
@@ -123,5 +108,22 @@ lex:add_fold_point(lexer.OPERATOR, '[', ']')
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
 lex:add_fold_point(lexer.COMMENT, '=begin', '=end')
 lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('#'))
+
+-- Word lists.
+lex:set_word_list(lexer.KEYWORD, {
+  'BEGIN', 'END', 'alias', 'and', 'begin', 'break', 'case', 'class', 'def', 'defined?', 'do',
+  'else', 'elsif', 'end', 'ensure', 'false', 'for', 'if', 'in', 'module', 'next', 'nil', 'not',
+  'or', 'redo', 'rescue', 'retry', 'return', 'self', 'super', 'then', 'true', 'undef', 'unless',
+  'until', 'when', 'while', 'yield', '__FILE__', '__LINE__'
+})
+
+lex:set_word_list(lexer.FUNCTION_BUILTIN, {
+  'at_exit', 'autoload', 'binding', 'caller', 'catch', 'chop', 'chop!', 'chomp', 'chomp!', 'eval',
+  'exec', 'exit', 'exit!', 'extend', 'fail', 'fork', 'format', 'gets', 'global_variables', 'gsub',
+  'gsub!', 'include', 'iterator?', 'lambda', 'load', 'local_variables', 'loop', 'module_function',
+  'open', 'p', 'print', 'printf', 'proc', 'putc', 'puts', 'raise', 'rand', 'readline', 'readlines',
+  'require', 'require_relative', 'select', 'sleep', 'split', 'sprintf', 'srand', 'sub', 'sub!',
+  'syscall', 'system', 'test', 'trace_var', 'trap', 'untrace_var'
+})
 
 return lex
