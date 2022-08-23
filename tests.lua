@@ -44,7 +44,7 @@ end
 -- @param rules The ordered list of rule names the lexer should have.
 function assert_rules(lex, rules)
   if rules[1] ~= 'whitespace' then table.insert(rules, 1, 'whitespace') end -- auto-added
-  if not lex._lexer then
+  if not lex._lexer and not lex._no_user_word_lists then
     for i = 1, lexer.num_user_word_lists do table.insert(rules, i + 1, 'userlist' .. i) end -- auto-added
   end
   local j = 1

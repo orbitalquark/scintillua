@@ -764,7 +764,7 @@ M.num_user_word_lists = 4
 -- @usage local annotation = lex:tag('annotation', '@' * lexer.word)
 -- @name tag
 function M.tag(lexer, name, patt)
-  if not lexer._TAGS[name] then
+  if not assert(lexer._TAGS, 'not a lexer instance')[name] then
     local num_styles = lexer._num_styles
     if num_styles == 33 then num_styles = num_styles + 8 end -- skip predefined
     assert(num_styles <= 256, 'too many styles defined (256 MAX)')
@@ -793,6 +793,14 @@ local function word_list_id(lexer, i) return lexer._name .. '_wordlist' .. i end
 -- @usage lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD)))
 -- @name get_word_list
 function M.get_word_list(lexer, name, case_insensitive)
+  if lexer._lexer then
+    -- If this lexer is a proxy (e.g. rails), get the true parent (ruby) in order to get the
+    -- parent's word list. If this lexer is a child embedding itself (e.g. php), continue
+    -- getting its word list, not the parent's (html).
+    local parent = lexer._lexer
+    if not parent._CHILDREN or not parent._CHILDREN[lexer] then lexer = parent end
+  end
+
   if not lexer._WORDLISTS then lexer._WORDLISTS = {case_insensitive = {}} end
   local i = lexer._WORDLISTS[name] or #lexer._WORDLISTS + 1
   lexer._WORDLISTS[name], lexer._WORDLISTS[i] = i, '' -- empty placeholder word list
@@ -814,7 +822,14 @@ end
 -- @see word_match
 -- @name set_word_list
 function M.set_word_list(lexer, name, word_list, append)
-  if lexer._lexer then lexer = lexer._lexer end -- proxy; get true parent
+  if lexer._lexer then
+    -- If this lexer is a proxy (e.g. rails), get the true parent (ruby) in order to set the
+    -- parent's word list. If this lexer is a child embedding itself (e.g. php), continue
+    -- setting its word list, not the parent's (html).
+    local parent = lexer._lexer
+    if not parent._CHILDREN or not parent._CHILDREN[lexer] then lexer = parent end
+  end
+
   assert(lexer._WORDLISTS, 'lexer has no word lists')
   local i = tonumber(lexer._WORDLISTS[name]) or name -- lexer._WORDLISTS[name] --> i
   if type(i) ~= 'number' or i > #lexer._WORDLISTS then return end -- silently return
@@ -901,7 +916,7 @@ function M.embed(lexer, child, start_rule, end_rule)
   if not child._end_rules then child._end_rules = {} end
   child._start_rules[lexer], child._end_rules[lexer] = start_rule, end_rule
   if not lexer._CHILDREN then lexer._CHILDREN = {} end
-  lexer._CHILDREN[#lexer._CHILDREN + 1] = child
+  lexer._CHILDREN[#lexer._CHILDREN + 1], lexer._CHILDREN[child] = child, true
 
   -- Add child tags.
   for name in pairs(child._extra_tags) do lexer:tag(name, true) end
@@ -912,6 +927,17 @@ function M.embed(lexer, child, start_rule, end_rule)
       if tag_name ~= '_symbols' then
         for symbol, v in pairs(symbols) do lexer:add_fold_point(tag_name, symbol, v) end
       end
+    end
+  end
+
+  -- Add child word lists.
+  if child._WORDLISTS then
+    for name, i in pairs(child._WORDLISTS) do
+      if type(name) ~= 'string' or type(i) ~= 'number' then goto continue end
+      name = child._name .. '.' .. name
+      lexer:get_word_list(name) -- for side effects
+      lexer:set_word_list(name, child._WORDLISTS[i])
+      ::continue::
     end
   end
 
@@ -1310,7 +1336,7 @@ function M.new(name, opts)
     _name = assert(name, 'lexer name expected'), _lex_by_line = opts and opts['lex_by_line'],
     _fold_by_indentation = opts and opts['fold_by_indentation'],
     _case_insensitive_fold_points = opts and opts['case_insensitive_fold_points'],
-    _lexer = opts and opts['inherit']
+    _no_user_word_lists = opts and opts['no_user_word_lists'], _lexer = opts and opts['inherit']
   }, {
     __index = {
       tag = M.tag, get_word_list = M.get_word_list, set_word_list = M.set_word_list,
@@ -1332,7 +1358,7 @@ function M.new(name, opts)
   lexer:add_rule('whitespace', lexer:tag('whitespace.' .. name, M.space^1))
 
   -- Add placeholders for user-defined word lists.
-  if not lexer._lexer and not opts or not opts['no_user_word_lists'] then
+  if not lexer._lexer and not lexer._no_user_word_lists then
     for i = 1, M.num_user_word_lists do
       local name = 'userlist' .. i
       lexer:add_rule(name, lexer:tag(name, lexer:get_word_list(name)))
