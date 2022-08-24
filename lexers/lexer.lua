@@ -1150,8 +1150,7 @@ function M.lex(lexer, text, init_style)
   if lexer._lex_by_line then
     local function append(tags, line_tags, offset)
       for i = 1, #line_tags, 2 do
-        tags[#tags + 1] = line_tags[i]
-        tags[#tags + 1] = line_tags[i + 1] + offset
+        tags[#tags + 1], tags[#tags + 2] = line_tags[i], line_tags[i + 1] + offset
       end
     end
     local tags = {}
@@ -1161,7 +1160,9 @@ function M.lex(lexer, text, init_style)
       if line_tags then append(tags, line_tags, offset) end
       offset = offset + #line
       -- Use the default tag to the end of the line if none was specified.
-      if tags[#tags] ~= offset then tags[#tags + 1], tags[#tags + 2] = 'default', offset + 1 end
+      if tags[#tags] ~= offset + 1 then
+        tags[#tags + 1], tags[#tags + 2] = 'default', offset + 1
+      end
     end
     return tags
   end
@@ -1380,6 +1381,7 @@ end
 -- @return lexer object
 -- @name load
 function M.load(name, alt_name)
+  assert(name, 'no lexer given')
   -- When using Scintillua as a stand-alone module, the `property` and `property_int` tables
   -- do not exist (they are not useful). Create them in order prevent errors from occurring.
   if not M.property then
@@ -1515,17 +1517,23 @@ function M.range(s, e, single_line, escapes, balanced)
   return s * any^0 * P(e)^-1
 end
 
+local indent_chars = {[string.byte(' ')] = true, [string.byte('\t')] = true}
+
 local newline_chars = {}
 for _, byte in utf8.codes('\n\r\f') do newline_chars[byte] = true end
 ---
--- Creates and returns a pattern that matches pattern *patt* only at the beginning of a line.
+-- Creates and returns a pattern that matches pattern *patt* only at the beginning of a line,
+-- or after any line indentation if *allow_indent* is `true`.
 -- @param patt The LPeg pattern to match on the beginning of a line.
+-- @param allow_indent Whether or not to consider line indentation as the start of a line. The
+--   default value is `false`.
 -- @return pattern
 -- @usage local preproc = lex:tag(lexer.PREPROCESSOR, lexer.starts_line(lexer.to_eol('#')))
 -- @name starts_line
-function M.starts_line(patt)
+function M.starts_line(patt, allow_indent)
   return Cmt(C(patt), function(input, index, match, ...)
     local pos = index - #match
+    if allow_indent then while pos > 1 and indent_chars[input:byte(pos - 1)] do pos = pos - 1 end end
     if pos == 1 or newline_chars[input:byte(pos - 1)] then return index, ... end
   end)
 end
@@ -1584,7 +1592,7 @@ function M.word_match(word_list, case_insensitive)
   if word_chars ~= '' then chars = chars + S(word_chars) end
 
   -- Optimize small word sets as ordered choice.
-  if #word_list < 5 and not case_insensitive then
+  if #word_list <= 6 and not case_insensitive then
     local choice = P(false)
     for _, word in ipairs(word_list) do choice = choice + word:match('%S+') end
     return choice * -chars
@@ -1597,7 +1605,6 @@ function M.word_match(word_list, case_insensitive)
 end
 
 local LF, CR = string.byte('\n'), string.byte('\r')
-local indent_chars = {[string.byte(' ')] = true, [string.byte('\t')] = true}
 
 -- Determines if the previous line is a comment.
 -- This is used for determining if the current comment line is a fold point.
