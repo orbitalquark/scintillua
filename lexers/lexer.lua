@@ -739,7 +739,8 @@ M.styles = setmetatable({}, { -- legacy
 local default = {
   'nothing', 'whitespace', 'comment', 'string', 'number', 'keyword', 'identifier', 'operator',
   'error', 'preprocessor', 'constant', 'variable', 'function', 'class', 'type', 'label', 'regex',
-  'embedded', 'function.builtin', 'constant.builtin', 'function.method', 'tag', 'attribute'
+  'embedded', 'function.builtin', 'constant.builtin', 'function.method', 'tag', 'attribute',
+  'variable.builtin'
 }
 for _, name in ipairs(default) do M[name:upper():gsub('%.', '_')] = name end
 -- Names for predefined Scintilla styles.

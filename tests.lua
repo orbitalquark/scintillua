@@ -1180,6 +1180,135 @@ function test_vb_folding()
   assert_fold_points(vb, code, folds)
 end
 
+function test_makefile()
+  local makefile = lexer.load('makefile')
+
+  local code = ([[
+    # Comment.
+    .DEFAULT_GOAL := all
+    foo ?= bar=baz
+    all: $(foo)
+    $(foo): ; echo 'hi'
+
+    .PHONY: docs
+    define build-cc =
+      $(CC) ${CFLAGS} -c $< -o $@
+    endef
+     func = $(call quux, ${adsuffix .o, $(1)})
+     echo = $(shell echo $PATH)
+  ]]):gsub('    ', ''):gsub('  ', '\t') -- strip indent, convert to tabs
+  -- LuaFormatter off
+  local tags = {
+    {lexer.COMMENT, '# Comment.'},
+    {lexer.VARIABLE_BUILTIN, '.DEFAULT_GOAL'}, {lexer.OPERATOR, ':='}, {lexer.IDENTIFIER, 'all'},
+    {lexer.VARIABLE, 'foo'},
+    {lexer.OPERATOR, '?='},
+    {lexer.IDENTIFIER, 'bar'}, {lexer.DEFAULT, '='}, {lexer.IDENTIFIER, 'baz'},
+    {lexer.IDENTIFIER, 'all'}, {lexer.OPERATOR, ':'},
+    {lexer.OPERATOR, '$('}, {lexer.VARIABLE, 'foo'}, {lexer.OPERATOR, ')'},
+    {lexer.OPERATOR, '$('}, {lexer.VARIABLE, 'foo'}, {lexer.OPERATOR, ')'},
+    {lexer.OPERATOR, ':'}, {lexer.OPERATOR, ';'},
+    {lexer.FUNCTION_BUILTIN, 'echo'}, {lexer.STRING, "'hi'"},
+    {lexer.CONSTANT_BUILTIN, '.PHONY'}, {lexer.OPERATOR, ':'}, {lexer.IDENTIFIER, 'docs'},
+    {lexer.KEYWORD, 'define'}, {lexer.FUNCTION, 'build-cc'}, {lexer.OPERATOR, '='},
+    {lexer.OPERATOR, '$('}, {lexer.VARIABLE_BUILTIN, 'CC'}, {lexer.OPERATOR, ')'},
+    {lexer.OPERATOR, '${'}, {lexer.VARIABLE_BUILTIN, 'CFLAGS'}, {lexer.OPERATOR, '}'},
+    {lexer.DEFAULT, '-'}, {lexer.IDENTIFIER, 'c'},
+    {lexer.OPERATOR, '$'}, {lexer.VARIABLE_BUILTIN, '<'},
+    {lexer.DEFAULT, '-'}, {lexer.IDENTIFIER, 'o'},
+    {lexer.OPERATOR, '$'}, {lexer.VARIABLE_BUILTIN, '@'},
+    {lexer.KEYWORD, 'endef'},
+    {lexer.FUNCTION, 'func'},
+    {lexer.OPERATOR, '='},
+    {lexer.OPERATOR, '$('},
+    {lexer.FUNCTION_BUILTIN, 'call'},
+    {lexer.FUNCTION, 'quux'},
+    {lexer.DEFAULT, ','},
+    {lexer.OPERATOR, '${'},
+    {lexer.VARIABLE, 'adsuffix'}, -- typo should not be tagged as FUNCTION_BUILTIN
+    {lexer.IDENTIFIER, '.o'},
+    {lexer.DEFAULT, ','},
+    {lexer.OPERATOR, '$('}, {lexer.VARIABLE, '1'}, {lexer.OPERATOR, ')'},
+    {lexer.OPERATOR, '}'},
+    {lexer.OPERATOR, ')'},
+    {lexer.VARIABLE, 'echo'},
+    {lexer.OPERATOR, '='},
+    {lexer.OPERATOR, '$('},
+    {lexer.FUNCTION_BUILTIN, 'shell'},
+    {lexer.FUNCTION_BUILTIN, 'echo'}, {lexer.OPERATOR, '$'}, {lexer.VARIABLE_BUILTIN, 'PATH'},
+    {lexer.OPERATOR, ')'}
+  }
+  -- LuaFormatter on
+  assert_lex(makefile, code, tags)
+end
+
+function test_bash()
+  local bash = lexer.load('bash')
+
+  local code = [=[
+    # Comment.
+    foo=bar=baz:$PATH
+    echo -n $foo 1>&2
+    if [ ! -z "foo" -a 0 -ne 1 ]; then
+      quux=$((1 - 2 / 0x3))
+    elif [[ -d /foo/bar-baz.quux ]]; then
+      foo=$?
+    fi
+    s=<<-"END"
+      foobar
+    END
+  ]=]
+  -- LuaFormatter off
+  local tags = {
+    {lexer.COMMENT, '# Comment.'},
+    {lexer.VARIABLE, 'foo'},
+    {lexer.OPERATOR, '='},
+    {lexer.IDENTIFIER, 'bar'}, {lexer.DEFAULT, '='}, {lexer.IDENTIFIER, 'baz'},
+    {lexer.DEFAULT, ':'},
+    {lexer.OPERATOR, '$'}, {lexer.VARIABLE_BUILTIN, 'PATH'},
+    {lexer.FUNCTION_BUILTIN, 'echo'},
+    {lexer.DEFAULT, '-'}, {lexer.IDENTIFIER, 'n'},
+    {lexer.OPERATOR, '$'}, {lexer.VARIABLE, 'foo'},
+    {lexer.NUMBER, '1'}, {lexer.OPERATOR, '>'}, {lexer.OPERATOR, '&'}, {lexer.NUMBER, '2'},
+    {lexer.KEYWORD, 'if'},
+    {lexer.OPERATOR, '['},
+    {lexer.OPERATOR, '!'},
+    {lexer.OPERATOR, '-z'}, {lexer.STRING, '"foo"'},
+    {lexer.OPERATOR, '-a'},
+    {lexer.NUMBER, '0'}, {lexer.OPERATOR, '-ne'}, {lexer.NUMBER, '1'},
+    {lexer.OPERATOR, ']'},
+    {lexer.OPERATOR, ';'}, {lexer.KEYWORD, 'then'},
+    {lexer.VARIABLE, 'quux'},
+    {lexer.OPERATOR, '='},
+    {lexer.OPERATOR, '$'}, {lexer.OPERATOR, '('}, {lexer.OPERATOR, '('},
+    {lexer.NUMBER, '1'},
+    {lexer.OPERATOR, '-'},
+    {lexer.NUMBER, '2'},
+    {lexer.OPERATOR, '/'},
+    {lexer.NUMBER, '0x3'},
+    {lexer.OPERATOR, ')'}, {lexer.OPERATOR, ')'},
+    {lexer.KEYWORD, 'elif'},
+    {lexer.OPERATOR, '['}, {lexer.OPERATOR, '['},
+    {lexer.OPERATOR, '-d'},
+    {lexer.DEFAULT, '/'},
+    {lexer.IDENTIFIER, 'foo'},
+    {lexer.DEFAULT, '/'},
+    {lexer.IDENTIFIER, 'bar'},
+    {lexer.DEFAULT, '-'},
+    {lexer.IDENTIFIER, 'baz'},
+    {lexer.DEFAULT, '.'},
+    {lexer.IDENTIFIER, 'quux'},
+    {lexer.OPERATOR, ']'}, {lexer.OPERATOR, ']'}, {lexer.OPERATOR, ';'}, {lexer.KEYWORD, 'then'},
+    {lexer.VARIABLE, 'foo'},
+    {lexer.OPERATOR, '='},
+    {lexer.OPERATOR, '$'}, {lexer.VARIABLE_BUILTIN, '?'},
+    {lexer.KEYWORD, 'fi'},
+    {lexer.VARIABLE, 's'}, {lexer.OPERATOR, '='}, {lexer.STRING, '<<-"END"\n      foobar\n    END'},
+  }
+  -- LuaFormatter on
+  assert_lex(bash, code, tags)
+end
+
 function test_legacy()
   local lex = lexer.new('test')
   local ws = lexer.token(lexer.WHITESPACE, lexer.space^1)
