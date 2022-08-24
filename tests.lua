@@ -174,6 +174,10 @@ function test_starts_line()
   assert(lexer.starts_line('#'):match('#foo') == 2)
   assert(lexer.starts_line('#'):match('\n#foo', 2) == 3)
   assert(not lexer.starts_line('#'):match(' #foo', 2))
+  assert(lexer.starts_line('#', true):match(' #foo', 2) == 3)
+  assert(lexer.starts_line('#', true):match('\t#foo', 2) == 3)
+  assert(lexer.starts_line('#', true):match('\n\t#foo', 3) == 4)
+  assert(not lexer.starts_line('#', true):match('\n.#foo', 3))
 end
 
 function test_last_char_includes()
