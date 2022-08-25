@@ -1226,6 +1226,90 @@ function test_bash()
   assert_lex(bash, code, tags)
 end
 
+function test_cpp()
+  local cpp = lexer.load('cpp')
+
+  local code = [=[
+    /*/*Comment.*///
+    #include <string>
+    #include "header.h"
+    #  undef FOO
+    [[deprecated]]
+    class Foo : public Bar {
+      Foo();
+      ~Foo();
+    private:
+      std::string mFoo = u8"foo";
+      int mBar = 1;
+    };
+
+    Foo::Foo() {
+      std::clog << std::abs(strlen(mFoo.c_str()));
+      this->bar(1'000 + 0xFF'00 - 0b11'00);
+      std::sort(
+    }
+  ]=]
+  local tags = {
+    lexer.COMMENT, '/*/*Comment.*/', lexer.COMMENT, '//', --
+    lexer.PREPROCESSOR, '#include', lexer.STRING, '<string>', --
+    lexer.PREPROCESSOR, '#include', lexer.STRING, '"header.h"', --
+    lexer.PREPROCESSOR, '#  undef', lexer.IDENTIFIER, 'FOO', --
+    lexer.ATTRIBUTE, '[[deprecated]]', --
+    lexer.KEYWORD, 'class', lexer.IDENTIFIER, 'Foo', --
+    lexer.OPERATOR, ':', --
+    lexer.KEYWORD, 'public', lexer.IDENTIFIER, 'Bar', --
+    lexer.OPERATOR, '{', --
+    lexer.FUNCTION, 'Foo', lexer.OPERATOR, '(', lexer.OPERATOR, ')', lexer.OPERATOR, ';', --
+    lexer.OPERATOR, '~', --
+    lexer.FUNCTION, 'Foo', --
+    lexer.OPERATOR, '(', lexer.OPERATOR, ')', --
+    lexer.OPERATOR, ';', --
+    lexer.KEYWORD, 'private', lexer.OPERATOR, ':', --
+    lexer.TYPE .. '.stl', 'std::string', --
+    lexer.IDENTIFIER, 'mFoo', --
+    lexer.OPERATOR, '=', --
+    lexer.STRING, 'u8"foo"', --
+    lexer.OPERATOR, ';', --
+    lexer.TYPE, 'int', --
+    lexer.IDENTIFIER, 'mBar', --
+    lexer.OPERATOR, '=', --
+    lexer.NUMBER, '1', --
+    lexer.OPERATOR, ';', --
+    lexer.OPERATOR, '}', lexer.OPERATOR, ';', --
+    lexer.IDENTIFIER, 'Foo', --
+    lexer.OPERATOR, ':', lexer.OPERATOR, ':', --
+    lexer.FUNCTION, 'Foo', --
+    lexer.OPERATOR, '(', lexer.OPERATOR, ')', --
+    lexer.OPERATOR, '{', --
+    lexer.CONSTANT_BUILTIN .. '.stl', 'std::clog', --
+    lexer.OPERATOR, '<', lexer.OPERATOR, '<', lexer.FUNCTION_BUILTIN, 'std::abs', --
+    lexer.OPERATOR, '(', --
+    lexer.FUNCTION_BUILTIN, 'strlen', --
+    lexer.OPERATOR, '(', --
+    lexer.IDENTIFIER, 'mFoo', --
+    lexer.OPERATOR, '.', --
+    lexer.FUNCTION_METHOD, 'c_str', lexer.OPERATOR, '(', lexer.OPERATOR, ')', --
+    lexer.OPERATOR, ')', --
+    lexer.OPERATOR, ')', --
+    lexer.OPERATOR, ';', --
+    lexer.KEYWORD, 'this', --
+    lexer.OPERATOR, '-', lexer.OPERATOR, '>', --
+    lexer.FUNCTION_METHOD, 'bar', --
+    lexer.OPERATOR, '(', --
+    lexer.NUMBER, "1'000", --
+    lexer.OPERATOR, '+', --
+    lexer.NUMBER, "0xFF'00", --
+    lexer.OPERATOR, '-', --
+    lexer.NUMBER, "0b11'00", --
+    lexer.OPERATOR, ')', --
+    lexer.OPERATOR, ';', --
+    lexer.FUNCTION_BUILTIN .. '.stl', 'std::sort', --
+    lexer.OPERATOR, '(', --
+    lexer.OPERATOR, '}'
+  }
+  assert_lex(cpp, code, tags)
+end
+
 function test_legacy()
   local lex = lexer.new('test')
   local ws = lexer.token(lexer.WHITESPACE, lexer.space^1)
