@@ -713,7 +713,7 @@ local M = {}
 module('lexer')]=]
 
 local lpeg = lpeg or require('lpeg') -- Scintillua's Lua environment defines _G.lpeg
-local P, R, S, V = lpeg.P, lpeg.R, lpeg.S, lpeg.V
+local P, R, S, V, B = lpeg.P, lpeg.R, lpeg.S, lpeg.V, lpeg.B
 local Ct, Cc, Cp, Cmt, C = lpeg.Ct, lpeg.Cc, lpeg.Cp, lpeg.Cmt, lpeg.C
 
 -- Searches for the given *name* in the given *path*.
@@ -1532,11 +1532,15 @@ for _, byte in utf8.codes('\n\r\f') do newline_chars[byte] = true end
 -- @usage local preproc = lex:tag(lexer.PREPROCESSOR, lexer.starts_line(lexer.to_eol('#')))
 -- @name starts_line
 function M.starts_line(patt, allow_indent)
-  return Cmt(C(patt), function(input, index, match, ...)
-    local pos = index - #match
-    if allow_indent then while pos > 1 and indent_chars[input:byte(pos - 1)] do pos = pos - 1 end end
-    if pos == 1 or newline_chars[input:byte(pos - 1)] then return index, ... end
-  end)
+  local starts_line = (B(S('\r\n\f')) + -B(1)) * patt
+  if allow_indent then
+    starts_line = starts_line + Cmt(C(patt), function(input, index, match, ...)
+      local pos = index - #match
+      while pos > 1 and indent_chars[input:byte(pos - 1)] do pos = pos - 1 end
+      if pos == 1 or newline_chars[input:byte(pos - 1)] then return index, ... end
+    end)
+  end
+  return starts_line
 end
 
 local space_chars = {}
