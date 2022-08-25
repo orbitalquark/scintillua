@@ -61,11 +61,10 @@ lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.to_eol('#')))
 local bash = lexer.load('bash')
 bash:modify_rule('variable',
   lex:tag(lexer.VARIABLE, '$$' * word) + func + var + bash:get_rule('variable'))
-bash:add_rule('makefile_variable', func + var)
 local bash_start_rule = lex:tag(lexer.WHITESPACE, '\t') + lex:tag(lexer.OPERATOR, ';')
 local bash_end_rule = lex:tag(lexer.WHITESPACE, '\n')
 lex:embed(bash, bash_start_rule, bash_end_rule)
--- Embedded Bash in $(shell ...) variables.
+-- Embedded Bash in $(shell ...) calls.
 local shell = lexer.load('bash', 'shell')
 bash_start_rule = #P('$(shell') * func
 bash_end_rule = lex:tag(lexer.OPERATOR, -B('\\') * ')')
