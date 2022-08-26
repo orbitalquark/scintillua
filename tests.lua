@@ -18,8 +18,8 @@ lexer.FOLD_BASE, lexer.FOLD_HEADER, lexer.FOLD_BLANK = 0x400, 0x2000, 0x1000
 -- @param lex The lexer to style-check.
 function assert_default_tags(lex)
   local default_tags = {
-    'nothing', 'whitespace', 'comment', 'string', 'number', 'keyword', 'identifier', 'operator',
-    'error', 'preprocessor', 'constant', 'variable', 'function', 'class', 'type', 'label', 'regex',
+    'whitespace', 'comment', 'string', 'number', 'keyword', 'identifier', 'operator', 'error',
+    'preprocessor', 'constant', 'variable', 'function', 'class', 'type', 'label', 'regex',
     'embedded'
   }
   for i = 1, #default_tags do

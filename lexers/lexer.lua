@@ -739,7 +739,7 @@ M.styles = setmetatable({}, { -- legacy
 
 -- Default tags.
 local default = {
-  'nothing', 'whitespace', 'comment', 'string', 'number', 'keyword', 'identifier', 'operator',
+  'whitespace', 'comment', 'string', 'number', 'keyword', 'identifier', 'operator',
   'error', 'preprocessor', 'constant', 'variable', 'function', 'class', 'type', 'label', 'regex',
   'embedded', 'function.builtin', 'constant.builtin', 'function.method', 'tag', 'attribute',
   'variable.builtin'
@@ -1451,18 +1451,6 @@ M.number = M.float + M.integer
 
 M.word = (M.alpha + '_') * (M.alnum + '_')^0
 
--- Legacy function for creates and returns a token pattern with token name *name* and pattern
--- *patt*.
--- Use `tag()` instead.
--- @param name The name of token.
--- @param patt The LPeg pattern associated with the token.
--- @return pattern
--- @usage local number = token(lexer.NUMBER, lexer.number)
--- @usage local annotation = token('annotation', '@' * lexer.word)
--- @name token
--- @see tag
-function M.token(name, patt) return Cc(name) * (P(patt) / 0) * Cp() end
-
 ---
 -- Creates and returns a pattern that matches from string or pattern *prefix* until the end of
 -- the line.
@@ -1550,14 +1538,6 @@ end
 function M.starts_line(patt, allow_indent)
   return M.after_set('\r\n\v\f', patt, allow_indent and ' \t' or '')
 end
-
--- Legacy function that creates and returns a pattern that verifies the first non-whitespace
--- character behind the current match position is in string set *s*.
--- @param s String character set like one passed to `lpeg.S()`.
--- @return pattern
--- @usage local regex = #P('/') * lexer.last_char_includes('+-*!%^&|=,([{') * lexer.range('/')
--- @name last_char_includes
-function M.last_char_includes(s) return M.after_set(s, true) end
 
 ---
 -- Creates and returns a pattern that matches any single word in list or string *words*.
@@ -1669,6 +1649,26 @@ function M.fold_consecutive_lines(prefix)
     return 0
   end
 end
+
+-- Legacy function for creates and returns a token pattern with token name *name* and pattern
+-- *patt*.
+-- Use `tag()` instead.
+-- @param name The name of token.
+-- @param patt The LPeg pattern associated with the token.
+-- @return pattern
+-- @usage local number = token(lexer.NUMBER, lexer.number)
+-- @usage local annotation = token('annotation', '@' * lexer.word)
+-- @name token
+-- @see tag
+function M.token(name, patt) return Cc(name) * (P(patt) / 0) * Cp() end
+
+-- Legacy function that creates and returns a pattern that verifies the first non-whitespace
+-- character behind the current match position is in string set *s*.
+-- @param s String character set like one passed to `lpeg.S()`.
+-- @return pattern
+-- @usage local regex = #P('/') * lexer.last_char_includes('+-*!%^&|=,([{') * lexer.range('/')
+-- @name last_char_includes
+function M.last_char_includes(s) return M.after_set(s, true) end
 
 --[[ The functions and fields below were defined in C.
 
