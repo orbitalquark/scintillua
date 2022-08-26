@@ -4,7 +4,7 @@
 local lexer = lexer
 local P, S, B = lpeg.P, lpeg.S, lpeg.B
 
-local lex = lexer.new('cpp')
+local lex = lexer.new(...)
 
 -- Keywords.
 lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD)))
@@ -33,9 +33,9 @@ local stl_const = lex:tag(lexer.CONSTANT_BUILTIN .. '.stl',
 lex:add_rule('constants', stl_const + const)
 
 -- Strings.
-local sq_str = ('u8' + S('LuU'))^-1 * lexer.range("'", true)
-local dq_str = ('u8' + S('LuU'))^-1 * lexer.range('"', true)
-lex:add_rule('string', lex:tag(lexer.STRING, sq_str + dq_str))
+local sq_str = lexer.range("'", true)
+local dq_str = lexer.range('"', true)
+lex:add_rule('string', lex:tag(lexer.STRING, ('u8' + S('LuU'))^-1 * (sq_str + dq_str)))
 
 -- Identifiers.
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
