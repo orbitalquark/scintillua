@@ -505,24 +505,26 @@ local M = {}
 --    usual list of words to match. This allows users of your lexer to call `lex:set_word_list()`
 --    with their own set of words should they wish to.
 -- 5. Lexers no longer specify styling information. Remove any calls to `lex:add_style()`.
+-- 6. `lexer.starts_line()` has been deprecated in favor of the new [`lexer.after_set()`]().
+--    Use the character set and pattern as arguments to that new function.
 --
 -- As an example, consider the following sample legacy lexer:
 --
 --     local lexer = require('lexer')
---     local word_match = lexer.word_match
+--     local token, word_match = lexer.token, lexer.word_match
 --     local P, S = lpeg.P, lpeg.S
 --
 --     local lex = lexer.new('legacy')
 --
---     lex:add_rule('whitespace', lex:tag(lexer.WHITESPACE, lexer.space^1))
---     lex:add_rule('keyword', lex:tag(lexer.KEYWORD, word_match('foo bar baz')))
---     lex:add_rule('custom', lex:tag('custom', 'quux'))
+--     lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+--     lex:add_rule('keyword', token(lexer.KEYWORD, word_match('foo bar baz')))
+--     lex:add_rule('custom', token('custom', 'quux'))
 --     lex:add_style('custom', lexer.styles.keyword .. {bold = true})
---     lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
---     lex:add_rule('string', lex:tag(lexer.STRING, lexer.range('"')))
---     lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.to_eol('#')))
---     lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number))
---     lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('+-*/%^=<>,.()[]{}')))
+--     lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
+--     lex:add_rule('string', token(lexer.STRING, lexer.range('"')))
+--     lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('#')))
+--     lex:add_rule('number', token(lexer.NUMBER, lexer.number))
+--     lex:add_rule('operator', token(lexer.OPERATOR, S('+-*/%^=<>,.()[]{}')))
 --
 --     lex:add_fold_point(lexer.OPERATOR, '{', '}')
 --
@@ -1459,9 +1461,7 @@ M.word = (M.alpha + '_') * (M.alnum + '_')^0
 -- @usage local annotation = token('annotation', '@' * lexer.word)
 -- @name token
 -- @see tag
-function M.token(name, patt)
-  return Cc(name) * (P(patt) / 0) * Cp()
-end
+function M.token(name, patt) return Cc(name) * (P(patt) / 0) * Cp() end
 
 ---
 -- Creates and returns a pattern that matches from string or pattern *prefix* until the end of
@@ -1509,19 +1509,35 @@ function M.range(s, e, single_line, escapes, balanced)
   local any = M.any - e
   if single_line then any = any - '\n' end
   if balanced then any = any - s end
-  if escapes == nil then
-    -- Only allow escapes by default for ranges with identical, single-character string delimiters.
-    escapes = type(s) == 'string' and #s == 1 and s == e
-  end
+  -- Only allow escapes by default for ranges with identical, single-character string delimiters.
+  if escapes == nil then escapes = type(s) == 'string' and #s == 1 and s == e end
   if escapes then any = any - '\\' + '\\' * M.any end
   if balanced and s ~= e then return P{s * (any + V(1))^0 * P(e)^-1} end
   return s * any^0 * P(e)^-1
 end
 
-local indent_chars = {[string.byte(' ')] = true, [string.byte('\t')] = true}
+---
+-- Creates and returns a pattern that matches pattern *patt* only when it comes after one of
+-- the characters in string *set* (or when there are no characters behind *patt*), skipping
+-- over any characters in string *skip*, which is whitespace by default.
+-- @param set String character set like one passed to `lpeg.S()`.
+-- @param patt The LPeg pattern to match after a set character.
+-- @param skip String character set to skip over. The default value is ' \t\r\n\v\f' (whitespace).
+-- @usage local regex = lexer.after_set('+-*!%^&|=,([{', lexer.range('/'))
+-- @name after_set
+function M.after_set(set, patt, skip)
+  if not skip then skip = ' \t\r\n\v\f' end
+  local set_chars, skip_chars = {}, {}
+  for _, byte in utf8.codes(set) do set_chars[byte] = true end
+  for _, byte in utf8.codes(skip) do skip_chars[byte] = true end
+  return (B(S(set)) + -B(1)) * patt + Cmt(C(patt), function(input, index, match, ...)
+    local pos = index - #match
+    if #skip > 0 then while pos > 1 and skip_chars[input:byte(pos - 1)] do pos = pos - 1 end end
+    if pos == 1 or set_chars[input:byte(pos - 1)] then return index, ... end
+    return nil
+  end)
+end
 
-local newline_chars = {}
-for _, byte in utf8.codes('\n\r\v\f') do newline_chars[byte] = true end
 ---
 -- Creates and returns a pattern that matches pattern *patt* only at the beginning of a line,
 -- or after any line indentation if *allow_indent* is `true`.
@@ -1532,35 +1548,16 @@ for _, byte in utf8.codes('\n\r\v\f') do newline_chars[byte] = true end
 -- @usage local preproc = lex:tag(lexer.PREPROCESSOR, lexer.starts_line(lexer.to_eol('#')))
 -- @name starts_line
 function M.starts_line(patt, allow_indent)
-  local starts_line = (B(S('\r\n\v\f')) + -B(1)) * patt
-  if allow_indent then
-    starts_line = starts_line + Cmt(C(patt), function(input, index, match, ...)
-      local pos = index - #match
-      while pos > 1 and indent_chars[input:byte(pos - 1)] do pos = pos - 1 end
-      if pos == 1 or newline_chars[input:byte(pos - 1)] then return index, ... end
-    end)
-  end
-  return starts_line
+  return M.after_set('\r\n\v\f', patt, allow_indent and ' \t' or '')
 end
 
-local space_chars = {}
-for _, byte in utf8.codes(' \t\r\n\v\f') do space_chars[byte] = true end
----
--- Creates and returns a pattern that verifies the first non-whitespace character behind the
--- current match position is in string set *s*.
+-- Legacy function that creates and returns a pattern that verifies the first non-whitespace
+-- character behind the current match position is in string set *s*.
 -- @param s String character set like one passed to `lpeg.S()`.
 -- @return pattern
--- @usage local regex = lexer.last_char_includes('+-*!%^&|=,([{') * lexer.range('/')
+-- @usage local regex = #P('/') * lexer.last_char_includes('+-*!%^&|=,([{') * lexer.range('/')
 -- @name last_char_includes
-function M.last_char_includes(s)
-  s = string.format('[%s]', s:gsub('[-%%%[]', '%%%1'))
-  return P(function(input, index)
-    if index == 1 then return index end
-    local i = index
-    while space_chars[input:byte(i - 1)] do i = i - 1 end
-    if input:sub(i - 1, i - 1):match(s) then return index end
-  end)
-end
+function M.last_char_includes(s) return M.after_set(s, true) end
 
 ---
 -- Creates and returns a pattern that matches any single word in list or string *words*.
@@ -1609,8 +1606,9 @@ function M.word_match(word_list, case_insensitive)
   end)
 end
 
-local LF, CR = string.byte('\n'), string.byte('\r')
+local indent_chars = {[string.byte(' ')] = true, [string.byte('\t')] = true}
 
+local LF, CR = string.byte('\n'), string.byte('\r')
 -- Determines if the previous line is a comment.
 -- This is used for determining if the current comment line is a fold point.
 -- @param prefix The prefix string defining a comment.

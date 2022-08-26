@@ -47,12 +47,12 @@ lex:add_rule('equals', equals)
 -- Strings.
 local sq_str = lexer.range("'", false, false)
 local dq_str = lexer.range('"', false, false)
-local string = #S('\'"') * lexer.last_char_includes('=') * token(lexer.STRING, sq_str + dq_str)
+local string = token(lexer.STRING, lexer.after_set('=', sq_str + dq_str))
 lex:add_rule('string', string)
 
 -- Numbers.
 local number = token(lexer.NUMBER, lexer.dec_num * P('%')^-1)
-lex:add_rule('number', #lexer.digit * lexer.last_char_includes('=') * number * in_tag)
+lex:add_rule('number', lexer.after_set('=', number) * in_tag)
 
 -- Entities.
 lex:add_rule('entity', token('entity', '&' * word_match('lt gt amp apos quot') * ';'))

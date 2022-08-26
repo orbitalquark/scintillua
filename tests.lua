@@ -180,11 +180,17 @@ function test_starts_line()
   assert(not lexer.starts_line('#', true):match('\n.#foo', 3))
 end
 
-function test_last_char_includes()
-  assert(lexer.last_char_includes('=,'):match('/foo/'))
-  assert(lexer.last_char_includes('=,'):match('foo=/bar/', 5) == 5)
-  assert(lexer.last_char_includes('=,'):match('foo, /bar/', 6) == 6)
-  assert(not lexer.last_char_includes('=,'):match('foo/bar', 4))
+function test_after_set()
+  local set = '=,'
+  local regex = lexer.range('/')
+  assert(lexer.after_set(set, regex):match('/foo'))
+  assert(lexer.after_set(set, regex):match('/foo/'))
+  assert(lexer.after_set(set, regex):match('foo=/bar/', 5))
+  assert(lexer.after_set(set, regex):match('foo=\n/bar/', 6))
+  assert(lexer.after_set(set, regex):match('foo, /bar/', 6))
+  assert(not lexer.after_set(set, regex):match('foo/bar', 4))
+  assert(not lexer.after_set(set, regex):match('foo / bar', 5))
+  assert(lexer.after_set(set .. ' ', regex):match('foo / bar', 5))
 end
 
 function test_word_match()
@@ -634,9 +640,8 @@ function test_c()
     begin:
       if (NULL) // comment
         printf("%ld %f %s %i", 1l, 1.0e-1f, L"foo", INT_MAX);
-      uint8_t uint8_t0;
       foo.free, foo->free(), free(foo);
-      return 0;
+      return 0x0?argc:0;
     }
   ]]):gsub('    ', '') -- strip indent
   local tags = {
@@ -668,7 +673,6 @@ function test_c()
     lexer.CONSTANT_BUILTIN, 'INT_MAX', --
     lexer.OPERATOR, ')', --
     lexer.OPERATOR, ';', --
-    lexer.TYPE, 'uint8_t', lexer.IDENTIFIER, 'uint8_t0', lexer.OPERATOR, ';', --
     lexer.IDENTIFIER, 'foo', lexer.OPERATOR, '.', lexer.IDENTIFIER, 'free', --
     lexer.OPERATOR, ',', --
     lexer.IDENTIFIER, 'foo', --
@@ -681,7 +685,13 @@ function test_c()
     lexer.IDENTIFIER, 'foo', --
     lexer.OPERATOR, ')', --
     lexer.OPERATOR, ';', --
-    lexer.KEYWORD, 'return', lexer.NUMBER, '0', lexer.OPERATOR, ';', --
+    lexer.KEYWORD, 'return', --
+    lexer.NUMBER, '0x0', --
+    lexer.OPERATOR, '?', --
+    lexer.IDENTIFIER, 'argc', -- should not be a label
+    lexer.OPERATOR, ':', --
+    lexer.NUMBER, '0', --
+    lexer.OPERATOR, ';', --
     lexer.OPERATOR, '}'
   }
   assert_lex(c, code, tags)
@@ -745,7 +755,7 @@ function test_html()
           foo(eval(arguments), bar.baz(), Object);
         </script>
       </HEAD>
-      <bod clss="unknown">
+      <bod clss = "unknown">
       <hr tabindex=1/> &copy;
     </html>
   ]]
@@ -1318,15 +1328,17 @@ function test_legacy()
   assert(lex._rules['whitespace'] == ws)
   lex:add_rule('keyword', lexer.token(lexer.KEYWORD, lexer.word_match('foo bar baz')))
   lex:add_rule('number', lexer.token(lexer.NUMBER, lexer.number))
+  lex:add_rule('preproc', lexer.token(lexer.PREPROCESSOR, lexer.starts_line(lexer.to_eol('#'))))
   lex:add_style('whatever', lexer.styles.keyword .. {fore = lexer.colors.red, italic = true})
-  local code = [[foo 1 bar 2 baz 3]]
+  local code = "foo 1 bar 2 baz 3\n#quux"
   local tags = {
     lexer.KEYWORD, 'foo', --
     lexer.NUMBER, '1', --
     lexer.KEYWORD, 'bar', --
     lexer.NUMBER, '2', --
     lexer.KEYWORD, 'baz', --
-    lexer.NUMBER, '3'
+    lexer.NUMBER, '3', --
+    lexer.PREPROCESSOR, '#quux'
   }
   assert_lex(lex, code, tags)
 end

@@ -48,13 +48,12 @@ local equals = lex:tag(lexer.OPERATOR, '=') -- * in_tag
 -- lex:add_rule('equals', equals)
 
 -- Strings.
-local string = #S('\'"') * lexer.last_char_includes('=') *
-  lex:tag(lexer.STRING, lexer.range("'") + lexer.range('"'))
+local string = lex:tag(lexer.STRING, lexer.after_set('=', lexer.range("'") + lexer.range('"')))
 lex:add_rule('string', string)
 
 -- Numbers.
 local number = lex:tag(lexer.NUMBER, lexer.dec_num * P('%')^-1)
-lex:add_rule('number', #lexer.digit * lexer.last_char_includes('=') * number) -- *in_tag)
+lex:add_rule('number', lexer.after_set('=', number)) -- *in_tag)
 
 -- Entities.
 lex:add_rule('entity', lex:tag('entity', '&' * (lexer.any - lexer.space - ';')^1 * ';'))

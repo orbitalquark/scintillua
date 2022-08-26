@@ -58,8 +58,7 @@ end)
 local string = lex:tag(lexer.STRING, (sq_str + dq_str + lit_str + heredoc + cmd_str + lit_cmd +
   lit_array) * S('f')^-1)
 -- TODO: regex_str fails with `obj.method /patt/` syntax.
-local regex_str =
-  #P('/') * lexer.last_char_includes('!%^&*([{-=+|:;,?<>~') * lexer.range('/', true) * S('iomx')^0
+local regex_str = lexer.after_set('!%^&*([{-=+|:;,?<>~', lexer.range('/', true) * S('iomx')^0)
 local lit_regex = '%r' * literal_delimited * S('iomx')^0
 local regex = lex:tag(lexer.REGEX, regex_str + lit_regex)
 lex:add_rule('string', string + regex)

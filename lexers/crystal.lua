@@ -49,8 +49,7 @@ local heredoc = '<<' * P(function(input, index)
 end)
 local string = token(lexer.STRING, (sq_str + dq_str + heredoc + cmd_str) * S('f')^-1)
 -- TODO: regex_str fails with `obj.method /patt/` syntax.
-local regex_str =
-  #P('/') * lexer.last_char_includes('!%^&*([{-=+|:;,?<>~') * lexer.range('/', true) * S('iomx')^0
+local regex_str = lexer.after_set('!%^&*([{-=+|:;,?<>~', lexer.range('/', true) * S('iomx')^0)
 local regex = token(lexer.REGEX, regex_str)
 lex:add_rule('string', string + regex)
 

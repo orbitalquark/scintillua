@@ -35,8 +35,7 @@ local sq_str = lexer.range("'")
 local dq_str = lexer.range('"')
 local bq_str = lexer.range('`')
 local string = lex:tag(lexer.STRING, sq_str + dq_str + bq_str)
-local regex_str =
-  #P('/') * lexer.last_char_includes('+-*%^!=&|?:;,([{<>') * lexer.range('/', true) * S('igm')^0
+local regex_str = lexer.after_set('+-*%^!=&|?:;,([{<>', lexer.range('/', true) * S('igm')^0)
 local regex = lex:tag(lexer.REGEX, regex_str)
 lex:add_rule('string', string + regex)
 

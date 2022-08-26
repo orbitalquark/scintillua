@@ -30,8 +30,7 @@ lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
 local sq_str = lexer.range("'")
 local dq_str = lexer.range('"')
 local string = lex:tag(lexer.STRING, sq_str + dq_str)
-local regex_str =
-  #P('/') * lexer.last_char_includes('+-*%<>!=^&|?~:;,([{') * lexer.range('/', true) * S('igm')^0
+local regex_str = lexer.after_set('+-*%<>!=^&|?~:;,([{', lexer.range('/', true) * S('igm')^0)
 local regex = lex:tag(lexer.REGEX, regex_str)
 lex:add_rule('string', string + regex)
 
