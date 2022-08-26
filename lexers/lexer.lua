@@ -1521,7 +1521,7 @@ end
 local indent_chars = {[string.byte(' ')] = true, [string.byte('\t')] = true}
 
 local newline_chars = {}
-for _, byte in utf8.codes('\n\r\f') do newline_chars[byte] = true end
+for _, byte in utf8.codes('\n\r\v\f') do newline_chars[byte] = true end
 ---
 -- Creates and returns a pattern that matches pattern *patt* only at the beginning of a line,
 -- or after any line indentation if *allow_indent* is `true`.
@@ -1532,7 +1532,7 @@ for _, byte in utf8.codes('\n\r\f') do newline_chars[byte] = true end
 -- @usage local preproc = lex:tag(lexer.PREPROCESSOR, lexer.starts_line(lexer.to_eol('#')))
 -- @name starts_line
 function M.starts_line(patt, allow_indent)
-  local starts_line = (B(S('\r\n\f')) + -B(1)) * patt
+  local starts_line = (B(S('\r\n\v\f')) + -B(1)) * patt
   if allow_indent then
     starts_line = starts_line + Cmt(C(patt), function(input, index, match, ...)
       local pos = index - #match
@@ -1544,7 +1544,7 @@ function M.starts_line(patt, allow_indent)
 end
 
 local space_chars = {}
-for _, byte in utf8.codes(' \t\r\n\f') do space_chars[byte] = true end
+for _, byte in utf8.codes(' \t\r\n\v\f') do space_chars[byte] = true end
 ---
 -- Creates and returns a pattern that verifies the first non-whitespace character behind the
 -- current match position is in string set *s*.
