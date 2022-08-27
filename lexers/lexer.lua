@@ -115,22 +115,30 @@ local M = {}
 -- At first glance, the first argument does not appear to be a string name and the second
 -- argument does not appear to be an LPeg pattern. Perhaps you expected something like:
 --
---     lex:tag('identifier', (R('AZ', 'az')  + '_') * (lpeg.R('AZ', 'az', '09') + '_')^0)
+--     lex:tag('identifier', (lpeg.R('AZ', 'az')  + '_') * (lpeg.R('AZ', 'az', '09') + '_')^0)
 --
--- The `lexer` module actually provides a convenient list of common tag names and common
--- LPeg patterns for you to use. Tag names include [`lexer.DEFAULT`](), [`lexer.COMMENT`](),
--- [`lexer.STRING`](), [`lexer.NUMBER`](), [`lexer.KEYWORD`](), [`lexer.IDENTIFIER`](),
+-- The `lexer` module actually provides a convenient list of common tag names and
+-- common LPeg patterns for you to use. Tag names for programming languages include
+-- (but are not limited to) [`lexer.DEFAULT`](), [`lexer.COMMENT`](), [`lexer.STRING`](),
+-- [`lexer.NUMBER`](), [`lexer.KEYWORD`](), [`lexer.KEYWORD_BUILTIN`](), [`lexer.IDENTIFIER`](),
 -- [`lexer.OPERATOR`](), [`lexer.ERROR`](), [`lexer.PREPROCESSOR`](), [`lexer.CONSTANT`](),
--- [`lexer.VARIABLE`](), [`lexer.FUNCTION`](), [`lexer.CLASS`](), [`lexer.TYPE`](),
--- [`lexer.LABEL`](), [`lexer.REGEX`](), and [`lexer.EMBEDDED`](). Patterns include
--- [`lexer.any`](), [`lexer.alpha`](), [`lexer.digit`](), [`lexer.alnum`](), [`lexer.lower`](),
--- [`lexer.upper`](), [`lexer.xdigit`](), [`lexer.graph`](), [`lexer.print`](), [`lexer.punct`](),
--- [`lexer.space`](), [`lexer.newline`](), [`lexer.nonnewline`](), [`lexer.dec_num`](),
--- [`lexer.hex_num`](), [`lexer.oct_num`](), [`lexer.integer`](), [`lexer.float`](),
--- [`lexer.number`](), and [`lexer.word`](). You may use your own tag names if none of the
--- above fit your language, but an advantage to using predefined tag names is that the language
--- elements your lexer recognizes will inherit any universal syntax highlighting color theme
--- that your editor uses.
+-- [`lexer.CONSTANT_BUILTIN`](), [`lexer.VARIABLE`](), [`lexer.VARIABLE_BUILTIN`](),
+-- [`lexer.FUNCTION`](), [`lexer.FUNCTION_BUILTIN`](), [`lexer.FUNCTION_METHOD`](),
+-- [`lexer.CLASS`](), [`lexer.TYPE`](), [`lexer.LABEL`](), [`lexer.REGEX`](), and
+-- [`lexer.EMBEDDED`](). Tag names for markup languages include (but are not limited to)
+-- [`lexer.TAG`](), [`lexer.ATTRIBUTE`](), [`lexer.TITLE`](), [`lexer.BOLD`](), [`lexer.ITALIC`](),
+-- [`lexer.UNDERLINE`](), [`lexer.CODE`](), and [`lexer.LINK`](). Patterns include [`lexer.any`](),
+-- [`lexer.alpha`](), [`lexer.digit`](), [`lexer.alnum`](), [`lexer.lower`](), [`lexer.upper`](),
+-- [`lexer.xdigit`](), [`lexer.graph`](), [`lexer.print`](), [`lexer.punct`](), [`lexer.space`](),
+-- [`lexer.newline`](), [`lexer.nonnewline`](), [`lexer.dec_num`](), [`lexer.hex_num`](),
+-- [`lexer.oct_num`](), [`lexer.integer`](), [`lexer.float`](), [`lexer.number`](), and
+-- [`lexer.word`](). You may use your own tag names if none of the above fit your language,
+-- but an advantage to using predefined tag names is that the language elements your lexer
+-- recognizes will inherit any universal syntax highlighting color theme that your editor
+-- uses. You can also "subclass" existing tag names by appending a '.*subclass*' string to
+-- them. For example, the HTML lexer tags unknown tags as `lexer.TAG .. '.unknown'`. Editors
+-- have the ability to style those subclassed tags in a different way than normal tags, or fall
+-- back to styling them as normal tags.
 --
 -- ##### Example Tags
 --
@@ -254,7 +262,7 @@ local M = {}
 -- allows the lexer to produce all tags separately, but in a single, convenient rule. That rule
 -- might look something like this:
 --
---     local ws = lex:get_rule('whitespace')
+--     local ws = lex:get_rule('whitespace') -- predefined rule for all lexers
 --     lex:add_rule('tag', tag_start * (ws * attributes)^0 * tag_end^-1)
 --
 -- Note however that lexers with complex rules like these are more prone to lose track of their
@@ -265,9 +273,10 @@ local M = {}
 -- Lexers primarily consist of tagged patterns and grammar rules. These patterns match language
 -- elements like keywords, comments, and strings, and rules dictate the order in which patterns
 -- are matched. At your disposal are a number of convenience patterns and functions for rapidly
--- creating a lexer. If you choose to use predefined tag names for your patterns, you do not
--- have to update your editor's theme to specify how to syntax-highlight those patterns. Your
--- language's elements will inherit the default syntax highlighting color theme your editor uses.
+-- creating a lexer. If you choose to use predefined tag names (or perhaps even subclassed
+-- names) for your patterns, you do not have to update your editor's theme to specify how to
+-- syntax-highlight those patterns. Your language's elements will inherit the default syntax
+-- highlighting color theme your editor uses.
 --
 -- ### Advanced Techniques
 --
@@ -640,6 +649,32 @@ local M = {}
 --   The tag name for label elements.
 -- @field REGEX (string)
 --   The tag name for regex elements.
+-- @field EMBEDDED (string)
+--   The tag name for embedded elements.
+-- @field FUNCTION_BUILTIN (string)
+--   The tag name for builtin function elements.
+-- @field CONSTANT_BUILTIN (string)
+--   The tag name for builtin constant elements.
+-- @field FUNCTION_METHOD (string)
+--   The tag name for function method elements.
+-- @field TAG (string)
+--   The tag name for function tag elements, typically in markup.
+-- @field ATTRIBUTE (string)
+--   The tag name for function attribute elements, typically in markup.
+-- @field VARIABLE_BUILTIN (string)
+--   The tag name for builtin variable elements.
+-- @field TITLE (string)
+--   The tag name for title elements, typically in markup.
+-- @field BOLD (string)
+--   The tag name for bold elements, typically in markup.
+-- @field ITALIC (string)
+--   The tag name for builtin italic elements, typically in markup.
+-- @field UNDERLINE (string)
+--   The tag name for underlined elements, typically in markup.
+-- @field CODE (string)
+--   The tag name for code elements, typically in markup.
+-- @field LINK (string)
+--   The tag name for link elements, typically in markup.
 -- @field any (pattern)
 --   A pattern that matches any single character.
 -- @field alpha (pattern)
@@ -739,10 +774,10 @@ M.styles = setmetatable({}, { -- legacy
 
 -- Default tags.
 local default = {
-  'whitespace', 'comment', 'string', 'number', 'keyword', 'identifier', 'operator',
-  'error', 'preprocessor', 'constant', 'variable', 'function', 'class', 'type', 'label', 'regex',
-  'embedded', 'function.builtin', 'constant.builtin', 'function.method', 'tag', 'attribute',
-  'variable.builtin'
+  'whitespace', 'comment', 'string', 'number', 'keyword', 'identifier', 'operator', 'error',
+  'preprocessor', 'constant', 'variable', 'function', 'class', 'type', 'label', 'regex', 'embedded',
+  'function.builtin', 'constant.builtin', 'function.method', 'tag', 'attribute', 'variable.builtin',
+  'title', 'bold', 'italic', 'underline', 'code', 'link'
 }
 for _, name in ipairs(default) do M[name:upper():gsub('%.', '_')] = name end
 -- Names for predefined Scintilla styles.

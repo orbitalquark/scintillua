@@ -1095,7 +1095,6 @@ end
 -- Tests folding with complex keywords and case-insensitivity.
 function test_vb_folding()
   local vb = lexer.load('vb')
-
   local code = [[
     Sub Foo()
       If bar Then
@@ -1113,7 +1112,6 @@ end
 
 function test_makefile()
   local makefile = lexer.load('makefile')
-
   local code = ([[
     # Comment.
     .DEFAULT_GOAL := all
@@ -1174,6 +1172,7 @@ end
 function test_bash()
   local bash = lexer.load('bash')
 
+  -- Lexing tests.
   local code = [=[
     # Comment.
     foo=bar=baz:$PATH
@@ -1234,11 +1233,28 @@ function test_bash()
     lexer.VARIABLE, 's', lexer.OPERATOR, '=', lexer.STRING, '<<-"END"\n      foobar\n    END'
   }
   assert_lex(bash, code, tags)
+
+  -- Folding tests.
+  code = [[
+    function foo() {
+
+    }
+    if [ expr ]; then
+      case
+        *)
+        ;;
+      esac
+    fi
+    for x in y; do
+
+    done
+  ]]
+  local folds = {1, -3, 4, 5, -8, -9, 10, -12}
+  assert_fold_points(bash, code, folds)
 end
 
 function test_cpp()
   local cpp = lexer.load('cpp')
-
   local code = [=[
     /*/*Comment.*///
     #include <string>
@@ -1318,6 +1334,80 @@ function test_cpp()
     lexer.OPERATOR, '}'
   }
   assert_lex(cpp, code, tags)
+end
+
+function test_markdown()
+  local md = lexer.load('markdown')
+  local code = ([[
+
+    # header1
+    ## header2
+
+    > block1
+    > block2
+    block3
+
+    1. l1
+    2
+    * l2
+
+        code1
+
+    ```
+    code2
+    ```
+
+    `code3` ``code4`` ``code`5`` `code``6`
+
+        > code7
+
+    ---
+    * * *
+
+    [link](target) ![image](target "alt_text") [link][1]
+    http://link text <http://link>
+    [1]: link#text
+
+    **strong** *emphasis* \*text\*
+
+    <html>
+        </html>
+
+        <a>
+  ]]):gsub('\n    ', '\n') -- strip indent
+  local tags = {
+    lexer.TITLE .. '.h1', '# header1', --
+    lexer.TITLE .. '.h2', '## header2', --
+    lexer.STRING, '> block1\n> block2\nblock3\n\n', --
+    lexer.NUMBER, '1. ', lexer.DEFAULT, 'l', lexer.DEFAULT, '1', --
+    lexer.DEFAULT, '2', --
+    lexer.NUMBER, '* ', lexer.DEFAULT, 'l', lexer.DEFAULT, '2', --
+    lexer.CODE, 'code1\n', --
+    lexer.CODE, '```\ncode2\n```\n', --
+    lexer.CODE, '`code3`', --
+    lexer.CODE, '``code4``', --
+    lexer.CODE, '``code`5``', --
+    lexer.CODE, '`code``6`', --
+    lexer.CODE, '> code7\n', --
+    lexer.UNDERLINE .. '.hr', '---\n', --
+    lexer.UNDERLINE .. '.hr', '* * *\n', --
+    lexer.LINK, '[link](target)', --
+    lexer.LINK, '![image](target "alt_text")', --
+    lexer.LINK, '[link][1]', --
+    lexer.LINK, 'http://link', --
+    lexer.DEFAULT, 't', lexer.DEFAULT, 'e', lexer.DEFAULT, 'x', lexer.DEFAULT, 't', --
+    lexer.LINK, '<http://link>', --
+    lexer.LABEL, '[1]:', lexer.LINK, 'link#text', --
+    lexer.BOLD, '**strong**', --
+    lexer.ITALIC, '*emphasis*', --
+    lexer.DEFAULT, '\\*', --
+    lexer.DEFAULT, 't', lexer.DEFAULT, 'e', lexer.DEFAULT, 'x', lexer.DEFAULT, 't', --
+    lexer.DEFAULT, '\\*', --
+    lexer.TAG .. '.chars', '<', lexer.TAG, 'html', lexer.TAG .. '.chars', '>', --
+    lexer.TAG .. '.chars', '</', lexer.TAG, 'html', lexer.TAG .. '.chars', '>', --
+    lexer.CODE, '<a>\n'
+  }
+  assert_lex(md, code, tags)
 end
 
 function test_legacy()
