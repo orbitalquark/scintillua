@@ -48,20 +48,20 @@ lex:add_rule('blockquote',
 -- Span elements.
 lex:add_rule('escape', lex:tag(lexer.DEFAULT, P('\\') * 1))
 
-local ref_link_label = lex:tag(lexer.LABEL, lexer.range('[', ']', true) * ':')
+local link_text = lexer.range('[', ']', true)
+local link_target =
+  '(' * (lexer.any - S(') \t'))^0 * (S(' \t')^1 * lexer.range('"', false, false))^-1 * ')'
+local link_url = 'http' * P('s')^-1 * '://' * (lexer.any - lexer.space)^1 +
+  ('<' * lexer.alpha^2 * ':' * (lexer.any - lexer.space - '>')^1 * '>')
+lex:add_rule('link', lex:tag(lexer.LINK, P('!')^-1 * link_text * link_target + link_url))
+
+local link_ref = lex:tag(lexer.REFERENCE, link_text * S(' \t')^0 * lexer.range('[', ']', true))
+local ref_link_label = lex:tag(lexer.REFERENCE, lexer.range('[', ']', true) * ':')
 local ws = lex:get_rule('whitespace')
 local ref_link_url = lex:tag(lexer.LINK, (lexer.any - lexer.space)^1)
 local ref_link_title = lex:tag(lexer.STRING, lexer.range('"', true, false) +
   lexer.range("'", true, false) + lexer.range('(', ')', true))
-lex:add_rule('link_label', ref_link_label * ws * ref_link_url * (ws * ref_link_title)^-1)
-
-local link_label = P('!')^-1 * lexer.range('[', ']', true)
-local link_target =
-  '(' * (lexer.any - S(') \t'))^0 * (S(' \t')^1 * lexer.range('"', false, false))^-1 * ')'
-local link_ref = S(' \t')^0 * lexer.range('[', ']', true)
-local link_url = 'http' * P('s')^-1 * '://' * (lexer.any - lexer.space)^1 +
-  ('<' * lexer.alpha^2 * ':' * (lexer.any - lexer.space - '>')^1 * '>')
-lex:add_rule('link', lex:tag(lexer.LINK, link_label * (link_target + link_ref) + link_url))
+lex:add_rule('link_ref', link_ref + ref_link_label * ws * ref_link_url * (ws * ref_link_title)^-1)
 
 local punct_space = lexer.punct + lexer.space
 

@@ -127,18 +127,18 @@ local M = {}
 -- [`lexer.CLASS`](), [`lexer.TYPE`](), [`lexer.LABEL`](), [`lexer.REGEX`](), and
 -- [`lexer.EMBEDDED`](). Tag names for markup languages include (but are not limited to)
 -- [`lexer.TAG`](), [`lexer.ATTRIBUTE`](), [`lexer.TITLE`](), [`lexer.BOLD`](), [`lexer.ITALIC`](),
--- [`lexer.UNDERLINE`](), [`lexer.CODE`](), and [`lexer.LINK`](). Patterns include [`lexer.any`](),
--- [`lexer.alpha`](), [`lexer.digit`](), [`lexer.alnum`](), [`lexer.lower`](), [`lexer.upper`](),
--- [`lexer.xdigit`](), [`lexer.graph`](), [`lexer.print`](), [`lexer.punct`](), [`lexer.space`](),
--- [`lexer.newline`](), [`lexer.nonnewline`](), [`lexer.dec_num`](), [`lexer.hex_num`](),
--- [`lexer.oct_num`](), [`lexer.integer`](), [`lexer.float`](), [`lexer.number`](), and
--- [`lexer.word`](). You may use your own tag names if none of the above fit your language,
--- but an advantage to using predefined tag names is that the language elements your lexer
--- recognizes will inherit any universal syntax highlighting color theme that your editor
--- uses. You can also "subclass" existing tag names by appending a '.*subclass*' string to
--- them. For example, the HTML lexer tags unknown tags as `lexer.TAG .. '.unknown'`. Editors
--- have the ability to style those subclassed tags in a different way than normal tags, or fall
--- back to styling them as normal tags.
+-- [`lexer.UNDERLINE`](), [`lexer.CODE`](), [`lexer.LINK`](), and [`lexer.REFERENCE`](). Patterns
+-- include [`lexer.any`](), [`lexer.alpha`](), [`lexer.digit`](), [`lexer.alnum`](),
+-- [`lexer.lower`](), [`lexer.upper`](), [`lexer.xdigit`](), [`lexer.graph`](), [`lexer.print`](),
+-- [`lexer.punct`](), [`lexer.space`](), [`lexer.newline`](), [`lexer.nonnewline`](),
+-- [`lexer.dec_num`](), [`lexer.hex_num`](), [`lexer.oct_num`](), [`lexer.integer`](),
+-- [`lexer.float`](), [`lexer.number`](), and [`lexer.word`](). You may use your own tag names if
+-- none of the above fit your language, but an advantage to using predefined tag names is that
+-- the language elements your lexer recognizes will inherit any universal syntax highlighting
+-- color theme that your editor uses. You can also "subclass" existing tag names by appending a
+-- '.*subclass*' string to them. For example, the HTML lexer tags unknown tags as `lexer.TAG
+-- .. '.unknown'`. Editors have the ability to style those subclassed tags in a different way
+-- than normal tags, or fall back to styling them as normal tags.
 --
 -- ##### Example Tags
 --
@@ -675,6 +675,8 @@ local M = {}
 --   The tag name for code elements, typically in markup.
 -- @field LINK (string)
 --   The tag name for link elements, typically in markup.
+-- @field REFERENCE (string)
+--   The tag name for reference elements, typically in markup.
 -- @field any (pattern)
 --   A pattern that matches any single character.
 -- @field alpha (pattern)
@@ -777,7 +779,7 @@ local default = {
   'whitespace', 'comment', 'string', 'number', 'keyword', 'identifier', 'operator', 'error',
   'preprocessor', 'constant', 'variable', 'function', 'class', 'type', 'label', 'regex', 'embedded',
   'function.builtin', 'constant.builtin', 'function.method', 'tag', 'attribute', 'variable.builtin',
-  'title', 'bold', 'italic', 'underline', 'code', 'link'
+  'title', 'bold', 'italic', 'underline', 'code', 'link', 'reference'
 }
 for _, name in ipairs(default) do M[name:upper():gsub('%.', '_')] = name end
 -- Names for predefined Scintilla styles.

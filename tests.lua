@@ -1364,7 +1364,7 @@ function test_markdown()
     ---
     * * *
 
-    [link](target) ![image](target "alt_text") [link][1]
+    [link](target) ![image](target "alt_text") [link] [1]
     http://link text <http://link>
     [1]: link#text
 
@@ -1393,11 +1393,11 @@ function test_markdown()
     lexer.UNDERLINE .. '.hr', '* * *\n', --
     lexer.LINK, '[link](target)', --
     lexer.LINK, '![image](target "alt_text")', --
-    lexer.LINK, '[link][1]', --
+    lexer.REFERENCE, '[link] [1]', --
     lexer.LINK, 'http://link', --
     lexer.DEFAULT, 't', lexer.DEFAULT, 'e', lexer.DEFAULT, 'x', lexer.DEFAULT, 't', --
     lexer.LINK, '<http://link>', --
-    lexer.LABEL, '[1]:', lexer.LINK, 'link#text', --
+    lexer.REFERENCE, '[1]:', lexer.LINK, 'link#text', --
     lexer.BOLD, '**strong**', --
     lexer.ITALIC, '*emphasis*', --
     lexer.DEFAULT, '\\*', --
