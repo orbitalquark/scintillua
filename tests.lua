@@ -1410,6 +1410,118 @@ function test_markdown()
   assert_lex(md, code, tags)
 end
 
+function test_yaml()
+  local yaml = lexer.load('yaml')
+
+  local code = ([[
+    %YAML directive
+    --- # document start
+    - item 1
+      - item 2
+        - - item - 3
+        - [1, -2.0e-3, 0x3, 04, two words]
+    - &anchor !!str item
+    - *anchor
+    ... # document end
+    key: value
+    "key 2": 'value 2'
+    key 3: value "3"
+    key-4_: {1: true, 2: FALSE, 3: null, 4: .Inf, 5: two words, 6: 2000-01-01T12:00:00.0Z}
+    - -key - 5: {one: two, three four: five six}
+    ? - item 1
+    : - item 2
+    - {ok: ok@, @: @}
+    literal: |
+      line 1
+
+      - line 2
+      [line, 3]
+      #line 4
+      ---
+
+    flow: >
+      {line: 5}
+      ? - line 6
+      @line 7
+      %line 8
+      ...
+    - foo: bar
+      baz: |
+       quux
+    - foobar
+  ]]):gsub('    ', '') -- strip indent
+  local tags = {
+    lexer.PREPROCESSOR, '%YAML directive', --
+    lexer.OPERATOR, '---', lexer.COMMENT, '# document start', --
+    lexer.OPERATOR, '-', lexer.DEFAULT, 'item 1', --
+    lexer.OPERATOR, '-', lexer.DEFAULT, 'item 2', --
+    lexer.OPERATOR, '-', lexer.OPERATOR, '-', lexer.DEFAULT, 'item - 3', --
+    lexer.OPERATOR, '-', --
+    lexer.OPERATOR, '[', --
+    lexer.NUMBER, '1', lexer.OPERATOR, ',', --
+    lexer.NUMBER, '-2.0e-3', lexer.OPERATOR, ',', --
+    lexer.NUMBER, '0x3', lexer.OPERATOR, ',', --
+    lexer.NUMBER, '04', lexer.OPERATOR, ',', --
+    lexer.DEFAULT, 'two words', --
+    lexer.OPERATOR, ']', --
+    lexer.OPERATOR, '-', --
+    lexer.OPERATOR, '&', lexer.LABEL, 'anchor', lexer.TYPE, '!!str', --
+    lexer.DEFAULT, 'i', lexer.DEFAULT, 't', lexer.DEFAULT, 'e', lexer.DEFAULT, 'm', --
+    lexer.OPERATOR, '-', lexer.OPERATOR, '*', lexer.LABEL, 'anchor', --
+    lexer.OPERATOR, '...', lexer.COMMENT, '# document end', --
+    lexer.STRING, 'key', lexer.OPERATOR, ':', lexer.DEFAULT, 'value', --
+    lexer.STRING, '"key 2"', lexer.OPERATOR, ':', lexer.STRING, "'value 2'", --
+    lexer.STRING, 'key 3', lexer.OPERATOR, ':', lexer.DEFAULT, 'value "3"', --
+    lexer.STRING, 'key-4_', --
+    lexer.OPERATOR, ':', --
+    lexer.OPERATOR, '{', --
+    lexer.STRING, '1', lexer.OPERATOR, ':', lexer.CONSTANT_BUILTIN, 'true', lexer.OPERATOR, ',', --
+    lexer.STRING, '2', lexer.OPERATOR, ':', lexer.CONSTANT_BUILTIN, 'FALSE', lexer.OPERATOR, ',', --
+    lexer.STRING, '3', lexer.OPERATOR, ':', lexer.CONSTANT_BUILTIN, 'null', lexer.OPERATOR, ',', --
+    lexer.STRING, '4', lexer.OPERATOR, ':', lexer.NUMBER, '.Inf', lexer.OPERATOR, ',', --
+    lexer.STRING, '5', lexer.OPERATOR, ':', lexer.DEFAULT, 'two words', lexer.OPERATOR, ',', --
+    lexer.STRING, '6', lexer.OPERATOR, ':', lexer.NUMBER .. '.timestamp', '2000-01-01T12:00:00.0Z', --
+    lexer.OPERATOR, '}', --
+    lexer.OPERATOR, '-', --
+    lexer.STRING, '-key - 5', --
+    lexer.OPERATOR, ':', --
+    lexer.OPERATOR, '{', --
+    lexer.STRING, 'one', lexer.OPERATOR, ':', lexer.DEFAULT, 'two', lexer.OPERATOR, ',', --
+    lexer.STRING, 'three four', lexer.OPERATOR, ':', lexer.DEFAULT, 'five six', --
+    lexer.OPERATOR, '}', --
+    lexer.OPERATOR, '?', lexer.OPERATOR, '-', lexer.DEFAULT, 'item 1', --
+    lexer.OPERATOR, ':', lexer.OPERATOR, '-', lexer.DEFAULT, 'item 2', --
+    lexer.OPERATOR, '-', lexer.OPERATOR, '{', lexer.STRING, 'ok', lexer.OPERATOR, ':',
+    lexer.DEFAULT, 'ok@', lexer.OPERATOR, ',', --
+    lexer.ERROR, '@', lexer.OPERATOR, ':', lexer.ERROR, '@', --
+    lexer.OPERATOR, '}', --
+    lexer.STRING, 'literal', --
+    lexer.OPERATOR, ':', --
+    lexer.DEFAULT, '|\n  line 1\n\n  - line 2\n  [line, 3]\n  #line 4\n  ---\n', --
+    lexer.STRING, 'flow', --
+    lexer.OPERATOR, ':', --
+    lexer.DEFAULT, '>\n  {line: 5}\n  ? - line 6\n  @line 7\n  %line 8\n  ...', --
+    lexer.OPERATOR, '-', lexer.STRING, 'foo', lexer.OPERATOR, ':', lexer.DEFAULT, 'bar', --
+    lexer.STRING, 'baz', lexer.OPERATOR, ':', lexer.DEFAULT, '|\n   quux', --
+    lexer.OPERATOR, '-', lexer.DEFAULT, 'foobar' --
+  }
+  assert_lex(yaml, code, tags)
+
+  -- Simulate inserting a newline after |.
+  code = ([[
+    - foo: bar
+      baz: |
+
+       quux
+    - foobar
+  ]]):gsub('    ', '') -- strip indent
+  tags = {
+    lexer.DEFAULT, '|\n\n   quux', --
+    lexer.OPERATOR, '-', lexer.DEFAULT, 'foobar'
+  }
+  assert_lex(yaml, code:match('(|.+)$'), tags, lexer.DEFAULT)
+end
+
 function test_legacy()
   local lex = lexer.new('test')
   local ws = lexer.token(lexer.WHITESPACE, lexer.space^1)
