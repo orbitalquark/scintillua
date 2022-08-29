@@ -132,7 +132,7 @@ function assert_fold_points(lex, code, expected_fold_points, initial_style)
     })
   end
   lexer.property['fold'] = 1
-  local levels = lex:fold(code, 1, 1, lexer.FOLD_BASE)
+  local levels = lex:fold(code, 1, lexer.FOLD_BASE)
   local j = 1
   for i = 1, #levels do
     local line_num = expected_fold_points[j]

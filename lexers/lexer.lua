@@ -1213,16 +1213,15 @@ end
 ---
 -- Determines fold points in a chunk of text *text* using lexer *lexer*, returning a table of
 -- fold levels associated with line numbers.
--- *text* starts at position *start_pos* on line number *start_line* with a beginning fold
--- level of *start_level* in the buffer.
+-- *text* starts on line number *start_line* with a beginning fold level of *start_level*
+-- in the buffer.
 -- @param lexer The lexer to fold text with.
 -- @param text The text in the buffer to fold.
--- @param start_pos The position in the buffer *text* starts at, counting from 1.
 -- @param start_line The line number *text* starts on, counting from 1.
 -- @param start_level The fold level *text* starts on.
 -- @return table of fold levels associated with line numbers.
 -- @name fold
-function M.fold(lexer, text, start_pos, start_line, start_level)
+function M.fold(lexer, text, start_line, start_level)
   local folds = {}
   if text == '' then return folds end
   local fold = M.property_int['fold'] > 0
@@ -1264,7 +1263,7 @@ function M.fold(lexer, text, start_pos, start_line, start_level)
             local word_before = s > 1 and line:find('^[%w_]', s - 1)
             local word_after = line:find('^[%w_]', e + 1)
             if not word or not (word_before or word_after) then
-              local symbols = fold_points[style_at[start_pos + pos - 1 + s - 1]]
+              local symbols = fold_points[style_at[pos + s - 1]]
               local level = symbols and symbols[symbol]
               if type(level) == 'function' then
                 level = level(text, pos, line, s, symbol)

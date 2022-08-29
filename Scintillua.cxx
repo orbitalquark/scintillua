@@ -447,10 +447,9 @@ void Scintillua::Fold(
   lua_pushvalue(L.get(), -3);
   const Sci_Position currentLine = styler.GetLine(startPos);
   lua_pushlstring(L.get(), buffer->BufferPointer() + startPos, lengthDoc);
-  lua_pushinteger(L.get(), startPos + 1);
   lua_pushinteger(L.get(), currentLine + 1);
   lua_pushinteger(L.get(), styler.LevelAt(currentLine) & SC_FOLDLEVELNUMBERMASK);
-  if (lua_pcall(L.get(), 5, 1, -7) != LUA_OK) // t = xpcall(lexer.fold, msgh, lex, txt, p, ln, lvl)
+  if (lua_pcall(L.get(), 4, 1, -6) != LUA_OK) // t = xpcall(lexer.fold, msgh, lex, txt, p, ln, lvl)
     return LogError();
   lua_remove(L.get(), -2); // lua_error_handler
   lua_remove(L.get(), -2); // lex
