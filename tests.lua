@@ -1545,6 +1545,14 @@ function test_legacy()
   assert_lex(lex, code, tags)
 end
 
+function test_lua51()
+  local p = io.popen(
+    [[cd lexers && lua5.1 -e 'lexer=require"lexer"' -e 'print(unpack(lexer.load("lua"):lex("_G")))']])
+  local output = p:read('a')
+  p:close()
+  assert(output == lexer.CONSTANT_BUILTIN .. '\t3\n')
+end
+
 -- Run tests.
 print('Starting test suite.')
 local tests = {}
