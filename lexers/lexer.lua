@@ -974,11 +974,11 @@ function M.embed(lexer, child, start_rule, end_rule)
   -- Add child word lists.
   if child._WORDLISTS then
     for name, i in pairs(child._WORDLISTS) do
-      if type(name) ~= 'string' or type(i) ~= 'number' then goto continue end
-      name = child._name .. '.' .. name
-      lexer:get_word_list(name) -- for side effects
-      lexer:set_word_list(name, child._WORDLISTS[i])
-      ::continue::
+      if type(name) == 'string' and type(i) == 'number' then
+        name = child._name .. '.' .. name
+        lexer:get_word_list(name) -- for side effects
+        lexer:set_word_list(name, child._WORDLISTS[i])
+      end
     end
   end
 
@@ -1160,14 +1160,14 @@ local function build_grammar(lexer, init_style)
   -- if necessary. LPeg does not allow a variable initial rule.
   if lexer._CHILDREN then
     for tag, style_num in pairs(lexer._TAGS) do
-      if style_num ~= init_style then goto continue end
-      local lexer_name = tag:match('^whitespace%.(.+)$') or lexer._parent_name or lexer._name
-      if lexer._initial_rule == lexer_name then break end
-      lexer._initial_rule = lexer_name
-      lexer._grammar_table[1] = lexer._initial_rule
-      lexer._grammar = Ct(P(lexer._grammar_table))
-      do return lexer._grammar end
-      ::continue::
+      if style_num == init_style then
+        local lexer_name = tag:match('^whitespace%.(.+)$') or lexer._parent_name or lexer._name
+        if lexer._initial_rule == lexer_name then break end
+        lexer._initial_rule = lexer_name
+        lexer._grammar_table[1] = lexer._initial_rule
+        lexer._grammar = Ct(P(lexer._grammar_table))
+        return lexer._grammar
+      end
     end
   end
 
