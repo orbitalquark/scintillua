@@ -139,7 +139,9 @@ int lexer_field_index(lua_State *L) {
     if (field == "property_int") lua_pushinteger(L, lua_tointeger(L, -1));
   } else if (field == "style_at") {
     if (!buffer) luaL_error(L, "must be lexing or folding");
-    const int style = buffer->StyleAt(luaL_checkinteger(L, 2) - 1); // incoming position is 1-based
+    const Sci_PositionU startPos =
+      (lua_getfield(L, LUA_REGISTRYINDEX, "startPos"), lua_tointeger(L, -1)); // REGISTRY.startPos
+    const int style = buffer->StyleAt(startPos + luaL_checkinteger(L, 2) - 1); // 1-based position
     lua_pushstring(L, scintillua->NameOfStyle(style));
   } else if (field == "line_state") {
     if (!buffer) luaL_error(L, "must be lexing or folding");
@@ -175,7 +177,10 @@ int line_from_position(lua_State *L) {
   if (lua_getfield(L, LUA_REGISTRYINDEX, "buffer") != LUA_TLIGHTUSERDATA) // REGISTRY.buffer
     luaL_error(L, "must be lexing or folding");
   const auto buffer = static_cast<Scintilla::IDocument *>(lua_touserdata(L, -1));
-  return (lua_pushinteger(L, buffer->LineFromPosition(luaL_checkinteger(L, 1) - 1) + 1), 1);
+  const Sci_PositionU startPos =
+    (lua_getfield(L, LUA_REGISTRYINDEX, "startPos"), lua_tointeger(L, -1)); // REGISTRY.startPos
+  lua_pushinteger(L, buffer->LineFromPosition(startPos + luaL_checkinteger(L, 1) - 1) + 1);
+  return 1;
 }
 
 // lexer[key] metamethod.
@@ -348,6 +353,9 @@ public:
   LuaRegistryField(lua_State *L, const char *key, void *value) : L(L), key{key} {
     lua_pushlightuserdata(L, value), lua_setfield(L, LUA_REGISTRYINDEX, key);
   }
+  LuaRegistryField(lua_State *L, const char *key, Sci_PositionU value) : L(L), key{key} {
+    lua_pushinteger(L, value), lua_setfield(L, LUA_REGISTRYINDEX, key);
+  }
   ~LuaRegistryField() { lua_pushnil(L), lua_setfield(L, LUA_REGISTRYINDEX, key); }
 };
 
@@ -371,6 +379,7 @@ void Scintillua::Lex(
   }
   styler.StartAt(startPos);
   styler.StartSegment(startPos);
+  LuaRegistryField regStartPos{L.get(), "startPos", startPos}; // REGISTRY.startPos = startPos
 
   // Call lexer.lex(lex, text, init_style).
   if (lua_getfield(L.get(), -1, "lex") != LUA_TFUNCTION) {
@@ -428,6 +437,7 @@ void Scintillua::Fold(
   Lexilla::LexAccessor styler(buffer);
   RECORD_STACK_TOP(L.get());
   LuaRegistryField regBuf{L.get(), "buffer", buffer}; // REGISTRY.buffer = buffer
+  LuaRegistryField regStartPos{L.get(), "startPos", startPos}; // REGISTRY.startPos = startPos
 
   // Call lexer.fold(lex, text, start_pos, start_line, start_level).
   lua_rawgetp(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
