@@ -1186,6 +1186,7 @@ end
 function M.lex(lexer, text, init_style)
   local grammar = build_grammar(lexer, init_style)
   if not grammar then return {M.DEFAULT, #text + 1} end
+  if M._standalone then M._text = text end -- for M.line_from_position and M.indent_amount
 
   if lexer._lex_by_line then
     local function append(tags, line_tags, offset)
@@ -1227,6 +1228,7 @@ function M.fold(lexer, text, start_line, start_level)
   local fold = M.property_int['fold'] > 0
   local FOLD_BASE = M.FOLD_BASE
   local FOLD_HEADER, FOLD_BLANK = M.FOLD_HEADER, M.FOLD_BLANK
+  if M._standalone then M._text = text end -- for M.line_from_position and M.indent_amount
   if fold and lexer._fold_points then
     local lines = {}
     for p, l in (text .. '\n'):gmatch('()(.-)\r?\n') do lines[#lines + 1] = {p, l} end
@@ -1409,6 +1411,42 @@ function M.new(name, opts)
   return lexer
 end
 
+-- When using Scintillua as a stand-alone module, some tables and functions that depend on
+-- Scintilla do not exist. Create a substitute for them.
+local function initialize_standalone_library()
+  M.property = setmetatable({['scintillua.lexers'] = package.path:gsub('/%?%.lua', '')}, {
+    __index = function() return '' end, __newindex = function(t, k, v) rawset(t, k, tostring(v)) end
+  })
+  M.property_int = setmetatable({}, {
+    __index = function(t, k) return tonumber(M.property[k]) or 0 end,
+    __newindex = function() error('read-only property') end
+  })
+  M.property_expanded = setmetatable({}, {__index = function() return '' end}) -- legacy
+
+  M.line_from_position = function(pos)
+    local line = 1
+    for s in M._text:gmatch('[^\n]*()') do
+      if pos < s then return line end
+      line = line + 1
+    end
+    return line - 1 -- should not get to here
+  end
+
+  M.indent_amount = setmetatable({}, {
+    __index = function(_, line)
+      local current_line = 1
+      for s in M._text:gmatch('()[^\n]*') do
+        if current_line == line then
+          return #M._text:match('^[ \t]*', s):gsub('\t', string.rep(' ', 8))
+        end
+        current_line = current_line + 1
+      end
+    end
+  })
+
+  M._standalone = true
+end
+
 ---
 -- Initializes or loads and then returns the lexer of string name *name*.
 -- Scintilla calls this function in order to load a lexer. Parent lexers also call this function
@@ -1421,19 +1459,7 @@ end
 -- @name load
 function M.load(name, alt_name)
   assert(name, 'no lexer given')
-  -- When using Scintillua as a stand-alone module, the `property` and `property_int` tables
-  -- do not exist (they are not useful). Create them in order prevent errors from occurring.
-  if not M.property then
-    M.property = setmetatable({['scintillua.lexers'] = package.path:gsub('/%?%.lua', '')}, {
-      __index = function() return '' end,
-      __newindex = function(t, k, v) rawset(t, k, tostring(v)) end
-    })
-    M.property_int = setmetatable({}, {
-      __index = function(t, k) return tonumber(M.property[k]) or 0 end,
-      __newindex = function() error('read-only property') end
-    })
-  end
-  M.property_expanded = setmetatable({}, {__index = function() return '' end}) -- legacy
+  if not getmetatable(M) then initialize_standalone_library() end
 
   -- Load the language lexer with its rules, tags, etc.
   local path = M.property['scintillua.lexers']:gsub(';', '/?.lua;') .. '/?.lua'
