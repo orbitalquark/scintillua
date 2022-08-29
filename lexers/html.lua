@@ -16,8 +16,7 @@ lex:add_rule('doctype',
 
 -- Tags.
 local paired_tag = lex:tag(lexer.TAG, lex:get_word_list(lexer.TAG, true))
-local single_tag = lex:tag(lexer.TAG .. '.single',
-lex:get_word_list(lexer.TAG .. '.single', true))
+local single_tag = lex:tag(lexer.TAG .. '.single', lex:get_word_list(lexer.TAG .. '.single', true))
 local known_tag = paired_tag + single_tag
 local unknown_tag = lex:tag(lexer.TAG .. '.unknown', (lexer.alnum + '-')^1)
 local tag = lex:tag(lexer.TAG .. '.chars', '<' * P('/')^-1) * (known_tag + unknown_tag) * -P(':')

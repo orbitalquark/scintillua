@@ -233,7 +233,7 @@ function test_rule_order()
   assert_lex(lex, code, tags)
 
   -- Modify the identifier rule to not catch keywords.
-  lex:modify_rule('identifier', lex:tag(lexer.IDENTIFIER, -lpeg.P('foo') * lexer.word))
+  lex:modify_rule('identifier', -lpeg.P('foo') * lex:tag(lexer.IDENTIFIER, lexer.word))
   tags = {lexer.KEYWORD, 'foo', lexer.IDENTIFIER, 'bar'}
   assert_lex(lex, code, tags)
 end

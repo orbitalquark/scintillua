@@ -67,7 +67,7 @@ lex:embed(bash, bash_start_rule, bash_end_rule)
 -- Embedded Bash in $(shell ...) calls.
 local shell = lexer.load('bash', 'shell')
 bash_start_rule = #P('$(shell') * func
-bash_end_rule = lex:tag(lexer.OPERATOR, -B('\\') * ')')
+bash_end_rule = -B('\\') * lex:tag(lexer.OPERATOR, ')')
 lex:embed(shell, bash_start_rule, bash_end_rule)
 
 -- Word lists.
