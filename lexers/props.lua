@@ -12,7 +12,8 @@ lex:add_rule('identifier',
 
 -- Colors.
 local xdigit = lexer.xdigit
-lex:add_rule('color', lex:tag('color', '#' * xdigit * xdigit * xdigit * xdigit * xdigit * xdigit))
+lex:add_rule('color',
+  lex:tag(lexer.NUMBER, '#' * xdigit * xdigit * xdigit * xdigit * xdigit * xdigit))
 
 -- Comments.
 lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.to_eol('#')))

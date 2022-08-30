@@ -65,7 +65,7 @@ local bash_start_rule = lex:tag(lexer.WHITESPACE, '\t') + lex:tag(lexer.OPERATOR
 local bash_end_rule = lex:tag(lexer.WHITESPACE, '\n')
 lex:embed(bash, bash_start_rule, bash_end_rule)
 -- Embedded Bash in $(shell ...) calls.
-local shell = lexer.load('bash', 'shell')
+local shell = lexer.load('bash', 'bash.shell')
 bash_start_rule = #P('$(shell') * func
 bash_end_rule = -B('\\') * lex:tag(lexer.OPERATOR, ')')
 lex:embed(shell, bash_start_rule, bash_end_rule)

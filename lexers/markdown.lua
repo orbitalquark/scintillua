@@ -4,7 +4,7 @@
 local lexer = lexer
 local P, S, B = lpeg.P, lpeg.S, lpeg.B
 
-local lex = lexer.new(...)
+local lex = lexer.new(..., {no_user_word_lists = true})
 
 -- Distinguish between horizontal and vertical space so html start rule has a chance to match.
 lex:modify_rule('whitespace', lex:tag(lexer.WHITESPACE, S(' \t')^1 + S('\r\n')^1))
