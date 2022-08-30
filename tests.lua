@@ -1110,6 +1110,7 @@ function test_vb_folding()
   assert_fold_points(vb, code, folds)
 end
 
+-- Tests the Makefile lexer with bash/shell embedded two different ways.
 function test_makefile()
   local makefile = lexer.load('makefile')
   local code = ([[
@@ -1169,6 +1170,7 @@ function test_makefile()
   assert_lex(makefile, code, tags)
 end
 
+-- Tests the Bash lexer, where some operators are recognized only in certain contexts.
 function test_bash()
   local bash = lexer.load('bash')
 
@@ -1253,6 +1255,7 @@ function test_bash()
   assert_fold_points(bash, code, folds)
 end
 
+-- Tests the C++ lexer.
 function test_cpp()
   local cpp = lexer.load('cpp')
   local code = [=[
@@ -1336,6 +1339,7 @@ function test_cpp()
   assert_lex(cpp, code, tags)
 end
 
+-- Tests the Markdown lexer with embedded HTML.
 function test_markdown()
   local md = lexer.load('markdown')
   local code = ([[
@@ -1410,6 +1414,7 @@ function test_markdown()
   assert_lex(md, code, tags)
 end
 
+-- Tests the YAML lexer.
 function test_yaml()
   local yaml = lexer.load('yaml')
 
@@ -1520,6 +1525,103 @@ function test_yaml()
     lexer.OPERATOR, '-', lexer.DEFAULT, 'foobar'
   }
   assert_lex(yaml, code:match('(|.+)$'), tags, lexer.DEFAULT)
+end
+
+-- Tests the Python lexer and fold by indentation.
+function test_python()
+  local python = lexer.load('python')
+
+  -- Lexing tests.
+  local code = [[
+    # Comment.
+    @decorator
+    class Foo(Bar):
+      """documentation"""
+
+      def __init__(self, foo):
+        super(Foo, self).__init__()
+
+      def bar(): pass
+
+    if __name__ == '__main__':
+      a = -1 + 2.0e3 - 0x40 @ 5j
+      b = u"foo"
+      c = br"\n"
+      print(Foo.__doc__)
+      Foo().bar()
+  ]]
+  local tags = {
+    lexer.COMMENT, '# Comment.', --
+    lexer.LABEL .. '.decorator', '@decorator', --
+    lexer.KEYWORD, 'class', --
+    lexer.CLASS, 'Foo', --
+    lexer.OPERATOR, '(', lexer.IDENTIFIER, 'Bar', lexer.OPERATOR, ')', lexer.OPERATOR, ':', --
+    lexer.STRING, '"""documentation"""', --
+    lexer.KEYWORD, 'def', --
+    lexer.FUNCTION_BUILTIN .. '.special', '__init__', --
+    lexer.OPERATOR, '(', --
+    lexer.IDENTIFIER, 'self', --
+    lexer.OPERATOR, ',', --
+    lexer.IDENTIFIER, 'foo', --
+    lexer.OPERATOR, ')', --
+    lexer.OPERATOR, ':', --
+    lexer.FUNCTION_BUILTIN, 'super', --
+    lexer.OPERATOR, '(', --
+    lexer.IDENTIFIER, 'Foo', --
+    lexer.OPERATOR, ',', --
+    lexer.IDENTIFIER, 'self', --
+    lexer.OPERATOR, ')', --
+    lexer.OPERATOR, '.', --
+    lexer.FUNCTION_BUILTIN .. '.special', '__init__', --
+    lexer.OPERATOR, '(', lexer.OPERATOR, ')', --
+    lexer.KEYWORD, 'def', --
+    lexer.FUNCTION, 'bar', --
+    lexer.OPERATOR, '(', lexer.OPERATOR, ')', --
+    lexer.OPERATOR, ':', --
+    lexer.KEYWORD, 'pass', --
+    lexer.KEYWORD, 'if', --
+    lexer.ATTRIBUTE, '__name__', --
+    lexer.OPERATOR, '=', lexer.OPERATOR, '=', --
+    lexer.STRING, "'__main__'", --
+    lexer.OPERATOR, ':', --
+    lexer.IDENTIFIER, 'a', --
+    lexer.OPERATOR, '=', --
+    lexer.NUMBER, '-1', --
+    lexer.OPERATOR, '+', --
+    lexer.NUMBER, '2.0e3', --
+    lexer.OPERATOR, '-', --
+    lexer.NUMBER, '0x40', --
+    lexer.OPERATOR, '@', --
+    lexer.NUMBER, '5j', --
+    lexer.IDENTIFIER, 'b', lexer.OPERATOR, '=', lexer.STRING, 'u"foo"', --
+    lexer.IDENTIFIER, 'c', lexer.OPERATOR, '=', lexer.STRING, 'br"\\n"', --
+    lexer.FUNCTION_BUILTIN, 'print', --
+    lexer.OPERATOR, '(', --
+    lexer.IDENTIFIER, 'Foo', lexer.OPERATOR, '.', lexer.ATTRIBUTE, '__doc__', --
+    lexer.OPERATOR, ')', --
+    lexer.FUNCTION, 'Foo', --
+    lexer.OPERATOR, '(', lexer.OPERATOR, ')', --
+    lexer.OPERATOR, '.', --
+    lexer.FUNCTION_METHOD, 'bar', --
+    lexer.OPERATOR, '(', lexer.OPERATOR, ')' --
+  }
+  assert_lex(python, code, tags)
+
+  -- Folding tests.
+  code = [[
+    class Foo:
+      """Documentation
+      """
+      def foo():
+        pass
+
+      def bar(): pass
+
+    if __name__ == '__main__':
+      pass
+  ]]
+  local folds = {1, 4, -6, -8, 9}
+  assert_fold_points(python, code, folds)
 end
 
 function test_legacy()
