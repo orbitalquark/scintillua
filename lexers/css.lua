@@ -2,24 +2,31 @@
 -- CSS LPeg lexer.
 
 local lexer = lexer
-local P, S = lpeg.P, lpeg.S
+local P, S, B = lpeg.P, lpeg.S, lpeg.B
 
 local lex = lexer.new(..., {no_user_word_lists = true})
 
+-- Tags.
+local sel_prefix = B(S('#.'))
+local sel_suffix = lexer.space^0 * S('!>+.,:[{')
+lex:add_rule('tag', -sel_prefix * lex:tag(lexer.TAG, lex:get_word_list(lexer.TAG) * #sel_suffix))
+
 -- Properties.
-lex:add_rule('property', lex:tag('property', lex:get_word_list('property')))
+lex:add_rule('property', lex:tag('property', lex:get_word_list('property')) * #P(':'))
 
 -- Values.
-lex:add_rule('value', lex:tag('value', lex:get_word_list('value')))
+lex:add_rule('value', -sel_prefix * lex:tag(lexer.CONSTANT_BUILTIN, lex:get_word_list('value')) *
+  -sel_suffix)
 
 -- Functions.
 lex:add_rule('function', lex:tag(lexer.FUNCTION_BUILTIN, lex:get_word_list(lexer.FUNCTION_BUILTIN)))
 
 -- Colors.
-local color_name = lex:get_word_list('color')
+local color_name = lex:tag(lexer.CONSTANT_BUILTIN, lex:get_word_list('color'))
 local xdigit = lexer.xdigit
-local color_value = '#' * xdigit * xdigit * xdigit * (xdigit * xdigit * xdigit)^-1
-lex:add_rule('color', lex:tag('color', color_name + color_value))
+local color_value = lex:tag(lexer.NUMBER,
+  '#' * xdigit * xdigit * xdigit * (xdigit * xdigit * xdigit)^-1)
+lex:add_rule('color', color_name + color_value)
 
 -- Identifiers.
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.alpha * (lexer.alnum + S('_-'))^0))
@@ -37,20 +44,34 @@ lex:add_rule('string', lex:tag(lexer.STRING, sq_str + dq_str))
 lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.range('/*', '*/')))
 
 -- Numbers.
-local unit = lex:tag('unit', lex:get_word_list('unit'))
-lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.dec_num) * unit^-1)
+local unit = lex:get_word_list('unit') + '%'
+lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number * unit^-1))
 
 -- Operators.
 lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('~!#*>+=|.,:;()[]{}')))
 
 -- At rule.
-lex:add_rule('at_rule', lex:tag('at_rule', '@' * lex:get_word_list('at_rule')))
+lex:add_rule('at_rule', lex:tag(lexer.PREPROCESSOR, '@' * lex:get_word_list('at_rule')))
 
 -- Fold points.
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
 lex:add_fold_point(lexer.COMMENT, '/*', '*/')
 
 -- Word lists.
+lex:set_word_list(lexer.TAG, {
+  'a', 'abbr', 'address', 'article', 'aside', 'audio', 'b', 'bdi', 'bdo', 'blockquote', 'body',
+  'button', 'canvas', 'caption', 'cite', 'code', 'colgroup', 'content', 'data', 'datalist', 'dd',
+  'decorator', 'del', 'details', 'dfn', 'div', 'dl', 'dt', 'element', 'em', 'fieldset',
+  'figcaption', 'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'head', 'header',
+  'html', 'i', 'iframe', 'ins', 'kbd', 'label', 'legend', 'li', 'main', 'map', 'mark', 'menu',
+  'menuitem', 'meter', 'nav', 'noscript', 'object', 'ol', 'optgroup', 'option', 'output', 'p',
+  'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'script', 'section', 'select', 'shadow',
+  'small', 'spacer', 'span', 'strong', 'style', 'sub', 'summary', 'sup', 'table', 'tbody', 'td',
+  'template', 'textarea', 'tfoot', 'th', 'thead', 'time', 'title', 'tr', 'u', 'ul', 'var', 'video', --
+  'area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta',
+  'param', 'source', 'track', 'wbr'
+})
+
 lex:set_word_list('property', {
   -- CSS 1.
   'color', 'background-color', 'background-image', 'background-repeat', 'background-attachment',

@@ -710,14 +710,14 @@ function test_html()
   }
   assert_rules(html, rules)
   local tags = {
-    TAG .. '.doctype', TAG .. '.unknown', ATTRIBUTE .. '.unknown', 'entity', --
+    TAG .. '.doctype', TAG .. '.unknown', ATTRIBUTE .. '.unknown', --
     'whitespace.html', -- HTML
-    'value', 'color', 'unit', 'at_rule', 'whitespace.css', -- CSS
+    'property', 'whitespace.css', -- CSS
     'whitespace.javascript', -- JS
     'whitespace.coffeescript' -- CoffeeScript
   }
   assert_extra_tags(html, tags)
-  assert_children(html, {'css', 'javascript', 'coffeescript'})
+  assert_children(html, {'css', 'css.style', 'javascript', 'coffeescript'})
 
   -- Lexing tests.
   local code = [[
@@ -729,10 +729,11 @@ function test_html()
           @charset "utf8"
           /* Another comment. */
           h1:hover, h2::first-line {
-            color: darkred;
-            border: 1px solid #0000FF;
+            color: red;
+            border: 1.5px solid #0000FF;
             background: url("/images/image.jpg");
           }
+          table.class {}
         </style>
         <script type="text/javascript">
           /* A third comment. */
@@ -744,6 +745,7 @@ function test_html()
       </HEAD>
       <bod clss = "unknown">
       <hr tabindex=1/> &copy;
+      <div style="float: right">
     </html>
   ]]
   local tag_chars = TAG .. '.chars'
@@ -755,22 +757,23 @@ function test_html()
     tag_chars, '<', TAG, 'style', --
     ATTRIBUTE, 'type', OPERATOR, '=', STRING, '"text/css"', --
     tag_chars, '>', --
-    'at_rule', '@charset', STRING, '"utf8"', --
+    PREPROCESSOR, '@charset', STRING, '"utf8"', --
     COMMENT, '/* Another comment. */', --
-    IDENTIFIER, 'h1', 'pseudoclass', ':hover', --
+    TAG, 'h1', 'pseudoclass', ':hover', --
     OPERATOR, ',', --
-    IDENTIFIER, 'h2', 'pseudoelement', '::first-line', --
+    TAG, 'h2', 'pseudoelement', '::first-line', --
     OPERATOR, '{', --
-    'property', 'color', OPERATOR, ':', 'color', 'darkred', OPERATOR, ';', --
+    'property', 'color', OPERATOR, ':', CONSTANT_BUILTIN, 'red', OPERATOR, ';', --
     'property', 'border', --
     OPERATOR, ':', --
-    NUMBER, '1', 'unit', 'px', 'value', 'solid', 'color', '#0000FF', --
+    NUMBER, '1.5px', CONSTANT_BUILTIN, 'solid', NUMBER, '#0000FF', --
     OPERATOR, ';', --
     'property', 'background', --
     OPERATOR, ':', --
     FUNCTION_BUILTIN, 'url', OPERATOR, '(', STRING, '"/images/image.jpg"', OPERATOR, ')', --
     OPERATOR, ';', --
     OPERATOR, '}', --
+    TAG, 'table', OPERATOR, '.', IDENTIFIER, 'class', OPERATOR, '{', OPERATOR, '}', --
     tag_chars, '</', TAG, 'style', tag_chars, '>', --
     tag_chars, '<', TAG, 'script', --
     ATTRIBUTE, 'type', OPERATOR, '=', STRING, '"text/javascript"', --
@@ -797,12 +800,16 @@ function test_html()
     tag_chars, '</', TAG, 'script', tag_chars, '>', --
     tag_chars, '</', TAG, 'HEAD', tag_chars, '>', --
     tag_chars, '<', TAG .. '.unknown', 'bod', --
-    ATTRIBUTE .. '.unknown', 'clss', DEFAULT, '=', STRING, '"unknown"', --
+    ATTRIBUTE .. '.unknown', 'clss', OPERATOR, '=', STRING, '"unknown"', --
     tag_chars, '>', --
     tag_chars, '<', TAG .. '.single', 'hr', --
-    ATTRIBUTE, 'tabindex', DEFAULT, '=', NUMBER, '1', --
+    ATTRIBUTE, 'tabindex', OPERATOR, '=', NUMBER, '1', --
     tag_chars, '/>', --
-    'entity', '&copy;', --
+    CONSTANT_BUILTIN .. '.entity', '&copy;', --
+    tag_chars, '<', TAG, 'div', --
+    ATTRIBUTE, 'style', OPERATOR, '=', STRING, '"', --
+    'property', 'float', OPERATOR, ':', CONSTANT_BUILTIN, 'right', --
+    STRING, '"', tag_chars, '>', --
     tag_chars, '</', TAG, 'html', tag_chars, '>'
   }
   assert_lex(html, code, tags)
@@ -1542,7 +1549,7 @@ function test_lua51()
     [[cd lexers && lua5.1 -e 'lexer=require"lexer"' -e 'print(unpack(lexer.load("lua"):lex("_G")))']])
   local output = p:read('a')
   p:close()
-  assert(output == CONSTANT_BUILTIN .. '\t3\n')
+  assert(output:find(CONSTANT_BUILTIN .. '\t3', 1, true))
 end
 
 -- Run tests.

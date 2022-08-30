@@ -26,13 +26,6 @@ lex:add_rule('tag', tag)
 local tag_close = lex:tag(lexer.TAG .. '.chars', P('/')^-1 * '>')
 lex:add_rule('tag_close', tag_close)
 
--- Attributes.
-local known_attribute = lex:tag(lexer.ATTRIBUTE, lex:get_word_list(lexer.ATTRIBUTE, true) +
-  ((P('data-') + 'aria-') * (lexer.alnum + '-')^1))
-local unknown_attribute = lex:tag(lexer.ATTRIBUTE .. '.unknown', (lexer.alnum + '-')^1)
-local attribute = (known_attribute + unknown_attribute) * #(lexer.space^0 * '=')
-lex:add_rule('attribute', attribute)
-
 -- Equals.
 -- TODO: performance is terrible on large files.
 local in_tag = P(function(input, index)
@@ -46,6 +39,14 @@ end)
 local equals = lex:tag(lexer.OPERATOR, '=') -- * in_tag
 -- lex:add_rule('equals', equals)
 
+-- Attributes.
+local known_attribute = lex:tag(lexer.ATTRIBUTE, lex:get_word_list(lexer.ATTRIBUTE, true) +
+  ((P('data-') + 'aria-') * (lexer.alnum + '-')^1))
+local unknown_attribute = lex:tag(lexer.ATTRIBUTE .. '.unknown', (lexer.alnum + '-')^1)
+local ws = lex:get_rule('whitespace')
+local attribute_eq = (known_attribute + unknown_attribute) * ws^-1 * equals
+lex:add_rule('attribute', attribute_eq)
+
 -- Strings.
 local string = lex:tag(lexer.STRING, lexer.after_set('=', lexer.range("'") + lexer.range('"')))
 lex:add_rule('string', string)
@@ -55,7 +56,8 @@ local number = lex:tag(lexer.NUMBER, lexer.dec_num * P('%')^-1)
 lex:add_rule('number', lexer.after_set('=', number)) -- *in_tag)
 
 -- Entities.
-lex:add_rule('entity', lex:tag('entity', '&' * (lexer.any - lexer.space - ';')^1 * ';'))
+lex:add_rule('entity', lex:tag(lexer.CONSTANT_BUILTIN .. '.entity',
+  '&' * (lexer.any - lexer.space - ';')^1 * ';'))
 
 -- Fold points.
 local function disambiguate_lt(text, pos, line, s)
@@ -72,8 +74,7 @@ lex:add_fold_point(lexer.COMMENT, '<!--', '-->')
 
 -- Tags that start embedded languages.
 -- Export these patterns for proxy lexers (e.g. ASP) that need them.
-local ws = lex:get_rule('whitespace')
-lex.embed_start_tag = tag * (ws * attribute * ws^-1 * equals * ws^-1 * string)^0 * ws^-1 * tag_close
+lex.embed_start_tag = tag * (ws * attribute_eq * ws^-1 * string)^0 * ws^-1 * tag_close
 lex.embed_end_tag = tag * tag_close
 
 -- Embedded CSS (<style type="text/css"> ... </style>).
@@ -84,6 +85,12 @@ local css_start_rule = #('<' * style_tag * ('>' + P(function(input, index)
 end))) * lex.embed_start_tag
 local css_end_rule = #('</' * style_tag * '>') * lex.embed_end_tag
 lex:embed(css, css_start_rule, css_end_rule)
+-- Embedded CSS in style="" attribute.
+local style = lexer.load('css', 'css.style')
+css_start_rule = #(P('style') * lexer.space^0 * '=') * attribute_eq * ws^-1 *
+  lex:tag(lexer.STRING, '"')
+css_end_rule = lex:tag(lexer.STRING, '"')
+lex:embed(style, css_start_rule, css_end_rule) -- only double-quotes for now
 
 -- Embedded JavaScript (<script type="text/javascript"> ... </script>).
 local js = lexer.load('javascript')
