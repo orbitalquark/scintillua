@@ -86,8 +86,8 @@ end
 --   Whitespace tags are ignored for the sake of simplicity. Do not include them.
 -- @param initial_style Optional current style. This is used for determining which language to
 --   start in in a multiple-language lexer.
--- @usage assert_lex(lua, "print('hi')", {lexer.FUNCTION_BUILTIN, 'print', lexer.OPERATOR, '(',
---   lexer.STRING, "'hi'", lexer.OPERATOR, ')'}})
+-- @usage assert_lex(lua, "print('hi')", {FUNCTION_BUILTIN, 'print', OPERATOR, '(', STRING, "'hi'",
+--   OPERATOR, ')'}})
 function assert_lex(lex, code, expected_tags, initial_style)
   if lex._lexer then lex = lex._lexer end -- note: lexer.load() does this
   local tags = lex:lex(code, initial_style or lex._TAGS['whitespace.' .. lex._name])
@@ -204,20 +204,49 @@ function test_word_match()
   assert(word_match('foo! bar? baz.', true):match('FOO!') == 5)
 end
 
+local DEFAULT = lexer.DEFAULT
+local COMMENT = lexer.COMMENT
+local STRING = lexer.STRING
+local NUMBER = lexer.NUMBER
+local KEYWORD = lexer.KEYWORD
+local IDENTIFIER = lexer.IDENTIFIER
+local OPERATOR = lexer.OPERATOR
+local ERROR = lexer.ERROR
+local PREPROCESSOR = lexer.PREPROCESSOR
+local VARIABLE = lexer.VARIABLE
+local FUNCTION = lexer.FUNCTION
+local CLASS = lexer.CLASS
+local TYPE = lexer.TYPE
+local LABEL = lexer.LABEL
+local REGEX = lexer.REGEX
+local FUNCTION_BUILTIN = lexer.FUNCTION_BUILTIN
+local CONSTANT_BUILTIN = lexer.CONSTANT_BUILTIN
+local FUNCTION_METHOD = lexer.FUNCTION_METHOD
+local TAG = lexer.TAG
+local ATTRIBUTE = lexer.ATTRIBUTE
+local VARIABLE_BUILTIN = lexer.VARIABLE_BUILTIN
+local TITLE = lexer.TITLE
+local BOLD = lexer.BOLD
+local ITALIC = lexer.ITALIC
+local UNDERLINE = lexer.UNDERLINE
+local CODE = lexer.CODE
+local LINK = lexer.LINK
+local REFERENCE = lexer.REFERENCE
+
 -- Tests a basic lexer with a few simple rules and no custom styles.
 function test_basics()
   local lex = lexer.new('test')
   assert_default_tags(lex)
-  lex:add_rule('keyword', lex:tag(lexer.KEYWORD, word_match('foo bar baz')))
-  lex:add_rule('string', lex:tag(lexer.STRING, lexer.range('"')))
-  lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.integer))
+  lex:add_rule('keyword', lex:tag(KEYWORD, word_match('foo bar baz')))
+  lex:add_rule('string', lex:tag(STRING, lexer.range('"')))
+  lex:add_rule('number', lex:tag(NUMBER, lexer.integer))
   local code = [[foo bar baz "foo bar baz" 123]]
   local tags = {
-    lexer.KEYWORD, 'foo', --
-    lexer.KEYWORD, 'bar', --
-    lexer.KEYWORD, 'baz', --
-    lexer.STRING, '"foo bar baz"', --
-    lexer.NUMBER, '123'
+    KEYWORD, 'foo', --
+    KEYWORD, 'bar', --
+    KEYWORD, 'baz', --
+    STRING, '"foo bar baz"', --
+    NUMBER, '123'
   }
   assert_lex(lex, code, tags)
 end
@@ -226,15 +255,15 @@ end
 -- works as expected.
 function test_rule_order()
   local lex = lexer.new('test')
-  lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
-  lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lpeg.P('foo')))
+  lex:add_rule('identifier', lex:tag(IDENTIFIER, lexer.word))
+  lex:add_rule('keyword', lex:tag(KEYWORD, lpeg.P('foo')))
   local code = [[foo bar]]
-  local tags = {lexer.IDENTIFIER, 'foo', lexer.IDENTIFIER, 'bar'}
+  local tags = {IDENTIFIER, 'foo', IDENTIFIER, 'bar'}
   assert_lex(lex, code, tags)
 
   -- Modify the identifier rule to not catch keywords.
-  lex:modify_rule('identifier', -lpeg.P('foo') * lex:tag(lexer.IDENTIFIER, lexer.word))
-  tags = {lexer.KEYWORD, 'foo', lexer.IDENTIFIER, 'bar'}
+  lex:modify_rule('identifier', -lpeg.P('foo') * lex:tag(IDENTIFIER, lexer.word))
+  tags = {KEYWORD, 'foo', IDENTIFIER, 'bar'}
   assert_lex(lex, code, tags)
 end
 
@@ -252,30 +281,30 @@ end
 -- Tests word lists.
 function test_word_list()
   local lex = lexer.new('test')
-  lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD)))
-  lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
-  lex:add_rule('operator', lex:tag(lexer.OPERATOR, '.'))
+  lex:add_rule('keyword', lex:tag(KEYWORD, lex:get_word_list(KEYWORD)))
+  lex:add_rule('identifier', lex:tag(IDENTIFIER, lexer.word))
+  lex:add_rule('operator', lex:tag(OPERATOR, '.'))
   local code = [[foo bar.baz quux]]
   local tags = {
-    lexer.IDENTIFIER, 'foo', --
-    lexer.IDENTIFIER, 'bar', --
-    lexer.OPERATOR, '.', --
-    lexer.IDENTIFIER, 'baz', --
-    lexer.IDENTIFIER, 'quux'
+    IDENTIFIER, 'foo', --
+    IDENTIFIER, 'bar', --
+    OPERATOR, '.', --
+    IDENTIFIER, 'baz', --
+    IDENTIFIER, 'quux'
   }
   assert_lex(lex, code, tags)
 
-  lex:set_word_list(lexer.KEYWORD, 'foo quux')
-  tags[1 * 2 - 1], tags[1 * 2] = lexer.KEYWORD, 'foo'
-  tags[5 * 2 - 1], tags[5 * 2] = lexer.KEYWORD, 'quux'
+  lex:set_word_list(KEYWORD, 'foo quux')
+  tags[1 * 2 - 1], tags[1 * 2] = KEYWORD, 'foo'
+  tags[5 * 2 - 1], tags[5 * 2] = KEYWORD, 'quux'
   assert_lex(lex, code, tags)
 
-  lex:set_word_list(lexer.KEYWORD, 'bar', true) -- append
-  tags[2 * 2 - 1], tags[2 * 2] = lexer.KEYWORD, 'bar'
+  lex:set_word_list(KEYWORD, 'bar', true) -- append
+  tags[2 * 2 - 1], tags[2 * 2] = KEYWORD, 'bar'
   assert_lex(lex, code, tags)
 
-  lex:set_word_list(lexer.KEYWORD, {'bar.baz'})
-  tags = {lexer.IDENTIFIER, 'foo', lexer.KEYWORD, 'bar.baz', lexer.IDENTIFIER, 'quux'}
+  lex:set_word_list(KEYWORD, {'bar.baz'})
+  tags = {IDENTIFIER, 'foo', KEYWORD, 'bar.baz', IDENTIFIER, 'quux'}
   assert_lex(lex, code, tags)
 end
 
@@ -309,11 +338,7 @@ function test_embed()
   local tags = {
     'parent', 'foo', --
     'transition', '[', --
-    'child', '1', --
-    lexer.DEFAULT, ',', --
-    'child', '2', --
-    lexer.DEFAULT, ',', --
-    'child', '3', --
+    'child', '1', DEFAULT, ',', 'child', '2', DEFAULT, ',', 'child', '3', --
     'transition', ']', --
     'parent', 'bar'
   }
@@ -322,10 +347,7 @@ function test_embed()
   -- Lex some child -> parent code, starting from within the child.
   code = [[2, 3] bar]]
   tags = {
-    'child', '2', --
-    lexer.DEFAULT, ',', --
-    'child', '3', --
-    'transition', ']', --
+    'child', '2', DEFAULT, ',', 'child', '3', 'transition', ']', --
     'parent', 'bar'
   }
   local initial_style = parent._TAGS['whitespace.' .. child._name]
@@ -359,11 +381,7 @@ function test_embed_into()
   local tags = {
     'parent', 'foo', --
     'transition', '[', --
-    'child', '1', --
-    lexer.DEFAULT, ',', --
-    'child', '2', --
-    lexer.DEFAULT, ',', --
-    'child', '3', --
+    'child', '1', DEFAULT, ',', 'child', '2', DEFAULT, ',', 'child', '3', --
     'transition', ']', --
     'parent', 'bar'
   }
@@ -372,10 +390,7 @@ function test_embed_into()
   -- Lex some child -> parent code, starting from within the child.
   code = [[2, 3] bar]]
   tags = {
-    'child', '2', --
-    lexer.DEFAULT, ',', --
-    'child', '3', --
-    'transition', ']', --
+    'child', '2', DEFAULT, ',', 'child', '3', 'transition', ']', --
     'parent', 'bar'
   }
   local initial_style = parent._TAGS['whitespace.' .. child._name]
@@ -417,11 +432,7 @@ function test_proxy()
   local tags = {
     'parent', 'foo', --
     'transition', '[', --
-    'child', '1', --
-    lexer.DEFAULT, ',', --
-    'child', '2', --
-    lexer.DEFAULT, ',', --
-    'child', '3', --
+    'child', '1', DEFAULT, ',', 'child', '2', DEFAULT, ',', 'child', '3', --
     'transition', ']', --
     'parent', 'bar'
   }
@@ -430,10 +441,7 @@ function test_proxy()
   -- Lex some child -> parent code, starting from within the child.
   code = [[ 2, 3] bar]]
   tags = {
-    'child', '2', --
-    lexer.DEFAULT, ',', --
-    'child', '3', --
-    'transition', ']', --
+    'child', '2', DEFAULT, ',', 'child', '3', 'transition', ']', --
     'parent', 'bar'
   }
   local initial_style = parent._TAGS['whitespace.' .. child._name]
@@ -459,18 +467,18 @@ end
 -- Tests a lexer that inherits from another one.
 function test_inherits_rules()
   local lex = lexer.new('test')
-  lex:add_rule('keyword', lex:tag(lexer.KEYWORD, word_match('foo bar baz')))
+  lex:add_rule('keyword', lex:tag(KEYWORD, word_match('foo bar baz')))
 
   -- Verify inherited rules are used.
   local sublexer = lexer.new('test2', {inherit = lex})
   local code = [[foo bar baz]]
-  local tags = {lexer.KEYWORD, 'foo', lexer.KEYWORD, 'bar', lexer.KEYWORD, 'baz'}
+  local tags = {KEYWORD, 'foo', KEYWORD, 'bar', KEYWORD, 'baz'}
   assert_lex(sublexer, code, tags)
 
   -- Verify subsequently added rules are also used.
-  sublexer:add_rule('keyword2', sublexer:tag(lexer.KEYWORD, lpeg.P('quux')))
+  sublexer:add_rule('keyword2', sublexer:tag(KEYWORD, lpeg.P('quux')))
   code = [[foo bar baz quux]]
-  tags = {lexer.KEYWORD, 'foo', lexer.KEYWORD, 'bar', lexer.KEYWORD, 'baz', lexer.KEYWORD, 'quux'}
+  tags = {KEYWORD, 'foo', KEYWORD, 'bar', KEYWORD, 'baz', KEYWORD, 'quux'}
   assert_lex(sublexer, code, tags)
 end
 
@@ -478,8 +486,8 @@ end
 -- (e.g. "if" and "endif").
 function test_fold_words()
   local lex = lexer.new('test')
-  lex:add_rule('keyword', lex:tag(lexer.KEYWORD, word_match('if endif')))
-  lex:add_fold_point(lexer.KEYWORD, 'if', 'endif')
+  lex:add_rule('keyword', lex:tag(KEYWORD, word_match('if endif')))
+  lex:add_fold_point(KEYWORD, 'if', 'endif')
 
   local code = [[
     if foo
@@ -537,7 +545,7 @@ function test_lua()
   }
   assert_rules(lua, rules)
   local tags = {
-    lexer.STRING .. '.longstring', --
+    STRING .. '.longstring', --
     'whitespace.lua' -- language-specific whitespace for multilang lexers
   }
   assert_extra_tags(lua, tags)
@@ -552,47 +560,32 @@ function test_lua()
     print(string.upper'a', b:upper())
   ]=]
   tags = {
-    lexer.COMMENT, '--[[ Comment. ]]', lexer.COMMENT, '--', --
-    lexer.LABEL, '::begin::', --
-    lexer.KEYWORD, 'local', --
-    lexer.IDENTIFIER, 'a', --
-    lexer.ATTRIBUTE, '<const>', --
-    lexer.OPERATOR, '=', --
-    lexer.NUMBER, '-1', --
-    lexer.OPERATOR, '+', --
-    lexer.NUMBER, '2.0e3', --
-    lexer.OPERATOR, '-', --
-    lexer.NUMBER, '0x40', --
-    lexer.KEYWORD, 'local', --
-    lexer.IDENTIFIER, 'b', --
-    lexer.OPERATOR, '=', --
-    lexer.STRING, '"two"', --
-    lexer.OPERATOR, '..', --
-    lexer.STRING .. '.longstring', '[[three]]', --
-    lexer.OPERATOR, '..', --
-    lexer.STRING, [['four\'']], --
-    lexer.IDENTIFIER, 'c', --
-    lexer.OPERATOR, '=', --
-    lexer.OPERATOR, '{', --
-    lexer.CONSTANT_BUILTIN, '_G', lexer.OPERATOR, '.', lexer.IDENTIFIER, 'print', --
-    lexer.OPERATOR, ',', --
-    lexer.IDENTIFIER, 'type', --
-    lexer.OPERATOR, '=', --
-    lexer.FUNCTION, 'foo', --
-    lexer.OPERATOR, '{', --
-    lexer.CONSTANT_BUILTIN, 'math.pi', --
-    lexer.OPERATOR, '}', --
-    lexer.OPERATOR, '}', --
-    lexer.FUNCTION_BUILTIN, 'print', --
-    lexer.OPERATOR, '(', --
-    lexer.FUNCTION_BUILTIN, 'string.upper', --
-    lexer.STRING, "'a'", --
-    lexer.OPERATOR, ',', --
-    lexer.IDENTIFIER, 'b', --
-    lexer.OPERATOR, ':', --
-    lexer.FUNCTION_METHOD, 'upper', --
-    lexer.OPERATOR, '(', lexer.OPERATOR, ')', --
-    lexer.OPERATOR, ')'
+    COMMENT, '--[[ Comment. ]]', COMMENT, '--', --
+    LABEL, '::begin::', --
+    KEYWORD, 'local', IDENTIFIER, 'a', ATTRIBUTE, '<const>', --
+    OPERATOR, '=', --
+    NUMBER, '-1', OPERATOR, '+', NUMBER, '2.0e3', OPERATOR, '-', NUMBER, '0x40', --
+    KEYWORD, 'local', IDENTIFIER, 'b', --
+    OPERATOR, '=', --
+    STRING, '"two"', --
+    OPERATOR, '..', --
+    STRING .. '.longstring', '[[three]]', --
+    OPERATOR, '..', --
+    STRING, "'four\\''", --
+    IDENTIFIER, 'c', --
+    OPERATOR, '=', --
+    OPERATOR, '{', --
+    CONSTANT_BUILTIN, '_G', OPERATOR, '.', IDENTIFIER, 'print', --
+    OPERATOR, ',', --
+    IDENTIFIER, 'type', --
+    OPERATOR, '=', --
+    FUNCTION, 'foo', OPERATOR, '{', CONSTANT_BUILTIN, 'math.pi', OPERATOR, '}', OPERATOR, '}', --
+    FUNCTION_BUILTIN, 'print', --
+    OPERATOR, '(', --
+    FUNCTION_BUILTIN, 'string.upper', STRING, "'a'", --
+    OPERATOR, ',', --
+    IDENTIFIER, 'b', OPERATOR, ':', FUNCTION_METHOD, 'upper', OPERATOR, '(', OPERATOR, ')', --
+    OPERATOR, ')'
   }
   assert_lex(lua, code, tags)
 
@@ -645,54 +638,48 @@ function test_c()
     }
   ]]):gsub('    ', '') -- strip indent
   local tags = {
-    lexer.COMMENT, '/* Comment. */', --
-    lexer.PREPROCESSOR, '#include', lexer.STRING, '<stdio.h>', --
-    lexer.PREPROCESSOR, '#include', lexer.STRING, '"lua.h"', --
-    lexer.PREPROCESSOR, '#  define', lexer.IDENTIFIER, 'INT_MAX_', lexer.NUMBER, '1', --
-    lexer.TYPE, 'int', lexer.FUNCTION, 'main', --
-    lexer.OPERATOR, '(', --
-    lexer.TYPE, 'int', lexer.IDENTIFIER, 'argc', --
-    lexer.OPERATOR, ',', --
-    lexer.TYPE, 'char', lexer.OPERATOR, '*', lexer.OPERATOR, '*', lexer.IDENTIFIER, 'argv', --
-    lexer.OPERATOR, ')', --
-    lexer.OPERATOR, '{', --
-    lexer.LABEL, 'begin:', --
-    lexer.KEYWORD, 'if', --
-    lexer.OPERATOR, '(', lexer.CONSTANT_BUILTIN, 'NULL', lexer.OPERATOR, ')', --
-    lexer.COMMENT, '// comment', --
-    lexer.FUNCTION_BUILTIN, 'printf', --
-    lexer.OPERATOR, '(', --
-    lexer.STRING, '"%ld %f %s %i"', --
-    lexer.OPERATOR, ',', --
-    lexer.NUMBER, '1l', --
-    lexer.OPERATOR, ',', --
-    lexer.NUMBER, '1.0e-1f', --
-    lexer.OPERATOR, ',', --
-    lexer.STRING, 'L"foo"', --
-    lexer.OPERATOR, ',', --
-    lexer.CONSTANT_BUILTIN, 'INT_MAX', --
-    lexer.OPERATOR, ')', --
-    lexer.OPERATOR, ';', --
-    lexer.IDENTIFIER, 'foo', lexer.OPERATOR, '.', lexer.IDENTIFIER, 'free', --
-    lexer.OPERATOR, ',', --
-    lexer.IDENTIFIER, 'foo', --
-    lexer.OPERATOR, '-', lexer.OPERATOR, '>', --
-    lexer.FUNCTION_METHOD, 'free', --
-    lexer.OPERATOR, '(', lexer.OPERATOR, ')', --
-    lexer.OPERATOR, ',', --
-    lexer.FUNCTION_BUILTIN, 'free', --
-    lexer.OPERATOR, '(', --
-    lexer.IDENTIFIER, 'foo', --
-    lexer.OPERATOR, ')', --
-    lexer.OPERATOR, ';', --
-    lexer.KEYWORD, 'return', --
-    lexer.NUMBER, '0x0', --
-    lexer.OPERATOR, '?', --
-    lexer.IDENTIFIER, 'argc', -- should not be a label
-    lexer.OPERATOR, ':', --
-    lexer.NUMBER, '0', --
-    lexer.OPERATOR, ';', --
-    lexer.OPERATOR, '}'
+    COMMENT, '/* Comment. */', --
+    PREPROCESSOR, '#include', STRING, '<stdio.h>', --
+    PREPROCESSOR, '#include', STRING, '"lua.h"', --
+    PREPROCESSOR, '#  define', IDENTIFIER, 'INT_MAX_', NUMBER, '1', --
+    TYPE, 'int', FUNCTION, 'main', --
+    OPERATOR, '(', --
+    TYPE, 'int', IDENTIFIER, 'argc', --
+    OPERATOR, ',', --
+    TYPE, 'char', OPERATOR, '*', OPERATOR, '*', IDENTIFIER, 'argv', --
+    OPERATOR, ')', --
+    OPERATOR, '{', --
+    LABEL, 'begin:', --
+    KEYWORD, 'if', OPERATOR, '(', CONSTANT_BUILTIN, 'NULL', OPERATOR, ')', COMMENT, '// comment', --
+    FUNCTION_BUILTIN, 'printf', --
+    OPERATOR, '(', --
+    STRING, '"%ld %f %s %i"', --
+    OPERATOR, ',', --
+    NUMBER, '1l', --
+    OPERATOR, ',', --
+    NUMBER, '1.0e-1f', --
+    OPERATOR, ',', --
+    STRING, 'L"foo"', --
+    OPERATOR, ',', --
+    CONSTANT_BUILTIN, 'INT_MAX', --
+    OPERATOR, ')', --
+    OPERATOR, ';', --
+    IDENTIFIER, 'foo', OPERATOR, '.', IDENTIFIER, 'free', --
+    OPERATOR, ',', --
+    IDENTIFIER, 'foo', --
+    OPERATOR, '-', OPERATOR, '>', --
+    FUNCTION_METHOD, 'free', OPERATOR, '(', OPERATOR, ')', --
+    OPERATOR, ',', --
+    FUNCTION_BUILTIN, 'free', OPERATOR, '(', IDENTIFIER, 'foo', OPERATOR, ')', --
+    OPERATOR, ';', --
+    KEYWORD, 'return', --
+    NUMBER, '0x0', --
+    OPERATOR, '?', --
+    IDENTIFIER, 'argc', -- should not be a label
+    OPERATOR, ':', --
+    NUMBER, '0', --
+    OPERATOR, ';', --
+    OPERATOR, '}'
   }
   assert_lex(c, code, tags)
 
@@ -723,7 +710,7 @@ function test_html()
   }
   assert_rules(html, rules)
   local tags = {
-    lexer.TAG .. '.doctype', lexer.TAG .. '.unknown', lexer.ATTRIBUTE .. '.unknown', 'entity', --
+    TAG .. '.doctype', TAG .. '.unknown', ATTRIBUTE .. '.unknown', 'entity', --
     'whitespace.html', -- HTML
     'value', 'color', 'unit', 'at_rule', 'whitespace.css', -- CSS
     'whitespace.javascript', -- JS
@@ -759,103 +746,78 @@ function test_html()
       <hr tabindex=1/> &copy;
     </html>
   ]]
-  local tag_chars = lexer.TAG .. '.chars'
+  local tag_chars = TAG .. '.chars'
   tags = {
-    lexer.TAG .. '.doctype', '<!DOCTYPE html>', --
-    lexer.COMMENT, '<!-- Comment. -->', --
-    tag_chars, '<', lexer.TAG, 'html', tag_chars, '>', --
-    tag_chars, '<', lexer.TAG, 'HEAD', tag_chars, '>', --
-    tag_chars, '<', --
-    lexer.TAG, 'style', --
-    lexer.ATTRIBUTE, 'type', lexer.OPERATOR, '=', lexer.STRING, '"text/css"', --
+    TAG .. '.doctype', '<!DOCTYPE html>', --
+    COMMENT, '<!-- Comment. -->', --
+    tag_chars, '<', TAG, 'html', tag_chars, '>', --
+    tag_chars, '<', TAG, 'HEAD', tag_chars, '>', --
+    tag_chars, '<', TAG, 'style', --
+    ATTRIBUTE, 'type', OPERATOR, '=', STRING, '"text/css"', --
     tag_chars, '>', --
-    'at_rule', '@charset', lexer.STRING, '"utf8"', --
-    lexer.COMMENT, '/* Another comment. */', --
-    lexer.IDENTIFIER, 'h1', 'pseudoclass', ':hover', --
-    lexer.OPERATOR, ',', --
-    lexer.IDENTIFIER, 'h2', 'pseudoelement', '::first-line', --
-    lexer.OPERATOR, '{', --
-    'property', 'color', lexer.OPERATOR, ':', 'color', 'darkred', lexer.OPERATOR, ';', --
+    'at_rule', '@charset', STRING, '"utf8"', --
+    COMMENT, '/* Another comment. */', --
+    IDENTIFIER, 'h1', 'pseudoclass', ':hover', --
+    OPERATOR, ',', --
+    IDENTIFIER, 'h2', 'pseudoelement', '::first-line', --
+    OPERATOR, '{', --
+    'property', 'color', OPERATOR, ':', 'color', 'darkred', OPERATOR, ';', --
     'property', 'border', --
-    lexer.OPERATOR, ':', --
-    lexer.NUMBER, '1', 'unit', 'px', 'value', 'solid', 'color', '#0000FF', --
-    lexer.OPERATOR, ';', --
+    OPERATOR, ':', --
+    NUMBER, '1', 'unit', 'px', 'value', 'solid', 'color', '#0000FF', --
+    OPERATOR, ';', --
     'property', 'background', --
-    lexer.OPERATOR, ':', --
-    lexer.FUNCTION_BUILTIN, 'url', --
-    lexer.OPERATOR, '(', --
-    lexer.STRING, '"/images/image.jpg"', --
-    lexer.OPERATOR, ')', --
-    lexer.OPERATOR, ';', --
-    lexer.OPERATOR, '}', --
-    tag_chars, '</', lexer.TAG, 'style', tag_chars, '>', --
-    tag_chars, '<', --
-    lexer.TAG, 'script', --
-    lexer.ATTRIBUTE, 'type', lexer.OPERATOR, '=', lexer.STRING, '"text/javascript"', --
+    OPERATOR, ':', --
+    FUNCTION_BUILTIN, 'url', OPERATOR, '(', STRING, '"/images/image.jpg"', OPERATOR, ')', --
+    OPERATOR, ';', --
+    OPERATOR, '}', --
+    tag_chars, '</', TAG, 'style', tag_chars, '>', --
+    tag_chars, '<', TAG, 'script', --
+    ATTRIBUTE, 'type', OPERATOR, '=', STRING, '"text/javascript"', --
     tag_chars, '>', --
-    lexer.COMMENT, '/* A third comment. */', --
-    lexer.KEYWORD, 'var', --
-    lexer.IDENTIFIER, 'a', --
-    lexer.OPERATOR, '=', --
-    lexer.NUMBER, '1', --
-    lexer.OPERATOR, '+', --
-    lexer.NUMBER, '2.0e3', --
-    lexer.OPERATOR, '-', --
-    lexer.NUMBER, '0x40', --
-    lexer.OPERATOR, ';', --
-    lexer.KEYWORD, 'var', --
-    lexer.IDENTIFIER, 'b', --
-    lexer.OPERATOR, '=', --
-    lexer.STRING, '"two"', --
-    lexer.OPERATOR, '+', --
-    lexer.STRING, '`three`', --
-    lexer.OPERATOR, ';', --
-    lexer.KEYWORD, 'var', --
-    lexer.IDENTIFIER, 'c', --
-    lexer.OPERATOR, '=', --
-    lexer.REGEX, '/pattern/i', --
-    lexer.OPERATOR, ';', --
-    lexer.FUNCTION, 'foo', --
-    lexer.OPERATOR, '(', --
-    lexer.FUNCTION_BUILTIN, 'eval', --
-    lexer.OPERATOR, '(', --
-    lexer.CONSTANT_BUILTIN, 'arguments', --
-    lexer.OPERATOR, ')', --
-    lexer.OPERATOR, ',', --
-    lexer.IDENTIFIER, 'bar', --
-    lexer.OPERATOR, '.', --
-    lexer.FUNCTION_METHOD, 'baz', --
-    lexer.OPERATOR, '(', lexer.OPERATOR, ')', --
-    lexer.OPERATOR, ',', --
-    lexer.TYPE, 'Object', --
-    lexer.OPERATOR, ')', --
-    lexer.OPERATOR, ';', --
-    tag_chars, '</', lexer.TAG, 'script', tag_chars, '>', --
-    tag_chars, '</', lexer.TAG, 'HEAD', tag_chars, '>', --
-    tag_chars, '<', --
-    lexer.TAG .. '.unknown', 'bod', --
-    lexer.ATTRIBUTE .. '.unknown', 'clss', lexer.DEFAULT, '=', lexer.STRING, '"unknown"', --
+    COMMENT, '/* A third comment. */', --
+    KEYWORD, 'var', IDENTIFIER, 'a', --
+    OPERATOR, '=', --
+    NUMBER, '1', OPERATOR, '+', NUMBER, '2.0e3', OPERATOR, '-', NUMBER, '0x40', --
+    OPERATOR, ';', --
+    KEYWORD, 'var', IDENTIFIER, 'b', --
+    OPERATOR, '=', --
+    STRING, '"two"', OPERATOR, '+', STRING, '`three`', --
+    OPERATOR, ';', --
+    KEYWORD, 'var', IDENTIFIER, 'c', OPERATOR, '=', REGEX, '/pattern/i', OPERATOR, ';', --
+    FUNCTION, 'foo', --
+    OPERATOR, '(', --
+    FUNCTION_BUILTIN, 'eval', OPERATOR, '(', CONSTANT_BUILTIN, 'arguments', OPERATOR, ')', --
+    OPERATOR, ',', --
+    IDENTIFIER, 'bar', OPERATOR, '.', FUNCTION_METHOD, 'baz', OPERATOR, '(', OPERATOR, ')', --
+    OPERATOR, ',', --
+    TYPE, 'Object', --
+    OPERATOR, ')', --
+    OPERATOR, ';', --
+    tag_chars, '</', TAG, 'script', tag_chars, '>', --
+    tag_chars, '</', TAG, 'HEAD', tag_chars, '>', --
+    tag_chars, '<', TAG .. '.unknown', 'bod', --
+    ATTRIBUTE .. '.unknown', 'clss', DEFAULT, '=', STRING, '"unknown"', --
     tag_chars, '>', --
-    tag_chars, '<', --
-    lexer.TAG .. '.single', 'hr', --
-    lexer.ATTRIBUTE, 'tabindex', lexer.DEFAULT, '=', lexer.NUMBER, '1', --
+    tag_chars, '<', TAG .. '.single', 'hr', --
+    ATTRIBUTE, 'tabindex', DEFAULT, '=', NUMBER, '1', --
     tag_chars, '/>', --
     'entity', '&copy;', --
-    tag_chars, '</', lexer.TAG, 'html', tag_chars, '>'
+    tag_chars, '</', TAG, 'html', tag_chars, '>'
   }
   assert_lex(html, code, tags)
 
   -- Folding tests.
   local symbols = {'<', '<!--', '-->', '{', '}', '/*', '*/', '//'}
   for i = 1, #symbols do assert(html._fold_points._symbols[symbols[i]]) end
-  assert(html._fold_points[lexer.TAG .. '.chars']['<'])
-  assert(html._fold_points[lexer.COMMENT]['<!--'])
-  assert(html._fold_points[lexer.COMMENT]['-->'])
-  assert(html._fold_points[lexer.OPERATOR]['{'])
-  assert(html._fold_points[lexer.OPERATOR]['}'])
-  assert(html._fold_points[lexer.COMMENT]['/*'])
-  assert(html._fold_points[lexer.COMMENT]['*/'])
-  assert(html._fold_points[lexer.COMMENT]['//'])
+  assert(html._fold_points[TAG .. '.chars']['<'])
+  assert(html._fold_points[COMMENT]['<!--'])
+  assert(html._fold_points[COMMENT]['-->'])
+  assert(html._fold_points[OPERATOR]['{'])
+  assert(html._fold_points[OPERATOR]['}'])
+  assert(html._fold_points[COMMENT]['/*'])
+  assert(html._fold_points[COMMENT]['*/'])
+  assert(html._fold_points[COMMENT]['//'])
   code = [[
     <html>
       foo
@@ -888,29 +850,28 @@ function test_php()
   local php = lexer.load('php')
   assert(php._name == 'php')
   assert_default_tags(php)
-  assert_extra_tags(php, {'whitespace.php', lexer.TAG .. '.php'})
+  assert_extra_tags(php, {'whitespace.php', TAG .. '.php'})
 
   -- Lexing tests
   -- Starting in HTML.
   local code = [[<h1><?php echo "hi" . PHP_OS . foo() . bar->baz(); ?></h1>]]
-  local tag_chars = lexer.TAG .. '.chars'
+  local tag_chars = TAG .. '.chars'
   local tags = {
-    tag_chars, '<', lexer.TAG, 'h1', tag_chars, '>', --
-    lexer.TAG .. '.php', '<?php ', --
-    lexer.KEYWORD, 'echo', --
-    lexer.STRING, '"hi"', --
-    lexer.OPERATOR, '.', --
-    lexer.CONSTANT_BUILTIN, 'PHP_OS', --
-    lexer.OPERATOR, '.', --
-    lexer.FUNCTION, 'foo', lexer.OPERATOR, '(', lexer.OPERATOR, ')', --
-    lexer.OPERATOR, '.', --
-    lexer.IDENTIFIER, 'bar', --
-    lexer.OPERATOR, '-', lexer.OPERATOR, '>', --
-    lexer.FUNCTION_METHOD, 'baz', --
-    lexer.OPERATOR, '(', lexer.OPERATOR, ')', --
-    lexer.OPERATOR, ';', --
-    lexer.TAG .. '.php', '?>', --
-    tag_chars, '</', lexer.TAG, 'h1', tag_chars, '>'
+    tag_chars, '<', TAG, 'h1', tag_chars, '>', --
+    TAG .. '.php', '<?php ', --
+    KEYWORD, 'echo', --
+    STRING, '"hi"', --
+    OPERATOR, '.', --
+    CONSTANT_BUILTIN, 'PHP_OS', --
+    OPERATOR, '.', --
+    FUNCTION, 'foo', OPERATOR, '(', OPERATOR, ')', --
+    OPERATOR, '.', --
+    IDENTIFIER, 'bar', --
+    OPERATOR, '-', OPERATOR, '>', --
+    FUNCTION_METHOD, 'baz', OPERATOR, '(', OPERATOR, ')', --
+    OPERATOR, ';', --
+    TAG .. '.php', '?>', --
+    tag_chars, '</', TAG, 'h1', tag_chars, '>'
   }
   local initial_style = php._TAGS['whitespace.html']
   assert_lex(php, code, tags, initial_style)
@@ -921,22 +882,22 @@ function test_php()
   -- Starting in PHP.
   code = [[echo "hi";]]
   initial_style = php._TAGS['whitespace.php']
-  tags = {lexer.KEYWORD, 'echo', lexer.STRING, '"hi"', lexer.OPERATOR, ';'}
+  tags = {KEYWORD, 'echo', STRING, '"hi"', OPERATOR, ';'}
   assert_lex(php, code, tags, initial_style)
 
   -- Folding tests.
   local symbols = {'<?', '?>', '/*', '*/', '//', '#', '{', '}', '(', ')'}
   for i = 1, #symbols do assert(php._fold_points._symbols[symbols[i]]) end
-  assert(php._fold_points[lexer.TAG .. '.php']['<?'])
-  assert(php._fold_points[lexer.TAG .. '.php']['?>'])
-  assert(php._fold_points[lexer.COMMENT]['/*'])
-  assert(php._fold_points[lexer.COMMENT]['*/'])
-  assert(php._fold_points[lexer.COMMENT]['//'])
-  assert(php._fold_points[lexer.COMMENT]['#'])
-  assert(php._fold_points[lexer.OPERATOR]['{'])
-  assert(php._fold_points[lexer.OPERATOR]['}'])
-  assert(php._fold_points[lexer.OPERATOR]['('])
-  assert(php._fold_points[lexer.OPERATOR][')'])
+  assert(php._fold_points[TAG .. '.php']['<?'])
+  assert(php._fold_points[TAG .. '.php']['?>'])
+  assert(php._fold_points[COMMENT]['/*'])
+  assert(php._fold_points[COMMENT]['*/'])
+  assert(php._fold_points[COMMENT]['//'])
+  assert(php._fold_points[COMMENT]['#'])
+  assert(php._fold_points[OPERATOR]['{'])
+  assert(php._fold_points[OPERATOR]['}'])
+  assert(php._fold_points[OPERATOR]['('])
+  assert(php._fold_points[OPERATOR][')'])
 end
 
 -- Tests the Ruby lexer.
@@ -954,27 +915,22 @@ function test_ruby()
     puts :c, foo.puts
   ]]
   local tags = {
-    lexer.COMMENT, '# Comment.', --
-    lexer.FUNCTION_BUILTIN, 'require', lexer.STRING, '"foo"', --
-    lexer.VARIABLE, '$a', --
-    lexer.OPERATOR, '=', --
-    lexer.NUMBER, '1', --
-    lexer.OPERATOR, '+', --
-    lexer.NUMBER, '2.0e3', --
-    lexer.OPERATOR, '-', --
-    lexer.NUMBER, '0x40', --
-    lexer.KEYWORD, 'if', --
-    lexer.KEYWORD, 'true', --
-    lexer.IDENTIFIER, 'b', --
-    lexer.OPERATOR, '=', --
-    lexer.STRING, '"two"', --
-    lexer.OPERATOR, '+', --
-    lexer.STRING, '%q[three]', --
-    lexer.OPERATOR, '+', --
-    lexer.STRING, '<<-FOUR\n      four\n    FOUR', --
-    lexer.FUNCTION_BUILTIN, 'puts', 'symbol', ':c', --
-    lexer.OPERATOR, ',', --
-    lexer.IDENTIFIER, 'foo', lexer.OPERATOR, '.', lexer.IDENTIFIER, 'puts'
+    COMMENT, '# Comment.', --
+    FUNCTION_BUILTIN, 'require', STRING, '"foo"', --
+    VARIABLE, '$a', --
+    OPERATOR, '=', --
+    NUMBER, '1', OPERATOR, '+', NUMBER, '2.0e3', OPERATOR, '-', NUMBER, '0x40', --
+    KEYWORD, 'if', KEYWORD, 'true', --
+    IDENTIFIER, 'b', --
+    OPERATOR, '=', --
+    STRING, '"two"', --
+    OPERATOR, '+', --
+    STRING, '%q[three]', --
+    OPERATOR, '+', --
+    STRING, '<<-FOUR\n      four\n    FOUR', --
+    FUNCTION_BUILTIN, 'puts', 'symbol', ':c', --
+    OPERATOR, ',', --
+    IDENTIFIER, 'foo', OPERATOR, '.', IDENTIFIER, 'puts'
   }
   assert_lex(ruby, code, tags)
 
@@ -987,15 +943,15 @@ function test_ruby()
   for k, v in pairs(fold_keywords) do
     assert(ruby._fold_points._symbols[k])
     if type(v) == 'number' then
-      assert(ruby._fold_points[lexer.KEYWORD][k] == v)
+      assert(ruby._fold_points[KEYWORD][k] == v)
     else
-      assert(type(ruby._fold_points[lexer.KEYWORD][k]) == 'function')
+      assert(type(ruby._fold_points[KEYWORD][k]) == 'function')
     end
   end
   local fold_operators = {'(', ')', '[', ']', '{', '}'}
   for i = 1, #fold_operators do
     assert(ruby._fold_points._symbols[fold_operators[i]])
-    assert(ruby._fold_points[lexer.OPERATOR][fold_operators[i]])
+    assert(ruby._fold_points[OPERATOR][fold_operators[i]])
   end
   code = [=[
     class Foo
@@ -1036,28 +992,21 @@ function test_ruby_and_rails()
     end
   ]]
   local ruby_tags = {
-    lexer.KEYWORD, 'class', --
-    lexer.IDENTIFIER, 'Foo', --
-    lexer.OPERATOR, '<', --
-    lexer.IDENTIFIER, 'ActiveRecord', --
-    lexer.OPERATOR, ':', lexer.OPERATOR, ':', --
-    lexer.IDENTIFIER, 'Base', --
-    lexer.IDENTIFIER, 'has_one', -- function.builtin in rails
+    KEYWORD, 'class', IDENTIFIER, 'Foo', --
+    OPERATOR, '<', --
+    IDENTIFIER, 'ActiveRecord', OPERATOR, ':', OPERATOR, ':', IDENTIFIER, 'Base', --
+    IDENTIFIER, 'has_one', -- function.builtin in rails
     'symbol', ':bar', --
-    lexer.KEYWORD, 'end'
+    KEYWORD, 'end'
   }
   assert_lex(ruby, code, ruby_tags)
 
   local rails_tags = {
-    lexer.KEYWORD, 'class', --
-    lexer.IDENTIFIER, 'Foo', --
-    lexer.OPERATOR, '<', --
-    lexer.IDENTIFIER, 'ActiveRecord', --
-    lexer.OPERATOR, ':', lexer.OPERATOR, ':', --
-    lexer.IDENTIFIER, 'Base', --
-    lexer.FUNCTION_BUILTIN, 'has_one', --
-    'symbol', ':bar', --
-    lexer.KEYWORD, 'end'
+    KEYWORD, 'class', IDENTIFIER, 'Foo', --
+    OPERATOR, '<', --
+    IDENTIFIER, 'ActiveRecord', OPERATOR, ':', OPERATOR, ':', IDENTIFIER, 'Base', --
+    FUNCTION_BUILTIN, 'has_one', 'symbol', ':bar', --
+    KEYWORD, 'end'
   }
   assert_lex(rails, code, rails_tags)
 end
@@ -1069,24 +1018,24 @@ function test_rhtml()
   -- Lexing tests.
   -- Start in HTML.
   local code = [[<h1><% puts "hi" + link_to "foo" @foo %></h1>]]
-  local tag_chars = lexer.TAG .. '.chars'
+  local tag_chars = TAG .. '.chars'
   local rhtml_tags = {
-    tag_chars, '<', lexer.TAG, 'h1', tag_chars, '>', --
-    'rhtml_tag', '<%', --
-    lexer.FUNCTION_BUILTIN, 'puts', lexer.STRING, '"hi"', --
-    lexer.OPERATOR, '+', --
-    lexer.FUNCTION_BUILTIN, 'link_to', lexer.STRING, '"foo"', lexer.VARIABLE, '@foo', --
-    'rhtml_tag', '%>', --
-    tag_chars, '</', lexer.TAG, 'h1', tag_chars, '>'
+    tag_chars, '<', TAG, 'h1', tag_chars, '>', --
+    TAG .. '.rhtml', '<%', --
+    FUNCTION_BUILTIN, 'puts', STRING, '"hi"', --
+    OPERATOR, '+', --
+    FUNCTION_BUILTIN, 'link_to', STRING, '"foo"', VARIABLE, '@foo', --
+    TAG .. '.rhtml', '%>', --
+    tag_chars, '</', TAG, 'h1', tag_chars, '>'
   }
   local initial_style = rhtml._TAGS['whitespace.html']
   assert_lex(rhtml, code, rhtml_tags, initial_style)
   -- Start in Ruby.
   code = [[puts "hi" + link_to "foo" @foo]]
   rhtml_tags = {
-    lexer.FUNCTION_BUILTIN, 'puts', lexer.STRING, '"hi"', --
-    lexer.OPERATOR, '+', --
-    lexer.FUNCTION_BUILTIN, 'link_to', lexer.STRING, '"foo"', lexer.VARIABLE, '@foo'
+    FUNCTION_BUILTIN, 'puts', STRING, '"hi"', --
+    OPERATOR, '+', --
+    FUNCTION_BUILTIN, 'link_to', STRING, '"foo"', VARIABLE, '@foo'
   }
   initial_style = rhtml._TAGS['whitespace.rails']
   assert_lex(rhtml, code, rhtml_tags, initial_style)
@@ -1128,44 +1077,39 @@ function test_makefile()
      echo = $(shell echo $PATH)
   ]]):gsub('    ', ''):gsub('  ', '\t') -- strip indent, convert to tabs
   local tags = {
-    lexer.COMMENT, '# Comment.', --
-    lexer.VARIABLE_BUILTIN, '.DEFAULT_GOAL', lexer.OPERATOR, ':=', lexer.IDENTIFIER, 'all', --
-    lexer.VARIABLE, 'foo', --
-    lexer.OPERATOR, '?=', --
-    lexer.IDENTIFIER, 'bar', lexer.DEFAULT, '=', lexer.IDENTIFIER, 'baz', --
-    lexer.IDENTIFIER, 'all', lexer.OPERATOR, ':', --
-    lexer.OPERATOR, '$(', lexer.VARIABLE, 'foo', lexer.OPERATOR, ')', --
-    lexer.OPERATOR, '$(', lexer.VARIABLE, 'foo', lexer.OPERATOR, ')', --
-    lexer.OPERATOR, ':', lexer.OPERATOR, ';', --
-    lexer.FUNCTION_BUILTIN, 'echo', lexer.STRING, "'hi'", --
-    lexer.CONSTANT_BUILTIN, '.PHONY', lexer.OPERATOR, ':', lexer.IDENTIFIER, 'docs', --
-    lexer.KEYWORD, 'define', lexer.FUNCTION, 'build-cc', lexer.OPERATOR, '=', --
-    lexer.OPERATOR, '$(', lexer.VARIABLE_BUILTIN, 'CC', lexer.OPERATOR, ')', --
-    lexer.OPERATOR, '${', lexer.VARIABLE_BUILTIN, 'CFLAGS', lexer.OPERATOR, '}', --
-    lexer.DEFAULT, '-', lexer.IDENTIFIER, 'c', --
-    lexer.OPERATOR, '$', lexer.VARIABLE_BUILTIN, '<', --
-    lexer.DEFAULT, '-', lexer.IDENTIFIER, 'o', --
-    lexer.OPERATOR, '$', lexer.VARIABLE_BUILTIN, '@', --
-    lexer.KEYWORD, 'endef', --
-    lexer.FUNCTION, 'func', --
-    lexer.OPERATOR, '=', --
-    lexer.OPERATOR, '$(', --
-    lexer.FUNCTION_BUILTIN, 'call', --
-    lexer.FUNCTION, 'quux', --
-    lexer.DEFAULT, ',', --
-    lexer.OPERATOR, '${', --
-    lexer.VARIABLE, 'adsuffix', -- typo should not be tagged as FUNCTION_BUILTIN
-    lexer.IDENTIFIER, '.o', --
-    lexer.DEFAULT, ',', --
-    lexer.OPERATOR, '$(', lexer.VARIABLE, '1', lexer.OPERATOR, ')', --
-    lexer.OPERATOR, '}', --
-    lexer.OPERATOR, ')', --
-    lexer.VARIABLE, 'echo', --
-    lexer.OPERATOR, '=', --
-    lexer.OPERATOR, '$(', --
-    lexer.FUNCTION_BUILTIN, 'shell', --
-    lexer.FUNCTION_BUILTIN, 'echo', lexer.OPERATOR, '$', lexer.VARIABLE_BUILTIN, 'PATH', --
-    lexer.OPERATOR, ')'
+    COMMENT, '# Comment.', --
+    VARIABLE_BUILTIN, '.DEFAULT_GOAL', OPERATOR, ':=', IDENTIFIER, 'all', --
+    VARIABLE, 'foo', OPERATOR, '?=', IDENTIFIER, 'bar', DEFAULT, '=', IDENTIFIER, 'baz', --
+    IDENTIFIER, 'all', OPERATOR, ':', OPERATOR, '$(', VARIABLE, 'foo', OPERATOR, ')', --
+    OPERATOR, '$(', VARIABLE, 'foo', OPERATOR, ')', --
+    OPERATOR, ':', OPERATOR, ';', --
+    FUNCTION_BUILTIN, 'echo', STRING, "'hi'", --
+    CONSTANT_BUILTIN, '.PHONY', OPERATOR, ':', IDENTIFIER, 'docs', --
+    KEYWORD, 'define', FUNCTION, 'build-cc', OPERATOR, '=', --
+    OPERATOR, '$(', VARIABLE_BUILTIN, 'CC', OPERATOR, ')', --
+    OPERATOR, '${', VARIABLE_BUILTIN, 'CFLAGS', OPERATOR, '}', --
+    DEFAULT, '-', IDENTIFIER, 'c', --
+    OPERATOR, '$', VARIABLE_BUILTIN, '<', --
+    DEFAULT, '-', IDENTIFIER, 'o', --
+    OPERATOR, '$', VARIABLE_BUILTIN, '@', --
+    KEYWORD, 'endef', --
+    FUNCTION, 'func', --
+    OPERATOR, '=', --
+    OPERATOR, '$(', FUNCTION_BUILTIN, 'call', --
+    FUNCTION, 'quux', --
+    DEFAULT, ',', --
+    OPERATOR, '${', --
+    VARIABLE, 'adsuffix', -- typo should not be tagged as FUNCTION_BUILTIN
+    IDENTIFIER, '.o', --
+    DEFAULT, ',', --
+    OPERATOR, '$(', VARIABLE, '1', OPERATOR, ')', --
+    OPERATOR, '}', --
+    OPERATOR, ')', --
+    VARIABLE, 'echo', --
+    OPERATOR, '=', --
+    OPERATOR, '$(', FUNCTION_BUILTIN, 'shell', --
+    FUNCTION_BUILTIN, 'echo', OPERATOR, '$', VARIABLE_BUILTIN, 'PATH', --
+    OPERATOR, ')'
   }
   assert_lex(makefile, code, tags)
 end
@@ -1189,50 +1133,39 @@ function test_bash()
     END
   ]=]
   local tags = {
-    lexer.COMMENT, '# Comment.', --
-    lexer.VARIABLE, 'foo', --
-    lexer.OPERATOR, '=', --
-    lexer.IDENTIFIER, 'bar', lexer.DEFAULT, '=', lexer.IDENTIFIER, 'baz', --
-    lexer.DEFAULT, ':', --
-    lexer.OPERATOR, '$', lexer.VARIABLE_BUILTIN, 'PATH', --
-    lexer.FUNCTION_BUILTIN, 'echo', --
-    lexer.DEFAULT, '-', lexer.IDENTIFIER, 'n', --
-    lexer.OPERATOR, '$', lexer.VARIABLE, 'foo', --
-    lexer.NUMBER, '1', lexer.OPERATOR, '>', lexer.OPERATOR, '&', lexer.NUMBER, '2', --
-    lexer.KEYWORD, 'if', --
-    lexer.OPERATOR, '[', --
-    lexer.OPERATOR, '!', --
-    lexer.OPERATOR, '-z', lexer.STRING, '"foo"', --
-    lexer.OPERATOR, '-a', --
-    lexer.NUMBER, '0', lexer.OPERATOR, '-ne', lexer.NUMBER, '1', --
-    lexer.OPERATOR, ']', --
-    lexer.OPERATOR, ';', lexer.KEYWORD, 'then', --
-    lexer.VARIABLE, 'quux', --
-    lexer.OPERATOR, '=', --
-    lexer.OPERATOR, '$', lexer.OPERATOR, '(', lexer.OPERATOR, '(', --
-    lexer.NUMBER, '1', --
-    lexer.OPERATOR, '-', --
-    lexer.NUMBER, '2', --
-    lexer.OPERATOR, '/', --
-    lexer.NUMBER, '0x3', --
-    lexer.OPERATOR, ')', lexer.OPERATOR, ')', --
-    lexer.KEYWORD, 'elif', --
-    lexer.OPERATOR, '[', lexer.OPERATOR, '[', --
-    lexer.OPERATOR, '-d', --
-    lexer.DEFAULT, '/', --
-    lexer.IDENTIFIER, 'foo', --
-    lexer.DEFAULT, '/', --
-    lexer.IDENTIFIER, 'bar', --
-    lexer.DEFAULT, '-', --
-    lexer.IDENTIFIER, 'baz', --
-    lexer.DEFAULT, '.', --
-    lexer.IDENTIFIER, 'quux', --
-    lexer.OPERATOR, ']', lexer.OPERATOR, ']', lexer.OPERATOR, ';', lexer.KEYWORD, 'then', --
-    lexer.VARIABLE, 'foo', --
-    lexer.OPERATOR, '=', --
-    lexer.OPERATOR, '$', lexer.VARIABLE_BUILTIN, '?', --
-    lexer.KEYWORD, 'fi', --
-    lexer.VARIABLE, 's', lexer.OPERATOR, '=', lexer.STRING, '<<-"END"\n      foobar\n    END'
+    COMMENT, '# Comment.', --
+    VARIABLE, 'foo', --
+    OPERATOR, '=', --
+    IDENTIFIER, 'bar', DEFAULT, '=', IDENTIFIER, 'baz', --
+    DEFAULT, ':', --
+    OPERATOR, '$', VARIABLE_BUILTIN, 'PATH', --
+    FUNCTION_BUILTIN, 'echo', --
+    DEFAULT, '-', IDENTIFIER, 'n', --
+    OPERATOR, '$', VARIABLE, 'foo', --
+    NUMBER, '1', OPERATOR, '>', OPERATOR, '&', NUMBER, '2', --
+    KEYWORD, 'if', --
+    OPERATOR, '[', --
+    OPERATOR, '!', OPERATOR, '-z', STRING, '"foo"', --
+    OPERATOR, '-a', --
+    NUMBER, '0', OPERATOR, '-ne', NUMBER, '1', --
+    OPERATOR, ']', --
+    OPERATOR, ';', KEYWORD, 'then', --
+    VARIABLE, 'quux', --
+    OPERATOR, '=', --
+    OPERATOR, '$', OPERATOR, '(', OPERATOR, '(', --
+    NUMBER, '1', OPERATOR, '-', NUMBER, '2', OPERATOR, '/', NUMBER, '0x3', --
+    OPERATOR, ')', OPERATOR, ')', --
+    KEYWORD, 'elif', --
+    OPERATOR, '[', OPERATOR, '[', --
+    OPERATOR, '-d', --
+    DEFAULT, '/', --
+    IDENTIFIER, 'foo', --
+    DEFAULT, '/', --
+    IDENTIFIER, 'bar', DEFAULT, '-', IDENTIFIER, 'baz', DEFAULT, '.', IDENTIFIER, 'quux', --
+    OPERATOR, ']', OPERATOR, ']', OPERATOR, ';', KEYWORD, 'then', --
+    VARIABLE, 'foo', OPERATOR, '=', OPERATOR, '$', VARIABLE_BUILTIN, '?', --
+    KEYWORD, 'fi', --
+    VARIABLE, 's', OPERATOR, '=', STRING, '<<-"END"\n      foobar\n    END'
   }
   assert_lex(bash, code, tags)
 
@@ -1264,7 +1197,8 @@ function test_cpp()
     #include "header.h"
     #  undef FOO
     [[deprecated]]
-    class Foo : public Bar {
+    class Foo : public Bar
+    {
       Foo();
       ~Foo();
     private:
@@ -1272,69 +1206,52 @@ function test_cpp()
       int mBar = 1;
     };
 
-    Foo::Foo() {
+    Foo::Foo()
+    {
       std::clog << std::abs(strlen(mFoo.c_str()));
       this->bar(1'000 + 0xFF'00 - 0b11'00);
       std::sort(
     }
   ]=]
   local tags = {
-    lexer.COMMENT, '/*/*Comment.*/', lexer.COMMENT, '//', --
-    lexer.PREPROCESSOR, '#include', lexer.STRING, '<string>', --
-    lexer.PREPROCESSOR, '#include', lexer.STRING, '"header.h"', --
-    lexer.PREPROCESSOR, '#  undef', lexer.IDENTIFIER, 'FOO', --
-    lexer.ATTRIBUTE, '[[deprecated]]', --
-    lexer.KEYWORD, 'class', lexer.IDENTIFIER, 'Foo', --
-    lexer.OPERATOR, ':', --
-    lexer.KEYWORD, 'public', lexer.IDENTIFIER, 'Bar', --
-    lexer.OPERATOR, '{', --
-    lexer.FUNCTION, 'Foo', lexer.OPERATOR, '(', lexer.OPERATOR, ')', lexer.OPERATOR, ';', --
-    lexer.OPERATOR, '~', --
-    lexer.FUNCTION, 'Foo', --
-    lexer.OPERATOR, '(', lexer.OPERATOR, ')', --
-    lexer.OPERATOR, ';', --
-    lexer.KEYWORD, 'private', lexer.OPERATOR, ':', --
-    lexer.TYPE .. '.stl', 'std::string', --
-    lexer.IDENTIFIER, 'mFoo', --
-    lexer.OPERATOR, '=', --
-    lexer.STRING, 'u8"foo"', --
-    lexer.OPERATOR, ';', --
-    lexer.TYPE, 'int', --
-    lexer.IDENTIFIER, 'mBar', --
-    lexer.OPERATOR, '=', --
-    lexer.NUMBER, '1', --
-    lexer.OPERATOR, ';', --
-    lexer.OPERATOR, '}', lexer.OPERATOR, ';', --
-    lexer.IDENTIFIER, 'Foo', --
-    lexer.OPERATOR, ':', lexer.OPERATOR, ':', --
-    lexer.FUNCTION, 'Foo', --
-    lexer.OPERATOR, '(', lexer.OPERATOR, ')', --
-    lexer.OPERATOR, '{', --
-    lexer.CONSTANT_BUILTIN .. '.stl', 'std::clog', --
-    lexer.OPERATOR, '<', lexer.OPERATOR, '<', lexer.FUNCTION_BUILTIN, 'std::abs', --
-    lexer.OPERATOR, '(', --
-    lexer.FUNCTION_BUILTIN, 'strlen', --
-    lexer.OPERATOR, '(', --
-    lexer.IDENTIFIER, 'mFoo', --
-    lexer.OPERATOR, '.', --
-    lexer.FUNCTION_METHOD, 'c_str', lexer.OPERATOR, '(', lexer.OPERATOR, ')', --
-    lexer.OPERATOR, ')', --
-    lexer.OPERATOR, ')', --
-    lexer.OPERATOR, ';', --
-    lexer.KEYWORD, 'this', --
-    lexer.OPERATOR, '-', lexer.OPERATOR, '>', --
-    lexer.FUNCTION_METHOD, 'bar', --
-    lexer.OPERATOR, '(', --
-    lexer.NUMBER, "1'000", --
-    lexer.OPERATOR, '+', --
-    lexer.NUMBER, "0xFF'00", --
-    lexer.OPERATOR, '-', --
-    lexer.NUMBER, "0b11'00", --
-    lexer.OPERATOR, ')', --
-    lexer.OPERATOR, ';', --
-    lexer.FUNCTION_BUILTIN .. '.stl', 'std::sort', --
-    lexer.OPERATOR, '(', --
-    lexer.OPERATOR, '}'
+    COMMENT, '/*/*Comment.*/', COMMENT, '//', --
+    PREPROCESSOR, '#include', STRING, '<string>', --
+    PREPROCESSOR, '#include', STRING, '"header.h"', --
+    PREPROCESSOR, '#  undef', IDENTIFIER, 'FOO', --
+    ATTRIBUTE, '[[deprecated]]', --
+    KEYWORD, 'class', IDENTIFIER, 'Foo', OPERATOR, ':', KEYWORD, 'public', IDENTIFIER, 'Bar', --
+    OPERATOR, '{', --
+    FUNCTION, 'Foo', OPERATOR, '(', OPERATOR, ')', OPERATOR, ';', --
+    OPERATOR, '~', FUNCTION, 'Foo', OPERATOR, '(', OPERATOR, ')', OPERATOR, ';', --
+    KEYWORD, 'private', OPERATOR, ':', --
+    TYPE .. '.stl', 'std::string', --
+    IDENTIFIER, 'mFoo', --
+    OPERATOR, '=', --
+    STRING, 'u8"foo"', --
+    OPERATOR, ';', --
+    TYPE, 'int', IDENTIFIER, 'mBar', OPERATOR, '=', NUMBER, '1', OPERATOR, ';', --
+    OPERATOR, '}', OPERATOR, ';', --
+    IDENTIFIER, 'Foo', OPERATOR, ':', OPERATOR, ':', FUNCTION, 'Foo', OPERATOR, '(', OPERATOR, ')', --
+    OPERATOR, '{', --
+    CONSTANT_BUILTIN .. '.stl', 'std::clog', --
+    OPERATOR, '<', OPERATOR, '<', --
+    FUNCTION_BUILTIN, 'std::abs', --
+    OPERATOR, '(', --
+    FUNCTION_BUILTIN, 'strlen', --
+    OPERATOR, '(', --
+    IDENTIFIER, 'mFoo', OPERATOR, '.', FUNCTION_METHOD, 'c_str', OPERATOR, '(', OPERATOR, ')', --
+    OPERATOR, ')', --
+    OPERATOR, ')', --
+    OPERATOR, ';', --
+    KEYWORD, 'this', --
+    OPERATOR, '-', OPERATOR, '>', --
+    FUNCTION_METHOD, 'bar', --
+    OPERATOR, '(', --
+    NUMBER, "1'000", OPERATOR, '+', NUMBER, "0xFF'00", OPERATOR, '-', NUMBER, "0b11'00", --
+    OPERATOR, ')', --
+    OPERATOR, ';', --
+    FUNCTION_BUILTIN .. '.stl', 'std::sort', OPERATOR, '(', --
+    OPERATOR, '}'
   }
   assert_lex(cpp, code, tags)
 end
@@ -1380,36 +1297,29 @@ function test_markdown()
         <a>
   ]]):gsub('\n    ', '\n') -- strip indent
   local tags = {
-    lexer.TITLE .. '.h1', '# header1', --
-    lexer.TITLE .. '.h2', '## header2', --
-    lexer.STRING, '> block1\n> block2\nblock3\n\n', --
-    lexer.NUMBER, '1. ', lexer.DEFAULT, 'l', lexer.DEFAULT, '1', --
-    lexer.DEFAULT, '2', --
-    lexer.NUMBER, '* ', lexer.DEFAULT, 'l', lexer.DEFAULT, '2', --
-    lexer.CODE, 'code1\n', --
-    lexer.CODE, '```\ncode2\n```\n', --
-    lexer.CODE, '`code3`', --
-    lexer.CODE, '``code4``', --
-    lexer.CODE, '``code`5``', --
-    lexer.CODE, '`code``6`', --
-    lexer.CODE, '> code7\n', --
-    lexer.UNDERLINE .. '.hr', '---\n', --
-    lexer.UNDERLINE .. '.hr', '* * *\n', --
-    lexer.LINK, '[link](target)', --
-    lexer.LINK, '![image](target "alt_text")', --
-    lexer.REFERENCE, '[link] [1]', --
-    lexer.LINK, 'http://link', --
-    lexer.DEFAULT, 't', lexer.DEFAULT, 'e', lexer.DEFAULT, 'x', lexer.DEFAULT, 't', --
-    lexer.LINK, '<http://link>', --
-    lexer.REFERENCE, '[1]:', lexer.LINK, 'link#text', --
-    lexer.BOLD, '**strong**', --
-    lexer.ITALIC, '*emphasis*', --
-    lexer.DEFAULT, '\\*', --
-    lexer.DEFAULT, 't', lexer.DEFAULT, 'e', lexer.DEFAULT, 'x', lexer.DEFAULT, 't', --
-    lexer.DEFAULT, '\\*', --
-    lexer.TAG .. '.chars', '<', lexer.TAG, 'html', lexer.TAG .. '.chars', '>', --
-    lexer.TAG .. '.chars', '</', lexer.TAG, 'html', lexer.TAG .. '.chars', '>', --
-    lexer.CODE, '<a>\n'
+    TITLE .. '.h1', '# header1', --
+    TITLE .. '.h2', '## header2', --
+    STRING, '> block1\n> block2\nblock3\n\n', --
+    NUMBER, '1. ', DEFAULT, 'l', DEFAULT, '1', --
+    DEFAULT, '2', --
+    NUMBER, '* ', DEFAULT, 'l', DEFAULT, '2', --
+    CODE, 'code1\n', --
+    CODE, '```\ncode2\n```\n', --
+    CODE, '`code3`', CODE, '``code4``', CODE, '``code`5``', CODE, '`code``6`', --
+    CODE, '> code7\n', --
+    UNDERLINE .. '.hr', '---\n', --
+    UNDERLINE .. '.hr', '* * *\n', --
+    LINK, '[link](target)', LINK, '![image](target "alt_text")', REFERENCE, '[link] [1]', --
+    LINK, 'http://link', --
+    DEFAULT, 't', DEFAULT, 'e', DEFAULT, 'x', DEFAULT, 't', --
+    LINK, '<http://link>', --
+    REFERENCE, '[1]:', LINK, 'link#text', --
+    BOLD, '**strong**', --
+    ITALIC, '*emphasis*', --
+    DEFAULT, '\\*', DEFAULT, 't', DEFAULT, 'e', DEFAULT, 'x', DEFAULT, 't', DEFAULT, '\\*', --
+    TAG .. '.chars', '<', TAG, 'html', TAG .. '.chars', '>', --
+    TAG .. '.chars', '</', TAG, 'html', TAG .. '.chars', '>', --
+    CODE, '<a>\n'
   }
   assert_lex(md, code, tags)
 end
@@ -1456,59 +1366,52 @@ function test_yaml()
     - foobar
   ]]):gsub('    ', '') -- strip indent
   local tags = {
-    lexer.PREPROCESSOR, '%YAML directive', --
-    lexer.OPERATOR, '---', lexer.COMMENT, '# document start', --
-    lexer.OPERATOR, '-', lexer.DEFAULT, 'item 1', --
-    lexer.OPERATOR, '-', lexer.DEFAULT, 'item 2', --
-    lexer.OPERATOR, '-', lexer.OPERATOR, '-', lexer.DEFAULT, 'item - 3', --
-    lexer.OPERATOR, '-', --
-    lexer.OPERATOR, '[', --
-    lexer.NUMBER, '1', lexer.OPERATOR, ',', --
-    lexer.NUMBER, '-2.0e-3', lexer.OPERATOR, ',', --
-    lexer.NUMBER, '0x3', lexer.OPERATOR, ',', --
-    lexer.NUMBER, '04', lexer.OPERATOR, ',', --
-    lexer.DEFAULT, 'two words', --
-    lexer.OPERATOR, ']', --
-    lexer.OPERATOR, '-', --
-    lexer.OPERATOR, '&', lexer.LABEL, 'anchor', lexer.TYPE, '!!str', --
-    lexer.DEFAULT, 'i', lexer.DEFAULT, 't', lexer.DEFAULT, 'e', lexer.DEFAULT, 'm', --
-    lexer.OPERATOR, '-', lexer.OPERATOR, '*', lexer.LABEL, 'anchor', --
-    lexer.OPERATOR, '...', lexer.COMMENT, '# document end', --
-    lexer.STRING, 'key', lexer.OPERATOR, ':', lexer.DEFAULT, 'value', --
-    lexer.STRING, '"key 2"', lexer.OPERATOR, ':', lexer.STRING, "'value 2'", --
-    lexer.STRING, 'key 3', lexer.OPERATOR, ':', lexer.DEFAULT, 'value "3"', --
-    lexer.STRING, 'key-4_', --
-    lexer.OPERATOR, ':', --
-    lexer.OPERATOR, '{', --
-    lexer.STRING, '1', lexer.OPERATOR, ':', lexer.CONSTANT_BUILTIN, 'true', lexer.OPERATOR, ',', --
-    lexer.STRING, '2', lexer.OPERATOR, ':', lexer.CONSTANT_BUILTIN, 'FALSE', lexer.OPERATOR, ',', --
-    lexer.STRING, '3', lexer.OPERATOR, ':', lexer.CONSTANT_BUILTIN, 'null', lexer.OPERATOR, ',', --
-    lexer.STRING, '4', lexer.OPERATOR, ':', lexer.NUMBER, '.Inf', lexer.OPERATOR, ',', --
-    lexer.STRING, '5', lexer.OPERATOR, ':', lexer.DEFAULT, 'two words', lexer.OPERATOR, ',', --
-    lexer.STRING, '6', lexer.OPERATOR, ':', lexer.NUMBER .. '.timestamp', '2000-01-01T12:00:00.0Z', --
-    lexer.OPERATOR, '}', --
-    lexer.OPERATOR, '-', --
-    lexer.STRING, '-key - 5', --
-    lexer.OPERATOR, ':', --
-    lexer.OPERATOR, '{', --
-    lexer.STRING, 'one', lexer.OPERATOR, ':', lexer.DEFAULT, 'two', lexer.OPERATOR, ',', --
-    lexer.STRING, 'three four', lexer.OPERATOR, ':', lexer.DEFAULT, 'five six', --
-    lexer.OPERATOR, '}', --
-    lexer.OPERATOR, '?', lexer.OPERATOR, '-', lexer.DEFAULT, 'item 1', --
-    lexer.OPERATOR, ':', lexer.OPERATOR, '-', lexer.DEFAULT, 'item 2', --
-    lexer.OPERATOR, '-', lexer.OPERATOR, '{', lexer.STRING, 'ok', lexer.OPERATOR, ':',
-    lexer.DEFAULT, 'ok@', lexer.OPERATOR, ',', --
-    lexer.ERROR, '@', lexer.OPERATOR, ':', lexer.ERROR, '@', --
-    lexer.OPERATOR, '}', --
-    lexer.STRING, 'literal', --
-    lexer.OPERATOR, ':', --
-    lexer.DEFAULT, '|\n  line 1\n\n  - line 2\n  [line, 3]\n  #line 4\n  ---\n', --
-    lexer.STRING, 'flow', --
-    lexer.OPERATOR, ':', --
-    lexer.DEFAULT, '>\n  {line: 5}\n  ? - line 6\n  @line 7\n  %line 8\n  ...', --
-    lexer.OPERATOR, '-', lexer.STRING, 'foo', lexer.OPERATOR, ':', lexer.DEFAULT, 'bar', --
-    lexer.STRING, 'baz', lexer.OPERATOR, ':', lexer.DEFAULT, '|\n   quux', --
-    lexer.OPERATOR, '-', lexer.DEFAULT, 'foobar' --
+    PREPROCESSOR, '%YAML directive', --
+    OPERATOR, '---', COMMENT, '# document start', --
+    OPERATOR, '-', DEFAULT, 'item 1', --
+    OPERATOR, '-', DEFAULT, 'item 2', --
+    OPERATOR, '-', OPERATOR, '-', DEFAULT, 'item - 3', --
+    OPERATOR, '-', --
+    OPERATOR, '[', --
+    NUMBER, '1', OPERATOR, ',', --
+    NUMBER, '-2.0e-3', OPERATOR, ',', --
+    NUMBER, '0x3', OPERATOR, ',', --
+    NUMBER, '04', OPERATOR, ',', --
+    DEFAULT, 'two words', --
+    OPERATOR, ']', --
+    OPERATOR, '-', --
+    OPERATOR, '&', LABEL, 'anchor', TYPE, '!!str', --
+    DEFAULT, 'i', DEFAULT, 't', DEFAULT, 'e', DEFAULT, 'm', --
+    OPERATOR, '-', OPERATOR, '*', LABEL, 'anchor', --
+    OPERATOR, '...', COMMENT, '# document end', --
+    STRING, 'key', OPERATOR, ':', DEFAULT, 'value', --
+    STRING, '"key 2"', OPERATOR, ':', STRING, "'value 2'", --
+    STRING, 'key 3', OPERATOR, ':', DEFAULT, 'value "3"', --
+    STRING, 'key-4_', OPERATOR, ':', OPERATOR, '{', --
+    STRING, '1', OPERATOR, ':', CONSTANT_BUILTIN, 'true', OPERATOR, ',', --
+    STRING, '2', OPERATOR, ':', CONSTANT_BUILTIN, 'FALSE', OPERATOR, ',', --
+    STRING, '3', OPERATOR, ':', CONSTANT_BUILTIN, 'null', OPERATOR, ',', --
+    STRING, '4', OPERATOR, ':', NUMBER, '.Inf', OPERATOR, ',', --
+    STRING, '5', OPERATOR, ':', DEFAULT, 'two words', OPERATOR, ',', --
+    STRING, '6', OPERATOR, ':', NUMBER .. '.timestamp', '2000-01-01T12:00:00.0Z', --
+    OPERATOR, '}', --
+    OPERATOR, '-', STRING, '-key - 5', OPERATOR, ':', OPERATOR, '{', --
+    STRING, 'one', OPERATOR, ':', DEFAULT, 'two', OPERATOR, ',', --
+    STRING, 'three four', OPERATOR, ':', DEFAULT, 'five six', --
+    OPERATOR, '}', --
+    OPERATOR, '?', OPERATOR, '-', DEFAULT, 'item 1', --
+    OPERATOR, ':', OPERATOR, '-', DEFAULT, 'item 2', --
+    OPERATOR, '-', OPERATOR, '{', --
+    STRING, 'ok', OPERATOR, ':', DEFAULT, 'ok@', OPERATOR, ',', --
+    ERROR, '@', OPERATOR, ':', ERROR, '@', --
+    OPERATOR, '}', --
+    STRING, 'literal', OPERATOR, ':', --
+    DEFAULT, '|\n  line 1\n\n  - line 2\n  [line, 3]\n  #line 4\n  ---\n', --
+    STRING, 'flow', OPERATOR, ':', --
+    DEFAULT, '>\n  {line: 5}\n  ? - line 6\n  @line 7\n  %line 8\n  ...', --
+    OPERATOR, '-', STRING, 'foo', OPERATOR, ':', DEFAULT, 'bar', --
+    STRING, 'baz', OPERATOR, ':', DEFAULT, '|\n   quux', --
+    OPERATOR, '-', DEFAULT, 'foobar' --
   }
   assert_lex(yaml, code, tags)
 
@@ -1521,10 +1424,10 @@ function test_yaml()
     - foobar
   ]]):gsub('    ', '') -- strip indent
   tags = {
-    lexer.DEFAULT, '|\n\n   quux', --
-    lexer.OPERATOR, '-', lexer.DEFAULT, 'foobar'
+    DEFAULT, '|\n\n   quux', --
+    OPERATOR, '-', DEFAULT, 'foobar'
   }
-  assert_lex(yaml, code:match('(|.+)$'), tags, lexer.DEFAULT)
+  assert_lex(yaml, code:match('(|.+)$'), tags, DEFAULT)
 end
 
 -- Tests the Python lexer and fold by indentation.
@@ -1551,59 +1454,46 @@ function test_python()
       Foo().bar()
   ]]
   local tags = {
-    lexer.COMMENT, '# Comment.', --
-    lexer.LABEL .. '.decorator', '@decorator', --
-    lexer.KEYWORD, 'class', --
-    lexer.CLASS, 'Foo', --
-    lexer.OPERATOR, '(', lexer.IDENTIFIER, 'Bar', lexer.OPERATOR, ')', lexer.OPERATOR, ':', --
-    lexer.STRING, '"""documentation"""', --
-    lexer.KEYWORD, 'def', --
-    lexer.FUNCTION_BUILTIN .. '.special', '__init__', --
-    lexer.OPERATOR, '(', --
-    lexer.IDENTIFIER, 'self', --
-    lexer.OPERATOR, ',', --
-    lexer.IDENTIFIER, 'foo', --
-    lexer.OPERATOR, ')', --
-    lexer.OPERATOR, ':', --
-    lexer.FUNCTION_BUILTIN, 'super', --
-    lexer.OPERATOR, '(', --
-    lexer.IDENTIFIER, 'Foo', --
-    lexer.OPERATOR, ',', --
-    lexer.IDENTIFIER, 'self', --
-    lexer.OPERATOR, ')', --
-    lexer.OPERATOR, '.', --
-    lexer.FUNCTION_BUILTIN .. '.special', '__init__', --
-    lexer.OPERATOR, '(', lexer.OPERATOR, ')', --
-    lexer.KEYWORD, 'def', --
-    lexer.FUNCTION, 'bar', --
-    lexer.OPERATOR, '(', lexer.OPERATOR, ')', --
-    lexer.OPERATOR, ':', --
-    lexer.KEYWORD, 'pass', --
-    lexer.KEYWORD, 'if', --
-    lexer.ATTRIBUTE, '__name__', --
-    lexer.OPERATOR, '=', lexer.OPERATOR, '=', --
-    lexer.STRING, "'__main__'", --
-    lexer.OPERATOR, ':', --
-    lexer.IDENTIFIER, 'a', --
-    lexer.OPERATOR, '=', --
-    lexer.NUMBER, '-1', --
-    lexer.OPERATOR, '+', --
-    lexer.NUMBER, '2.0e3', --
-    lexer.OPERATOR, '-', --
-    lexer.NUMBER, '0x40', --
-    lexer.OPERATOR, '@', --
-    lexer.NUMBER, '5j', --
-    lexer.IDENTIFIER, 'b', lexer.OPERATOR, '=', lexer.STRING, 'u"foo"', --
-    lexer.IDENTIFIER, 'c', lexer.OPERATOR, '=', lexer.STRING, 'br"\\n"', --
-    lexer.FUNCTION_BUILTIN, 'print', --
-    lexer.OPERATOR, '(', --
-    lexer.IDENTIFIER, 'Foo', lexer.OPERATOR, '.', lexer.ATTRIBUTE, '__doc__', --
-    lexer.OPERATOR, ')', --
-    lexer.FUNCTION, 'Foo', --
-    lexer.OPERATOR, '(', lexer.OPERATOR, ')', --
-    lexer.OPERATOR, '.', --
-    lexer.FUNCTION_METHOD, 'bar', --
-    lexer.OPERATOR, '(', lexer.OPERATOR, ')' --
+    COMMENT, '# Comment.', --
+    LABEL .. '.decorator', '@decorator', --
+    KEYWORD, 'class', CLASS, 'Foo', OPERATOR, '(', IDENTIFIER, 'Bar', OPERATOR, ')', OPERATOR, ':', --
+    STRING, '"""documentation"""', --
+    KEYWORD, 'def', --
+    FUNCTION_BUILTIN .. '.special', '__init__', --
+    OPERATOR, '(', IDENTIFIER, 'self', OPERATOR, ',', IDENTIFIER, 'foo', OPERATOR, ')', --
+    OPERATOR, ':', --
+    FUNCTION_BUILTIN, 'super', --
+    OPERATOR, '(', --
+    IDENTIFIER, 'Foo', --
+    OPERATOR, ',', --
+    IDENTIFIER, 'self', --
+    OPERATOR, ')', --
+    OPERATOR, '.', --
+    FUNCTION_BUILTIN .. '.special', '__init__', OPERATOR, '(', OPERATOR, ')', --
+    KEYWORD, 'def', FUNCTION, 'bar', OPERATOR, '(', OPERATOR, ')', OPERATOR, ':', KEYWORD, 'pass', --
+    KEYWORD, 'if', --
+    ATTRIBUTE, '__name__', --
+    OPERATOR, '=', OPERATOR, '=', --
+    STRING, "'__main__'", --
+    OPERATOR, ':', --
+    IDENTIFIER, 'a', --
+    OPERATOR, '=', --
+    NUMBER, '-1', --
+    OPERATOR, '+', --
+    NUMBER, '2.0e3', --
+    OPERATOR, '-', --
+    NUMBER, '0x40', --
+    OPERATOR, '@', --
+    NUMBER, '5j', --
+    IDENTIFIER, 'b', OPERATOR, '=', STRING, 'u"foo"', --
+    IDENTIFIER, 'c', OPERATOR, '=', STRING, 'br"\\n"', --
+    FUNCTION_BUILTIN, 'print', --
+    OPERATOR, '(', --
+    IDENTIFIER, 'Foo', OPERATOR, '.', ATTRIBUTE, '__doc__', --
+    OPERATOR, ')', --
+    FUNCTION, 'Foo', OPERATOR, '(', OPERATOR, ')', --
+    OPERATOR, '.', --
+    FUNCTION_METHOD, 'bar', OPERATOR, '(', OPERATOR, ')' --
   }
   assert_lex(python, code, tags)
 
@@ -1630,19 +1520,19 @@ function test_legacy()
   lex:add_rule('whitespace', ws) -- should call lex:modify_rule()
   assert(#lex._rules == 1 + lexer.num_user_word_lists)
   assert(lex._rules['whitespace'] == ws)
-  lex:add_rule('keyword', lexer.token(lexer.KEYWORD, lexer.word_match('foo bar baz')))
-  lex:add_rule('number', lexer.token(lexer.NUMBER, lexer.number))
-  lex:add_rule('preproc', lexer.token(lexer.PREPROCESSOR, lexer.starts_line(lexer.to_eol('#'))))
+  lex:add_rule('keyword', lexer.token(KEYWORD, lexer.word_match('foo bar baz')))
+  lex:add_rule('number', lexer.token(NUMBER, lexer.number))
+  lex:add_rule('preproc', lexer.token(PREPROCESSOR, lexer.starts_line(lexer.to_eol('#'))))
   lex:add_style('whatever', lexer.styles.keyword .. {fore = lexer.colors.red, italic = true})
   local code = "foo 1 bar 2 baz 3\n#quux"
   local tags = {
-    lexer.KEYWORD, 'foo', --
-    lexer.NUMBER, '1', --
-    lexer.KEYWORD, 'bar', --
-    lexer.NUMBER, '2', --
-    lexer.KEYWORD, 'baz', --
-    lexer.NUMBER, '3', --
-    lexer.PREPROCESSOR, '#quux'
+    KEYWORD, 'foo', --
+    NUMBER, '1', --
+    KEYWORD, 'bar', --
+    NUMBER, '2', --
+    KEYWORD, 'baz', --
+    NUMBER, '3', --
+    PREPROCESSOR, '#quux'
   }
   assert_lex(lex, code, tags)
 end
@@ -1652,7 +1542,7 @@ function test_lua51()
     [[cd lexers && lua5.1 -e 'lexer=require"lexer"' -e 'print(unpack(lexer.load("lua"):lex("_G")))']])
   local output = p:read('a')
   p:close()
-  assert(output == lexer.CONSTANT_BUILTIN .. '\t3\n')
+  assert(output == CONSTANT_BUILTIN .. '\t3\n')
 end
 
 -- Run tests.
