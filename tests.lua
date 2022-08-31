@@ -281,7 +281,7 @@ end
 -- Tests word lists.
 function test_word_list()
   local lex = lexer.new('test')
-  lex:add_rule('keyword', lex:tag(KEYWORD, lex:get_word_list(KEYWORD)))
+  lex:add_rule('keyword', lex:tag(KEYWORD, lex:word_match(KEYWORD)))
   lex:add_rule('identifier', lex:tag(IDENTIFIER, lexer.word))
   lex:add_rule('operator', lex:tag(OPERATOR, '.'))
   local code = [[foo bar.baz quux]]
@@ -615,6 +615,15 @@ function test_lua()
   ]=]
   local folds = {1, -3, 4, -6, 7, -9, 10, -12, 13, -15, 16, -18, 19}
   assert_fold_points(lua, code, folds)
+
+  -- Test overriding keywords.
+  lua:set_word_list(KEYWORD, '')
+  assert_lex(lua, 'if', {IDENTIFIER, 'if'})
+
+  -- Test adding to built-in functions.
+  lua:set_word_list(FUNCTION_BUILTIN, 'module', true) -- from Lua 5.1
+  assert_lex(lua, 'dofile(', {FUNCTION_BUILTIN, 'dofile', OPERATOR, '('})
+  assert_lex(lua, 'module(', {FUNCTION_BUILTIN, 'module', OPERATOR, '('})
 end
 
 -- Tests the C lexer.

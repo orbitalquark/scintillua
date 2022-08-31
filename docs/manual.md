@@ -133,7 +133,7 @@ an example of how [SciTE][] does it:
       const auto setStyle = [&wEditor, &props, &languageName](int style) {
         std::string finalPropStr;
         const std::string &name = wEditor.NameOfStyle(style);
-        size_t end = -1;
+        size_t end = std::string::npos;
         do {
           end = name.find('.', ++end);
           char propStr[128] = "";

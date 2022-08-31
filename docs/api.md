@@ -150,22 +150,22 @@ some examples.
 Instead of matching _n_ keywords with _n_ `P('keyword_`_`n`_`')` ordered choices, use one
 of of the following methods:
 
-1. Use [`lexer.get_word_list()`](#lexer.get_word_list) optionally coupled with [`lexer.set_word_list()`](#lexer.set_word_list). It
-  is much easier and more efficient to write word matches like:
+1. Use the convenience function [`lexer.word_match()`](#lexer.word_match) optionally coupled with
+  [`lexer.set_word_list()`](#lexer.set_word_list). It is much easier and more efficient to write word matches like:
 
-      local keyword = lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD))
+      local keyword = lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD))
       [...]
       lex:set_word_list(lexer.KEYWORD, {
         'keyword_1', 'keyword_2', ..., 'keyword_n'
       })
 
-      local case_insensitive = lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD, true))
+      local case_insensitive_word = lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD, true))
       [...]
       lex:set_word_list(lexer.KEYWORD, {
         'KEYWORD_1', 'keyword_2', ..., 'KEYword_n'
       })
 
-      local hyphenated_keyword = lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD))
+      local hyphenated_keyword = lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD))
       [...]
       lex:set_word_list(lexer.KEYWORD, {
         'keyword-1', 'keyword-2', ..., 'keyword-n'
@@ -185,7 +185,7 @@ of of the following methods:
   expect the editor using it to supply word lists. Scintilla-based editors can do so via
   Scintilla's `ILexer5` interface.
 
-2. Use the convenience function: [`lexer.word_match()`](#lexer.word_match):
+2. Use the lexer-agnostic form of [`lexer.word_match()`](#lexer.word_match):
 
        local keyword = lex:tag(lexer.KEYWORD, lexer.word_match{
          'keyword_1', 'keyword_2', ..., 'keyword_n'
@@ -546,14 +546,14 @@ recommended that you migrate yours. The migration process is fairly straightforw
    token and rule. Otherwise, your defined whitespace rule will replace the default one.
 3. The concept of tokens has been replaced with tags. Instead of calling a `token()` function,
    call [`lex:tag()`](#lexer.tag) instead.
-4. Lexers now support replaceable word lists. Instead of calling `lexer.word_match()` with large
-   word lists, call [`lex:get_word_list()`](#lexer.get_word_list) with an identifier string
-   (typically something like `lexer.KEYWORD`). Then at the end of the lexer (before `return
-   lex`), call [`lex:set_word_list()`](#lexer.set_word_list) with the same identifier and the
-   usual list of words to match. This allows users of your lexer to call `lex:set_word_list()`
+4. Lexers now support replaceable word lists. Instead of calling [`lexer.word_match()`](#lexer.word_match)
+   with large word lists, call it with an identifier string (typically something
+   like `lexer.KEYWORD`). Then at the end of the lexer (before `return lex`), call
+   [`lex:set_word_list()`](#lexer.set_word_list) with the same identifier and the usual
+   list of words to match. This allows users of your lexer to call `lex:set_word_list()`
    with their own set of words should they wish to.
 5. Lexers no longer specify styling information. Remove any calls to `lex:add_style()`.
-6. `lexer.starts_line()` has been deprecated in favor of the new [`lexer.after_set()`](#lexer.after_set).
+6. `lexer.last_char_includes()` has been deprecated in favor of the new [`lexer.after_set()`](#lexer.after_set).
    Use the character set and pattern as arguments to that new function.
 
 As an example, consider the following sample legacy lexer:
@@ -585,7 +585,7 @@ Following the migration steps would yield:
 
     local lex = lexer.new(...)
 
-    lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD)))
+    lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
     lex:add_rule('custom', lex:tag('custom', 'quux'))
     lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
     lex:add_rule('string', lex:tag(lexer.STRING, lexer.range('"')))
@@ -1103,29 +1103,6 @@ Return:
 
 * pattern
 
-<a id="lexer.get_word_list"></a>
-#### `lexer.get_word_list`(lexer, name, case\_insensitive)
-
-Returns a pattern for lexer *lexer* that matches one word in the word list identified by
-string *name*, ignoring case if *case_insensitive* is `true`.
-If there is ultimately no word list set via `set_word_list()`, no error will be raised,
-but the returned pattern will not match anything.
-
-Fields:
-
-* `lexer`: The lexer to get a word list pattern for.
-* `name`: The name of the word list to get.
-* `case_insensitive`: Whether or not words in the list should be case insensitive. The
-  default value is `false`.
-
-Usage:
-
-* `lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD)))`
-
-See also:
-
-* [`lexer.set_word_list`](#lexer.set_word_list)
-
 <a id="lexer.lex"></a>
 #### `lexer.lex`(lexer, text, init\_style)
 
@@ -1249,8 +1226,8 @@ Return:
 
 Sets in lexer *lexer* the word list identified by string or number *name* to string or
 list *word_list*, appending to any existing word list if *append* is `true`.
-This only has an effect if *lexer* uses `get_word_list()` to reference the given list.
-Case-insensitivity is specified by `get_word_list()`.
+This only has an effect if *lexer* uses `word_match()` to reference the given list.
+Case-insensitivity is specified by `word_match()`.
 
 Fields:
 
@@ -1262,7 +1239,6 @@ Fields:
 
 See also:
 
-* [`lexer.get_word_list`](#lexer.get_word_list)
 * [`lexer.word_match`](#lexer.word_match)
 
 <a id="lexer.starts_line"></a>
@@ -1330,26 +1306,33 @@ Return:
 * pattern
 
 <a id="lexer.word_match"></a>
-#### `lexer.word_match`(word\_list, case\_insensitive)
+#### `lexer.word_match`(lexer, word\_list, case\_insensitive)
 
-Creates and returns a pattern that matches any single word in list or string *words*.
-*case_insensitive* indicates whether or not to ignore case when matching words.
-This is a convenience function for simplifying a set of ordered choice word patterns.
-Note: if you are passing in a word list that could be configured by a downstream user,
-consider using `get_word_list()` and `set_word_list()` instead.
+Either returns a pattern for lexer *lexer* (if given) that matches one word in the word list
+identified by string *word_list*, ignoring case if *case_sensitive* is `true`, or, if *lexer*
+is not given, creates and returns a pattern that matches any single word in list or string
+*word_list*, ignoring case if *case_insensitive* is `true`.
+This is a convenience function for simplifying a set of ordered choice word patterns and
+potentially allowing downstream users to configure word lists.
+If there is ultimately no word list set via `set_word_list()`, no error will be raised,
+but the returned pattern will not match anything.
 
 Fields:
 
-* `word_list`: A list of words or a string list of words separated by spaces.
+* `lexer`: Optional lexer to match a word in a wordlist for. This parameter may be omitted
+  for lexer-agnostic matching.
+* `word_list`: Either a string name of the word list to match from if *lexer* is given,
+  or, if *lexer* is omitted, a list of words or a string list of words separated by spaces.
 * `case_insensitive`: Optional boolean flag indicating whether or not the word match is
   case-insensitive. The default value is `false`.
 
 Usage:
 
-* `local keyword = lex:tag(lexer.KEYWORD, word_match{'foo', 'bar', 'baz'})`
-* `local keyword = lex:tag(lexer.KEYWORD, word_match({'foo-bar', 'foo-baz', 'bar-foo',
-  'bar-baz', 'baz-foo', 'baz-bar'}, true))`
-* `local keyword = lex:tag(lexer.KEYWORD, word_match('foo bar baz'))`
+* `lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))`
+* `local keyword = lex:tag(lexer.KEYWORD, lexer.word_match{'foo', 'bar', 'baz'})`
+* `local keyword = lex:tag(lexer.KEYWORD, lexer.word_match({'foo-bar', 'foo-baz',
+  'bar-foo', 'bar-baz', 'baz-foo', 'baz-bar'}, true))`
+* `local keyword = lex:tag(lexer.KEYWORD, lexer.word_match('foo bar baz'))`
 
 Return:
 
@@ -1357,7 +1340,6 @@ Return:
 
 See also:
 
-* [`lexer.get_word_list`](#lexer.get_word_list)
 * [`lexer.set_word_list`](#lexer.set_word_list)
 
 

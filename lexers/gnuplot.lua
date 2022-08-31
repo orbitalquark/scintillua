@@ -8,13 +8,13 @@ local P, S = lpeg.P, lpeg.S
 local lex = lexer.new(...)
 
 -- Keywords.
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD)))
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 
 -- Functions.
-lex:add_rule('function', lex:tag(lexer.FUNCTION_BUILTIN, lex:get_word_list(lexer.FUNCTION_BUILTIN)))
+lex:add_rule('function', lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN)))
 
 -- Variables.
-lex:add_rule('variable', lex:tag(lexer.VARIABLE_BUILTIN, lex:get_word_list(lexer.VARIABLE_BUILTIN)))
+lex:add_rule('variable', lex:tag(lexer.VARIABLE_BUILTIN, lex:word_match(lexer.VARIABLE_BUILTIN)))
 
 -- Identifiers.
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))

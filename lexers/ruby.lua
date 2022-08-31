@@ -7,10 +7,10 @@ local P, S = lpeg.P, lpeg.S
 local lex = lexer.new(...)
 
 -- Keywords.
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD)))
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 
 -- Functions.
-local builtin_func = lex:tag(lexer.FUNCTION_BUILTIN, lex:get_word_list(lexer.FUNCTION_BUILTIN))
+local builtin_func = lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN))
 lex:add_rule('function', -lpeg.B('.') * builtin_func * -S('.:|'))
 
 -- Identifiers.

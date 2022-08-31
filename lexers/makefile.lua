@@ -15,10 +15,10 @@ lex:add_rule('function_def',
   lex:tag(lexer.KEYWORD, lexer.word_match('define')) * ws * func_name * ws^-1 * eq)
 
 -- Keywords.
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, P('!')^-1 * lex:get_word_list(lexer.KEYWORD, true)))
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, P('!')^-1 * lex:word_match(lexer.KEYWORD, true)))
 
 -- Targets.
-local special_target = lex:tag(lexer.CONSTANT_BUILTIN, '.' * lex:get_word_list('special_targets'))
+local special_target = lex:tag(lexer.CONSTANT_BUILTIN, '.' * lex:word_match('special_targets'))
 -- local normal_target = lex:tag('target', (lexer.any - lexer.space - S(':+?!=#'))^1)
 local target = special_target -- + normal_target * (ws * normal_target)^0
 lex:add_rule('target', lexer.starts_line(target * ws^-1 * #(':' * lexer.space)))
@@ -26,7 +26,7 @@ lex:add_rule('target', lexer.starts_line(target * ws^-1 * #(':' * lexer.space)))
 -- Variable and function assignments.
 local func_assign = func_name * ws^-1 * eq *
   #P(function(input, index) return input:find('%$%(%d%)', index) end)
-local builtin_var = lex:tag(lexer.VARIABLE_BUILTIN, lex:get_word_list(lexer.VARIABLE_BUILTIN))
+local builtin_var = lex:tag(lexer.VARIABLE_BUILTIN, lex:word_match(lexer.VARIABLE_BUILTIN))
 local var_name = lex:tag(lexer.VARIABLE, word)
 local var_assign = (builtin_var + var_name) * ws^-1 *
   lex:tag(lexer.OPERATOR, S(':+?!')^-1 * '=' + '::=')
@@ -42,7 +42,7 @@ lex:add_rule('string', lexer.range("'", true) + lexer.range('"', true))
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, word))
 
 -- Functions.
-local builtin_func = lex:tag(lexer.FUNCTION_BUILTIN, lex:get_word_list(lexer.FUNCTION_BUILTIN))
+local builtin_func = lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN))
 local call_func = lex:tag(lexer.FUNCTION_BUILTIN, 'call') * ws * func_name
 local func = lex:tag(lexer.OPERATOR, '$' * S('({')) * (call_func + builtin_func)
 lex:add_rule('function', func)

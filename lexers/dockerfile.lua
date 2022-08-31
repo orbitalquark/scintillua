@@ -7,7 +7,7 @@ local P, S, B = lpeg.P, lpeg.S, lpeg.B
 local lex = lexer.new(..., {fold_by_indentation = true})
 
 -- Keywords.
-local keyword = lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD))
+local keyword = lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD))
 lex:add_rule('keyword', keyword)
 
 -- Identifiers.

@@ -7,17 +7,17 @@ local P, S = lpeg.P, lpeg.S
 local lex = lexer.new(...)
 
 -- Keywords.
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD)))
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 
 -- Constants.
-lex:add_rule('constant', lex:tag(lexer.CONSTANT_BUILTIN, lex:get_word_list(lexer.CONSTANT_BUILTIN)))
+lex:add_rule('constant', lex:tag(lexer.CONSTANT_BUILTIN, lex:word_match(lexer.CONSTANT_BUILTIN)))
 
 -- Types.
-lex:add_rule('type', lex:tag(lexer.TYPE, lex:get_word_list(lexer.TYPE)))
+lex:add_rule('type', lex:tag(lexer.TYPE, lex:word_match(lexer.TYPE)))
 
 -- Functions.
 local builtin_func = -lpeg.B('.') *
-  lex:tag(lexer.FUNCTION_BUILTIN, lex:get_word_list(lexer.FUNCTION_BUILTIN))
+  lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN))
 local func = lex:tag(lexer.FUNCTION, lexer.word)
 local method = lpeg.B('.') * lex:tag(lexer.FUNCTION_METHOD, lexer.word)
 lex:add_rule('function', (builtin_func + method + func) * #(lexer.space^0 * '('))

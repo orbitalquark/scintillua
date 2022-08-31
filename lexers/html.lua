@@ -15,8 +15,8 @@ lex:add_rule('doctype',
   lex:tag(lexer.TAG .. '.doctype', lexer.range('<!' * word_match('doctype', true), '>')))
 
 -- Tags.
-local paired_tag = lex:tag(lexer.TAG, lex:get_word_list(lexer.TAG, true))
-local single_tag = lex:tag(lexer.TAG .. '.single', lex:get_word_list(lexer.TAG .. '.single', true))
+local paired_tag = lex:tag(lexer.TAG, lex:word_match(lexer.TAG, true))
+local single_tag = lex:tag(lexer.TAG .. '.single', lex:word_match(lexer.TAG .. '.single', true))
 local known_tag = paired_tag + single_tag
 local unknown_tag = lex:tag(lexer.TAG .. '.unknown', (lexer.alnum + '-')^1)
 local tag = lex:tag(lexer.TAG .. '.chars', '<' * P('/')^-1) * (known_tag + unknown_tag) * -P(':')
@@ -40,7 +40,7 @@ local equals = lex:tag(lexer.OPERATOR, '=') -- * in_tag
 -- lex:add_rule('equals', equals)
 
 -- Attributes.
-local known_attribute = lex:tag(lexer.ATTRIBUTE, lex:get_word_list(lexer.ATTRIBUTE, true) +
+local known_attribute = lex:tag(lexer.ATTRIBUTE, lex:word_match(lexer.ATTRIBUTE, true) +
   ((P('data-') + 'aria-') * (lexer.alnum + '-')^1))
 local unknown_attribute = lex:tag(lexer.ATTRIBUTE .. '.unknown', (lexer.alnum + '-')^1)
 local ws = lex:get_rule('whitespace')

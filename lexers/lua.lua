@@ -8,12 +8,12 @@ local B, P, S = lpeg.B, lpeg.P, lpeg.S
 local lex = lexer.new(...)
 
 -- Keywords.
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD)))
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 
 -- Functions.
 local non_field = -B('.') + B('_G.') + B('..')
-local builtin_func = lex:get_word_list(lexer.FUNCTION_BUILTIN)
-local lib_func = lex:get_word_list(lexer.FUNCTION_BUILTIN .. '.library')
+local builtin_func = lex:word_match(lexer.FUNCTION_BUILTIN)
+local lib_func = lex:word_match(lexer.FUNCTION_BUILTIN .. '.library')
 local func = lex:tag(lexer.FUNCTION, lexer.word)
 local method = B(':') * lex:tag(lexer.FUNCTION_METHOD, lexer.word)
 lex:add_rule('function',
@@ -21,8 +21,8 @@ lex:add_rule('function',
     #(lexer.space^0 * S('({\'"')))
 
 -- Constants.
-local builtin_const = lex:get_word_list(lexer.CONSTANT_BUILTIN)
-local lib_const = lex:get_word_list(lexer.CONSTANT_BUILTIN .. '.library')
+local builtin_const = lex:word_match(lexer.CONSTANT_BUILTIN)
+local lib_const = lex:word_match(lexer.CONSTANT_BUILTIN .. '.library')
 lex:add_rule('constant', non_field * lex:tag(lexer.CONSTANT_BUILTIN, builtin_const + lib_const))
 
 -- Identifiers.

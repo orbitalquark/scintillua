@@ -7,29 +7,29 @@ local P, S, B = lpeg.P, lpeg.S, lpeg.B
 local lex = lexer.new(...)
 
 -- Keywords.
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD)))
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 
 -- Types.
-local basic_type = lex:tag(lexer.TYPE, lex:get_word_list(lexer.TYPE))
-local stl_type = lex:tag(lexer.TYPE .. '.stl', 'std::' * lex:get_word_list(lexer.TYPE .. '.stl'))
-lex:add_rule('type', basic_type + stl_type)
+local basic_type = lex:tag(lexer.TYPE, lex:word_match(lexer.TYPE))
+local stl_type = lex:tag(lexer.TYPE .. '.stl', 'std::' * lex:word_match(lexer.TYPE .. '.stl'))
+lex:add_rule('type', basic_type + stl_type * -P('::'))
 
 -- Functions.
 local non_member = -(B('.') + B('->') + B('::'))
 local builtin_func = lex:tag(lexer.FUNCTION_BUILTIN,
-  P('std::')^-1 * lex:get_word_list(lexer.FUNCTION_BUILTIN))
+  P('std::')^-1 * lex:word_match(lexer.FUNCTION_BUILTIN))
 local stl_func = lex:tag(lexer.FUNCTION_BUILTIN .. '.stl',
-  'std::' * lex:get_word_list(lexer.FUNCTION_BUILTIN .. '.stl'))
+  'std::' * lex:word_match(lexer.FUNCTION_BUILTIN .. '.stl'))
 local func = lex:tag(lexer.FUNCTION, lexer.word)
 local method = (B('.') + B('->')) * lex:tag(lexer.FUNCTION_METHOD, lexer.word)
 lex:add_rule('function',
   (non_member * (stl_func + builtin_func) + method + func) * #(lexer.space^0 * '('))
 
 -- Constants.
-local const = lex:tag(lexer.CONSTANT_BUILTIN,
-  P('std::')^-1 * lex:get_word_list(lexer.CONSTANT_BUILTIN))
+local const =
+  lex:tag(lexer.CONSTANT_BUILTIN, P('std::')^-1 * lex:word_match(lexer.CONSTANT_BUILTIN))
 local stl_const = lex:tag(lexer.CONSTANT_BUILTIN .. '.stl',
-  'std::' * lex:get_word_list(lexer.CONSTANT_BUILTIN .. '.stl'))
+  'std::' * lex:word_match(lexer.CONSTANT_BUILTIN .. '.stl'))
 lex:add_rule('constants', stl_const + const)
 
 -- Strings.
@@ -55,12 +55,11 @@ lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.float + integer))
 -- Preprocessor.
 local include = lex:tag(lexer.PREPROCESSOR, '#' * S('\t ')^0 * 'include') *
   (lex:get_rule('whitespace') * lex:tag(lexer.STRING, lexer.range('<', '>', true)))^-1
-local preproc =
-  lex:tag(lexer.PREPROCESSOR, '#' * S('\t ')^0 * lex:get_word_list(lexer.PREPROCESSOR))
+local preproc = lex:tag(lexer.PREPROCESSOR, '#' * S('\t ')^0 * lex:word_match(lexer.PREPROCESSOR))
 lex:add_rule('preprocessor', include + preproc)
 
 -- Attributes.
-lex:add_rule('attribute', lex:tag(lexer.ATTRIBUTE, '[[' * lex:get_word_list(lexer.ATTRIBUTE) * ']]'))
+lex:add_rule('attribute', lex:tag(lexer.ATTRIBUTE, '[[' * lex:word_match(lexer.ATTRIBUTE) * ']]'))
 
 -- Operators.
 lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('+-/*%<>!=^&|?~:;,.()[]{}')))

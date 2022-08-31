@@ -7,10 +7,10 @@ local P, S = lpeg.P, lpeg.S
 local lex = lexer.new(...)
 
 -- Keywords.
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD)))
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 
 -- Builtins.
-lex:add_rule('builtin', lex:tag(lexer.FUNCTION_BUILTIN, lex:get_word_list(lexer.FUNCTION_BUILTIN)))
+lex:add_rule('builtin', lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN)))
 
 -- Variable assignment.
 local assign = lex:tag(lexer.VARIABLE, lexer.word) * lex:tag(lexer.OPERATOR, '=')
@@ -39,8 +39,8 @@ lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.to_eol('#')))
 lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number))
 
 -- Variables.
-local builtin_var = lex:tag(lexer.OPERATOR, '$') * lex:tag(lexer.VARIABLE_BUILTIN,
-  lex:get_word_list(lexer.VARIABLE_BUILTIN) + S('!#?*@$-') + lexer.digit^1)
+local builtin_var = lex:tag(lexer.OPERATOR, '$') * lex:tag(lexer.VARIABLE_BUILTIN, lex:word_match(
+  lexer.VARIABLE_BUILTIN) + S('!#?*@$-') + lexer.digit^1)
 local var_ref = lex:tag(lexer.OPERATOR, '$' * ('{' * S('!#')^-1)^-1) *
   lex:tag(lexer.VARIABLE, lexer.word)
 lex:add_rule('variable', builtin_var + var_ref)

@@ -9,20 +9,20 @@ local lex = lexer.new(..., {no_user_word_lists = true})
 -- Tags.
 local sel_prefix = B(S('#.'))
 local sel_suffix = lexer.space^0 * S('!>+.,:[{')
-lex:add_rule('tag', -sel_prefix * lex:tag(lexer.TAG, lex:get_word_list(lexer.TAG) * #sel_suffix))
+lex:add_rule('tag', -sel_prefix * lex:tag(lexer.TAG, lex:word_match(lexer.TAG) * #sel_suffix))
 
 -- Properties.
-lex:add_rule('property', lex:tag('property', lex:get_word_list('property')) * #P(':'))
+lex:add_rule('property', lex:tag('property', lex:word_match('property')) * #P(':'))
 
 -- Values.
-lex:add_rule('value', -sel_prefix * lex:tag(lexer.CONSTANT_BUILTIN, lex:get_word_list('value')) *
-  -sel_suffix)
+lex:add_rule('value',
+  -sel_prefix * lex:tag(lexer.CONSTANT_BUILTIN, lex:word_match('value')) * -sel_suffix)
 
 -- Functions.
-lex:add_rule('function', lex:tag(lexer.FUNCTION_BUILTIN, lex:get_word_list(lexer.FUNCTION_BUILTIN)))
+lex:add_rule('function', lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN)))
 
 -- Colors.
-local color_name = lex:tag(lexer.CONSTANT_BUILTIN, lex:get_word_list('color'))
+local color_name = lex:tag(lexer.CONSTANT_BUILTIN, lex:word_match('color'))
 local xdigit = lexer.xdigit
 local color_value = lex:tag(lexer.NUMBER,
   '#' * xdigit * xdigit * xdigit * (xdigit * xdigit * xdigit)^-1)
@@ -32,8 +32,8 @@ lex:add_rule('color', color_name + color_value)
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.alpha * (lexer.alnum + S('_-'))^0))
 
 -- Pseudo classes and pseudo elements.
-lex:add_rule('pseudoclass', ':' * lex:tag('pseudoclass', lex:get_word_list('pseudoclass')))
-lex:add_rule('pseudoelement', '::' * lex:tag('pseudoelement', lex:get_word_list('pseudoelement')))
+lex:add_rule('pseudoclass', ':' * lex:tag('pseudoclass', lex:word_match('pseudoclass')))
+lex:add_rule('pseudoelement', '::' * lex:tag('pseudoelement', lex:word_match('pseudoelement')))
 
 -- Strings.
 local sq_str = lexer.range("'")
@@ -44,14 +44,14 @@ lex:add_rule('string', lex:tag(lexer.STRING, sq_str + dq_str))
 lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.range('/*', '*/')))
 
 -- Numbers.
-local unit = lex:get_word_list('unit') + '%'
+local unit = lex:word_match('unit') + '%'
 lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number * unit^-1))
 
 -- Operators.
 lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('~!#*>+=|.,:;()[]{}')))
 
 -- At rule.
-lex:add_rule('at_rule', lex:tag(lexer.PREPROCESSOR, '@' * lex:get_word_list('at_rule')))
+lex:add_rule('at_rule', lex:tag(lexer.PREPROCESSOR, '@' * lex:word_match('at_rule')))
 
 -- Fold points.
 lex:add_fold_point(lexer.OPERATOR, '{', '}')

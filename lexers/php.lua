@@ -7,10 +7,10 @@ local P, S = lpeg.P, lpeg.S
 local lex = lexer.new(...)
 
 -- Keywords.
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD)))
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 
 -- Types.
-lex:add_rule('type', lex:tag(lexer.TYPE, lex:get_word_list(lexer.TYPE)))
+lex:add_rule('type', lex:tag(lexer.TYPE, lex:word_match(lexer.TYPE)))
 
 -- Functions.
 local word = (lexer.alpha + '_' + lpeg.R('\127\255')) * (lexer.alnum + '_' + lpeg.R('\127\255'))^0
@@ -19,7 +19,7 @@ local method = lpeg.B('->') * lex:tag(lexer.FUNCTION_METHOD, word)
 lex:add_rule('function', (method + func) * #(lexer.space^0 * '('))
 
 -- Constants.
-lex:add_rule('constant', lex:tag(lexer.CONSTANT_BUILTIN, lex:get_word_list(lexer.CONSTANT_BUILTIN)))
+lex:add_rule('constant', lex:tag(lexer.CONSTANT_BUILTIN, lex:word_match(lexer.CONSTANT_BUILTIN)))
 
 -- Identifiers.
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, word))

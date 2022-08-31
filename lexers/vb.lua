@@ -7,10 +7,10 @@ local P, S = lpeg.P, lpeg.S
 local lex = lexer.new(..., {case_insensitive_fold_points = true})
 
 -- Keywords.
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD, true)))
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD, true)))
 
 -- Types.
-lex:add_rule('type', lex:tag(lexer.TYPE, lex:get_word_list(lexer.TYPE, true)))
+lex:add_rule('type', lex:tag(lexer.TYPE, lex:word_match(lexer.TYPE, true)))
 
 -- Comments.
 lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.to_eol("'" + lexer.word_match('rem', true))))
