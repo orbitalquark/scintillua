@@ -131,14 +131,14 @@ common LPeg patterns for you to use. Tag names for programming languages include
 include [`lexer.any`](#lexer.any), [`lexer.alpha`](#lexer.alpha), [`lexer.digit`](#lexer.digit), [`lexer.alnum`](#lexer.alnum),
 [`lexer.lower`](#lexer.lower), [`lexer.upper`](#lexer.upper), [`lexer.xdigit`](#lexer.xdigit), [`lexer.graph`](#lexer.graph), [`lexer.print`](#lexer.print),
 [`lexer.punct`](#lexer.punct), [`lexer.space`](#lexer.space), [`lexer.newline`](#lexer.newline), [`lexer.nonnewline`](#lexer.nonnewline),
-[`lexer.dec_num`](#lexer.dec_num), [`lexer.hex_num`](#lexer.hex_num), [`lexer.oct_num`](#lexer.oct_num), [`lexer.integer`](#lexer.integer),
-[`lexer.float`](#lexer.float), [`lexer.number`](#lexer.number), and [`lexer.word`](#lexer.word). You may use your own tag names if
-none of the above fit your language, but an advantage to using predefined tag names is that
-the language elements your lexer recognizes will inherit any universal syntax highlighting
-color theme that your editor uses. You can also "subclass" existing tag names by appending a
-'.*subclass*' string to them. For example, the HTML lexer tags unknown tags as `lexer.TAG
-.. '.unknown'`. Editors have the ability to style those subclassed tags in a different way
-than normal tags, or fall back to styling them as normal tags.
+[`lexer.dec_num`](#lexer.dec_num), [`lexer.hex_num`](#lexer.hex_num), [`lexer.oct_num`](#lexer.oct_num), [`lexer.bin_num`](#lexer.bin_num),
+[`lexer.integer`](#lexer.integer), [`lexer.float`](#lexer.float), [`lexer.number`](#lexer.number), and [`lexer.word`](#lexer.word). You may use
+your own tag names if none of the above fit your language, but an advantage to using predefined
+tag names is that the language elements your lexer recognizes will inherit any universal
+syntax highlighting color theme that your editor uses. You can also "subclass" existing tag
+names by appending a '.*subclass*' string to them. For example, the HTML lexer tags unknown
+tags as `lexer.TAG .. '.unknown'`. Editors have the ability to style those subclassed tags
+in a different way than normal tags, or fall back to styling them as normal tags.
 
 ##### Example Tags
 
@@ -839,6 +839,11 @@ A pattern that matches any alphabetic character ('A'-'Z', 'a'-'z').
 
 A pattern that matches any single character.
 
+<a id="lexer.bin_num"></a>
+#### `lexer.bin_num` (pattern)
+
+A pattern that matches a binary number.
+
 <a id="lexer.dec_num"></a>
 #### `lexer.dec_num` (pattern)
 
@@ -885,7 +890,7 @@ Table of indentation amounts in character columns, for line numbers starting fro
 <a id="lexer.integer"></a>
 #### `lexer.integer` (pattern)
 
-A pattern that matches either a decimal, hexadecimal, or octal number.
+A pattern that matches either a decimal, hexadecimal, octal, or binary number.
 
 <a id="lexer.line_state"></a>
 #### `lexer.line_state` (table)
@@ -919,7 +924,7 @@ The number of word lists to add as rules to every lexer created by `lexer.new()`
 #### `lexer.number` (pattern)
 
 A pattern that matches a typical number, either a floating point, decimal, hexadecimal,
-  or octal number.
+  octal, or binary number.
 
 <a id="lexer.oct_num"></a>
 #### `lexer.oct_num` (pattern)
@@ -1036,6 +1041,24 @@ Usage:
 
 * `local regex = lexer.after_set('+-*!%^&|=,([{', lexer.range('/'))`
 
+<a id="lexer.bin_num_"></a>
+#### `lexer.bin_num_`(c)
+
+Returns a pattern that matches a binary number, whose digits may be separated by character *c*.
+
+Fields:
+
+* `c`: 
+
+<a id="lexer.dec_num_"></a>
+#### `lexer.dec_num_`(c)
+
+Returns a pattern that matches a decimal number, whose digits may be separated by character *c*.
+
+Fields:
+
+* `c`: 
+
 <a id="lexer.embed"></a>
 #### `lexer.embed`(lexer, child, start\_rule, end\_rule)
 
@@ -1053,6 +1076,16 @@ Usage:
 
 * `html:embed(css, css_start_rule, css_end_rule)`
 * `html:embed(lex, php_start_rule, php_end_rule) -- from php lexer`
+
+<a id="lexer.float_"></a>
+#### `lexer.float_`(c)
+
+Returns a pattern that matches a floating point number, whose digits may be separated by
+character *c*.
+
+Fields:
+
+* `c`: 
 
 <a id="lexer.fold"></a>
 #### `lexer.fold`(lexer, text, start\_line, start\_level)
@@ -1102,6 +1135,26 @@ Fields:
 Return:
 
 * pattern
+
+<a id="lexer.hex_num_"></a>
+#### `lexer.hex_num_`(c)
+
+Returns a pattern that matches a hexadecimal number, whose digits may be separated by
+character *c*.
+
+Fields:
+
+* `c`: 
+
+<a id="lexer.integer_"></a>
+#### `lexer.integer_`(c)
+
+Returns a pattern that matches either a decimal, hexadecimal, octal, or binary number,
+whose digits may be separated by character *c*.
+
+Fields:
+
+* `c`: 
 
 <a id="lexer.lex"></a>
 #### `lexer.lex`(lexer, text, init\_style)
@@ -1185,6 +1238,25 @@ Fields:
 Usage:
 
 * `lexer.new('rhtml', {inherit = lexer.load('html')})`
+
+<a id="lexer.number_"></a>
+#### `lexer.number_`(c)
+
+Returns a pattern that matches a typical number, either a floating point, decimal, hexadecimal,
+octal, or binary number, and whose digits may be separated by character *c*.
+
+Fields:
+
+* `c`: 
+
+<a id="lexer.oct_num_"></a>
+#### `lexer.oct_num_`(c)
+
+Returns a pattern that matches an octal number, whose digits may be separated by character *c*.
+
+Fields:
+
+* `c`: 
 
 <a id="lexer.range"></a>
 #### `lexer.range`(s, e, single\_line, escapes, balanced)

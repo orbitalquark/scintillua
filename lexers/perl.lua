@@ -120,11 +120,7 @@ local block_comment = lexer.range(lexer.starts_line('=' * lexer.alpha), lexer.st
 lex:add_rule('comment', token(lexer.COMMENT, block_comment + line_comment))
 
 -- Numbers.
-local dec = lexer.digit^1 * ('_' * lexer.digit^1)^0
-local hex = '0' * S('xX') * lexer.xdigit^1 * ('_' * lexer.xdigit^1)^0
-local bin = '0' * S('bB') * S('01')^1 * ('_' * S('01')^1)^0 * -lexer.xdigit
-local integer = S('+-')^-1 * (hex + bin + dec)
-lex:add_rule('number', token(lexer.NUMBER, lexer.float + integer))
+lex:add_rule('number', token(lexer.NUMBER, lexer.number_('_')))
 
 -- Variables.
 -- LuaFormatter off

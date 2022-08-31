@@ -44,9 +44,7 @@ lex:add_rule('string', token(lexer.STRING, lexer.range('"', true, false)))
 lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('--')))
 
 -- Numbers.
-local integer = lexer.digit^1 * ('_' * lexer.digit^1)^0
-local float = integer^1 * ('.' * integer^0)^-1 * S('eE') * S('+-')^-1 * integer
-lex:add_rule('number', token(lexer.NUMBER, S('+-')^-1 * (float + integer)))
+lex:add_rule('number', token(lexer.NUMBER, lexer.number_('_')))
 
 -- Operators.
 lex:add_rule('operator', token(lexer.OPERATOR, S(':;=<>&+-*/.()')))

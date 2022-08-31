@@ -924,7 +924,7 @@ function test_ruby()
   local code = [[
     # Comment.
     require "foo"
-    $a = 1 + 2.0e3 - 0x40 if true
+    $a = 1 + 2.0e3 - 0x4_0 if true
     b = "two" + %q[three] + <<-FOUR
       four
     FOUR
@@ -935,7 +935,7 @@ function test_ruby()
     FUNCTION_BUILTIN, 'require', STRING, '"foo"', --
     VARIABLE, '$a', --
     OPERATOR, '=', --
-    NUMBER, '1', OPERATOR, '+', NUMBER, '2.0e3', OPERATOR, '-', NUMBER, '0x40', --
+    NUMBER, '1', OPERATOR, '+', NUMBER, '2.0e3', OPERATOR, '-', NUMBER, '0x4_0', --
     KEYWORD, 'if', KEYWORD, 'true', --
     IDENTIFIER, 'b', --
     OPERATOR, '=', --
@@ -1463,7 +1463,7 @@ function test_python()
       def bar(): pass
 
     if __name__ == '__main__':
-      a = -1 + 2.0e3 - 0x40 @ 5j
+      a = -1 + 2.0e3 - 0x4_0 @ 5j
       b = u"foo"
       c = br"\n"
       print(Foo.__doc__)
@@ -1498,7 +1498,7 @@ function test_python()
     OPERATOR, '+', --
     NUMBER, '2.0e3', --
     OPERATOR, '-', --
-    NUMBER, '0x40', --
+    NUMBER, '0x4_0', --
     OPERATOR, '@', --
     NUMBER, '5j', --
     IDENTIFIER, 'b', OPERATOR, '=', STRING, 'u"foo"', --

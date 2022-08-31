@@ -46,11 +46,7 @@ local block_comment = lexer.range('/*', '*/')
 lex:add_rule('comment', lex:tag(lexer.COMMENT, line_comment + block_comment))
 
 -- Numbers.
-local dec = lexer.digit^1 * ("'" * lexer.digit^1)^0
-local hex = '0' * S('xX') * lexer.xdigit^1 * ("'" * lexer.xdigit^1)^0
-local bin = '0' * S('bB') * S('01')^1 * ("'" * S('01')^1)^0 * -lexer.xdigit
-local integer = S('+-')^-1 * (hex + bin + dec)
-lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.float + integer))
+lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number_("'")))
 
 -- Preprocessor.
 local include = lex:tag(lexer.PREPROCESSOR, '#' * S('\t ')^0 * 'include') *

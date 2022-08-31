@@ -42,7 +42,7 @@ lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
 lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.to_eol('#', true)))
 
 -- Numbers.
-lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number * S('jJ')^-1))
+lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number_('_') * S('jJ')^-1))
 
 -- Decorators.
 lex:add_rule('decorator', lex:tag(lexer.LABEL .. '.decorator', '@' * lexer.word))

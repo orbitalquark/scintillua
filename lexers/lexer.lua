@@ -131,14 +131,14 @@ local M = {}
 -- include [`lexer.any`](), [`lexer.alpha`](), [`lexer.digit`](), [`lexer.alnum`](),
 -- [`lexer.lower`](), [`lexer.upper`](), [`lexer.xdigit`](), [`lexer.graph`](), [`lexer.print`](),
 -- [`lexer.punct`](), [`lexer.space`](), [`lexer.newline`](), [`lexer.nonnewline`](),
--- [`lexer.dec_num`](), [`lexer.hex_num`](), [`lexer.oct_num`](), [`lexer.integer`](),
--- [`lexer.float`](), [`lexer.number`](), and [`lexer.word`](). You may use your own tag names if
--- none of the above fit your language, but an advantage to using predefined tag names is that
--- the language elements your lexer recognizes will inherit any universal syntax highlighting
--- color theme that your editor uses. You can also "subclass" existing tag names by appending a
--- '.*subclass*' string to them. For example, the HTML lexer tags unknown tags as `lexer.TAG
--- .. '.unknown'`. Editors have the ability to style those subclassed tags in a different way
--- than normal tags, or fall back to styling them as normal tags.
+-- [`lexer.dec_num`](), [`lexer.hex_num`](), [`lexer.oct_num`](), [`lexer.bin_num`](),
+-- [`lexer.integer`](), [`lexer.float`](), [`lexer.number`](), and [`lexer.word`](). You may use
+-- your own tag names if none of the above fit your language, but an advantage to using predefined
+-- tag names is that the language elements your lexer recognizes will inherit any universal
+-- syntax highlighting color theme that your editor uses. You can also "subclass" existing tag
+-- names by appending a '.*subclass*' string to them. For example, the HTML lexer tags unknown
+-- tags as `lexer.TAG .. '.unknown'`. Editors have the ability to style those subclassed tags
+-- in a different way than normal tags, or fall back to styling them as normal tags.
 --
 -- ##### Example Tags
 --
@@ -747,13 +747,15 @@ local M = {}
 --   A pattern that matches a hexadecimal number.
 -- @field oct_num (pattern)
 --   A pattern that matches an octal number.
+-- @field bin_num (pattern)
+--   A pattern that matches a binary number.
 -- @field integer (pattern)
---   A pattern that matches either a decimal, hexadecimal, or octal number.
+--   A pattern that matches either a decimal, hexadecimal, octal, or binary number.
 -- @field float (pattern)
 --   A pattern that matches a floating point number.
 -- @field number (pattern)
 --   A pattern that matches a typical number, either a floating point, decimal, hexadecimal,
---   or octal number.
+--   octal, or binary number.
 -- @field word (pattern)
 --   A pattern that matches a typical word. Words begin with a letter or underscore and consist
 --   of alphanumeric and underscore characters.
@@ -1584,13 +1586,53 @@ M.space = S('\t\v\f\n\r ')
 M.newline = P('\r')^-1 * '\n'
 M.nonnewline = 1 - M.newline
 
-M.dec_num = M.digit^1
-M.hex_num = '0' * S('xX') * M.xdigit^1
-M.oct_num = '0' * R('07')^1
-M.integer = S('+-')^-1 * (M.hex_num + M.oct_num + M.dec_num)
-M.float = S('+-')^-1 * ((M.digit^0 * '.' * M.digit^1 + M.digit^1 * '.' * M.digit^0 * -P('.')) *
-  (S('eE') * S('+-')^-1 * M.digit^1)^-1 + (M.digit^1 * S('eE') * S('+-')^-1 * M.digit^1))
-M.number = M.float + M.integer
+---
+-- Returns a pattern that matches a decimal number, whose digits may be separated by character *c*.
+-- @name dec_num_
+function M.dec_num_(c) return M.digit * (P(c)^-1 * M.digit)^0 end
+---
+-- Returns a pattern that matches a hexadecimal number, whose digits may be separated by
+-- character *c*.
+-- @name hex_num_
+function M.hex_num_(c) return '0' * S('xX') * (P(c)^-1 * M.xdigit)^1 end
+---
+-- Returns a pattern that matches an octal number, whose digits may be separated by character *c*.
+-- @name oct_num_
+function M.oct_num_(c) return '0' * (P(c)^-1 * R('07'))^1 * -M.xdigit end
+---
+-- Returns a pattern that matches a binary number, whose digits may be separated by character *c*.
+-- @name bin_num_
+function M.bin_num_(c) return '0' * S('bB') * (P(c)^-1 * S('01'))^1 * -M.xdigit end
+---
+-- Returns a pattern that matches either a decimal, hexadecimal, octal, or binary number,
+-- whose digits may be separated by character *c*.
+-- @name integer_
+function M.integer_(c)
+  return S('+-')^-1 * (M.hex_num_(c) + M.bin_num_(c) + M.oct_num_(c) + M.dec_num_(c))
+end
+local function exp_(c) return S('eE') * S('+-')^-1 * M.digit * (P(c)^-1 * M.digit)^0 end
+---
+-- Returns a pattern that matches a floating point number, whose digits may be separated by
+-- character *c*.
+-- @name float_
+function M.float_(c)
+  return S('+-')^-1 *
+    ((M.dec_num_(c)^-1 * '.' * M.dec_num_(c) + M.dec_num_(c) * '.' * M.dec_num_(c)^-1 * -P('.')) *
+      exp_(c)^-1 + (M.dec_num_(c) * exp_(c)))
+end
+---
+-- Returns a pattern that matches a typical number, either a floating point, decimal, hexadecimal,
+-- octal, or binary number, and whose digits may be separated by character *c*.
+-- @name number_
+function M.number_(c) return M.float_(c) + M.integer_(c) end
+
+M.dec_num = M.dec_num_(false)
+M.hex_num = M.hex_num_(false)
+M.oct_num = M.oct_num_(false)
+M.bin_num = M.bin_num_(false)
+M.integer = M.integer_(false)
+M.float = M.float_(false)
+M.number = M.number_(false)
 
 M.word = (M.alpha + '_') * (M.alnum + '_')^0
 
