@@ -147,25 +147,64 @@ local M = {}
 --
 -- **Keywords**
 --
--- Instead of matching _n_ keywords with _n_ `P('keyword_`_`n`_`')` ordered choices, use a
--- convenience function: [`lexer.word_match()`](). It is much easier and more efficient to
--- write word matches like:
+-- Instead of matching _n_ keywords with _n_ `P('keyword_`_`n`_`')` ordered choices, use one
+-- of of the following methods:
 --
---     local keyword = lex:tag(lexer.KEYWORD, lexer.word_match{
---       'keyword_1', 'keyword_2', ..., 'keyword_n'
---     })
+-- 1. Use [`lexer.get_word_list()`]() optionally coupled with [`lexer.set_word_list()`](). It
+--   is much easier and more efficient to write word matches like:
 --
---     local case_insensitive_keyword = lex:tag(lexer.KEYWORD, lexer.word_match({
---       'KEYWORD_1', 'keyword_2', ..., 'KEYword_n'
---     }, true))
+--       local keyword = lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD))
+--       [...]
+--       lex:set_word_list(lexer.KEYWORD, {
+--         'keyword_1', 'keyword_2', ..., 'keyword_n'
+--       })
 --
---     local hyphened_keyword = lex:tag(lexer.KEYWORD, lexer.word_match{
---       'keyword-1', 'keyword-2', ..., 'keyword-n'
---     })
+--       local case_insensitive = lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD, true))
+--       [...]
+--       lex:set_word_list(lexer.KEYWORD, {
+--         'KEYWORD_1', 'keyword_2', ..., 'KEYword_n'
+--       })
 --
--- For short keyword lists, you can use a single string of words. For example:
+--       local hyphenated_keyword = lex:tag(lexer.KEYWORD, lex:get_word_list(lexer.KEYWORD))
+--       [...]
+--       lex:set_word_list(lexer.KEYWORD, {
+--         'keyword-1', 'keyword-2', ..., 'keyword-n'
+--       })
 --
---     local keyword = lex:tag(lexer.KEYWORD, lexer.word_match('key_1 key_2 ... key_n'))
+--   The benefit of using this method is that other lexers that inherit from, embed, or embed
+--   themselves into your lexer can set, replace, or extend these word lists. For example,
+--   the TypeScript lexer inherits from JavaScript, but extends JavaScript's keyword and type
+--   lists with more options.
+--
+--   This method also allows applications that use your lexer to extend or replace your word
+--   lists. For example, the Lua lexer includes keywords and functions for the latest version
+--   of Lua (5.4 at the time of writing). However, editors using that lexer might want to use
+--   keywords from Lua version 5.1, which is still quite popular.
+--
+--   Note that calling `lex:set_word_list()` is completely optional. Your lexer is allowed to
+--   expect the editor using it to supply word lists. Scintilla-based editors can do so via
+--   Scintilla's `ILexer5` interface.
+--
+-- 2. Use the convenience function: [`lexer.word_match()`]():
+--
+--        local keyword = lex:tag(lexer.KEYWORD, lexer.word_match{
+--          'keyword_1', 'keyword_2', ..., 'keyword_n'
+--        })
+--
+--        local case_insensitive_keyword = lex:tag(lexer.KEYWORD, lexer.word_match({
+--          'KEYWORD_1', 'keyword_2', ..., 'KEYword_n'
+--        }, true))
+--
+--        local hyphened_keyword = lex:tag(lexer.KEYWORD, lexer.word_match{
+--          'keyword-1', 'keyword-2', ..., 'keyword-n'
+--        })
+--
+--    For short keyword lists, you can use a single string of words. For example:
+--
+--        local keyword = lex:tag(lexer.KEYWORD, lexer.word_match('key_1 key_2 ... key_n'))
+--
+--    You can use this method for static word lists that do not change, or where it does not
+--    make sense to allow applications or other lexers to extend or replace a word list.
 --
 -- **Comments**
 --

@@ -119,22 +119,31 @@ numbers, calling `NameOfStyle()`, in order to obtain a map of style names to num
 that information, your application can then specify style settings for style numbers. Here's
 an example of how [SciTE][] does it:
 
-    // Scintillua's style numbers are not constant, so ask it for names of styles
-    // and create a mapping of style numbers to more constant style definitions.
-    // For example, if Scintillua reports for the cpp lexer that style number 2 is
-    // associated with comments, create the property:
+    // Scintillua's style numbers are not constant, so ask it for names of styles and create a
+    // mapping of style numbers to more constant style definitions.
+    // For example, if Scintillua reports for the cpp lexer that style number 2 is a 'comment',
+    // create the property:
     //   style.scintillua.cpp.2=$(scintillua.styles.comment)
-    // That way the user can define 'scintillua.styles.comment' once and it will
-    // be used for whatever the style number for comments is in any given lexer.
+    // That way the user can define 'scintillua.styles.comment' once and it will be used for whatever
+    // the style number for comments is in any given lexer.
+    // Similarly, if Scintillua reports for the lua lexer that style number 20 is 'string.longstring',
+    // create the property:
+    //   style.scintillua.lua.20=$(scintillua.styles.string),$(scintillua.styles.string.longstring)
     void SetScintilluaStyles(GUI::ScintillaWindow &wEditor, PropSetFile& props, const char *languageName) {
       const auto setStyle = [&wEditor, &props, &languageName](int style) {
+        std::string finalPropStr;
+        const std::string &name = wEditor.NameOfStyle(style);
+        size_t end = -1;
+        do {
+          end = name.find('.', ++end);
+          char propStr[128] = "";
+          sprintf(propStr, "$(scintillua.styles.%s),", end == std::string::npos ?
+            name.c_str() : name.substr(0, end).c_str());
+          finalPropStr += propStr;
+        } while (end != std::string::npos);
         char key[256] = "";
-        char styleName[64] = "";
-        char propStr[128] = "";
         sprintf(key, "style.%s.%0d", languageName, style);
-        wEditor.NameOfStyle(style, styleName);
-        sprintf(propStr, "$(scintillua.styles.%s)", styleName);
-        props.Set(key, propStr);
+        props.Set(key, finalPropStr.c_str());
       };
       const int namedStyles = wEditor.NamedStyles(); // this count includes predefined styles
       constexpr int LastPredefined = static_cast<int>(Scintilla::StylesCommon::LastPredefined);
