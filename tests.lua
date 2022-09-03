@@ -157,6 +157,8 @@ function test_to_eol()
   local code = '#foo\\\nbar\\\nbaz'
   assert(lexer.to_eol('#'):match(code) == 6)
   assert(lexer.to_eol('#', true):match(code) == #code + 1)
+  assert(not lexer.to_eol('f'):match(code))
+  assert(lexer.to_eol():match(code) == 6)
 end
 
 function test_range()

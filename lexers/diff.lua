@@ -20,6 +20,6 @@ lex:add_rule('addition', lex:tag('addition', to_eol(starts_line(S('>+')))))
 lex:add_rule('deletion', lex:tag('deletion', to_eol(starts_line(S('<-')))))
 lex:add_rule('change', lex:tag('change', to_eol(starts_line('!'))))
 
-lex:add_rule('any_line', lex:tag(lexer.DEFAULT, lexer.any^1))
+lex:add_rule('any_line', lex:tag(lexer.DEFAULT, lexer.to_eol()))
 
 return lex

@@ -29,8 +29,8 @@ lex:add_rule('list', lex:tag(lexer.NUMBER,
 local hspace = lexer.space - '\n'
 local blank_line = '\n' * hspace^0 * ('\n' + P(-1))
 
-local code_line = lexer.starts_line((B('    ') + B('\t')) * lexer.to_eol(lexer.nonnewline^1) *
-  lexer.newline^-1, true) -- include newline for eolfilled styles
+-- Note: include newline for eolfilled styles.
+local code_line = lexer.starts_line((B('    ') + B('\t')) * lexer.to_eol() * lexer.newline^-1, true)
 local code_block = lexer.range(lexer.starts_line('```', true), '\n```' * hspace^0 * ('\n' + P(-1)))
 local code_inline = lpeg.Cmt(lpeg.C(P('`')^1), function(input, index, bt)
   -- `foo`, ``foo``, ``foo`bar``, `foo``bar` are all allowed.

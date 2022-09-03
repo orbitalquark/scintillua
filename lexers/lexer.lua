@@ -1640,7 +1640,8 @@ M.word = (M.alpha + '_') * (M.alnum + '_')^0
 -- Creates and returns a pattern that matches from string or pattern *prefix* until the end of
 -- the line.
 -- *escape* indicates whether the end of the line can be escaped with a '\' character.
--- @param prefix String or pattern prefix to start matching at.
+-- @param prefix Optional string or pattern prefix to start matching at. The default value is
+--   any non-newline character.
 -- @param escape Optional flag indicating whether or not newlines can be escaped by a '\'
 --  character. The default value is `false`.
 -- @return pattern
@@ -1648,7 +1649,8 @@ M.word = (M.alpha + '_') * (M.alnum + '_')^0
 -- @usage local line_comment = lexer.to_eol(S('#;'))
 -- @name to_eol
 function M.to_eol(prefix, escape)
-  return prefix * (not escape and M.nonnewline or 1 - (M.newline + '\\') + '\\' * M.any)^0
+  return (prefix or M.nonnewline) *
+    (not escape and M.nonnewline or 1 - (M.newline + '\\') + '\\' * M.any)^0
 end
 
 ---
