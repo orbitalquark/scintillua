@@ -79,8 +79,8 @@ lex:set_word_list(lexer.KEYWORD, {
   -- Operators.
   'and', 'and_eq', 'bitand', 'bitor', 'compl', 'not', 'not_eq', 'or', 'or_eq', 'xor', 'xor_eq',
   -- C++11.
-  'alignas', 'alignof', 'constexpr', 'decltype', 'final', 'noexcept', 'override', 'static_assert',
-  'thread_local', --
+  'alignas', 'alignof', 'constexpr', 'decltype', 'final', 'noexcept', 'nullptr', 'override',
+  'static_assert', 'thread_local', --
   'consteval', 'constinit', 'co_await', 'co_return', 'co_yield', 'requires' -- C++20
 })
 
