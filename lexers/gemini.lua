@@ -1,0 +1,23 @@
+-- Copyright 2020-2022 Haelwenn (lanodan) Monnier <contact+gemini.lua@hacktivis.me>. See LICENSE.
+-- Gemini / Gemtext LPeg lexer.
+-- See https://gemini.circumlunar.space/docs/specification.html
+
+local lexer = lexer
+local P, S = lpeg.P, lpeg.S
+
+local lex = lexer.new(...)
+
+local header = lex:tag('h3', lexer.to_eol(lexer.starts_line('###'))) +
+  lex:tag('h2', lexer.to_eol(lexer.starts_line('##'))) +
+  lex:tag('h1', lexer.to_eol(lexer.starts_line('#')))
+lex:add_rule('header', header)
+
+lex:add_rule('list', lex:tag('list', lexer.to_eol(lexer.starts_line('*'))))
+
+lex:add_rule('blockquote', lex:tag(lexer.STRING, lexer.to_eol(lexer.starts_line('>'))))
+
+lex:add_rule('pre', lex:tag(lexer.CODE, lexer.to_eol(lexer.range('```', false, true))))
+
+lex:add_rule('link', lex:tag(lexer.LINK, lexer.to_eol(lexer.starts_line('=>'))))
+
+return lex

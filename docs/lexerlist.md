@@ -47,8 +47,10 @@ used if [`fold.by.indentation`][] is enabled. For SciTE, see *lexers/lpeg.proper
 1. Fortran
 1. fstab
 1. GAP`*`
+1. Gemini
 1. gettext
 1. Gherkin
+1. git-rebase
 1. Gleam`*`
 1. GLSL`*`
 1. Gnuplot
@@ -121,6 +123,7 @@ used if [`fold.by.indentation`][] is enabled. For SciTE, see *lexers/lpeg.proper
 1. Scheme`*`
 1. Shell`*`
 1. Smalltalk`*`
+1. strace
 1. Standard ML
 1. SNOBOL4
 1. Spin
