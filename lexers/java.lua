@@ -139,4 +139,6 @@ lex:set_word_list(lexer.TYPE, {
   'UnsupportedClassVersionError', 'VerifyError', 'VirtualMachineError'
 })
 
+lexer.property['scintillua.comment'] = '//'
+
 return lex

@@ -121,4 +121,6 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
   'syscall', 'system', 'test', 'trace_var', 'trap', 'untrace_var'
 })
 
+lexer.property['scintillua.comment'] = '#'
+
 return lex

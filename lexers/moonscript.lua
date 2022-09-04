@@ -141,4 +141,6 @@ lex:add_rule('operator', token(lexer.OPERATOR, S('+-*!\\/%^#=<>;:,.')))
 lex:add_rule('symbol', token('symbol', S('(){}[]')))
 lex:add_style('symbol', lexer.styles.embedded)
 
+lexer.property['scintillua.comment'] = '--'
+
 return lex

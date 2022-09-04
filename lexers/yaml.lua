@@ -99,4 +99,6 @@ lex:add_rule('scalar', lex:tag(lexer.DEFAULT, block + seq + csv + map))
 -- Directives
 lex:add_rule('directive', lex:tag(lexer.PREPROCESSOR, lexer.starts_line(lexer.to_eol('%'))))
 
+lexer.property['scintillua.comment'] = '#'
+
 return lex

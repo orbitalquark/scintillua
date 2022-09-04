@@ -43,4 +43,6 @@ lex:add_rule('backslash', token(lexer.TYPE, '\\' * (oct + hex + unicode + 1)))
 lex:add_fold_point(lexer.KEYWORD, '{', '}')
 lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('#'))
 
+lexer.property['scintillua.comment'] = '#'
+
 return lex

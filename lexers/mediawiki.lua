@@ -44,4 +44,6 @@ lex:add_rule('behavior_switch', (B(lexer.space) + start_pat) * token('behavior_s
   '__TOC__ __FORCETOC__ __NOTOC__ __NOEDITSECTION__ __NOCC__ __NOINDEX__')) * #lexer.space)
 lex:add_style('behavior_switch', lexer.styles.keyword)
 
+lexer.property['scintillua.comment'] = '<!--|-->'
+
 return lex

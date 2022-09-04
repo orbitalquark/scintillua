@@ -57,4 +57,6 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
 
 lex:set_word_list(lexer.CONSTANT_BUILTIN, 'gridDim blockIdx blockDim threadIdx', true)
 
+lexer.property['scintillua.comment'] = '//'
+
 return lex

@@ -31,4 +31,6 @@ lex:add_rule('variable',
   lex:tag(lexer.OPERATOR, '$(') * lex:tag(lexer.VARIABLE, (lexer.nonnewline - lexer.space - ')')^0) *
     lex:tag(lexer.OPERATOR, ')'))
 
+lexer.property['scintillua.comment'] = '#'
+
 return lex

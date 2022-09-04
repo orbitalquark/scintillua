@@ -116,4 +116,6 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
   'call', 'eval', 'file', 'flavor', 'foreach', 'origin', 'shell', 'value' -- other
 })
 
+lexer.property['scintillua.comment'] = '#'
+
 return lex

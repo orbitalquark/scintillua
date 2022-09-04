@@ -15,4 +15,6 @@ lex:embed(ruby, ruby_start_rule, ruby_end_rule)
 -- Fold points.
 lex:add_fold_point(lexer.TAG .. '.rhtml', '<%', '%>')
 
+lexer.property['scintillua.comment'] = '<!--|-->'
+
 return lex

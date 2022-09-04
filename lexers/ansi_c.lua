@@ -194,4 +194,6 @@ lex:set_word_list(lexer.PREPROCESSOR, {
   'undef'
 })
 
+lexer.property['scintillua.comment'] = '//'
+
 return lex

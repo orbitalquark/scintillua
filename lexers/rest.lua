@@ -216,4 +216,6 @@ local start_rule =
     return index
   end))]]
 
+lexer.property['scintillua.comment'] = '.. '
+
 return lex

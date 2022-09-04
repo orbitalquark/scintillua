@@ -42,4 +42,6 @@ lex:set_word_list(lexer.KEYWORD, {
   'ONBUILD', 'RUN', 'STOPSIGNAL', 'USER', 'VOLUME', 'WORKDIR'
 })
 
+lexer.property['scintillua.comment'] = '#'
+
 return lex

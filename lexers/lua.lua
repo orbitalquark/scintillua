@@ -140,4 +140,6 @@ lex:set_word_list(lexer.CONSTANT_BUILTIN .. '.library', {
   'os'
 })
 
+lexer.property['scintillua.comment'] = '--'
+
 return lex

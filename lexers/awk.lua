@@ -281,4 +281,6 @@ lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
 lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('#'))
 
+lexer.property['scintillua.comment'] = '#'
+
 return lex

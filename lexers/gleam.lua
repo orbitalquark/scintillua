@@ -116,4 +116,6 @@ bitstring:add_rule('operator', op_tok)
 bitstring:add_rule('error', err_tok)
 lex:embed(bitstring, token(OP, '<<'), token(OP, '>>'))
 
+lexer.property['scintillua.comment'] = '//'
+
 return lex

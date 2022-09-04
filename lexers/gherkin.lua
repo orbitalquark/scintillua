@@ -37,4 +37,6 @@ lex:add_style('placeholder', lexer.styles.variable)
 lex:add_rule('example', token('example', lexer.to_eol('|')))
 lex:add_style('example', lexer.styles.number)
 
+lexer.property['scintillua.comment'] = '#'
+
 return lex

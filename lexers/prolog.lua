@@ -349,4 +349,6 @@ local sq_str = lexer.range("'", true)
 local dq_str = lexer.range('"', true)
 lex:add_rule('string', token(lexer.STRING, sq_str + dq_str))
 
+lexer.property['scintillua.comment'] = '%'
+
 return lex

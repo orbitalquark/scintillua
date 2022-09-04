@@ -120,4 +120,6 @@ lex:set_word_list(lexer.ATTRIBUTE, {
   '__self__', '__func__' --
 })
 
+lexer.property['scintillua.comment'] = '#'
+
 return lex

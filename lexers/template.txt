@@ -36,4 +36,6 @@ lex:set_word_list(lexer.KEYWORD, {
   'keyword1', 'keyword2', 'keyword3'
 })
 
+lexer.property['scintillua.comment'] = '#'
+
 return lex

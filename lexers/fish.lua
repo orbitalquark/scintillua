@@ -54,4 +54,6 @@ lex:add_fold_point(lexer.KEYWORD, 'if', 'end')
 lex:add_fold_point(lexer.KEYWORD, 'switch', 'end')
 lex:add_fold_point(lexer.KEYWORD, 'while', 'end')
 
+lexer.property['scintillua.comment'] = '#'
+
 return lex

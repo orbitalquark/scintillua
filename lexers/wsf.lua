@@ -87,4 +87,6 @@ end) + '>')) * embed_start_tag -- <script language="vbscript">
 local vbs_end_rule = #('</script' * ws^0 * '>') * embed_end_tag -- </script>
 lex:embed(vbs, vbs_start_rule, vbs_end_rule)
 
+lexer.property['scintillua.comment'] = '<!--|-->'
+
 return lex

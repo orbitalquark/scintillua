@@ -144,4 +144,6 @@ lex:set_word_list(lexer.ATTRIBUTE, {
   'wrap'
 })
 
+lexer.property['scintillua.comment.' .. ...] = '<!--|-->'
+
 return lex

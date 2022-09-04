@@ -17,4 +17,6 @@ lex:add_style('jsp_tag', lexer.styles.embedded)
 -- Fold points.
 lex:add_fold_point('jsp_tag', '<%', '%>')
 
+lexer.property['scintillua.comment'] = '<!--|-->'
+
 return lex

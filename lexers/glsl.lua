@@ -112,4 +112,6 @@ lex:set_word_list(lexer.CONSTANT_BUILTIN, {
 
 lex:set_word_list(lexer.PREPROCESSOR, 'extension version', true)
 
+lexer.property['scintillua.comment'] = '//'
+
 return lex

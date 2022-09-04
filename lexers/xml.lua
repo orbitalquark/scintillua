@@ -74,4 +74,6 @@ lex:add_fold_point('element', '/>', -1)
 lex:add_fold_point(lexer.COMMENT, '<!--', '-->')
 lex:add_fold_point('cdata', '<![CDATA[', ']]>')
 
+lexer.property['scintillua.comment'] = '<!--|-->'
+
 return lex

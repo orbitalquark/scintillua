@@ -386,4 +386,6 @@ lex:add_fold_point(lexer.PREPROCESSOR, '%while', '%endwhile')
 lex:add_fold_point(lexer.KEYWORD, 'struc', 'endstruc')
 lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines(';'))
 
+lexer.property['scintillua.comment'] = ';'
+
 return lex

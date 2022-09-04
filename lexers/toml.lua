@@ -45,4 +45,6 @@ lex:add_style('timestamp', lexer.styles.number)
 -- Numbers.
 lex:add_rule('number', token(lexer.NUMBER, lexer.number))
 
+lexer.property['scintillua.comment'] = '#'
+
 return lex

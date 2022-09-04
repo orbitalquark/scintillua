@@ -104,4 +104,6 @@ lex:set_word_list(lexer.CONSTANT_BUILTIN, {
   'E_STRICT', '__COMPILER_HALT_OFFSET__'
 })
 
+lexer.property['scintillua.comment'] = '//'
+
 return lex

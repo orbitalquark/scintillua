@@ -43,4 +43,6 @@ local bibtex_start_rule = entry * ws^0 * token(lexer.OPERATOR, '{')
 local bibtex_end_rule = token(lexer.OPERATOR, '}')
 latex:embed(lex, bibtex_start_rule, bibtex_end_rule)
 
+lexer.property['scintillua.comment'] = '%'
+
 return lex

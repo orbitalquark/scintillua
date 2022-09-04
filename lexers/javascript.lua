@@ -94,4 +94,6 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
 
 lex:set_word_list(lexer.CONSTANT_BUILTIN, 'Infinity NaN undefined globalThis arguments')
 
+lexer.property['scintillua.comment'] = '//'
+
 return lex

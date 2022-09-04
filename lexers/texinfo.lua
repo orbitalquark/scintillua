@@ -202,4 +202,6 @@ lex:add_fold_point('directives', '@smallexample', '@end smallexample')
 lex:add_fold_point('directives', '@cartouche', '@end cartouche')
 lex:add_fold_point('directives', '@startchapter', '@end startchapter')
 
+lexer.property['scintillua.comment'] = '@c'
+
 return lex

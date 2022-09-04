@@ -53,4 +53,6 @@ lex:set_word_list(lexer.CONSTANT_BUILTIN, {
 
 lex:set_word_list(lexer.FUNCTION_BUILTIN, {'mix', 'shade', 'lighter', 'darker'})
 
+lexer.property['scintillua.comment'] = '#'
+
 return lex

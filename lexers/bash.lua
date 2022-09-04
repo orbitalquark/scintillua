@@ -124,4 +124,6 @@ lex:set_word_list(lexer.VARIABLE_BUILTIN, {
   'auto_resume'
 })
 
+lexer.property['scintillua.comment'] = '#'
+
 return lex

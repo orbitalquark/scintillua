@@ -50,4 +50,6 @@ local luatex_start_rule = #P('\\startluacode') * environment
 local luatex_end_rule = #P('\\stopluacode') * environment
 lex:embed(luatex, luatex_start_rule, luatex_end_rule)
 
+lexer.property['scintillua.comment'] = '%'
+
 return lex

@@ -99,4 +99,6 @@ lex:add_fold_point(lexer.COMMENT, '{', '}')
 lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines(';'))
 lex:add_fold_point(lexer.OPERATOR, '[', ']')
 
+lexer.property['scintillua.comment'] = ';'
+
 return lex

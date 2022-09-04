@@ -63,4 +63,6 @@ lex:set_word_list(lexer.TYPE, {
   'String'
 })
 
+lexer.property['scintillua.comment'] = "'"
+
 return lex

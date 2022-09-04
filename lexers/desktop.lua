@@ -50,4 +50,6 @@ lex:add_style('code', lexer.styles.variable)
 -- Operators.
 lex:add_rule('operator', token(lexer.OPERATOR, S('=')))
 
+lexer.property['scintillua.comment'] = '#'
+
 return lex

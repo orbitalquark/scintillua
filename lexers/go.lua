@@ -67,4 +67,6 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
   'print', 'println', 'real', 'recover'
 })
 
+lexer.property['scintillua.comment'] = '//'
+
 return lex

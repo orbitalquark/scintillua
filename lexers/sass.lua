@@ -21,4 +21,6 @@ lex:add_style('mixin', lexer.styles['function'])
 -- Fold points.
 lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('//'))
 
+lexer.property['scintillua.comment'] = '//'
+
 return lex

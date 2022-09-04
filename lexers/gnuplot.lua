@@ -65,4 +65,6 @@ lex:set_word_list(lexer.VARIABLE_BUILTIN, {
   'zmtics', 'zrange', 'ztics', 'cblabel', 'cbmtics', 'cbrange', 'cbtics'
 })
 
+lexer.property['scintillua.comment'] = '#'
+
 return lex

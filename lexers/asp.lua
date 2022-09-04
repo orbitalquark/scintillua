@@ -26,4 +26,6 @@ lex:embed(vbs, vbs_start_rule, vbs_end_rule)
 -- Fold points.
 lex:add_fold_point(lexer.TAG .. '.asp', '<%', '%>')
 
+lexer.property['scintillua.comment'] = '<!--|-->'
+
 return lex
