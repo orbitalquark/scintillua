@@ -3,6 +3,7 @@
 -- If a warning or error is recognized, tags its filename, line, column (if available),
 -- and message, and sets the line state to 1 for an error (first bit), and 2 for a warning
 -- (second bit).
+-- This is similar to Lexilla's errorlist lexer.
 
 local lexer = lexer
 local starts_line = lexer.starts_line

@@ -2,7 +2,7 @@
 
 Scintillua has lexers for the languages below. Languages denoted by a `*` have native
 [folders][]. For languages without native folding support, folding based on indentation can be
-used if [`fold.by.indentation`][] is enabled. For SciTE, see *lexers/lpeg.properties*.
+used if [`fold.scintillua.by.indentation`][] is enabled. For SciTE, see *lexers/lpeg.properties*.
 
 1. Actionscript`*`
 1. Ada
@@ -149,4 +149,4 @@ used if [`fold.by.indentation`][] is enabled. For SciTE, see *lexers/lpeg.proper
 1. Zig`*`
 
 [folders]: api.html#code-folding
-[`fold.by.indentation`]: manual.html#using-scintillua-with-other-apps
+[`fold.scintillua.by.indentation`]: manual.html#using-scintillua-with-other-apps

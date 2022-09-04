@@ -896,7 +896,8 @@ A pattern that matches either a decimal, hexadecimal, octal, or binary number.
 #### `lexer.line_state` (table)
 
 Table of integer line states for line numbers starting from 1.
-  Line states can be used by lexers for keeping track of persistent states.
+  Line states can be used by lexers for keeping track of persistent states. For example,
+  the output lexer uses this to mark lines that have warnings or errors.
 
 <a id="lexer.lower"></a>
 #### `lexer.lower` (pattern)
@@ -1364,7 +1365,8 @@ the line.
 
 Fields:
 
-* `prefix`: String or pattern prefix to start matching at.
+* `prefix`: Optional string or pattern prefix to start matching at. The default value is
+  any non-newline character.
 * `escape`: Optional flag indicating whether or not newlines can be escaped by a '\'
  character. The default value is `false`.
 
