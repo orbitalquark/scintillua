@@ -1532,6 +1532,35 @@ function test_python()
   assert_fold_points(python, code, folds)
 end
 
+-- Tests output lexer.
+function test_output()
+  local output = lexer.load('output')
+  local text = ([[
+    > command
+    /tmp/foo:1:2: error
+    /tmp/bar.baz:12: warning: warn
+    > exit status: 1
+    lua: /tmp/quux.lua:34: error
+    no error or warning here
+  ]]):gsub('    ', '') -- strip indent
+  local tags = {
+    DEFAULT, '> command', --
+    'filename', '/tmp/foo', DEFAULT, ':', --
+    'line', '1', DEFAULT, ':', 'column', '2', DEFAULT, ': ', --
+    'message', 'error', --
+    'filename', '/tmp/bar.baz', DEFAULT, ':', --
+    'line', '12', DEFAULT, ': ', --
+    'message', 'warning: warn', --
+    DEFAULT, '> exit status: 1', --
+    DEFAULT, 'lua', DEFAULT, ': ', --
+    'filename', '/tmp/quux.lua', DEFAULT, ':', --
+    'line', '34', DEFAULT, ': ', --
+    'message', 'error', --
+    DEFAULT, 'no error or warning here'
+  }
+  assert_lex(output, text, tags)
+end
+
 function test_legacy()
   local lex = lexer.new('test')
   local ws = lexer.token(lexer.WHITESPACE, lexer.space^1)

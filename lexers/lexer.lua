@@ -779,7 +779,8 @@ local M = {}
 --   Table of indentation amounts in character columns, for line numbers starting from 1.
 -- @field line_state (table)
 --   Table of integer line states for line numbers starting from 1.
---   Line states can be used by lexers for keeping track of persistent states.
+--   Line states can be used by lexers for keeping track of persistent states. For example,
+--   the output lexer uses this to mark lines that have warnings or errors.
 -- @field property (table)
 --   Map of key-value string pairs.
 -- @field property_int (table, Read-only)
@@ -1526,6 +1527,8 @@ local function initialize_standalone_library()
       end
     end
   })
+
+  M.line_state = {}
 
   M._standalone = true
 end
