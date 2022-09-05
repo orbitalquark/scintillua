@@ -2,6 +2,73 @@
 
 [Atom Feed](https://github.com/orbitalquark/scintillua/releases.atom)
 
+### 6.0 (TBD 2022)
+
+Download:
+
+* [Scintillua 6.0][]
+
+Bugfixes:
+
+* Updated Ruby, C++, D, Gleam, Nim, and Verilog lexers to fix binary number parsing.
+* Fixed `lexer.line_from_position()` for start positions after 1.
+* Fixed inability for standalone Lua library to use lexers that call `lexer.line_from_position()`,
+   index `lexer.indent_amount`, or index `lexer.line_state`.
+
+Changes:
+
+* Removed support for old legacy lexers.
+* Rewrote Scintillua lexer to behave like a typical Scintilla lexer.
+  - Renamed to Scintillua from LexLPeg.
+  - Renamed `lpeg.home` library property to `scintillua.lexers`.
+  - Removed `lpeg.color.theme` library property
+  - [`CreateLexer()`][] is the only way to load lexers now; no more private call API.
+  - Removed all styling capability. Applications are responsible for setting styles.
+  - Implemented ILexer5's `NamedStyles()` and `NameOfStyles()` so editors can construct style map.
+  - Replaced Lua theme files with SciTE properties files in *themes/* for demonstration.
+  - Renamed `fold.*` properties to `fold.scintillua.*`.
+  - Added `GetCreateLexerError()` function for fetching `CreateLexer()` errors.
+* Replaced "token" concept with "[tags][]".
+* Deprecated `lexer.token()` in favor of [`lexer.tag()`][] and made it an instance method.
+* Dropped 32-bit Windows DLL support.
+* Removed `lexer.property_expanded`.
+* Compile a very minimal subset of Lua into Scintillua (no bit, coro, debug, io, package, os libs).
+* Applications can use their own keyword lists for lexers that support it.
+* More restricted sandbox environment for lexers.
+* All lexers created with `lexer.new()` have a default whitespace rule and deprecated
+   `lexer.WHITESPACE`.
+* Child lexers can extend their parent's keyword lists.
+* Added more builtin tag/token names.
+* All lexers created with `lexer.new()` have a default set of user word lists.
+* Updated Perl lexer to recognize more numbers.
+* Updated Fennel lexer.
+* Updated Python lexer to highlight class definitions.
+* Updated Makefile, R, Fortran, and Go lexers.
+* Added Hare and RPM spec lexers.
+* Updated a number of lexers to use the new lexer format.
+* Added `allow_indent` option to `lexer.starts_line()`.
+* Deprecated `lexer.last_char_includes()` in favor of [`lexer.after_set()`][].
+* Removed `lexer.NOTHING` tag/token in favor of the existing `lexer.DEFAULT`.
+* Removed `start_pos` argument to `lexer.fold()`.
+* `lexer.word_match()` can be used as an instance method for enabling users to set, replace, or
+   extend word lists.
+* Added [`lexer.number_()`][] and friends for creating patterns that match numbers separated
+   by arbitrary characters.
+* Allow prefix to be optional in `lexer.to_eol()`.
+* Added "output" lexer for recognizing tool errors and warnings, similar to Lexilla's errorlist
+   lexer.
+* Added Gemini, git-rebase, and strace lexers.
+* Added "scintillua.comment" property for lexers with comments so applications can use them.
+* Updated [lexer template][].
+
+[Scintillua 6.0]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_6.0/scintillua_6.0.zip
+[`CreateLexer()`]: manual.html#using-scintillua-with-other-apps
+[tags]: api.html#tags
+[`lexer.tag()`]: api.html#lexer.tag
+[`lexer.after_set()`]: api.html#lexer.after_set
+[`lexer.number_()`]: api.html#lexer.number_
+[lexer template]: api.html#new-lexer-template
+
 ### 5.3 (03 Nov 2021)
 
 Download:
@@ -993,12 +1060,11 @@ Changes:
 
 * Added support for ncurses via [scinterm][].
 * Added `__DATA__` and `__END__` markers to Perl lexer.
-* Added new [`lexer.last_char_includes()`][] function for better regex detection.
+* Added new `lexer.last_char_includes()` function for better regex detection.
 * Updated AWK lexer.
 
 [Scintillua 3.2.2-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.2.2-1.zip
 [scinterm]: https://orbitalquark.github.io/scinterm
-[`lexer.last_char_includes()`]: api.html#lexer.last_char_includes
 
 ### 3.2.1-1 (15 Jul 2012)
 
