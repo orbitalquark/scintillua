@@ -215,7 +215,7 @@ Here is a sample portion of a *Makefile* with Lua 5.3 as an example:
     sci_flags = [flags used to compile Scintilla and Lexilla]
     scintillua_obj = Scintillua.o
     lua_flags = -Iscintillua/lua/src
-    lua_objs = lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o linit.o llex.o lmem.o \
+    lua_objs = lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o \
       lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o lundump.o lvm.o lzio.o \
       lauxlib.o lbaselib.o lmathlib.o lstrlib.o ltablib.o lutf8lib.o \
       lpcap.o lpcode.o lpprint.o lptree.o lpvm.o
