@@ -205,7 +205,7 @@ You can compile Scintillua directly (statically) into your Scintilla-based appli
 1. Adding *Scintillua.h* and *Scintillua.cxx* to your project's sources.
 2. Downloading and adding [Lua][] and [LPeg][] to your project's sources. Scintillua supports
    Lua 5.3+.
-3. Adding infrastructure to build Lua, LPeg, *Scintillua.cxx*, and link them all into your
+3. Adding infrastructure to build Lua, LPeg, *Scintillua.cxx*, and linking them all into your
    application.
 
 Here is a sample portion of a *Makefile* with Lua 5.3 as an example:
@@ -217,8 +217,7 @@ Here is a sample portion of a *Makefile* with Lua 5.3 as an example:
     lua_flags = -Iscintillua/lua/src
     lua_objs = lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o linit.o llex.o lmem.o \
       lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o lundump.o lvm.o lzio.o \
-      lauxlib.o lbaselib.o lbitlib.o lcorolib.o ldblib.o liolib.o lmathlib.o loadlib.o loslib.o \
-      lstrlib.o ltablib.o lutf8lib.o \
+      lauxlib.o lbaselib.o lmathlib.o lstrlib.o ltablib.o lutf8lib.o \
       lpcap.o lpcode.o lpprint.o lptree.o lpvm.o
     $(scintillua_obj): scintillua/Scintillua.cxx
     	g++ $(sci_flags) $(lua_flags) -c $< -o $@
