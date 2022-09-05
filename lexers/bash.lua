@@ -23,9 +23,12 @@ lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
 local sq_str = lexer.range("'", false, false)
 local dq_str = lexer.range('"')
 local heredoc = '<<' * P(function(input, index)
-  local _, e, indent, _, delimiter = input:find('^(%-?)(["\']?)([%a_][%w_]*)%2[\n\r\f;]+', index)
-  if not delimiter then return end
-  _, e = input:find((indent == '' and '[\n\r\f]+' or '[\n\r\f]+[ \t]*') .. delimiter, e)
+  local _, e, minus, _, delimiter = input:find('^(%-?)%s*(["\']?)([%w_]+)%2[^\n]*[\n\r\f;]+', index)
+  if not delimiter then return nil end
+  -- If the starting delimiter of a here-doc begins with "-", then spaces are allowed to come
+  -- before the closing delimiter.
+  _, e =
+    input:find((minus == '' and '[\n\r\f]+' or '[\n\r\f]+[ \t]*') .. delimiter .. '%f[^%w_]', e)
   return e and e + 1 or #input + 1
 end)
 local ex_str = P('`')
