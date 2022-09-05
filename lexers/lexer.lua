@@ -541,19 +541,22 @@ local M = {}
 --
 -- 1. `lexer` exists in the default lexer environment, so `require('lexer')` should be replaced
 --    by simply `lexer`. (Keep in mind `local lexer = lexer` is a Lua idiom.)
--- 2. Every lexer created using [`lexer.new()`]() now includes a rule to match whitespace. Unless
+-- 2. Every lexer created using [`lexer.new()`]() should no longer specify a lexer name by
+--    string, but should instead use `...` (three dots), which evaluates to the lexer's filename
+--    or alternative name in embedded lexer applications.
+-- 3. Every lexer created using `lexer.new()` now includes a rule to match whitespace. Unless
 --    your lexer has significant whitespace, you can remove your legacy lexer's whitespace
 --    token and rule. Otherwise, your defined whitespace rule will replace the default one.
--- 3. The concept of tokens has been replaced with tags. Instead of calling a `token()` function,
+-- 4. The concept of tokens has been replaced with tags. Instead of calling a `token()` function,
 --    call [`lex:tag()`](#lexer.tag) instead.
--- 4. Lexers now support replaceable word lists. Instead of calling [`lexer.word_match()`]()
---    with large word lists, call it with an identifier string (typically something
---    like `lexer.KEYWORD`). Then at the end of the lexer (before `return lex`), call
+-- 5. Lexers now support replaceable word lists. Instead of calling [`lexer.word_match()`]()
+--    with large word lists, call it as an instance method with an identifier string (typically
+--    something like `lexer.KEYWORD`). Then at the end of the lexer (before `return lex`), call
 --    [`lex:set_word_list()`](#lexer.set_word_list) with the same identifier and the usual
 --    list of words to match. This allows users of your lexer to call `lex:set_word_list()`
 --    with their own set of words should they wish to.
--- 5. Lexers no longer specify styling information. Remove any calls to `lex:add_style()`.
--- 6. `lexer.last_char_includes()` has been deprecated in favor of the new [`lexer.after_set()`]().
+-- 6. Lexers no longer specify styling information. Remove any calls to `lex:add_style()`.
+-- 7. `lexer.last_char_includes()` has been deprecated in favor of the new [`lexer.after_set()`]().
 --    Use the character set and pattern as arguments to that new function.
 --
 -- As an example, consider the following sample legacy lexer:
