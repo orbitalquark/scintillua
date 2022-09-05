@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     container: ghcr.io/orbitalquark/textadept-build:v1.0
     outputs:
       version: ${{ steps.build.outputs.version }}
@@ -40,6 +40,7 @@ jobs:
           rm -r textadept-build
 
           # Build.
+          make deps docs
           make release
 
           # Output version information for use in later steps.

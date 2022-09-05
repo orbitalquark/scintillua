@@ -38,7 +38,7 @@ $(call win-objs, $(lexlib_objs)): win-%.o: lexilla/lexlib/%.cxx ; $(build-cxx)
 $(call all-objs, $(scintillua_objs)): Scintillua.cxx ; $(build-cxx)
 
 # Lua.
-lua_objs := $(call objs, lua/src/*.c, lua luac lbitlib lcorolib ldblib liolib loadlib loslib)
+lua_objs := $(call objs, lua/src/*.c, lua luac lbitlib lcorolib ldblib liolib loadlib loslib linit)
 lua_lib_objs := $(call objs, lua/src/lib/*.c)
 
 lua_flags := -Ilua/src
@@ -75,7 +75,7 @@ $(win_objs): CC := x86_64-w64-mingw32-gcc-posix
 $(win_objs): CXX := x86_64-w64-mingw32-g++-posix
 $(win_objs): CFLAGS += -mms-bitfields
 $(win_objs): CXXFLAGS += -mms-bitfields
-$(win_objs): lua_flags += -D_WIN32 -DWIN32
+$(win_objs): lua_flags += -DLUA_BUILD_AS_DLL -DLUA_LIB
 
 # Shared libraries.
 
@@ -127,7 +127,7 @@ docs/api.md: lexers/lexer.lua ; luadoc --doclet docs/markdowndoc $^ > $@
 basedir = scintillua_$(shell grep '^\#\#\#' docs/changelog.md | head -1 | cut -d ' ' -f 2)
 
 .PHONY: release
-release: $(base_dir).zip | deps docs
+release: $(basedir).zip | deps docs
 
 ifneq (, $(shell hg summary 2>/dev/null))
   archive = hg archive -X ".hg*" $(1)
@@ -148,19 +148,18 @@ tests: test-lexers test-scite test-wscite
 test-lexers: tests.lua ; lua $<
 # Tests SciTE GTK using ~/.SciTEUser.properties.
 test-scite: scintilla
-	make -C scintilla/gtk -j4
-	make -C lexilla/src -j4
-	make -C scite/gtk -j4
+	make -C scintilla/gtk -j16
+	make -C lexilla/src -j16
+	make -C scite/gtk -j16
 	scite/bin/SciTE
 # Tests, via Wine, SciTE Win64 using SciTEGlobal.properties.
-wscite_zip = wscite510.zip
+wscite_zip = wscite530.zip
 /tmp/$(wscite_zip): ; wget -O $@ https://www.scintilla.org/$(wscite_zip)
 /tmp/wscite: /tmp/$(wscite_zip)
 	unzip -d /tmp $<
 	ln -s `pwd`/lexers /tmp/wscite
 	sed -i 's/technology=1/technology=0/;' /tmp/wscite/SciTEGlobal.properties
-	echo "import lexers/lpeg" >> /tmp/wscite/SciTEGlobal.properties
-	echo "lexilla.context.lpeg.color.theme=light" >> /tmp/wscite/SciTEGlobal.properties
+	echo "import scintillua/scintillua" >> /tmp/wscite/SciTEGlobal.properties
 test-wscite: /tmp/wscite
 	cd /tmp/wscite && WINEPREFIX=/tmp/wscite/.wine WINEARCH=win64 wine SciTE
 
