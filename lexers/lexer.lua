@@ -1508,7 +1508,6 @@ local function initialize_standalone_library()
     __index = function(t, k) return tonumber(M.property[k]) or 0 end,
     __newindex = function() error('read-only property') end
   })
-  M.property_expanded = setmetatable({}, {__index = function() return '' end}) -- legacy
 
   M.line_from_position = function(pos)
     local line = 1
@@ -1535,6 +1534,7 @@ local function initialize_standalone_library()
 
   M._standalone = true
 end
+M.property_expanded = setmetatable({}, {__index = function() return '' end}) -- legacy
 
 ---
 -- Initializes or loads and then returns the lexer of string name *name*.
