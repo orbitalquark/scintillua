@@ -793,7 +793,7 @@ local M = {}
 -- @field num_user_word_lists (number)
 --   The number of word lists to add as rules to every lexer created by `lexer.new()`. These
 --   word lists are intended to be set by users outside the lexer. Each word in a list is tagged
---   with the name `userlistN`, where N is the index of the list. The default value is `4`.
+--   with the name `userlistN`, where N is the index of the list. The default value is `2`.
 module('lexer')]=]
 
 local lpeg = lpeg or require('lpeg') -- Scintillua's Lua environment defines _G.lpeg
@@ -835,7 +835,7 @@ local predefined = {
 }
 M.DEFAULT = 'default'
 
-M.num_user_word_lists = 4
+M.num_user_word_lists = 2
 
 ---
 -- Creates and returns a pattern that tags pattern *patt* with name *name* in lexer *lexer*.
