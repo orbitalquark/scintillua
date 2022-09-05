@@ -13,4 +13,6 @@ lex:set_word_list(lexer.KEYWORD, 'abstract as constructor declare is module name
 lex:set_word_list(lexer.TYPE, 'boolean number bigint string unknown any void never symbol object',
   true)
 
+lexer.property['scintillua.comment'] = '//'
+
 return lex

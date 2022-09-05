@@ -283,4 +283,6 @@ lex:set_word_list(lexer.ATTRIBUTE, {
   'likely', 'no_unique_address', 'unlikely' -- C++20
 })
 
+lexer.property['scintillua.comment'] = '//'
+
 return lex

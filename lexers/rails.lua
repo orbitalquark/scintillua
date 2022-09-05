@@ -36,4 +36,6 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
   'returning', 'memoize'
 }, true)
 
+lexer.property['scintillua.comment'] = '#'
+
 return lex
