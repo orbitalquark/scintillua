@@ -117,28 +117,28 @@ local M = {}
 --
 --     lex:tag('identifier', (lpeg.R('AZ', 'az')  + '_') * (lpeg.R('AZ', 'az', '09') + '_')^0)
 --
--- The `lexer` module actually provides a convenient list of common tag names and
--- common LPeg patterns for you to use. Tag names for programming languages include
--- (but are not limited to) [`lexer.DEFAULT`](), [`lexer.COMMENT`](), [`lexer.STRING`](),
--- [`lexer.NUMBER`](), [`lexer.KEYWORD`](), [`lexer.KEYWORD_BUILTIN`](), [`lexer.IDENTIFIER`](),
--- [`lexer.OPERATOR`](), [`lexer.ERROR`](), [`lexer.PREPROCESSOR`](), [`lexer.CONSTANT`](),
--- [`lexer.CONSTANT_BUILTIN`](), [`lexer.VARIABLE`](), [`lexer.VARIABLE_BUILTIN`](),
--- [`lexer.FUNCTION`](), [`lexer.FUNCTION_BUILTIN`](), [`lexer.FUNCTION_METHOD`](),
--- [`lexer.CLASS`](), [`lexer.TYPE`](), [`lexer.LABEL`](), [`lexer.REGEX`](), and
--- [`lexer.EMBEDDED`](). Tag names for markup languages include (but are not limited to)
--- [`lexer.TAG`](), [`lexer.ATTRIBUTE`](), [`lexer.TITLE`](), [`lexer.BOLD`](), [`lexer.ITALIC`](),
--- [`lexer.UNDERLINE`](), [`lexer.CODE`](), [`lexer.LINK`](), and [`lexer.REFERENCE`](). Patterns
--- include [`lexer.any`](), [`lexer.alpha`](), [`lexer.digit`](), [`lexer.alnum`](),
--- [`lexer.lower`](), [`lexer.upper`](), [`lexer.xdigit`](), [`lexer.graph`](), [`lexer.print`](),
--- [`lexer.punct`](), [`lexer.space`](), [`lexer.newline`](), [`lexer.nonnewline`](),
--- [`lexer.dec_num`](), [`lexer.hex_num`](), [`lexer.oct_num`](), [`lexer.bin_num`](),
--- [`lexer.integer`](), [`lexer.float`](), [`lexer.number`](), and [`lexer.word`](). You may use
--- your own tag names if none of the above fit your language, but an advantage to using predefined
--- tag names is that the language elements your lexer recognizes will inherit any universal
--- syntax highlighting color theme that your editor uses. You can also "subclass" existing tag
--- names by appending a '.*subclass*' string to them. For example, the HTML lexer tags unknown
--- tags as `lexer.TAG .. '.unknown'`. Editors have the ability to style those subclassed tags
--- in a different way than normal tags, or fall back to styling them as normal tags.
+-- The `lexer` module actually provides a convenient list of common tag names and common LPeg
+-- patterns for you to use. Tag names for programming languages include (but are not limited
+-- to) [`lexer.DEFAULT`](), [`lexer.COMMENT`](), [`lexer.STRING`](), [`lexer.NUMBER`](),
+-- [`lexer.KEYWORD`](), [`lexer.IDENTIFIER`](), [`lexer.OPERATOR`](), [`lexer.ERROR`](),
+-- [`lexer.PREPROCESSOR`](), [`lexer.CONSTANT`](), [`lexer.CONSTANT_BUILTIN`](),
+-- [`lexer.VARIABLE`](), [`lexer.VARIABLE_BUILTIN`](), [`lexer.FUNCTION`](),
+-- [`lexer.FUNCTION_BUILTIN`](), [`lexer.FUNCTION_METHOD`](), [`lexer.CLASS`](), [`lexer.TYPE`](),
+-- [`lexer.LABEL`](), [`lexer.REGEX`](), and [`lexer.EMBEDDED`](). Tag names for markup
+-- languages include (but are not limited to) [`lexer.TAG`](), [`lexer.ATTRIBUTE`](),
+-- [`lexer.HEADING`](), [`lexer.BOLD`](), [`lexer.ITALIC`](), [`lexer.UNDERLINE`](),
+-- [`lexer.CODE`](), [`lexer.LINK`](), and [`lexer.REFERENCE`](). Patterns include [`lexer.any`](),
+-- [`lexer.alpha`](), [`lexer.digit`](), [`lexer.alnum`](), [`lexer.lower`](), [`lexer.upper`](),
+-- [`lexer.xdigit`](), [`lexer.graph`](), [`lexer.print`](), [`lexer.punct`](), [`lexer.space`](),
+-- [`lexer.newline`](), [`lexer.nonnewline`](), [`lexer.dec_num`](), [`lexer.hex_num`](),
+-- [`lexer.oct_num`](), [`lexer.bin_num`](), [`lexer.integer`](), [`lexer.float`](),
+-- [`lexer.number`](), and [`lexer.word`](). You may use your own tag names if none of the above
+-- fit your language, but an advantage to using predefined tag names is that the language elements
+-- your lexer recognizes will inherit any universal syntax highlighting color theme that your
+-- editor uses. You can also "subclass" existing tag names by appending a '.*subclass*' string
+-- to them. For example, the HTML lexer tags unknown tags as `lexer.TAG .. '.unknown'`. Editors
+-- have the ability to style those subclassed tags in a different way than normal tags, or fall
+-- back to styling them as normal tags.
 --
 -- ##### Example Tags
 --
@@ -705,8 +705,8 @@ local M = {}
 --   The tag name for function attribute elements, typically in markup.
 -- @field VARIABLE_BUILTIN (string)
 --   The tag name for builtin variable elements.
--- @field TITLE (string)
---   The tag name for title elements, typically in markup.
+-- @field HEADING (string)
+--   The tag name for heading elements, typically in markup.
 -- @field BOLD (string)
 --   The tag name for bold elements, typically in markup.
 -- @field ITALIC (string)
@@ -824,7 +824,7 @@ local default = {
   'whitespace', 'comment', 'string', 'number', 'keyword', 'identifier', 'operator', 'error',
   'preprocessor', 'constant', 'variable', 'function', 'class', 'type', 'label', 'regex', 'embedded',
   'function.builtin', 'constant.builtin', 'function.method', 'tag', 'attribute', 'variable.builtin',
-  'title', 'bold', 'italic', 'underline', 'code', 'link', 'reference'
+  'heading', 'bold', 'italic', 'underline', 'code', 'link', 'reference'
 }
 for _, name in ipairs(default) do M[name:upper():gsub('%.', '_')] = name end
 -- Names for predefined Scintilla styles.

@@ -9,7 +9,7 @@ local lex = lexer.new(..., {lex_by_line = true})
 
 -- Text, file headers, and separators.
 lex:add_rule('index', lex:tag(lexer.COMMENT, to_eol(starts_line('Index: '))))
-lex:add_rule('header', lex:tag(lexer.TITLE, to_eol(starts_line(P('*** ') + '--- ' + '+++ '))))
+lex:add_rule('header', lex:tag(lexer.HEADING, to_eol(starts_line(P('*** ') + '--- ' + '+++ '))))
 lex:add_rule('separator', lex:tag(lexer.COMMENT, to_eol(starts_line(P('---') + '****' + '='))))
 
 -- Location.

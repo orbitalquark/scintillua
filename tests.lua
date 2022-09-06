@@ -227,7 +227,7 @@ local FUNCTION_METHOD = lexer.FUNCTION_METHOD
 local TAG = lexer.TAG
 local ATTRIBUTE = lexer.ATTRIBUTE
 local VARIABLE_BUILTIN = lexer.VARIABLE_BUILTIN
-local TITLE = lexer.TITLE
+local HEADING = lexer.HEADING
 local BOLD = lexer.BOLD
 local ITALIC = lexer.ITALIC
 local UNDERLINE = lexer.UNDERLINE
@@ -1315,8 +1315,8 @@ function test_markdown()
         <a>
   ]]):gsub('\n    ', '\n') -- strip indent
   local tags = {
-    TITLE .. '.h1', '# header1', --
-    TITLE .. '.h2', '## header2', --
+    HEADING .. '.h1', '# header1', --
+    HEADING .. '.h2', '## header2', --
     STRING, '> block1\n> block2\nblock3\n\n', --
     NUMBER, '1. ', DEFAULT, 'l', DEFAULT, '1', --
     DEFAULT, '2', --

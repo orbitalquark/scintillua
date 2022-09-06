@@ -124,19 +124,19 @@ to) [`lexer.DEFAULT`](#lexer.DEFAULT), [`lexer.COMMENT`](#lexer.COMMENT), [`lexe
 [`lexer.PREPROCESSOR`](#lexer.PREPROCESSOR), [`lexer.CONSTANT`](#lexer.CONSTANT), [`lexer.CONSTANT_BUILTIN`](#lexer.CONSTANT_BUILTIN),
 [`lexer.VARIABLE`](#lexer.VARIABLE), [`lexer.VARIABLE_BUILTIN`](#lexer.VARIABLE_BUILTIN), [`lexer.FUNCTION`](#lexer.FUNCTION),
 [`lexer.FUNCTION_BUILTIN`](#lexer.FUNCTION_BUILTIN), [`lexer.FUNCTION_METHOD`](#lexer.FUNCTION_METHOD), [`lexer.CLASS`](#lexer.CLASS), [`lexer.TYPE`](#lexer.TYPE),
-[`lexer.LABEL`](#lexer.LABEL), [`lexer.REGEX`](#lexer.REGEX), and [`lexer.EMBEDDED`](#lexer.EMBEDDED). Tag names for markup languages
-include (but are not limited to) [`lexer.TAG`](#lexer.TAG), [`lexer.ATTRIBUTE`](#lexer.ATTRIBUTE), [`lexer.TITLE`](#lexer.TITLE),
-[`lexer.BOLD`](#lexer.BOLD), [`lexer.ITALIC`](#lexer.ITALIC), [`lexer.UNDERLINE`](#lexer.UNDERLINE), [`lexer.CODE`](#lexer.CODE), [`lexer.LINK`](#lexer.LINK),
-and [`lexer.REFERENCE`](#lexer.REFERENCE). Patterns include [`lexer.any`](#lexer.any), [`lexer.alpha`](#lexer.alpha),
-[`lexer.digit`](#lexer.digit), [`lexer.alnum`](#lexer.alnum), [`lexer.lower`](#lexer.lower), [`lexer.upper`](#lexer.upper), [`lexer.xdigit`](#lexer.xdigit),
-[`lexer.graph`](#lexer.graph), [`lexer.print`](#lexer.print), [`lexer.punct`](#lexer.punct), [`lexer.space`](#lexer.space), [`lexer.newline`](#lexer.newline),
-[`lexer.nonnewline`](#lexer.nonnewline), [`lexer.dec_num`](#lexer.dec_num), [`lexer.hex_num`](#lexer.hex_num), [`lexer.oct_num`](#lexer.oct_num),
-[`lexer.bin_num`](#lexer.bin_num), [`lexer.integer`](#lexer.integer), [`lexer.float`](#lexer.float), [`lexer.number`](#lexer.number), and
-[`lexer.word`](#lexer.word). You may use your own tag names if none of the above fit your language,
-but an advantage to using predefined tag names is that the language elements your lexer
-recognizes will inherit any universal syntax highlighting color theme that your editor
-uses. You can also "subclass" existing tag names by appending a '.*subclass*' string to
-them. For example, the HTML lexer tags unknown tags as `lexer.TAG .. '.unknown'`. Editors
+[`lexer.LABEL`](#lexer.LABEL), [`lexer.REGEX`](#lexer.REGEX), and [`lexer.EMBEDDED`](#lexer.EMBEDDED). Tag names for markup
+languages include (but are not limited to) [`lexer.TAG`](#lexer.TAG), [`lexer.ATTRIBUTE`](#lexer.ATTRIBUTE),
+[`lexer.HEADING`](#lexer.HEADING), [`lexer.BOLD`](#lexer.BOLD), [`lexer.ITALIC`](#lexer.ITALIC), [`lexer.UNDERLINE`](#lexer.UNDERLINE),
+[`lexer.CODE`](#lexer.CODE), [`lexer.LINK`](#lexer.LINK), and [`lexer.REFERENCE`](#lexer.REFERENCE). Patterns include [`lexer.any`](#lexer.any),
+[`lexer.alpha`](#lexer.alpha), [`lexer.digit`](#lexer.digit), [`lexer.alnum`](#lexer.alnum), [`lexer.lower`](#lexer.lower), [`lexer.upper`](#lexer.upper),
+[`lexer.xdigit`](#lexer.xdigit), [`lexer.graph`](#lexer.graph), [`lexer.print`](#lexer.print), [`lexer.punct`](#lexer.punct), [`lexer.space`](#lexer.space),
+[`lexer.newline`](#lexer.newline), [`lexer.nonnewline`](#lexer.nonnewline), [`lexer.dec_num`](#lexer.dec_num), [`lexer.hex_num`](#lexer.hex_num),
+[`lexer.oct_num`](#lexer.oct_num), [`lexer.bin_num`](#lexer.bin_num), [`lexer.integer`](#lexer.integer), [`lexer.float`](#lexer.float),
+[`lexer.number`](#lexer.number), and [`lexer.word`](#lexer.word). You may use your own tag names if none of the above
+fit your language, but an advantage to using predefined tag names is that the language elements
+your lexer recognizes will inherit any universal syntax highlighting color theme that your
+editor uses. You can also "subclass" existing tag names by appending a '.*subclass*' string
+to them. For example, the HTML lexer tags unknown tags as `lexer.TAG .. '.unknown'`. Editors
 have the ability to style those subclassed tags in a different way than normal tags, or fall
 back to styling them as normal tags.
 
@@ -742,6 +742,11 @@ The tag name for builtin function elements.
 
 The tag name for function method elements.
 
+<a id="lexer.HEADING"></a>
+#### `lexer.HEADING` (string)
+
+The tag name for heading elements, typically in markup.
+
 <a id="lexer.IDENTIFIER"></a>
 #### `lexer.IDENTIFIER` (string)
 
@@ -801,11 +806,6 @@ The tag name for string elements.
 #### `lexer.TAG` (string)
 
 The tag name for function tag elements, typically in markup.
-
-<a id="lexer.TITLE"></a>
-#### `lexer.TITLE` (string)
-
-The tag name for title elements, typically in markup.
 
 <a id="lexer.TYPE"></a>
 #### `lexer.TYPE` (string)
