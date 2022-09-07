@@ -160,9 +160,11 @@ int lexer_field_newindex(lua_State *L) {
     3, "read-only field");
   lua_getfield(L, LUA_REGISTRYINDEX, "scintillua"); // REGISTRY.scintillua
   const auto lexer = reinterpret_cast<Scintillua *>(lua_touserdata(L, -1));
-  if (field == "property")
+  if (field == "property") {
+    static constexpr const char *validKeys[] = {"scintillua.comment"};
+    luaL_checkoption(L, 2, nullptr, validKeys);
     lexer->PropertySet(luaL_checkstring(L, 2), luaL_checkstring(L, 3));
-  else if (field == "line_state") {
+  } else if (field == "line_state") {
     if (lua_getfield(L, LUA_REGISTRYINDEX, "buffer") != LUA_TLIGHTUSERDATA) // REGISTRY.buffer
       luaL_error(L, "must be lexing or folding");
     const auto buffer = static_cast<Scintilla::IDocument *>(lua_touserdata(L, -1));
@@ -272,7 +274,7 @@ Scintillua::Scintillua(const std::string &lexersDir, const char *name)
   lua_pushvalue(L.get(), -2), lua_setfield(L.get(), -2, "lexer"); // _LOADED['lexer'] = lexer
   lua_pop(L.get(), 1); // _LOADED
 
-  // Call lexer.load(name, nil, true).
+  // Call lexer.load(name).
   if (lua_getfield(L.get(), -1, "load") != LUA_TFUNCTION) {
     LogError("cannot find lexer.load()");
     return;

@@ -183,7 +183,7 @@ function lex:fold(text, start_pos, start_line, start_level)
   local folds, line_starts = {}, {}
   for pos in (text .. '\n'):gmatch('().-\r?\n') do line_starts[#line_starts + 1] = pos end
   local style_at, CONSTANT, level = lexer.style_at, lexer.CONSTANT, start_level
-  local sphinx = lexer.property_int['fold.by.sphinx.convention'] > 0
+  local sphinx = lexer.property_int['fold.scintillua.rest.by.sphinx.convention'] > 0
   local FOLD_BASE = lexer.FOLD_BASE
   local FOLD_HEADER, FOLD_BLANK = lexer.FOLD_HEADER, lexer.FOLD_BLANK
   for i = 1, #line_starts do
@@ -204,7 +204,7 @@ function lex:fold(text, start_pos, start_line, start_level)
   return folds
 end
 
-lexer.property['fold.by.sphinx.convention'] = '0'
+-- lexer.property['fold.by.sphinx.convention'] = '0'
 
 --[[ Embedded languages.
 local bash = lexer.load('bash')
