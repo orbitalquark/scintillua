@@ -22,7 +22,7 @@ local function mark_warning(_, pos)
 end
 
 local colon = lex:tag(lexer.DEFAULT, ':' * P(' ')^-1)
-local filename = lex:tag('filename', (lexer.nonnewline - lexer.space - ':')^1) * colon
+local filename = lex:tag('filename', (lexer.nonnewline - ':')^1) * colon
 local line = lex:tag('line', lexer.dec_num) * colon
 local column = lex:tag('column', lexer.dec_num) * colon
 local warning = lex:tag('message', lexer.to_eol('warning: ')) * mark_warning
