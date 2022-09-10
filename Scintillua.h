@@ -4,6 +4,8 @@
 #ifndef SCINTILLUA_H
 #define SCINTILLUA_H
 
+#define SCLUA_DETECT 1
+
 #ifdef __cplusplus
 #include "ILexer.h"
 #define ILEXER5 Scintilla::ILexer5

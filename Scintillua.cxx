@@ -18,6 +18,8 @@
 #include "OptionSet.h"
 #include "DefaultLexer.h"
 
+#include "Scintillua.h"
+
 extern "C" {
 #include "lua.h"
 #include "lualib.h" // LUALIB_API
@@ -44,6 +46,7 @@ class Scintillua : public Lexilla::DefaultLexer {
   // This is used in multi-language lexers when backtracking to whitespace to determine which
   // lexer grammar to use.
   bool ws[STYLE_MAX];
+  std::string privateCallResult; // used by PrivateCall for persistence
   std::string wordListsDescription; // used by DescribeWordListSets() for persistence
   std::string styleName; // used by NameOfStyle() for persistence
 
@@ -86,6 +89,8 @@ public:
   void SCI_METHOD Fold(
     Sci_PositionU startPos, Sci_Position lengthDoc, int, Scintilla::IDocument *buffer) override;
 
+  void *SCI_METHOD PrivateCall(int operation, void *pointer) override;
+
   // Note: includes predefined styles.
   int SCI_METHOD NamedStyles() override;
   // Note: the returned value persists only until the next call.
@@ -110,6 +115,10 @@ Scintillua::PropertyDoc::PropertyDoc() {
     "else {').");
   DefineProperty(
     "fold.scintillua.compact", &Placeholder::b, "Include in a fold any subsequent blank lines.");
+  DefineProperty("lexer.scintillua.filename", &Placeholder::s,
+    "The filename for detecting a lexer via PrivateCall.");
+  DefineProperty("lexer.scintillua.line", &Placeholder::s,
+    "The content line for detecting a lexer via PrivateCall.");
 }
 
 void Scintillua::LogError(const char *str, bool print) {
@@ -464,6 +473,27 @@ void Scintillua::Fold(
   lua_pop(L.get(), 1); // fold table
 
   ASSERT_STACK_TOP(L.get());
+}
+
+void *SCI_METHOD Scintillua::PrivateCall(int operation, void *pointer) {
+  if (operation != SCLUA_DETECT) return (LogError("invalid private call operation"), nullptr);
+  if (pointer)
+    return (memcpy(pointer, privateCallResult.c_str(), privateCallResult.size()), nullptr);
+  RECORD_STACK_TOP(L.get());
+  lua_getfield(L.get(), LUA_REGISTRYINDEX, "_LOADED"), lua_getfield(L.get(), -1, "lexer"),
+    lua_replace(L.get(), -2); // _LOADED['lexer']
+  if (!lua_istable(L.get(), -1)) return (LogError("cannot find lexer module"), nullptr);
+  if (lua_getfield(L.get(), -1, "detect") != LUA_TFUNCTION)
+    return (LogError("cannot find lexer.detect()"), nullptr);
+  lua_pushcfunction(L.get(), lua_error_handler), lua_insert(L.get(), -2);
+  if (lua_pcall(L.get(), 0, 1, -2) != LUA_OK) // name = xpcall(lexer.detect)
+    return (LogError(), nullptr);
+  lua_remove(L.get(), -2); // lua_error_handler
+  const char *name = lua_tostring(L.get(), -1);
+  privateCallResult = name ? name : "";
+  lua_pop(L.get(), 2); // name, _LOADED['lexer']
+  ASSERT_STACK_TOP(L.get());
+  return reinterpret_cast<void *>(static_cast<uintptr_t>(privateCallResult.size()));
 }
 
 // Note: includes the names of predefined styles.

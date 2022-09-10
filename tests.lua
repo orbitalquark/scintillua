@@ -515,7 +515,6 @@ function test_fold_by_indentation()
       baz
   ]]
   lexer.fold_level = {lexer.FOLD_BASE} -- Scintilla normally creates this
-  lexer.indent_amount = {0} -- Scintilla normally creates this
   local folds = {1, -2, 3}
   assert_fold_points(lex, code, folds)
 end
@@ -1582,6 +1581,27 @@ function test_legacy()
     PREPROCESSOR, '#quux'
   }
   assert_lex(lex, code, tags)
+end
+
+function test_detect()
+  assert(lexer.detect('foo.lua') == 'lua')
+  assert(lexer.detect('foo.c') == 'ansi_c')
+  assert(not lexer.detect('foo.txt'))
+  assert(lexer.detect('foo', '#!/bin/sh') == 'bash')
+  assert(not lexer.detect('foo', '/bin/sh'))
+
+  lexer.detect_extensions.luadoc = 'lua'
+  assert(lexer.detect('foo.luadoc') == 'lua')
+  assert(lexer.detect('foo.m') == 'objective_c')
+  lexer.detect_extensions.m = 'matlab' -- override
+  assert(lexer.detect('foo.m') == 'matlab')
+
+  -- Simulate SCI_PRIVATELEXERCALL.
+  assert(not lexer.detect()) -- should not error or anything
+  lexer.property['lexer.scintillua.filename'] = 'foo.lua'
+  assert(lexer.detect() == 'lua')
+  lexer.property['lexer.scintillua.line'] = '#!/usr/env/ruby'
+  assert(lexer.detect() == 'ruby') -- line detection has priority over filename detection
 end
 
 function test_lua51()

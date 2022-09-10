@@ -186,6 +186,27 @@ Scintillua's lexers support the following properties:
 [SCI_DESCRIBEKEYWORDSETS]: https://scintilla.org/ScintillaDoc.html#SCI_DESCRIBEKEYWORDSETS
 [SciTE]: https://scintilla.org/SciTE.html
 
+#### Lexer Detection
+
+Applications can leverage Scintillua's internal database of lexer names associated with filenames
+and extensions, and lexer names associated with content lines like shebang lines. In order to do this:
+
+1. Initially call `CreateLexer("text")` and then set it using Scintilla's [SCI_SETILEXER][]
+   message.
+2. Set the `lexer.scintillua.filename` and/or `lexer.scintillua.line` properties to set the
+   filename and/or content line, respectively, used for detecting a lexer. You may wish to
+   truncate the content line in order to avoid the overhead of dealing with a very long line,
+   such as minified JavaScript.  The first 128 bytes seems reasonable.
+3. Use Scintilla's [SCI_PRIVATELEXERCALL][] message along with the operation `SCLUA_DETECT`
+   (1) to store the detected lexer's name in the given `pointer` argument. This operation
+   behaves like other Scintilla string API functions: when passing a NULL pointer argument,
+   the length of the string that should be allocated is returned.
+4. If the result is a non-empty string, call `CreateLexer()` with that result and set the newly
+   created lexer using SCI_SETILEXER.
+
+[SCI_SETILEXER]: https://scintilla.org/ScintillaDoc.html#SCI_SETILEXER
+[SCI_PRIVATELEXERCALL]: https://scintilla.org/ScintillaDoc.html#SCI_PRIVATELEXERCALL
+
 #### Error Handling
 
 Scintillua reports errors in one of two ways:
@@ -300,5 +321,9 @@ doing this:
     whitespace.ansi_c	24
     operator	25
 
+If you are unsure of which lexer to use for a given filename and/or content line (e.g. shebang line), you can
+call [`detect()`][] and pass the result to `load()` if it is non-nil.
+
 [`load()`]: api.html#lexer.load
 [`lex()`]: api.html#lexer.lex
+[`detect()`]: api.html#lexer.detect

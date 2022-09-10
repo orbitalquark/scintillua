@@ -1063,6 +1063,29 @@ Fields:
 
 * `c`: 
 
+<a id="lexer.detect"></a>
+#### `lexer.detect`(filename, line)
+
+Returns the name of the lexer often associated with filename *filename* and/or content
+line *line*.
+
+Fields:
+
+* `filename`: Optional string filename. The default value is read from the
+  'lexer.scintillua.filename' property.
+* `line`: Optional string first content line, such as a shebang line. The default value
+  is read from the 'lexer.scintillua.line' property.
+
+Return:
+
+* string lexer name to pass to `load()`, or `nil` if none was detected
+
+See also:
+
+* [`lexer.detect_extensions`](#lexer.detect_extensions)
+* [`lexer.detect_patterns`](#lexer.detect_patterns)
+* [`lexer.load`](#lexer.load)
+
 <a id="lexer.embed"></a>
 #### `lexer.embed`(lexer, child, start\_rule, end\_rule)
 
@@ -1419,5 +1442,28 @@ See also:
 
 * [`lexer.set_word_list`](#lexer.set_word_list)
 
+
+### Tables defined by `lexer`
+
+<a id="lexer.detect_extensions"></a>
+#### `lexer.detect_extensions`
+
+Map of file extensions, without the '.' prefix, to their associated lexer names.
+This map has precedence over Scintillua's built-in map.
+
+See also:
+
+* [`lexer.detect`](#lexer.detect)
+
+<a id="lexer.detect_patterns"></a>
+#### `lexer.detect_patterns`
+
+Map of line patterns to their associated lexer names.
+These are Lua string patterns, not LPeg patterns.
+This map has precedence over Scintillua's built-in map.
+
+See also:
+
+* [`lexer.detect`](#lexer.detect)
 
 ---
