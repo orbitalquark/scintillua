@@ -1620,10 +1620,8 @@ M.detect_patterns = {}
 -- @see load
 -- @name detect
 function M.detect(filename, line)
-  if M.property then
-    if not filename then filename = M.property['lexer.scintillua.filename'] end
-    if not line then line = M.property['lexer.scintillua.line'] end
-  end
+  if not filename then filename = M.property and M.property['lexer.scintillua.filename'] or '' end
+  if not line then line = M.property and M.property['lexer.scintillua.line'] or '' end
 
   -- Locally scoped in order to avoid persistence in memory.
   -- LuaFormatter off
