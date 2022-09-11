@@ -661,6 +661,7 @@ local M = {}
 -- [lexer post]: http://lua-users.org/lists/lua-l/2007-04/msg00116.html
 -- @field DEFAULT (string)
 --   The tag name for default elements.
+--   It is also the name of the predefined Scintilla style for unstyled text.
 -- @field COMMENT (string)
 --   The tag name for comment elements.
 -- @field STRING (string)
@@ -719,6 +720,20 @@ local M = {}
 --   The tag name for link elements, typically in markup.
 -- @field REFERENCE (string)
 --   The tag name for reference elements, typically in markup.
+-- @field LINE_NUMBER (string)
+--   The name of the predefined Scintilla style for line numbers.
+-- @field BRACE_LIGHT (string)
+--   The name of the predefined Scintilla style for highlighting a matching brace character.
+-- @field BRACE_BAD (string)
+--   The name of the predefined Scintilla style for highlighting a mismatched brace character.
+-- @field CONTROL_CHAR (string)
+--   The name of the predefined Scintilla style for control characters.
+-- @field INDENT_GUIDE (string)
+--   The name of the predefined Scintilla style for indentation guides.
+-- @field CALL_TIP (string)
+--   The name of the predefined Scintilla style for call tips.
+-- @field FOLD_DISPLAY_TEXT (string)
+--   The name of the predefined Scintilla style for the text displayed next to folded lines.
 -- @field any (pattern)
 --   A pattern that matches any single character.
 -- @field alpha (pattern)
@@ -830,10 +845,10 @@ for _, name in ipairs(default) do M[name:upper():gsub('%.', '_')] = name end
 -- Names for predefined Scintilla styles.
 -- Having these here simplifies style number handling between Scintillua and Scintilla.
 local predefined = {
-  'default', 'line_number', 'brace_light', 'brace_bad', 'control_char', 'indent_guide', 'call_tip',
-  'fold_display_text'
+  'default', 'line.number', 'brace.light', 'brace.bad', 'control.char', 'indent.guide', 'call.tip',
+  'fold.display.text'
 }
-M.DEFAULT = 'default'
+for _, name in ipairs(predefined) do M[name:upper():gsub('%.', '_')] = name end
 
 M.num_user_word_lists = 2
 
