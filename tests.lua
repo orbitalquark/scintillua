@@ -28,8 +28,8 @@ function assert_default_tags(lex)
     assert(lex._TAGS[tag] == i, 'default styles out of order')
   end
   local predefined_styles = {
-    'default', 'line_number', 'brace_light', 'brace_bad', 'control_char', 'indent_guide',
-    'call_tip', 'fold_display_text'
+    'default', 'line.number', 'brace.light', 'brace.bad', 'control.char', 'indent.guide',
+    'call.tip', 'fold.display.text'
   }
   for i = 1, #predefined_styles do
     local style = predefined_styles[i]
