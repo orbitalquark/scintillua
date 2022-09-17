@@ -14,6 +14,7 @@ Bugfixes:
 * Fixed `lexer.line_from_position()` for start positions after 1.
 * Fixed inability for standalone Lua library to use lexers that call `lexer.line_from_position()`,
    index `lexer.indent_amount`, or index `lexer.line_state`.
+* Updated Bash lexer to improve heredoc handling.
 
 Changes:
 
@@ -32,10 +33,11 @@ Changes:
 * Deprecated `lexer.token()` in favor of [`lexer.tag()`][] and made it an instance method.
 * Dropped 32-bit Windows DLL support.
 * Removed `lexer.property_expanded`.
-* Compile a very minimal subset of Lua into Scintillua (no bit, coro, debug, io, package, os libs).
+* Compile a very minimal subset of Lua into Scintillua (no bit32, coroutine, debug, io, package,
+   or os libraries).
 * Applications can use their own keyword lists for lexers that support it.
 * More restricted sandbox environment for lexers.
-* All lexers created with `lexer.new()` have a default whitespace rule and deprecated
+* All lexers created with `lexer.new()` have a default whitespace rule; deprecated
    `lexer.WHITESPACE`.
 * Child lexers can extend their parent's keyword lists.
 * Added more builtin tag/token names.
@@ -60,6 +62,9 @@ Changes:
 * Added Gemini, git-rebase, and strace lexers.
 * Added "scintillua.comment" property for lexers with comments so applications can use them.
 * Updated [lexer template][].
+* Refreshed light and dark color themes.
+* Added [lexer detection][] via SCI_PRIVATELEXERCALL or [`lexer.detect()`][] to help clients
+   determine which lexers are associated with which filenames and content line patterns.
 
 [Scintillua 6.0]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_6.0/scintillua_6.0.zip
 [`CreateLexer()`]: manual.html#using-scintillua-with-other-apps
@@ -68,6 +73,8 @@ Changes:
 [`lexer.after_set()`]: api.html#lexer.after_set
 [`lexer.number_()`]: api.html#lexer.number_
 [lexer template]: api.html#new-lexer-template
+[lexer detection]: manual.html#lexer-detection
+[`lexer.detect()`]: api.html#lexer.detect
 
 ### 5.3 (03 Nov 2021)
 
