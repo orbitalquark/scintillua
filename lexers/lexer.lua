@@ -123,20 +123,21 @@ local M = {}
 -- [`lexer.KEYWORD`](), [`lexer.IDENTIFIER`](), [`lexer.OPERATOR`](), [`lexer.ERROR`](),
 -- [`lexer.PREPROCESSOR`](), [`lexer.CONSTANT`](), [`lexer.CONSTANT_BUILTIN`](),
 -- [`lexer.VARIABLE`](), [`lexer.VARIABLE_BUILTIN`](), [`lexer.FUNCTION`](),
--- [`lexer.FUNCTION_BUILTIN`](), [`lexer.FUNCTION_METHOD`](), [`lexer.CLASS`](), [`lexer.TYPE`](),
--- [`lexer.LABEL`](), [`lexer.REGEX`](), and [`lexer.EMBEDDED`](). Tag names for markup
--- languages include (but are not limited to) [`lexer.TAG`](), [`lexer.ATTRIBUTE`](),
--- [`lexer.HEADING`](), [`lexer.BOLD`](), [`lexer.ITALIC`](), [`lexer.UNDERLINE`](),
--- [`lexer.CODE`](), [`lexer.LINK`](), and [`lexer.REFERENCE`](). Patterns include [`lexer.any`](),
--- [`lexer.alpha`](), [`lexer.digit`](), [`lexer.alnum`](), [`lexer.lower`](), [`lexer.upper`](),
--- [`lexer.xdigit`](), [`lexer.graph`](), [`lexer.print`](), [`lexer.punct`](), [`lexer.space`](),
--- [`lexer.newline`](), [`lexer.nonnewline`](), [`lexer.dec_num`](), [`lexer.hex_num`](),
--- [`lexer.oct_num`](), [`lexer.bin_num`](), [`lexer.integer`](), [`lexer.float`](),
--- [`lexer.number`](), and [`lexer.word`](). You may use your own tag names if none of the above
--- fit your language, but an advantage to using predefined tag names is that the language elements
--- your lexer recognizes will inherit any universal syntax highlighting color theme that your
--- editor uses. You can also "subclass" existing tag names by appending a '.*subclass*' string
--- to them. For example, the HTML lexer tags unknown tags as `lexer.TAG .. '.unknown'`. Editors
+-- [`lexer.FUNCTION_BUILTIN`](), [`lexer.FUNCTION_METHOD`](), [`lexer.CLASS`](),
+-- [`lexer.TYPE`](), [`lexer.LABEL`](), [`lexer.REGEX`](), [`lexer.EMBEDDED`](), and
+-- [`lexer.ANNOTATION`](). Tag names for markup languages include (but are not limited
+-- to) [`lexer.TAG`](), [`lexer.ATTRIBUTE`](), [`lexer.HEADING`](), [`lexer.BOLD`](),
+-- [`lexer.ITALIC`](), [`lexer.UNDERLINE`](), [`lexer.CODE`](), [`lexer.LINK`](),
+-- and [`lexer.REFERENCE`](). Patterns include [`lexer.any`](), [`lexer.alpha`](),
+-- [`lexer.digit`](), [`lexer.alnum`](), [`lexer.lower`](), [`lexer.upper`](), [`lexer.xdigit`](),
+-- [`lexer.graph`](), [`lexer.print`](), [`lexer.punct`](), [`lexer.space`](), [`lexer.newline`](),
+-- [`lexer.nonnewline`](), [`lexer.dec_num`](), [`lexer.hex_num`](), [`lexer.oct_num`](),
+-- [`lexer.bin_num`](), [`lexer.integer`](), [`lexer.float`](), [`lexer.number`](), and
+-- [`lexer.word`](). You may use your own tag names if none of the above fit your language,
+-- but an advantage to using predefined tag names is that the language elements your lexer
+-- recognizes will inherit any universal syntax highlighting color theme that your editor
+-- uses. You can also "subclass" existing tag names by appending a '.*subclass*' string to
+-- them. For example, the HTML lexer tags unknown tags as `lexer.TAG .. '.unknown'`. Editors
 -- have the ability to style those subclassed tags in a different way than normal tags, or fall
 -- back to styling them as normal tags.
 --
@@ -719,6 +720,8 @@ local M = {}
 --   The tag name for link elements, typically in markup.
 -- @field REFERENCE (string)
 --   The tag name for reference elements, typically in markup.
+-- @field ANNOTATION (string)
+--   The tag name for annotation elements.
 -- @field any (pattern)
 --   A pattern that matches any single character.
 -- @field alpha (pattern)
@@ -824,7 +827,7 @@ local default = {
   'whitespace', 'comment', 'string', 'number', 'keyword', 'identifier', 'operator', 'error',
   'preprocessor', 'constant', 'variable', 'function', 'class', 'type', 'label', 'regex', 'embedded',
   'function.builtin', 'constant.builtin', 'function.method', 'tag', 'attribute', 'variable.builtin',
-  'heading', 'bold', 'italic', 'underline', 'code', 'link', 'reference'
+  'heading', 'bold', 'italic', 'underline', 'code', 'link', 'reference', 'annotation'
 }
 for _, name in ipairs(default) do M[name:upper():gsub('%.', '_')] = name end
 -- Names for predefined Scintilla styles.
@@ -846,7 +849,7 @@ M.num_user_word_lists = 2
 -- @param patt The LPeg pattern to tag.
 -- @return pattern
 -- @usage local number = lex:tag(lexer.NUMBER, lexer.number)
--- @usage local annotation = lex:tag('annotation', '@' * lexer.word)
+-- @usage local addition = lex:tag('addition', '+' * lexer.word)
 -- @name tag
 function M.tag(lexer, name, patt)
   if not assert(lexer._TAGS, 'not a lexer instance')[name] then
@@ -1848,7 +1851,7 @@ end
 -- @param patt The LPeg pattern associated with the token.
 -- @return pattern
 -- @usage local number = token(lexer.NUMBER, lexer.number)
--- @usage local annotation = token('annotation', '@' * lexer.word)
+-- @usage local addition = token('addition', '+' * lexer.word)
 -- @name token
 -- @see tag
 function M.token(name, patt) return Cc(name) * (P(patt) / 0) * Cp() end

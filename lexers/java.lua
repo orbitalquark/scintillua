@@ -44,7 +44,7 @@ lex:add_rule('comment', lex:tag(lexer.COMMENT, line_comment + block_comment))
 lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number * S('LlFfDd')^-1))
 
 -- Annotations.
-lex:add_rule('annotation', lex:tag(lexer.LABEL .. '.annotation', '@' * lexer.word))
+lex:add_rule('annotation', lex:tag(lexer.ANNOTATION, '@' * lexer.word))
 
 -- Operators.
 lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('+-/*%<>!=^&|?~:;.()[]{}')))

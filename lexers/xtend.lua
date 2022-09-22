@@ -72,7 +72,7 @@ local float = float_pref * dec_inf * float_suff
 lex:add_rule('number', token(lexer.NUMBER, float + hex + dec))
 
 -- Annotations.
-lex:add_rule('annotation', token('annotation', '@' * lexer.word))
+lex:add_rule('annotation', token(lexer.ANNOTATION, '@' * lexer.word))
 lex:add_style('annotation', lexer.styles.preprocessor)
 
 -- Operators.

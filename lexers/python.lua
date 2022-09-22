@@ -45,7 +45,7 @@ lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.to_eol('#', true)))
 lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number_('_') * S('jJ')^-1))
 
 -- Decorators.
-lex:add_rule('decorator', lex:tag(lexer.LABEL .. '.decorator', '@' * lexer.word))
+lex:add_rule('decorator', lex:tag(lexer.ANNOTATION, '@' * lexer.word))
 
 -- Operators.
 lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('!@%^&*()[]{}-=+/|:;.,<>~')))

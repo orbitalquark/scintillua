@@ -234,6 +234,7 @@ local UNDERLINE = lexer.UNDERLINE
 local CODE = lexer.CODE
 local LINK = lexer.LINK
 local REFERENCE = lexer.REFERENCE
+local ANNOTATION = lexer.ANNOTATION
 
 -- Tests a basic lexer with a few simple rules and no custom styles.
 function test_basics()
@@ -1472,7 +1473,7 @@ function test_python()
   ]]
   local tags = {
     COMMENT, '# Comment.', --
-    LABEL .. '.decorator', '@decorator', --
+    ANNOTATION, '@decorator', --
     KEYWORD, 'class', CLASS, 'Foo', OPERATOR, '(', IDENTIFIER, 'Bar', OPERATOR, ')', OPERATOR, ':', --
     STRING, '"""documentation"""', --
     KEYWORD, 'def', --
