@@ -135,7 +135,7 @@ local underline = lpeg.Cmt(starts_line(adornment), function(_, index, adm, c)
   return pos and index - #adm + pos - 1 or nil
 end)
 -- Token needs to be a predefined one in order for folder to work.
-lex:add_rule('title', token(lexer.CONSTANT, overline + underline))
+lex:add_rule('title', token(lexer.HEADING, overline + underline))
 
 -- Line block.
 lex:add_rule('line_block_char', token(lexer.OPERATOR, starts_line(any_indent * '|')))
@@ -144,30 +144,25 @@ lex:add_rule('line_block_char', token(lexer.OPERATOR, starts_line(any_indent * '
 lex:add_rule('whitespace', token(lexer.WHITESPACE, S(' \t')^1 + lexer.newline^1))
 
 -- Inline markup.
-local strong = token('strong', lexer.range('**'))
-local em = token('em', lexer.range('*'))
+local strong = token(lexer.BOLD, lexer.range('**'))
+local em = token(lexer.ITALIC, lexer.range('*'))
 local inline_literal = token('inline_literal', lexer.range('``'))
 local postfix_link = (word + lexer.range('`')) * '_' * P('_')^-1
 local prefix_link = '_' * lexer.range('`')
-local link_ref = token('link', postfix_link + prefix_link)
+local link_ref = token(lexer.LINK, postfix_link + prefix_link)
 local role = token('role', ':' * word * ':' * (word * ':')^-1)
 local interpreted = role^-1 * token('interpreted', lexer.range('`')) * role^-1
-local footnote_ref = token('footnote', footnote_label * '_')
-local citation_ref = token('citation', citation_label * '_')
+local footnote_ref = token(lexer.REFERENCE, footnote_label * '_')
+local citation_ref = token(lexer.REFERENCE, citation_label * '_')
 local substitution_ref = token('substitution', lexer.range('|', true) * ('_' * P('_')^-1)^-1)
-local link = token('link',
+local link = token(lexer.LINK,
   lexer.alpha * (lexer.alnum + S('-.'))^1 * ':' * (lexer.alnum + S('/.+-%@'))^1)
 lex:add_rule('inline_markup',
   (strong + em + inline_literal + link_ref + interpreted + footnote_ref + citation_ref +
     substitution_ref + link) * -lexer.alnum)
-lex:add_style('strong', {bold = true})
-lex:add_style('em', {italics = true})
 lex:add_style('inline_literal', lexer.styles.embedded)
-lex:add_style('link', {underlined = true})
 lex:add_style('role', lexer.styles.class)
 lex:add_style('interpreted', lexer.styles.string)
-lex:add_style('footnote', {underlined = true})
-lex:add_style('citation', {underlined = true})
 
 -- Other.
 lex:add_rule('non_space', token(lexer.DEFAULT, lexer.alnum * (lexer.any - lexer.space)^0))

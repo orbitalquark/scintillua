@@ -75,7 +75,7 @@ local inst_var = '@' * word
 lex:add_rule('variable', lex:tag(lexer.VARIABLE, global_var + class_var + inst_var))
 
 -- Symbols.
-lex:add_rule('symbol', lex:tag('symbol', ':' * P(function(input, index)
+lex:add_rule('symbol', lex:tag(lexer.STRING .. '.symbol', ':' * P(function(input, index)
   if input:sub(index - 2, index - 2) ~= ':' then return index end
 end) * (word_char^1 + sq_str + dq_str)))
 

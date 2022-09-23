@@ -34,7 +34,7 @@ local equals = lex:tag(lexer.OPERATOR, '=') -- * in_tag
 
 -- Attributes.
 local ws = lex:get_rule('whitespace')
-local attribute_eq = lex:tag('attribute', identifier) * ws^-1 * equals
+local attribute_eq = lex:tag(lexer.ATTRIBUTE, identifier) * ws^-1 * equals
 lex:add_rule('attribute', attribute_eq)
 
 -- Strings.

@@ -14,8 +14,8 @@ lex:add_rule('note', delimiter * lex:tag('note', lexer.to_eol(lexer.alnum)))
 lex:add_rule('task', delimiter * lex:tag(lexer.LIST, '-'))
 
 -- Projects.
-lex:add_rule('project',
-  lex:tag('project', lexer.range(lexer.starts_line(lexer.alnum), ':') * lexer.newline))
+lex:add_rule('project', lex:tag(lexer.HEADING,
+  lexer.range(lexer.starts_line(lexer.alnum), ':') * lexer.newline))
 
 -- Tags.
 lex:add_rule('extended_tag', lex:tag(lexer.TAG .. '.extended', '@' * lexer.word * '(' *

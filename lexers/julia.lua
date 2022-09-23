@@ -53,8 +53,7 @@ lex:add_rule('type', token(lexer.TYPE,
     type_builtin_range + type_builtin_array))
 
 -- Macro
-lex:add_rule('macro', token('macro', '@' * (id + '.')))
-lex:add_style('macro', lexer.styles.preprocessor)
+lex:add_rule('macro', token(lexer.PREPROCESSOR, '@' * (id + '.')))
 
 -- Symbol
 lex:add_rule('symbol', token('symbol', -B(P(':') + '<') * ':' * id))

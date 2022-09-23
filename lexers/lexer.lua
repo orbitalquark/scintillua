@@ -399,7 +399,7 @@ local M = {}
 --
 -- Note that the use of a 'php_tag' tag will require the editor using the lexer to specify how
 -- to highlight text with that tag. In order to avoid this, you could use the `lexer.EMBEDDED`
--- tag instead.
+-- tag instead, or perhaps `lexer.TAG .. '.php'` if your application supports it.
 --
 -- #### Lexers with Complex State
 --
