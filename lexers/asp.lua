@@ -9,8 +9,8 @@ local lex = lexer.new(..., {inherit = html}) -- proxy for HTML
 
 -- Embedded VB.
 local vb = lexer.load('vb')
-local vb_start_rule = lex:tag(lexer.TAG .. '.asp', '<%' * P('=')^-1)
-local vb_end_rule = lex:tag(lexer.TAG .. '.asp', '%>')
+local vb_start_rule = lex:tag(lexer.PREPROCESSOR, '<%' * P('=')^-1)
+local vb_end_rule = lex:tag(lexer.PREPROCESSOR, '%>')
 lex:embed(vb, vb_start_rule, vb_end_rule)
 
 -- Embedded VBScript.
@@ -24,7 +24,7 @@ local vbs_end_rule = #('</' * script_element * '>') * html.embed_end_tag -- </sc
 lex:embed(vbs, vbs_start_rule, vbs_end_rule)
 
 -- Fold points.
-lex:add_fold_point(lexer.TAG .. '.asp', '<%', '%>')
+lex:add_fold_point(lexer.PREPROCESSOR, '<%', '%>')
 
 lexer.property['scintillua.comment'] = '<!--|-->'
 

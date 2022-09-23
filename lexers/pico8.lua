@@ -3,6 +3,7 @@
 -- http://www.lexaloffle.com/pico-8.php
 
 local lexer = lexer
+local word_match = lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
 local lex = lexer.new(...)

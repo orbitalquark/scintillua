@@ -56,12 +56,12 @@ lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('!@%^*&()-+=|/?.,;:<>[]{}')))
 local html = lexer.load('html')
 
 -- Embedded PHP.
-local php_start_rule = lex:tag(lexer.TAG .. '.php', '<?' * ('php' * lexer.space)^-1)
-local php_end_rule = lex:tag(lexer.TAG .. '.php', '?>')
+local php_start_rule = lex:tag(lexer.PREPROCESSOR, '<?' * ('php' * lexer.space)^-1)
+local php_end_rule = lex:tag(lexer.PREPROCESSOR, '?>')
 html:embed(lex, php_start_rule, php_end_rule)
 
 -- Fold points.
-lex:add_fold_point(lexer.TAG .. '.php', '<?', '?>')
+lex:add_fold_point(lexer.PREPROCESSOR, '<?', '?>')
 lex:add_fold_point(lexer.COMMENT, '/*', '*/')
 lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('//'))
 lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('#'))

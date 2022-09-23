@@ -24,13 +24,13 @@ lex:add_rule('operator', lex:tag(lexer.OPERATOR, S(':,.|')))
 -- Embed Django in HTML.
 local html = lexer.load('html')
 html:add_rule('django_comment', lex:tag(lexer.COMMENT, lexer.range('{#', '#}', true)))
-local django_start_rule = lex:tag(lexer.TAG .. '.django', '{' * S('{%'))
-local django_end_rule = lex:tag(lexer.TAG .. '.django', S('%}') * '}')
+local django_start_rule = lex:tag(lexer.PREPROCESSOR, '{' * S('{%'))
+local django_end_rule = lex:tag(lexer.PREPROCESSOR, S('%}') * '}')
 html:embed(lex, django_start_rule, django_end_rule)
 
 -- Fold points.
-lex:add_fold_point(lexer.TAG .. '.django', '{{', '}}')
-lex:add_fold_point(lexer.TAG .. '.django', '{%', '%}')
+lex:add_fold_point(lexer.PREPROCESSOR, '{{', '}}')
+lex:add_fold_point(lexer.PREPROCESSOR, '{%', '%}')
 
 -- Word lists.
 lex:set_word_list(lexer.KEYWORD, {

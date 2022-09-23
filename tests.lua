@@ -235,6 +235,7 @@ local CODE = lexer.CODE
 local LINK = lexer.LINK
 local REFERENCE = lexer.REFERENCE
 local ANNOTATION = lexer.ANNOTATION
+local LIST = lexer.LIST
 
 -- Tests a basic lexer with a few simple rules and no custom styles.
 function test_basics()
@@ -868,7 +869,7 @@ function test_php()
   local php = lexer.load('php')
   assert(php._name == 'php')
   assert_default_tags(php)
-  assert_extra_tags(php, {'whitespace.php', TAG .. '.php'})
+  assert_extra_tags(php, {'whitespace.php'})
 
   -- Lexing tests
   -- Starting in HTML.
@@ -876,7 +877,7 @@ function test_php()
   local tag_chars = TAG .. '.chars'
   local tags = {
     tag_chars, '<', TAG, 'h1', tag_chars, '>', --
-    TAG .. '.php', '<?php ', --
+    PREPROCESSOR, '<?php ', --
     KEYWORD, 'echo', --
     STRING, '"hi"', --
     OPERATOR, '.', --
@@ -888,7 +889,7 @@ function test_php()
     OPERATOR, '-', OPERATOR, '>', --
     FUNCTION_METHOD, 'baz', OPERATOR, '(', OPERATOR, ')', --
     OPERATOR, ';', --
-    TAG .. '.php', '?>', --
+    PREPROCESSOR, '?>', --
     tag_chars, '</', TAG, 'h1', tag_chars, '>'
   }
   local initial_style = php._TAGS['whitespace.html']
@@ -906,8 +907,8 @@ function test_php()
   -- Folding tests.
   local symbols = {'<?', '?>', '/*', '*/', '//', '#', '{', '}', '(', ')'}
   for i = 1, #symbols do assert(php._fold_points._symbols[symbols[i]]) end
-  assert(php._fold_points[TAG .. '.php']['<?'])
-  assert(php._fold_points[TAG .. '.php']['?>'])
+  assert(php._fold_points[PREPROCESSOR]['<?'])
+  assert(php._fold_points[PREPROCESSOR]['?>'])
   assert(php._fold_points[COMMENT]['/*'])
   assert(php._fold_points[COMMENT]['*/'])
   assert(php._fold_points[COMMENT]['//'])
@@ -946,7 +947,7 @@ function test_ruby()
     STRING, '%q[three]', --
     OPERATOR, '+', --
     STRING, '<<-FOUR\n      four\n    FOUR', --
-    FUNCTION_BUILTIN, 'puts', 'symbol', ':c', --
+    FUNCTION_BUILTIN, 'puts', STRING .. '.symbol', ':c', --
     OPERATOR, ',', --
     IDENTIFIER, 'foo', OPERATOR, '.', IDENTIFIER, 'puts'
   }
@@ -1014,7 +1015,7 @@ function test_ruby_and_rails()
     OPERATOR, '<', --
     IDENTIFIER, 'ActiveRecord', OPERATOR, ':', OPERATOR, ':', IDENTIFIER, 'Base', --
     IDENTIFIER, 'has_one', -- function.builtin in rails
-    'symbol', ':bar', --
+    STRING .. '.symbol', ':bar', --
     KEYWORD, 'end'
   }
   assert_lex(ruby, code, ruby_tags)
@@ -1023,7 +1024,7 @@ function test_ruby_and_rails()
     KEYWORD, 'class', IDENTIFIER, 'Foo', --
     OPERATOR, '<', --
     IDENTIFIER, 'ActiveRecord', OPERATOR, ':', OPERATOR, ':', IDENTIFIER, 'Base', --
-    FUNCTION_BUILTIN, 'has_one', 'symbol', ':bar', --
+    FUNCTION_BUILTIN, 'has_one', STRING .. '.symbol', ':bar', --
     KEYWORD, 'end'
   }
   assert_lex(rails, code, rails_tags)
@@ -1039,11 +1040,11 @@ function test_rhtml()
   local tag_chars = TAG .. '.chars'
   local rhtml_tags = {
     tag_chars, '<', TAG, 'h1', tag_chars, '>', --
-    TAG .. '.rhtml', '<%', --
+    lexer.PREPROCESSOR, '<%', --
     FUNCTION_BUILTIN, 'puts', STRING, '"hi"', --
     OPERATOR, '+', --
     FUNCTION_BUILTIN, 'link_to', STRING, '"foo"', VARIABLE, '@foo', --
-    TAG .. '.rhtml', '%>', --
+    lexer.PREPROCESSOR, '%>', --
     tag_chars, '</', TAG, 'h1', tag_chars, '>'
   }
   local initial_style = rhtml._TAGS['whitespace.html']
@@ -1318,9 +1319,9 @@ function test_markdown()
     HEADING .. '.h1', '# header1', --
     HEADING .. '.h2', '## header2', --
     STRING, '> block1\n> block2\nblock3\n\n', --
-    NUMBER, '1. ', DEFAULT, 'l', DEFAULT, '1', --
+    LIST, '1. ', DEFAULT, 'l', DEFAULT, '1', --
     DEFAULT, '2', --
-    NUMBER, '* ', DEFAULT, 'l', DEFAULT, '2', --
+    LIST, '* ', DEFAULT, 'l', DEFAULT, '2', --
     CODE, 'code1\n', --
     CODE, '```\ncode2\n```\n', --
     CODE, '`code3`', CODE, '``code4``', CODE, '``code`5``', CODE, '`code``6`', --
