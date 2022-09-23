@@ -65,6 +65,7 @@ Changes:
 * Refreshed light and dark color themes.
 * Added [lexer detection][] via SCI_PRIVATELEXERCALL or [`lexer.detect()`][] to help clients
    determine which lexers are associated with which filenames and content line patterns.
+* Updated AWK and Django lexers with updated keywords and functions/filters.
 
 [Scintillua 6.0]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_6.0/scintillua_6.0.zip
 [`CreateLexer()`]: manual.html#using-scintillua-with-other-apps

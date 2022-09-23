@@ -398,8 +398,8 @@ local M = {}
 --     html:embed(lex, php_start_rule, php_end_rule)
 --
 -- Note that the use of a 'php_tag' tag will require the editor using the lexer to specify how
--- to highlight text with that tag. In order to avoid this, you could use the `lexer.EMBEDDED`
--- tag instead, or perhaps `lexer.TAG .. '.php'` if your application supports it.
+-- to highlight text with that tag. In order to avoid this, you could use the `lexer.PREPROCESSOR`
+-- tag instead.
 --
 -- #### Lexers with Complex State
 --
