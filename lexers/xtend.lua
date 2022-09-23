@@ -72,7 +72,6 @@ lex:add_rule('number', token(lexer.NUMBER, float + hex + dec))
 
 -- Annotations.
 lex:add_rule('annotation', token(lexer.ANNOTATION, '@' * lexer.word))
-lex:add_style('annotation', lexer.styles.preprocessor)
 
 -- Operators.
 lex:add_rule('operator', token(lexer.OPERATOR, S('+-/*%<>!=^&|?~:;.()[]{}#')))

@@ -48,7 +48,7 @@ lex:add_rule('constant', token(lexer.CONSTANT, word_match{
 }))
 
 -- Libraries.
-lex:add_rule('library', token('library', word_match{
+lex:add_rule('library', token(lexer.FUNCTION_BUILTIN, word_match{
   -- Coroutine.
   'coroutine', 'coroutine.create', 'coroutine.resume', 'coroutine.running', 'coroutine.status',
   'coroutine.wrap', 'coroutine.yield',
@@ -106,7 +106,6 @@ lex:add_rule('library', token('library', word_match{
   -- Debug functions.
   'debug.upvalue'
 }))
-lex:add_style('library', lexer.styles.type)
 
 -- Identifiers.
 local identifier = token(lexer.IDENTIFIER, lexer.word)
@@ -121,8 +120,7 @@ local longstring = lpeg.Cmt('[' * lpeg.C(P('=')^0) * '[', function(input, index,
   local _, e = input:find(']' .. eq .. ']', index, true)
   return (e or #input) + 1
 end)
-lex:add_rule('string', token(lexer.STRING, sq_str + dq_str) + token('longstring', longstring))
-lex:add_style('longstring', lexer.styles.string)
+lex:add_rule('string', token(lexer.STRING, sq_str + dq_str) + token(lexer.STRING, longstring))
 
 -- Comments.
 local line_comment = lexer.to_eol('--')
