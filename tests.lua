@@ -1322,10 +1322,10 @@ function test_markdown()
     LIST, '1. ', DEFAULT, 'l', DEFAULT, '1', --
     DEFAULT, '2', --
     LIST, '* ', DEFAULT, 'l', DEFAULT, '2', --
-    CODE, 'code1\n', --
+    CODE, 'code1', --
     CODE, '```\ncode2\n```\n', --
     CODE, '`code3`', CODE, '``code4``', CODE, '``code`5``', CODE, '`code``6`', --
-    CODE, '> code7\n', --
+    CODE, '> code7', --
     'hr', '---\n', --
     'hr', '* * *\n', --
     LINK, '[link](target)', LINK, '![image](target "alt_text")', REFERENCE, '[link] [1]', --
@@ -1338,7 +1338,7 @@ function test_markdown()
     DEFAULT, '\\*', DEFAULT, 't', DEFAULT, 'e', DEFAULT, 'x', DEFAULT, 't', DEFAULT, '\\*', --
     TAG .. '.chars', '<', TAG, 'html', TAG .. '.chars', '>', --
     TAG .. '.chars', '</', TAG, 'html', TAG .. '.chars', '>', --
-    CODE, '<a>\n'
+    CODE, '<a>'
   }
   assert_lex(md, code, tags)
 end
