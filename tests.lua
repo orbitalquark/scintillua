@@ -1325,8 +1325,8 @@ function test_markdown()
     CODE, '```\ncode2\n```\n', --
     CODE, '`code3`', CODE, '``code4``', CODE, '``code`5``', CODE, '`code``6`', --
     CODE, '> code7\n', --
-    UNDERLINE .. '.hr', '---\n', --
-    UNDERLINE .. '.hr', '* * *\n', --
+    'hr', '---\n', --
+    'hr', '* * *\n', --
     LINK, '[link](target)', LINK, '![image](target "alt_text")', REFERENCE, '[link] [1]', --
     LINK, 'http://link', --
     DEFAULT, 't', DEFAULT, 'e', DEFAULT, 'x', DEFAULT, 't', --

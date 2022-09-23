@@ -16,8 +16,8 @@ local function h(n)
 end
 lex:add_rule('header', h(6) + h(5) + h(4) + h(3) + h(2) + h(1))
 
-lex:add_rule('hr', lex:tag(lexer.UNDERLINE .. '.hr',
-  lpeg.Cmt(lexer.starts_line(lpeg.C(S('*-_')), true), function(input, index, c)
+lex:add_rule('hr',
+  lex:tag('hr', lpeg.Cmt(lexer.starts_line(lpeg.C(S('*-_')), true), function(input, index, c)
     local line = input:match('[^\r\n]*', index):gsub('[ \t]', '')
     if line:find('[^' .. c .. ']') or #line < 2 then return nil end
     return (select(2, input:find('\r?\n', index)) or #input) + 1 -- include \n for eolfilled styles
