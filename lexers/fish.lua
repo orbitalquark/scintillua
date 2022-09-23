@@ -13,7 +13,8 @@ lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
 
 -- Variables.
-lex:add_rule('variable', lex:tag(lexer.VARIABLE, '$' * (lexer.word + lexer.range('{', '}', true))))
+lex:add_rule('variable', lex:tag(lexer.OPERATOR, '$') *
+  lex:tag(lexer.VARIABLE, lexer.word + lexer.range('{', '}', true)))
 
 -- Strings.
 local sq_str = lexer.range("'", false, false)

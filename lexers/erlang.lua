@@ -12,8 +12,9 @@ lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 -- Functions.
 local word = lexer.lower * ('_' + lexer.alnum)^0
 local func = lex:tag(lexer.FUNCTION, word)
-lex:add_rule('function', (lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN)) +
-  func) * #P('('))
+local method = lpeg.B(':') * lex:tag(lexer.FUNCTION_METHOD, word)
+lex:add_rule('function', method +
+  (lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN)) + func) * #P('('))
 
 -- Identifiers.
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, word))

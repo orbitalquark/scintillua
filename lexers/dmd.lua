@@ -26,8 +26,9 @@ lex:add_rule('trait', lex:tag(lexer.KEYWORD, '__traits') * ws^-1 * open_paren * 
   lex:tag(lexer.VARIABLE_BUILTIN .. '.traits', lex:word_match('trait')))
 
 -- Function names.
-lex:add_rule('function', lex:tag(lexer.FUNCTION, lexer.word) *
-  #(ws^-1 * ('!' * lexer.word^-1 * ws^-1)^-1 * '('))
+local func = lex:tag(lexer.FUNCTION, lexer.word)
+local method = lpeg.B('.') * lex:tag(lexer.FUNCTION_METHOD, lexer.word)
+lex:add_rule('function', (method + func) * #(ws^-1 * ('!' * lexer.word^-1 * ws^-1)^-1 * '('))
 
 -- Keywords.
 lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))

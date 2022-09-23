@@ -13,6 +13,11 @@ lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 -- Built-ins.
 lex:add_rule('builtin', lex:tag(lexer.CONSTANT_BUILTIN, lex:word_match(lexer.CONSTANT_BUILTIN)))
 
+-- Functions.
+local func = lex:tag(lexer.FUNCTION, lexer.word)
+local method = lpeg.B('.') * lex:tag(lexer.FUNCTION_METHOD, lexer.word)
+lex:add_rule('function', (method + func) * #P('('))
+
 -- Strings.
 local sq_str = S('r')^-1 * lexer.range("'", true)
 local dq_str = S('r')^-1 * lexer.range('"', true)
