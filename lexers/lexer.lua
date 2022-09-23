@@ -1281,6 +1281,7 @@ function M.lex(lexer, text, init_style)
   if M._standalone then M._text = text end -- for M.line_from_position and M.indent_amount
 
   if lexer._lex_by_line then
+    local line_from_position = M.line_from_position
     local function append(tags, line_tags, offset)
       for i = 1, #line_tags, 2 do
         tags[#tags + 1], tags[#tags + 2] = line_tags[i], line_tags[i + 1] + offset
@@ -1288,6 +1289,7 @@ function M.lex(lexer, text, init_style)
     end
     local tags = {}
     local offset = 0
+    rawset(M, 'line_from_position', function(pos) return line_from_position(pos + offset) end)
     for line in text:gmatch('[^\r\n]*\r?\n?') do
       local line_tags = grammar:match(line)
       if line_tags then append(tags, line_tags, offset) end
@@ -1297,6 +1299,7 @@ function M.lex(lexer, text, init_style)
         tags[#tags + 1], tags[#tags + 2] = 'default', offset + 1
       end
     end
+    rawset(M, 'line_from_position', line_from_position)
     return tags
   end
 
