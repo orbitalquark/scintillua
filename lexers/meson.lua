@@ -71,8 +71,7 @@ local method_names = word_match{
   'compiled', 'returncode', 'stderr', 'stdout'
 }
 -- A method call must be followed by an opening parenthesis.
-lex:add_rule('method', token('method', method_names * #(lexer.space^0 * '(')))
-lex:add_style('method', lexer.styles['function'])
+lex:add_rule('method', token(lexer.FUNCTION_METHOD, method_names * #(lexer.space^0 * '(')))
 
 -- Function.
 -- https://mesonbuild.com/Reference-manual.html#functions

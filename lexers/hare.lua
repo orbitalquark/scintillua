@@ -49,7 +49,8 @@ lex:add_rule('number', token(lexer.NUMBER, lexer.number))
 lex:add_rule('operator', token(lexer.OPERATOR, S('+-/*%^!=&|?:;,.()[]{}<>')))
 
 -- At rule.
-lex:add_rule('at_rule', token('at_rule', '@' * word_match('noreturn offset init fini test symbol')))
+lex:add_rule('at_rule',
+  token(lexer.ANNOTATION, '@' * word_match('noreturn offset init fini test symbol')))
 lex:add_style('at_rule', lexer.styles.preprocessor)
 
 -- Fold points.

@@ -41,8 +41,7 @@ lex:add_rule('function', token(lexer.FUNCTION, lexer.word) * #P('('))
 lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
 
 -- Templates.
-lex:add_rule('template', token('template', lexer.range("'''")))
-lex:add_style('template', lexer.styles.embedded)
+lex:add_rule('template', token(lexer.EMBEDDED, lexer.range("'''")))
 
 -- Strings.
 local sq_str = lexer.range("'", true)
