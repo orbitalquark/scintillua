@@ -255,7 +255,9 @@ lex:add_rule('gawkBuiltInVariable', lex:tag(lexer.VARIABLE_BUILTIN .. '.gawk',
   lex:word_match(lexer.VARIABLE_BUILTIN .. '.gawk')))
 
 -- Functions.
-lex:add_rule('function', lex:tag(lexer.FUNCTION, lexer.word * #P('(')))
+local builtin_func = lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN))
+local func = lex:tag(lexer.FUNCTION, lexer.word)
+lex:add_rule('function', (builtin_func + func) * #P('('))
 
 -- Identifiers.
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
@@ -266,10 +268,17 @@ lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('#'))
 
 -- Word lists.
 lex:set_word_list(lexer.KEYWORD, {
-  'BEGIN', 'END', 'atan2', 'break', 'close', 'continue', 'cos', 'delete', 'do', 'else', 'exit',
-  'exp', 'fflush', 'for', 'function', 'getline', 'gsub', 'if', 'in', 'index', 'int', 'length',
-  'log', 'match', 'next', 'nextfile', 'print', 'printf', 'rand', 'return', 'sin', 'split',
-  'sprintf', 'sqrt', 'srand', 'sub', 'substr', 'system', 'tolower', 'toupper', 'while'
+  'BEGIN', 'END', 'break', 'continue', 'do', 'else', 'for', 'if', 'in', 'while', --
+  'delete', -- array
+  'print', 'printf', 'getline', 'close', 'fflush', 'system', -- I/O
+  'function', 'return', -- functions
+  'next', 'nextfile', 'exit' -- program execution
+})
+
+lex:set_word_list(lexer.FUNCTION_BUILTIN, {
+  'gsub', 'index', 'length', 'match', 'split', 'sprintf', 'sub', 'substr', 'tolower', 'toupper', -- string
+  'mktime', 'strftime', 'systime', -- time
+  'atan2', 'cos', 'exp', 'int', 'log', 'rand', 'sin', 'sqrt', 'srand' -- arithmetic
 })
 
 lex:set_word_list(lexer.VARIABLE_BUILTIN, {

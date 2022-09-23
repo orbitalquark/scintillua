@@ -19,7 +19,7 @@ local doctype = lex:tag(lexer.TAG .. '.doctype', '<!DOCTYPE') * ws *
 lex:add_rule('doctype', doctype)
 
 -- Processing instructions.
-lex:add_rule('proc_insn', lex:tag(lexer.TAG .. '.pi', lexer.range('<?', '?>')))
+lex:add_rule('proc_insn', lex:tag(lexer.TAG .. '.pi', '<?' * identifier + '?>'))
 
 -- Tags.
 local namespace = lex:tag(lexer.OPERATOR, ':') * lex:tag(lexer.LABEL, identifier)
