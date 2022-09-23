@@ -26,11 +26,12 @@ local filename = lex:tag('filename', (lexer.nonnewline - ':')^1) * colon
 local line = lex:tag('line', lexer.dec_num) * colon
 local column = lex:tag('column', lexer.dec_num) * colon
 local warning = lex:tag('message', lexer.to_eol('warning: ')) * mark_warning
+local note = lex:tag('message', lexer.to_eol('note: ')) -- do not mark
 local message = lex:tag('message', lexer.to_eol()) * mark_error
 
 -- filename:line: message
 -- filename:line:col: message
-lex:add_rule('common', starts_line(filename) * line * column^-1 * (warning + message))
+lex:add_rule('common', starts_line(filename) * line * column^-1 * (warning + note + message))
 
 -- lua: filename:line: message
 -- luac: filename:line: message
