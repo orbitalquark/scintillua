@@ -1,25 +1,46 @@
 -- Copyright 2006-2022 Mitchell. See LICENSE.
 -- Django LPeg lexer.
 
-local lexer = require('lexer')
-local token, word_match = lexer.token, lexer.word_match
+local lexer = lexer
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new('django')
-
--- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+local lex = lexer.new(...)
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
+
+-- Functions.
+lex:add_rule('function', lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN)))
+
+-- Identifiers.
+lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
+
+-- Strings.
+lex:add_rule('string', lex:tag(lexer.STRING, lexer.range('"', false, false)))
+
+-- Operators.
+lex:add_rule('operator', lex:tag(lexer.OPERATOR, S(':,.|')))
+
+-- Embed Django in HTML.
+local html = lexer.load('html')
+html:add_rule('django_comment', lex:tag(lexer.COMMENT, lexer.range('{#', '#}', true)))
+local django_start_rule = lex:tag(lexer.TAG .. '.django', '{' * S('{%'))
+local django_end_rule = lex:tag(lexer.TAG .. '.django', S('%}') * '}')
+html:embed(lex, django_start_rule, django_end_rule)
+
+-- Fold points.
+lex:add_fold_point(lexer.TAG .. '.django', '{{', '}}')
+lex:add_fold_point(lexer.TAG .. '.django', '{%', '%}')
+
+-- Word lists.
+lex:set_word_list(lexer.KEYWORD, {
   'as', 'block', 'blocktrans', 'by', 'endblock', 'endblocktrans', 'comment', 'endcomment', 'cycle',
   'date', 'debug', 'else', 'extends', 'filter', 'endfilter', 'firstof', 'for', 'endfor', 'if',
   'endif', 'ifchanged', 'endifchanged', 'ifnotequal', 'endifnotequal', 'in', 'load', 'not', 'now',
   'or', 'parsed', 'regroup', 'ssi', 'trans', 'with', 'widthratio'
-}))
+})
 
--- Functions.
-lex:add_rule('function', token(lexer.FUNCTION, word_match{
+lex:set_word_list(lexer.FUNCTION_BUILTIN, {
   'add', 'addslashes', 'capfirst', 'center', 'cut', 'date', 'default', 'dictsort',
   'dictsortreversed', 'divisibleby', 'escape', 'filesizeformat', 'first', 'fix_ampersands',
   'floatformat', 'get_digit', 'join', 'length', 'length_is', 'linebreaks', 'linebreaksbr',
@@ -27,29 +48,8 @@ lex:add_rule('function', token(lexer.FUNCTION, word_match{
   'removetags', 'rjust', 'slice', 'slugify', 'stringformat', 'striptags', 'time', 'timesince',
   'title', 'truncatewords', 'unordered_list', 'upper', 'urlencode', 'urlize', 'urlizetrunc',
   'wordcount', 'wordwrap', 'yesno'
-}))
+})
 
--- Identifiers.
-lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
-
--- Strings.
-lex:add_rule('string', token(lexer.STRING, lexer.range('"', false, false)))
-
--- Operators.
-lex:add_rule('operator', token(lexer.OPERATOR, S(':,.|')))
-
--- Embed Django in HTML.
-local html = lexer.load('html')
-local html_comment = lexer.range('<!--', '-->')
-local django_comment = lexer.range('{#', '#}', true)
-html:modify_rule('comment', token(lexer.COMMENT, html_comment + django_comment))
-local django_start_rule = token('django_tag', '{' * S('{%'))
-local django_end_rule = token('django_tag', S('%}') * '}')
-html:embed(lex, django_start_rule, django_end_rule)
-lex:add_style('django_tag', lexer.styles.embedded)
-
--- Fold points.
-lex:add_fold_point('django_tag', '{{', '}}')
-lex:add_fold_point('django_tag', '{%', '%}')
+lexer.property['scintillua.comment'] = '{#|#}'
 
 return lex

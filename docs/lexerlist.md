@@ -110,8 +110,8 @@ used if [`fold.scintillua.by.indentation`][] is enabled. For SciTE, see *lexers/
 1. rc`*`
 1. Reason
 1. REBOL`*`
-1. Rexx`*`
 1. ReStructuredText`*`
+1. Rexx`*`
 1. RHTML`*`
 1. RouterOS`*`
 1. RPM Spec

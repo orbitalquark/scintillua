@@ -1,18 +1,39 @@
 -- Copyright 2010-2022 Jeff Stone. See LICENSE.
--- Inform LPeg lexer for Scintillua.
+-- Inform 6 LPeg lexer for Scintillua.
 -- JMS 2010-04-25.
 
-local lexer = require('lexer')
-local token, word_match = lexer.token, lexer.word_match
+local lexer = lexer
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new('inform')
-
--- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+local lex = lexer.new(...)
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
+
+-- Library actions.
+lex:add_rule('action', lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match('action')))
+
+-- Identifiers.
+lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
+
+-- Strings.
+local sq_str = lexer.range("'")
+local dq_str = lexer.range('"')
+lex:add_rule('string', lex:tag(lexer.STRING, sq_str + dq_str))
+
+-- Comments.
+lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.to_eol('!')))
+
+-- Numbers.
+local inform_hex = '$' * lexer.xdigit^1
+local inform_bin = '$$' * S('01')^1
+lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.integer + inform_hex + inform_bin))
+
+-- Operators.
+lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('@~=+-*/%^#=<>;:,.{}[]()&|?')))
+
+-- Word lists.
+lex:set_word_list(lexer.KEYWORD, {
   'Abbreviate', 'Array', 'Attribute', 'Class', 'Constant', 'Default', 'End', 'Endif', 'Extend',
   'Global', 'Ifdef', 'Iffalse', 'Ifndef', 'Ifnot', 'Iftrue', 'Import', 'Include', 'Link',
   'Lowstring', 'Message', 'Object', 'Property', 'Release', 'Replace', 'Serial', 'StartDaemon',
@@ -36,10 +57,9 @@ lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
   'time_left', 'time_out', 'to', 'topic', 'transparent', 'true', 'underline', 'u_to', 'u_obj',
   'visited', 'w_to', 'w_obj', 'when_closed', 'when_off', 'when_on', 'when_open', 'while', 'with',
   'with_key', 'workflag', 'worn'
-}))
+})
 
--- Library actions.
-lex:add_rule('action', token('action', word_match{
+lex:set_word_list('action', {
   'Answer', 'Ask', 'AskFor', 'Attack', 'Blow', 'Burn', 'Buy', 'Climb', 'Close', 'Consult', 'Cut',
   'Dig', 'Disrobe', 'Drink', 'Drop', 'Eat', 'Empty', 'EmptyT', 'Enter', 'Examine', 'Exit', 'Fill',
   'FullScore', 'GetOff', 'Give', 'Go', 'GoIn', 'Insert', 'Inv', 'InvTall', 'InvWide', 'Jump',
@@ -50,27 +70,7 @@ lex:add_rule('action', token('action', word_match{
   'Smell', 'Sorry', 'Squeeze', 'Strong', 'Swim', 'Swing', 'SwitchOff', 'SwitchOn', 'Take', 'Taste',
   'Tell', 'Think', 'ThrowAt', 'ThrownAt', 'Tie', 'Touch', 'Transfer', 'Turn', 'Unlock', 'VagueGo',
   'Verify', 'Version', 'Wait', 'Wake', 'WakeOther', 'Wave', 'WaveHands', 'Wear', 'Yes'
-}))
-lex:add_style('action', lexer.styles.variable)
-
--- Identifiers.
-lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
-
--- Strings.
-local sq_str = lexer.range("'")
-local dq_str = lexer.range('"')
-lex:add_rule('string', token(lexer.STRING, sq_str + dq_str))
-
--- Comments.
-lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('!')))
-
--- Numbers.
-local inform_hex = '$' * lexer.xdigit^1
-local inform_bin = '$$' * S('01')^1
-lex:add_rule('number', token(lexer.NUMBER, lexer.integer + inform_hex + inform_bin))
-
--- Operators.
-lex:add_rule('operator', token(lexer.OPERATOR, S('@~=+-*/%^#=<>;:,.{}[]()&|?')))
+})
 
 lexer.property['scintillua.comment'] = '!'
 

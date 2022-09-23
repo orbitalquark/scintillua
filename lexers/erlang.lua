@@ -1,26 +1,71 @@
 -- Copyright 2006-2022 Mitchell. See LICENSE.
 -- Erlang LPeg lexer.
 
-local lexer = require('lexer')
-local token, word_match = lexer.token, lexer.word_match
+local lexer = lexer
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new('erlang')
-
--- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+local lex = lexer.new(...)
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
+
+-- Functions.
+local word = lexer.lower * ('_' + lexer.alnum)^0
+local func = lex:tag(lexer.FUNCTION, word)
+lex:add_rule('function', (lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN)) +
+  func) * #P('('))
+
+-- Identifiers.
+lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, word))
+
+-- Variables.
+lex:add_rule('variable', lex:tag(lexer.VARIABLE, P('_')^0 * lexer.upper * ('_' + lexer.alnum)^0))
+
+-- Directives.
+lex:add_rule('directive',
+  lex:tag(lexer.PREPROCESSOR .. '.directive', '-' * lex:word_match('directive')))
+
+-- Strings.
+local sq_str = lexer.range("'", true)
+local dq_str = lexer.range('"')
+lex:add_rule('string', lex:tag(lexer.STRING, sq_str + dq_str + '$' * lexer.any * lexer.alnum^0))
+
+-- Comments.
+lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.to_eol('%')))
+
+-- Numbers.
+lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number))
+
+-- Operators.
+lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('-<>.;=/|+*:,!()[]{}')))
+
+-- Preprocessor.
+lex:add_rule('preprocessor', lex:tag(lexer.PREPROCESSOR, '?' * lexer.word))
+
+-- Records.
+lex:add_rule('type', lex:tag(lexer.TYPE, '#' * lexer.word))
+
+-- Fold points.
+lex:add_fold_point(lexer.KEYWORD, 'case', 'end')
+lex:add_fold_point(lexer.KEYWORD, 'fun', 'end')
+lex:add_fold_point(lexer.KEYWORD, 'if', 'end')
+lex:add_fold_point(lexer.KEYWORD, 'query', 'end')
+lex:add_fold_point(lexer.KEYWORD, 'receive', 'end')
+lex:add_fold_point(lexer.OPERATOR, '(', ')')
+lex:add_fold_point(lexer.OPERATOR, '[', ']')
+lex:add_fold_point(lexer.OPERATOR, '{', '}')
+lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('%'))
+
+-- Word lists.
+lex:set_word_list(lexer.KEYWORD, {
   'after', 'begin', 'case', 'catch', 'cond', 'end', 'fun', 'if', 'let', 'of', 'query', 'receive',
   'try', 'when',
   -- Operators.
   'div', 'rem', 'or', 'xor', 'bor', 'bxor', 'bsl', 'bsr', 'and', 'band', 'not', 'bnot', 'badarg',
   'nocookie', 'orelse', 'andalso', 'false', 'true'
-}))
+})
 
--- Functions.
-lex:add_rule('function', token(lexer.FUNCTION, word_match{
+lex:set_word_list(lexer.FUNCTION_BUILTIN, {
   'abs', 'alive', 'apply', 'atom_to_list', 'binary_to_list', 'binary_to_term', 'concat_binary',
   'date', 'disconnect_node', 'element', 'erase', 'exit', 'float', 'float_to_list', 'get',
   'get_keys', 'group_leader', 'halt', 'hd', 'integer_to_list', 'is_alive', 'is_record', 'length',
@@ -40,52 +85,13 @@ lex:add_rule('function', token(lexer.FUNCTION, word_match{
   -- Math.
   'acos', 'asin', 'atan', 'atan2', 'cos', 'cosh', 'exp', 'log', 'log10', 'min', 'max', 'pi', 'pow',
   'power', 'sin', 'sinh', 'sqrt', 'tan', 'tanh'
-}))
+})
 
--- Identifiers.
-lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.lower * ('_' + lexer.alnum)^0))
-
--- Variables.
-lex:add_rule('variable', token(lexer.VARIABLE, P('_')^0 * lexer.upper * ('_' + lexer.alnum)^0))
-
--- Directives.
-lex:add_rule('directive', token('directive', '-' * word_match{
+lex:set_word_list('directive', {
   'author', 'behaviour', 'behavior', 'compile', 'copyright', 'define', 'doc', 'else', 'endif',
   'export', 'file', 'ifdef', 'ifndef', 'import', 'include', 'include_lib', 'module', 'record',
   'spec', 'type', 'undef'
-}))
-lex:add_style('directive', lexer.styles.preprocessor)
-
--- Strings.
-local sq_str = lexer.range("'", true)
-local dq_str = lexer.range('"')
-lex:add_rule('string', token(lexer.STRING, sq_str + dq_str + '$' * lexer.any * lexer.alnum^0))
-
--- Comments.
-lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('%')))
-
--- Numbers.
-lex:add_rule('number', token(lexer.NUMBER, lexer.number))
-
--- Operators.
-lex:add_rule('operator', token(lexer.OPERATOR, S('-<>.;=/|+*:,!()[]{}')))
-
--- Preprocessor.
-lex:add_rule('preprocessor', token(lexer.TYPE, '?' * lexer.word))
-
--- Records.
-lex:add_rule('type', token(lexer.TYPE, '#' * lexer.word))
-
--- Fold points.
-lex:add_fold_point(lexer.KEYWORD, 'case', 'end')
-lex:add_fold_point(lexer.KEYWORD, 'fun', 'end')
-lex:add_fold_point(lexer.KEYWORD, 'if', 'end')
-lex:add_fold_point(lexer.KEYWORD, 'query', 'end')
-lex:add_fold_point(lexer.KEYWORD, 'receive', 'end')
-lex:add_fold_point(lexer.OPERATOR, '(', ')')
-lex:add_fold_point(lexer.OPERATOR, '[', ']')
-lex:add_fold_point(lexer.OPERATOR, '{', '}')
-lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('%'))
+})
 
 lexer.property['scintillua.comment'] = '%'
 
