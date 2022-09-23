@@ -5,7 +5,7 @@ local format, concat = string.format, table.concat
 -- Do not glob these files. (e.g. *.foo)
 local noglobs = {
   Dockerfile = true, GNUmakefile = true, Makefile = true, makefile = true, Rakefile = true,
-  ['Rout.save'] = true, ['Rout.fail'] = true
+  ['Rout.save'] = true, ['Rout.fail'] = true, fstab = true, ['meson.build'] = true
 }
 
 local alt_name = {
@@ -13,9 +13,9 @@ local alt_name = {
   ruby = 'rb'
 }
 
--- Process file patterns and lexer definitions from Textadept.
-local f = io.open('../textadept/modules/textadept/file_types.lua')
-local definitions = f:read('*all'):match('M%.extensions = (%b{})')
+-- Process file patterns and lexer definitions.
+local f = io.open('lexers/lexer.lua')
+local definitions = f:read('*all'):match('local extensions = (%b{})')
 f:close()
 
 local output = {'# Lexer definitions ('}
@@ -25,7 +25,7 @@ for ext, lexer in definitions:gmatch("([^,'%]]+)'?%]?='([%w_]+)'") do
   if lexer ~= last_lexer and #exts > 0 then
     local name = alt_name[last_lexer] or last_lexer
     output[#output + 1] = format('file.patterns.%s=%s', name, concat(exts, ';'))
-    output[#output + 1] = format('lexer.$(file.patterns.%s)=lpeg_%s', name, last_lexer)
+    output[#output + 1] = format('lexer.$(file.patterns.%s)=scintillua.%s', name, last_lexer)
     exts = {}
   end
   exts[#exts + 1] = not noglobs[ext] and '*.' .. ext or ext
@@ -33,14 +33,14 @@ for ext, lexer in definitions:gmatch("([^,'%]]+)'?%]?='([%w_]+)'") do
 end
 local name = alt_name[last_lexer] or last_lexer
 output[#output + 1] = format('file.patterns.%s=%s', name, concat(exts, ';'))
-output[#output + 1] = format('lexer.$(file.patterns.%s)=lpeg_%s', name, last_lexer)
+output[#output + 1] = format('lexer.$(file.patterns.%s)=scintillua.%s', name, last_lexer)
 output[#output + 1] = '# )'
 
 -- Write to lpeg.properties.
-f = io.open('lexers/lpeg.properties')
+f = io.open('scintillua.properties')
 local text = f:read('*all')
 text = text:gsub('# Lexer definitions %b()', table.concat(output, '\n'), 1)
 f:close()
-f = io.open('lexers/lpeg.properties', 'wb')
+f = io.open('scintillua.properties', 'wb')
 f:write(text)
 f:close()
