@@ -1355,7 +1355,11 @@ function M.fold(lexer, text, start_line, start_level)
             local word_before = s > 1 and line:find('^[%w_]', s - 1)
             local word_after = line:find('^[%w_]', e + 1)
             if not word or not (word_before or word_after) then
-              local symbols = fold_points[style_at[pos + s - 1]]
+              local style_name = style_at[pos + s - 1]
+              local symbols = fold_points[style_name]
+              if not symbols and style_name:find('%.') then
+                symbols = fold_points[style_name:match('^[^.]+')]
+              end
               local level = symbols and symbols[symbol]
               if type(level) == 'function' then
                 level = level(text, pos, line, s, symbol)

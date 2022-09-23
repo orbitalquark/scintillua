@@ -1561,6 +1561,28 @@ function test_output()
   assert_lex(output, text, tags)
 end
 
+-- Tests LaTeX lexer, particularly its folding.
+function test_latex()
+  local latex = lexer.load('latex')
+  local code = [[
+    \begin{document}
+      \begin{align} % should inherit environment folding
+      E = mc^2
+      \end{align}
+    \end{document}
+  ]]
+  local tags = {
+    'environment', '\\begin{document}', --
+    'environment.math', '\\begin{align}', COMMENT, '% should inherit environment folding', --
+    DEFAULT, 'E', DEFAULT, '=', DEFAULT, 'm', DEFAULT, 'c', DEFAULT, '^', DEFAULT, '2', --
+    'environment.math', '\\end{align}', --
+    'environment', '\\end{document}' --
+  }
+  assert_lex(latex, code, tags)
+  local folds = {1, 2, -4, -5}
+  assert_fold_points(latex, code, folds)
+end
+
 function test_legacy()
   local lex = lexer.new('test')
   local ws = lexer.token(lexer.WHITESPACE, lexer.space^1)
