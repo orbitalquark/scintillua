@@ -2,58 +2,26 @@
 -- AutoIt LPeg lexer.
 -- Contributed by Jeff Stone.
 
-local lexer = lexer
+local lexer = require('lexer')
+local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new(...)
+local lex = lexer.new('autoit')
+
+-- Whitespace.
+lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD, true)))
-
--- Functions.
-lex:add_rule('function',
-  lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN, true)))
-
--- Identifiers.
-lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
-
--- Comments.
-local line_comment = lexer.to_eol(';')
-local block_comment = lexer.range('#comments-start', '#comments-end') + lexer.range('#cs', '#ce')
-lex:add_rule('comment', lex:tag(lexer.COMMENT, line_comment + block_comment))
-
--- Preprocessor.
-lex:add_rule('preprocessor',
-  lex:tag(lexer.PREPROCESSOR, '#' * lex:word_match(lexer.PREPROCESSOR, true)))
-
--- Strings.
-local dq_str = lexer.range('"', true, false)
-local sq_str = lexer.range("'", true, false)
-local inc = lexer.range('<', '>', true, false, true)
-lex:add_rule('string', lex:tag(lexer.STRING, dq_str + sq_str + inc))
-
--- Macros.
-lex:add_rule('macro', lex:tag(lexer.CONSTANT_BUILTIN, '@' * (lexer.alnum + '_')^1))
-
--- Variables.
-lex:add_rule('variable', lex:tag(lexer.VARIABLE, '$' * (lexer.alnum + '_')^1))
-
--- Numbers.
-lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number))
-
--- Operators.
-lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('+-^*/&<>=?:()[]')))
-
--- Word lists.
-lex:set_word_list(lexer.KEYWORD, {
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match({
   'False', 'True', 'And', 'Or', 'Not', 'ContinueCase', 'ContinueLoop', 'Default', 'Dim', 'Global',
   'Local', 'Const', 'Do', 'Until', 'Enum', 'Exit', 'ExitLoop', 'For', 'To', 'Step', 'Next', 'In',
   'Func', 'Return', 'EndFunc', 'If', 'Then', 'ElseIf', 'Else', 'EndIf', 'Null', 'ReDim', 'Select',
   'Case', 'EndSelect', 'Static', 'Switch', 'EndSwitch', 'Volatile', 'While', 'WEnd', 'With',
   'EndWith'
-})
+}, true)))
 
-lex:set_word_list(lexer.FUNCTION_BUILTIN, {
+-- Functions.
+lex:add_rule('function', token(lexer.FUNCTION_BUILTIN, word_match({
   'Abs', 'ACos', 'AdlibRegister', 'AdlibUnRegister', 'Asc', 'AscW', 'ASin', 'Assign', 'ATan',
   'AutoItSetOption', 'AutoItWinGetTitle', 'AutoItWinSetTitle', 'Beep', 'Binary', 'BinaryLen',
   'BinaryMid', 'BinaryToString', 'BitAND', 'BitNOT', 'BitOR', 'BitRotate', 'BitShift', 'BitXOR',
@@ -123,12 +91,39 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
   'WinGetState', 'WinGetText', 'WinGetTitle', 'WinKill', 'WinList', 'WinMenuSelectItem',
   'WinMinimizeAll', 'WinMinimizeAllUndo', 'WinMove', 'WinSetOnTop', 'WinSetState', 'WinSetTitle',
   'WinSetTrans', 'WinWait', 'WinWaitActive', 'WinWaitClose', 'WinWaitNotActive'
-})
+}, true)))
 
-lex:set_word_list(lexer.PREPROCESSOR, {
+-- Identifiers.
+lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
+
+-- Comments.
+local line_comment = lexer.to_eol(';')
+local block_comment = lexer.range('#comments-start', '#comments-end') + lexer.range('#cs', '#ce')
+lex:add_rule('comment', token(lexer.COMMENT, line_comment + block_comment))
+
+-- Preprocessor.
+lex:add_rule('preprocessor', token(lexer.PREPROCESSOR, '#' * word_match({
   'include-once', 'include', 'pragma', 'forceref', 'RequireAdmin', 'NoTrayIcon',
   'OnAutoItStartRegister'
-})
+}, true)))
+
+-- Strings.
+local dq_str = lexer.range('"', true, false)
+local sq_str = lexer.range("'", true, false)
+local inc = lexer.range('<', '>', true, false, true)
+lex:add_rule('string', token(lexer.STRING, dq_str + sq_str + inc))
+
+-- Macros.
+lex:add_rule('macro', token(lexer.CONSTANT_BUILTIN, '@' * (lexer.alnum + '_')^1))
+
+-- Variables.
+lex:add_rule('variable', token(lexer.VARIABLE, '$' * (lexer.alnum + '_')^1))
+
+-- Numbers.
+lex:add_rule('number', token(lexer.NUMBER, lexer.number))
+
+-- Operators.
+lex:add_rule('operator', token(lexer.OPERATOR, S('+-^*/&<>=?:()[]')))
 
 lexer.property['scintillua.comment'] = ';'
 
