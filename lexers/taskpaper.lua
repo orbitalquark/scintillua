@@ -11,7 +11,7 @@ local delimiter = lpeg.B('    ') + lpeg.B('\t')
 lex:add_rule('note', delimiter * lex:tag('note', lexer.to_eol(lexer.alnum)))
 
 -- Tasks.
-lex:add_rule('task', delimiter * lex:tag('task', '-'))
+lex:add_rule('task', delimiter * lex:tag(lexer.LIST, '-'))
 
 -- Projects.
 lex:add_rule('project',

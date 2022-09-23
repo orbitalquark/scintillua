@@ -31,9 +31,8 @@ local bullet_list = S('*+-') -- TODO: '•‣⁃', as lpeg does not support UTF-
 local enum_list = P('(')^-1 * (lexer.digit^1 + S('ivxlcmIVXLCM')^1 + lexer.alnum + '#') * S('.)')
 local field_list = ':' * (lexer.any - ':')^1 * P(':')^-1
 lex:add_rule('list', #(lexer.space^0 * (S('*+-:/') + enum_list)) *
-  starts_line(token('list', lexer.space^0 * (option_list + bullet_list + enum_list + field_list) *
-    lexer.space)))
-lex:add_style('list', lexer.styles.type)
+  starts_line(token(lexer.LIST,
+    lexer.space^0 * (option_list + bullet_list + enum_list + field_list) * lexer.space)))
 
 local any_indent = S(' \t')^0
 local word = lexer.alpha * (lexer.alnum + S('-.+'))^0

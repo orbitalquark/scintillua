@@ -123,14 +123,14 @@ to) [`lexer.DEFAULT`](#lexer.DEFAULT), [`lexer.COMMENT`](#lexer.COMMENT), [`lexe
 [`lexer.KEYWORD`](#lexer.KEYWORD), [`lexer.IDENTIFIER`](#lexer.IDENTIFIER), [`lexer.OPERATOR`](#lexer.OPERATOR), [`lexer.ERROR`](#lexer.ERROR),
 [`lexer.PREPROCESSOR`](#lexer.PREPROCESSOR), [`lexer.CONSTANT`](#lexer.CONSTANT), [`lexer.CONSTANT_BUILTIN`](#lexer.CONSTANT_BUILTIN),
 [`lexer.VARIABLE`](#lexer.VARIABLE), [`lexer.VARIABLE_BUILTIN`](#lexer.VARIABLE_BUILTIN), [`lexer.FUNCTION`](#lexer.FUNCTION),
-[`lexer.FUNCTION_BUILTIN`](#lexer.FUNCTION_BUILTIN), [`lexer.FUNCTION_METHOD`](#lexer.FUNCTION_METHOD), [`lexer.CLASS`](#lexer.CLASS),
-[`lexer.TYPE`](#lexer.TYPE), [`lexer.LABEL`](#lexer.LABEL), [`lexer.REGEX`](#lexer.REGEX), [`lexer.EMBEDDED`](#lexer.EMBEDDED), and
-[`lexer.ANNOTATION`](#lexer.ANNOTATION). Tag names for markup languages include (but are not limited
-to) [`lexer.TAG`](#lexer.TAG), [`lexer.ATTRIBUTE`](#lexer.ATTRIBUTE), [`lexer.HEADING`](#lexer.HEADING), [`lexer.BOLD`](#lexer.BOLD),
-[`lexer.ITALIC`](#lexer.ITALIC), [`lexer.UNDERLINE`](#lexer.UNDERLINE), [`lexer.CODE`](#lexer.CODE), [`lexer.LINK`](#lexer.LINK),
-and [`lexer.REFERENCE`](#lexer.REFERENCE). Patterns include [`lexer.any`](#lexer.any), [`lexer.alpha`](#lexer.alpha),
-[`lexer.digit`](#lexer.digit), [`lexer.alnum`](#lexer.alnum), [`lexer.lower`](#lexer.lower), [`lexer.upper`](#lexer.upper), [`lexer.xdigit`](#lexer.xdigit),
-[`lexer.graph`](#lexer.graph), [`lexer.print`](#lexer.print), [`lexer.punct`](#lexer.punct), [`lexer.space`](#lexer.space), [`lexer.newline`](#lexer.newline),
+[`lexer.FUNCTION_BUILTIN`](#lexer.FUNCTION_BUILTIN), [`lexer.FUNCTION_METHOD`](#lexer.FUNCTION_METHOD), [`lexer.CLASS`](#lexer.CLASS), [`lexer.TYPE`](#lexer.TYPE),
+[`lexer.LABEL`](#lexer.LABEL), [`lexer.REGEX`](#lexer.REGEX), [`lexer.EMBEDDED`](#lexer.EMBEDDED), and [`lexer.ANNOTATION`](#lexer.ANNOTATION). Tag
+names for markup languages include (but are not limited to) [`lexer.TAG`](#lexer.TAG),
+[`lexer.ATTRIBUTE`](#lexer.ATTRIBUTE), [`lexer.HEADING`](#lexer.HEADING), [`lexer.BOLD`](#lexer.BOLD), [`lexer.ITALIC`](#lexer.ITALIC),
+[`lexer.UNDERLINE`](#lexer.UNDERLINE), [`lexer.CODE`](#lexer.CODE), [`lexer.LINK`](#lexer.LINK), [`lexer.REFERENCE`](#lexer.REFERENCE), and
+[`lexer.LIST`](#lexer.LIST). Patterns include [`lexer.any`](#lexer.any), [`lexer.alpha`](#lexer.alpha), [`lexer.digit`](#lexer.digit),
+[`lexer.alnum`](#lexer.alnum), [`lexer.lower`](#lexer.lower), [`lexer.upper`](#lexer.upper), [`lexer.xdigit`](#lexer.xdigit), [`lexer.graph`](#lexer.graph),
+[`lexer.print`](#lexer.print), [`lexer.punct`](#lexer.punct), [`lexer.space`](#lexer.space), [`lexer.newline`](#lexer.newline),
 [`lexer.nonnewline`](#lexer.nonnewline), [`lexer.dec_num`](#lexer.dec_num), [`lexer.hex_num`](#lexer.hex_num), [`lexer.oct_num`](#lexer.oct_num),
 [`lexer.bin_num`](#lexer.bin_num), [`lexer.integer`](#lexer.integer), [`lexer.float`](#lexer.float), [`lexer.number`](#lexer.number), and
 [`lexer.word`](#lexer.word). You may use your own tag names if none of the above fit your language,
@@ -777,6 +777,11 @@ The tag name for label elements.
 #### `lexer.LINK` (string)
 
 The tag name for link elements, typically in markup.
+
+<a id="lexer.LIST"></a>
+#### `lexer.LIST` (string)
+
+The tag name for list item elements, typically in markup.
 
 <a id="lexer.NUMBER"></a>
 #### `lexer.NUMBER` (string)

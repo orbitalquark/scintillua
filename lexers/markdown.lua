@@ -23,7 +23,7 @@ lex:add_rule('hr',
     return (select(2, input:find('\r?\n', index)) or #input) + 1 -- include \n for eolfilled styles
   end)))
 
-lex:add_rule('list', lex:tag(lexer.NUMBER,
+lex:add_rule('list', lex:tag(lexer.LIST,
   lexer.starts_line(lexer.digit^1 * '.' + S('*+-'), true) * S(' \t')))
 
 local hspace = lexer.space - '\n'
