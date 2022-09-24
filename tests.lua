@@ -1541,8 +1541,31 @@ function test_output()
     /tmp/foo:1:2: error
     /tmp/bar.baz:12: warning: warn
     > exit status: 1
+
     lua: /tmp/quux.lua:34: error
     no error or warning here
+
+    /tmp/foo.sh: line 2: message
+
+    > python3
+      File "/tmp/foo.py", line 10
+
+    foo.d(5): Error: no property `foo` for type `Bar`
+
+    "/tmp/foo.plt" line 1: invalid command
+
+    java.lang.Exception: Stack trace
+      at com.foo(Foo.java:23)
+
+    No such file or directory in /tmp/foo.php on line 2
+
+    C:\tmp\foo.cs(12, 34): error CS0000: message
+
+    syntax error at /tmp/foo.pl line 7, near "foo"
+
+    CMake Error at CMakeLists.txt:1:
+      Parse error.  Expected ...
+    -- Configuring incomplete, errors occurred!
   ]]):gsub('    ', '') -- strip indent
   local tags = {
     DEFAULT, '> command', --
@@ -1552,12 +1575,47 @@ function test_output()
     'filename', '/tmp/bar.baz', DEFAULT, ':', --
     'line', '12', DEFAULT, ': ', --
     'message', 'warning: warn', --
-    DEFAULT, '> exit status: 1', --
+    DEFAULT, '> exit status: 1',
+    --
     DEFAULT, 'lua', DEFAULT, ': ', --
     'filename', '/tmp/quux.lua', DEFAULT, ':', --
     'line', '34', DEFAULT, ': ', --
     'message', 'error', --
-    DEFAULT, 'no error or warning here'
+    DEFAULT, 'no error or warning here',
+    --
+    'filename', '/tmp/foo.sh', DEFAULT, ': ', --
+    DEFAULT, 'line ', 'line', '2', DEFAULT, ': ', --
+    'message', 'message',
+    --
+    DEFAULT, '> python3', --
+    DEFAULT, 'File "', 'filename', '/tmp/foo.py', DEFAULT, '", ', --
+    DEFAULT, 'line ', 'line', '10',
+    --
+    'filename', 'foo.d', DEFAULT, '(', 'line', '5', DEFAULT, ')', DEFAULT, ': ', --
+    'message', 'Error: no property `foo` for type `Bar`',
+    --
+    DEFAULT, '"', 'filename', '/tmp/foo.plt', DEFAULT, '" ', --
+    DEFAULT, 'line ', 'line', '1', DEFAULT, ': ', --
+    'message', 'invalid command',
+    --
+    DEFAULT, 'java.lang.Exception: Stack trace', --
+    DEFAULT, 'at com.foo', DEFAULT, '(', --
+    'filename', 'Foo.java', DEFAULT, ':', 'line', '23', DEFAULT, ')',
+    --
+    'message', 'No such file or directory', DEFAULT, ' in ', --
+    'filename', '/tmp/foo.php', DEFAULT, ' on ', DEFAULT, 'line ', 'line', '2',
+    --
+    'filename', 'C:\\tmp\\foo.cs', --
+    DEFAULT, '(', 'line', '12', DEFAULT, ', ', 'column', '34', DEFAULT, ')', DEFAULT, ': ', --
+    'message', 'error CS0000: message',
+    --
+    'message', 'syntax error', DEFAULT, ' at ', --
+    'filename', '/tmp/foo.pl', DEFAULT, ' line ', 'line', '7', --
+    DEFAULT, ', near "foo"',
+    --
+    DEFAULT, 'CMake Error at ', --
+    'filename', 'CMakeLists.txt', DEFAULT, ':', 'line', '1', DEFAULT, ':', --
+    DEFAULT, 'Parse error.  Expected ...', DEFAULT, '-- Configuring incomplete, errors occurred!'
   }
   assert_lex(output, text, tags)
 end
