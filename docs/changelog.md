@@ -923,7 +923,7 @@ Bugfixes:
 Changes:
 
 * Updated HTML, LaTeX, and Go lexers.
-* Enable Scintillua to be used as a stand-alone [Lua library][].
+* Enable Scintillua to be used as a standalone [Lua library][].
 * Scintillua can accept and use [external Lua states][].
 
 [Scintillua 3.3.9-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.3.9-1.zip

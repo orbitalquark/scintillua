@@ -1494,7 +1494,7 @@ function M.new(name, opts)
   return lexer
 end
 
--- When using Scintillua as a stand-alone module, some tables and functions that depend on
+-- When using Scintillua as a standalone module, some tables and functions that depend on
 -- Scintilla do not exist. Create a substitute for them.
 local function initialize_standalone_library()
   M.property = setmetatable({['scintillua.lexers'] = package.path:gsub('/%?%.lua', '')}, {
