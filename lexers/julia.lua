@@ -57,7 +57,7 @@ lex:add_rule('macro', token(lexer.PREPROCESSOR, '@' * (id + '.')))
 
 -- Symbol
 lex:add_rule('symbol', token('symbol', -B(P(':') + '<') * ':' * id))
-lex:add_style('symbol', lexer.styles.constant)
+lex:add_style('symbol', lexer.styles.string)
 
 -- Function
 lex:add_rule('function', token(lexer.FUNCTION, id * #(P('.')^-1 * '(')))

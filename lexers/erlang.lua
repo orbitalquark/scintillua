@@ -54,7 +54,6 @@ lex:add_rule('directive', token(lexer.PREPROCESSOR, '-' * word_match{
   'export', 'file', 'ifdef', 'ifndef', 'import', 'include', 'include_lib', 'module', 'record',
   'spec', 'type', 'undef'
 }))
-lex:add_style('directive', lexer.styles.preprocessor)
 
 -- Strings.
 local sq_str = lexer.range("'", true)
