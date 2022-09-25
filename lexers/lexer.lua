@@ -801,28 +801,9 @@ local M = {}
 --   with the name `userlistN`, where N is the index of the list. The default value is `2`.
 module('lexer')]=]
 
-local lpeg = lpeg or require('lpeg') -- Scintillua's Lua environment defines _G.lpeg
+local lpeg = _G.lpeg or require('lpeg') -- Scintillua's Lua environment defines _G.lpeg
 local P, R, S, V, B = lpeg.P, lpeg.R, lpeg.S, lpeg.V, lpeg.B
 local Ct, Cc, Cp, Cmt, C = lpeg.Ct, lpeg.Cc, lpeg.Cp, lpeg.Cmt, lpeg.C
-
--- Searches for the given *name* in the given *path*.
--- This is a safe implementation of Lua 5.2's `package.searchpath()` function that does not
--- require the package module to be loaded.
-local function searchpath(name, path)
-  local tried = {}
-  for part in path:gmatch('[^;]+') do
-    local filename = part:gsub('%?', name)
-    local ok, errmsg = loadfile(filename)
-    if ok or not errmsg:find('cannot open') then return filename end
-    tried[#tried + 1] = string.format("no file '%s'", filename)
-  end
-  return nil, table.concat(tried, '\n')
-end
-
-M.colors = {} -- legacy
-M.styles = setmetatable({}, { -- legacy
-  __index = function() return setmetatable({}, {__concat = function() return nil end}) end
-})
 
 -- Default tags.
 local default = {
@@ -840,7 +821,7 @@ local predefined = {
 }
 for _, name in ipairs(predefined) do M[name:upper():gsub('%.', '_')] = name end
 
-M.num_user_word_lists = 2
+M.num_user_word_lists = 2 -- TODO: make configurable
 
 ---
 -- Creates and returns a pattern that tags pattern *patt* with name *name* in lexer *lexer*.
@@ -854,6 +835,14 @@ M.num_user_word_lists = 2
 -- @usage local addition = lex:tag('addition', '+' * lexer.word)
 -- @name tag
 function M.tag(lexer, name, patt)
+  if not lexer._TAGS then
+    -- Create the initial maps for tag names to style numbers and styles.
+    local tags = {}
+    for i = 1, #default do tags[default[i]] = i end
+    for i = 1, #predefined do tags[predefined[i]] = i + 32 end
+    lexer._TAGS, lexer._num_styles = tags, #default + 1
+    lexer._extra_tags = {}
+  end
   if not assert(lexer._TAGS, 'not a lexer instance')[name] then
     local num_styles = lexer._num_styles
     if num_styles == 33 then num_styles = num_styles + 8 end -- skip predefined
@@ -908,37 +897,38 @@ function M.word_match(lexer, word_list, case_insensitive)
     lexer._WORDLISTS[word_list], lexer._WORDLISTS[i] = i, '' -- empty placeholder word list
     lexer._WORDLISTS.case_insensitive[i] = case_insensitive
     return V(word_list_id(lexer, i))
-  else
-    word_list, case_insensitive = lexer, word_list
-
-    if type(word_list) == 'string' then
-      local words = word_list -- space-separated list of words
-      word_list = {}
-      for word in words:gmatch('%S+') do word_list[#word_list + 1] = word end
-    end
-
-    local chars = M.alnum + '_'
-    local word_chars = ''
-    for _, word in ipairs(word_list) do
-      word_list[case_insensitive and word:lower() or word] = true
-      for char in word:gmatch('[^%w_%s]') do
-        if not word_chars:find(char, 1, true) then word_chars = word_chars .. char end
-      end
-    end
-    if word_chars ~= '' then chars = chars + S(word_chars) end
-
-    -- Optimize small word sets as ordered choice.
-    if #word_list <= 6 and not case_insensitive then
-      local choice = P(false)
-      for _, word in ipairs(word_list) do choice = choice + word:match('%S+') end
-      return choice * -chars
-    end
-
-    return Cmt(chars^1, function(input, index, word)
-      if case_insensitive then word = word:lower() end
-      return word_list[word] and index or nil
-    end)
   end
+
+  -- Lexer-agnostic word match.
+  word_list, case_insensitive = lexer, word_list
+
+  if type(word_list) == 'string' then
+    local words = word_list -- space-separated list of words
+    word_list = {}
+    for word in words:gmatch('%S+') do word_list[#word_list + 1] = word end
+  end
+
+  local word_chars = M.alnum + '_'
+  local extra_chars = ''
+  for _, word in ipairs(word_list) do
+    word_list[case_insensitive and word:lower() or word] = true
+    for char in word:gmatch('[^%w_%s]') do
+      if not extra_chars:find(char, 1, true) then extra_chars = extra_chars .. char end
+    end
+  end
+  if extra_chars ~= '' then word_chars = word_chars + S(extra_chars) end
+
+  -- Optimize small word sets as ordered choice. "Small" is arbitrary.
+  if #word_list <= 6 and not case_insensitive then
+    local choice = P(false)
+    for _, word in ipairs(word_list) do choice = choice + word:match('%S+') end
+    return choice * -word_chars
+  end
+
+  return Cmt(word_chars^1, function(input, index, word)
+    if case_insensitive then word = word:lower() end
+    return word_list[word]
+  end)
 end
 
 ---
@@ -1277,7 +1267,7 @@ end
 function M.lex(lexer, text, init_style)
   local grammar = build_grammar(lexer, init_style)
   if not grammar then return {M.DEFAULT, #text + 1} end
-  if M._standalone then M._text = text end -- for M.line_from_position and M.indent_amount
+  if M._standalone then M._text, M.line_state = text, {} end
 
   if lexer._lex_by_line then
     local line_from_position = M.line_from_position
@@ -1322,7 +1312,7 @@ function M.fold(lexer, text, start_line, start_level)
   local fold = M.property_int['fold'] > 0
   local FOLD_BASE = M.FOLD_BASE
   local FOLD_HEADER, FOLD_BLANK = M.FOLD_HEADER, M.FOLD_BLANK
-  if M._standalone then M._text = text end -- for M.line_from_position and M.indent_amount
+  if M._standalone then M._text, M.line_state = text, {} end
   if fold and lexer._fold_points then
     local lines = {}
     for p, l in (text .. '\n'):gmatch('()(.-)\r?\n') do lines[#lines + 1] = {p, l} end
@@ -1469,6 +1459,8 @@ end
 --     is `false`.
 --   * `case_insensitive_fold_points`: Whether or not fold points added via
 --     `lexer.add_fold_point()` ignore case. The default value is `false`.
+--   * `no_user_word_lists`: Does not automatically allocate word lists that can be set by
+--     users. This should really only be set by non-programming languages like markup languages.
 --   * `inherit`: Lexer to inherit from. The default value is `nil`.
 -- @usage lexer.new('rhtml', {inherit = lexer.load('html')})
 -- @name new
@@ -1486,13 +1478,6 @@ function M.new(name, opts)
       add_style = function() end -- legacy
     }
   })
-
-  -- Create the initial maps for tag names to style numbers and styles.
-  local tags = {}
-  for i = 1, #default do tags[default[i]] = i end
-  for i = 1, #predefined do tags[predefined[i]] = i + 32 end
-  lexer._TAGS, lexer._num_styles = tags, #default + 1
-  lexer._extra_tags = {}
 
   -- Add initial whitespace rule.
   -- Use a unique whitespace tag name since embedded lexing relies on these unique names.
@@ -1541,11 +1526,22 @@ local function initialize_standalone_library()
     end
   })
 
-  M.line_state = {}
-
   M._standalone = true
 end
-M.property_expanded = setmetatable({}, {__index = function() return '' end}) -- legacy
+
+-- Searches for the given *name* in the given *path*.
+-- This is a safe implementation of Lua 5.2's `package.searchpath()` function that does not
+-- require the package module to be loaded.
+local function searchpath(name, path)
+  local tried = {}
+  for part in path:gmatch('[^;]+') do
+    local filename = part:gsub('%?', name)
+    local ok, errmsg = loadfile(filename)
+    if ok or not errmsg:find('cannot open') then return filename end
+    tried[#tried + 1] = string.format("no file '%s'", filename)
+  end
+  return nil, table.concat(tried, '\n')
+end
 
 ---
 -- Initializes or loads and then returns the lexer of string name *name*.
@@ -1787,6 +1783,12 @@ end
 function M.starts_line(patt, allow_indent)
   return M.after_set('\r\n\v\f', patt, allow_indent and ' \t' or '')
 end
+
+M.colors = {} -- legacy
+M.styles = setmetatable({}, { -- legacy
+  __index = function() return setmetatable({}, {__concat = function() return nil end}) end
+})
+M.property_expanded = setmetatable({}, {__index = function() return '' end}) -- legacy
 
 -- Legacy function for creates and returns a token pattern with token name *name* and pattern
 -- *patt*.

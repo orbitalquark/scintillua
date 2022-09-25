@@ -1533,7 +1533,6 @@ end
 -- Tests output lexer.
 function test_output()
   local output = lexer.load('output')
-  lexer.line_state = {}
   local text = ([[
     > command
     /tmp/foo:1:2: error

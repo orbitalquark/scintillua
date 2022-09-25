@@ -1254,6 +1254,8 @@ Fields:
     is `false`.
   * `case_insensitive_fold_points`: Whether or not fold points added via
     `lexer.add_fold_point()` ignore case. The default value is `false`.
+  * `no_user_word_lists`: Does not automatically allocate word lists that can be set by
+    users. This should really only be set by non-programming languages like markup languages.
   * `inherit`: Lexer to inherit from. The default value is `nil`.
 
 Usage:
