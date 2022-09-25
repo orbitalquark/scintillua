@@ -78,7 +78,6 @@ lex:add_rule('variable', token(lexer.VARIABLE, '$' * lexer.word))
 lex:add_fold_point(lexer.KEYWORD, 'if', 'end')
 lex:add_fold_point(lexer.OPERATOR, '[', ']')
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
-lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('#'))
 
 lexer.property['scintillua.comment'] = '#'
 

@@ -82,8 +82,6 @@ lex:add_rule('error', token(lexer.ERROR, lexer.any))
 -- Fold points.
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
 lex:add_fold_point(lexer.COMMENT, '/*', '*/')
-lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('//'))
-lex:add_fold_point(lexer.KEYWORD, lexer.fold_consecutive_lines('import'))
 
 lexer.property['scintillua.comment'] = '//'
 

@@ -1098,7 +1098,6 @@ end
 --   (-1), or not a fold point at all (0).
 -- @usage lex:add_fold_point(lexer.OPERATOR, '{', '}')
 -- @usage lex:add_fold_point(lexer.KEYWORD, 'if', 'end')
--- @usage lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('#'))
 -- @usage lex:add_fold_point('custom', function(text, pos, line, s, symbol) ... end)
 -- @name add_fold_point
 function M.add_fold_point(lexer, tag_name, start_symbol, end_symbol)
@@ -1789,70 +1788,6 @@ function M.starts_line(patt, allow_indent)
   return M.after_set('\r\n\v\f', patt, allow_indent and ' \t' or '')
 end
 
-local indent_chars = {[string.byte(' ')] = true, [string.byte('\t')] = true}
-
-local LF, CR = string.byte('\n'), string.byte('\r')
--- Determines if the previous line is a comment.
--- This is used for determining if the current comment line is a fold point.
--- @param prefix The prefix string defining a comment.
--- @param text The text passed to a fold function.
--- @param pos The pos passed to a fold function.
--- @param line The line passed to a fold function.
--- @param s The s passed to a fold function.
-local function prev_line_is_comment(prefix, text, pos, line, s)
-  local start = line:find('%S')
-  if start < s and not line:find(prefix, start, true) then return false end
-  local p = pos - 1
-  if text:byte(p) == LF then
-    p = p - 1
-    if text:byte(p) == CR then p = p - 1 end
-    if text:byte(p) ~= LF then
-      while p > 1 and text:byte(p - 1) ~= LF do p = p - 1 end
-      while indent_chars[text:byte(p)] do p = p + 1 end
-      return text:sub(p, p + #prefix - 1) == prefix
-    end
-  end
-  return false
-end
-
--- Determines if the next line is a comment.
--- This is used for determining if the current comment line is a fold point.
--- @param prefix The prefix string defining a comment.
--- @param text The text passed to a fold function.
--- @param pos The pos passed to a fold function.
--- @param line The line passed to a fold function.
--- @param s The s passed to a fold function.
-local function next_line_is_comment(prefix, text, pos, line, s)
-  local p = text:find('\n', pos + s)
-  if p then
-    p = p + 1
-    while indent_chars[text:byte(p)] do p = p + 1 end
-    return text:sub(p, p + #prefix - 1) == prefix
-  end
-  return false
-end
-
----
--- Returns for `lexer.add_fold_point()` the parameters needed to fold consecutive lines that
--- start with string *prefix*.
--- @param prefix The prefix string (e.g. a line comment).
--- @usage lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('--'))
--- @usage lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('//'))
--- @usage lex:add_fold_point(lexer.KEYWORD, lexer.fold_consecutive_lines('import'))
--- @name fold_consecutive_lines
-function M.fold_consecutive_lines(prefix)
-  local property_int = M.property_int
-  return prefix, function(text, pos, line, s)
-    if property_int['fold.scintillua.line.groups'] == 0 then return 0 end
-    if s > 1 and line:match('^%s*()') < s then return 0 end
-    local prev_line_comment = prev_line_is_comment(prefix, text, pos, line, s)
-    local next_line_comment = next_line_is_comment(prefix, text, pos, line, s)
-    if not prev_line_comment and next_line_comment then return 1 end
-    if prev_line_comment and not next_line_comment then return -1 end
-    return 0
-  end
-end
-
 -- Legacy function for creates and returns a token pattern with token name *name* and pattern
 -- *patt*.
 -- Use `tag()` instead.
@@ -1872,6 +1807,8 @@ function M.token(name, patt) return Cc(name) * (P(patt) / 0) * Cp() end
 -- @usage local regex = #P('/') * lexer.last_char_includes('+-*!%^&|=,([{') * lexer.range('/')
 -- @name last_char_includes
 function M.last_char_includes(s) return M.after_set(s, true) end
+
+function M.fold_consecutive_lines() end -- legacy
 
 --[[ The functions and fields below were defined in C.
 

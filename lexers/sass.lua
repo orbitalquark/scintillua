@@ -16,9 +16,6 @@ lex:add_rule('variable', lex:tag(lexer.VARIABLE, '$' * (lexer.alnum + S('_-'))^1
 -- Mixins.
 lex:add_rule('mixin', lex:tag(lexer.PREPROCESSOR, '@' * lexer.word))
 
--- Fold points.
-lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('//'))
-
 lexer.property['scintillua.comment'] = '//'
 
 return lex

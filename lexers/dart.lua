@@ -50,7 +50,6 @@ lex:add_rule('annotation', token(lexer.ANNOTATION, '@' * lexer.word^1))
 -- Fold points.
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
 lex:add_fold_point(lexer.COMMENT, '/*', '*/')
-lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('//'))
 
 lexer.property['scintillua.comment'] = '//'
 

@@ -78,7 +78,6 @@ lex:add_rule('facet', token(lexer.ANNOTATION, '@' * lexer.word))
 -- Fold points.
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
 lex:add_fold_point(lexer.COMMENT, '/*', '*/')
-lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('//'))
 
 lexer.property['scintillua.comment'] = '//'
 

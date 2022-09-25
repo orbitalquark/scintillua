@@ -88,7 +88,6 @@ local err_tok = token(lexer.ERROR, lexer.any)
 lex:add_rule('error', err_tok)
 
 -- Fold points.
-lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('//'))
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
 lex:add_fold_point(lexer.OPERATOR, '[', ']')
 lex:add_fold_point(lexer.OPERATOR, '(', ')')

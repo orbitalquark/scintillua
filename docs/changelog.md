@@ -66,6 +66,7 @@ Changes:
 * Added [lexer detection][] via SCI_PRIVATELEXERCALL or [`lexer.detect()`][] to help clients
    determine which lexers are associated with which filenames and content line patterns.
 * Updated AWK and Django lexers with updated keywords and functions/filters.
+* Removed `fold.line.groups` property and `lexer.fold_consecutive_lines()`.
 
 [Scintillua 6.0]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_6.0/scintillua_6.0.zip
 [`CreateLexer()`]: manual.html#using-scintillua-with-other-apps
@@ -212,7 +213,7 @@ Bugfixes:
 Changes:
 
 * Scintillua supports the [Lexilla][] interface.
-* Deprecated `lexer.fold_line_comments()` in favor of [`lexer.fold_consecutive_lines()`][].
+* Deprecated `lexer.fold_line_comments()` in favor of `lexer.fold_consecutive_lines()`.
 * Added `fold.line.groups` property and [`lexer.fold_line_groups`][] alias.
 * Added 64-bit and 32-bit Windows DLLs.
 * Added jq lexer.
@@ -220,7 +221,6 @@ Changes:
 
 [Scintillua 4.4.5-1]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_4.4.5-1/scintillua_4.4.5-1.zip
 [Lexilla]: https://scintilla.org/Lexilla.html
-[`lexer.fold_consecutive_lines()`]: api.html#lexer.fold_consecutive_lines
 [`lexer.fold_line_groups`]: api.html#lexer.fold_line_groups
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html

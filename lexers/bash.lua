@@ -84,7 +84,6 @@ lex:add_fold_point(lexer.KEYWORD, 'if', 'fi')
 lex:add_fold_point(lexer.KEYWORD, 'case', 'esac')
 lex:add_fold_point(lexer.KEYWORD, 'do', 'done')
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
-lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('#'))
 
 -- Word lists.
 lex:set_word_list(lexer.KEYWORD, {

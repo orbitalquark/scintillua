@@ -57,7 +57,6 @@ lex:add_fold_point(lexer.PREPROCESSOR, '%macro', '%endmacro')
 lex:add_fold_point(lexer.PREPROCESSOR, '%rep', '%endrep')
 lex:add_fold_point(lexer.PREPROCESSOR, '%while', '%endwhile')
 lex:add_fold_point(lexer.KEYWORD, 'struc', 'endstruc')
-lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines(';'))
 
 -- Word lists.
 lex:set_word_list(lexer.KEYWORD, {

@@ -66,7 +66,6 @@ lex:add_fold_point(lexer.PREPROCESSOR, 'ifdef', 'endif')
 lex:add_fold_point(lexer.PREPROCESSOR, 'ifndef', 'endif')
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
 lex:add_fold_point(lexer.COMMENT, '/*', '*/')
-lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('//'))
 
 -- Word lists.
 lex:set_word_list(lexer.KEYWORD, {

@@ -36,7 +36,6 @@ lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('&#{}[]')))
 
 -- Fold points.
 lex:add_fold_point(lexer.COMMENT, '\\begin', '\\end')
-lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('%'))
 lex:add_fold_point('environment', '\\begin', '\\end')
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
 

@@ -107,9 +107,6 @@ Scintillua::PropertyDoc::PropertyDoc() {
   DefineProperty("fold.scintillua.by.indentation", &Placeholder::b,
     "Fold based on indentation level if a lexer does not have its own folder. Note some lexers "
     "automatically enable this.");
-  DefineProperty("fold.scintillua.line.groups", &Placeholder::b,
-    "Fold consecutive line groups (such as line comments and import statements) and only show "
-    "the top line.");
   DefineProperty("fold.scintillua.on.zero.sum.lines", &Placeholder::b,
     "Mark as a fold point lines that contain both an ending and starting fold point (e.g. '} "
     "else {').");

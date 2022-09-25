@@ -1020,7 +1020,6 @@ Usage:
 
 * `lex:add_fold_point(lexer.OPERATOR, '{', '}')`
 * `lex:add_fold_point(lexer.KEYWORD, 'if', 'end')`
-* `lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('#'))`
 * `lex:add_fold_point('custom', function(text, pos, line, s, symbol) ... end)`
 
 <a id="lexer.add_rule"></a>
@@ -1143,22 +1142,6 @@ Fields:
 Return:
 
 * table of fold levels associated with line numbers.
-
-<a id="lexer.fold_consecutive_lines"></a>
-#### `lexer.fold_consecutive_lines`(prefix)
-
-Returns for `lexer.add_fold_point()` the parameters needed to fold consecutive lines that
-start with string *prefix*.
-
-Fields:
-
-* `prefix`: The prefix string (e.g. a line comment).
-
-Usage:
-
-* `lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('--'))`
-* `lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('//'))`
-* `lex:add_fold_point(lexer.KEYWORD, lexer.fold_consecutive_lines('import'))`
 
 <a id="lexer.get_rule"></a>
 #### `lexer.get_rule`(lexer, id)

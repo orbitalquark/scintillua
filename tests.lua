@@ -827,7 +827,7 @@ function test_html()
   assert_lex(html, code, tags)
 
   -- Folding tests.
-  local symbols = {'<', '<!--', '-->', '{', '}', '/*', '*/', '//'}
+  local symbols = {'<', '<!--', '-->', '{', '}', '/*', '*/'}
   for i = 1, #symbols do assert(html._fold_points._symbols[symbols[i]]) end
   assert(html._fold_points[TAG .. '.chars']['<'])
   assert(html._fold_points[COMMENT]['<!--'])
@@ -836,7 +836,6 @@ function test_html()
   assert(html._fold_points[OPERATOR]['}'])
   assert(html._fold_points[COMMENT]['/*'])
   assert(html._fold_points[COMMENT]['*/'])
-  assert(html._fold_points[COMMENT]['//'])
   code = [[
     <html>
       foo
@@ -905,14 +904,12 @@ function test_php()
   assert_lex(php, code, tags, initial_style)
 
   -- Folding tests.
-  local symbols = {'<?', '?>', '/*', '*/', '//', '#', '{', '}', '(', ')'}
+  local symbols = {'<?', '?>', '/*', '*/', '{', '}', '(', ')'}
   for i = 1, #symbols do assert(php._fold_points._symbols[symbols[i]]) end
   assert(php._fold_points[PREPROCESSOR]['<?'])
   assert(php._fold_points[PREPROCESSOR]['?>'])
   assert(php._fold_points[COMMENT]['/*'])
   assert(php._fold_points[COMMENT]['*/'])
-  assert(php._fold_points[COMMENT]['//'])
-  assert(php._fold_points[COMMENT]['#'])
   assert(php._fold_points[OPERATOR]['{'])
   assert(php._fold_points[OPERATOR]['}'])
   assert(php._fold_points[OPERATOR]['('])

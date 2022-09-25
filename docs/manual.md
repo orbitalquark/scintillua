@@ -59,8 +59,6 @@ Scintillua's lexers support the following properties which can also be set from 
 
 * `fold.scintillua.by.indentation`: Whether or not to fold based on indentation level if a lexer does not
    have a folder. Some lexers automatically enable this option. It is disabled by default.
-* `fold.scintillua.line.groups`: Whether or not to fold multiple, consecutive line groups (such as line
-   comments and import statements) and only show the top line. This option is disabled by default.
 * `fold.scintillua.on.zero.sum.lines`: Whether or not to mark as a fold point lines that contain both an
    ending and starting fold point. For example, `} else {` would be marked as a fold point. This
    option is disabled by default.
@@ -171,9 +169,6 @@ Scintillua's lexers support the following properties:
    disabled by default. Set to `1` to enable.
 * `fold.scintillua.by.indentation`: Whether or not to fold based on indentation level if a
    lexer does not have a folder. Some lexers automatically enable this option. It is disabled
-   by default. Set to `1` to enable.
-* `fold.scintillua.line.groups`: Whether or not to fold multiple, consecutive line groups (such
-   as line comments and import statements) and only show the top line. This option is disabled
    by default. Set to `1` to enable.
 * `fold.scintillua.on.zero.sum.lines`: Whether or not to mark as a fold point lines that contain
    both an ending and starting fold point. For example, `} else {` would be marked as a fold

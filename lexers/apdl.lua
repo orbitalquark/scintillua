@@ -73,7 +73,6 @@ lex:add_rule('operator', token(lexer.OPERATOR, S('+-*/$=,;()')))
 lex:add_fold_point(lexer.KEYWORD, '*if', '*endif')
 lex:add_fold_point(lexer.KEYWORD, '*do', '*enddo')
 lex:add_fold_point(lexer.KEYWORD, '*dowhile', '*enddo')
-lex:add_fold_point(lexer.COMMENT, lexer.fold_consecutive_lines('!'))
 
 lexer.property['scintillua.comment'] = '!'
 
