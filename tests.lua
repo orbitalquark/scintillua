@@ -1536,6 +1536,7 @@ end
 -- Tests output lexer.
 function test_output()
   local output = lexer.load('output')
+  lexer.line_state = {}
   local text = ([[
     > command
     /tmp/foo:1:2: error
@@ -1618,6 +1619,15 @@ function test_output()
     DEFAULT, 'Parse error.  Expected ...', DEFAULT, '-- Configuring incomplete, errors occurred!'
   }
   assert_lex(output, text, tags)
+  local marks = {}
+  for _, i in ipairs{2, 6, 9, 12, 14, 16, 19, 21, 23, 25, 27} do marks[i] = 1 end -- errors
+  for _, i in ipairs{3} do marks[i] = 2 end -- warnings
+  for k, v in pairs(marks) do
+    assert(lexer.line_state[k] == v, string.format('line_state[%d] ~= %d', k, v))
+  end
+  for k, v in pairs(lexer.line_state) do
+    assert(marks[k] == v, string.format('marks[%d] ~= %d', k, v))
+  end
 end
 
 -- Tests LaTeX lexer, particularly its folding.

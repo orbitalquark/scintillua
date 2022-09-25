@@ -1524,7 +1524,7 @@ local function initialize_standalone_library()
   M.line_from_position = function(pos)
     local line = 1
     for s in M._text:gmatch('[^\n]*()') do
-      if pos < s then return line end
+      if pos <= s then return line end
       line = line + 1
     end
     return line - 1 -- should not get to here
