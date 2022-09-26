@@ -916,13 +916,6 @@ A pattern that matches a sequence of end of line characters.
 
 A pattern that matches any single, non-newline character.
 
-<a id="lexer.num_user_word_lists"></a>
-#### `lexer.num_user_word_lists` (number)
-
-The number of word lists to add as rules to every lexer created by `lexer.new()`. These
-  word lists are intended to be set by users outside the lexer. Each word in a list is tagged
-  with the name `userlistN`, where N is the index of the list. The default value is `0`.
-
 <a id="lexer.number"></a>
 #### `lexer.number` (pattern)
 

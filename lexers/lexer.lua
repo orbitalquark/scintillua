@@ -786,10 +786,6 @@ local M = {}
 --   Flag indicating that the line is blank.
 -- @field FOLD_HEADER (number)
 --   Flag indicating the line is fold point.
--- @field num_user_word_lists (number)
---   The number of word lists to add as rules to every lexer created by `lexer.new()`. These
---   word lists are intended to be set by users outside the lexer. Each word in a list is tagged
---   with the name `userlistN`, where N is the index of the list. The default value is `0`.
 module('lexer')]=]
 
 local lpeg = _G.lpeg or require('lpeg') -- Scintillua's Lua environment defines _G.lpeg
@@ -811,8 +807,6 @@ local predefined = {
   'fold.display.text'
 }
 for _, name in ipairs(predefined) do M[name:upper():gsub('%.', '_')] = name end
-
-M.num_user_word_lists = 0 -- TODO: make configurable
 
 ---
 -- Creates and returns a pattern that tags pattern *patt* with name *name* in lexer *lexer*.
@@ -1473,14 +1467,6 @@ function M.new(name, opts)
   -- Add initial whitespace rule.
   -- Use a unique whitespace tag name since embedded lexing relies on these unique names.
   lexer:add_rule('whitespace', lexer:tag('whitespace.' .. name, M.space^1))
-
-  -- Add placeholders for user-defined word lists.
-  if not lexer._lexer and not lexer._no_user_word_lists then
-    for i = 1, M.num_user_word_lists do
-      local name = 'userlist' .. i
-      lexer:add_rule(name, lexer:tag(name, lexer:word_match(name)))
-    end
-  end
 
   return lexer
 end

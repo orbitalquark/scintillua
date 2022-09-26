@@ -41,7 +41,6 @@ Changes:
    `lexer.WHITESPACE`.
 * Child lexers can extend their parent's keyword lists.
 * Added more builtin tag/token names.
-* All lexers created with `lexer.new()` have a default set of user word lists.
 * Updated Perl lexer to recognize more numbers.
 * Updated Fennel lexer.
 * Updated Python lexer to highlight class definitions.

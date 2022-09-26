@@ -44,9 +44,6 @@ end
 -- @param rules The ordered list of rule names the lexer should have.
 function assert_rules(lex, rules)
   if rules[1] ~= 'whitespace' then table.insert(rules, 1, 'whitespace') end -- auto-added
-  if not lex._lexer and not lex._no_user_word_lists then
-    for i = 1, lexer.num_user_word_lists do table.insert(rules, i + 1, 'userlist' .. i) end -- auto-added
-  end
   local j = 1
   for i = 1, #lex._rules do
     assert(lex._rules[rules[j]], string.format("rule '%s' does not exist", rules[j]))
@@ -1652,7 +1649,6 @@ function test_legacy()
   local lex = lexer.new('test')
   local ws = lexer.token(lexer.WHITESPACE, lexer.space^1)
   lex:add_rule('whitespace', ws) -- should call lex:modify_rule()
-  assert(#lex._rules == 1 + lexer.num_user_word_lists)
   assert(lex._rules['whitespace'] == ws)
   lex:add_rule('keyword', lexer.token(KEYWORD, lexer.word_match('foo bar baz')))
   lex:add_rule('number', lexer.token(NUMBER, lexer.number))
