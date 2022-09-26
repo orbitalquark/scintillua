@@ -886,19 +886,6 @@ A pattern that matches any digit ('0'-'9').
 
 A pattern that matches a floating point number.
 
-<a id="lexer.fold_level"></a>
-#### `lexer.fold_level` (table, Read-only)
-
-Table of fold level bit-masks for line numbers starting from 1.
-  Fold level masks are composed of an integer level combined with any of the following bits:
-
-  * `lexer.FOLD_BASE`
-    The initial fold level.
-  * `lexer.FOLD_BLANK`
-    The line is blank.
-  * `lexer.FOLD_HEADER`
-    The line is a header, or fold point.
-
 <a id="lexer.graph"></a>
 #### `lexer.graph` (pattern)
 
@@ -909,22 +896,10 @@ A pattern that matches any graphical character ('!' to '~').
 
 A pattern that matches a hexadecimal number.
 
-<a id="lexer.indent_amount"></a>
-#### `lexer.indent_amount` (table, Read-only)
-
-Table of indentation amounts in character columns, for line numbers starting from 1.
-
 <a id="lexer.integer"></a>
 #### `lexer.integer` (pattern)
 
 A pattern that matches either a decimal, hexadecimal, octal, or binary number.
-
-<a id="lexer.line_state"></a>
-#### `lexer.line_state` (table)
-
-Table of integer line states for line numbers starting from 1.
-  Line states can be used by lexers for keeping track of persistent states. For example,
-  the output lexer uses this to mark lines that have warnings or errors.
 
 <a id="lexer.lower"></a>
 #### `lexer.lower` (pattern)
@@ -959,16 +934,6 @@ A pattern that matches a typical number, either a floating point, decimal, hexad
 
 A pattern that matches an octal number.
 
-<a id="lexer.property"></a>
-#### `lexer.property` (table)
-
-Map of key-value string pairs.
-
-<a id="lexer.property_int"></a>
-#### `lexer.property_int` (table, Read-only)
-
-Map of key-value pairs with values interpreted as numbers, or `0` if not found.
-
 <a id="lexer.punct"></a>
 #### `lexer.punct` (pattern)
 
@@ -979,11 +944,6 @@ A pattern that matches any punctuation character ('!' to '/', ':' to '@', '[' to
 #### `lexer.space` (pattern)
 
 A pattern that matches any whitespace character ('\t', '\v', '\f', '\n', '\r', space).
-
-<a id="lexer.style_at"></a>
-#### `lexer.style_at` (table, Read-only)
-
-Table of style names at positions in the buffer starting from 1.
 
 <a id="lexer.upper"></a>
 #### `lexer.upper` (pattern)
@@ -1474,5 +1434,40 @@ This map has precedence over Scintillua's built-in map.
 See also:
 
 * [`lexer.detect`](#lexer.detect)
+
+<a id="lexer.fold_level"></a>
+#### `lexer.fold_level`
+
+Read-only table of fold level bit-masks for line numbers starting from 1.
+Fold level masks are composed of an integer level combined with any of the following bits:
+
+* `lexer.FOLD_BASE`
+  The initial fold level.
+* `lexer.FOLD_BLANK`
+  The line is blank.
+* `lexer.FOLD_HEADER`
+  The line is a header, or fold point.
+
+<a id="lexer.indent_amount"></a>
+#### `lexer.indent_amount`
+
+Read-only table of indentation amounts in character columns, for line numbers starting from 1.
+
+<a id="lexer.line_state"></a>
+#### `lexer.line_state`
+
+Table of integer line states for line numbers starting from 1.
+Line states can be used by lexers for keeping track of persistent states. For example,
+the output lexer uses this to mark lines that have warnings or errors.
+
+<a id="lexer.property_int"></a>
+#### `lexer.property_int`
+
+Read-only map of key-value pairs with values interpreted as numbers, or `0` if not found.
+
+<a id="lexer.style_at"></a>
+#### `lexer.style_at`
+
+Read-only table of style names at positions in the buffer starting from 1.
 
 ---

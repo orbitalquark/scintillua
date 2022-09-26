@@ -786,28 +786,6 @@ local M = {}
 --   Flag indicating that the line is blank.
 -- @field FOLD_HEADER (number)
 --   Flag indicating the line is fold point.
--- @field fold_level (table, Read-only)
---   Table of fold level bit-masks for line numbers starting from 1.
---   Fold level masks are composed of an integer level combined with any of the following bits:
---
---   * `lexer.FOLD_BASE`
---     The initial fold level.
---   * `lexer.FOLD_BLANK`
---     The line is blank.
---   * `lexer.FOLD_HEADER`
---     The line is a header, or fold point.
--- @field indent_amount (table, Read-only)
---   Table of indentation amounts in character columns, for line numbers starting from 1.
--- @field line_state (table)
---   Table of integer line states for line numbers starting from 1.
---   Line states can be used by lexers for keeping track of persistent states. For example,
---   the output lexer uses this to mark lines that have warnings or errors.
--- @field property (table)
---   Map of key-value string pairs.
--- @field property_int (table, Read-only)
---   Map of key-value pairs with values interpreted as numbers, or `0` if not found.
--- @field style_at (table, Read-only)
---   Table of style names at positions in the buffer starting from 1.
 -- @field num_user_word_lists (number)
 --   The number of word lists to add as rules to every lexer created by `lexer.new()`. These
 --   word lists are intended to be set by users outside the lexer. Each word in a list is tagged
@@ -1826,6 +1804,52 @@ function M.last_char_includes(s) return M.after_set(s, true) end
 function M.fold_consecutive_lines() end -- legacy
 
 --[[ The functions and fields below were defined in C.
+
+---
+-- Read-only table of fold level bit-masks for line numbers starting from 1.
+-- Fold level masks are composed of an integer level combined with any of the following bits:
+--
+-- * `lexer.FOLD_BASE`
+--   The initial fold level.
+-- * `lexer.FOLD_BLANK`
+--   The line is blank.
+-- * `lexer.FOLD_HEADER`
+--   The line is a header, or fold point.
+-- @class table
+-- @name fold_level
+local fold_level
+
+---
+-- Read-only table of indentation amounts in character columns, for line numbers starting from 1.
+-- @class table
+-- @name indent_amount
+local indent_amount
+
+---
+-- Table of integer line states for line numbers starting from 1.
+-- Line states can be used by lexers for keeping track of persistent states. For example,
+-- the output lexer uses this to mark lines that have warnings or errors.
+-- @class table
+-- @name line_state
+local line_state
+
+---
+-- Map of key-value string pairs.
+-- @class
+-- @name property
+local property
+
+---
+-- Read-only map of key-value pairs with values interpreted as numbers, or `0` if not found.
+-- @class table
+-- @name property_int
+local property_int
+
+---
+-- Read-only table of style names at positions in the buffer starting from 1.
+-- @class table
+-- @name style_at
+local style_at
 
 ---
 -- Returns the line number (starting from 1) of the line that contains position *pos*, which
