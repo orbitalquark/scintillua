@@ -33,9 +33,9 @@ lex:add_rule('close_tag', lex:tag(lexer.TAG, P('/')^-1 * '>'))
 local in_tag = P(function(input, index)
   local before = input:sub(1, index - 1)
   local s, e = before:find('<[^>]-$'), before:find('>[^<]-$')
-  if s and e then return s > e and index or nil end
-  if s then return index end
-  return input:find('^[^<]->', index) and index or nil
+  if s and e then return s > e end
+  if s then return true end
+  return input:find('^[^<]->', index) ~= nil
 end)
 
 local equals = lex:tag(lexer.OPERATOR, '=') -- * in_tag

@@ -58,7 +58,7 @@ local function in_expr(constructs)
       local s = line:find(k, 1, true)
       if not s then goto continue end
       local e = line:find(v, 1, true)
-      if not e or e < s then return index end
+      if not e or e < s then return true end
       ::continue::
     end
     return nil

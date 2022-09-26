@@ -31,9 +31,9 @@ lex:add_rule('tag_close', tag_close)
 local in_tag = P(function(input, index)
   local before = input:sub(1, index - 1)
   local s, e = before:find('<[^>]-$'), before:find('>[^<]-$')
-  if s and e then return s > e and index or nil end
-  if s then return index end
-  return input:find('^[^<]->', index) and index or nil
+  if s and e then return s > e end
+  if s then return true end
+  return input:find('^[^<]->', index) ~= nil
 end)
 
 local equals = lex:tag(lexer.OPERATOR, '=') -- * in_tag
@@ -81,7 +81,7 @@ lex.embed_end_tag = tag * tag_close
 local css = lexer.load('css')
 local style_tag = word_match('style', true)
 local css_start_rule = #('<' * style_tag * ('>' + P(function(input, index)
-  if input:find('^%s+type%s*=%s*(["\'])text/css%1', index) then return index end
+  if input:find('^%s+type%s*=%s*(["\'])text/css%1', index) then return true end
 end))) * lex.embed_start_tag
 local css_end_rule = #('</' * style_tag * '>') * lex.embed_end_tag
 lex:embed(css, css_start_rule, css_end_rule)
@@ -96,7 +96,7 @@ lex:embed(style, css_start_rule, css_end_rule) -- only double-quotes for now
 local js = lexer.load('javascript')
 local script_tag = word_match('script', true)
 local js_start_rule = #('<' * script_tag * ('>' + P(function(input, index)
-  if input:find('^%s+type%s*=%s*(["\'])text/javascript%1', index) then return index end
+  if input:find('^%s+type%s*=%s*(["\'])text/javascript%1', index) then return true end
 end))) * lex.embed_start_tag
 local js_end_rule = #('</' * script_tag * '>') * lex.embed_end_tag
 lex:embed(js, js_start_rule, js_end_rule)
@@ -105,7 +105,7 @@ lex:embed(js, js_start_rule, js_end_rule)
 local cs = lexer.load('coffeescript')
 script_tag = word_match('script', true)
 local cs_start_rule = #('<' * script_tag * P(function(input, index)
-  if input:find('^[^>]+type%s*=%s*(["\'])text/coffeescript%1', index) then return index end
+  if input:find('^[^>]+type%s*=%s*(["\'])text/coffeescript%1', index) then return true end
 end)) * lex.embed_start_tag
 local cs_end_rule = #('</' * script_tag * '>') * lex.embed_end_tag
 lex:embed(cs, cs_start_rule, cs_end_rule)
