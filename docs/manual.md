@@ -45,9 +45,36 @@ In order to install Scintillua for one user (e.g. yourself) without administrato
 
 With Scintillua installed, SciTE will use Scintillua's Lua lexers whenever possible (as indicated
 in *scintillua.properties*). If a Lua lexer is loaded but you prefer to use a different
-one, add to your *SciTEUser.properties* (Windows) or *.SciTEUser.properties* (Linux) file a
-`lexer.$(file.patterns.`*`name`*`)=scintillua.`*`name`* line, where *`name`* is the name of
-the lexer you prefer. Note that Scintillua lexers have a "scintillua." prefix when used with SciTE.
+one, add to your *SciTEUser.properties* (Windows) or *.SciTEUser.properties* (Linux) file:
+
+    lexer.$(file.patterns.name)=scintillua.name
+
+where `name` is the name of the Scintillua lexer you prefer. (Note that Scintillua lexers have
+a "scintillua." prefix when used with SciTE.)  If you prefer to use SciTE's lexer instead of
+Scintillua's, simply remove from *scintillua.properties* the lines:
+
+    file.patterns.name=...
+    lexer.$(file.patterns.name)=scintillua.name
+    keywords.$(file.patterns.name)=scintillua
+    keywords2.$(file.patterns.name)=scintillua
+    ...
+    keywords9.$(file.patterns.name)=scintillua
+
+(You could manually override Scintillua's `lexer` and `keywords.*` settings from your SciTE
+user properties file, but it's easier to just change *scintillua.properties*.)
+
+Scintillua's Lua lexers also have their own keyword sets, which are distinct from SciTE lexer
+keyword sets. If you would like to change the set of keywords that a Scintillua lexer uses,
+add to your *SciTEUser.properties* (Windows) or *.SciTEUser.properties* (Linux) file:
+
+    keywords.$(file.patterns.name)=set of keywords
+    keywords2.$(filepatterns.name)=another set of keywords
+    ...
+
+with the desired set(s) of keywords in the same order as the Scintillua *lexers/*`name`*.lua*
+lexer's calls to `lex:set_word_list()`. For example, the Lua lexer's first set of keywords is for
+reserved words, the second is for built-in global functions, the third is for library functions,
+the fourth is for built-in global constants, and the fifth is for library constants.
 
 Scintillua comes with a set of universal color themes in its *themes/* directory. By default, the
 'scite' theme is used, which is similar to SciTE's default color theme. You can use a different
