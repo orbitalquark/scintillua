@@ -1835,7 +1835,7 @@ local line_state
 
 ---
 -- Map of key-value string pairs.
--- @class
+-- @class table
 -- @name property
 local property
 

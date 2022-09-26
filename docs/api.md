@@ -1460,6 +1460,11 @@ Table of integer line states for line numbers starting from 1.
 Line states can be used by lexers for keeping track of persistent states. For example,
 the output lexer uses this to mark lines that have warnings or errors.
 
+<a id="lexer.property"></a>
+#### `lexer.property`
+
+Map of key-value string pairs.
+
 <a id="lexer.property_int"></a>
 #### `lexer.property_int`
 
