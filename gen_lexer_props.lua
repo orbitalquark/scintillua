@@ -19,21 +19,25 @@ local definitions = f:read('*all'):match('local extensions = (%b{})')
 f:close()
 
 local output = {'# Lexer definitions ('}
+local function append(lang, exts, lexer)
+  output[#output + 1] = format('file.patterns.%s=%s', lang, concat(exts, ';'))
+  output[#output + 1] = format('lexer.$(file.patterns.%s)=scintillua.%s', lang, lexer)
+  output[#output + 1] = format('keywords.$(file.patterns.%s)=scintillua', lang)
+  for i = 2, 9 do
+    output[#output + 1] = format('keywords%d.$(file.patterns.%s)=scintillua', i, lang)
+  end
+end
 local lexer, ext, last_lexer
 local exts = {}
 for ext, lexer in definitions:gmatch("([^,'%]]+)'?%]?='([%w_]+)'") do
   if lexer ~= last_lexer and #exts > 0 then
-    local name = alt_name[last_lexer] or last_lexer
-    output[#output + 1] = format('file.patterns.%s=%s', name, concat(exts, ';'))
-    output[#output + 1] = format('lexer.$(file.patterns.%s)=scintillua.%s', name, last_lexer)
+    append(alt_name[last_lexer] or last_lexer, exts, last_lexer)
     exts = {}
   end
   exts[#exts + 1] = not noglobs[ext] and '*.' .. ext or ext
   last_lexer = lexer
 end
-local name = alt_name[last_lexer] or last_lexer
-output[#output + 1] = format('file.patterns.%s=%s', name, concat(exts, ';'))
-output[#output + 1] = format('lexer.$(file.patterns.%s)=scintillua.%s', name, last_lexer)
+append(alt_name[last_lexer] or last_lexer, exts, last_lexer)
 output[#output + 1] = '# )'
 
 -- Write to lpeg.properties.
