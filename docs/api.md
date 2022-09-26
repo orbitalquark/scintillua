@@ -154,37 +154,37 @@ of of the following methods:
 1. Use the convenience function [`lexer.word_match()`](#lexer.word_match) optionally coupled with
   [`lexer.set_word_list()`](#lexer.set_word_list). It is much easier and more efficient to write word matches like:
 
-      local keyword = lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD))
-      [...]
-      lex:set_word_list(lexer.KEYWORD, {
-        'keyword_1', 'keyword_2', ..., 'keyword_n'
-      })
+       local keyword = lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD))
+       [...]
+       lex:set_word_list(lexer.KEYWORD, {
+         'keyword_1', 'keyword_2', ..., 'keyword_n'
+       })
 
-      local case_insensitive_word = lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD, true))
-      [...]
-      lex:set_word_list(lexer.KEYWORD, {
-        'KEYWORD_1', 'keyword_2', ..., 'KEYword_n'
-      })
+       local case_insensitive_word = lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD, true))
+       [...]
+       lex:set_word_list(lexer.KEYWORD, {
+         'KEYWORD_1', 'keyword_2', ..., 'KEYword_n'
+       })
 
-      local hyphenated_keyword = lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD))
-      [...]
-      lex:set_word_list(lexer.KEYWORD, {
-        'keyword-1', 'keyword-2', ..., 'keyword-n'
-      })
+       local hyphenated_keyword = lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD))
+       [...]
+       lex:set_word_list(lexer.KEYWORD, {
+         'keyword-1', 'keyword-2', ..., 'keyword-n'
+       })
 
-  The benefit of using this method is that other lexers that inherit from, embed, or embed
-  themselves into your lexer can set, replace, or extend these word lists. For example,
-  the TypeScript lexer inherits from JavaScript, but extends JavaScript's keyword and type
-  lists with more options.
+   The benefit of using this method is that other lexers that inherit from, embed, or embed
+   themselves into your lexer can set, replace, or extend these word lists. For example,
+   the TypeScript lexer inherits from JavaScript, but extends JavaScript's keyword and type
+   lists with more options.
 
-  This method also allows applications that use your lexer to extend or replace your word
-  lists. For example, the Lua lexer includes keywords and functions for the latest version
-  of Lua (5.4 at the time of writing). However, editors using that lexer might want to use
-  keywords from Lua version 5.1, which is still quite popular.
+   This method also allows applications that use your lexer to extend or replace your word
+   lists. For example, the Lua lexer includes keywords and functions for the latest version
+   of Lua (5.4 at the time of writing). However, editors using that lexer might want to use
+   keywords from Lua version 5.1, which is still quite popular.
 
-  Note that calling `lex:set_word_list()` is completely optional. Your lexer is allowed to
-  expect the editor using it to supply word lists. Scintilla-based editors can do so via
-  Scintilla's `ILexer5` interface.
+   Note that calling `lex:set_word_list()` is completely optional. Your lexer is allowed to
+   expect the editor using it to supply word lists. Scintilla-based editors can do so via
+   Scintilla's `ILexer5` interface.
 
 2. Use the lexer-agnostic form of [`lexer.word_match()`](#lexer.word_match):
 
