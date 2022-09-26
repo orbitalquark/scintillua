@@ -3,7 +3,7 @@
 Scintillua can be used in the following ways:
 
 * Dropped into an existing installation of a Scintilla-based application as an external lexer.
-* Compiled directly into your Scintilla-based application.
+* Compiled directly into a Scintilla-based application.
 * Used as a standalone Lua library (Scintilla is not required).
 
 These usages are discussed in the following sections.
@@ -14,7 +14,7 @@ Scintillua can be dropped into any existing installation of a Scintilla-based ap
 long as that application supports [Lexilla][] 5.1.0 or greater.
 
 Scintillua releases come with two external lexers in the *lexers/* directory: *libscintillua.so*,
-which is a 64-bit Linux shared library; and *Scintillua.cxx*, which is a 64-bit Windows DLL.
+which is a 64-bit Linux shared library; and *Scintillua.dll*, which is a 64-bit Windows DLL.
 
 [Lexilla]: https://scintilla.org/LexillaDoc.html
 
@@ -60,8 +60,8 @@ Scintillua's, simply remove from *scintillua.properties* the lines:
     ...
     keywords9.$(file.patterns.name)=scintillua
 
-(You could manually override Scintillua's `lexer` and `keywords.*` settings from your SciTE
-user properties file, but it's easier to just change *scintillua.properties*.)
+(You could manually override Scintillua's `file.patterns.name`, `lexer`, and `keywords` settings
+from your SciTE user properties file, but it's easier to just change *scintillua.properties*.)
 
 Scintillua's Lua lexers also have their own keyword sets, which are distinct from SciTE lexer
 keyword sets. If you would like to change the set of keywords that a Scintillua lexer uses,
@@ -221,7 +221,7 @@ and extensions, and lexer names associated with content lines like shebang lines
    such as minified JavaScript.  The first 128 bytes seems reasonable.
 3. Use Scintilla's [SCI_PRIVATELEXERCALL][] message along with the operation `SCLUA_DETECT`
    (1) to store the detected lexer's name in the given `pointer` argument. This operation
-   behaves like other Scintilla string API functions: when passing a NULL pointer argument,
+   behaves like other Scintilla string API functions: when passing a null pointer argument,
    the length of the string that should be allocated is returned.
 4. If the result is a non-empty string, call `CreateLexer()` with that result and set the newly
    created lexer using SCI_SETILEXER.
@@ -234,8 +234,8 @@ and extensions, and lexer names associated with content lines like shebang lines
 Scintillua reports errors in one of two ways:
 
 1. If the `CreateLexer()` call fails and returns a null pointer, you can retrieve the error
-  message using `GetCreateLexerError()`. This can happen when the "scintillua.lexers" property
-  is not correctly set or when there is an error loading a particular Lua lexer.
+  message using Scintillua's `GetCreateLexerError()`. This can happen when the "scintillua.lexers"
+  property is not correctly set or when there is an error loading a particular Lua lexer.
 2. If there is an error during a lex or fold operation, the error message is stored in the
   "lexer.scintillua.error" property. This property only contains the most recent error (if any).
 
@@ -272,7 +272,7 @@ Here is a sample portion of a *Makefile* with Lua 5.3 as an example:
     [your app]: [your dependencies] $(scintillua_obj) $(lua_objs)
 
 **Windows note:** when cross-compiling for Windows statically, you will need to pass `-DNO_DLL`
-when compiling *Scintillua.cxx*.
+to the compiler when compiling *Scintillua.cxx*.
 
 In order to use Scintillua's lexers in your application:
 
@@ -286,11 +286,13 @@ In order to use Scintillua's lexers in your application:
 
 For example, using the GTK platform:
 
+    GtkWidget *sci = scintilla_new();
     SetLibraryProperty("scintillua.lexers", "/path/to/lexers/");
     ILEXER5* lua_lexer = CreateLexer("lua");
-    if (!lua_lexer) fprintf("error creating lexer: %s\n", GetCreateLexerError());
-    GtkWidget *sci = scintilla_new();
-    send_scintilla_message(SCINTILLA(sci), SCI_SETILEXER, 0, (sptr_t)lua_lexer);
+    if (lua_lexer)
+      send_scintilla_message(SCINTILLA(sci), SCI_SETILEXER, 0, (sptr_t)lua_lexer);
+    else
+      fprintf("error creating lexer: %s\n", GetCreateLexerError());
 
 Your application will then have to query Scintillua for how many styles are currently defined
 and what the names of those styles are in order to create a map of style names to style numbers
@@ -307,8 +309,8 @@ an example of this process.
 Scintillua reports errors in one of two ways:
 
 1. If the `CreateLexer()` call fails and returns a null pointer, you can retrieve the error
-  message using `GetCreateLexerError()`. This can happen when the "scintillua.lexers" property
-  is not correctly set or when there is an error loading a particular Lua lexer.
+  message using Scintillua's `GetCreateLexerError()`. This can happen when the "scintillua.lexers"
+  property is not correctly set or when there is an error loading a particular Lua lexer.
 2. If there is an error during a lex or fold operation, the error message is stored in the
   "lexer.scintillua.error" property. This property only contains the most recent error (if any).
 

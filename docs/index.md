@@ -7,7 +7,7 @@ Scintilla-based text editor or IDE. Scintillua was designed to be dropped into o
 any Scintilla environment.
 
 Scintillua may also be used as a standalone Lua library for obtaining syntax highlighting
-information of source code snippets. Scintilla is not required in that case.
+information of source code. Scintilla is not required in that case.
 
 [Lua]: https://lua.org
 [LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html

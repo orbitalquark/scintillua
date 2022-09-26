@@ -31,7 +31,7 @@ local M = {}
 -- `patt1 * patt2` | Matches `patt1` followed by `patt2`.
 -- `patt1 + patt2` | Matches `patt1` or `patt2` (ordered choice).
 -- `patt1 - patt2` | Matches `patt1` if `patt2` does not also match.
--- `-patt` | Equivalent to `("" - patt)`.
+-- `-patt` | Matches if `patt` does not match, consuming no input.
 -- `#patt` | Matches `patt` but consumes no input.
 --
 -- The first part of this document deals with rapidly constructing a simple lexer. The next part
@@ -50,9 +50,9 @@ local M = {}
 -- The *lexers/* directory contains all of Scintillua's Lua lexers, including any new ones you
 -- write. Before attempting to write one from scratch though, first determine if your programming
 -- language is similar to any of the 100+ languages supported. If so, you may be able to copy
--- and modify that lexer, saving some time and effort. The filename of your lexer should be the
--- name of your programming language in lower case followed by a *.lua* extension. For example,
--- a new Lua lexer has the name *lua.lua*.
+-- and modify, or inherit from that lexer, saving some time and effort. The filename of your
+-- lexer should be the name of your programming language in lower case followed by a *.lua*
+-- extension. For example, a new Lua lexer has the name *lua.lua*.
 --
 -- Note: Try to refrain from using one-character language names like "c", "d", or "r". For
 -- example, Scintillua uses "ansi_c", "dmd", and "rstats", respectively.
@@ -82,7 +82,7 @@ local M = {}
 --
 -- The first line of code is a Lua convention to store a global variable into a local variable
 -- for quick access. The second line simply defines often used convenience variables. The third
--- and last lines [define](#lexer.new) and return the lexer object Scintilla uses; they are
+-- and last lines [define](#lexer.new) and return the lexer object Scintillua uses; they are
 -- very important and must be part of every lexer. Note the `...` passed to [`lexer.new()`]() is
 -- literal: the lexer will assume the name of its filename or an alternative name specified by
 -- [`lexer.load()`]() in embedded lexer applications. The fourth line uses something called a
@@ -137,9 +137,9 @@ local M = {}
 -- but an advantage to using predefined tag names is that the language elements your lexer
 -- recognizes will inherit any universal syntax highlighting color theme that your editor
 -- uses. You can also "subclass" existing tag names by appending a '.*subclass*' string to
--- them. For example, the HTML lexer tags unknown tags as `lexer.TAG .. '.unknown'`. Editors
--- have the ability to style those subclassed tags in a different way than normal tags, or fall
--- back to styling them as normal tags.
+-- them. For example, the HTML lexer tags unknown tags as `lexer.TAG .. '.unknown'`. This gives
+-- editors the opportunity to style those subclassed tags in a different way than normal tags,
+-- or fall back to styling them as normal tags.
 --
 -- ##### Example Tags
 --
@@ -240,8 +240,8 @@ local M = {}
 --
 -- **Numbers**
 --
--- Most programming languages have the same format for integer and float tokens, so it might
--- be as simple as using a predefined LPeg pattern:
+-- Most programming languages have the same format for integers and floats, so it might be as
+-- simple as using a predefined LPeg pattern:
 --
 --     local number = lex:tag(lexer.NUMBER, lexer.number)
 --
@@ -249,6 +249,10 @@ local M = {}
 --
 --     local integer = P('-')^-1 * (lexer.dec_num * S('lL')^-1)
 --     local number = lex:tag(lexer.NUMBER, lexer.float + lexer.hex_num + integer)
+--
+-- Other languages allow separaters within numbers for better readability.
+--
+--     local number = lex:tag(lexer.NUMBER, lexer.number_('_')) -- recognize 1_000_000
 --
 -- Your language may need other tweaks, but it is up to you how fine-grained you want your
 -- highlighting to be. After all, you are not writing a compiler or interpreter!
@@ -266,7 +270,7 @@ local M = {}
 -- Each rule has an associated name, but rule names are completely arbitrary and serve only to
 -- identify and distinguish between different rules. Rule order is important: if text does not
 -- match the first rule added to the grammar, the lexer tries to match the second rule added, and
--- so on. Right now this lexer simply matches identifier tokens under a rule named "identifier".
+-- so on. Right now this lexer simply matches identifiers under a rule named "identifier".
 --
 -- To illustrate the importance of rule order, here is an example of a simplified Lua lexer:
 --
@@ -279,16 +283,16 @@ local M = {}
 --     lex:add_rule('operator', lex:tag(lexer.OPERATOR, ...))
 --
 -- Notice how identifiers come _after_ keywords. In Lua, as with most programming languages,
--- the characters allowed in keywords and identifiers are in the same set (alphanumerics
--- plus underscores). If the lexer added the "identifier" rule before the "keyword" rule,
--- all keywords would match identifiers and thus would be incorrectly tagged (and likewise
--- incorrectly highlighted) as identifiers instead of keywords. The same idea applies to function,
--- constant, etc. tokens that you may want to distinguish between: their rules should come
--- before identifiers.
+-- the characters allowed in keywords and identifiers are in the same set (alphanumerics plus
+-- underscores). If the lexer added the "identifier" rule before the "keyword" rule, all keywords
+-- would match identifiers and thus would be incorrectly tagged (and likewise incorrectly
+-- highlighted) as identifiers instead of keywords. The same idea applies to function names,
+-- constants, etc. that you may want to distinguish between: their rules should come before
+-- identifiers.
 --
 -- So what about text that does not match any rules? For example in Lua, the '!' character is
 -- meaningless outside a string or comment. Normally the lexer skips over such text. If instead
--- you want to highlight these "syntax errors", add an additional end rule:
+-- you want to highlight these "syntax errors", add a final rule:
 --
 --     lex:add_rule('keyword', keyword)
 --     ...
@@ -362,15 +366,14 @@ local M = {}
 -- tag with a "type" attribute whose value is "text/css":
 --
 --     local css_tag = P('<style') * P(function(input, index)
---       if input:find('^[^>]+type="text/css"', index) then return index end
+--       if input:find('^[^>]+type="text/css"', index) then return true end
 --     end)
 --
 -- This pattern looks for the beginning of a "style" tag and searches its attribute list for
 -- the text "`type="text/css"`". (In this simplified example, the Lua pattern does not consider
 -- whitespace between the '=' nor does it consider that using single quotes is valid.) If there
--- is a match, the functional pattern returns a value instead of `nil`. In this case, the value
--- returned does not matter because we ultimately want to style the "style" tag as an HTML tag,
--- so the actual start rule looks like this:
+-- is a match, the functional pattern returns `true`. However, we ultimately want to style the
+-- "style" tag as an HTML tag, so the actual start rule looks like this:
 --
 --     local css_start_rule = #css_tag * tag
 --
@@ -393,7 +396,7 @@ local M = {}
 -- in this case, call [`lexer.embed()`]() with switched arguments. For example, in the PHP lexer:
 --
 --     local html = lexer.load('html')
---     local php_start_rule = lex:tag('php_tag', '<?php ')
+--     local php_start_rule = lex:tag('php_tag', '<?php' * lexer.space)
 --     local php_end_rule = lex:tag('php_tag', '?>')
 --     html:embed(lex, php_start_rule, php_end_rule)
 --
@@ -407,7 +410,7 @@ local M = {}
 -- document. However, there may be rare cases where a lexer does need to keep track of some
 -- sort of persistent state. Rather than using `lpeg.P` function patterns that set state
 -- variables, it is recommended to make use of Scintilla's built-in, per-line state integers via
--- [`lexer.line_state`](). It was designed to accommodate up to 32 bit flags for tracking state.
+-- [`lexer.line_state`](). It was designed to accommodate up to 32 bit-flags for tracking state.
 -- [`lexer.line_from_position()`]() will return the line for any position given to an `lpeg.P`
 -- function pattern. (Any positions derived from that position argument will also work.)
 --
@@ -485,8 +488,8 @@ local M = {}
 -- Place your lexer in your *~/.textadept/lexers/* directory so you do not overwrite it when
 -- upgrading Textadept. Also, lexers in this directory override default lexers. Thus, Textadept
 -- loads a user *lua* lexer instead of the default *lua* lexer. This is convenient for tweaking
--- a default lexer to your liking. Then add a [file type](#textadept.file_types) for your lexer
--- if necessary.
+-- a default lexer to your liking. Then add a [file extension](#lexer.detect_extensions) for
+-- your lexer if necessary.
 --
 -- **SciTE**
 --
@@ -495,18 +498,25 @@ local M = {}
 --
 --     file.patterns.[lexer_name]=[file_patterns]
 --     lexer.$(file.patterns.[lexer_name])=scintillua.[lexer_name]
+--     keywords.$(file.patterns.[lexer_name])=scintillua
+--     keywords2.$(file.patterns.[lexer_name])=scintillua
+--     ...
+--     keywords9.$(file.patterns.[lexer_name])=scintillua
 --
 -- where `[lexer_name]` is the name of your lexer (minus the *.lua* extension) and
--- `[file_patterns]` is a set of file extensions to use your lexer for.
+-- `[file_patterns]` is a set of file extensions to use your lexer for. The `keyword` settings are
+-- only needed if another SciTE properties file has defined keyword sets for `[file_patterns]`.
+-- The `scintillua` keyword setting instructs Scintillua to use the keyword sets defined within
+-- the lexer. You can override a lexer's keyword set(s) by specifying your own in the same order
+-- that the lexer calls `lex:set_word_list()`. For example, the Lua lexer's first set of keywords
+-- is for reserved words, the second is for built-in global functions, the third is for library
+-- functions, the fourth is for built-in global constants, and the fifth is for library constants.
 --
 -- SciTE assigns styles to tag names in order to perform syntax highlighting. Since the set of
 -- tag names used for a given language changes, your *.properties* file should specify styles
 -- for tag names instead of style numbers. For example:
 --
---     scintillua.styles.default=fore:#000000,back:#FFFFFF
---     scintillua.styles.keyword=fore:#00007F,bold
---     scintillua.styles.string=fore:#7F007F
---     scintillua.styles.my_tag=
+--     scintillua.styles.my_tag=$(scintillua.styles.keyword),bold
 --
 -- ### Migrating Legacy Lexers
 --
@@ -556,7 +566,8 @@ local M = {}
 --    [`lex:set_word_list()`](#lexer.set_word_list) with the same identifier and the usual
 --    list of words to match. This allows users of your lexer to call `lex:set_word_list()`
 --    with their own set of words should they wish to.
--- 6. Lexers no longer specify styling information. Remove any calls to `lex:add_style()`.
+-- 6. Lexers no longer specify styling information. Remove any calls to `lex:add_style()`. You
+--    may need to add styling information for custom tags to your editor's theme.
 -- 7. `lexer.last_char_includes()` has been deprecated in favor of the new [`lexer.after_set()`]().
 --    Use the character set and pattern as arguments to that new function.
 --
@@ -602,6 +613,8 @@ local M = {}
 --     lex:set_word_list(lexer.KEYWORD, {'foo', 'bar', 'baz'})
 --
 --     return lex
+--
+-- Any editors using this lexer would have to add a style for the 'custom' tag.
 --
 -- ### Considerations
 --
