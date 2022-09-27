@@ -2,7 +2,7 @@
 
 [Atom Feed](https://github.com/orbitalquark/scintillua/releases.atom)
 
-### 6.0 (TBD 2022)
+### 6.0 (27 Sep 2022)
 
 Download:
 
