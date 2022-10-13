@@ -10,7 +10,7 @@ local lex = lexer.new(...)
 lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 
 -- Markers.
-lex:add_rule('marker', lex:tag(lexer.COMMENT, lex:word_match(lexer.COMMENT) * lexer.any^0))
+lex:add_rule('marker', lex:tag(lexer.COMMENT, lexer.word_match('__DATA__ __END__') * lexer.any^0))
 
 -- Strings.
 local delimiter_matches = {['('] = ')', ['['] = ']', ['{'] = '}', ['<'] = '>'}
@@ -143,10 +143,6 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
   'sysseek', 'system', 'syswrite', 'telldir', 'tell', 'tied', 'tie', 'time', 'times', 'truncate',
   'ucfirst', 'uc', 'umask', 'undef', 'unlink', 'unpack', 'unshift', 'untie', 'utime', 'values',
   'vec', 'wait', 'waitpid', 'wantarray', 'warn', 'write'
-})
-
-lex:set_word_list(lexer.COMMENT, {
-  '__DATA__', '__END__'
 })
 
 lexer.property['scintillua.comment'] = '#'
