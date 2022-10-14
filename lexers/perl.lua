@@ -12,9 +12,6 @@ lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 -- Markers.
 lex:add_rule('marker', lex:tag(lexer.COMMENT, lex:word_match(lexer.COMMENT) * lexer.any^0))
 
--- Functions.
-lex:add_rule('function', lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN)))
-
 -- Strings.
 local delimiter_matches = {['('] = ')', ['['] = ']', ['{'] = '}', ['<'] = '>'}
 local literal_delimited = P(function(input, index) -- for single delimiter sets
@@ -77,6 +74,12 @@ local lit_match = 'm' * literal_delimited * S('cgimosx')^0
 local lit_sub = 's' * literal_delimited2 * S('ecgimosx')^0
 local regex = lex:tag(lexer.REGEX, regex_str + lit_regex + lit_match + lit_sub)
 lex:add_rule('string', string + regex)
+
+-- Functions.
+lex:add_rule('function_builtin', lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN)) * #(lexer.space^0 * P('(')^-1))
+local func = lex:tag(lexer.FUNCTION, lexer.word)
+local method = B('->') * lex:tag(lexer.FUNCTION_METHOD, lexer.word)
+lex:add_rule('function', (method + func) * #(lexer.space^0 * '('))
 
 -- Identifiers.
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
