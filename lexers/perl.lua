@@ -94,6 +94,22 @@ lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number_('_')))
 
 -- Variables.
 -- LuaFormatter off
+local builtin_var_s = '$' * (
+  lpeg.R('09') +
+  S('!"$%&\'()+,-./:;<=>?@\\]_`|~') +
+  '^' * S('ACDEFHILMNOPRSTVWX')^-1 +
+  'ARGV')
+local builtin_var_a = '@' * (
+  S('+-_F') +
+  'ARGV' + 'INC' + 'ISA')
+local builtin_var_h = '%' * (
+  S('+-!') +
+  '^' * S('H')^-1 +
+  'ENV' + 'INC' + 'SIG')
+lex:add_rule('variable_builtin', lex:tag(lexer.VARIABLE_BUILTIN,
+  builtin_var_s +
+  builtin_var_a +
+  builtin_var_h))
 local special_var = '$' * (
   '^' * S('ADEFHILMOPSTWX')^-1 +
   S('\\"[]\'&`+*.,;=%~?@<>(|/!-') +
