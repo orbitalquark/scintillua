@@ -81,6 +81,9 @@ local func = lex:tag(lexer.FUNCTION, lexer.word)
 local method = B('->') * lex:tag(lexer.FUNCTION_METHOD, lexer.word)
 lex:add_rule('function', (method + func) * #(lexer.space^0 * '('))
 
+-- Constants.
+lex:add_rule('constant', lex:tag(lexer.CONSTANT_BUILTIN, lex:word_match(lexer.CONSTANT_BUILTIN)))
+
 -- Identifiers.
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
 
@@ -159,6 +162,18 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
   'sysseek', 'system', 'syswrite', 'telldir', 'tell', 'tied', 'tie', 'time', 'times', 'truncate',
   'ucfirst', 'uc', 'umask', 'undef', 'unlink', 'unpack', 'unshift', 'untie', 'utime', 'values',
   'vec', 'wait', 'waitpid', 'wantarray', 'warn', 'write'
+})
+
+lex:set_word_list(lexer.CONSTANT_BUILTIN, {
+  'ARGV',
+  'ARGVOUT',
+  'DATA',
+  'ENV',
+  'INC',
+  'SIG',
+  'STDERR',
+  'STDIN',
+  'STDOUT',
 })
 
 lexer.property['scintillua.comment'] = '#'
