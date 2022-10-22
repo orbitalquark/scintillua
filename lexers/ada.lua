@@ -11,28 +11,23 @@ local lex = lexer.new('ada')
 lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
-  'abort', 'abs', 'accept', 'all', 'and', 'begin', 'body', 'case', 'declare', 'delay', 'do', 'else',
-  'elsif', 'end', 'entry', 'exception', 'exit', 'for', 'generic', 'goto', 'if', 'in', 'is', 'loop',
-  'mod', 'new', 'not', 'null', 'or', 'others', 'out', 'protected', 'raise', 'record', 'rem',
-  'renames', 'requeue', 'reverse', 'select', 'separate', 'subtype', 'task', 'terminate', 'then',
-  'type', 'until', 'when', 'while', 'xor',
-  -- Preprocessor.
-  'package', 'pragma', 'use', 'with',
-  -- Function.
-  'function', 'procedure', 'return',
-  -- Storage class.
-  'abstract', 'access', 'aliased', 'array', 'at', 'constant', 'delta', 'digits', 'interface',
-  'limited', 'of', 'private', 'range', 'tagged', 'synchronized',
-  -- Boolean.
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match({
+  'abort', 'abs', 'abstract', 'accept', 'access', 'aliased', 'all', 'and', 'array', 'at', 'begin',
+  'body', 'case', 'constant', 'declare', 'delay', 'delta', 'digits', 'do', 'else', 'elsif', 'end',
+  'entry', 'exception', 'exit', 'for', 'function', 'generic', 'goto', 'if', 'in', 'interface', 'is',
+  'limited', 'loop', 'mod', 'new', 'not', 'null', 'of', 'or', 'others', 'out', 'overriding',
+  'package', 'parallel', 'pragma', 'private', 'procedure', 'protected', 'raise', 'range', 'record',
+  'rem', 'renames', 'requeue', 'return', 'reverse', 'select', 'separate', 'some', 'subtype',
+  'synchronized', 'tagged', 'task', 'terminate', 'then', 'type', 'until', 'use', 'when', 'while',
+  'with', 'xor', --
   'true', 'false'
-}))
+}, true)))
 
 -- Types.
-lex:add_rule('type', token(lexer.TYPE, word_match{
+lex:add_rule('type', token(lexer.TYPE, word_match({
   'boolean', 'character', 'count', 'duration', 'float', 'integer', 'long_float', 'long_integer',
   'priority', 'short_float', 'short_integer', 'string'
-}))
+}, true)))
 
 -- Identifiers.
 lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
