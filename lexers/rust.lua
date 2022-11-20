@@ -69,13 +69,47 @@ lex:add_fold_point(lexer.COMMENT, '/*', '*/')
 lex:add_fold_point(lexer.OPERATOR, '(', ')')
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
 
--- https://github.com/rust-lang/rust/blob/stable/src/libsyntax_pos/symbol.rs
+-- https://doc.rust-lang.org/std/#keywords
 lex:set_word_list(lexer.KEYWORD, {
-  'Self', 'abstract', 'as', 'async', 'auto', 'await', 'become', 'box', 'break', 'catch', 'const',
-  'continue', 'crate', 'default', 'do', 'dyn', 'else', 'enum', 'extern', 'false', 'final', 'fn',
-  'for', 'if', 'impl', 'in', 'let', 'loop', 'macro', 'match', 'mod', 'move', 'mut', 'override',
-  'priv', 'pub', 'ref', 'return', 'self', 'static', 'struct', 'super', 'trait', 'true', 'try',
-  'type', 'typeof', 'union', 'unsafe', 'unsized', 'use', 'virtual', 'where', 'while', 'yield'
+  'SelfTy',
+  'as',
+  'async',
+  'await',
+  'break',
+  'const',
+  'continue',
+  'crate',
+  'dyn',
+  'else',
+  'enum',
+  'extern',
+  'false',
+  'fn',
+  'for',
+  'if',
+  'impl',
+  'in',
+  'let',
+  'loop',
+  'match',
+  'mod',
+  'move',
+  'mut',
+  'pub',
+  'ref',
+  'return',
+  'self',
+  'static',
+  'struct',
+  'super',
+  'trait',
+  'true',
+  'type',
+  'union',
+  'unsafe',
+  'use',
+  'where',
+  'while',
 })
 
 lex:set_word_list(lexer.TYPE, {
