@@ -1,7 +1,7 @@
 -- AutoHotkey LPeg lexer.
 
 local lexer = lexer
-local P, S = lpeg.P, lpeg.S
+local P, S, B = lpeg.P, lpeg.S, lpeg.B
 
 local lex = lexer.new(...)
 
@@ -16,12 +16,10 @@ lex:add_rule('constant', lex:tag(lexer.CONSTANT_BUILTIN, S('fF') * lexer.digit *
     + lex:word_match(lexer.CONSTANT_BUILTIN, true)))
 
 -- Functions.
-lex:add_rule('function_builtin',
-  lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN, true)) *
-    #(lexer.space^0 * P('(')^-1))
+local builtin_func = lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN, true))
 local func = lex:tag(lexer.FUNCTION, lexer.word)
-local method = lpeg.B('.') * lex:tag(lexer.FUNCTION_METHOD, lexer.word)
-lex:add_rule('function', (method + func) * #(lexer.space^0 * '('))
+local method = B('.') * lex:tag(lexer.FUNCTION_METHOD, lexer.word)
+lex:add_rule('function', (builtin_func + method + func) * #(lexer.space^0 * '('))
 
 -- Identifiers.
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
