@@ -10,9 +10,6 @@ local lex = lexer.new(...)
 -- Keywords.
 lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 
--- Macro names.
-lex:add_rule('macro', lex:tag(lexer.FUNCTION, lexer.word * S("!")))
-
 -- Library types
 lex:add_rule('library', lex:tag(lexer.LABEL, lexer.upper * (lexer.lower + lexer.dec_num)^1))
 
@@ -49,6 +46,12 @@ local raw_str = Cmt(P('b')^-1 * P('r') * C(P('#')^0) * '"', function(input, inde
   return (e or #input) + 1
 end)
 lex:add_rule('string', lex:tag(lexer.STRING, sq_str + dq_str + raw_str))
+
+-- Functions.
+local builtin_macros = lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN) * '!')
+local macros = lex:tag(lexer.FUNCTION, lexer.word * '!')
+local func = lex:tag(lexer.FUNCTION, lexer.word)
+lex:add_rule('function', (builtin_macros + macros + func) * #(lexer.space^0 * '('))
 
 -- Identifiers.
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, identifier))
@@ -139,6 +142,53 @@ lex:set_word_list(lexer.TYPE, {
   'u128',
   'unit',
   'usize',
+})
+
+lex:set_word_list(lexer.FUNCTION_BUILTIN, {
+  'assert',
+  'assert_eq',
+  'assert_ne',
+  'cfg',
+  'column',
+  'compile_error',
+  'concat',
+  'dbg',
+  'debug_assert',
+  'debug_assert_eq',
+  'debug_assert_ne',
+  'env',
+  'eprint',
+  'eprintln',
+  'file',
+  'format',
+  'format_args',
+  'include',
+  'include_bytes',
+  'include_str',
+  'line',
+  'matches',
+  'module_path',
+  'option_env',
+  'panic',
+  'print',
+  'println',
+  'stringify',
+  'thread_local',
+  'todo',
+  'unimplemented',
+  'unreachable',
+  'vec',
+  'write',
+  'writeln',
+  -- Experimental
+  'concat_bytes',
+  'concat_idents',
+  'const_format_args',
+  'format_args_nl',
+  'log_syntax',
+  'trace_macros',
+  -- Deprecated
+  'try',
 })
 
 lexer.property['scintillua.comment'] = '//'
