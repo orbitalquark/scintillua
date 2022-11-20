@@ -11,7 +11,7 @@ local lex = lexer.new(...)
 lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 
 -- Library types
-lex:add_rule('library', lex:tag(lexer.LABEL, lexer.upper * (lexer.lower + lexer.dec_num)^1))
+lex:add_rule('library', lex:tag(lexer.TYPE, lexer.upper * (lexer.lower + lexer.dec_num)^1))
 
 -- Numbers.
 local identifier = P('r#')^-1 * lexer.word
