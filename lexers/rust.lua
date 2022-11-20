@@ -112,8 +112,33 @@ lex:set_word_list(lexer.KEYWORD, {
   'while',
 })
 
+-- https://doc.rust-lang.org/std/#primitives
 lex:set_word_list(lexer.TYPE, {
-  'bool isize usize char str u8 u16 u32 u64 u128 i8 i16 i32 i64 i128 f32 f64'
+  'never',
+  'array',
+  'bool',
+  'char',
+  'f32',
+  'f64',
+  'fn',
+  'i8',
+  'i16',
+  'i32',
+  'i64',
+  'i128',
+  'isize',
+  'pointer',
+  'reference',
+  'slice',
+  'str',
+  'tuple',
+  'u8',
+  'u16',
+  'u32',
+  'u64',
+  'u128',
+  'unit',
+  'usize',
 })
 
 lexer.property['scintillua.comment'] = '//'
