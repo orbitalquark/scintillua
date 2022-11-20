@@ -38,6 +38,9 @@ lex:add_rule('number', lex:tag(lexer.NUMBER, float + integer))
 -- Types.
 lex:add_rule('type', lex:tag(lexer.TYPE, lex:word_match(lexer.TYPE)))
 
+-- Lifetime annotation
+lex:add_rule('lifetime', lex:tag(lexer.OPERATOR, S('<&') * P("'")))
+
 -- Strings.
 local sq_str = P('b')^-1 * lexer.range("'", true)
 local dq_str = P('b')^-1 * lexer.range('"')
