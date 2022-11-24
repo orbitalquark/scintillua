@@ -74,8 +74,8 @@ public:
   void SCI_METHOD Release() override;
 
   const char *SCI_METHOD PropertyNames() override;
-  int SCI_METHOD PropertyType(const char *name) override;
-  const char *SCI_METHOD DescribeProperty(const char *name) override;
+  int SCI_METHOD PropertyType(const char *name_) override;
+  const char *SCI_METHOD DescribeProperty(const char *name_) override;
 
   Sci_Position SCI_METHOD PropertySet(const char *key, const char *value) override;
 
@@ -174,7 +174,7 @@ int lexer_field_newindex(lua_State *L) {
     if (lua_getfield(L, LUA_REGISTRYINDEX, "buffer") != LUA_TLIGHTUSERDATA) // REGISTRY.buffer
       luaL_error(L, "must be lexing or folding");
     const auto buffer = static_cast<Scintilla::IDocument *>(lua_touserdata(L, -1));
-    const int line = luaL_checkinteger(L, 2) - 1; // incoming line is 1-based
+    const Sci_Position line = luaL_checkinteger(L, 2) - 1; // incoming line is 1-based
     buffer->SetLineState(line, luaL_checkinteger(L, 3));
   }
   return 0;
@@ -309,9 +309,9 @@ Scintillua::Scintillua(const std::string &lexersDir, const char *name)
 void Scintillua::Release() { delete this; }
 
 const char *Scintillua::PropertyNames() { return properties.PropertyNames(); }
-int Scintillua::PropertyType(const char *name) { return properties.PropertyType(name); }
-const char *Scintillua::DescribeProperty(const char *name) {
-  return properties.DescribeProperty(name);
+int Scintillua::PropertyType(const char *name_) { return properties.PropertyType(name_); }
+const char *Scintillua::DescribeProperty(const char *name_) {
+  return properties.DescribeProperty(name_);
 }
 
 Sci_Position Scintillua::PropertySet(const char *key, const char *value) {
@@ -421,7 +421,7 @@ void Scintillua::Lex(
         style = lua_tointeger(L.get(), -1) - 1; // returned styles are 1-based
       lua_pop(L.get(), 1); // lex._TAGS[token]
       lua_rawgeti(L.get(), -2, i + 1); // pos = t[i + 1]
-      const unsigned int position = lua_tointeger(L.get(), -1) - 1; // returned pos is 1-based
+      const Sci_PositionU position = lua_tointeger(L.get(), -1) - 1; // returned pos is 1-based
       lua_pop(L.get(), 1); // pos
       if (style < 0 || style >= STYLE_MAX) {
         styler.ColourTo(startPos + lengthDoc - 1, initStyle), styler.Flush();
@@ -483,12 +483,12 @@ void *SCI_METHOD Scintillua::PrivateCall(int operation, void *pointer) {
   if (lua_getfield(L.get(), -1, "detect") != LUA_TFUNCTION)
     return (LogError("cannot find lexer.detect()"), nullptr);
   lua_pushcfunction(L.get(), lua_error_handler), lua_insert(L.get(), -2);
-  if (lua_pcall(L.get(), 0, 1, -2) != LUA_OK) // name = xpcall(lexer.detect)
+  if (lua_pcall(L.get(), 0, 1, -2) != LUA_OK) // lexer_name = xpcall(lexer.detect)
     return (LogError(), nullptr);
   lua_remove(L.get(), -2); // lua_error_handler
-  const char *name = lua_tostring(L.get(), -1);
-  privateCallResult = name ? name : "";
-  lua_pop(L.get(), 2); // name, _LOADED['lexer']
+  const char *lexer_name = lua_tostring(L.get(), -1);
+  privateCallResult = lexer_name ? lexer_name : "";
+  lua_pop(L.get(), 2); // lexer_name, _LOADED['lexer']
   ASSERT_STACK_TOP(L.get());
   return reinterpret_cast<void *>(static_cast<uintptr_t>(privateCallResult.size()));
 }
