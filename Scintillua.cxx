@@ -293,7 +293,7 @@ Scintillua::Scintillua(const std::string &lexersDir, const char *name)
     return;
   }
   lua_remove(L.get(), -2); // lua_error_handler
-  lua_pushvalue(L.get(), -1), lua_rawsetp(L.get(), LUA_REGISTRYINDEX, "lex"); // REGISTRY.lex = lex
+  lua_pushvalue(L.get(), -1), lua_setfield(L.get(), LUA_REGISTRYINDEX, "lex"); // REGISTRY.lex = lex
 
   if (lua_getfield(L.get(), -1, "_CHILDREN") == LUA_TTABLE) { // lex._CHILDREN
     multilang = true;
@@ -323,7 +323,7 @@ Sci_Position Scintillua::PropertySet(const char *key, const char *value) {
 const char *SCI_METHOD Scintillua::DescribeWordListSets() {
   RECORD_STACK_TOP(L.get());
   wordListsDescription = "";
-  lua_rawgetp(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
+  lua_getfield(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
   if (lua_getfield(L.get(), -1, "_WORDLISTS") == LUA_TTABLE) { // lex._WORDLISTS
     std::vector<std::string> names(lua_rawlen(L.get(), -1));
     for (lua_pushnil(L.get()); lua_next(L.get(), -2); lua_pop(L.get(), 1))
@@ -339,7 +339,7 @@ const char *SCI_METHOD Scintillua::DescribeWordListSets() {
 
 Sci_Position SCI_METHOD Scintillua::WordListSet(int n, const char *wl) {
   RECORD_STACK_TOP(L.get());
-  lua_rawgetp(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
+  lua_getfield(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
   if (lua_getfield(L.get(), -1, "set_word_list") != LUA_TFUNCTION) // lex.set_word_list
     return (LogError("cannot find lexer.set_word_list()"), 0);
   lua_pushcfunction(L.get(), lua_error_handler), lua_insert(L.get(), -2);
@@ -373,7 +373,7 @@ void Scintillua::Lex(
   Lexilla::LexAccessor styler(buffer);
   RECORD_STACK_TOP(L.get());
   LuaRegistryField regBuf{L.get(), "buffer", buffer}; // REGISTRY.buffer = buffer
-  lua_rawgetp(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
+  lua_getfield(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
 
   // Start from the beginning of the current style so the lexer can match the token.
   // For multilang lexers, start at whitespace since embedded languages have whitespace.[lang]
@@ -449,7 +449,7 @@ void Scintillua::Fold(
   LuaRegistryField regStartPos{L.get(), "startPos", startPos}; // REGISTRY.startPos = startPos
 
   // Call lexer.fold(lex, text, start_pos, start_line, start_level).
-  lua_rawgetp(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
+  lua_getfield(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
   if (lua_getfield(L.get(), -1, "fold") != LUA_TFUNCTION)
     return LogError("cannot find lexer.fold()");
   lua_pushcfunction(L.get(), lua_error_handler), lua_insert(L.get(), -2);
@@ -496,7 +496,7 @@ void *SCI_METHOD Scintillua::PrivateCall(int operation, void *pointer) {
 // Note: includes the names of predefined styles.
 int Scintillua::NamedStyles() {
   RECORD_STACK_TOP(L.get());
-  lua_rawgetp(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
+  lua_getfield(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
   lua_getfield(L.get(), -1, "_TAGS"); // lex._TAGS
   int num = 0;
   for (lua_pushnil(L.get()); lua_next(L.get(), -2); lua_pop(L.get(), 1)) num++;
@@ -508,7 +508,7 @@ int Scintillua::NamedStyles() {
 const char *Scintillua::NameOfStyle(int style) {
   styleName = "Unknown";
   RECORD_STACK_TOP(L.get());
-  lua_rawgetp(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
+  lua_getfield(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
   lua_getfield(L.get(), -1, "_TAGS"); // lex._TAGS
   for (lua_pushnil(L.get()); lua_next(L.get(), -2); lua_pop(L.get(), 1)) // {token = style}
     if (lua_tointeger(L.get(), -1) - 1 == style) { // style in _TAGS is 1-based
@@ -525,9 +525,14 @@ const char *Scintillua::PropertyGet(const char *key) { return props.Get(key); }
 
 const char *Scintillua::GetName() { return name.c_str(); }
 
-#if (_WIN32 && !NO_DLL)
+#if _WIN32
+#if !NO_DLL
 #define EXPORT_FUNCTION __declspec(dllexport)
 #define CALLING_CONVENTION __stdcall
+#else
+#define EXPORT_FUNCTION extern
+#define CALLING_CONVENTION
+#endif
 #else
 #define EXPORT_FUNCTION __attribute__((visibility("default")))
 #define CALLING_CONVENTION
