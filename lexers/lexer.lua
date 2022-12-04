@@ -1593,15 +1593,171 @@ function M.detect(filename, line)
   if not line then line = M.property and M.property['lexer.scintillua.line'] or '' end
 
   -- Locally scoped in order to avoid persistence in memory.
-  -- LuaFormatter off
-  local extensions = {--[[Actionscript]]as='actionscript',asc='actionscript',--[[Ada]]adb='ada',ads='ada',--[[ANTLR]]g='antlr',g4='antlr',--[[APDL]]ans='apdl',inp='apdl',mac='apdl',--[[APL]]apl='apl',--[[Applescript]]applescript='applescript',--[[ASM]]asm='asm',ASM='asm',s='asm',S='asm',--[[ASP]]asa='asp',asp='asp',hta='asp',--[[AutoHotkey]]ahk='autohotkey',--[[AutoIt]]au3='autoit',a3x='autoit',--[[AWK]]awk='awk',--[[Batch]]bat='batch',cmd='batch',--[[BibTeX]]bib='bibtex',--[[Boo]]boo='boo',--[[C#]]cs='csharp',--[[C/C++]]c='ansi_c',C='ansi_c',cc='cpp',cpp='cpp',cxx='cpp',['c++']='cpp',h='cpp',hh='cpp',hpp='cpp',hxx='cpp',['h++']='cpp',--[[ChucK]]ck='chuck',--[[Clojure]]clj='clojure',cljs='clojure',cljc='clojure',edn='clojure',--[[CMake]]cmake='cmake',['cmake.in']='cmake',ctest='cmake',['ctest.in']='cmake',--[[CoffeeScript]]coffee='coffeescript',--[[Crystal]]cr='crystal',--[[CSS]]css='css',--[[CUDA]]cu='cuda',cuh='cuda',--[[D]]d='dmd',di='dmd',--[[Dart]]dart='dart',--[[Desktop]]desktop='desktop',--[[diff]]diff='diff',patch='diff',--[[Dockerfile]]Dockerfile='dockerfile',--[[dot]]dot='dot',--[[Eiffel]]e='eiffel',eif='eiffel',--[[Elixir]]ex='elixir',exs='elixir',--[[Elm]]elm='elm',--[[Erlang]]erl='erlang',hrl='erlang',--[[F#]]fs='fsharp',--[[Fantom]]fan='fantom',--[[Faust]]dsp='faust',--[[Fennel]]fnl='fennel',--[[Fish]]fish='fish',--[[Forth]]forth='forth',frt='forth',--[[Fortran]]f='fortran',['for']='fortran',ftn='fortran',fpp='fortran',f77='fortran',f90='fortran',f95='fortran',f03='fortran',f08='fortran',--[[fstab]]fstab='fstab',--[[Gap]]gd='gap',gi='gap',gap='gap',--[[Gemini]]gmi='gemini',--[[Gettext]]po='gettext',pot='gettext',--[[Gherkin]]feature='gherkin',--[[Gleam]]gleam='gleam',--[[GLSL]]glslf='glsl',glslv='glsl',--[[GNUPlot]]dem='gnuplot',plt='gnuplot',--[[Go]]go='go',--[[Groovy]]groovy='groovy',gvy='groovy',--[[Gtkrc]]gtkrc='gtkrc',--[[Hare]]ha='hare',--[[Haskell]]hs='haskell',--[[HTML]]htm='html',html='html',shtm='html',shtml='html',xhtml='html',vue='html',--[[Icon]]icn='icon',--[[IDL]]idl='idl',odl='idl',--[[Inform]]ni='inform',--[[ini]]cfg='ini',cnf='ini',inf='ini',ini='ini',reg='ini',--[[Io]]io='io_lang',--[[Java]]bsh='java',java='java',--[[Javascript]]js='javascript',jsfl='javascript',--[[jq]]jq='jq',--[[JSON]]json='json',--[[JSP]]jsp='jsp',--[[Julia]]jl='julia',--[[LaTeX]]bbl='latex',dtx='latex',ins='latex',ltx='latex',tex='latex',sty='latex',--[[Ledger]]ledger='ledger',journal='ledger',--[[LESS]]less='less',--[[LilyPond]]lily='lilypond',ly='lilypond',--[[Lisp]]cl='lisp',el='lisp',lisp='lisp',lsp='lisp',--[[Literate Coffeescript]]litcoffee='litcoffee',--[[Logtalk]]lgt='logtalk',--[[Lua]]lua='lua',--[[Makefile]]GNUmakefile='makefile',iface='makefile',mak='makefile',makefile='makefile',Makefile='makefile',--[[Man]]['1']='man',['2']='man',['3']='man',['4']='man',['5']='man',['6']='man',['7']='man',['8']='man',['9']='man',['1x']='man',['2x']='man',['3x']='man',['4x']='man',['5x']='man',['6x']='man',['7x']='man',['8x']='man',['9x']='man',--[[Markdown]]md='markdown',--[[Meson]]['meson.build']='meson',--[[MoonScript]]moon='moonscript',--[[Myrddin]]myr='myrddin',--[[Nemerle]]n='nemerle',--[[Networkd]]link='networkd',network='networkd',netdev='networkd',--[[Nim]]nim='nim',--[[NSIS]]nsh='nsis',nsi='nsis',nsis='nsis',--[[Objective C]]m='objective_c',mm='objective_c',objc='objective_c',--[[OCaml]]caml='caml',ml='caml',mli='caml',mll='caml',mly='caml',--[[Pascal]]dpk='pascal',dpr='pascal',p='pascal',pas='pascal',--[[Perl]]al='perl',perl='perl',pl='perl',pm='perl',pod='perl',--[[PHP]]inc='php',php='php',php3='php',php4='php',phtml='php',--[[PICO-8]]p8='pico8',--[[Pike]]pike='pike',pmod='pike',--[[PKGBUILD]]PKGBUILD='pkgbuild',--[[Pony]]pony='pony',--[[Postscript]]eps='ps',ps='ps',--[[PowerShell]]ps1='powershell',--[[Prolog]]prolog='prolog',--[[Properties]]props='props',properties='props',--[[Protobuf]]proto='protobuf',--[[Pure]]pure='pure',--[[Python]]sc='python',py='python',pyw='python',--[[R]]R='rstats',Rout='rstats',Rhistory='rstats',Rt='rstats',['Rout.save']='rstats',['Rout.fail']='rstats',--[[Reason]]re='reason',--[[REBOL]]r='rebol',reb='rebol',--[[reST]]rst='rest',--[[Rexx]]orx='rexx',rex='rexx',--[[RHTML]]erb='rhtml',rhtml='rhtml',--[[RouterOS]]rsc='routeros',--[[RPM Spec]]spec='rpmspec',--[[Ruby]]Rakefile='ruby',rake='ruby',rb='ruby',rbw='ruby',--[[Rust]]rs='rust',--[[Sass CSS]]sass='sass',scss='sass',--[[Scala]]scala='scala',--[[Scheme]]sch='scheme',scm='scheme',--[[Shell]]bash='bash',bashrc='bash',bash_profile='bash',configure='bash',csh='bash',ksh='bash',mksh='bash',sh='bash',zsh='bash',--[[Smalltalk]]changes='smalltalk',st='smalltalk',sources='smalltalk',--[[SML]]sml='sml',fun='sml',sig='sml',--[[SNOBOL4]]sno='snobol4',SNO='snobol4',--[[Spin]]spin='spin',--[[SQL]]ddl='sql',sql='sql',--[[Systemd]]automount='systemd',device='systemd',mount='systemd',path='systemd',scope='systemd',service='systemd',slice='systemd',socket='systemd',swap='systemd',target='systemd',timer='systemd',--[[TaskPaper]]taskpaper='taskpaper',--[[Tcl]]tcl='tcl',tk='tcl',--[[Texinfo]]texi='texinfo',--[[TOML]]toml='toml',--[[Txt2tags]]t2t='txt2tags',--[[TypeScript]]ts='typescript',--[[Vala]]vala='vala',--[[vCard]]vcf='vcard',vcard='vcard',--[[Verilog]]v='verilog',ver='verilog',--[[VHDL]]vh='vhdl',vhd='vhdl',vhdl='vhdl',--[[Visual Basic]]bas='vb',cls='vb',ctl='vb',dob='vb',dsm='vb',dsr='vb',frm='vb',pag='vb',vb='vb',vba='vb',vbs='vb',--[[WSF]]wsf='wsf',--[[XML]]dtd='xml',svg='xml',xml='xml',xsd='xml',xsl='xml',xslt='xml',xul='xml',--[[Xs]]xs='xs',xsin='xs',xsrc='xs',--[[Xtend]]xtend='xtend',--[[YAML]]yaml='yaml',yml='yaml',--[[Zig]]zig='zig'}
-  local patterns = {['^#!.+[/ ][gm]?awk']='awk',['^#!.+[/ ]lua']='lua',['^#!.+[/ ]octave']='matlab',['^#!.+[/ ]perl']='perl',['^#!.+[/ ]php']='php',['^#!.+[/ ]python']='python',['^#!.+[/ ]ruby']='ruby',['^#!.+[/ ]bash']='bash',['^#!.+/m?ksh']='bash',['^#!.+/sh']='bash',['^%s*class%s+%S+%s*<%s*ApplicationController']='rails',['^%s*class%s+%S+%s*<%s*ActionController::Base']='rails',['^%s*class%s+%S+%s*<%s*ActiveRecord::Base']='rails',['^%s*class%s+%S+%s*<%s*ActiveRecord::Migration']='rails',['^%s*<%?xml%s']='xml',['^#cloud%-config']='yaml'}
-  -- LuaFormatter on
+  local extensions = {
+    as = 'actionscript', asc = 'actionscript', --
+    adb = 'ada', ads = 'ada', --
+    g = 'antlr', g4 = 'antlr', --
+    ans = 'apdl', inp = 'apdl', mac = 'apdl', --
+    apl = 'apl', --
+    applescript = 'applescript', --
+    asm = 'asm', ASM = 'asm', s = 'asm', S = 'asm', --
+    asa = 'asp', asp = 'asp', hta = 'asp', --
+    ahk = 'autohotkey', --
+    au3 = 'autoit', a3x = 'autoit', --
+    awk = 'awk', --
+    bat = 'batch', cmd = 'batch', --
+    bib = 'bibtex', --
+    boo = 'boo', --
+    cs = 'csharp', --
+    c = 'ansi_c', C = 'ansi_c', cc = 'cpp', cpp = 'cpp', cxx = 'cpp', ['c++'] = 'cpp', h = 'cpp',
+    hh = 'cpp', hpp = 'cpp', hxx = 'cpp', ['h++'] = 'cpp', --
+    ck = 'chuck', --
+    clj = 'clojure', cljs = 'clojure', cljc = 'clojure', edn = 'clojure', --
+    ['CMakeLists.txt'] = 'cmake', cmake = 'cmake', ['cmake.in'] = 'cmake', ctest = 'cmake',
+    ['ctest.in'] = 'cmake', --
+    coffee = 'coffeescript', --
+    cr = 'crystal', --
+    css = 'css', --
+    cu = 'cuda', cuh = 'cuda', --
+    d = 'dmd', di = 'dmd', --
+    dart = 'dart', --
+    desktop = 'desktop', --
+    diff = 'diff', patch = 'diff', --
+    Dockerfile = 'dockerfile', --
+    dot = 'dot', --
+    e = 'eiffel', eif = 'eiffel', --
+    ex = 'elixir', exs = 'elixir', --
+    elm = 'elm', --
+    erl = 'erlang', hrl = 'erlang', --
+    fs = 'fsharp', --
+    fan = 'fantom', --
+    dsp = 'faust', --
+    fnl = 'fennel', --
+    fish = 'fish', --
+    forth = 'forth', frt = 'forth', --
+    f = 'fortran', ['for'] = 'fortran', ftn = 'fortran', fpp = 'fortran', f77 = 'fortran',
+    f90 = 'fortran', f95 = 'fortran', f03 = 'fortran', f08 = 'fortran', --
+    fstab = 'fstab', --
+    gd = 'gap', gi = 'gap', gap = 'gap', --
+    gmi = 'gemini', --
+    po = 'gettext', pot = 'gettext', --
+    feature = 'gherkin', --
+    gleam = 'gleam', --
+    glslf = 'glsl', glslv = 'glsl', --
+    dem = 'gnuplot', plt = 'gnuplot', --
+    go = 'go', --
+    groovy = 'groovy', gvy = 'groovy', --
+    gtkrc = 'gtkrc', --
+    ha = 'hare', --
+    hs = 'haskell', --
+    htm = 'html', html = 'html', shtm = 'html', shtml = 'html', xhtml = 'html', vue = 'html', --
+    icn = 'icon', --
+    idl = 'idl', odl = 'idl', --
+    ni = 'inform', --
+    cfg = 'ini', cnf = 'ini', inf = 'ini', ini = 'ini', reg = 'ini', --
+    io = 'io_lang', --
+    bsh = 'java', java = 'java', --
+    js = 'javascript', jsfl = 'javascript', --
+    jq = 'jq', --
+    json = 'json', --
+    jsp = 'jsp', --
+    jl = 'julia', --
+    bbl = 'latex', dtx = 'latex', ins = 'latex', ltx = 'latex', tex = 'latex', sty = 'latex', --
+    ledger = 'ledger', journal = 'ledger', --
+    less = 'less', --
+    lily = 'lilypond', ly = 'lilypond', --
+    cl = 'lisp', el = 'lisp', lisp = 'lisp', lsp = 'lisp', --
+    litcoffee = 'litcoffee', --
+    lgt = 'logtalk', --
+    lua = 'lua', --
+    GNUmakefile = 'makefile', iface = 'makefile', mak = 'makefile', makefile = 'makefile',
+    Makefile = 'makefile', --
+    ['1'] = 'man', ['2'] = 'man', ['3'] = 'man', ['4'] = 'man', ['5'] = 'man', ['6'] = 'man',
+    ['7'] = 'man', ['8'] = 'man', ['9'] = 'man', ['1x'] = 'man', ['2x'] = 'man', ['3x'] = 'man',
+    ['4x'] = 'man', ['5x'] = 'man', ['6x'] = 'man', ['7x'] = 'man', ['8x'] = 'man', ['9x'] = 'man', --
+    md = 'markdown', --
+    ['meson.build'] = 'meson', --
+    moon = 'moonscript', --
+    myr = 'myrddin', --
+    n = 'nemerle', --
+    link = 'networkd', network = 'networkd', netdev = 'networkd', --
+    nim = 'nim', --
+    nsh = 'nsis', nsi = 'nsis', nsis = 'nsis', --
+    m = 'objective_c', mm = 'objective_c', objc = 'objective_c', --
+    caml = 'caml', ml = 'caml', mli = 'caml', mll = 'caml', mly = 'caml', --
+    dpk = 'pascal', dpr = 'pascal', p = 'pascal', pas = 'pascal', --
+    al = 'perl', perl = 'perl', pl = 'perl', pm = 'perl', pod = 'perl', --
+    inc = 'php', php = 'php', php3 = 'php', php4 = 'php', phtml = 'php', --
+    p8 = 'pico8', --
+    pike = 'pike', pmod = 'pike', --
+    PKGBUILD = 'pkgbuild', --
+    pony = 'pony', --
+    eps = 'ps', ps = 'ps', --
+    ps1 = 'powershell', --
+    prolog = 'prolog', --
+    props = 'props', properties = 'props', --
+    proto = 'protobuf', --
+    pure = 'pure', --
+    sc = 'python', py = 'python', pyw = 'python', --
+    R = 'rstats', Rout = 'rstats', Rhistory = 'rstats', Rt = 'rstats', ['Rout.save'] = 'rstats',
+    ['Rout.fail'] = 'rstats', --
+    re = 'reason', --
+    r = 'rebol', reb = 'rebol', --
+    rst = 'rest', --
+    orx = 'rexx', rex = 'rexx', --
+    erb = 'rhtml', rhtml = 'rhtml', --
+    rsc = 'routeros', --
+    spec = 'rpmspec', --
+    Rakefile = 'ruby', rake = 'ruby', rb = 'ruby', rbw = 'ruby', --
+    rs = 'rust', --
+    sass = 'sass', scss = 'sass', --
+    scala = 'scala', --
+    sch = 'scheme', scm = 'scheme', --
+    bash = 'bash', bashrc = 'bash', bash_profile = 'bash', configure = 'bash', csh = 'bash',
+    ksh = 'bash', mksh = 'bash', sh = 'bash', zsh = 'bash', --
+    changes = 'smalltalk', st = 'smalltalk', sources = 'smalltalk', --
+    sml = 'sml', fun = 'sml', sig = 'sml', --
+    sno = 'snobol4', SNO = 'snobol4', --
+    spin = 'spin', --
+    ddl = 'sql', sql = 'sql', --
+    automount = 'systemd', device = 'systemd', mount = 'systemd', path = 'systemd',
+    scope = 'systemd', service = 'systemd', slice = 'systemd', socket = 'systemd', swap = 'systemd',
+    target = 'systemd', timer = 'systemd', --
+    taskpaper = 'taskpaper', --
+    tcl = 'tcl', tk = 'tcl', --
+    texi = 'texinfo', --
+    toml = 'toml', --
+    t2t = 'txt2tags', --
+    ts = 'typescript', --
+    vala = 'vala', --
+    vcf = 'vcard', vcard = 'vcard', --
+    v = 'verilog', ver = 'verilog', --
+    vh = 'vhdl', vhd = 'vhdl', vhdl = 'vhdl', --
+    bas = 'vb', cls = 'vb', ctl = 'vb', dob = 'vb', dsm = 'vb', dsr = 'vb', frm = 'vb', pag = 'vb',
+    vb = 'vb', vba = 'vb', vbs = 'vb', --
+    wsf = 'wsf', --
+    dtd = 'xml', svg = 'xml', xml = 'xml', xsd = 'xml', xsl = 'xml', xslt = 'xml', xul = 'xml', --
+    xs = 'xs', xsin = 'xs', xsrc = 'xs', --
+    xtend = 'xtend', --
+    yaml = 'yaml', yml = 'yaml', --
+    zig = 'zig'
+  }
+  local patterns = {
+    ['^#!.+[/ ][gm]?awk'] = 'awk', ['^#!.+[/ ]lua'] = 'lua', ['^#!.+[/ ]octave'] = 'matlab',
+    ['^#!.+[/ ]perl'] = 'perl', ['^#!.+[/ ]php'] = 'php', ['^#!.+[/ ]python'] = 'python',
+    ['^#!.+[/ ]ruby'] = 'ruby', ['^#!.+[/ ]bash'] = 'bash', ['^#!.+/m?ksh'] = 'bash',
+    ['^#!.+/sh'] = 'bash', ['^%s*class%s+%S+%s*<%s*ApplicationController'] = 'rails',
+    ['^%s*class%s+%S+%s*<%s*ActionController::Base'] = 'rails',
+    ['^%s*class%s+%S+%s*<%s*ActiveRecord::Base'] = 'rails',
+    ['^%s*class%s+%S+%s*<%s*ActiveRecord::Migration'] = 'rails', ['^%s*<%?xml%s'] = 'xml',
+    ['^#cloud%-config'] = 'yaml'
+  }
 
   for patt, name in ipairs(M.detect_patterns) do if line:find(patt) then return name end end
   for patt, name in pairs(patterns) do if line:find(patt) then return name end end
-  local name_or_ext = filename:match('[^/\\.]+$')
-  return M.detect_extensions[name_or_ext] or extensions[name_or_ext]
+  local name, ext = filename:match('[^/\\]+$'), filename:match('[^.]*$')
+  return M.detect_extensions[name] or extensions[name] or M.detect_extensions[ext] or
+    extensions[ext]
 end
 
 -- The following are utility functions lexers will have access to.
