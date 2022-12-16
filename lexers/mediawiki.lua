@@ -39,5 +39,6 @@ lex:add_rule('behavior_switch', (B(lexer.space) + start_pat) * token('behavior_s
 lex:add_style('behavior_switch', lexer.styles.keyword)
 
 lexer.property['scintillua.comment'] = '<!--|-->'
+lexer.property['scintillua.angle.braces'] = '1'
 
 return lex

@@ -82,5 +82,6 @@ local vbs_end_rule = #P('</script>') * embed_end_tag -- </script>
 lex:embed(vbs, vbs_start_rule, vbs_end_rule)
 
 lexer.property['scintillua.comment'] = '<!--|-->'
+lexer.property['scintillua.angle.braces'] = '1'
 
 return lex
