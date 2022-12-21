@@ -1680,6 +1680,8 @@ function test_detect()
   lexer.detect_extensions.m = 'matlab' -- override
   assert(lexer.detect('foo.m') == 'matlab')
 
+  assert(lexer.detect('CMakeLists.txt') == 'cmake') -- not text
+
   -- Simulate SCI_PRIVATELEXERCALL.
   assert(not lexer.detect()) -- should not error or anything
   lexer.property['lexer.scintillua.filename'] = 'foo.lua'

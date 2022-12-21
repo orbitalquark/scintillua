@@ -20,7 +20,8 @@ local method = (B('.') + B('->')) * lex:tag(lexer.FUNCTION_METHOD, lexer.word)
 lex:add_rule('function', (builtin_func + method + func) * #(lexer.space^0 * '('))
 
 -- Constants.
-lex:add_rule('constants', lex:tag(lexer.CONSTANT_BUILTIN, lex:word_match(lexer.CONSTANT_BUILTIN)))
+lex:add_rule('constants', lex:tag(lexer.CONSTANT_BUILTIN,
+  -(B('.') + B('->')) * lex:word_match(lexer.CONSTANT_BUILTIN)))
 
 -- Labels.
 lex:add_rule('label', lex:tag(lexer.LABEL, lexer.starts_line(lexer.word * ':')))
