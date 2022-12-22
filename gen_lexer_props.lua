@@ -29,7 +29,7 @@ local function append(lang, exts, lexer)
 end
 local lexer, ext, last_lexer
 local exts = {}
-for ext, lexer in definitions:gmatch("([^,'%]]+)'?%]?='([%w_]+)'") do
+for ext, lexer in definitions:gmatch("([^%s,'%]-]+)'?%]?%s*=%s*'([%w_]+)'") do
   if lexer ~= last_lexer and #exts > 0 then
     append(alt_name[last_lexer] or last_lexer, exts, last_lexer)
     exts = {}
