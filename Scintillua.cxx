@@ -167,8 +167,10 @@ int lexer_field_newindex(lua_State *L) {
   lua_getfield(L, LUA_REGISTRYINDEX, "scintillua"); // REGISTRY.scintillua
   const auto lexer = reinterpret_cast<Scintillua *>(lua_touserdata(L, -1));
   if (field == "property") {
-    static constexpr const char *validKeys[] = {"scintillua.comment", "scintillua.angle.braces"};
-    luaL_checkoption(L, 2, nullptr, validKeys);
+    if (strncmp(lua_tostring(L, 2), "scintillua.comment.", strlen("scintillua.comment.")) != 0) {
+      static constexpr const char *validKeys[] = {"scintillua.comment", "scintillua.angle.braces"};
+      luaL_checkoption(L, 2, nullptr, validKeys);
+    }
     lexer->PropertySet(luaL_checkstring(L, 2), luaL_checkstring(L, 3));
   } else if (field == "line_state") {
     if (lua_getfield(L, LUA_REGISTRYINDEX, "buffer") != LUA_TLIGHTUSERDATA) // REGISTRY.buffer

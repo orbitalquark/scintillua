@@ -1556,6 +1556,8 @@ function M.load(name, alt_name)
     lexer._parent_name, lexer._name = lexer._name, alt_name or name
   end
 
+  M.property['scintillua.comment.' .. (alt_name or name)] = M.property['scintillua.comment']
+
   return lexer
 end
 
