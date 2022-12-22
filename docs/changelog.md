@@ -2,6 +2,25 @@
 
 [Atom Feed](https://github.com/orbitalquark/scintillua/releases.atom)
 
+### 6.1 (22 Dec 2022)
+
+Download:
+
+* [Scintillua 6.1][]
+
+Bugfixes:
+
+* Fixed compile issues with MSVC.
+* Fixed detection of filenames with extensions like "CMakeLists.txt".
+* Do not highlight C struct members as builtin constants if names match.
+
+Changes:
+
+* Added AutoHotkey lexer.
+* Updated Perl, Ada, Rust, AutoIt, and CMake lexers.
+
+[Scintillua 6.1]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_6.1/scintillua_6.1.zip
+
 ### 6.0 (27 Sep 2022)
 
 Download:
