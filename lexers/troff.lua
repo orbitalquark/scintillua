@@ -12,7 +12,7 @@ lex:add_rule('keywords', lex:tag(lexer.KEYWORD, (lexer.starts_line('.') * lexer.
 -- Markup.
 lex:add_rule('escape_sequences', lex:tag(lexer.VARIABLE,
 	P('\\') * ((P('s') * S('+-')) + S('*fgmnYV')) *
-	(P('(') * 2 + lexer.range('[', ']')))
+	(P('(') * 2 + lexer.range('[', ']') + 1))
 
 lex:add_rule('headings', lex:tag(lexer.NUMBER, lexer.starts_line('.') * lexer.space^0 * (S('STN') * P('H')) * lexer.space * lexer.nonnewline^0)
 lex:add_rule('man_alignment', lex:tag(lexer.KEYWORD, lexer.starts_line('.') * lexer.space^0 * (P('br') + P('DS') + P('RS') + P('RE') + P('PD') + P('PP')) * lexer.space))
