@@ -11,7 +11,7 @@ lex:add_rule('keywords', lex:tag(lexer.KEYWORD, (lexer.starts_line('.') * (lexer
 
 -- Markup.
 lex:add_rule('escape_sequences', lex:tag(lexer.VARIABLE,
-	P('\\') * ((P('s') * S('+-')) + S('*fgmnYV'))^-1 *
+	P('\\') * ((P('s') * S('+-')^-1) + S('*fgmnYV'))^-1 *
 	(P('(') * 2 + lexer.range('[', ']') + 1)))
 
 lex:add_rule('headings', lex:tag(lexer.NUMBER, lexer.starts_line('.') * (lexer.space-'\n')^0 * (S('STN') * P('H')) * (lexer.space-'\n') * lexer.nonnewline^0))
