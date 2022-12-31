@@ -1755,7 +1755,7 @@ function M.detect(filename, line)
     ['^#cloud%-config'] = 'yaml'
   }
 
-  for patt, name in ipairs(M.detect_patterns) do if line:find(patt) then return name end end
+  for patt, name in pairs(M.detect_patterns) do if line:find(patt) then return name end end
   for patt, name in pairs(patterns) do if line:find(patt) then return name end end
   local name, ext = filename:match('[^/\\]+$'), filename:match('[^.]*$')
   return M.detect_extensions[name] or extensions[name] or M.detect_extensions[ext] or
