@@ -1,4 +1,4 @@
--- Copyright 2017-2022 Michael Forney. See LICENSE.
+-- Copyright 2017-2023 Michael Forney. See LICENSE.
 -- rc LPeg lexer.
 
 local lexer = require('lexer')

@@ -1,4 +1,4 @@
--- Copyright 2017-2022 Marc André Tanner. See LICENSE.
+-- Copyright 2017-2023 Marc André Tanner. See LICENSE.
 -- git-rebase(1) LPeg lexer.
 
 local lexer = lexer

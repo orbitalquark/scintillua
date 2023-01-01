@@ -1,4 +1,4 @@
--- Copyright 2006-2022 gwash. See LICENSE.
+-- Copyright 2006-2023 gwash. See LICENSE.
 -- Archlinux PKGBUILD LPeg lexer.
 
 local lexer = require('lexer')

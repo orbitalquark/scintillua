@@ -1,4 +1,4 @@
--- Copyright 2022 Mitchell. See LICENSE.
+-- Copyright 2022-2023 Mitchell. See LICENSE.
 -- AutoHotkey LPeg lexer.
 -- Contributed by Snoopy.
 

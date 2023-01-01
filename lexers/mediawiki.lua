@@ -1,4 +1,4 @@
--- Copyright 2006-2022 Mitchell. See LICENSE.
+-- Copyright 2006-2023 Mitchell. See LICENSE.
 -- MediaWiki LPeg lexer.
 -- Contributed by Alexander Misel.
 

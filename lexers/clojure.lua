@@ -1,4 +1,4 @@
--- Copyright 2018-2022 Mitchell. See LICENSE.
+-- Copyright 2018-2023 Mitchell. See LICENSE.
 -- Clojure LPeg lexer.
 -- Contributed by Christos Chatzifountas.
 

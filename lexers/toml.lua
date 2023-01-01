@@ -1,4 +1,4 @@
--- Copyright 2015-2022 Alejandro Baez (https://keybase.io/baez). See LICENSE.
+-- Copyright 2015-2023 Alejandro Baez (https://keybase.io/baez). See LICENSE.
 -- TOML LPeg lexer.
 
 local lexer = lexer

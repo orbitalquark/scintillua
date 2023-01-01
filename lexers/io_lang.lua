@@ -1,4 +1,4 @@
--- Copyright 2006-2022 Mitchell. See LICENSE.
+-- Copyright 2006-2023 Mitchell. See LICENSE.
 -- Io LPeg lexer.
 
 local lexer = require('lexer')

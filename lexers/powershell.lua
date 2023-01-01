@@ -1,4 +1,4 @@
--- Copyright 2015-2022 Mitchell. See LICENSE.
+-- Copyright 2015-2023 Mitchell. See LICENSE.
 -- PowerShell LPeg lexer.
 -- Contributed by Jeff Stone.
 
