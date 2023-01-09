@@ -27,14 +27,6 @@ extern "C" {
 LUALIB_API int luaopen_lpeg(lua_State *L);
 }
 
-#ifndef NDEBUG
-#define RECORD_STACK_TOP(l) int orig_stack_top = lua_gettop(l)
-#define ASSERT_STACK_TOP(l) assert(lua_gettop(l) == orig_stack_top)
-#else
-#define RECORD_STACK_TOP(_) (void)0
-#define ASSERT_STACK_TOP(_) (void)0
-#endif
-
 namespace {
 
 class Scintillua : public Lexilla::DefaultLexer {
@@ -99,6 +91,18 @@ public:
   const char *SCI_METHOD PropertyGet(const char *key) override;
 
   const char *SCI_METHOD GetName() override;
+};
+
+// Ensures that the Lua stack contains the same number of stack values at the beginning and
+// end of this object's lifetime (thus the stack does not grow or shrink over time).
+class DeferLuaStackCheck {
+public:
+  DeferLuaStackCheck(lua_State *L) : L(L), top(lua_gettop(L)) {}
+  ~DeferLuaStackCheck() { assert(lua_gettop(L) == top); }
+
+private:
+  lua_State *L;
+  int top;
 };
 
 Scintillua::PropertyDoc::PropertyDoc() {
@@ -229,7 +233,7 @@ Scintillua::Scintillua(const std::string &lexersDir, const char *name)
     return;
   }
   PropertySet("scintillua.lexers", lexersDir.c_str());
-  RECORD_STACK_TOP(L.get());
+  DeferLuaStackCheck checker{L.get()};
 
   luaL_requiref(L.get(), "_G", luaopen_base, 1), lua_pop(L.get(), 1);
   luaL_requiref(L.get(), LUA_TABLIBNAME, luaopen_table, 1), lua_pop(L.get(), 1);
@@ -304,7 +308,6 @@ Scintillua::Scintillua(const std::string &lexersDir, const char *name)
   lua_pop(L.get(), 1); // lex._CHILDREN
 
   lua_pop(L.get(), 2); // lex, lexer
-  ASSERT_STACK_TOP(L.get());
   PropertySet(LexerErrorKey, "");
 }
 
@@ -323,7 +326,7 @@ Sci_Position Scintillua::PropertySet(const char *key, const char *value) {
 }
 
 const char *SCI_METHOD Scintillua::DescribeWordListSets() {
-  RECORD_STACK_TOP(L.get());
+  DeferLuaStackCheck checker{L.get()};
   wordListsDescription = "";
   lua_getfield(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
   if (lua_getfield(L.get(), -1, "_WORDLISTS") == LUA_TTABLE) { // lex._WORDLISTS
@@ -335,12 +338,11 @@ const char *SCI_METHOD Scintillua::DescribeWordListSets() {
       wordListsDescription.append(names[i]), wordListsDescription.append("\n");
   }
   lua_pop(L.get(), 2); // lex._WORDLISTS, lex
-  ASSERT_STACK_TOP(L.get());
   return wordListsDescription.c_str();
 }
 
 Sci_Position SCI_METHOD Scintillua::WordListSet(int n, const char *wl) {
-  RECORD_STACK_TOP(L.get());
+  DeferLuaStackCheck checker{L.get()};
   lua_getfield(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
   if (lua_getfield(L.get(), -1, "set_word_list") != LUA_TFUNCTION) // lex.set_word_list
     return (LogError("cannot find lexer.set_word_list()"), 0);
@@ -351,7 +353,6 @@ Sci_Position SCI_METHOD Scintillua::WordListSet(int n, const char *wl) {
   if (lua_pcall(L.get(), 3, 0, -5) != LUA_OK) // xpcall(lex.set_word_list, msgh, lex, n, wl)
     return (LogError(), 0);
   lua_pop(L.get(), 2); // lua_error_handler, lex
-  ASSERT_STACK_TOP(L.get());
   return 1; // re-lex
 }
 
@@ -373,7 +374,7 @@ public:
 void Scintillua::Lex(
   Sci_PositionU startPos, Sci_Position lengthDoc, int initStyle, Scintilla::IDocument *buffer) {
   Lexilla::LexAccessor styler(buffer);
-  RECORD_STACK_TOP(L.get());
+  DeferLuaStackCheck checker{L.get()};
   LuaRegistryField regBuf{L.get(), "buffer", buffer}; // REGISTRY.buffer = buffer
   lua_getfield(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
 
@@ -440,13 +441,12 @@ void Scintillua::Lex(
   lua_pop(L.get(), 1); // token table
 
   lua_pop(L.get(), 1); // lex
-  ASSERT_STACK_TOP(L.get());
 }
 
 void Scintillua::Fold(
   Sci_PositionU startPos, Sci_Position lengthDoc, int, Scintilla::IDocument *buffer) {
   Lexilla::LexAccessor styler(buffer);
-  RECORD_STACK_TOP(L.get());
+  DeferLuaStackCheck checker{L.get()};
   LuaRegistryField regBuf{L.get(), "buffer", buffer}; // REGISTRY.buffer = buffer
   LuaRegistryField regStartPos{L.get(), "startPos", startPos}; // REGISTRY.startPos = startPos
 
@@ -470,15 +470,13 @@ void Scintillua::Fold(
   for (lua_pushnil(L.get()); lua_next(L.get(), -2); lua_pop(L.get(), 1)) // {line = level}
     styler.SetLevel(lua_tointeger(L.get(), -2) - 1, lua_tointeger(L.get(), -1)); // line is 1-based
   lua_pop(L.get(), 1); // fold table
-
-  ASSERT_STACK_TOP(L.get());
 }
 
 void *SCI_METHOD Scintillua::PrivateCall(int operation, void *pointer) {
   if (operation != SCLUA_DETECT) return (LogError("invalid private call operation"), nullptr);
   if (pointer)
     return (memcpy(pointer, privateCallResult.c_str(), privateCallResult.size()), nullptr);
-  RECORD_STACK_TOP(L.get());
+  DeferLuaStackCheck checker{L.get()};
   lua_getfield(L.get(), LUA_REGISTRYINDEX, "_LOADED"), lua_getfield(L.get(), -1, "lexer"),
     lua_replace(L.get(), -2); // _LOADED['lexer']
   if (!lua_istable(L.get(), -1)) return (LogError("cannot find lexer module"), nullptr);
@@ -491,25 +489,23 @@ void *SCI_METHOD Scintillua::PrivateCall(int operation, void *pointer) {
   const char *lexer_name = lua_tostring(L.get(), -1);
   privateCallResult = lexer_name ? lexer_name : "";
   lua_pop(L.get(), 2); // lexer_name, _LOADED['lexer']
-  ASSERT_STACK_TOP(L.get());
   return reinterpret_cast<void *>(static_cast<uintptr_t>(privateCallResult.size()));
 }
 
 // Note: includes the names of predefined styles.
 int Scintillua::NamedStyles() {
-  RECORD_STACK_TOP(L.get());
+  DeferLuaStackCheck checker{L.get()};
   lua_getfield(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
   lua_getfield(L.get(), -1, "_TAGS"); // lex._TAGS
   int num = 0;
   for (lua_pushnil(L.get()); lua_next(L.get(), -2); lua_pop(L.get(), 1)) num++;
   lua_pop(L.get(), 2); // lex._TAGS, lex
-  ASSERT_STACK_TOP(L.get());
   return num;
 }
 
 const char *Scintillua::NameOfStyle(int style) {
   styleName = "Unknown";
-  RECORD_STACK_TOP(L.get());
+  DeferLuaStackCheck checker{L.get()};
   lua_getfield(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
   lua_getfield(L.get(), -1, "_TAGS"); // lex._TAGS
   for (lua_pushnil(L.get()); lua_next(L.get(), -2); lua_pop(L.get(), 1)) // {token = style}
@@ -519,7 +515,6 @@ const char *Scintillua::NameOfStyle(int style) {
       break;
     }
   lua_pop(L.get(), 2); // lex._TAGS, lex
-  ASSERT_STACK_TOP(L.get());
   return styleName.c_str();
 }
 
