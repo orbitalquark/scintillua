@@ -2,7 +2,7 @@
 -- Shell LPeg lexer.
 
 local lexer = lexer
-local P, S = lpeg.P, lpeg.S
+local P, S, B = lpeg.P, lpeg.S, lpeg.B
 
 local lex = lexer.new(...)
 
@@ -20,8 +20,8 @@ lex:add_rule('assign', lexer.starts_line(assign, true))
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
 
 -- Strings.
-local sq_str = lexer.range("'", false, false)
-local dq_str = lexer.range('"')
+local sq_str = -B('\\') * lexer.range("'", false, false)
+local dq_str = -B('\\') * lexer.range('"')
 local heredoc = '<<' * P(function(input, index)
   local _, e, minus, _, delimiter = input:find('^(%-?)%s*(["\']?)([%w_]+)%2[^\n]*[\n\r\f;]+', index)
   if not delimiter then return nil end
@@ -31,7 +31,7 @@ local heredoc = '<<' * P(function(input, index)
     input:find((minus == '' and '[\n\r\f]+' or '[\n\r\f]+[ \t]*') .. delimiter .. '%f[^%w_]', e)
   return e and e + 1 or #input + 1
 end)
-local ex_str = P('`')
+local ex_str = -B('\\') * '`'
 lex:add_rule('string',
   lex:tag(lexer.STRING, sq_str + dq_str + heredoc) + lex:tag(lexer.EMBEDDED, ex_str))
 
