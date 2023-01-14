@@ -121,5 +121,7 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
 })
 
 lexer.property['scintillua.comment'] = '#'
+lexer.property['scintillua.word.chars'] =
+  'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_?!'
 
 return lex

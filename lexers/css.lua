@@ -195,5 +195,7 @@ lex:set_word_list('unit', {
 lex:set_word_list('at_rule', 'charset font-face media page import namespace keyframes')
 
 lexer.property['scintillua.comment'] = '/*|*/'
+lexer.property['scintillua.word.chars'] =
+  'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-'
 
 return lex

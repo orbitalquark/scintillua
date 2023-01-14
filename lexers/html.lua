@@ -146,5 +146,7 @@ lex:set_word_list(lexer.ATTRIBUTE, {
 
 lexer.property['scintillua.comment'] = '<!--|-->'
 lexer.property['scintillua.angle.braces'] = '1'
+lexer.property['scintillua.word.chars'] =
+  'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-'
 
 return lex

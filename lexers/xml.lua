@@ -69,5 +69,7 @@ lex:add_fold_point('cdata', '<![CDATA[', ']]>')
 
 lexer.property['scintillua.comment'] = '<!--|-->'
 lexer.property['scintillua.angle.braces'] = '1'
+lexer.property['scintillua.word.chars'] =
+  'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-'
 
 return lex
