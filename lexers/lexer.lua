@@ -1562,6 +1562,40 @@ function M.load(name, alt_name)
 end
 
 ---
+-- Returns a list of all known lexer names.
+-- Requires the LuaFileSystem (`lfs`) module to be available.
+-- @param path Optional ';'-delimited list of directories to search for lexers in. The default
+--   value is Scintillua's configured lexer path.
+-- @return lexer name list
+-- @name names
+function M.names(path)
+  local lfs = require('lfs')
+  if not path then path = M.property and M.property['scintillua.lexers'] end
+  if not path or path == '' then
+    for part in package.path:gmatch('[^;]+') do
+      local dir = part:match('^(.-[/\\]?lexers)[/\\]%?%.lua$')
+      if dir then
+        path = dir
+        break
+      end
+    end
+  end
+  local lexers = {}
+  for dir in assert(path, 'lexer path not configured or found'):gmatch('[^;]+') do
+    if lfs.attributes(dir, 'mode') == 'directory' then
+      for file in lfs.dir(dir) do
+        local name = file:match('^(.+)%.lua$')
+        if name and name ~= 'lexer' and not lexers[name] then
+          lexers[#lexers + 1], lexers[name] = name, true
+        end
+      end
+    end
+  end
+  table.sort(lexers)
+  return lexers
+end
+
+---
 -- Map of file extensions, without the '.' prefix, to their associated lexer names.
 -- This map has precedence over Scintillua's built-in map.
 -- @see detect

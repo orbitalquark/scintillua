@@ -1203,6 +1203,21 @@ Fields:
 * `id`: The id associated with this rule.
 * `rule`: The LPeg pattern of the rule.
 
+<a id="lexer.names"></a>
+#### `lexer.names`(path)
+
+Returns a list of all known lexer names.
+Requires the LuaFileSystem (`lfs`) module to be available.
+
+Fields:
+
+* `path`: Optional ';'-delimited list of directories to search for lexers in. The default
+  value is Scintillua's configured lexer path.
+
+Return:
+
+* lexer name list
+
 <a id="lexer.new"></a>
 #### `lexer.new`(name, opts)
 

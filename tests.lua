@@ -534,6 +534,23 @@ function test_loads()
   end
 end
 
+function test_names()
+  lexer.property['scintillua.lexers'] = ''
+  local names = lexer.names()
+  assert(#names > 0)
+  local lua_found = false
+  for _, name in ipairs(names) do
+    assert(name ~= 'lexer')
+    if name == 'lua' then lua_found = true end
+  end
+  assert(lua_found)
+  local names2 = lexer.names('lexers')
+  assert(#names == #names2)
+  lexer.property['scintillua.lexers'] = 'lexers'
+  local names3 = lexer.names()
+  assert(#names == #names3)
+end
+
 -- Tests the Lua lexer.
 function test_lua()
   local lua = lexer.load('lua')
