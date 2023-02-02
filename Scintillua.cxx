@@ -379,7 +379,7 @@ void Scintillua::Lex(
   LuaRegistryField regBuf{L.get(), "buffer", buffer}; // REGISTRY.buffer = buffer
   lua_getfield(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
 
-  // Start from the beginning of the current style so the lexer can match the token.
+  // Start from the beginning of the current style so the lexer can match the tag.
   // For multilang lexers, start at whitespace since embedded languages have whitespace.[lang]
   // styles. This is so the lexer can start matching child languages instead of parent ones
   // if necessary.
@@ -410,20 +410,20 @@ void Scintillua::Lex(
   lua_remove(L.get(), -2); // lua_error_handler
   if (!lua_istable(L.get(), -1)) {
     styler.ColourTo(startPos + lengthDoc - 1, initStyle), styler.Flush();
-    return LogError("table of tokens expected from lexer.lex()");
+    return LogError("table of tags expected from lexer.lex()");
   }
 
-  // Style the text from the returned table of tokens.
+  // Style the text from the returned table of tags.
   const int len = lua_rawlen(L.get(), -1);
   if (len > 0) {
     int style = STYLE_DEFAULT;
     lua_getfield(L.get(), -2, "_TAGS"); // lex._TAGS
     for (int i = 1; i < len; i += 2) { // for i = 1, #t, 2 do ... end
       style = STYLE_DEFAULT;
-      lua_rawgeti(L.get(), -2, i); // token = t[i]
-      if (lua_rawget(L.get(), -2)) // lex._TAGS[token]
+      lua_rawgeti(L.get(), -2, i); // tag = t[i]
+      if (lua_rawget(L.get(), -2)) // lex._TAGS[tag]
         style = lua_tointeger(L.get(), -1) - 1; // returned styles are 1-based
-      lua_pop(L.get(), 1); // lex._TAGS[token]
+      lua_pop(L.get(), 1); // lex._TAGS[tag]
       lua_rawgeti(L.get(), -2, i + 1); // pos = t[i + 1]
       const Sci_PositionU position = lua_tointeger(L.get(), -1) - 1; // returned pos is 1-based
       lua_pop(L.get(), 1); // pos
@@ -439,7 +439,7 @@ void Scintillua::Lex(
     styler.ColourTo(startPos + lengthDoc - 1, style);
     styler.Flush();
   }
-  lua_pop(L.get(), 1); // token table
+  lua_pop(L.get(), 1); // tag table
 
   lua_pop(L.get(), 1); // lex
 }
@@ -461,7 +461,7 @@ void Scintillua::Fold(
   lua_pushlstring(L.get(), buffer->BufferPointer() + startPos, lengthDoc);
   lua_pushinteger(L.get(), currentLine + 1);
   lua_pushinteger(L.get(), styler.LevelAt(currentLine) & SC_FOLDLEVELNUMBERMASK);
-  if (lua_pcall(L.get(), 4, 1, -6) != LUA_OK) // t = xpcall(lexer.fold, msgh, lex, txt, p, ln, lvl)
+  if (lua_pcall(L.get(), 4, 1, -6) != LUA_OK) // t = xpcall(lexer.fold, msgh, lex, txt, ln, lvl)
     return LogError();
   lua_remove(L.get(), -2); // lua_error_handler
   lua_remove(L.get(), -2); // lex
