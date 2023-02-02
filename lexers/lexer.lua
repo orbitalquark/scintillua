@@ -1361,8 +1361,8 @@ function M.fold(lexer, text, start_line, start_level)
   local folds = {}
   if text == '' then return folds end
   local fold = M.property_int['fold'] > 0
-  local FOLD_BASE = M.FOLD_BASE
-  local FOLD_HEADER, FOLD_BLANK = M.FOLD_HEADER, M.FOLD_BLANK
+  local FOLD_BASE = M.FOLD_BASE or 0x400
+  local FOLD_HEADER, FOLD_BLANK = M.FOLD_HEADER or 0x2000, M.FOLD_BLANK or 0x1000
   if M._standalone then M._text, M.line_state = text, {} end
   if fold and lexer._fold_points then
     local lines = {}
@@ -1542,10 +1542,6 @@ local function initialize_standalone_library()
   M.property = setmetatable({['scintillua.lexers'] = package.path:gsub('/%?%.lua', '')}, {
     __index = function() return '' end, __newindex = function(t, k, v) rawset(t, k, tostring(v)) end
   })
-  M.property_int = setmetatable({}, {
-    __index = function(t, k) return tonumber(M.property[k]) or 0 end,
-    __newindex = function() error('read-only property') end
-  })
 
   M.line_from_position = function(pos)
     local line = 1
@@ -1597,6 +1593,14 @@ end
 function M.load(name, alt_name)
   assert(name, 'no lexer given')
   if not M.property then initialize_standalone_library() end
+  if not M.property_int then
+    -- Separate from initialize_standalone_library() so applications that choose to define
+    -- M.property do not also have to define this.
+    M.property_int = setmetatable({}, {
+      __index = function(t, k) return tonumber(M.property[k]) or 0 end,
+      __newindex = function() error('read-only property') end
+    })
+  end
 
   -- Load the language lexer with its rules, tags, etc.
   local path = M.property['scintillua.lexers']:gsub(';', '/?.lua;') .. '/?.lua'
