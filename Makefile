@@ -120,7 +120,7 @@ docs: docs/index.md docs/api.md $(wildcard docs/*.md) | docs/_layouts/default.ht
 docs/index.md: README.md
 	sed -e 's/^\# [[:alpha:]]\+/## Introduction/;' -e \
 		's|https://[[:alpha:]]\+\.github\.io/[[:alpha:]]\+/||;' $< > $@
-docs/api.md: lexers/lexer.lua ; luadoc --doclet docs/markdowndoc $^ > $@
+docs/api.md: lexers/lexer.lua ; ldoc --filter docs.markdowndoc.ldoc $^ > $@
 
 # Releases.
 

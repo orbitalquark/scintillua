@@ -94,7 +94,7 @@ lex:add_rule('library', token(lexer.FUNCTION_BUILTIN, word_match{
   -- Debug added in 5.2.
   'debug.getuservalue', 'debug.setuservalue', 'debug.upvalueid', 'debug.upvaluejoin',
 
-  --- MoonScript 0.3.1 standard library.
+  -- MoonScript 0.3.1 standard library.
   -- Printing functions.
   'p',
   -- Table functions.

@@ -677,280 +677,280 @@ and thanks to Roberto Ierusalimschy for LPeg.
 ### Fields defined by `lexer`
 
 <a id="lexer.ANNOTATION"></a>
-#### `lexer.ANNOTATION` (string)
+#### `lexer.ANNOTATION` 
 
 The tag name for annotation elements.
 
 <a id="lexer.ATTRIBUTE"></a>
-#### `lexer.ATTRIBUTE` (string)
+#### `lexer.ATTRIBUTE` 
 
 The tag name for function attribute elements, typically in markup.
 
 <a id="lexer.BOLD"></a>
-#### `lexer.BOLD` (string)
+#### `lexer.BOLD` 
 
 The tag name for bold elements, typically in markup.
 
 <a id="lexer.CLASS"></a>
-#### `lexer.CLASS` (string)
+#### `lexer.CLASS` 
 
 The tag name for class elements.
 
 <a id="lexer.CODE"></a>
-#### `lexer.CODE` (string)
+#### `lexer.CODE` 
 
 The tag name for code elements, typically in markup.
 
 <a id="lexer.COMMENT"></a>
-#### `lexer.COMMENT` (string)
+#### `lexer.COMMENT` 
 
 The tag name for comment elements.
 
 <a id="lexer.CONSTANT"></a>
-#### `lexer.CONSTANT` (string)
+#### `lexer.CONSTANT` 
 
 The tag name for constant elements.
 
 <a id="lexer.CONSTANT_BUILTIN"></a>
-#### `lexer.CONSTANT_BUILTIN` (string)
+#### `lexer.CONSTANT_BUILTIN` 
 
 The tag name for builtin constant elements.
 
 <a id="lexer.DEFAULT"></a>
-#### `lexer.DEFAULT` (string)
+#### `lexer.DEFAULT` 
 
 The tag name for default elements.
 
 <a id="lexer.EMBEDDED"></a>
-#### `lexer.EMBEDDED` (string)
+#### `lexer.EMBEDDED` 
 
 The tag name for embedded elements.
 
 <a id="lexer.ERROR"></a>
-#### `lexer.ERROR` (string)
+#### `lexer.ERROR` 
 
 The tag name for error elements.
 
 <a id="lexer.FOLD_BASE"></a>
-#### `lexer.FOLD_BASE` (number)
+#### `lexer.FOLD_BASE` 
 
 The initial (root) fold level.
 
 <a id="lexer.FOLD_BLANK"></a>
-#### `lexer.FOLD_BLANK` (number)
+#### `lexer.FOLD_BLANK` 
 
 Flag indicating that the line is blank.
 
 <a id="lexer.FOLD_HEADER"></a>
-#### `lexer.FOLD_HEADER` (number)
+#### `lexer.FOLD_HEADER` 
 
 Flag indicating the line is fold point.
 
 <a id="lexer.FUNCTION"></a>
-#### `lexer.FUNCTION` (string)
+#### `lexer.FUNCTION` 
 
 The tag name for function elements.
 
 <a id="lexer.FUNCTION_BUILTIN"></a>
-#### `lexer.FUNCTION_BUILTIN` (string)
+#### `lexer.FUNCTION_BUILTIN` 
 
 The tag name for builtin function elements.
 
 <a id="lexer.FUNCTION_METHOD"></a>
-#### `lexer.FUNCTION_METHOD` (string)
+#### `lexer.FUNCTION_METHOD` 
 
 The tag name for function method elements.
 
 <a id="lexer.HEADING"></a>
-#### `lexer.HEADING` (string)
+#### `lexer.HEADING` 
 
 The tag name for heading elements, typically in markup.
 
 <a id="lexer.IDENTIFIER"></a>
-#### `lexer.IDENTIFIER` (string)
+#### `lexer.IDENTIFIER` 
 
 The tag name for identifier elements.
 
 <a id="lexer.ITALIC"></a>
-#### `lexer.ITALIC` (string)
+#### `lexer.ITALIC` 
 
 The tag name for builtin italic elements, typically in markup.
 
 <a id="lexer.KEYWORD"></a>
-#### `lexer.KEYWORD` (string)
+#### `lexer.KEYWORD` 
 
 The tag name for keyword elements.
 
 <a id="lexer.LABEL"></a>
-#### `lexer.LABEL` (string)
+#### `lexer.LABEL` 
 
 The tag name for label elements.
 
 <a id="lexer.LINK"></a>
-#### `lexer.LINK` (string)
+#### `lexer.LINK` 
 
 The tag name for link elements, typically in markup.
 
 <a id="lexer.LIST"></a>
-#### `lexer.LIST` (string)
+#### `lexer.LIST` 
 
 The tag name for list item elements, typically in markup.
 
 <a id="lexer.NUMBER"></a>
-#### `lexer.NUMBER` (string)
+#### `lexer.NUMBER` 
 
 The tag name for number elements.
 
 <a id="lexer.OPERATOR"></a>
-#### `lexer.OPERATOR` (string)
+#### `lexer.OPERATOR` 
 
 The tag name for operator elements.
 
 <a id="lexer.PREPROCESSOR"></a>
-#### `lexer.PREPROCESSOR` (string)
+#### `lexer.PREPROCESSOR` 
 
 The tag name for preprocessor elements.
 
 <a id="lexer.REFERENCE"></a>
-#### `lexer.REFERENCE` (string)
+#### `lexer.REFERENCE` 
 
 The tag name for reference elements, typically in markup.
 
 <a id="lexer.REGEX"></a>
-#### `lexer.REGEX` (string)
+#### `lexer.REGEX` 
 
 The tag name for regex elements.
 
 <a id="lexer.STRING"></a>
-#### `lexer.STRING` (string)
+#### `lexer.STRING` 
 
 The tag name for string elements.
 
 <a id="lexer.TAG"></a>
-#### `lexer.TAG` (string)
+#### `lexer.TAG` 
 
 The tag name for function tag elements, typically in markup.
 
 <a id="lexer.TYPE"></a>
-#### `lexer.TYPE` (string)
+#### `lexer.TYPE` 
 
 The tag name for type elements.
 
 <a id="lexer.UNDERLINE"></a>
-#### `lexer.UNDERLINE` (string)
+#### `lexer.UNDERLINE` 
 
 The tag name for underlined elements, typically in markup.
 
 <a id="lexer.VARIABLE"></a>
-#### `lexer.VARIABLE` (string)
+#### `lexer.VARIABLE` 
 
 The tag name for variable elements.
 
 <a id="lexer.VARIABLE_BUILTIN"></a>
-#### `lexer.VARIABLE_BUILTIN` (string)
+#### `lexer.VARIABLE_BUILTIN` 
 
 The tag name for builtin variable elements.
 
 <a id="lexer.alnum"></a>
-#### `lexer.alnum` (pattern)
+#### `lexer.alnum` 
 
 A pattern that matches any alphanumeric character ('A'-'Z', 'a'-'z', '0'-'9').
 
 <a id="lexer.alpha"></a>
-#### `lexer.alpha` (pattern)
+#### `lexer.alpha` 
 
 A pattern that matches any alphabetic character ('A'-'Z', 'a'-'z').
 
 <a id="lexer.any"></a>
-#### `lexer.any` (pattern)
+#### `lexer.any` 
 
 A pattern that matches any single character.
 
 <a id="lexer.bin_num"></a>
-#### `lexer.bin_num` (pattern)
+#### `lexer.bin_num` 
 
 A pattern that matches a binary number.
 
 <a id="lexer.dec_num"></a>
-#### `lexer.dec_num` (pattern)
+#### `lexer.dec_num` 
 
 A pattern that matches a decimal number.
 
 <a id="lexer.digit"></a>
-#### `lexer.digit` (pattern)
+#### `lexer.digit` 
 
 A pattern that matches any digit ('0'-'9').
 
 <a id="lexer.float"></a>
-#### `lexer.float` (pattern)
+#### `lexer.float` 
 
 A pattern that matches a floating point number.
 
 <a id="lexer.graph"></a>
-#### `lexer.graph` (pattern)
+#### `lexer.graph` 
 
 A pattern that matches any graphical character ('!' to '~').
 
 <a id="lexer.hex_num"></a>
-#### `lexer.hex_num` (pattern)
+#### `lexer.hex_num` 
 
 A pattern that matches a hexadecimal number.
 
 <a id="lexer.integer"></a>
-#### `lexer.integer` (pattern)
+#### `lexer.integer` 
 
 A pattern that matches either a decimal, hexadecimal, octal, or binary number.
 
 <a id="lexer.lower"></a>
-#### `lexer.lower` (pattern)
+#### `lexer.lower` 
 
 A pattern that matches any lower case character ('a'-'z').
 
 <a id="lexer.newline"></a>
-#### `lexer.newline` (pattern)
+#### `lexer.newline` 
 
 A pattern that matches a sequence of end of line characters.
 
 <a id="lexer.nonnewline"></a>
-#### `lexer.nonnewline` (pattern)
+#### `lexer.nonnewline` 
 
 A pattern that matches any single, non-newline character.
 
 <a id="lexer.number"></a>
-#### `lexer.number` (pattern)
+#### `lexer.number` 
 
 A pattern that matches a typical number, either a floating point, decimal, hexadecimal,
-  octal, or binary number.
+octal, or binary number.
 
 <a id="lexer.oct_num"></a>
-#### `lexer.oct_num` (pattern)
+#### `lexer.oct_num` 
 
 A pattern that matches an octal number.
 
 <a id="lexer.punct"></a>
-#### `lexer.punct` (pattern)
+#### `lexer.punct` 
 
-A pattern that matches any punctuation character ('!' to '/', ':' to '@', '[' to ''',
-  '{' to '~').
+A pattern that matches any punctuation character ('!' to '/', ':' to '@', '[' to ''', '{'
+to '~').
 
 <a id="lexer.space"></a>
-#### `lexer.space` (pattern)
+#### `lexer.space` 
 
 A pattern that matches any whitespace character ('\t', '\v', '\f', '\n', '\r', space).
 
 <a id="lexer.upper"></a>
-#### `lexer.upper` (pattern)
+#### `lexer.upper` 
 
 A pattern that matches any upper case character ('A'-'Z').
 
 <a id="lexer.word"></a>
-#### `lexer.word` (pattern)
+#### `lexer.word` 
 
 A pattern that matches a typical word. Words begin with a letter or underscore and consist
-  of alphanumeric and underscore characters.
+of alphanumeric and underscore characters.
 
 <a id="lexer.xdigit"></a>
-#### `lexer.xdigit` (pattern)
+#### `lexer.xdigit` 
 
 A pattern that matches any hexadecimal digit ('0'-'9', 'A'-'F', 'a'-'f').
 
@@ -958,7 +958,7 @@ A pattern that matches any hexadecimal digit ('0'-'9', 'A'-'F', 'a'-'f').
 ### Functions defined by `lexer`
 
 <a id="lexer.add_fold_point"></a>
-#### `lexer.add_fold_point`(lexer, tag\_name, start\_symbol, end\_symbol)
+#### `lexer.add_fold_point`(*lexer*, *tag_name*, *start_symbol*, *end_symbol*)
 
 Adds to lexer *lexer* a fold point whose beginning and end points are tagged with string
 *tag_name* tags and have string content *start_symbol* and *end_symbol*, respectively.
@@ -967,303 +967,301 @@ additional processing is required, *end_symbol* may be a function that ultimatel
 `1` (indicating a beginning fold point), `-1` (indicating an ending fold point), or `0`
 (indicating no fold point). That function is passed the following arguments:
 
-  * `text`: The text being processed for fold points.
-  * `pos`: The position in *text* of the beginning of the line currently being processed.
-  * `line`: The text of the line currently being processed.
-  * `s`: The position of *start_symbol* in *line*.
-  * `symbol`: *start_symbol* itself.
+  - `text`: The text being processed for fold points.
+  - `pos`: The position in *text* of the beginning of the line currently being processed.
+  - `line`: The text of the line currently being processed.
+  - `s`: The position of *start_symbol* in *line*.
+  - `symbol`: *start_symbol* itself.
 
-Fields:
+Parameters:
 
-* `lexer`: The lexer to add a fold point to.
-* `tag_name`: The tag name for text that indicates a fold point.
-* `start_symbol`: The text that indicates the beginning of a fold point.
-* `end_symbol`: Either the text that indicates the end of a fold point, or a function that
-  returns whether or not *start_symbol* is a beginning fold point (1), an ending fold point
-  (-1), or not a fold point at all (0).
+- *lexer*:  The lexer to add a fold point to.
+- *tag_name*:  The tag name for text that indicates a fold point.
+- *start_symbol*:  The text that indicates the beginning of a fold point.
+- *end_symbol*:  Either the text that indicates the end of a fold point, or a function that
+   returns whether or not *start_symbol* is a beginning fold point (1), an ending fold point
+   (-1), or not a fold point at all (0).
 
 Usage:
 
-* `lex:add_fold_point(lexer.OPERATOR, '{', '}')`
-* `lex:add_fold_point(lexer.KEYWORD, 'if', 'end')`
-* `lex:add_fold_point('custom', function(text, pos, line, s, symbol) ... end)`
+- `lex:add_fold_point(lexer.OPERATOR, '{', '}')
+`
+- `lex:add_fold_point(lexer.KEYWORD, 'if', 'end')
+`
+- `lex:add_fold_point('custom', function(text, pos, line, s, symbol) ... end)
+`
 
 <a id="lexer.add_rule"></a>
-#### `lexer.add_rule`(lexer, id, rule)
+#### `lexer.add_rule`(*lexer*, *id*, *rule*)
 
 Adds pattern *rule* identified by string *id* to the ordered list of rules for lexer *lexer*.
 
-Fields:
+Parameters:
 
-* `lexer`: The lexer to add the given rule to.
-* `id`: The id associated with this rule. It does not have to be the same as the name
-  passed to `tag()`.
-* `rule`: The LPeg pattern of the rule.
-
-See also:
-
-* [`lexer.modify_rule`](#lexer.modify_rule)
+- *lexer*:  The lexer to add the given rule to.
+- *id*:  The id associated with this rule. It does not have to be the same as the name
+   passed to `tag()`.
+- *rule*:  The LPeg pattern of the rule.
 
 <a id="lexer.after_set"></a>
-#### `lexer.after_set`(set, patt, skip)
+#### `lexer.after_set`(*set*, *patt*, *skip*)
 
 Creates and returns a pattern that matches pattern *patt* only when it comes after one of
 the characters in string *set* (or when there are no characters behind *patt*), skipping
 over any characters in string *skip*, which is whitespace by default.
 
-Fields:
+Parameters:
 
-* `set`: String character set like one passed to `lpeg.S()`.
-* `patt`: The LPeg pattern to match after a set character.
-* `skip`: String character set to skip over. The default value is ' \t\r\n\v\f' (whitespace).
+- *set*:  String character set like one passed to `lpeg.S()`.
+- *patt*:  The LPeg pattern to match after a set character.
+- *skip*:  String character set to skip over. The default value is ' \t\r\n\v\f' (whitespace).
 
 Usage:
 
-* `local regex = lexer.after_set('+-*!%^&|=,([{', lexer.range('/'))`
+- `local regex = lexer.after_set('+-*!%^&|=,([{', lexer.range('/'))
+`
 
 <a id="lexer.bin_num_"></a>
-#### `lexer.bin_num_`(c)
+#### `lexer.bin_num_`(*c*)
 
 Returns a pattern that matches a binary number, whose digits may be separated by character *c*.
 
-Fields:
+Parameters:
 
-* `c`: 
+- *c*: 
 
 <a id="lexer.dec_num_"></a>
-#### `lexer.dec_num_`(c)
+#### `lexer.dec_num_`(*c*)
 
 Returns a pattern that matches a decimal number, whose digits may be separated by character *c*.
 
-Fields:
+Parameters:
 
-* `c`: 
+- *c*: 
 
 <a id="lexer.detect"></a>
-#### `lexer.detect`(filename, line)
+#### `lexer.detect`([*filename*[, *line*]])
 
 Returns the name of the lexer often associated with filename *filename* and/or content
 line *line*.
 
-Fields:
+Parameters:
 
-* `filename`: Optional string filename. The default value is read from the
-  'lexer.scintillua.filename' property.
-* `line`: Optional string first content line, such as a shebang line. The default value
-  is read from the 'lexer.scintillua.line' property.
+- *filename*:  Optional string filename. The default value is read from the
+   'lexer.scintillua.filename' property.
+- *line*:  Optional string first content line, such as a shebang line. The default
+   value is read from the 'lexer.scintillua.line' property.
 
 Return:
 
-* string lexer name to pass to `load()`, or `nil` if none was detected
-
-See also:
-
-* [`lexer.detect_extensions`](#lexer.detect_extensions)
-* [`lexer.detect_patterns`](#lexer.detect_patterns)
-* [`lexer.load`](#lexer.load)
+- string lexer name to pass to `load()`, or `nil` if none was detected
 
 <a id="lexer.embed"></a>
-#### `lexer.embed`(lexer, child, start\_rule, end\_rule)
+#### `lexer.embed`(*lexer*, *child*, *start_rule*, *end_rule*)
 
 Embeds child lexer *child* in parent lexer *lexer* using patterns *start_rule* and *end_rule*,
 which signal the beginning and end of the embedded lexer, respectively.
 
-Fields:
+Parameters:
 
-* `lexer`: The parent lexer.
-* `child`: The child lexer.
-* `start_rule`: The pattern that signals the beginning of the embedded lexer.
-* `end_rule`: The pattern that signals the end of the embedded lexer.
+- *lexer*:  The parent lexer.
+- *child*:  The child lexer.
+- *start_rule*:  The pattern that signals the beginning of the embedded lexer.
+- *end_rule*:  The pattern that signals the end of the embedded lexer.
 
 Usage:
 
-* `html:embed(css, css_start_rule, css_end_rule)`
-* `html:embed(lex, php_start_rule, php_end_rule) -- from php lexer`
+- `html:embed(css, css_start_rule, css_end_rule)
+`
+- `html:embed(lex, php_start_rule, php_end_rule) -- from php lexer
+`
 
 <a id="lexer.float_"></a>
-#### `lexer.float_`(c)
+#### `lexer.float_`(*c*)
 
 Returns a pattern that matches a floating point number, whose digits may be separated by
 character *c*.
 
-Fields:
+Parameters:
 
-* `c`: 
+- *c*: 
 
 <a id="lexer.fold"></a>
-#### `lexer.fold`(lexer, text, start\_line, start\_level)
+#### `lexer.fold`(*lexer*, *text*, *start_line*, *start_level*)
 
 Determines fold points in a chunk of text *text* using lexer *lexer*, returning a table of
 fold levels associated with line numbers.
 *text* starts on line number *start_line* with a beginning fold level of *start_level*
 in the buffer.
 
-Fields:
+Parameters:
 
-* `lexer`: The lexer to fold text with.
-* `text`: The text in the buffer to fold.
-* `start_line`: The line number *text* starts on, counting from 1.
-* `start_level`: The fold level *text* starts on.
+- *lexer*:  The lexer to fold text with.
+- *text*:  The text in the buffer to fold.
+- *start_line*:  The line number *text* starts on, counting from 1.
+- *start_level*:  The fold level *text* starts on.
 
 Return:
 
-* table of fold levels associated with line numbers.
+- table of fold levels associated with line numbers.
 
 <a id="lexer.get_rule"></a>
-#### `lexer.get_rule`(lexer, id)
+#### `lexer.get_rule`(*lexer*, *id*)
 
 Returns the rule identified by string *id*.
 
-Fields:
+Parameters:
 
-* `lexer`: The lexer to fetch a rule from.
-* `id`: The id of the rule to fetch.
+- *lexer*:  The lexer to fetch a rule from.
+- *id*:  The id of the rule to fetch.
 
 Return:
 
-* pattern
+- pattern
 
 <a id="lexer.hex_num_"></a>
-#### `lexer.hex_num_`(c)
+#### `lexer.hex_num_`(*c*)
 
 Returns a pattern that matches a hexadecimal number, whose digits may be separated by
 character *c*.
 
-Fields:
+Parameters:
 
-* `c`: 
+- *c*: 
 
 <a id="lexer.integer_"></a>
-#### `lexer.integer_`(c)
+#### `lexer.integer_`(*c*)
 
 Returns a pattern that matches either a decimal, hexadecimal, octal, or binary number,
 whose digits may be separated by character *c*.
 
-Fields:
+Parameters:
 
-* `c`: 
+- *c*: 
 
 <a id="lexer.lex"></a>
-#### `lexer.lex`(lexer, text, init\_style)
+#### `lexer.lex`(*lexer*, *text*, *init_style*)
 
 Lexes a chunk of text *text* (that has an initial style number of *init_style*) using lexer
 *lexer*, returning a list of tag names and positions.
 
-Fields:
+Parameters:
 
-* `lexer`: The lexer to lex text with.
-* `text`: The text in the buffer to lex.
-* `init_style`: The current style. Multiple-language lexers use this to determine which
-  language to start lexing in.
+- *lexer*:  The lexer to lex text with.
+- *text*:  The text in the buffer to lex.
+- *init_style*:  The current style. Multiple-language lexers use this to determine which
+   language to start lexing in.
 
 Return:
 
-* list of tag names and positions.
+- list of tag names and positions.
 
 <a id="lexer.line_from_position"></a>
-#### `lexer.line_from_position`(pos)
+#### `lexer.line_from_position`(*pos*)
 
 Returns the line number (starting from 1) of the line that contains position *pos*, which
 starts from 1.
 
-Fields:
+Parameters:
 
-* `pos`: The position to get the line number of.
+- *pos*:  The position to get the line number of.
 
 Return:
 
-* number
+- number
 
 <a id="lexer.load"></a>
-#### `lexer.load`(name, alt\_name)
+#### `lexer.load`(*name*[, *alt_name*])
 
 Initializes or loads and then returns the lexer of string name *name*.
 Scintilla calls this function in order to load a lexer. Parent lexers also call this function
 in order to load child lexers and vice-versa. The user calls this function in order to load
 a lexer when using Scintillua as a Lua library.
 
-Fields:
+Parameters:
 
-* `name`: The name of the lexing language.
-* `alt_name`: The alternate name of the lexing language. This is useful for embedding the
-  same child lexer with multiple sets of start and end tags.
+- *name*:  The name of the lexing language.
+- *alt_name*:  Optional alternate name of the lexing language. This is useful for
+   embedding the same child lexer with multiple sets of start and end tags.
 
 Return:
 
-* lexer object
+- lexer object
 
 <a id="lexer.modify_rule"></a>
-#### `lexer.modify_rule`(lexer, id, rule)
+#### `lexer.modify_rule`(*lexer*, *id*, *rule*)
 
 Replaces in lexer *lexer* the existing rule identified by string *id* with pattern *rule*.
 
-Fields:
+Parameters:
 
-* `lexer`: The lexer to modify.
-* `id`: The id associated with this rule.
-* `rule`: The LPeg pattern of the rule.
+- *lexer*:  The lexer to modify.
+- *id*:  The id associated with this rule.
+- *rule*:  The LPeg pattern of the rule.
 
 <a id="lexer.names"></a>
-#### `lexer.names`(path)
+#### `lexer.names`([*path*])
 
 Returns a list of all known lexer names.
-Requires the LuaFileSystem (`lfs`) module to be available.
+This function is not available to lexers and requires the LuaFileSystem (`lfs`) module to
+be available.
 
-Fields:
+Parameters:
 
-* `path`: Optional ';'-delimited list of directories to search for lexers in. The default
-  value is Scintillua's configured lexer path.
+- *path*:  Optional ';'-delimited list of directories to search for lexers in. The
+   default value is Scintillua's configured lexer path.
 
 Return:
 
-* lexer name list
+- lexer name list
 
 <a id="lexer.new"></a>
-#### `lexer.new`(name, opts)
+#### `lexer.new`(*name*, *opts*)
 
 Creates a returns a new lexer with the given name.
 
-Fields:
+Parameters:
 
-* `name`: The lexer's name.
-* `opts`: Table of lexer options. Options currently supported:
-  * `lex_by_line`: Whether or not the lexer only processes whole lines of text (instead of
-    arbitrary chunks of text) at a time. Line lexers cannot look ahead to subsequent lines.
-    The default value is `false`.
-  * `fold_by_indentation`: Whether or not the lexer does not define any fold points and that
-    fold points should be calculated based on changes in line indentation. The default value
-    is `false`.
-  * `case_insensitive_fold_points`: Whether or not fold points added via
-    `lexer.add_fold_point()` ignore case. The default value is `false`.
-  * `no_user_word_lists`: Does not automatically allocate word lists that can be set by
-    users. This should really only be set by non-programming languages like markup languages.
-  * `inherit`: Lexer to inherit from. The default value is `nil`.
+- *name*:  The lexer's name.
+- *opts*:  Table of lexer options. Options currently supported:
+   - `lex_by_line`: Whether or not the lexer only processes whole lines of text (instead of
+     arbitrary chunks of text) at a time. Line lexers cannot look ahead to subsequent lines.
+     The default value is `false`.
+   - `fold_by_indentation`: Whether or not the lexer does not define any fold points and that
+     fold points should be calculated based on changes in line indentation. The default value
+     is `false`.
+   - `case_insensitive_fold_points`: Whether or not fold points added via
+     `lexer.add_fold_point()` ignore case. The default value is `false`.
+   - `no_user_word_lists`: Does not automatically allocate word lists that can be set by
+     users. This should really only be set by non-programming languages like markup languages.
+   - `inherit`: Lexer to inherit from. The default value is `nil`.
 
 Usage:
 
-* `lexer.new('rhtml', {inherit = lexer.load('html')})`
+- `lexer.new('rhtml', {inherit = lexer.load('html')})
+`
 
 <a id="lexer.number_"></a>
-#### `lexer.number_`(c)
+#### `lexer.number_`(*c*)
 
 Returns a pattern that matches a typical number, either a floating point, decimal, hexadecimal,
 octal, or binary number, and whose digits may be separated by character *c*.
 
-Fields:
+Parameters:
 
-* `c`: 
+- *c*: 
 
 <a id="lexer.oct_num_"></a>
-#### `lexer.oct_num_`(c)
+#### `lexer.oct_num_`(*c*)
 
 Returns a pattern that matches an octal number, whose digits may be separated by character *c*.
 
-Fields:
+Parameters:
 
-* `c`: 
+- *c*: 
 
 <a id="lexer.range"></a>
-#### `lexer.range`(s, e, single\_line, escapes, balanced)
+#### `lexer.range`(*s*[, *e*[, *single_line*[, *escapes*[, *balanced*]]]])
 
 Creates and returns a pattern that matches a range of text bounded by strings or patterns *s*
 and *e*.
@@ -1274,116 +1272,121 @@ defaults to *s*. *single_line* indicates whether or not the range must be on a s
 indicates whether or not to handle balanced ranges like parentheses, and requires *s* and *e*
 to be different.
 
-Fields:
+Parameters:
 
-* `s`: String or pattern start of a range.
-* `e`: Optional string or pattern end of a range. The default value is *s*.
-* `single_line`: Optional flag indicating whether or not the range must be on a single
-  line. The default value is `false`.
-* `escapes`: Optional flag indicating whether or not the range end may be escaped by a '\'
-  character. The default value is `false` unless *s* and *e* are identical, single-character
-  strings. In that case, the default value is `true`.
-* `balanced`: Optional flag indicating whether or not to match a balanced range, like the
-  "%b" Lua pattern. This flag only applies if *s* and *e* are different.
+- *s*:  String or pattern start of a range.
+- *e*:  Optional string or pattern end of a range. The default value is *s*.
+- *single_line*:  Optional flag indicating whether or not the range must be on a single
+   line. The default value is `false`.
+- *escapes*:  Optional flag indicating whether or not the range end may be escaped
+   by a '\' character. The default value is `false` unless *s* and *e* are identical,
+   single-character strings. In that case, the default value is `true`.
+- *balanced*:  Optional flag indicating whether or not to match a balanced range,
+   like the "%b" Lua pattern. This flag only applies if *s* and *e* are different.
 
 Usage:
 
-* `local dq_str_escapes = lexer.range('"')`
-* `local dq_str_noescapes = lexer.range('"', false, false)`
-* `local unbalanced_parens = lexer.range('(', ')')`
-* `local balanced_parens = lexer.range('(', ')', false, false, true)`
+- `local dq_str_escapes = lexer.range('"')
+`
+- `local dq_str_noescapes = lexer.range('"', false, false)
+`
+- `local unbalanced_parens = lexer.range('(', ')')
+`
+- `local balanced_parens = lexer.range('(', ')', false, false, true)
+`
 
 Return:
 
-* pattern
+- pattern
 
 <a id="lexer.set_word_list"></a>
-#### `lexer.set_word_list`(lexer, name, word\_list, append)
+#### `lexer.set_word_list`(*lexer*, *name*, *word_list*, *append*)
 
 Sets in lexer *lexer* the word list identified by string or number *name* to string or
 list *word_list*, appending to any existing word list if *append* is `true`.
 This only has an effect if *lexer* uses `word_match()` to reference the given list.
 Case-insensitivity is specified by `word_match()`.
 
-Fields:
+Parameters:
 
-* `lexer`: The lexer to add the given word list to.
-* `name`: The string name or number of the word list to set.
-* `word_list`: A list of words or a string list of words separated by spaces.
-* `append`: Whether or not to append *word_list* to the existing word list (if any). The
-  default value is `false`.
-
-See also:
-
-* [`lexer.word_match`](#lexer.word_match)
+- *lexer*:  The lexer to add the given word list to.
+- *name*:  The string name or number of the word list to set.
+- *word_list*:  A list of words or a string list of words separated by spaces.
+- *append*:  Whether or not to append *word_list* to the existing word list (if any). The
+   default value is `false`.
 
 <a id="lexer.starts_line"></a>
-#### `lexer.starts_line`(patt, allow\_indent)
+#### `lexer.starts_line`(*patt*, *allow_indent*)
 
 Creates and returns a pattern that matches pattern *patt* only at the beginning of a line,
 or after any line indentation if *allow_indent* is `true`.
 
-Fields:
+Parameters:
 
-* `patt`: The LPeg pattern to match on the beginning of a line.
-* `allow_indent`: Whether or not to consider line indentation as the start of a line. The
-  default value is `false`.
+- *patt*:  The LPeg pattern to match on the beginning of a line.
+- *allow_indent*:  Whether or not to consider line indentation as the start of a line. The
+   default value is `false`.
 
 Usage:
 
-* `local preproc = lex:tag(lexer.PREPROCESSOR, lexer.starts_line(lexer.to_eol('#')))`
+- `local preproc = lex:tag(lexer.PREPROCESSOR, lexer.starts_line(lexer.to_eol('#')))
+`
 
 Return:
 
-* pattern
+- pattern
 
 <a id="lexer.tag"></a>
-#### `lexer.tag`(lexer, name, patt)
+#### `lexer.tag`(*lexer*, *name*, *patt*)
 
 Creates and returns a pattern that tags pattern *patt* with name *name* in lexer *lexer*.
 If *name* is not a predefined tag name, its Scintilla style will likely need to be defined
 by the editor or theme using this lexer.
 
-Fields:
+Parameters:
 
-* `lexer`: The lexer to tag the given pattern in.
-* `name`: The name to use.
-* `patt`: The LPeg pattern to tag.
+- *lexer*:  The lexer to tag the given pattern in.
+- *name*:  The name to use.
+- *patt*:  The LPeg pattern to tag.
 
 Usage:
 
-* `local number = lex:tag(lexer.NUMBER, lexer.number)`
-* `local addition = lex:tag('addition', '+' * lexer.word)`
+- `local number = lex:tag(lexer.NUMBER, lexer.number)
+`
+- `local addition = lex:tag('addition', '+' * lexer.word)
+`
 
 Return:
 
-* pattern
+- pattern
 
 <a id="lexer.to_eol"></a>
-#### `lexer.to_eol`(prefix, escape)
+#### `lexer.to_eol`([*prefix*[, *escape*]])
 
 Creates and returns a pattern that matches from string or pattern *prefix* until the end of
 the line.
 *escape* indicates whether the end of the line can be escaped with a '\' character.
 
-Fields:
+Parameters:
 
-* `prefix`: Optional string or pattern prefix to start matching at. The default value is
-  any non-newline character.
-* `escape`: Optional flag indicating whether or not newlines can be escaped by a '\'
- character. The default value is `false`.
+- *prefix*:  Optional string or pattern prefix to start matching at. The default value
+   is any non-newline character.
+- *escape*:  Optional flag indicating whether or not newlines can be escaped by a '\'
+  character. The default value is `false`.
 
 Usage:
 
-* `local line_comment = lexer.to_eol('//')`
-* `local line_comment = lexer.to_eol(S('#;'))`
+- `local line_comment = lexer.to_eol('//')
+`
+- `local line_comment = lexer.to_eol(S('#;'))
+`
 
 Return:
 
-* pattern
+- pattern
 
 <a id="lexer.word_match"></a>
-#### `lexer.word_match`(lexer, word\_list, case\_insensitive)
+#### `lexer.word_match`([*lexer*], *word_list*[, *case_insensitive*])
 
 Either returns a pattern for lexer *lexer* (if given) that matches one word in the word list
 identified by string *word_list*, ignoring case if *case_sensitive* is `true`, or, if *lexer*
@@ -1394,30 +1397,30 @@ potentially allowing downstream users to configure word lists.
 If there is ultimately no word list set via `set_word_list()`, no error will be raised,
 but the returned pattern will not match anything.
 
-Fields:
+Parameters:
 
-* `lexer`: Optional lexer to match a word in a wordlist for. This parameter may be omitted
-  for lexer-agnostic matching.
-* `word_list`: Either a string name of the word list to match from if *lexer* is given,
-  or, if *lexer* is omitted, a list of words or a string list of words separated by spaces.
-* `case_insensitive`: Optional boolean flag indicating whether or not the word match is
-  case-insensitive. The default value is `false`.
+- *lexer*:  Optional lexer to match a word in a wordlist for. This parameter may be
+   omitted for lexer-agnostic matching.
+- *word_list*:  Either a string name of the word list to match from if *lexer* is given,
+   or, if *lexer* is omitted, a list of words or a string list of words separated by spaces.
+- *case_insensitive*:  Optional boolean flag indicating whether or not the word match
+   is case-insensitive. The default value is `false`.
 
 Usage:
 
-* `lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))`
-* `local keyword = lex:tag(lexer.KEYWORD, lexer.word_match{'foo', 'bar', 'baz'})`
-* `local keyword = lex:tag(lexer.KEYWORD, lexer.word_match({'foo-bar', 'foo-baz',
-  'bar-foo', 'bar-baz', 'baz-foo', 'baz-bar'}, true))`
-* `local keyword = lex:tag(lexer.KEYWORD, lexer.word_match('foo bar baz'))`
+- `lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
+`
+- `local keyword = lex:tag(lexer.KEYWORD, lexer.word_match{'foo', 'bar', 'baz'})
+`
+- `local keyword = lex:tag(lexer.KEYWORD, lexer.word_match({'foo-bar', 'foo-baz',
+   'bar-foo', 'bar-baz', 'baz-foo', 'baz-bar'}, true))
+`
+- `local keyword = lex:tag(lexer.KEYWORD, lexer.word_match('foo bar baz'))
+`
 
 Return:
 
-* pattern
-
-See also:
-
-* [`lexer.set_word_list`](#lexer.set_word_list)
+- pattern
 
 
 ### Tables defined by `lexer`
@@ -1428,10 +1431,6 @@ See also:
 Map of file extensions, without the '.' prefix, to their associated lexer names.
 This map has precedence over Scintillua's built-in map.
 
-See also:
-
-* [`lexer.detect`](#lexer.detect)
-
 <a id="lexer.detect_patterns"></a>
 #### `lexer.detect_patterns`
 
@@ -1439,27 +1438,23 @@ Map of line patterns to their associated lexer names.
 These are Lua string patterns, not LPeg patterns.
 This map has precedence over Scintillua's built-in map.
 
-See also:
-
-* [`lexer.detect`](#lexer.detect)
-
 <a id="lexer.fold_level"></a>
 #### `lexer.fold_level`
 
-Read-only table of fold level bit-masks for line numbers starting from 1.
+Table of fold level bit-masks for line numbers starting from 1. (Read-only)
 Fold level masks are composed of an integer level combined with any of the following bits:
 
-* `lexer.FOLD_BASE`
-  The initial fold level.
-* `lexer.FOLD_BLANK`
-  The line is blank.
-* `lexer.FOLD_HEADER`
-  The line is a header, or fold point.
+  - `lexer.FOLD_BASE`
+    The initial fold level.
+  - `lexer.FOLD_BLANK`
+    The line is blank.
+  - `lexer.FOLD_HEADER`
+    The line is a header, or fold point.
 
 <a id="lexer.indent_amount"></a>
 #### `lexer.indent_amount`
 
-Read-only table of indentation amounts in character columns, for line numbers starting from 1.
+Table of indentation amounts in character columns, for line numbers starting from 1. (Read-only)
 
 <a id="lexer.line_state"></a>
 #### `lexer.line_state`
@@ -1476,11 +1471,11 @@ Map of key-value string pairs.
 <a id="lexer.property_int"></a>
 #### `lexer.property_int`
 
-Read-only map of key-value pairs with values interpreted as numbers, or `0` if not found.
+Map of key-value pairs with values interpreted as numbers, or `0` if not found. (Read-only)
 
 <a id="lexer.style_at"></a>
 #### `lexer.style_at`
 
-Read-only table of style names at positions in the buffer starting from 1.
+Table of style names at positions in the buffer starting from 1. (Read-only)
 
 ---
