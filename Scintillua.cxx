@@ -498,8 +498,7 @@ int Scintillua::NamedStyles() {
   DeferLuaStackCheck checker{L.get()};
   lua_getfield(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
   lua_getfield(L.get(), -1, "_TAGS"); // lex._TAGS
-  int num = 0;
-  for (lua_pushnil(L.get()); lua_next(L.get(), -2); lua_pop(L.get(), 1)) num++;
+  const int num = lua_rawlen(L.get(), -1); // #lex._TAGS
   lua_pop(L.get(), 2); // lex._TAGS, lex
   return num;
 }
@@ -509,13 +508,9 @@ const char *Scintillua::NameOfStyle(int style) {
   DeferLuaStackCheck checker{L.get()};
   lua_getfield(L.get(), LUA_REGISTRYINDEX, "lex"); // lex = REGISTRY.lex
   lua_getfield(L.get(), -1, "_TAGS"); // lex._TAGS
-  for (lua_pushnil(L.get()); lua_next(L.get(), -2); lua_pop(L.get(), 1)) // {token = style}
-    if (lua_tointeger(L.get(), -1) - 1 == style) { // style in _TAGS is 1-based
-      styleName = lua_tostring(L.get(), -2);
-      lua_pop(L.get(), 2); // style, token
-      break;
-    }
-  lua_pop(L.get(), 2); // lex._TAGS, lex
+  if (lua_rawgeti(L.get(), -1, style + 1)) // style in _TAGS is 1-based
+    styleName = lua_tostring(L.get(), -1); // name = lex._TAGS[style]
+  lua_pop(L.get(), 3); // name, lex._TAGS, lex
   return styleName.c_str();
 }
 

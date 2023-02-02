@@ -898,8 +898,8 @@ function M.tag(lexer, name, patt)
   if not lexer._TAGS then
     -- Create the initial maps for tag names to style numbers and styles.
     local tags = {}
-    for i = 1, #default do tags[default[i]] = i end
-    for i = 1, #predefined do tags[predefined[i]] = i + 32 end
+    for i, name in ipairs(default) do tags[name], tags[i] = i, name end
+    for i, name in ipairs(predefined) do tags[name], tags[i + 32] = i + 32, name end
     lexer._TAGS, lexer._num_styles = tags, #default + 1
     lexer._extra_tags = {}
   end
@@ -907,7 +907,7 @@ function M.tag(lexer, name, patt)
     local num_styles = lexer._num_styles
     if num_styles == 33 then num_styles = num_styles + 8 end -- skip predefined
     assert(num_styles <= 256, 'too many styles defined (256 MAX)')
-    lexer._TAGS[name], lexer._num_styles = num_styles, num_styles + 1
+    lexer._TAGS[name], lexer._TAGS[num_styles], lexer._num_styles = num_styles, name, num_styles + 1
     lexer._extra_tags[name] = true
     -- If the lexer is a proxy or a child that embedded itself, make this tag name known to
     -- the parent lexer.
@@ -1293,7 +1293,7 @@ local function build_grammar(lexer, init_style)
   -- For multilang lexers, build a new grammar whose initial rule is the current language
   -- if necessary. LPeg does not allow a variable initial rule.
   if lexer._CHILDREN then
-    for tag, style_num in pairs(lexer._TAGS) do
+    for style_num, tag in ipairs(lexer._TAGS) do
       if style_num == init_style then
         local lexer_name = tag:match('^whitespace%.(.+)$') or lexer._parent_name or lexer._name
         if lexer._initial_rule == lexer_name then break end
