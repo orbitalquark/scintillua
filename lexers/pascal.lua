@@ -24,7 +24,7 @@ lex:add_rule('keyword', token(lexer.KEYWORD, word_match({
   'message', 'name', 'namespaces', 'near', 'nodefault', 'overload', 'override', 'package', 'pascal',
   'platform', 'private', 'protected', 'public', 'published', 'read', 'readonly', 'register',
   'reintroduce', 'requires', 'resident', 'safecall', 'stdcall', 'stored', 'varargs', 'virtual',
-  'write', 'writeln', 'writeonly', --
+  'write', 'writeonly', --
   'false', 'nil', 'self', 'true'
 }, true)))
 
