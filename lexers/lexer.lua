@@ -1782,6 +1782,7 @@ function M.detect(filename, line)
     link = 'networkd', network = 'networkd', netdev = 'networkd', --
     nim = 'nim', --
     nsh = 'nsis', nsi = 'nsis', nsis = 'nsis', --
+    obs = 'objeck', --
     m = 'objective_c', mm = 'objective_c', objc = 'objective_c', --
     caml = 'caml', ml = 'caml', mli = 'caml', mll = 'caml', mly = 'caml', --
     dpk = 'pascal', dpr = 'pascal', p = 'pascal', pas = 'pascal', --
