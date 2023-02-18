@@ -81,7 +81,6 @@ used if [`fold.scintillua.by.indentation`][] is enabled. For SciTE, see *lexers/
 1. Logtalk
 1. Lua`*`
 1. Makefile
-1. Man Page
 1. Markdown
 1. MATLAB`*`
 1. MediaWiki
@@ -136,6 +135,7 @@ used if [`fold.scintillua.by.indentation`][] is enabled. For SciTE, see *lexers/
 1. TeX`*`
 1. Texinfo`*`
 1. TOML
+1. Troff
 1. txt2tags
 1. TypeScript`*`
 1. Vala`*`

@@ -1771,9 +1771,6 @@ function M.detect(filename, line)
     lua = 'lua', --
     GNUmakefile = 'makefile', iface = 'makefile', mak = 'makefile', makefile = 'makefile',
     Makefile = 'makefile', --
-    ['1'] = 'man', ['2'] = 'man', ['3'] = 'man', ['4'] = 'man', ['5'] = 'man', ['6'] = 'man',
-    ['7'] = 'man', ['8'] = 'man', ['9'] = 'man', ['1x'] = 'man', ['2x'] = 'man', ['3x'] = 'man',
-    ['4x'] = 'man', ['5x'] = 'man', ['6x'] = 'man', ['7x'] = 'man', ['8x'] = 'man', ['9x'] = 'man', --
     md = 'markdown', --
     ['meson.build'] = 'meson', --
     moon = 'moonscript', --
@@ -1827,6 +1824,10 @@ function M.detect(filename, line)
     tcl = 'tcl', tk = 'tcl', --
     texi = 'texinfo', --
     toml = 'toml', --
+    ['1'] = 'troff', ['2'] = 'troff', ['3'] = 'troff', ['4'] = 'troff', ['5'] = 'troff',
+    ['6'] = 'troff', ['7'] = 'troff', ['8'] = 'troff', ['9'] = 'troff', ['1x'] = 'troff',
+    ['2x'] = 'troff', ['3x'] = 'troff', ['4x'] = 'troff', ['5x'] = 'troff', ['6x'] = 'troff',
+    ['7x'] = 'troff', ['8x'] = 'troff', ['9x'] = 'troff', --
     t2t = 'txt2tags', --
     ts = 'typescript', --
     vala = 'vala', --
