@@ -864,7 +864,8 @@ local M = {}
 
 -- This comment is needed for LDoc to process the previous field.
 
-local lpeg = _G.lpeg or require('lpeg') -- Scintillua's Lua environment defines _G.lpeg
+if not lpeg then lpeg = require('lpeg') end -- Scintillua's Lua environment defines _G.lpeg
+local lpeg = lpeg
 local P, R, S, V, B = lpeg.P, lpeg.R, lpeg.S, lpeg.V, lpeg.B
 local Ct, Cc, Cp, Cmt, C = lpeg.Ct, lpeg.Cc, lpeg.Cp, lpeg.Cmt, lpeg.C
 
