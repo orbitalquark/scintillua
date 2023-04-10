@@ -1,7 +1,6 @@
 -- Copyright 2006-2023 Mitchell. See LICENSE.
 
----
--- Lexes Scintilla documents and source code with Lua and LPeg.
+--- Lexes Scintilla documents and source code with Lua and LPeg.
 --
 -- ### Writing Lua Lexers
 --
@@ -673,193 +672,109 @@
 -- @module lexer
 local M = {}
 
----
--- The tag name for default elements.
+--- The tag name for default elements.
 -- @field DEFAULT
 
----
--- The tag name for comment elements.
+--- The tag name for comment elements.
 -- @field COMMENT
 
----
--- The tag name for string elements.
+--- The tag name for string elements.
 -- @field STRING
 
----
--- The tag name for number elements.
+--- The tag name for number elements.
 -- @field NUMBER
 
----
--- The tag name for keyword elements.
+--- The tag name for keyword elements.
 -- @field KEYWORD
 
----
--- The tag name for identifier elements.
+--- The tag name for identifier elements.
 -- @field IDENTIFIER
 
----
--- The tag name for operator elements.
+--- The tag name for operator elements.
 -- @field OPERATOR
 
----
--- The tag name for error elements.
+--- The tag name for error elements.
 -- @field ERROR
 
----
--- The tag name for preprocessor elements.
+--- The tag name for preprocessor elements.
 -- @field PREPROCESSOR
 
----
--- The tag name for constant elements.
+--- The tag name for constant elements.
 -- @field CONSTANT
 
----
--- The tag name for variable elements.
+--- The tag name for variable elements.
 -- @field VARIABLE
 
----
--- The tag name for function elements.
+--- The tag name for function elements.
 -- @field FUNCTION
 
----
--- The tag name for class elements.
+--- The tag name for class elements.
 -- @field CLASS
 
----
--- The tag name for type elements.
+--- The tag name for type elements.
 -- @field TYPE
 
----
--- The tag name for label elements.
+--- The tag name for label elements.
 -- @field LABEL
 
----
--- The tag name for regex elements.
+--- The tag name for regex elements.
 -- @field REGEX
 
----
--- The tag name for embedded elements.
+--- The tag name for embedded elements.
 -- @field EMBEDDED
 
----
--- The tag name for builtin function elements.
+--- The tag name for builtin function elements.
 -- @field FUNCTION_BUILTIN
 
----
--- The tag name for builtin constant elements.
+--- The tag name for builtin constant elements.
 -- @field CONSTANT_BUILTIN
 
----
--- The tag name for function method elements.
+--- The tag name for function method elements.
 -- @field FUNCTION_METHOD
 
----
--- The tag name for function tag elements, typically in markup.
+--- The tag name for function tag elements, typically in markup.
 -- @field TAG
 
----
--- The tag name for function attribute elements, typically in markup.
+--- The tag name for function attribute elements, typically in markup.
 -- @field ATTRIBUTE
 
----
--- The tag name for builtin variable elements.
+--- The tag name for builtin variable elements.
 -- @field VARIABLE_BUILTIN
 
----
--- The tag name for heading elements, typically in markup.
+--- The tag name for heading elements, typically in markup.
 -- @field HEADING
 
----
--- The tag name for bold elements, typically in markup.
+--- The tag name for bold elements, typically in markup.
 -- @field BOLD
 
----
--- The tag name for builtin italic elements, typically in markup.
+--- The tag name for builtin italic elements, typically in markup.
 -- @field ITALIC
 
----
--- The tag name for underlined elements, typically in markup.
+--- The tag name for underlined elements, typically in markup.
 -- @field UNDERLINE
 
----
--- The tag name for code elements, typically in markup.
+--- The tag name for code elements, typically in markup.
 -- @field CODE
 
----
--- The tag name for link elements, typically in markup.
+--- The tag name for link elements, typically in markup.
 -- @field LINK
 
----
--- The tag name for reference elements, typically in markup.
+--- The tag name for reference elements, typically in markup.
 -- @field REFERENCE
 
----
--- The tag name for annotation elements.
+--- The tag name for annotation elements.
 -- @field ANNOTATION
 
----
--- The tag name for list item elements, typically in markup.
+--- The tag name for list item elements, typically in markup.
 -- @field LIST
 
----
--- A pattern that matches any single character.
--- @field any
-
----
--- A pattern that matches any alphabetic character ('A'-'Z', 'a'-'z').
--- @field alpha
-
----
--- A pattern that matches any digit ('0'-'9').
--- @field digit
-
----
--- A pattern that matches any alphanumeric character ('A'-'Z', 'a'-'z', '0'-'9').
--- @field alnum
-
----
--- A pattern that matches any lower case character ('a'-'z').
--- @field lower
-
----
--- A pattern that matches any upper case character ('A'-'Z').
--- @field upper
-
----
--- A pattern that matches any hexadecimal digit ('0'-'9', 'A'-'F', 'a'-'f').
--- @field xdigit
-
----
--- A pattern that matches any graphical character ('!' to '~').
--- @field graph
-
----
--- A pattern that matches any punctuation character ('!' to '/', ':' to '@', '[' to ''', '{'
--- to '~').
--- @field punct
-
----
--- A pattern that matches any whitespace character ('\t', '\v', '\f', '\n', '\r', space).
--- @field space
-
----
--- A pattern that matches a sequence of end of line characters.
--- @field newline
-
----
--- A pattern that matches any single, non-newline character.
--- @field nonnewline
-
----
--- The initial (root) fold level.
+--- The initial (root) fold level.
 -- @field FOLD_BASE
 
----
--- Flag indicating that the line is blank.
+--- Flag indicating that the line is blank.
 -- @field FOLD_BLANK
 
----
--- Flag indicating the line is fold point.
+--- Flag indicating the line is fold point.
 -- @field FOLD_HEADER
 
 -- This comment is needed for LDoc to process the previous field.
@@ -869,7 +784,7 @@ local lpeg = lpeg
 local P, R, S, V, B = lpeg.P, lpeg.R, lpeg.S, lpeg.V, lpeg.B
 local Ct, Cc, Cp, Cmt, C = lpeg.Ct, lpeg.Cc, lpeg.Cp, lpeg.Cmt, lpeg.C
 
--- Default tags.
+--- Default tags.
 local default = {
   'whitespace', 'comment', 'string', 'number', 'keyword', 'identifier', 'operator', 'error',
   'preprocessor', 'constant', 'variable', 'function', 'class', 'type', 'label', 'regex', 'embedded',
@@ -877,7 +792,7 @@ local default = {
   'heading', 'bold', 'italic', 'underline', 'code', 'link', 'reference', 'annotation', 'list'
 }
 for _, name in ipairs(default) do M[name:upper():gsub('%.', '_')] = name end
--- Names for predefined Scintilla styles.
+--- Names for predefined Scintilla styles.
 -- Having these here simplifies style number handling between Scintillua and Scintilla.
 local predefined = {
   'default', 'line.number', 'brace.light', 'brace.bad', 'control.char', 'indent.guide', 'call.tip',
@@ -885,8 +800,7 @@ local predefined = {
 }
 for _, name in ipairs(predefined) do M[name:upper():gsub('%.', '_')] = name end
 
----
--- Creates and returns a pattern that tags pattern *patt* with name *name* in lexer *lexer*.
+--- Creates and returns a pattern that tags pattern *patt* with name *name* in lexer *lexer*.
 -- If *name* is not a predefined tag name, its Scintilla style will likely need to be defined
 -- by the editor or theme using this lexer.
 -- @param lexer The lexer to tag the given pattern in.
@@ -917,11 +831,10 @@ function M.tag(lexer, name, patt)
   return Cc(name) * (P(patt) / 0) * Cp()
 end
 
--- Returns a unique grammar rule name for the given lexer's i-th word list.
+--- Returns a unique grammar rule name for the given lexer's i-th word list.
 local function word_list_id(lexer, i) return lexer._name .. '_wordlist' .. i end
 
----
--- Either returns a pattern for lexer *lexer* (if given) that matches one word in the word list
+--- Either returns a pattern for lexer *lexer* (if given) that matches one word in the word list
 -- identified by string *word_list*, ignoring case if *case_sensitive* is `true`, or, if *lexer*
 -- is not given, creates and returns a pattern that matches any single word in list or string
 -- *word_list*, ignoring case if *case_insensitive* is `true`.
@@ -991,8 +904,7 @@ function M.word_match(lexer, word_list, case_insensitive)
   end)
 end
 
----
--- Sets in lexer *lexer* the word list identified by string or number *name* to string or
+--- Sets in lexer *lexer* the word list identified by string or number *name* to string or
 -- list *word_list*, appending to any existing word list if *append* is `true`.
 -- This only has an effect if *lexer* uses `word_match()` to reference the given list.
 -- Case-insensitivity is specified by `word_match()`.
@@ -1032,8 +944,7 @@ function M.set_word_list(lexer, name, word_list, append)
   lexer._grammar_table = nil -- invalidate
 end
 
----
--- Adds pattern *rule* identified by string *id* to the ordered list of rules for lexer *lexer*.
+--- Adds pattern *rule* identified by string *id* to the ordered list of rules for lexer *lexer*.
 -- @param lexer The lexer to add the given rule to.
 -- @param id The id associated with this rule. It does not have to be the same as the name
 --   passed to `tag()`.
@@ -1050,8 +961,7 @@ function M.add_rule(lexer, id, rule)
   lexer._grammar_table = nil -- invalidate
 end
 
----
--- Replaces in lexer *lexer* the existing rule identified by string *id* with pattern *rule*.
+--- Replaces in lexer *lexer* the existing rule identified by string *id* with pattern *rule*.
 -- @param lexer The lexer to modify.
 -- @param id The id associated with this rule.
 -- @param rule The LPeg pattern of the rule.
@@ -1062,11 +972,10 @@ function M.modify_rule(lexer, id, rule)
   lexer._grammar_table = nil -- invalidate
 end
 
--- Returns a unique grammar rule name for the given lexer's rule name.
+--- Returns a unique grammar rule name for the given lexer's rule name.
 local function rule_id(lexer, name) return lexer._name .. '.' .. name end
 
----
--- Returns the rule identified by string *id*.
+--- Returns the rule identified by string *id*.
 -- @param lexer The lexer to fetch a rule from.
 -- @param id The id of the rule to fetch.
 -- @return pattern
@@ -1076,8 +985,7 @@ function M.get_rule(lexer, id)
   return assert(lexer._rules[id], 'rule does not exist')
 end
 
----
--- Embeds child lexer *child* in parent lexer *lexer* using patterns *start_rule* and *end_rule*,
+--- Embeds child lexer *child* in parent lexer *lexer* using patterns *start_rule* and *end_rule*,
 -- which signal the beginning and end of the embedded lexer, respectively.
 -- @param lexer The parent lexer.
 -- @param child The child lexer.
@@ -1122,8 +1030,7 @@ function M.embed(lexer, child, start_rule, end_rule)
   child._lexer = lexer -- use parent's rules if child is embedding itself
 end
 
----
--- Adds to lexer *lexer* a fold point whose beginning and end points are tagged with string
+--- Adds to lexer *lexer* a fold point whose beginning and end points are tagged with string
 -- *tag_name* tags and have string content *start_symbol* and *end_symbol*, respectively.
 -- In the event that *start_symbol* may or may not be a fold point depending on context, and that
 -- additional processing is required, *end_symbol* may be a function that ultimately returns
@@ -1169,7 +1076,7 @@ function M.add_fold_point(lexer, tag_name, start_symbol, end_symbol)
   if lexer._lexer then lexer._lexer:add_fold_point(tag_name, start_symbol, end_symbol) end
 end
 
--- Recursively adds the rules for the given lexer and its children to the given grammar.
+--- Recursively adds the rules for the given lexer and its children to the given grammar.
 -- @param g The grammar to add rules to.
 -- @param lexer The lexer whose rules to add.
 local function add_lexer(g, lexer)
@@ -1239,7 +1146,7 @@ local function add_lexer(g, lexer)
   end
 end
 
--- Returns a grammar for the given lexer and initial rule, (re)constructing it if necessary.
+--- Returns a grammar for the given lexer and initial rule, (re)constructing it if necessary.
 -- @param lexer The lexer to build a grammar for.
 -- @param init_style The current style. Multiple-language lexers use this to determine which
 --   language to start lexing in.
@@ -1309,8 +1216,7 @@ local function build_grammar(lexer, init_style)
   return lexer._grammar
 end
 
----
--- Lexes a chunk of text *text* (that has an initial style number of *init_style*) using lexer
+--- Lexes a chunk of text *text* (that has an initial style number of *init_style*) using lexer
 -- *lexer*, returning a list of tag names and positions.
 -- @param lexer The lexer to lex text with.
 -- @param text The text in the buffer to lex.
@@ -1348,8 +1254,7 @@ function M.lex(lexer, text, init_style)
   return grammar:match(text)
 end
 
----
--- Determines fold points in a chunk of text *text* using lexer *lexer*, returning a table of
+--- Determines fold points in a chunk of text *text* using lexer *lexer*, returning a table of
 -- fold levels associated with line numbers.
 -- *text* starts on line number *start_line* with a beginning fold level of *start_level*
 -- in the buffer.
@@ -1499,8 +1404,7 @@ function M.fold(lexer, text, start_line, start_level)
   return folds
 end
 
----
--- Creates a returns a new lexer with the given name.
+--- Creates a returns a new lexer with the given name.
 -- @param name The lexer's name.
 -- @param opts Table of lexer options. Options currently supported:
 --   - `lex_by_line`: Whether or not the lexer only processes whole lines of text (instead of
@@ -1537,8 +1441,8 @@ function M.new(name, opts)
   return lexer
 end
 
--- When using Scintillua as a standalone module, some tables and functions that depend on
--- Scintilla do not exist. Create a substitute for them.
+--- Creates a substitute for some Scintilla tables and functions that Scintillua depends on
+-- when using it as a standalone module.
 local function initialize_standalone_library()
   M.property = setmetatable({['scintillua.lexers'] = package.path:gsub('/%?%.lua', '')}, {
     __index = function() return '' end, __newindex = function(t, k, v) rawset(t, k, tostring(v)) end
@@ -1568,7 +1472,7 @@ local function initialize_standalone_library()
   M._standalone = true
 end
 
--- Searches for the given *name* in the given *path*.
+--- Searches for the given *name* in the given *path*.
 -- This is a safe implementation of Lua 5.2's `package.searchpath()` function that does not
 -- require the package module to be loaded.
 local function searchpath(name, path)
@@ -1582,8 +1486,7 @@ local function searchpath(name, path)
   return nil, table.concat(tried, '\n')
 end
 
----
--- Initializes or loads and then returns the lexer of string name *name*.
+--- Initializes or loads and then returns the lexer of string name *name*.
 -- Scintilla calls this function in order to load a lexer. Parent lexers also call this function
 -- in order to load child lexers and vice-versa. The user calls this function in order to load
 -- a lexer when using Scintillua as a Lua library.
@@ -1630,8 +1533,7 @@ function M.load(name, alt_name)
   return lexer
 end
 
----
--- Returns a list of all known lexer names.
+--- Returns a list of all known lexer names.
 -- This function is not available to lexers and requires the LuaFileSystem (`lfs`) module to
 -- be available.
 -- @param[opt] path Optional ';'-delimited list of directories to search for lexers in. The
@@ -1664,21 +1566,18 @@ function M.names(path)
   return lexers
 end
 
----
--- Map of file extensions, without the '.' prefix, to their associated lexer names.
+--- Map of file extensions, without the '.' prefix, to their associated lexer names.
 -- This map has precedence over Scintillua's built-in map.
 -- @see detect
 M.detect_extensions = {}
 
----
--- Map of line patterns to their associated lexer names.
+--- Map of line patterns to their associated lexer names.
 -- These are Lua string patterns, not LPeg patterns.
 -- This map has precedence over Scintillua's built-in map.
 -- @see detect
 M.detect_patterns = {}
 
----
--- Returns the name of the lexer often associated with filename *filename* and/or content
+--- Returns the name of the lexer often associated with filename *filename* and/or content
 -- line *line*.
 -- @param[opt] filename Optional string filename. The default value is read from the
 --   'lexer.scintillua.filename' property.
@@ -1865,50 +1764,58 @@ end
 -- The following are utility functions lexers will have access to.
 
 -- Common patterns.
+
+--- A pattern that matches any single character.
 M.any = P(1)
+--- A pattern that matches any alphabetic character ('A'-'Z', 'a'-'z').
 M.alpha = R('AZ', 'az')
+--- A pattern that matches any digit ('0'-'9').
 M.digit = R('09')
+--- A pattern that matches any alphanumeric character ('A'-'Z', 'a'-'z', '0'-'9').
 M.alnum = R('AZ', 'az', '09')
+--- A pattern that matches any lower case character ('a'-'z').
 M.lower = R('az')
+--- A pattern that matches any upper case character ('A'-'Z').
 M.upper = R('AZ')
+--- A pattern that matches any hexadecimal digit ('0'-'9', 'A'-'F', 'a'-'f').
 M.xdigit = R('09', 'AF', 'af')
+--- A pattern that matches any graphical character ('!' to '~').
 M.graph = R('!~')
+--- A pattern that matches any punctuation character ('!' to '/', ':' to '@', '[' to ''', '{'
+-- to '~').
 M.punct = R('!/', ':@', '[\'', '{~')
+--- A pattern that matches any whitespace character ('\t', '\v', '\f', '\n', '\r', space).
 M.space = S('\t\v\f\n\r ')
 
+--- A pattern that matches a sequence of end of line characters.
 M.newline = P('\r')^-1 * '\n'
+--- A pattern that matches any single, non-newline character.
 M.nonnewline = 1 - M.newline
 
----
--- Returns a pattern that matches a decimal number, whose digits may be separated by character *c*.
+--- Returns a pattern that matches a decimal number, whose digits may be separated by character
+-- *c*.
 function M.dec_num_(c) return M.digit * (P(c)^-1 * M.digit)^0 end
----
--- Returns a pattern that matches a hexadecimal number, whose digits may be separated by
+--- Returns a pattern that matches a hexadecimal number, whose digits may be separated by
 -- character *c*.
 function M.hex_num_(c) return '0' * S('xX') * (P(c)^-1 * M.xdigit)^1 end
----
--- Returns a pattern that matches an octal number, whose digits may be separated by character *c*.
+--- Returns a pattern that matches an octal number, whose digits may be separated by character *c*.
 function M.oct_num_(c) return '0' * (P(c)^-1 * R('07'))^1 * -M.xdigit end
----
--- Returns a pattern that matches a binary number, whose digits may be separated by character *c*.
+--- Returns a pattern that matches a binary number, whose digits may be separated by character *c*.
 function M.bin_num_(c) return '0' * S('bB') * (P(c)^-1 * S('01'))^1 * -M.xdigit end
----
--- Returns a pattern that matches either a decimal, hexadecimal, octal, or binary number,
+--- Returns a pattern that matches either a decimal, hexadecimal, octal, or binary number,
 -- whose digits may be separated by character *c*.
 function M.integer_(c)
   return S('+-')^-1 * (M.hex_num_(c) + M.bin_num_(c) + M.oct_num_(c) + M.dec_num_(c))
 end
 local function exp_(c) return S('eE') * S('+-')^-1 * M.digit * (P(c)^-1 * M.digit)^0 end
----
--- Returns a pattern that matches a floating point number, whose digits may be separated by
+--- Returns a pattern that matches a floating point number, whose digits may be separated by
 -- character *c*.
 function M.float_(c)
   return S('+-')^-1 *
     ((M.dec_num_(c)^-1 * '.' * M.dec_num_(c) + M.dec_num_(c) * '.' * M.dec_num_(c)^-1 * -P('.')) *
       exp_(c)^-1 + (M.dec_num_(c) * exp_(c)))
 end
----
--- Returns a pattern that matches a typical number, either a floating point, decimal, hexadecimal,
+--- Returns a pattern that matches a typical number, either a floating point, decimal, hexadecimal,
 -- octal, or binary number, and whose digits may be separated by character *c*.
 function M.number_(c) return M.float_(c) + M.integer_(c) end
 
@@ -1924,18 +1831,15 @@ M.bin_num = M.bin_num_(false)
 M.integer = M.integer_(false)
 --- A pattern that matches a floating point number.
 M.float = M.float_(false)
----
--- A pattern that matches a typical number, either a floating point, decimal, hexadecimal,
+--- A pattern that matches a typical number, either a floating point, decimal, hexadecimal,
 -- octal, or binary number.
 M.number = M.number_(false)
 
----
--- A pattern that matches a typical word. Words begin with a letter or underscore and consist
+--- A pattern that matches a typical word. Words begin with a letter or underscore and consist
 -- of alphanumeric and underscore characters.
 M.word = (M.alpha + '_') * (M.alnum + '_')^0
 
----
--- Creates and returns a pattern that matches from string or pattern *prefix* until the end of
+--- Creates and returns a pattern that matches from string or pattern *prefix* until the end of
 -- the line.
 -- *escape* indicates whether the end of the line can be escaped with a '\' character.
 -- @param[opt] prefix Optional string or pattern prefix to start matching at. The default value
@@ -1950,8 +1854,7 @@ function M.to_eol(prefix, escape)
     (not escape and M.nonnewline or 1 - (M.newline + '\\') + '\\' * M.any)^0
 end
 
----
--- Creates and returns a pattern that matches a range of text bounded by strings or patterns *s*
+--- Creates and returns a pattern that matches a range of text bounded by strings or patterns *s*
 -- and *e*.
 -- This is a convenience function for matching more complicated ranges like strings with escape
 -- characters, balanced parentheses, and block comments (nested or not). *e* is optional and
@@ -1987,8 +1890,7 @@ function M.range(s, e, single_line, escapes, balanced)
   return s * any^0 * P(e)^-1
 end
 
----
--- Creates and returns a pattern that matches pattern *patt* only when it comes after one of
+--- Creates and returns a pattern that matches pattern *patt* only when it comes after one of
 -- the characters in string *set* (or when there are no characters behind *patt*), skipping
 -- over any characters in string *skip*, which is whitespace by default.
 -- @param set String character set like one passed to `lpeg.S()`.
@@ -2008,8 +1910,7 @@ function M.after_set(set, patt, skip)
   end)
 end
 
----
--- Creates and returns a pattern that matches pattern *patt* only at the beginning of a line,
+--- Creates and returns a pattern that matches pattern *patt* only at the beginning of a line,
 -- or after any line indentation if *allow_indent* is `true`.
 -- @param patt The LPeg pattern to match on the beginning of a line.
 -- @param allow_indent Whether or not to consider line indentation as the start of a line. The
@@ -2048,8 +1949,7 @@ function M.fold_consecutive_lines() end -- legacy
 
 -- The functions and fields below were defined in C.
 
----
--- Table of fold level bit-masks for line numbers starting from 1. (Read-only)
+--- Table of fold level bit-masks for line numbers starting from 1. (Read-only)
 -- Fold level masks are composed of an integer level combined with any of the following bits:
 --
 --   - `lexer.FOLD_BASE`
@@ -2060,30 +1960,25 @@ function M.fold_consecutive_lines() end -- legacy
 --     The line is a header, or fold point.
 -- @table fold_level
 
----
--- Table of indentation amounts in character columns, for line numbers starting from 1. (Read-only)
+--- Table of indentation amounts in character columns, for line numbers starting from
+-- 1. (Read-only)
 -- @table indent_amount
 
----
--- Table of integer line states for line numbers starting from 1.
+--- Table of integer line states for line numbers starting from 1.
 -- Line states can be used by lexers for keeping track of persistent states. For example,
 -- the output lexer uses this to mark lines that have warnings or errors.
 -- @table line_state
 
----
--- Map of key-value string pairs.
+--- Map of key-value string pairs.
 -- @table property
 
----
--- Map of key-value pairs with values interpreted as numbers, or `0` if not found. (Read-only)
+--- Map of key-value pairs with values interpreted as numbers, or `0` if not found. (Read-only)
 -- @table property_int
 
----
--- Table of style names at positions in the buffer starting from 1. (Read-only)
+--- Table of style names at positions in the buffer starting from 1. (Read-only)
 -- @table style_at
 
----
--- Returns the line number (starting from 1) of the line that contains position *pos*, which
+--- Returns the line number (starting from 1) of the line that contains position *pos*, which
 -- starts from 1.
 -- @param pos The position to get the line number of.
 -- @return number
