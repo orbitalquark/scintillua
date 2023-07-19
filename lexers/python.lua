@@ -12,7 +12,8 @@ lex:add_rule('classdef', lex:tag(lexer.KEYWORD, 'class') * lex:get_rule('whitesp
   lex:tag(lexer.CLASS, lexer.word))
 
 -- Keywords.
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)) +
+  lex:tag(lexer.KEYWORD .. '.soft', lex:word_match(lexer.KEYWORD .. '.soft')))
 
 -- Functions.
 local builtin_func = -B('.') *
@@ -57,6 +58,8 @@ lex:set_word_list(lexer.KEYWORD, {
   'lambda', 'None', 'nonlocal', 'not', 'or', 'pass', 'raise', 'return', 'True', 'try', 'while',
   'with', 'yield'
 })
+
+lex:set_word_list(lexer.KEYWORD .. '.soft', '_ case match')
 
 lex:set_word_list(lexer.FUNCTION_BUILTIN, {
   'abs', 'aiter', 'all', 'any', 'anext', 'ascii', 'bin', 'bool', 'breakpoint', 'bytearray', 'bytes',
