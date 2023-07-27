@@ -79,9 +79,9 @@
 -- The first line of code is a Lua convention to store a global variable into a local variable
 -- for quick access. The second line simply defines often used convenience variables. The third
 -- and last lines [define](#lexer.new) and return the lexer object Scintillua uses; they are
--- very important and must be part of every lexer. Note the `...` passed to [`lexer.new()`]() is
--- literal: the lexer will assume the name of its filename or an alternative name specified by
--- [`lexer.load()`]() in embedded lexer applications. The fourth line uses something called a
+-- very important and must be part of every lexer. Note the `...` passed to `lexer.new()` is
+-- literal: the lexer will assume the name of its filename or an alternative name specified
+-- by `lexer.load()` in embedded lexer applications. The fourth line uses something called a
 -- "tag", an essential component of lexers. You will learn about tags shortly. The fifth line
 -- defines a lexer grammar rule, which you will learn about later. (Be aware that it is common
 -- practice to combine these two lines for short rules.)  Note, however, the `local` prefix in
@@ -103,8 +103,8 @@
 -- to just recognize keywords and identifiers.
 --
 -- In a lexer, LPeg patterns that match particular sequences of characters are tagged with a
--- tag name using the the [`lexer.tag()`]() function. Let us examine the "identifier" tag used
--- in the template shown earlier:
+-- tag name using the the `lexer.tag()` function. Let us examine the "identifier" tag used in
+-- the template shown earlier:
 --
 --     local identifier = lex:tag(lexer.IDENTIFIER, lexer.word)
 --
@@ -115,27 +115,24 @@
 --
 -- The `lexer` module actually provides a convenient list of common tag names and common LPeg
 -- patterns for you to use. Tag names for programming languages include (but are not limited
--- to) [`lexer.DEFAULT`](), [`lexer.COMMENT`](), [`lexer.STRING`](), [`lexer.NUMBER`](),
--- [`lexer.KEYWORD`](), [`lexer.IDENTIFIER`](), [`lexer.OPERATOR`](), [`lexer.ERROR`](),
--- [`lexer.PREPROCESSOR`](), [`lexer.CONSTANT`](), [`lexer.CONSTANT_BUILTIN`](),
--- [`lexer.VARIABLE`](), [`lexer.VARIABLE_BUILTIN`](), [`lexer.FUNCTION`](),
--- [`lexer.FUNCTION_BUILTIN`](), [`lexer.FUNCTION_METHOD`](), [`lexer.CLASS`](), [`lexer.TYPE`](),
--- [`lexer.LABEL`](), [`lexer.REGEX`](), [`lexer.EMBEDDED`](), and [`lexer.ANNOTATION`](). Tag
--- names for markup languages include (but are not limited to) [`lexer.TAG`](),
--- [`lexer.ATTRIBUTE`](), [`lexer.HEADING`](), [`lexer.BOLD`](), [`lexer.ITALIC`](),
--- [`lexer.UNDERLINE`](), [`lexer.CODE`](), [`lexer.LINK`](), [`lexer.REFERENCE`](), and
--- [`lexer.LIST`](). Patterns include [`lexer.any`](), [`lexer.alpha`](), [`lexer.digit`](),
--- [`lexer.alnum`](), [`lexer.lower`](), [`lexer.upper`](), [`lexer.xdigit`](), [`lexer.graph`](),
--- [`lexer.print`](), [`lexer.punct`](), [`lexer.space`](), [`lexer.newline`](),
--- [`lexer.nonnewline`](), [`lexer.dec_num`](), [`lexer.hex_num`](), [`lexer.oct_num`](),
--- [`lexer.bin_num`](), [`lexer.integer`](), [`lexer.float`](), [`lexer.number`](), and
--- [`lexer.word`](). You may use your own tag names if none of the above fit your language,
--- but an advantage to using predefined tag names is that the language elements your lexer
--- recognizes will inherit any universal syntax highlighting color theme that your editor
--- uses. You can also "subclass" existing tag names by appending a '.*subclass*' string to
--- them. For example, the HTML lexer tags unknown tags as `lexer.TAG .. '.unknown'`. This gives
--- editors the opportunity to style those subclassed tags in a different way than normal tags,
--- or fall back to styling them as normal tags.
+-- to) `lexer.DEFAULT`, `lexer.COMMENT`, `lexer.STRING`, `lexer.NUMBER`, `lexer.KEYWORD`,
+-- `lexer.IDENTIFIER`, `lexer.OPERATOR`, `lexer.ERROR`, `lexer.PREPROCESSOR`, `lexer.CONSTANT`,
+-- `lexer.CONSTANT_BUILTIN`, `lexer.VARIABLE`, `lexer.VARIABLE_BUILTIN`, `lexer.FUNCTION`,
+-- `lexer.FUNCTION_BUILTIN`, `lexer.FUNCTION_METHOD`, `lexer.CLASS`, `lexer.TYPE`, `lexer.LABEL`,
+-- `lexer.REGEX`, `lexer.EMBEDDED`, and `lexer.ANNOTATION`. Tag names for markup languages include
+-- (but are not limited to) `lexer.TAG`, `lexer.ATTRIBUTE`, `lexer.HEADING`, `lexer.BOLD`,
+-- `lexer.ITALIC`, `lexer.UNDERLINE`, `lexer.CODE`, `lexer.LINK`, `lexer.REFERENCE`, and
+-- `lexer.LIST`. Patterns include `lexer.any`, `lexer.alpha`, `lexer.digit`, `lexer.alnum`,
+-- `lexer.lower`, `lexer.upper`, `lexer.xdigit`, `lexer.graph`, `lexer.punct`, `lexer.space`,
+-- `lexer.newline`, `lexer.nonnewline`, `lexer.dec_num`, `lexer.hex_num`, `lexer.oct_num`,
+-- `lexer.bin_num`, `lexer.integer`, `lexer.float`, `lexer.number`, and `lexer.word`. You may
+-- use your own tag names if none of the above fit your language, but an advantage to using
+-- predefined tag names is that the language elements your lexer recognizes will inherit any
+-- universal syntax highlighting color theme that your editor uses. You can also "subclass"
+-- existing tag names by appending a '.*subclass*' string to them. For example, the HTML lexer
+-- tags unknown tags as `lexer.TAG .. '.unknown'`. This gives editors the opportunity to style
+-- those subclassed tags in a different way than normal tags, or fall back to styling them as
+-- normal tags.
 --
 -- ##### Example Tags
 --
@@ -147,8 +144,8 @@
 -- Instead of matching _n_ keywords with _n_ `P('keyword_`_`n`_`')` ordered choices, use one
 -- of of the following methods:
 --
--- 1. Use the convenience function [`lexer.word_match()`]() optionally coupled with
---   [`lexer.set_word_list()`](). It is much easier and more efficient to write word matches like:
+-- 1. Use the convenience function `lexer.word_match()` optionally coupled with
+--   `lexer.set_word_list()`. It is much easier and more efficient to write word matches like:
 --
 --        local keyword = lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD))
 --        [...]
@@ -182,7 +179,7 @@
 --    expect the editor using it to supply word lists. Scintilla-based editors can do so via
 --    Scintilla's `ILexer5` interface.
 --
--- 2. Use the lexer-agnostic form of [`lexer.word_match()`]():
+-- 2. Use the lexer-agnostic form of `lexer.word_match()`:
 --
 --        local keyword = lex:tag(lexer.KEYWORD, lexer.word_match{
 --          'keyword_1', 'keyword_2', ..., 'keyword_n'
@@ -226,7 +223,7 @@
 --
 -- Most programming languages allow escape sequences in strings such that a sequence like
 -- "\\&quot;" in a double-quoted string indicates that the '&quot;' is not the end of the
--- string. [`lexer.range()`]() handles escapes inherently.
+-- string. `lexer.range()` handles escapes inherently.
 --
 --     local dq_str = lexer.range('"')
 --     local sq_str = lexer.range("'")
@@ -258,8 +255,8 @@
 -- Programming languages have grammars, which specify valid syntactic structure. For example,
 -- comments usually cannot appear within a string, and valid identifiers (like variable names)
 -- cannot be keywords. In Lua lexers, grammars consist of LPeg pattern rules, many of which
--- are tagged.  Recall from the lexer template the [`lexer.add_rule()`]() call, which adds a
--- rule to the lexer's grammar:
+-- are tagged.  Recall from the lexer template the `lexer.add_rule()` call, which adds a rule
+-- to the lexer's grammar:
 --
 --     lex:add_rule('identifier', identifier)
 --
@@ -350,7 +347,7 @@
 -- ##### Parent Lexer
 --
 -- Before embedding a child lexer into a parent lexer, the parent lexer needs to load the child
--- lexer. This is done with the [`lexer.load()`]() function. For example, loading the CSS lexer
+-- lexer. This is done with the `lexer.load()` function. For example, loading the CSS lexer
 -- within the HTML lexer looks like:
 --
 --     local css = lexer.load('css')
@@ -380,7 +377,7 @@
 --     local css_end_rule = #P('</style>') * tag
 --
 -- Once the parent loads the child lexer and defines the child's start and end rules, it embeds
--- the child with the [`lexer.embed()`]() function:
+-- the child with the `lexer.embed()` function:
 --
 --     lex:embed(css, css_start_rule, css_end_rule)
 --
@@ -388,8 +385,8 @@
 --
 -- The process for instructing a child lexer to embed itself into a parent is very similar to
 -- embedding a child into a parent: first, load the parent lexer into the child lexer with the
--- [`lexer.load()`]() function and then create start and end rules for the child lexer. However,
--- in this case, call [`lexer.embed()`]() with switched arguments. For example, in the PHP lexer:
+-- `lexer.load()` function and then create start and end rules for the child lexer. However,
+-- in this case, call `lexer.embed()` with switched arguments. For example, in the PHP lexer:
 --
 --     local html = lexer.load('html')
 --     local php_start_rule = lex:tag('php_tag', '<?php' * lexer.space)
@@ -406,8 +403,8 @@
 -- document. However, there may be rare cases where a lexer does need to keep track of some
 -- sort of persistent state. Rather than using `lpeg.P` function patterns that set state
 -- variables, it is recommended to make use of Scintilla's built-in, per-line state integers via
--- [`lexer.line_state`](). It was designed to accommodate up to 32 bit-flags for tracking state.
--- [`lexer.line_from_position()`]() will return the line for any position given to an `lpeg.P`
+-- `lexer.line_state`. It was designed to accommodate up to 32 bit-flags for tracking state.
+-- `lexer.line_from_position()` will return the line for any position given to an `lpeg.P`
 -- function pattern. (Any positions derived from that position argument will also work.)
 --
 -- Writing stateful lexers is beyond the scope of this document.
@@ -425,8 +422,8 @@
 -- fold keywords are "if" and "end" in Lua and examples of fold character sequences are '{',
 -- '}', "/\*", and "\*/" in C for code block and comment delimiters, respectively. However,
 -- these fold points cannot occur just anywhere. For example, lexers should not recognize fold
--- keywords that appear within strings or comments. The [`lexer.add_fold_point()`]() function
--- allows you to conveniently define fold points with such granularity. For example, consider C:
+-- keywords that appear within strings or comments. The `lexer.add_fold_point()` function allows
+-- you to conveniently define fold points with such granularity. For example, consider C:
 --
 --     lex:add_fold_point(lexer.OPERATOR, '{', '}')
 --     lex:add_fold_point(lexer.COMMENT, '/*', '*/')
@@ -443,7 +440,7 @@
 --     lex:add_fold_point(lexer.KEYWORD, 'repeat', 'until')
 --
 -- If your lexer has case-insensitive keywords as fold points, simply add a
--- `case_insensitive_fold_points = true` option to [`lexer.new()`](), and specify keywords in
+-- `case_insensitive_fold_points = true` option to `lexer.new()`, and specify keywords in
 -- lower case.
 --
 -- If your lexer needs to do some additional processing in order to determine if a tagged element
@@ -548,23 +545,23 @@
 --
 -- 1. `lexer` exists in the default lexer environment, so `require('lexer')` should be replaced
 --    by simply `lexer`. (Keep in mind `local lexer = lexer` is a Lua idiom.)
--- 2. Every lexer created using [`lexer.new()`]() should no longer specify a lexer name by
---    string, but should instead use `...` (three dots), which evaluates to the lexer's filename
---    or alternative name in embedded lexer applications.
+-- 2. Every lexer created using `lexer.new()` should no longer specify a lexer name by string,
+--    but should instead use `...` (three dots), which evaluates to the lexer's filename or
+--    alternative name in embedded lexer applications.
 -- 3. Every lexer created using `lexer.new()` now includes a rule to match whitespace. Unless
 --    your lexer has significant whitespace, you can remove your legacy lexer's whitespace
 --    token and rule. Otherwise, your defined whitespace rule will replace the default one.
 -- 4. The concept of tokens has been replaced with tags. Instead of calling a `token()` function,
 --    call [`lex:tag()`](#lexer.tag) instead.
--- 5. Lexers now support replaceable word lists. Instead of calling [`lexer.word_match()`]()
---    with large word lists, call it as an instance method with an identifier string (typically
+-- 5. Lexers now support replaceable word lists. Instead of calling `lexer.word_match()` with
+--    large word lists, call it as an instance method with an identifier string (typically
 --    something like `lexer.KEYWORD`). Then at the end of the lexer (before `return lex`), call
 --    [`lex:set_word_list()`](#lexer.set_word_list) with the same identifier and the usual
 --    list of words to match. This allows users of your lexer to call `lex:set_word_list()`
 --    with their own set of words should they wish to.
 -- 6. Lexers no longer specify styling information. Remove any calls to `lex:add_style()`. You
 --    may need to add styling information for custom tags to your editor's theme.
--- 7. `lexer.last_char_includes()` has been deprecated in favor of the new [`lexer.after_set()`]().
+-- 7. `lexer.last_char_includes()` has been deprecated in favor of the new `lexer.after_set()`.
 --    Use the character set and pattern as arguments to that new function.
 --
 -- As an example, consider the following sample legacy lexer:
@@ -854,7 +851,6 @@ local function word_list_id(lexer, i) return lexer._name .. '_wordlist' .. i end
 -- @usage local keyword = lex:tag(lexer.KEYWORD, lexer.word_match({'foo-bar', 'foo-baz',
 --   'bar-foo', 'bar-baz', 'baz-foo', 'baz-bar'}, true))
 -- @usage local keyword = lex:tag(lexer.KEYWORD, lexer.word_match('foo bar baz'))
--- @see set_word_list
 function M.word_match(lexer, word_list, case_insensitive)
   if type(lexer) == 'table' and getmetatable(lexer) then
     if lexer._lexer then
@@ -913,7 +909,6 @@ end
 -- @param word_list A list of words or a string list of words separated by spaces.
 -- @param append Whether or not to append *word_list* to the existing word list (if any). The
 --   default value is `false`.
--- @see word_match
 function M.set_word_list(lexer, name, word_list, append)
   if word_list == 'scintillua' then return end -- for SciTE
   if lexer._lexer then
@@ -1586,7 +1581,6 @@ M.detect_patterns = {}
 -- @return string lexer name to pass to `load()`, or `nil` if none was detected
 -- @see detect_extensions
 -- @see detect_patterns
--- @see load
 function M.detect(filename, line)
   if not filename then filename = M.property and M.property['lexer.scintillua.filename'] or '' end
   if not line then line = M.property and M.property['lexer.scintillua.line'] or '' end
@@ -1935,7 +1929,6 @@ M.property_expanded = setmetatable({}, {__index = function() return '' end}) -- 
 -- @return pattern
 -- @usage local number = token(lexer.NUMBER, lexer.number)
 -- @usage local addition = token('addition', '+' * lexer.word)
--- @see tag
 function M.token(name, patt) return Cc(name) * (P(patt) / 0) * Cp() end
 
 -- Legacy function that creates and returns a pattern that verifies the first non-whitespace
