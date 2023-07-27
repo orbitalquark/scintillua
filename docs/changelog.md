@@ -2,6 +2,34 @@
 
 [Atom Feed](https://github.com/orbitalquark/scintillua/releases.atom)
 
+### 6.2 (27 Jul 2022)
+
+Download:
+
+* [Scintillua 6.2][]
+
+Bugfixes:
+
+* Fixed user-specified first line pattern detection.
+
+Changes:
+
+* Updated Bash lexer to no highlight escaped quote characters as strings.
+* Added "scintillua.word.chars" property for use with Scintilla-based editors.
+* Added [`lexer.names()`][] for determining known lexer names if LuaFileSystem is available.
+* Improvements to allow using Scintillua as a Lua library in a Scintilla environment.
+* Updated Pascal keywords.
+* Added Objeck lexer.
+* Replaced Man lexer with Troff lexer.
+* Define `_G.lpeg` for lexers if it does not already exist.
+* Updated Python lexer to support soft keywords, but not highlight them by default.
+* Only highlight stand-alone numbers in YAML.
+* Updated to [LPeg][] 1.1.0.
+
+[Scintillua 6.2]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_6.2/scintillua_6.2.zip
+[`lexer.names()`]: api.html#lexer.names
+[LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
+
 ### 6.1 (22 Dec 2022)
 
 Download:
