@@ -72,7 +72,9 @@ lex:add_rule('timestamp', lex:tag(lexer.NUMBER .. '.timestamp',
 
 -- Numbers.
 local special_num = S('+-')^-1 * '.' * word_match('inf nan', true)
-lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number + special_num) * scalar_end)
+local number = lexer.number + special_num
+lex:add_rule('number', (B(lexer.alnum) * lex:tag(lexer.DEFAULT, number) +
+  lex:tag(lexer.NUMBER, number)) * scalar_end)
 
 -- Scalars.
 local block_indicator = S('|>') * (S('-+') * lexer.digit^-1 + lexer.digit * S('-+')^-1)^-1
