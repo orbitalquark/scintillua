@@ -171,7 +171,7 @@ deps: scintilla lexilla lua lua/src/lib/lpeg
 scintilla_tgz = scintilla501.tgz
 lexilla_tgz = lexilla510.tgz
 lua_tgz = lua-5.3.5.tar.gz
-lpeg_tgz = lpeg-1.0.2.tar.gz
+lpeg_tgz = lpeg-1.1.0.tar.gz
 
 $(scintilla_tgz): ; $(WGET) https://www.scintilla.org/$@
 scintilla: | $(scintilla_tgz)
@@ -186,4 +186,4 @@ lexilla: | $(lexilla_tgz) ; tar xzf $|
 $(lua_tgz): ; $(WGET) http://www.lua.org/ftp/$@
 $(lpeg_tgz): ; $(WGET) http://www.inf.puc-rio.br/~roberto/lpeg/$@
 lua: | $(lua_tgz) ; mkdir $@ && tar xzf $| -C $@ && mv $@/*/* $@
-lua/src/lib/lpeg: | $(lpeg_tgz) ; mkdir -p $@ && tar xzf $| -C $@ && mv $@/*/*.c $@/*/*.h $(dir $@)
+lua/src/lib/lpeg: | $(lpeg_tgz) ; mkdir -p $@ && tar xzf $| -C $@ && mv $@/*/*.c $@/*/*.h $(@D)
