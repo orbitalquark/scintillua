@@ -104,7 +104,8 @@ lex:add_rule('character', token('character', char))
 lex:add_style('character', lexer.styles.constant)
 
 -- Operator
-lex:add_rule('operator', token(lexer.OPERATOR, S('+-*/÷<>=!≠≈≤≥%^&|⊻~\\\':?.√')))
+lex:add_rule('operator', token(lexer.OPERATOR, S('+-*/<>=!%^&|~\\\':?.') + '÷' + '≠' + '≈' +
+  '≤' + '≥' + '⊻' + '√'))
 
 lexer.property['scintillua.comment'] = '#'
 
