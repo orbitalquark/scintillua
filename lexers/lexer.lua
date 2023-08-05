@@ -1047,6 +1047,7 @@ end
 -- @usage lex:add_fold_point(lexer.KEYWORD, 'if', 'end')
 -- @usage lex:add_fold_point('custom', function(text, pos, line, s, symbol) ... end)
 function M.add_fold_point(lexer, tag_name, start_symbol, end_symbol)
+  if not start_symbol and not end_symbol then return end -- from legacy fold_consecutive_lines()
   if not lexer._fold_points then lexer._fold_points = {_symbols = {}} end
   local symbols = lexer._fold_points._symbols
   if not lexer._fold_points[tag_name] then lexer._fold_points[tag_name] = {} end
