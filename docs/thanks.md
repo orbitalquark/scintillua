@@ -9,6 +9,7 @@ and better over the years.
 * Alejandro Baez
 * Alex Saraci
 * Alexey Melnichuk
+* Alexey Yerin
 * Alexander Misel
 * Brian Schott
 * Carl Sturtivant
