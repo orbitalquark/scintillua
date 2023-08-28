@@ -1924,7 +1924,8 @@ end
 
 M.colors = {} -- legacy
 M.styles = setmetatable({}, { -- legacy
-  __index = function() return setmetatable({}, {__concat = function() return nil end}) end
+  __index = function() return setmetatable({}, {__concat = function() return nil end}) end,
+  __newindex = function() end
 })
 M.property_expanded = setmetatable({}, {__index = function() return '' end}) -- legacy
 
