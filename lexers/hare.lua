@@ -38,7 +38,7 @@ lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
 -- Strings.
 local sq_str = lexer.range("'", true)
 local dq_str = lexer.range('"')
-local raw_str = lexer.range('`')
+local raw_str = lexer.range('`', false, false)
 lex:add_rule('string', token(lexer.STRING, sq_str + dq_str + raw_str))
 
 -- Comments.
