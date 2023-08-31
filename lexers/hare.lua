@@ -16,7 +16,7 @@ lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
   'as', 'break', 'case', 'const', 'continue', 'def', 'defer', 'else', 'export', 'false', 'fn',
   'for', 'if', 'is', 'let', 'match', 'null', 'nullable', 'return', 'static', 'struct', 'switch',
-  'true', 'type', 'use', 'yield'
+  'true', 'type', 'union', 'use', 'yield'
 }))
 
 -- Functions.
@@ -29,7 +29,7 @@ lex:add_rule('function', token(lexer.FUNCTION, word_match{
 -- Types.
 lex:add_rule('type', token(lexer.TYPE, word_match{
   'bool', 'enum', 'f32', 'f64', 'i16', 'i32', 'i64', 'i8', 'int', 'never', 'opaque', 'rune', 'size',
-  'str', 'u16', 'u32', 'u64', 'u8', 'uint', 'uintptr', 'union', 'valist', 'void'
+  'str', 'u16', 'u32', 'u64', 'u8', 'uint', 'uintptr', 'valist', 'void'
 }))
 
 -- Identifiers.
