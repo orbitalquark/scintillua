@@ -22,14 +22,14 @@ lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
 -- Functions.
 local size_builtin = 'size' * #(lexer.space^0 * '(')
 lex:add_rule('function', token(lexer.FUNCTION, word_match{
-  'abort', 'align', 'alloc', 'append', 'assert', 'cap', 'delete', 'free', 'insert', 'len', 'offset',
+  'abort', 'align', 'alloc', 'append', 'assert', 'delete', 'free', 'insert', 'len', 'offset',
   'vaarg', 'vaend', 'vastart'
 } + size_builtin))
 
 -- Types.
 lex:add_rule('type', token(lexer.TYPE, word_match{
-  'bool', 'enum', 'f32', 'f64', 'i16', 'i32', 'i64', 'i8', 'int', 'rune', 'size', 'str', 'u16',
-  'u32', 'u64', 'u8', 'uint', 'uintptr', 'union', 'valist', 'void'
+  'bool', 'enum', 'f32', 'f64', 'i16', 'i32', 'i64', 'i8', 'int', 'never', 'opaque', 'rune', 'size',
+  'str', 'u16', 'u32', 'u64', 'u8', 'uint', 'uintptr', 'union', 'valist', 'void'
 }))
 
 -- Identifiers.
