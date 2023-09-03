@@ -1201,6 +1201,12 @@ local function build_grammar(lexer, init_style)
       if style_num == init_style then
         local lexer_name = tag:match('^whitespace%.(.+)$') or lexer._parent_name or lexer._name
         if lexer._initial_rule == lexer_name then break end
+        if not lexer._grammar_table[lexer_name] then
+          -- For proxy lexers like RHTML, the 'whitespace.rhtml' tag would produce the 'rhtml'
+          -- lexer name, but there is no 'rhtml' rule. It should be the 'html' rule (parent)
+          -- instead.
+          lexer_name = lexer._parent_name or lexer._name
+        end
         lexer._initial_rule = lexer_name
         lexer._grammar_table[1] = lexer._initial_rule
         lexer._grammar = Ct(P(lexer._grammar_table))
@@ -1918,7 +1924,8 @@ end
 
 M.colors = {} -- legacy
 M.styles = setmetatable({}, { -- legacy
-  __index = function() return setmetatable({}, {__concat = function() return nil end}) end
+  __index = function() return setmetatable({}, {__concat = function() return nil end}) end,
+  __newindex = function() end
 })
 M.property_expanded = setmetatable({}, {__index = function() return '' end}) -- legacy
 

@@ -46,7 +46,8 @@ local builtin_var = lex:tag(lexer.OPERATOR, '$') * lex:tag(lexer.VARIABLE_BUILTI
   lexer.VARIABLE_BUILTIN) + S('!#?*@$-') + lexer.digit^1)
 local var_ref = lex:tag(lexer.OPERATOR, '$' * ('{' * S('!#')^-1)^-1) *
   lex:tag(lexer.VARIABLE, lexer.word)
-lex:add_rule('variable', builtin_var + var_ref)
+local patt_expansion = lex:tag(lexer.DEFAULT, '/#' + '#' * P('#')^-1)
+lex:add_rule('variable', builtin_var + var_ref * patt_expansion^-1)
 
 -- Operators.
 local op = S('!<>&|;$()[]{}') + lpeg.B(lexer.space) * S('.:') * #lexer.space
