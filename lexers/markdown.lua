@@ -30,7 +30,9 @@ local hspace = lexer.space - '\n'
 local blank_line = '\n' * hspace^0 * ('\n' + P(-1))
 
 local code_line = lexer.starts_line((B('    ') + B('\t')) * lexer.to_eol(), true)
-local code_block = lexer.range(lexer.starts_line('```', true), '\n```' * hspace^0 * ('\n' + P(-1)))
+local code_block =
+  lexer.range(lexer.starts_line('```', true), '\n```' * hspace^0 * ('\n' + P(-1))) +
+    lexer.range(lexer.starts_line('~~~', true), '\n~~~' * hspace^0 * ('\n' + P(-1)))
 local code_inline = lpeg.Cmt(lpeg.C(P('`')^1), function(input, index, bt)
   -- `foo`, ``foo``, ``foo`bar``, `foo``bar` are all allowed.
   local _, e = input:find('[^`]' .. bt .. '%f[^`]', index)
