@@ -61,12 +61,12 @@ lex:add_fold_point(lexer.OPERATOR, '{', '}')
 -- Word lists.
 lex:set_word_list(lexer.KEYWORD, {
   'as', 'break', 'case', 'const', 'continue', 'def', 'defer', 'else', 'export', 'fn', 'for', 'if',
-  'is', 'let', 'match', 'return', 'static', 'switch', 'type', 'use', 'yield', '_'
+  'is', 'let', 'match', 'nullable', 'return', 'static', 'switch', 'type', 'use', 'yield', '_'
 })
 
 lex:set_word_list(lexer.TYPE, {
-  'bool', 'enum', 'f32', 'f64', 'i16', 'i32', 'i64', 'i8', 'int', 'opaque', 'never', 'nullable',
-  'rune', 'size', 'str', 'struct', 'u16', 'u32', 'u64', 'u8', 'uint', 'uintptr', 'union', 'valist'
+  'bool', 'enum', 'f32', 'f64', 'i16', 'i32', 'i64', 'i8', 'int', 'opaque', 'never', 'rune', 'size',
+  'str', 'struct', 'u16', 'u32', 'u64', 'u8', 'uint', 'uintptr', 'union', 'valist'
 })
 
 lex:set_word_list(lexer.FUNCTION_BUILTIN, {
