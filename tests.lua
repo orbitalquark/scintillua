@@ -1118,9 +1118,9 @@ function test_makefile()
     KEYWORD, 'define', FUNCTION, 'build-cc', OPERATOR, '=', --
     OPERATOR, '$(', VARIABLE_BUILTIN, 'CC', OPERATOR, ')', --
     OPERATOR, '${', VARIABLE_BUILTIN, 'CFLAGS', OPERATOR, '}', --
-    DEFAULT, '-', IDENTIFIER, 'c', --
+    DEFAULT, '-c', --
     OPERATOR, '$', VARIABLE_BUILTIN, '<', --
-    DEFAULT, '-', IDENTIFIER, 'o', --
+    DEFAULT, '-o', --
     OPERATOR, '$', VARIABLE_BUILTIN, '@', --
     KEYWORD, 'endef', --
     FUNCTION, 'func', --
@@ -1170,7 +1170,7 @@ function test_bash()
     DEFAULT, ':', --
     OPERATOR, '$', VARIABLE_BUILTIN, 'PATH', --
     FUNCTION_BUILTIN, 'echo', --
-    DEFAULT, '-', IDENTIFIER, 'n', --
+    DEFAULT, '-n', --
     OPERATOR, '$', VARIABLE, 'foo', --
     NUMBER, '1', OPERATOR, '>', OPERATOR, '&', NUMBER, '2', --
     KEYWORD, 'if', --
@@ -1191,7 +1191,7 @@ function test_bash()
     DEFAULT, '/', --
     IDENTIFIER, 'foo', --
     DEFAULT, '/', --
-    IDENTIFIER, 'bar', DEFAULT, '-', IDENTIFIER, 'baz', DEFAULT, '.', IDENTIFIER, 'quux', --
+    IDENTIFIER, 'bar', DEFAULT, '-baz', DEFAULT, '.', IDENTIFIER, 'quux', --
     OPERATOR, ']', OPERATOR, ']', OPERATOR, ';', KEYWORD, 'then', --
     VARIABLE, 'foo', OPERATOR, '=', OPERATOR, '$', VARIABLE_BUILTIN, '?', --
     KEYWORD, 'fi', --
