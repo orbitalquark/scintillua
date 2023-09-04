@@ -10,7 +10,8 @@ local lex = lexer.new(...)
 lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 
 -- Builtins.
-lex:add_rule('builtin', lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN)))
+lex:add_rule('builtin',
+  lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN)) * -P('='))
 
 -- Variable assignment.
 local assign = lex:tag(lexer.VARIABLE, lexer.word) * lex:tag(lexer.OPERATOR, '=')
@@ -71,7 +72,7 @@ local shell_op = '-o'
 local var_op = '-' * S('vR')
 local string_op = '-' * S('zn') + S('!=')^-1 * '=' + S('<>')
 local num_op = '-' * lexer.word_match('eq ne lt le gt ge')
-local in_cond_expr = in_expr{[' [[ '] = ' ]]', [' [ '] = ' ]'}
+local in_cond_expr = in_expr{['[[ '] = ' ]]', ['[ '] = ' ]'}
 local conditional_op = (num_op + file_op + shell_op + var_op + string_op) * #lexer.space *
   in_cond_expr
 
@@ -79,6 +80,9 @@ local in_arith_expr = in_expr{['(('] = '))'}
 local arith_op = (S('+!~*/%<>=&^|?:,') + '--' + '-' * #S(' \t')) * in_arith_expr
 
 lex:add_rule('operator', lex:tag(lexer.OPERATOR, op + conditional_op + arith_op))
+
+-- Flags/options.
+lex:add_rule('flag', lex:tag(lexer.DEFAULT, '-' * P('-')^-1 * lexer.word * ('-' * lexer.word)^0))
 
 -- Fold points.
 lex:add_fold_point(lexer.KEYWORD, 'if', 'fi')
