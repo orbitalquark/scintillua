@@ -11,13 +11,15 @@ local lex = lexer.new(...)
 lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 
 -- Functions.
+-- Note: cannot tag normal functions because indexing variables uses the same syntax.
 local builtin_func = lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN))
-local func = lex:tag(lexer.FUNCTION, lexer.word)
-local method = B('.') * lex:tag(lexer.FUNCTION_METHOD, lexer.word)
-lex:add_rule('function', (method + builtin_func + func) * #(lexer.space^0 * S('(')))
+lex:add_rule('function', builtin_func * #(lexer.space^0 * S('(')))
 
 -- Variable.
 lex:add_rule('variable', lex:tag(lexer.VARIABLE_BUILTIN, lex:word_match(lexer.VARIABLE_BUILTIN)))
+
+-- Constants.
+lex:add_rule('constant', lex:tag(lexer.CONSTANT_BUILTIN, lex:word_match(lexer.CONSTANT_BUILTIN)))
 
 -- Identifiers.
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
@@ -69,15 +71,18 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
 
 lex:set_word_list(lexer.VARIABLE_BUILTIN, {
   'ans', 'automatic_replot', 'default_return_value', 'do_fortran_indexing',
-  'define_all_return_values', 'empty_list_elements_ok', 'eps', 'false', 'gnuplot_binary',
-  'ignore_function_time_stamp', 'implicit_str_to_num_ok', 'Inf', 'inf', 'NaN', 'nan',
-  'ok_to_lose_imaginary_part', 'output_max_field_width', 'output_precision', 'page_screen_output',
-  'pi', 'prefer_column_vectors', 'prefer_zero_one_indexing', 'print_answer_id_name',
-  'print_empty_dimensions', 'realmax', 'realmin', 'resize_on_range_error',
-  'return_last_computed_value', 'save_precision', 'silent_functions', 'split_long_rows',
-  'suppress_verbose_help_message', 'treat_neg_dim_as_zero', 'true', 'warn_assign_as_truth_value',
-  'warn_comma_in_global_decl', 'warn_divide_by_zero', 'warn_function_name_clash',
-  'whitespace_in_literal_matrix'
+  'define_all_return_values', 'empty_list_elements_ok', 'eps', 'gnuplot_binary',
+  'ignore_function_time_stamp', 'implicit_str_to_num_ok', 'ok_to_lose_imaginary_part',
+  'output_max_field_width', 'output_precision', 'page_screen_output', 'prefer_column_vectors',
+  'prefer_zero_one_indexing', 'print_answer_id_name', 'print_empty_dimensions',
+  'resize_on_range_error', 'return_last_computed_value', 'save_precision', 'silent_functions',
+  'split_long_rows', 'suppress_verbose_help_message', 'treat_neg_dim_as_zero',
+  'warn_assign_as_truth_value', 'warn_comma_in_global_decl', 'warn_divide_by_zero',
+  'warn_function_name_clash', 'whitespace_in_literal_matrix'
+})
+
+lex:set_word_list(lexer.CONSTANT_BUILTIN, {
+  'false', 'Inf', 'inf', 'NaN', 'nan', 'pi', 'realmax', 'realmin', 'true'
 })
 
 lexer.property['scintillua.comment'] = '%'
