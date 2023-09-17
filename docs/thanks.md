@@ -53,6 +53,7 @@ and better over the years.
 * Phil Hagelberg
 * Piotr Orzechowski
 * Qiu
+* Randy Palamar
 * Richard Philips
 * Robert Gieseke
 * Roberto Ierusalimschy
