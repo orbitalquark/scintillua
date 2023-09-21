@@ -43,8 +43,8 @@ lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.to_eol('#')))
 lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number))
 
 -- Variables.
-local builtin_var = lex:tag(lexer.OPERATOR, '$') * lex:tag(lexer.VARIABLE_BUILTIN, lex:word_match(
-  lexer.VARIABLE_BUILTIN) + S('!#?*@$-') + lexer.digit^1)
+local builtin_var = lex:tag(lexer.OPERATOR, '$' * P('{')^-1) * lex:tag(lexer.VARIABLE_BUILTIN,
+  lex:word_match(lexer.VARIABLE_BUILTIN) + S('!#?*@$-') * -lexer.alnum + lexer.digit^1)
 local var_ref = lex:tag(lexer.OPERATOR, '$' * ('{' * S('!#')^-1)^-1) *
   lex:tag(lexer.VARIABLE, lexer.word)
 local patt_expansion = lex:tag(lexer.DEFAULT, '/#' + '#' * P('#')^-1)

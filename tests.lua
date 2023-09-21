@@ -1156,7 +1156,7 @@ function test_bash()
     if [ ! -z "foo" -a 0 -ne 1 ]; then
       quux=$((1 - 2 / 0x3))
     elif [[ -d /foo/bar-baz.quux ]]; then
-      foo=$?
+      foo=${?}
     fi
     s=<<-"END"
       foobar
@@ -1193,7 +1193,7 @@ function test_bash()
     DEFAULT, '/', --
     IDENTIFIER, 'bar', DEFAULT, '-baz', DEFAULT, '.', IDENTIFIER, 'quux', --
     OPERATOR, ']', OPERATOR, ']', OPERATOR, ';', KEYWORD, 'then', --
-    VARIABLE, 'foo', OPERATOR, '=', OPERATOR, '$', VARIABLE_BUILTIN, '?', --
+    VARIABLE, 'foo', OPERATOR, '=', OPERATOR, '${', VARIABLE_BUILTIN, '?', OPERATOR, '}', --
     KEYWORD, 'fi', --
     VARIABLE, 's', OPERATOR, '=', STRING, '<<-"END"\n      foobar\n    END'
   }
