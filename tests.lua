@@ -1175,19 +1175,19 @@ function test_bash()
     NUMBER, '1', OPERATOR, '>', OPERATOR, '&', NUMBER, '2', --
     KEYWORD, 'if', --
     OPERATOR, '[', --
-    OPERATOR, '!', OPERATOR, '-z', STRING, '"foo"', --
-    OPERATOR, '-a', --
-    NUMBER, '0', OPERATOR, '-ne', NUMBER, '1', --
+    OPERATOR, '!', DEFAULT, '-z', STRING, '"foo"', --
+    DEFAULT, '-a', --
+    NUMBER, '0', DEFAULT, '-ne', NUMBER, '1', --
     OPERATOR, ']', --
     OPERATOR, ';', KEYWORD, 'then', --
     VARIABLE, 'quux', --
     OPERATOR, '=', --
     OPERATOR, '$', OPERATOR, '(', OPERATOR, '(', --
-    NUMBER, '1', OPERATOR, '-', NUMBER, '2', OPERATOR, '/', NUMBER, '0x3', --
+    NUMBER, '1', DEFAULT, '-', NUMBER, '2', DEFAULT, '/', NUMBER, '0x3', --
     OPERATOR, ')', OPERATOR, ')', --
     KEYWORD, 'elif', --
     OPERATOR, '[', OPERATOR, '[', --
-    OPERATOR, '-d', --
+    DEFAULT, '-d', --
     DEFAULT, '/', --
     IDENTIFIER, 'foo', --
     DEFAULT, '/', --

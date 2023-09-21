@@ -79,7 +79,9 @@ local conditional_op = (num_op + file_op + shell_op + var_op + string_op) * #lex
 local in_arith_expr = in_expr{['(('] = '))'}
 local arith_op = (S('+!~*/%<>=&^|?:,') + '--' + '-' * #S(' \t')) * in_arith_expr
 
-lex:add_rule('operator', lex:tag(lexer.OPERATOR, op + conditional_op + arith_op))
+-- TODO: performance is terrible on large files.
+-- lex:add_rule('operator', lex:tag(lexer.OPERATOR, op + conditional_op + arith_op))
+lex:add_rule('operator', lex:tag(lexer.OPERATOR, op))
 
 -- Flags/options.
 lex:add_rule('flag', lex:tag(lexer.DEFAULT, '-' * P('-')^-1 * lexer.word * ('-' * lexer.word)^0))
