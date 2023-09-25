@@ -1901,8 +1901,9 @@ end
 function M.after_set(set, patt, skip)
   if not skip then skip = ' \t\r\n\v\f' end
   local set_chars, skip_chars = {}, {}
-  for _, byte in utf8.codes(set) do set_chars[byte] = true end
-  for _, byte in utf8.codes(skip) do skip_chars[byte] = true end
+  -- Note: cannot use utf8.codes() because Lua 5.1 is still supported.
+  for char in set:gmatch('.') do set_chars[string.byte(char)] = true end
+  for char in skip:gmatch('.') do skip_chars[string.byte(char)] = true end
   return (B(S(set)) + -B(1)) * patt + Cmt(C(patt), function(input, index, match, ...)
     local pos = index - #match
     if #skip > 0 then while pos > 1 and skip_chars[input:byte(pos - 1)] do pos = pos - 1 end end
