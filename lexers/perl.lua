@@ -47,6 +47,7 @@ local literal_delimited2 = P(function(input, index) -- for 2 delimiter sets
     if not final_match_pos then -- using (), [], {}, or <> notation
       final_match_pos = lpeg.match(lexer.space^0 * patt, input, first_match_pos)
     end
+    if final_match_pos and final_match_pos < index then final_match_pos = index end
     return final_match_pos or #input + 1
   end
 end)
@@ -65,14 +66,14 @@ end)
 local lit_str = 'q' * P('q')^-1 * literal_delimited
 local lit_array = 'qw' * literal_delimited
 local lit_cmd = 'qx' * literal_delimited
-local lit_tr = (P('tr') + 'y') * literal_delimited2 * S('cds')^0
 local string = lex:tag(lexer.STRING,
-  sq_str + dq_str + cmd_str + heredoc + lit_str + lit_array + lit_cmd + lit_tr)
+  sq_str + dq_str + cmd_str + heredoc + lit_str + lit_array + lit_cmd)
 local regex_str = lexer.after_set('-<>+*!~\\=%&|^?:;([{', lexer.range('/', true) * S('imosx')^0)
 local lit_regex = 'qr' * literal_delimited * S('imosx')^0
 local lit_match = 'm' * literal_delimited * S('cgimosx')^0
 local lit_sub = 's' * literal_delimited2 * S('ecgimosx')^0
-local regex = lex:tag(lexer.REGEX, regex_str + lit_regex + lit_match + lit_sub)
+local lit_tr = (P('tr') + 'y') * literal_delimited2 * S('cds')^0
+local regex = lex:tag(lexer.REGEX, regex_str + lit_regex + lit_match + lit_sub + lit_tr)
 lex:add_rule('string', string + regex)
 
 -- Functions.
