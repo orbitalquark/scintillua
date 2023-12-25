@@ -1,4 +1,4 @@
--- Copyright 2006-2023 Mitchell. See LICENSE.
+-- Copyright 2006-2024 Mitchell. See LICENSE.
 
 --- Lexes Scintilla documents and source code with Lua and LPeg.
 --

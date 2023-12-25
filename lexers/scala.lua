@@ -1,4 +1,4 @@
--- Copyright 2006-2023 JMS. See LICENSE.
+-- Copyright 2006-2024 JMS. See LICENSE.
 -- Scala LPeg lexer.
 
 local lexer = require('lexer')
