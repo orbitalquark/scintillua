@@ -51,7 +51,7 @@ lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('~+-^*/&<>=?:()[]{}')))
 lex:set_word_list(lexer.KEYWORD, {
   'as', 'and', 'contains', 'false', 'in', 'is', 'IsSet', 'not', 'or', 'super', 'true', 'unset',
   'Break', 'Catch', 'Continue', 'Else', 'Finally', 'For', 'Global', 'Goto', 'If', 'Local', 'Loop',
-  'Return', 'Static', 'Throw', 'Try', 'Until', 'While'
+  'Return', 'Static', 'Throw', 'Try', 'Until', 'While', 'class', 'extends'
 })
 
 lex:set_word_list(lexer.FUNCTION_BUILTIN, {
@@ -156,5 +156,9 @@ lex:set_word_list(lexer.VARIABLE_BUILTIN, {
 })
 
 lexer.property['scintillua.comment'] = ';'
+
+-- fold point
+lex:add_fold_point(lexer.OPERATOR, '{', '}')
+lex:add_fold_point(lexer.COMMENT, '/*', '*/')
 
 return lex
