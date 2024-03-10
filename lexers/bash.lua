@@ -37,7 +37,7 @@ lex:add_rule('string',
   lex:tag(lexer.STRING, sq_str + dq_str + heredoc) + lex:tag(lexer.EMBEDDED, ex_str))
 
 -- Comments.
-lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.to_eol('#')))
+lex:add_rule('comment', lex:tag(lexer.COMMENT, -B('\\') * lexer.to_eol('#')))
 
 -- Numbers.
 lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number))
