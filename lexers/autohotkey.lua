@@ -49,9 +49,9 @@ lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number))
 lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('~+-^*/&<>=?:()[]{}')))
 
 lex:set_word_list(lexer.KEYWORD, {
-  'as', 'and', 'contains', 'false', 'in', 'is', 'IsSet', 'not', 'or', 'super', 'true', 'unset',
-  'Break', 'Catch', 'Continue', 'Else', 'Finally', 'For', 'Global', 'Goto', 'If', 'Local', 'Loop',
-  'Return', 'Static', 'Throw', 'Try', 'Until', 'While'
+  'as', 'and', 'class', 'contains', 'extends', 'false', 'in', 'is', 'IsSet', 'not', 'or', 'super',
+  'true', 'unset', 'Break', 'Catch', 'Continue', 'Else', 'Finally', 'For', 'Global', 'Goto', 'If',
+  'Local', 'Loop', 'Return', 'Static', 'Throw', 'Try', 'Until', 'While'
 })
 
 lex:set_word_list(lexer.FUNCTION_BUILTIN, {
@@ -156,5 +156,9 @@ lex:set_word_list(lexer.VARIABLE_BUILTIN, {
 })
 
 lexer.property['scintillua.comment'] = ';'
+
+-- Fold points.
+lex:add_fold_point(lexer.OPERATOR, '{', '}')
+lex:add_fold_point(lexer.COMMENT, '/*', '*/')
 
 return lex

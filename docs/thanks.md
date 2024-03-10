@@ -21,6 +21,7 @@ and better over the years.
 * Haelwenn Monnier
 * Hao Chi Kiang
 * Heck Fy
+* helsmy
 * Hugo O. Rivera
 * ittegrat
 * Ivan Baidakou
