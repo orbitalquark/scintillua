@@ -13,25 +13,6 @@ lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 -- Library types.
 lex:add_rule('library', lex:tag(lexer.TYPE, lexer.upper * (lexer.lower + lexer.dec_num)^1))
 
--- Numbers.
-local identifier = P('r#')^-1 * lexer.word
-local digit = lexer.digit
-local decimal_literal = digit * (digit + '_')^0
-local function integer_suffix(digit) return P('_')^0 * digit * (digit + '_')^0 end
-local function opt_cap(patt) return C(patt^-1) end
-local float = decimal_literal *
-  (Cmt(opt_cap('.' * decimal_literal) * opt_cap(S('eE') * S('+-')^-1 * integer_suffix(digit)) *
-    opt_cap(P('f32') + 'f64'), function(input, index, decimals, exponent, type)
-    return decimals ~= '' or exponent ~= '' or type ~= ''
-  end) + '.' * -(S('._') + identifier))
-local function prefixed_integer(prefix, digit) return P(prefix) * integer_suffix(digit) end
-local bin = prefixed_integer('0b', S('01'))
-local oct = prefixed_integer('0o', lpeg.R('07'))
-local hex = prefixed_integer('0x', lexer.xdigit)
-local integer = (bin + oct + hex + decimal_literal) *
-  (S('iu') * (P('8') + '16' + '32' + '64' + '128' + 'size'))^-1
-lex:add_rule('number', lex:tag(lexer.NUMBER, float + integer))
-
 -- Types.
 lex:add_rule('type', lex:tag(lexer.TYPE, lex:word_match(lexer.TYPE)))
 
@@ -54,12 +35,16 @@ local func = lex:tag(lexer.FUNCTION, lexer.word)
 lex:add_rule('function', (builtin_macros + macros + func) * #(lexer.space^0 * '('))
 
 -- Identifiers.
+local identifier = P('r#')^-1 * lexer.word
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, identifier))
 
 -- Comments.
 local line_comment = lexer.to_eol('//', true)
 local block_comment = lexer.range('/*', '*/', false, false, true)
 lex:add_rule('comment', lex:tag(lexer.COMMENT, line_comment + block_comment))
+
+-- Numbers.
+lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number_('_')))
 
 -- Attributes.
 lex:add_rule('preprocessor', lex:tag(lexer.PREPROCESSOR, '#' * lexer.range('[', ']', true)))
