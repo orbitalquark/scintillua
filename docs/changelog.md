@@ -2,7 +2,34 @@
 
 [Atom Feed](https://github.com/orbitalquark/scintillua/releases.atom)
 
-### 6.2 (27 Jul 2022)
+### 6.3 (29 Apr 2024)
+
+Download:
+
+* [Scintillua 6.3][]
+
+Bugfixes:
+
+* Fixed Julia lexer incorrectly highlighting some multi-byte characters as operators.
+* Fixed legacy support for `lexer.fold_consecutive_lines()`.
+* Fixed Bash lexer highlighting related to '${}' variables and '#' in variables and escape sequences.
+* Fixed some instances of proxy lexers not having an initial rule.
+* Avoid accidental changes to legacy `lexer.styles` table.
+* Fixed Perl lexer errors for some operators that occur at the end of input.
+
+Changes:
+
+* Updated Hare lexer with various improvements.
+* Updated Markdown lexer to recognize `~~~` code blocks.
+* Migrated fstab, Matlab, and Meson lexers.
+* Disabled conditional and arithmetic operator highlighting in Bash, improving performance.
+* Updated the Perl lexer highlight the `y` operator like `tr`.
+* Updated the AutoHotkey lexer with more keywords and fold points.
+* Updated the Rust lexer to simplify number highlighting.
+
+[Scintillua 6.3]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_6.3/scintillua_6.3.zip
+
+### 6.2 (27 Jul 2023)
 
 Download:
 
