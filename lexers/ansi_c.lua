@@ -52,9 +52,9 @@ local preproc = lex:tag(lexer.PREPROCESSOR, '#' * S('\t ')^0 * lex:word_match(le
 lex:add_rule('preprocessor', include + preproc)
 
 -- Attributes.
-lex:add_rule('attribute', lex:tag(lexer.ATTRIBUTE, '[[' * 
-  (lex:word_match(lexer.ATTRIBUTE) + (lexer.word * '::' * lexer.word)) * 
-  lexer.range('(', ')')^-1 * ']]'))
+lex:add_rule('attribute', lex:tag(lexer.ATTRIBUTE, '[[' *
+  ((lex:word_match(lexer.ATTRIBUTE) + (lexer.word * '::' * lexer.word)) *
+  lexer.range('(', ')')^-1 * (P(',') * P(' ')^0)^-1)^1 * ']]'))
 
 -- Operators.
 lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('+-/*%<>~!=^&|?~:;,.()[]{}')))
