@@ -53,7 +53,7 @@ lex:add_rule('preprocessor', include + preproc)
 
 -- Attributes.
 lex:add_rule('attribute', lex:tag(lexer.ATTRIBUTE, '[[' * 
-  (lex:word_match(lexer.ATTRIBUTE) + (lexer.word * ':' * lexer.word)) * 
+  (lex:word_match(lexer.ATTRIBUTE) + (lexer.word * '::' * lexer.word)) * 
   lexer.range('(', ')')^-1 * ']]'))
 
 -- Operators.
