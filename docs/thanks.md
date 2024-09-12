@@ -59,6 +59,7 @@ and better over the years.
 * Robert Gieseke
 * Roberto Ierusalimschy
 * S\. Gilles
+* Samuel Marquis
 * Simeon Maryasin
 * Snoopy
 * Stéphane Rivière
