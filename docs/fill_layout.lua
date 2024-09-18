@@ -1,4 +1,4 @@
-#!/usr/bin/lua
+#!/usr/bin/env lua
 -- Filters the given file through markdown, inserts it into the template specified by stdin by
 -- replacing simple {{ variable }} tags, and outputs the result to stdout.
 

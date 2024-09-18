@@ -1330,7 +1330,7 @@ Parameters:
 - *c*: 
 
 <a id="lexer.range"></a>
-#### `lexer.range`(*s*[, *e*[, *single_line*[, *escapes*[, *balanced*]]]])
+#### `lexer.range`(*s*[, *e*=*s*[, *single_line*=*false*[, *escapes*[, *balanced*=*false*]]]])
 
 Creates and returns a pattern that matches a range of text bounded by strings or patterns *s*
 and *e*.
@@ -1345,13 +1345,13 @@ Parameters:
 
 - *s*:  String or pattern start of a range.
 - *e*:  Optional string or pattern end of a range. The default value is *s*.
-- *single_line*:  Optional flag indicating whether or not the range must be on a single
-   line. The default value is `false`.
-- *escapes*:  Optional flag indicating whether or not the range end may be escaped
-   by a '\' character. The default value is `false` unless *s* and *e* are identical,
+- *single_line*:  Optional flag indicating whether or not the range must
+   be on a single line.
+- *escapes*:  Optional flag indicating whether or not the range end may be
+   escaped by a '\' character. The default value is `false` unless *s* and *e* are identical,
    single-character strings. In that case, the default value is `true`.
-- *balanced*:  Optional flag indicating whether or not to match a balanced range,
-   like the "%b" Lua pattern. This flag only applies if *s* and *e* are different.
+- *balanced*:  Optional flag indicating whether or not to match a balanced
+   range, like the "%b" Lua pattern. This flag only applies if *s* and *e* are different.
 
 Usage:
 
@@ -1430,7 +1430,7 @@ Return:
 - pattern
 
 <a id="lexer.to_eol"></a>
-#### `lexer.to_eol`([*prefix*[, *escape*]])
+#### `lexer.to_eol`([*prefix*[, *escape*=*false*]])
 
 Creates and returns a pattern that matches from string or pattern *prefix* until the end of
 the line.
@@ -1440,8 +1440,8 @@ Parameters:
 
 - *prefix*:  Optional string or pattern prefix to start matching at. The default value
    is any non-newline character.
-- *escape*:  Optional flag indicating whether or not newlines can be escaped by a '\'
-  character. The default value is `false`.
+- *escape*:  Optional flag indicating whether or not newlines can be escaped
+  by a '\' character.
 
 Usage:
 
@@ -1455,7 +1455,7 @@ Return:
 - pattern
 
 <a id="lexer.word_match"></a>
-#### `lexer.word_match`([*lexer*], *word_list*[, *case_insensitive*])
+#### `lexer.word_match`([*lexer*], *word_list*[, *case_insensitive*=*false*])
 
 Either returns a pattern for lexer *lexer* (if given) that matches one word in the word list
 identified by string *word_list*, ignoring case if *case_sensitive* is `true`, or, if *lexer*
@@ -1472,8 +1472,8 @@ Parameters:
    omitted for lexer-agnostic matching.
 - *word_list*:  Either a string name of the word list to match from if *lexer* is given,
    or, if *lexer* is omitted, a list of words or a string list of words separated by spaces.
-- *case_insensitive*:  Optional boolean flag indicating whether or not the word match
-   is case-insensitive. The default value is `false`.
+- *case_insensitive*:  Optional boolean flag indicating whether or not the word
+   match is case-insensitive.
 
 Usage:
 
