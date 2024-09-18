@@ -327,22 +327,22 @@ doing this:
     Lua 5.1.4  Copyright (C) 1994-2008 Lua.org, PUC-Rio
     > lexer_path = '/home/mitchell/code/scintillua/lexers/?.lua'
     > package.path = package.path .. ';' .. lexer_path
-    > c = require('lexer').load('ansi_c')
+    > c = require('lexer').load('c')
     > tokens = c:lex('int main() { return 0; }')
     > for i = 1, #tokens, 2 do print(tokens[i], tokens[i+1]) end
     type	4
-    whitespace.ansi_c	5
+    whitespace.c	5
     function	9
     operator	10
     operator	11
-    whitespace.ansi_c	12
+    whitespace.c	12
     operator	13
-    whitespace.ansi_c	14
+    whitespace.c	14
     keyword	20
-    whitespace.ansi_c	21
+    whitespace.c	21
     number	22
     operator	23
-    whitespace.ansi_c	24
+    whitespace.c	24
     operator	25
 
 If you are unsure of which lexer to use for a given filename and/or content line (e.g. shebang line), you can

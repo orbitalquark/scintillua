@@ -8,10 +8,7 @@ local noglobs = {
 	['Rout.save'] = true, ['Rout.fail'] = true, fstab = true, ['meson.build'] = true
 }
 
-local alt_name = {
-  actionscript = 'flash', ansi_c = 'c', dmd = 'd', javascript = 'js', python = 'py', rstats = 'r',
-  ruby = 'rb'
-}
+local alt_name = {actionscript = 'flash', javascript = 'js', python = 'py', ruby = 'rb'}
 
 -- Process file patterns and lexer definitions.
 local f = io.open('lexers/lexer.lua')

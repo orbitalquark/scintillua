@@ -645,8 +645,8 @@ end
 
 -- Tests the C lexer.
 function test_c()
-	local c = lexer.load('ansi_c')
-	assert(c._name == 'ansi_c')
+	local c = lexer.load('c')
+	assert(c._name == 'c')
 	assert_default_tags(c)
 
 	-- Lexing tests.
@@ -1686,7 +1686,7 @@ end
 
 function test_detect()
 	assert(lexer.detect('foo.lua') == 'lua')
-	assert(lexer.detect('foo.c') == 'ansi_c')
+	assert(lexer.detect('foo.c') == 'c')
 	assert(not lexer.detect('foo.txt'))
 	assert(lexer.detect('foo', '#!/bin/sh') == 'bash')
 	assert(not lexer.detect('foo', '/bin/sh'))

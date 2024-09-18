@@ -424,7 +424,7 @@ Bugfixes:
 Changes:
 
 * Do not match '..' on the trailing end of `lexer.float`.
-* Updated dmd lexer.
+* Updated D lexer.
 
 [Scintilla 3.10.3]: https://sourceforge.net/projects/scintilla/files/scintilla/3.10.3/scintilla3103.zip/download
 
