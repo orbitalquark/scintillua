@@ -1460,6 +1460,38 @@ function test_yaml()
 	assert_lex(yaml, code:match('(|.+)$'), tags, DEFAULT)
 end
 
+-- Tests the Factor lexer.
+function test_factor()
+	local factor = lexer.load('factor')
+
+	local code = [[
+	#!/usr/bin/env factor
+	! comment
+	: foo ( a: integer b -- c )
+	    { 1.5 3/2 1234 1.2e3 } sum + sqrt - ;
+	]]
+
+	local tags = {
+		COMMENT, '#!/usr/bin/env factor', --
+		COMMENT, '! comment', --
+		KEYWORD, ':', --
+		IDENTIFIER, 'foo', --
+		OPERATOR, '( a: integer b -- c )', --
+		OPERATOR, '{', --
+		NUMBER, '1.5', --
+		NUMBER, '3/2', --
+		NUMBER, '1234', --
+		NUMBER, '1.2e3', --
+		OPERATOR, '}', --
+		IDENTIFIER, 'sum', --
+		OPERATOR, '+', --
+		IDENTIFIER, 'sqrt', --
+		OPERATOR, '-', --
+		KEYWORD, ';', --
+	}
+	assert_lex(factor, code, tags)
+end
+
 -- Tests the Python lexer and fold by indentation.
 function test_python()
 	local python = lexer.load('python')

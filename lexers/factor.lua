@@ -1,6 +1,7 @@
 --[[
 Lexer for the Factor programming language (http://factorcode.org)
 Copyright 2013 Michael T. Richter <ttmrichter@gmail.com>
+Copyright 2024 John Benediktsson <mrjbq7@gmail.com>
 
 This program is free software and comes without any warranty, express nor
 implied.  It is, in short, warranted to do absolutely nothing but (possibly)
@@ -19,11 +20,11 @@ These make a few source files less than lovely and will be fixed as possible.
 turns out to be a non-trivial task!)
 ]]
 
-local l = lexer
-local token, style, color, word_match = l.token, l.style, l.color, l.word_match
+local lexer = lexer
+local token, style, color, word_match = lexer.token, lexer.style, lexer.color, lexer.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local M = {_NAME = 'factor'}
+local lex = lexer.new('factor');
 
 -- General building blocks.
 local pre = R'AZ'^1
@@ -32,15 +33,14 @@ local opt_pre = pre^-1
 local opt_post = opt_pre
 
 -- Whitespace.
-local ws = token(l.WHITESPACE, l.space^1)
+lex:add_rule('whitespace', lex:tag(lexer.WHITESPACE, lexer.space^1))
 
 -- Comments.
-local comment = token(l.COMMENT, P'#'^-1 * P'!' * l.nonnewline^0)
+lex:add_rule('comment', lex:tag(lexer.COMMENT, P'#'^-1 * P'!' * lexer.nonnewline^0))
 
 -- Strings.
-local dq1_str = opt_pre * l.delimited_range('"', '\\')
-local dq3_str = l.delimited_range('"""', '\\')
-local string = token(l.STRING, dq1_str + dq3_str)
+local dq1_str = opt_pre * lexer.range('"', true)
+lex:add_rule('string', lex:tag(lexer.STRING, dq1_str))
 
 -- Numbers.
 -- Note that complex literals like C{ 1/3 27.3 } are not covered by this lexer.
@@ -61,7 +61,7 @@ local float            = (dfloat_component * (S'eE' * decimal)^-1) +
                          (P'-'^-1 * P'1/0.')                       +
                          (P'0/0')
 
-local number = token(l.NUMBER, (float + ratio + integer) * #ws)
+lex:add_rule('number', lex:tag(lexer.NUMBER, (float + ratio + integer)))
 
 -- Keywords.
 -- Things like NAN:, USE:, USING:, POSTPONE:, etc. are considered keywords,
@@ -70,7 +70,7 @@ local number = token(l.NUMBER, (float + ratio + integer) * #ws)
 local colon_words = pre * S':#' + S':;'^1
 local angle_words = (P'<'^1 * post) +
                     (pre * P'>'^1)
-local keyword = token(l.KEYWORD, (colon_words + angle_words) * #ws)
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, (colon_words + angle_words)))
 
 -- Operators.
 -- The usual suspects like braces, brackets, angle brackets, parens, etc. are
@@ -79,26 +79,15 @@ local constructor_words = opt_pre * P'{' + P'}' +
                           opt_pre * P'[' + P']' +
                           opt_pre * P'<' + P'>' +
                           pre     * P'(' + P')'
-local stack_declaration = l.delimited_range('()')
+local stack_declaration = lexer.range('(', ')')
 local other_operators = S'+-*/<>'
-local operator = token(l.OPERATOR, (stack_declaration +
-                                   constructor_words +
-                                   other_operators) * #ws)
+lex:add_rule('operator', lex:tag(lexer.OPERATOR, (stack_declaration +
+                                                  constructor_words +
+                                                  other_operators)))
 
 -- Identifiers.
 -- Identifiers can be practically anything but whitespace.
 local symbols = S'`~!@#$%^&*()_-+={[<>]}:;X,?/'
-local identifier = token(l.IDENTIFIER, (l.alnum + symbols)^1 * #ws)
+lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, (lexer.alnum + symbols)^1))
 
-M._rules = {
-  {'keyword', keyword},
-  {'whitespace', ws},
-  {'string', string},
-  {'comment', comment},
-  {'number', number},
-  {'operator', operator},
-  {'identifier', identifier},
-  {'any_char', l.any_char},
-}
-
-return M
+return lex
