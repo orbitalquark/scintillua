@@ -1468,7 +1468,7 @@ function test_factor()
 	#!/usr/bin/env factor
 	! comment
 	: foo ( a: integer b -- c )
-	    { 1.5 3/2 1234 1.2e3 } sum + sqrt - ;
+	    { 1.5 3/2 1234 1.2e3 } sum + "hello" length sqrt - ;
 	]]
 
 	local tags = {
@@ -1485,6 +1485,8 @@ function test_factor()
 		OPERATOR, '}', --
 		IDENTIFIER, 'sum', --
 		OPERATOR, '+', --
+		STRING, '\"hello\"', --
+		IDENTIFIER, 'length', --
 		IDENTIFIER, 'sqrt', --
 		OPERATOR, '-', --
 		KEYWORD, ';', --

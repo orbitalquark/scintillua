@@ -21,19 +21,15 @@ turns out to be a non-trivial task!)
 ]]
 
 local lexer = lexer
-local token, style, color, word_match = lexer.token, lexer.style, lexer.color, lexer.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local lex = lexer.new('factor');
+local lex = lexer.new(...);
 
 -- General building blocks.
 local pre = R'AZ'^1
 local post = pre
 local opt_pre = pre^-1
 local opt_post = opt_pre
-
--- Whitespace.
-lex:add_rule('whitespace', lex:tag(lexer.WHITESPACE, lexer.space^1))
 
 -- Comments.
 lex:add_rule('comment', lex:tag(lexer.COMMENT, P'#'^-1 * P'!' * lexer.nonnewline^0))
