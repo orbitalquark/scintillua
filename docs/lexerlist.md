@@ -40,6 +40,7 @@ used if [`fold.scintillua.by.indentation`][] is enabled. For SciTE, see *lexers/
 1. Elm
 1. Erlang`*`
 1. F#
+1. Factor
 1. Fantom`*`
 1. Faust
 1. Fennel

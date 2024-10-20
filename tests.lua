@@ -1662,6 +1662,31 @@ function test_latex()
 	assert_fold_points(latex, code, folds)
 end
 
+-- Tests Factor lexer.
+function test_factor()
+	local factor = lexer.load('factor')
+
+	local code = [[
+	#!/usr/bin/env factor
+	! comment
+	: foo ( a: integer b -- c )
+	    { 1.5 3/2 1234 1.2e3 } sum + "hello" length sqrt - ;
+	]]
+
+	local tags = {
+		COMMENT, '#!/usr/bin/env factor', --
+		COMMENT, '! comment', --
+		KEYWORD, ':', IDENTIFIER, 'foo', OPERATOR, '( a: integer b -- c )', --
+		OPERATOR, '{', NUMBER, '1.5', NUMBER, '3/2', NUMBER, '1234', NUMBER, '1.2e3', OPERATOR, '}', --
+		IDENTIFIER, 'sum', --
+		OPERATOR, '+', --
+		STRING, '\"hello\"', IDENTIFIER, 'length', IDENTIFIER, 'sqrt', --
+		OPERATOR, '-', --
+		KEYWORD, ';' --
+	}
+	assert_lex(factor, code, tags)
+end
+
 function test_legacy()
 	local lex = lexer.new('test')
 	local ws = lexer.token(lexer.WHITESPACE, lexer.space^1)

@@ -27,6 +27,7 @@ and better over the years.
 * Ivan Baidakou
 * Jason Schindler
 * Jeff Stone
+* John Benediktsson
 * Jonathon Levi
 * Joseph Eib
 * Joshua Krämer
