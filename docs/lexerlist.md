@@ -91,6 +91,7 @@ used if [`fold.scintillua.by.indentation`][] is enabled. For SciTE, see *lexers/
 1. Nemerle`*`
 1. Networkd
 1. Nim
+1. Nix
 1. NSIS
 1. Objeck`*`
 1. Objective-C`*`
