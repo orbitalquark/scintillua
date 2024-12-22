@@ -48,8 +48,9 @@ lex:add_rule('comment', lex:tag(lexer.COMMENT, line_comment + block_comment))
 lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number))
 
 -- Operators.
-local ops = S('?+-.*/!<>=,;:()[]{}') + lex:word_match(lexer.OPERATOR)
-lex:add_rule('operator', lex:tag(lexer.OPERATOR, ops))
+local l_ops = P('&&') + P('||') + P('->') + P('//') + P('++')
+local s_ops = S('?+-.*/!<>=,;:()[]{}')
+lex:add_rule('operator', lex:tag(lexer.OPERATOR, l_ops + s_ops))
 
 -- Fold points.
 lex:add_fold_point(lexer.OPERATOR, '(', ')')
@@ -64,16 +65,35 @@ lex:set_word_list(lexer.KEYWORD, {
 })
 
 lex:set_word_list(lexer.CONSTANT_BUILTIN, {
+	-- Directly accessible.
 	'builtins', 'true', 'false', 'null',
+	-- Accessible via the global `builtins` object.
+	'currentSystem', 'currentTime', 'langVersion',
+	'nixPath', 'nixVersion', 'storeDir',
 })
 
--- Directly accessible functions.
 lex:set_word_list(lexer.FUNCTION_BUILTIN, {
+	-- Directly accessible.
 	'derivation', 'import', 'abort', 'throw',
-})
-
-lex:set_word_list(lexer.OPERATOR, {
-	'&&', '||', '->', '//', '++',
+	-- Accessible via the global `builtins` object.
+	'add', 'all', 'any', 'attrNames', 'attrValues', 'baseNameOf', 'bitAnd',
+	'bitOr', 'bitXor', 'break', 'catAttrs', 'ceil', 'compareVersions',
+	'concatLists', 'concatMap', 'concatStringsSep', 'deepSeq', 'dirOf',
+	'div', 'elem', 'elemAt', 'fetchClosure', 'fetchGit', 'fetchTarball',
+	'fetchurl', 'filter', 'filterSource', 'findFile', 'flakeRefToString',
+	'floor', "foldl'", -- It actually is called `foldl'`
+	'fromJSON', 'fromTOML', 'functionArgs', 'genList', 'genericClosure',
+	'getAttr', 'getContext', 'getEnv', 'getFlake', 'groupBy', 'hasAttr',
+	'hasContext', 'hashFile', 'hashString', 'head', 'import',
+	'intersectAttrs', 'isAttrs', 'isBool', 'isFloat', 'isFunction',
+	'isInt', 'isList', 'isNull', 'isPath', 'isString', 'length',
+	'lessThan', 'listToAttrs', 'map', 'mapAttrs', 'match', 'mul',
+	'outputOf', 'parseDrvName', 'parseFlakeRef', 'partition', 'path',
+	'pathExists', 'placeholder', 'readDir', 'readFile', 'readFileType',
+	'removeAttrs', 'replaceStrings', 'seq', 'sort', 'split',
+	'splitVersion', 'storePath', 'stringLength', 'sub', 'substring',
+	'tail', 'throw', 'toFile', 'toJSON', 'toPath', 'toString', 'toXML',
+	'trace', 'traceVerbose', 'tryEval', 'typeOf', 'zipAttrsWith'
 })
 
 lexer.property['scintillua.comment'] = '#'
