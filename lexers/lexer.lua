@@ -1684,6 +1684,7 @@ function M.detect(filename, line)
 		nsh = 'nsis', nsi = 'nsis', nsis = 'nsis', --
 		obs = 'objeck', --
 		m = 'objective_c', mm = 'objective_c', objc = 'objective_c', --
+		org = 'org', --
 		caml = 'caml', ml = 'caml', mli = 'caml', mll = 'caml', mly = 'caml', --
 		dpk = 'pascal', dpr = 'pascal', p = 'pascal', pas = 'pascal', --
 		al = 'perl', perl = 'perl', pl = 'perl', pm = 'perl', pod = 'perl', --

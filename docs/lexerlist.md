@@ -96,6 +96,7 @@ used if [`fold.scintillua.by.indentation`][] is enabled. For SciTE, see *lexers/
 1. Objeck`*`
 1. Objective-C`*`
 1. OCaml
+1. Org
 1. Pascal
 1. Perl`*`
 1. PHP`*`
