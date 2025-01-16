@@ -5,9 +5,6 @@ local C, P, R, S = lpeg.C, lpeg.P, lpeg.R, lpeg.S
 
 local lex = lexer.new(...)
 
--- Whitespace.
-lex:add_rule('whitespace', lex:tag(lexer.WHITESPACE, lexer.space^1))
-
 -- Comments.
 lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.to_eol('#')))
 
@@ -40,7 +37,7 @@ lex:add_rule('command', lex:tag(lexer.FUNCTION,
 -- Constants
 lex:add_rule('constant', lex:tag(lexer.CONSTANT, lex:word_match(lexer.CONSTANT)))
 lex:set_word_list(lexer.CONSTANT, {
-    'rhel', 'fedora', 'suse_version', 'sle_version', 'x86_64'
+	'rhel', 'fedora', 'suse_version', 'sle_version', 'x86_64'
 })
 
 lexer.property['scintillua.comment'] = '#'
