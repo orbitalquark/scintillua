@@ -1,15 +1,11 @@
 -- Copyright 2017-2025 Murray Calavera. See LICENSE.
 -- Standard ML LPeg lexer.
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new('sml')
-
--- Whitespace.
-local ws = token(lexer.WHITESPACE, lexer.space^1)
-lex:add_rule('whitespace', ws)
+local lex = lexer.new(...)
 
 -- Structures.
 local id = (lexer.alnum + "'" + '_')^0

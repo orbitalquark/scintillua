@@ -2,14 +2,11 @@
 -- Forth LPeg lexer.
 -- Contributions from Joseph Eib.
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new('forth')
-
--- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+local lex = lexer.new(...)
 
 -- Strings.
 local c_str = 'c' * lexer.range('"', true, false)

@@ -2,14 +2,11 @@
 -- Lilypond LPeg lexer.
 -- TODO Embed Scheme; Notes?, Numbers?
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new('lilypond')
-
--- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+local lex = lexer.new(...)
 
 -- Keywords, commands.
 lex:add_rule('keyword', token(lexer.KEYWORD, '\\' * lexer.word))

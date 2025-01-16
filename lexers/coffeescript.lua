@@ -1,14 +1,11 @@
 -- Copyright 2006-2025 Mitchell. See LICENSE.
 -- CoffeeScript LPeg lexer.
 
-local lexer = require('lexer')
+local lexer = lexer
 local word_match = lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
 local lex = lexer.new('coffeescript', {fold_by_indentation = true})
-
--- Whitespace.
-lex:add_rule('whitespace', lex:tag(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
 lex:add_rule('keyword', lex:tag(lexer.KEYWORD, word_match{

@@ -4,15 +4,12 @@
 -- [https://txt2tags.org/doc/english/rules.t2t])
 -- Contributed by Julien L.
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 local nonspace = lexer.any - lexer.space
 
-local lex = lexer.new('txt2tags')
-
--- Whitespace.
-local ws = token(lexer.WHITESPACE, (lexer.space - lexer.newline)^1)
+local lex = lexer.new(...)
 
 -- Titles
 local alphanumeric = lexer.alnum + S('_-')
@@ -108,7 +105,6 @@ lex:add_rule('link', link)
 lex:add_rule('line', line)
 lex:add_rule('header', header)
 lex:add_rule('comment', comment)
-lex:add_rule('whitespace', ws)
 lex:add_rule('image', image)
 lex:add_rule('macro', macro)
 lex:add_rule('inline', inline)

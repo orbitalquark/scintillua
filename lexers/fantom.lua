@@ -2,15 +2,11 @@
 -- Fantom LPeg lexer.
 -- Based on Java LPeg lexer by Mitchell and Vim's Fantom syntax.
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new('fantom')
-
--- Whitespace.
-local ws = token(lexer.WHITESPACE, lexer.space^1)
-lex:add_rule('whitespace', ws)
+local lex = lexer.new(...)
 
 -- Classes.
 local type = token(lexer.TYPE, lexer.word)

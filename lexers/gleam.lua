@@ -3,17 +3,13 @@
 -- https://gleam.run/
 -- Contributed by Tynan Beatty
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
 local KEY, OP = lexer.KEYWORD, lexer.OPERATOR
 
-local lex = lexer.new('gleam')
-
--- Whitespace.
-local gleam_ws = token(lexer.WHITESPACE, lexer.space^1)
-lex:add_rule('whitespace', gleam_ws)
+local lex = lexer.new(...)
 
 -- Types.
 local typ_tok = token(lexer.TYPE, lexer.upper * lexer.alnum^0)

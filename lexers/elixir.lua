@@ -2,14 +2,11 @@
 -- Contributed by Richard Philips.
 -- Elixir LPeg lexer.
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match = lexer.token, lexer.word_match
 local B, P, S = lpeg.B, lpeg.P, lpeg.S
 
 local lex = lexer.new('elixir', {fold_by_indentation = true})
-
--- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Sigils.
 local sigil11 = '~' * S('CRSW') * lexer.range('<', '>')

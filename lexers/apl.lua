@@ -1,14 +1,11 @@
 -- Copyright 2015-2025 David B. Lamkins <david@lamkins.net>. See LICENSE.
 -- APL LPeg lexer.
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new('apl')
-
--- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+local lex = lexer.new(...)
 
 -- Comments.
 lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol(P('⍝') + '#')))

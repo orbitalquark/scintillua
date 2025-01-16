@@ -1,14 +1,11 @@
 -- Copyright 2006-2025 Mitchell. See LICENSE.
 -- F# LPeg lexer.
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
 local lex = lexer.new('fsharp', {fold_by_indentation = true})
-
--- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
 lex:add_rule('keyword', token(lexer.KEYWORD, word_match{

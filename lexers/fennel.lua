@@ -2,14 +2,11 @@
 -- Fennel LPeg lexer.
 -- Contributed by Momohime Honda.
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
 local lex = lexer.new('fennel', {inherit = lexer.load('lua')})
-
--- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
 lex:modify_rule('keyword', token(lexer.KEYWORD, word_match{

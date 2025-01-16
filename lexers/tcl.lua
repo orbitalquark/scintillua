@@ -3,14 +3,11 @@
 -- This lexer follows the TCL dodekalogue (http://wiki.tcl.tk/10259).
 -- It is based on the previous lexer by Mitchell.
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new('tcl')
-
--- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+local lex = lexer.new(...)
 
 -- Comment.
 lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('#' * P(function(input, index)

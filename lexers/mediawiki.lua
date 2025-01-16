@@ -2,11 +2,11 @@
 -- MediaWiki LPeg lexer.
 -- Contributed by Alexander Misel.
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match = lexer.token, lexer.word_match
 local P, S, B = lpeg.P, lpeg.S, lpeg.B
 
-local lex = lexer.new('mediawiki')
+local lex = lexer.new(...)
 
 -- Comments.
 lex:add_rule('comment', token(lexer.COMMENT, lexer.range('<!--', '-->')))

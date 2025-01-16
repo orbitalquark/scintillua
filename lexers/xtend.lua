@@ -1,15 +1,11 @@
 -- Copyright (c) 2014-2025 Piotr Orzechowski [drzewo.org]. See LICENSE.
 -- Xtend LPeg lexer.
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new('xtend')
-
--- Whitespace.
-local ws = token(lexer.WHITESPACE, lexer.space^1)
-lex:add_rule('whitespace', ws)
+local lex = lexer.new(...)
 
 -- Classes.
 lex:add_rule('class', token(lexer.KEYWORD, 'class') * ws^1 * token(lexer.CLASS, lexer.word))

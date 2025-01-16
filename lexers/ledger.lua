@@ -1,7 +1,7 @@
 -- Copyright 2015-2025 Charles Lehner. See LICENSE.
 -- ledger journal LPeg lexer, see http://www.ledger-cli.org/
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
@@ -17,9 +17,6 @@ lex:add_rule('amount', token(lexer.NUMBER, delim * (1 - S(';\r\n'))^1))
 
 -- Comments.
 lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol(S(';#'))))
-
--- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Strings.
 local sq_str = lexer.range("'")

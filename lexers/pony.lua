@@ -1,15 +1,11 @@
 -- Copyright 2017-2025 Murray Calavera. See LICENSE.
 -- Pony LPeg lexer.
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new('pony')
-
--- Whitespace.
-local ws = token(lexer.WHITESPACE, lexer.space^1)
-lex:add_rule('whitespace', ws)
+local lex = lexer.new(...)
 
 -- Capabilities.
 local capability = token(lexer.LABEL, word_match('box iso ref tag trn val'))

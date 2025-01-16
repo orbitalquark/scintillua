@@ -1,14 +1,11 @@
 -- Copyright 2016-2025 Alejandro Baez (https://keybase.io/baez). See LICENSE.
 -- Moonscript LPeg lexer.
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
 local lex = lexer.new('moonscript', {fold_by_indentation = true})
-
--- Whitespace.
-lex:add_rule('whitspace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Table keys.
 lex:add_rule('tbl_key', token('tbl_key', lexer.word * ':' + ':' * lexer.word))

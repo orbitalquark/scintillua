@@ -23,12 +23,12 @@
   which override operators.
 ]]
 
-local lexer = require('lexer')
+local lexer = lexer
 
 local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new('prolog')
+local lex = lexer.new(...)
 
 local dialect = lexer.property['prolog.dialect']
 if dialect ~= 'gprolog' and dialog ~= 'swipl' then dialect = 'iso' end
@@ -72,9 +72,6 @@ directives.swipl = directives.iso .. [[
 lex:add_rule('directive',
 	token(lexer.WHITESPACE, lexer.starts_line(S(' \t'))^0) * token(lexer.OPERATOR, ':-') *
 		token(lexer.WHITESPACE, S(' \t')^0) * token(lexer.PREPROCESSOR, word_match(directives[dialect])))
-
--- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Keywords.
 local zero_arity_keywords = {}
