@@ -1,18 +1,15 @@
 -- Copyright 2006-2025 Robert Gieseke, Lars Otter. See LICENSE.
 -- ConTeXt LPeg lexer.
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new('context')
+local lex = lexer.new(...)
 
 -- TeX and ConTeXt mkiv environment definitions.
 local beginend = (P('begin') + 'end')
 local startstop = (P('start') + 'stop')
-
--- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 -- Comments.
 lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('%')))

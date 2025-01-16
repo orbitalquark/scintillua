@@ -1,7 +1,7 @@
 -- Copyright © 2017-2025 Michael T. Richter <ttmrichter@gmail.com>. See LICENSE.
 -- Logtalk LPeg lexer.
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
@@ -19,9 +19,6 @@ lex:modify_rule('directive',
 	(indent * token(lexer.OPERATOR, ':-') * token(lexer.WHITESPACE, S(' \t')^0) *
 		token(lexer.PREPROCESSOR, word_match(directives))
 ) + lex:get_rule('directive'))
-
--- Whitespace.
-lex:modify_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
 local zero_arity_keywords = {
 	-- extracted from test document in logtalk distribution

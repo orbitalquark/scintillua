@@ -1,14 +1,11 @@
 -- Copyright 2017-2025 David B. Lamkins <david@lamkins.net>. See LICENSE.
 -- Spin LPeg lexer, see https://www.parallax.com/microcontrollers/propeller.
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match = lexer.token, lexer.word_match
 local P, R, S = lpeg.P, lpeg.R, lpeg.S
 
-local lex = lexer.new('spin')
-
--- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+local lex = lexer.new(...)
 
 -- Keywords.
 lex:add_rule('keyword', token(lexer.KEYWORD, word_match{

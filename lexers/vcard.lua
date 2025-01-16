@@ -1,14 +1,11 @@
 -- Copyright (c) 2015-2025 Piotr Orzechowski [drzewo.org]. See LICENSE.
 -- vCard 2.1, 3.0 and 4.0 LPeg lexer.
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new('vcard')
-
--- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+local lex = lexer.new(...)
 
 -- Begin vCard, end vCard.
 lex:add_rule('begin_sequence', token(lexer.KEYWORD, 'BEGIN') * token(lexer.OPERATOR, ':') *

@@ -2,14 +2,11 @@
 -- NSIS LPeg lexer
 -- Based on NSIS 2.46 docs: http://nsis.sourceforge.net/Docs/.
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match = lexer.token, lexer.word_match
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new('nsis')
-
--- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+local lex = lexer.new(...)
 
 -- Comments (4.1).
 local line_comment = lexer.to_eol(S(';#'))

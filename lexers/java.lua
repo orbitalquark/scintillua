@@ -2,7 +2,7 @@
 -- Java LPeg lexer.
 -- Modified by Brian Schott.
 
-local lexer = require('lexer')
+local lexer = lexer
 local P, S = lpeg.P, lpeg.S
 
 local lex = lexer.new(...)

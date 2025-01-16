@@ -1,11 +1,11 @@
 -- Copyright 2006-2025 Mitchell. See LICENSE.
 -- reStructuredText LPeg lexer.
 
-local lexer = require('lexer')
+local lexer = lexer
 local token, word_match, starts_line = lexer.token, lexer.word_match, lexer.starts_line
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new('rest')
+local lex = lexer.new(...)
 
 -- Literal block.
 local block = '::' * (lexer.newline + -1) * function(input, index)
@@ -139,9 +139,6 @@ lex:add_rule('title', token(lexer.HEADING, overline + underline))
 
 -- Line block.
 lex:add_rule('line_block_char', token(lexer.OPERATOR, starts_line(any_indent * '|')))
-
--- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, S(' \t')^1 + lexer.newline^1))
 
 -- Inline markup.
 local strong = token(lexer.BOLD, lexer.range('**'))
