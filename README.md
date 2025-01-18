@@ -52,10 +52,14 @@ your Scintilla-based application, and how to use Scintillua as a standalone Lua 
 
 As an example, you can drop Scintillua into an existing installation of [SciTE][], the SCIntilla
 based Text Editor, by moving Scintillua's directory into SciTE's installation directory,
-renaming it simply *scintillua*, and then adding the following to your *SciTEUser.properties*
-(Windows), *.SciTEUser.properties* (Linux), or *SciTEGlobal.properties* (either) file:
+renaming it simply *scintillua*, and then adding the following to your `SciTEGlobal.properties`file:
 
     import scintillua/scintillua
+
+For additional installation instructions, including how to modify user property files;
+`SciTEUser.properties` (Windows) / `.SciTEUser.properties` (Linux), instead of global
+see [user manual][] or [user manual source](docs/manual.md).
+
 
 Scintillua's Application Programming Interface [(API) documentation][] is also located in
 *docs/*. It provides information on how to write and utilize Lua lexers.
