@@ -39,7 +39,7 @@ lex:add_rule('key_value', key * colon * value)
 
 
 -- date - any context, for now treat due and complete (or anywhere in string) the same
-lex:add_rule('date', lex:tag(lexer.KEYWORD, lexer.digit^4*P('-') * lexer.digit^2 * P('-') * lexer.digit^2 * #lexer.space))
+lex:add_rule('date', lex:tag(lexer.NUMBER, lexer.digit^4*P('-') * lexer.digit^2 * P('-') * lexer.digit^2 * #lexer.space))
 
 
 -- Project and Context last, as same characters can show up in key:value
