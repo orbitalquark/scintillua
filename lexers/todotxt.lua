@@ -4,7 +4,7 @@
 local lexer = lexer
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new('todotxt')
+local lex = lexer.new(...)
 
 local not_whitespace = lexer.any - lexer.space - P(':')
 local not_whitespace_word = not_whitespace * not_whitespace^0
