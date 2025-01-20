@@ -1,4 +1,4 @@
--- Copyright 2025 Chris Clark
+-- Copyright 2025 Chris Clark and Mitchell. See LICENSE.
 -- todo.txt https://github.com/too-much-todotxt/spec LPeg lexer.
 
 local lexer = lexer
@@ -25,11 +25,17 @@ lex:add_rule('priority', lex:tag(lexer.BOLD, lexer.starts_line(P('(') * lexer.up
 
 -- key:value
 -- https://github.com/too-much-todotxt/spec/issues/23
--- TODO different style for key and value so they are clearly marked?
-lex:add_rule('key_value', lex:tag(lexer.NUMBER, not_whitespace_word*P(':')*not_whitespace_word))
+-- simple same style for key, colon, and value - useful for URLs which look like key/value pairs
+--lex:add_rule('key_value', lex:tag(lexer.NUMBER, not_whitespace_word*P(':')*not_whitespace_word))
 -- lexer.word too restrictive according to todo.txt spec
 -- below works for alpha words but fails to match; due:2025-01-31 hide:1 rec:1b rec2:+2w p:2
 --lex:add_rule('key_value', lex:tag(lexer.NUMBER, lexer.word*P(':')*lexer.word))
+
+-- Different style for key and value so they are clearly marked
+local key = lex:tag(lexer.KEYWORD, not_whitespace_word)
+local colon = lex:tag(lexer.OPERATOR, P(':'))
+local value = lex:tag(lexer.CONSTANT, not_whitespace_word)
+lex:add_rule('key_value', key * colon * value)
 
 
 -- date - any context, for now treat due and complete (or anywhere in string) the same
