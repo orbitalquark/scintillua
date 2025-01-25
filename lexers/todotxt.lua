@@ -3,6 +3,7 @@
 
 local lexer = lexer
 local P, S = lpeg.P, lpeg.S
+local token, word_match = lexer.token, lexer.word_match
 
 local lex = lexer.new(...)
 
@@ -39,6 +40,46 @@ for letter in string.gmatch('abcdefghijklmnopqrstuvwxyz', '.') do
 end
 lex:add_rule('priority', priority)
 
+
+-- URLs - NOTE not part of todo.txt, extension to make editing cleaner
+--lex:add_rule('URL', lex:tag(lexer.STRING, 'http' * P('s')^-1 * '://' * (lexer.any - lexer.space)^1)
+--lex:add_rule('URL', lex:tag(lexer.STRING, 'http' * P('s')^-1 * '://')
+--lex:add_rule('url', lex:tag(lexer.STRING, P('milk')))
+--lex:add_rule('url_http', lex:tag(lexer.STRING, P('https://') * (lexer.any - lexer.space)^1))
+--lex:add_rule('url_https', lex:tag(lexer.STRING, P('https://') * (lexer.any - lexer.space)^1))
+--lex:add_rule('url_httpX', lex:tag(lexer.STRING .. 'url', P('http') * P('s')^-1 * P('://') * (lexer.any - lexer.space)^1))
+--lex:add_rule('url_httpX', lex:tag(lexer.STRING, P('http') * P('s')^-1 * P('://') * (lexer.any - lexer.space)^1))
+--lex:add_rule('url_httpX', lex:tag(lexer.LINK, P('http') * P('s')^-1 * P('://') * (lexer.any - lexer.space)^1))
+
+--lex:add_rule('uri', lex:tag(lexer.STRING, '://' * (lexer.any - lexer.space)^1))  -- not working
+--local really_not_whitespace = lexer.any - lexer.space
+--local really_not_whitespace_word = really_not_whitespace^1
+--lex:add_rule('uri', lex:tag(lexer.STRING, P('://') * really_not_whitespace_word))  -- not working
+--lex:add_rule('uri', lex:tag(lexer.STRING, (lexer.any - lexer.space)^1 * P('://') * (lexer.any - lexer.space)^1))  -- not working
+--lex:add_rule('uri', lex:tag(lexer.STRING, (lexer.any - lexer.space)^1 * P('://') * really_not_whitespace_word))  -- not working
+
+-- from nix.lua
+-- URIs.
+--local uri_char = lexer.alnum + S("%/?:@&=+$,-_.!~*'")
+--local uri = lexer.alpha * (lexer.alnum + S('+-.'))^0 * ':' * uri_char^1
+--lex:add_rule('uri', lex:tag(lexer.LINK, uri))
+
+-- from text2tags.lua
+-- URLs, emails, and domain names
+local nonspace = lexer.any - lexer.space
+-- Link.
+local email = token(lexer.LINK,
+	(nonspace - '@')^1 * '@' * (nonspace - '.')^1 * ('.' * (nonspace - S('.?'))^1)^1 *
+		('?' * nonspace^1)^-1)
+local host = token(lexer.LINK,
+	word_match('www ftp', true) * (nonspace - '.')^0 * '.' * (nonspace - '.')^1 * '.' *
+		(nonspace - S(',.'))^1)
+local url = token(lexer.LINK,
+	(nonspace - '://')^1 * '://' * (nonspace - ',' - '.')^1 * ('.' * (nonspace - S(',./?#'))^1)^1 *
+		('/' * (nonspace - S('./?#'))^0 * ('.' * (nonspace - S(',.?#'))^1)^0)^0 *
+		('?' * (nonspace - '#')^1)^-1 * ('#' * nonspace^0)^-1)
+local link = url + host + email
+lex:add_rule('link', link)
 
 -- key:value
 -- https://github.com/too-much-todotxt/spec/issues/23
