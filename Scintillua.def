@@ -1,8 +1,0 @@
-EXPORTS
-	GetLexerCount
-	GetLexerName
-	GetLibraryPropertyNames
-	SetLibraryProperty
-	GetNameSpace
-	CreateLexer
-	GetCreateLexerError

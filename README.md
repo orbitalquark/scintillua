@@ -69,30 +69,35 @@ Scintillua's Application Programming Interface [(API) documentation][] is also l
 Scintillua can be built as an external Scintilla lexer, or it can be built directly into a
 Scintilla-based application. The standalone Lua library does not need to be compiled.
 
-Scintillua currently only builds on Linux, though it can be cross-compiled for Windows.
+Scintillua can be built on Windows and Linux using [CMake][].
 
-Requirements:
+General requirements:
 
-* [GNU C compiler][] (*gcc*) 7.1+ (circa mid-2017)
-* [GNU Make][] (*make*)
-* [mingw-w64][] 5.0+ with GCC 7.1+ when cross-compiling for Windows.
+- [CMake][] 3.16+
+- A C and C++ compiler, such as:
+  - [GNU C compiler][] (*gcc*) 7.1+
+  - [Microsoft Visual Studio][] 2019+
 
-In order to build the external lexer:
+Basic procedure:
 
-1. Place a copy of Scintilla in the root directory of Scintillua (the Scintilla directory should
-   be called *scintilla/*).
-2. Place a copy of Lexilla in the root directory of Scintillua (the Lexilla directory should
-   be called *lexilla/*).
-3. Run `make deps` to download Scintillua's core dependencies.
-4. Run `make` or `make win`.
-5. The external lexer is either *lexers/libscintillua.so* or *lexers/Scintillua.dll*.
+1. Configure CMake to build Scintillua by pointing it to Scintillua's source directory (where
+  *CMakeLists.txt* is) and specifying a binary directory to compile to.
+2. Build Scintillua.
+3. Either copy the built shared object library to Scintillua's *lexers/* directory or use CMake to
+  install it there.
+
+For example:
+
+	cmake -S . -B build_dir -D CMAKE_BUILD_TYPE=RelWithDebInfo
+	cmake --build build_dir -j # compiled shared object library is in build_dir/
+	cmake --install build_dir # installs the shared object library to the local lexers/ directory
 
 For more information on compiling Scintillua, including how to compile Scintillua directly into
 your Scintilla-based application please see the [manual][].
 
+[CMake]: https://cmake.org
 [GNU C compiler]: https://gcc.gnu.org
-[GNU Make]: https://www.gnu.org/software/make/
-[mingw-w64]: https://mingw-w64.org/
+[Microsoft Visual Studio]: https://visualstudio.microsoft.com/
 [manual]: https://orbitalquark.github.io/scintillua/manual.html#compiling-scintillua-directly-into-an-app
 
 ## Contribute
