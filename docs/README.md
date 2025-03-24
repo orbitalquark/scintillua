@@ -1,4 +1,4 @@
-## Introduction
+# Scintillua
 
 Scintillua enables lexers for [Scintilla][] to be written in the [Lua][] programming language,
 particularly in conjunction with the [LPeg][] pattern-matching library. It is the quickest way
@@ -23,7 +23,7 @@ information of source code. Scintilla is not required in that case.
 * Comparable speed to native Scintilla/Lexilla lexers.
 * Can be used as a standalone Lua library (Scintilla is not required).
 
-[over 120]: lexerlist.html
+[over 120]: lexerlist.md
 
 ## Requirements
 
@@ -42,7 +42,7 @@ Scintillua releases can be found [here][1]. A comprehensive list of changes betw
 can be found [here][2].
 
 [1]: https://github.com/orbitalquark/scintillua/releases
-[2]: changelog.html
+[2]: changelog.md
 
 ## Installation and Usage
 
@@ -60,9 +60,9 @@ file:
 Scintillua's Application Programming Interface [(API) documentation][] is also located in
 *docs/*. It provides information on how to write and utilize Lua lexers.
 
-[user manual]: manual.html
+[user manual]: manual.md
 [SciTE]: https://scintilla.org/SciTE.html
-[(API) documentation]: api.html
+[(API) documentation]: api.md
 
 ## Compile
 
@@ -88,9 +88,11 @@ Basic procedure:
 
 For example:
 
-	cmake -S . -B build_dir -D CMAKE_BUILD_TYPE=RelWithDebInfo
-	cmake --build build_dir -j # compiled shared object library is in build_dir/
-	cmake --install build_dir # installs the shared object library to the local lexers/ directory
+```bash
+cmake -S . -B build_dir -D CMAKE_BUILD_TYPE=RelWithDebInfo
+cmake --build build_dir -j # compiled shared object library is in build_dir/
+cmake --install build_dir # installs the shared object library to the local lexers/ directory
+```
 
 For more information on compiling Scintillua, including how to compile Scintillua directly into
 your Scintilla-based application please see the [manual][].
@@ -100,11 +102,13 @@ your Scintilla-based application please see the [manual][].
 [Microsoft Visual Studio]: https://visualstudio.microsoft.com/
 [manual]: manual.html#compiling-scintillua-directly-into-an-app
 
-## Contribute
+## Support
 
-Scintillua is [open source][]. Feel free to submit new lexers, report bugs, ask for help,
-and discuss features. You can also contact me personally (code att foicica.com). Thanks to
-[everyone][] who has contributed.
+- [Manual](manual.md)
+- [API Documentation](api.md)
+- [Project page](https://github.com/orbitalquark/scintillua)
+- [Issue tracker](https://github.com/orbitalquark/scintillua/issues)
+- [Discussions](https://github.com/orbitalquark/scintillua/discussions)
+- [Credits](thanks.md)
 
-[open source]: https://github.com/orbitalquark/scintillua
-[everyone]: thanks.html
+You can contact me personally at code att foicica.com.

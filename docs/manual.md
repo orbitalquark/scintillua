@@ -144,45 +144,47 @@ numbers, calling `NameOfStyle()`, in order to obtain a map of style names to num
 that information, your application can then specify style settings for style numbers. Here's
 an example of how [SciTE][] does it:
 
-    // Scintillua's style numbers are not constant, so ask it for names of styles and create a
-    // mapping of style numbers to more constant style definitions.
-    // For example, if Scintillua reports for the cpp lexer that style number 2 is a 'comment',
-    // create the property:
-    //   style.scintillua.cpp.2=$(scintillua.styles.comment)
-    // That way the user can define 'scintillua.styles.comment' once and it will be used for whatever
-    // the style number for comments is in any given lexer.
-    // Similarly, if Scintillua reports for the lua lexer that style number 20 is 'string.longstring',
-    // create the property:
-    //   style.scintillua.lua.20=$(scintillua.styles.string),$(scintillua.styles.string.longstring)
-    void SetScintilluaStyles(GUI::ScintillaWindow &wEditor, PropSetFile& props, const char *languageName) {
-      const auto setStyle = [&wEditor, &props, &languageName](int style) {
-        std::string finalPropStr;
-        const std::string &name = wEditor.NameOfStyle(style);
-        size_t end = std::string::npos;
-        do {
-          end = name.find('.', ++end);
-          char propStr[128] = "";
-          sprintf(propStr, "$(scintillua.styles.%s),", end == std::string::npos ?
-            name.c_str() : name.substr(0, end).c_str());
-          finalPropStr += propStr;
-        } while (end != std::string::npos);
-        char key[256] = "";
-        sprintf(key, "style.%s.%0d", languageName, style);
-        props.Set(key, finalPropStr.c_str());
-      };
-      const int namedStyles = wEditor.NamedStyles(); // this count includes predefined styles
-      constexpr int LastPredefined = static_cast<int>(Scintilla::StylesCommon::LastPredefined);
-      constexpr int numPredefined = LastPredefined - StyleDefault + 1;
-      for (int i = 0; i < std::min(namedStyles - numPredefined, StyleDefault); i++) {
-        setStyle(i);
-      }
-      for (int i = StyleDefault; i <= LastPredefined; i++) {
-        setStyle(i);
-      }
-      for (int i = LastPredefined + 1; i < namedStyles; i++) {
-        setStyle(i);
-      }
-    }
+```cpp
+// Scintillua's style numbers are not constant, so ask it for names of styles and create a
+// mapping of style numbers to more constant style definitions.
+// For example, if Scintillua reports for the cpp lexer that style number 2 is a 'comment',
+// create the property:
+//   style.scintillua.cpp.2=$(scintillua.styles.comment)
+// That way the user can define 'scintillua.styles.comment' once and it will be used for whatever
+// the style number for comments is in any given lexer.
+// Similarly, if Scintillua reports for the lua lexer that style number 20 is 'string.longstring',
+// create the property:
+//   style.scintillua.lua.20=$(scintillua.styles.string),$(scintillua.styles.string.longstring)
+void SetScintilluaStyles(GUI::ScintillaWindow &wEditor, PropSetFile& props, const char *languageName) {
+  const auto setStyle = [&wEditor, &props, &languageName](int style) {
+    std::string finalPropStr;
+    const std::string &name = wEditor.NameOfStyle(style);
+    size_t end = std::string::npos;
+    do {
+      end = name.find('.', ++end);
+      char propStr[128] = "";
+      sprintf(propStr, "$(scintillua.styles.%s),", end == std::string::npos ?
+        name.c_str() : name.substr(0, end).c_str());
+      finalPropStr += propStr;
+    } while (end != std::string::npos);
+    char key[256] = "";
+    sprintf(key, "style.%s.%0d", languageName, style);
+    props.Set(key, finalPropStr.c_str());
+  };
+  const int namedStyles = wEditor.NamedStyles(); // this count includes predefined styles
+  constexpr int LastPredefined = static_cast<int>(Scintilla::StylesCommon::LastPredefined);
+  constexpr int numPredefined = LastPredefined - StyleDefault + 1;
+  for (int i = 0; i < std::min(namedStyles - numPredefined, StyleDefault); i++) {
+    setStyle(i);
+  }
+  for (int i = StyleDefault; i <= LastPredefined; i++) {
+    setStyle(i);
+  }
+  for (int i = LastPredefined + 1; i < namedStyles; i++) {
+    setStyle(i);
+  }
+}
+```
 
 In addition to not having static style numbers, Scintillua does not have static keyword lists
 should you wish to override the a given lexer's built-in list(s). Your application can call the
@@ -253,23 +255,25 @@ You can compile Scintillua directly (statically) into your Scintilla-based appli
 
 Here is a sample portion of a *Makefile* with Lua 5.3 as an example:
 
-    # ...
+```make
+# ...
 
-    sci_flags = [flags used to compile Scintilla and Lexilla]
-    scintillua_obj = Scintillua.o
-    lua_flags = -Iscintillua/lua/src
-    lua_objs = lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o \
-      lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o lundump.o lvm.o lzio.o \
-      lauxlib.o lbaselib.o lmathlib.o lstrlib.o ltablib.o lutf8lib.o \
-      lpcap.o lpcode.o lpprint.o lptree.o lpvm.o
-    $(scintillua_obj): scintillua/Scintillua.cxx
-    	g++ $(sci_flags) $(lua_flags) -c $< -o $@
-    $(lua_objs): scintillua/lua/src/*.c scintillua/lua/src/lib/*.c
-    	gcc $(lua_flags) -c $^
+sci_flags = # ... flags used to compile Scintilla and Lexilla ...
+scintillua_obj = Scintillua.o
+lua_flags = -Iscintillua/lua/src
+lua_objs = lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o \
+  lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o lundump.o lvm.o lzio.o \
+  lauxlib.o lbaselib.o lmathlib.o lstrlib.o ltablib.o lutf8lib.o \
+  lpcap.o lpcode.o lpprint.o lptree.o lpvm.o
+$(scintillua_obj): scintillua/Scintillua.cxx
+  g++ $(sci_flags) $(lua_flags) -c $< -o $@
+$(lua_objs): scintillua/lua/src/*.c scintillua/lua/src/lib/*.c
+  gcc $(lua_flags) -c $^
 
-    # ...
+# ...
 
-    [your app]: [your dependencies] $(scintillua_obj) $(lua_objs)
+your_app: $(your_dependencies) $(scintillua_obj) $(lua_objs)
+```
 
 **Windows note:** when cross-compiling for Windows statically, you will need to pass `-DNO_DLL`
 to the compiler when compiling *Scintillua.cxx*.
@@ -286,13 +290,15 @@ In order to use Scintillua's lexers in your application:
 
 For example, using the GTK platform:
 
-    GtkWidget *sci = scintilla_new();
-    SetLibraryProperty("scintillua.lexers", "/path/to/lexers/");
-    ILEXER5* lua_lexer = CreateLexer("lua");
-    if (lua_lexer)
-      send_scintilla_message(SCINTILLA(sci), SCI_SETILEXER, 0, (sptr_t)lua_lexer);
-    else
-      fprintf("error creating lexer: %s\n", GetCreateLexerError());
+```cpp
+GtkWidget *sci = scintilla_new();
+SetLibraryProperty("scintillua.lexers", "/path/to/lexers/");
+ILEXER5* lua_lexer = CreateLexer("lua");
+if (lua_lexer)
+  send_scintilla_message(SCINTILLA(sci), SCI_SETILEXER, 0, (sptr_t)lua_lexer);
+else
+  fprintf("error creating lexer: %s\n", GetCreateLexerError());
+```
 
 Your application will then have to query Scintillua for how many styles are currently defined
 and what the names of those styles are in order to create a map of style names to style numbers
@@ -323,27 +329,29 @@ path (or modify Lua's `package.path` accordingly), `require()` the `lexer` libra
 a lexer, and call that lexer's [`lex()`][] function. Here is an example interactive Lua session
 doing this:
 
-    $> lua
-    Lua 5.1.4  Copyright (C) 1994-2008 Lua.org, PUC-Rio
-    > lexer_path = '/home/mitchell/code/scintillua/lexers/?.lua'
-    > package.path = package.path .. ';' .. lexer_path
-    > c = require('lexer').load('c')
-    > tokens = c:lex('int main() { return 0; }')
-    > for i = 1, #tokens, 2 do print(tokens[i], tokens[i+1]) end
-    type	4
-    whitespace.c	5
-    function	9
-    operator	10
-    operator	11
-    whitespace.c	12
-    operator	13
-    whitespace.c	14
-    keyword	20
-    whitespace.c	21
-    number	22
-    operator	23
-    whitespace.c	24
-    operator	25
+```
+$> lua
+Lua 5.1.4  Copyright (C) 1994-2008 Lua.org, PUC-Rio
+> lexer_path = '/home/mitchell/code/scintillua/lexers/?.lua'
+> package.path = package.path .. ';' .. lexer_path
+> c = require('lexer').load('c')
+> tokens = c:lex('int main() { return 0; }')
+> for i = 1, #tokens, 2 do print(tokens[i], tokens[i+1]) end
+type	4
+whitespace.c	5
+function	9
+operator	10
+operator	11
+whitespace.c	12
+operator	13
+whitespace.c	14
+keyword	20
+whitespace.c	21
+number	22
+operator	23
+whitespace.c	24
+operator	25
+```
 
 If you are unsure of which lexer to use for a given filename and/or content line (e.g. shebang line), you can
 call [`detect()`][] and pass the result to `load()` if it is non-nil.

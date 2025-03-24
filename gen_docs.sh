@@ -15,12 +15,13 @@ if command -v ldoc &>/dev/null; then
 	ldoc --filter docs.markdowndoc.ldoc lexers/lexer.lua > docs/api.md
 fi
 
-# Copy README into index and update links.
-sed -e 's/^\# [[:alpha:]]\+/## Introduction/;' -e \
-	's|https://[[:alpha:]]\+\.github\.io/[[:alpha:]]\+/||;' README.md > docs/index.md
-
-# Generate HTML from Markdown (docs/*.html from docs/*.md)
-cd docs
-for file in `ls *.md`; do
-	cat _layouts/default.html | ./fill_layout.lua $file > `basename -s .md $file`.html
-done
+# Build html pages.
+exit 0
+pushd ../docs
+bundle install
+if [ -z "$LANG" ]; then export LANG="en_US.UTF-8"; fi
+bundle exec jekyll build --baseurl "`pwd`" --quiet
+cp _site/*.html .
+cp -r _site/assets/css assets
+rm -r _site
+popd

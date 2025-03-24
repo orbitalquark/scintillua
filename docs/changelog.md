@@ -1,8 +1,8 @@
-## Changelog
+# Changelog
 
 [Atom Feed](https://github.com/orbitalquark/scintillua/releases.atom)
 
-### 6.4 (31 Jan 2025)
+## 6.4 (31 Jan 2025)
 
 Download:
 
@@ -24,7 +24,7 @@ Changes:
 
 [Scintillua 6.4]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_6.4/scintillua_6.4.zip
 
-### 6.3 (29 Apr 2024)
+## 6.3 (29 Apr 2024)
 
 Download:
 
@@ -51,7 +51,7 @@ Changes:
 
 [Scintillua 6.3]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_6.3/scintillua_6.3.zip
 
-### 6.2 (27 Jul 2023)
+## 6.2 (27 Jul 2023)
 
 Download:
 
@@ -79,7 +79,7 @@ Changes:
 [`lexer.names()`]: api.html#lexer.names
 [LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
 
-### 6.1 (22 Dec 2022)
+## 6.1 (22 Dec 2022)
 
 Download:
 
@@ -98,7 +98,7 @@ Changes:
 
 [Scintillua 6.1]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_6.1/scintillua_6.1.zip
 
-### 6.0 (27 Sep 2022)
+## 6.0 (27 Sep 2022)
 
 Download:
 
@@ -173,7 +173,7 @@ Changes:
 [lexer detection]: manual.html#lexer-detection
 [`lexer.detect()`]: api.html#lexer.detect
 
-### 5.3 (03 Nov 2021)
+## 5.3 (03 Nov 2021)
 
 Download:
 
@@ -189,7 +189,7 @@ Changes:
 
 [Scintillua 5.3]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_5.3/scintillua_5.3.zip
 
-### 5.2 (18 Sep 2021)
+## 5.2 (18 Sep 2021)
 
 Download:
 
@@ -205,7 +205,7 @@ Changes:
 
 [Scintillua 5.2]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_5.2/scintillua_5.2.zip
 
-### 5.1 (31 Aug 2021)
+## 5.1 (31 Aug 2021)
 
 Download:
 
@@ -227,7 +227,7 @@ Changes:
 [Lexilla]: https://scintilla.org/Lexilla.html
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 5.0 (26 Jun 2021)
+## 5.0 (26 Jun 2021)
 
 Download:
 
@@ -262,7 +262,7 @@ Changes:
 [Lexilla]: https://scintilla.org/Lexilla.html
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 4.4.5-2 (29 Jan 2021)
+## 4.4.5-2 (29 Jan 2021)
 
 Download:
 
@@ -295,7 +295,7 @@ Changes:
 
 [Scintillua 4.4.5-2]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_4.4.5-2/scintillua_4.4.5-2.zip
 
-### 4.4.5-1 (19 Sep 2020)
+## 4.4.5-1 (19 Sep 2020)
 
 Download:
 
@@ -320,7 +320,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 3.21.0-1 (27 July 2020)
+## 3.21.0-1 (27 July 2020)
 
 Download:
 
@@ -349,7 +349,7 @@ Changes:
 [`lexer.styles`]: api.html#lexer.styles
 [`lexer.fold*`]: api.html#lexer.folding
 
-### 3.20.0-1 (9 May 2020)
+## 3.20.0-1 (9 May 2020)
 
 Download:
 
@@ -383,7 +383,7 @@ Changes:
 [`lexer.to_eol()`]: api.html#lexer.to_eol
 [`lexer.number`]: api.html#lexer.number
 
-### 3.11.1-1 (26 Oct 2019)
+## 3.11.1-1 (26 Oct 2019)
 
 Download:
 
@@ -400,7 +400,7 @@ Changes:
 
 [Scintilla 3.11.1]: https://sourceforge.net/projects/scintilla/files/scintilla/3.11.1/scintilla3111.zip/download
 
-### 3.10.6-1 (11 Jun 2019)
+## 3.10.6-1 (11 Jun 2019)
 
 Download:
 
@@ -417,7 +417,7 @@ Changes:
 
 [Scintilla 3.10.6]: https://sourceforge.net/projects/scintilla/files/scintilla/3.10.6/scintilla3106.zip/download
 
-### 3.10.4-1 (17 Apr 2019)
+## 3.10.4-1 (17 Apr 2019)
 
 Download:
 
@@ -433,7 +433,7 @@ Changes:
 
 [Scintilla 3.10.4]: https://sourceforge.net/projects/scintilla/files/scintilla/3.10.4/scintilla3104.zip/download
 
-### 3.10.3-1 (09 Mar 2019)
+## 3.10.3-1 (09 Mar 2019)
 
 Download:
 
@@ -450,7 +450,7 @@ Changes:
 
 [Scintilla 3.10.3]: https://sourceforge.net/projects/scintilla/files/scintilla/3.10.3/scintilla3103.zip/download
 
-### 3.10.2-1 (12 Jan 2019)
+## 3.10.2-1 (12 Jan 2019)
 
 Download:
 
@@ -466,7 +466,7 @@ Changes:
 
 [Scintilla 3.10.2]: https://sourceforge.net/projects/scintilla/files/scintilla/3.10.2/scintilla3102.zip/download
 
-### 3.10.1-1 (31 Oct 2018)
+## 3.10.1-1 (31 Oct 2018)
 
 Download:
 
@@ -484,7 +484,7 @@ Changes:
 
 [Scintilla 3.10.1]: https://sourceforge.net/projects/scintilla/files/scintilla/3.10.1/scintilla3101.zip/download
 
-### 3.10.0-1 (30 Jun 2018)
+## 3.10.0-1 (30 Jun 2018)
 
 Download:
 
@@ -502,7 +502,7 @@ Changes:
 
 [Scintilla 3.10.0]: https://sourceforge.net/projects/scintilla/files/scintilla/3.10.0/scintilla3100.zip/download
 
-### 3.8.0-1 (28 Mar 2018)
+## 3.8.0-1 (28 Mar 2018)
 
 Download:
 
@@ -541,7 +541,7 @@ Changes:
 [object-oriented]: api.html#new-lexer-template
 [migrate them]: api.html#migrating-legacy-lexers
 
-### 3.7.5-1 (19 Aug 2017)
+## 3.7.5-1 (19 Aug 2017)
 
 Download:
 
@@ -562,7 +562,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 3.7.4-1 (30 Apr 2017)
+## 3.7.4-1 (30 Apr 2017)
 
 Download:
 
@@ -584,7 +584,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 3.7.3-1 (22 Feb 2017)
+## 3.7.3-1 (22 Feb 2017)
 
 Download:
 
@@ -606,7 +606,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 3.7.1-1 (05 Dec 2016)
+## 3.7.1-1 (05 Dec 2016)
 
 Download:
 
@@ -626,7 +626,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 3.7.0-1 (19 Oct 2016)
+## 3.7.0-1 (19 Oct 2016)
 
 Download:
 
@@ -652,7 +652,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 3.6.7-1 (15 Sep 2016)
+## 3.6.7-1 (15 Sep 2016)
 
 Download:
 
@@ -671,7 +671,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 3.6.5-1 (26 Apr 2016)
+## 3.6.5-1 (26 Apr 2016)
 
 Download:
 
@@ -690,7 +690,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 3.6.4-2 (04 Apr 2016)
+## 3.6.4-2 (04 Apr 2016)
 
 Download:
 
@@ -707,7 +707,7 @@ Changes:
 
 [Scintillua 3.6.4-2]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.6.4-2.zip
 
-### 3.6.4-1 (19 Mar 2016)
+## 3.6.4-1 (19 Mar 2016)
 
 Download:
 
@@ -733,7 +733,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 3.6.3-1 (23 Jan 2016)
+## 3.6.3-1 (23 Jan 2016)
 
 Download:
 
@@ -754,7 +754,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 3.6.2-1 (07 Nov 2015)
+## 3.6.2-1 (07 Nov 2015)
 
 Download:
 
@@ -775,7 +775,7 @@ Changes:
 [SciTE]: https://scintilla.org/SciTE.html
 [LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
 
-### 3.6.1-1 (15 Sep 2015)
+## 3.6.1-1 (15 Sep 2015)
 
 Download:
 
@@ -794,7 +794,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 3.6.0-1 (03 Aug 2015)
+## 3.6.0-1 (03 Aug 2015)
 
 Download:
 
@@ -814,7 +814,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 3.5.7-1 (23 Jun 2015)
+## 3.5.7-1 (23 Jun 2015)
 
 Download:
 
@@ -833,7 +833,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 3.5.6-1 (26 May 2015)
+## 3.5.6-1 (26 May 2015)
 
 Download:
 
@@ -853,7 +853,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 3.5.5-1 (18 Apr 2015)
+## 3.5.5-1 (18 Apr 2015)
 
 Download:
 
@@ -878,7 +878,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 3.5.4-1 (09 Mar 2015)
+## 3.5.4-1 (09 Mar 2015)
 
 Download:
 
@@ -901,7 +901,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 3.5.3-1 (20 Jan 2015)
+## 3.5.3-1 (20 Jan 2015)
 
 Download:
 
@@ -922,7 +922,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 3.5.2-1 (10 Dec 2014)
+## 3.5.2-1 (10 Dec 2014)
 
 Download:
 
@@ -942,7 +942,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 3.5.1-1 (01 Oct 2014)
+## 3.5.1-1 (01 Oct 2014)
 
 Download:
 
@@ -962,7 +962,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 3.5.0-1 (01 Sep 2014)
+## 3.5.0-1 (01 Sep 2014)
 
 Download:
 
@@ -982,7 +982,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 3.4.4-1 (04 Jul 2014)
+## 3.4.4-1 (04 Jul 2014)
 
 Download:
 
@@ -1005,7 +1005,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 3.3.9-1 (05 Feb 2014)
+## 3.3.9-1 (05 Feb 2014)
 
 Download:
 
@@ -1025,7 +1025,7 @@ Changes:
 [Lua library]: manual.html#using-scintillua-as-a-lua-library
 [external Lua states]: api.html#SCI_CHANGELEXERSTATE
 
-### 3.3.7-1 (21 Dec 2013)
+## 3.3.7-1 (21 Dec 2013)
 
 Scintillua 3.3.7-1 is a major change from 3.3.2-1. It has a completely new [theme implementation][]
 and many lexer structure and API changes. Custom lexers and themes will need to be updated.
@@ -1078,7 +1078,7 @@ Changes:
 [rule]: api.html#rules
 [Child lexers]: api.html#child-lexer
 
-### 3.3.2-1 (25 May 2013)
+## 3.3.2-1 (25 May 2013)
 
 Download:
 
@@ -1097,7 +1097,7 @@ Changes:
 
 [Scintillua 3.3.2-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.3.2-1.zip
 
-### 3.3.0-1 (31 Mar 2013)
+## 3.3.0-1 (31 Mar 2013)
 
 Download:
 
@@ -1114,7 +1114,7 @@ Changes:
 
 [Scintillua 3.3.0-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.3.0-1.zip
 
-### 3.2.4-1 (18 Jan 2013)
+## 3.2.4-1 (18 Jan 2013)
 
 Download:
 
@@ -1132,7 +1132,7 @@ Changes:
 
 [Scintillua 3.2.4-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.2.4-1.zip
 
-### 3.2.3-1 (22 Oct 2012)
+## 3.2.3-1 (22 Oct 2012)
 
 Download:
 
@@ -1149,7 +1149,7 @@ Changes:
 
 [Scintillua 3.2.3-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.2.3-1.zip
 
-### 3.2.2-1 (31 Aug 2012)
+## 3.2.2-1 (31 Aug 2012)
 
 Download:
 
@@ -1169,7 +1169,7 @@ Changes:
 [Scintillua 3.2.2-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.2.2-1.zip
 [scinterm]: https://orbitalquark.github.io/scinterm
 
-### 3.2.1-1 (15 Jul 2012)
+## 3.2.1-1 (15 Jul 2012)
 
 Download:
 
@@ -1186,7 +1186,7 @@ Changes:
 
 [Scintillua 3.2.1-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.2.1-1.zip
 
-### 3.2.0-1 (01 Jun 2012)
+## 3.2.0-1 (01 Jun 2012)
 
 Download:
 
@@ -1203,7 +1203,7 @@ Changes:
 
 [Scintillua 3.2.0-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.2.0-1.zip
 
-### 3.1.0-1 (23 Apr 2012)
+## 3.1.0-1 (23 Apr 2012)
 
 Download:
 
@@ -1220,7 +1220,7 @@ Changes:
 
 [Scintillua 3.1.0-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.1.0-1.zip
 
-### 3.0.4-1 (11 Mar 2012)
+## 3.0.4-1 (11 Mar 2012)
 
 Download:
 
@@ -1238,7 +1238,7 @@ Changes:
 
 [Scintillua 3.0.4-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.0.4-1.zip
 
-### 3.0.3-1 (28 Jan 2012)
+## 3.0.3-1 (28 Jan 2012)
 
 Download:
 
@@ -1256,7 +1256,7 @@ Changes:
 
 [Scintillua 3.0.3-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.0.3-1.zip
 
-### 3.0.2-1 (08 Dec 2011)
+## 3.0.2-1 (08 Dec 2011)
 
 Download:
 
@@ -1284,7 +1284,7 @@ Changes:
 [API documentation]: api.html#lexer
 [Lua 5.2]: https://www.lua.org/manual/5.2/
 
-### 3.0.0-1 (01 Nov 2011)
+## 3.0.0-1 (01 Nov 2011)
 
 Download:
 
@@ -1300,7 +1300,7 @@ Changes:
 
 [Scintillua 3.0.0-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.0.0-1.zip
 
-### 2.29-1 (19 Sep 2011)
+## 2.29-1 (19 Sep 2011)
 
 Download:
 
@@ -1326,7 +1326,7 @@ Changes:
 
 [Scintillua 2.29-1]: https://github.com/orbitalquark/scintillua/archive/scintillua229-1.zip
 
-### 2.27-1 (20 Jun 2011)
+## 2.27-1 (20 Jun 2011)
 
 Download:
 
@@ -1342,7 +1342,7 @@ Changes:
 
 [Scintillua 2.27-1]: https://github.com/orbitalquark/scintillua/archive/scintillua227-1.zip
 
-### 2.26-1 (10 Jun 2011)
+## 2.26-1 (10 Jun 2011)
 
 Download:
 
@@ -1365,7 +1365,7 @@ Changes:
 [`get_style_at()`]: api.html#lexer.style_at
 [easier]: api.html#code-folding
 
-### 2.25-1 (20 Mar 2011)
+## 2.25-1 (20 Mar 2011)
 
 Download:
 
@@ -1386,7 +1386,7 @@ Changes:
 
 [Scintillua 2.25-1]: https://github.com/orbitalquark/scintillua/archive/scintillua225-1.zip
 
-### 2.24-1 (03 Feb 2011)
+## 2.24-1 (03 Feb 2011)
 
 Download:
 
@@ -1404,7 +1404,7 @@ Changes:
 
 [Scintillua 2.24-1]: https://github.com/orbitalquark/scintillua/archive/scintillua224-1.zip
 
-### 2.23-1 (07 Dec 2010)
+## 2.23-1 (07 Dec 2010)
 
 Download:
 
@@ -1421,7 +1421,7 @@ Changes:
 
 [Scintillua 2.23-1]: https://github.com/orbitalquark/scintillua/archive/scintillua223-1.zip
 
-### 2.22-1 (27 Oct 2010)
+## 2.22-1 (27 Oct 2010)
 
 Download:
 
@@ -1444,7 +1444,7 @@ Changes:
 [Scintillua 2.22-1]: https://github.com/orbitalquark/scintillua/archive/scintillua222-1.zip
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 2.22-pre-1 (13 Sep 2010)
+## 2.22-pre-1 (13 Sep 2010)
 
 Download:
 
@@ -1462,7 +1462,7 @@ Changes:
 
 [Scintillua 2.22-pre-1]: https://github.com/orbitalquark/scintillua/archive/scintillua222-pre-1.zip
 
-### 2.21-1 (01 Sep 2010)
+## 2.21-1 (01 Sep 2010)
 
 Bugfixes:
 
@@ -1472,7 +1472,7 @@ Changes:
 
 * `LexLPeg.cxx` can be compiled as an external lexer.
 
-### 2.20-1 (17 Aug 2010)
+## 2.20-1 (17 Aug 2010)
 
 Download:
 
@@ -1495,7 +1495,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 2.12-1 (15 Jun 2010)
+## 2.12-1 (15 Jun 2010)
 
 Download:
 
@@ -1515,7 +1515,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 2.11-1 (30 Apr 2010)
+## 2.11-1 (30 Apr 2010)
 
 Download:
 
@@ -1546,7 +1546,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 2.03-1 (22 Feb 2010)
+## 2.03-1 (22 Feb 2010)
 
 Download:
 
@@ -1565,7 +1565,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 2.02-1 (26 Jan 2010)
+## 2.02-1 (26 Jan 2010)
 
 Download:
 
@@ -1588,7 +1588,7 @@ Changes:
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
-### 2.01-1 (13 Jan 2010)
+## 2.01-1 (13 Jan 2010)
 
 * Initial release for [Scintilla][]/[SciTE][] 2.01.
 

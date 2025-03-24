@@ -1,9 +1,9 @@
-## Thanks
+# Thanks
 
 Thank you everyone for your contributions and feedback. They have helped make Scintillua better
 and better over the years.
 
-### Code Contributors
+## Code Contributors
 
 * Aki
 * Alejandro Baez

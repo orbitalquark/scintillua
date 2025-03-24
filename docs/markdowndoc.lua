@@ -1,27 +1,25 @@
 -- Copyright 2007-2025 Mitchell. See LICENSE.
 
---- Markdown filter for LDoc and doclet for Luadoc.
+--- Markdown filter for LDoc.
 -- @usage ldoc --filter markdowndoc.ldoc [ldoc opts] > api.md
--- @usage luadoc --doclet path/to/markdowndoc [file(s)] > api.md
 -- @module markdowndoc
 local M = {}
 
-local TOC = '1. [%s](#%s)\n'
-local MODULE = '<a id="%s"></a>\n## The `%s` Lua Module\n'
-local FIELD = '<a id="%s"></a>\n#### `%s` %s\n\n'
-local FUNCTION = '<a id="%s"></a>\n#### `%s`(%s)\n\n'
-local FUNCTION_NO_PARAMS = '<a id="%s"></a>\n#### `%s`()\n\n'
+local TOC = '%d. [%s](#%s)\n'
+local MODULE = '<a id="%s"></a>\n## The `%s` module\n'
+local FIELD = '<a id="%s"></a>\n%s `%s`\n\n'
+local FUNCTION = '<a id="%s"></a>\n%s `%s`(%s)\n\n'
+local FUNCTION_NO_PARAMS = '<a id="%s"></a>\n%s `%s`()\n\n'
 local DESCRIPTION = '%s\n\n'
-local LIST_TITLE = '%s:\n\n'
 local PARAM = '- *%s*: %s\n'
-local USAGE = '- `%s`\n'
-local RETURN = '- %s\n'
-local SEE = '- [`%s`](#%s)\n'
-local TABLE = '<a id="%s"></a>\n#### `%s` &lt;table&gt;\n\n'
+local USAGE = '```lua\n%s```\n'
+local RETURN = '%s'
+local SEE = '[`%s`](#%s)'
+local TABLE = '<a id="%s"></a>\n%s `%s`\n\n'
 local TFIELD = '- `%s`: %s\n'
 local titles = {
-	[PARAM] = 'Parameters', [USAGE] = 'Usage', [RETURN] = 'Return', [SEE] = 'See also',
-	[TFIELD] = 'Fields'
+	[PARAM] = 'Parameters:\n', [USAGE] = 'Usage:\n\n', [RETURN] = 'Returns: ', [SEE] = 'See also: ',
+	[TFIELD] = 'Fields:\n\n'
 }
 
 --- Set of all known symbols that can be linked to.
@@ -36,23 +34,25 @@ local function link_known_symbols(md)
 	end)
 end
 
---- Writes an LDoc description to the given file.
--- @param f The markdown file being written to.
--- @param description The description.
--- @param name The name of the module the description belongs to. Used for headers in module
+--- Writes an LDoc description to a file.
+-- @param f File to write to.
+-- @param item LDoc item to describe.
+-- @param name String name of the module the item belongs to. Used for headers in module
 --	descriptions.
-local function write_description(f, description, name)
+local function write_description(f, item, name)
+	local description = item.summary
+	if item.description ~= '' then description = description .. '\n' .. item.description end
 	description = link_known_symbols(description):gsub('\n ', '\n') -- strip leading spaces
 	f:write(string.format(DESCRIPTION, description))
 end
 
---- Writes an LDoc hashmap to the given file.
--- @param f The markdown file being written to.
--- @param fmt The format of a hashmap item.
--- @param hashmap The LDoc hashmap.
+--- Writes an LDoc hashmap to a file.
+-- @param f File to write to.
+-- @param fmt String format of a hashmap item.
+-- @param hashmap LDoc hashmap to write.
 local function write_hashmap(f, fmt, hashmap)
 	if not hashmap or #hashmap == 0 then return end
-	f:write(string.format(LIST_TITLE, titles[fmt]))
+	f:write(titles[fmt])
 	for _, name in ipairs(hashmap) do
 		local description = hashmap.map and hashmap.map[name] or hashmap[name] or ''
 		if fmt == PARAM or fmt == TFIELD then description = link_known_symbols(description) end
@@ -62,16 +62,16 @@ local function write_hashmap(f, fmt, hashmap)
 	f:write('\n')
 end
 
---- Writes an LDoc list to the given file.
--- @param f The markdown file being written to.
--- @param fmt The format of a list item.
--- @param list The LDoc list.
--- @param name The name of the module the list belongs to. Used for @see.
+--- Writes an LDoc list to a file.
+-- @param f File to write to.
+-- @param fmt String format of a list item.
+-- @param list LDoc list to write.
+-- @param name String name of the module the list belongs to. Used for @see.
 local function write_list(f, fmt, list, name)
 	if not list or #list == 0 then return end
 	if type(list) == 'string' then list = {list} end
-	f:write(string.format(LIST_TITLE, titles[fmt]))
-	for _, value in ipairs(list) do
+	f:write(titles[fmt])
+	for i, value in ipairs(list) do
 		if fmt == SEE and name ~= '_G' then
 			if not value:find('%.') then
 				-- Prepend module name to identifier if necessary.
@@ -81,129 +81,124 @@ local function write_list(f, fmt, list, name)
 				value = value:gsub('^_G%.', '')
 			end
 		end
+		if fmt == RETURN then value = link_known_symbols(value) end
 		f:write(string.format(fmt, value, value))
+		if (fmt == SEE or fmt == RETURN) and i < #list then f:write(', ') end
 	end
+	if (fmt == SEE or fmt == RETURN) then f:write('\n') end
 	f:write('\n')
 end
 
---- Writes an LDoc item to the given file.
--- @param f The markdown file being written to.
--- @param item The LDoc item.
--- @param module_name The LDoc item's module name.
+--- Writes an LDoc item to a file.
+-- @param f File to write to.
+-- @param item LDoc item to write.
+-- @param module_name String LDoc item's module name.
 -- @function write
 local write
 
---- Writes an LDoc field to the given file.
--- @param f The markdown file being written to.
--- @param field The LDoc field.
--- @param module_name The LDoc field's module name.
+--- Writes an LDoc field to a file.
+-- @param f File to write to.
+-- @param field LDoc field to write.
+-- @param module_name String LDoc field's module name.
 local function write_field(f, field, module_name)
 	if not field.name:find('%.') and module_name ~= '_G' then
 		field.name = module_name .. '.' .. field.name -- absolute name
 	elseif field.name:find('^_G%.[^.]+%.[^.]+') then
 		field.name = field.name:gsub('^_G%.', '') -- strip _G required for LDoc
 	end
-	local is_buffer_view_constant = field.name:find('^buffer%.[A-Z_]+$') or
-		field.name:find('^view%.[A-Z_]+$')
-	if not is_buffer_view_constant then
-		f:write(string.format(FIELD, field.name:gsub('^_G%.', ''), field.name, ''))
-		write_description(f, field.summary .. field.description)
+	local skip_constant =
+		field.name:find('^buffer%.[A-Z_]+$') or field.name:find('^view%.[A-Z_]+$') or
+			field.name:find('^lexer%.[A-Z_]+$')
+	if not skip_constant then
+		local level = module_name ~= 'buffer' and 3 or 4
+		f:write(string.format(FIELD, field.name:gsub('^_G%.', ''), string.rep('#', level), field.name))
+		write_description(f, field)
+		if field.usage then write_list(f, USAGE, table.concat(field.usage)) end
+		write_list(f, SEE, field.tags.see, module_name)
 	end
 end
 
---- Writes an LDoc function to the given file.
--- @param f The markdown file being written to.
--- @param func The LDoc function.
--- @param module_name The LDoc function's module name.
+--- Writes an LDoc function to a file.
+-- @param f File to write to.
+-- @param func LDoc function to write.
+-- @param module_name String LDoc function's module name.
 local function write_function(f, func, module_name)
 	if not func.name:find('[%.:]') and module_name ~= '_G' then
 		func.name = module_name .. '.' .. func.name -- absolute name
 	end
-	f:write(string.format(FUNCTION, func.name:gsub(':', '.'), func.name,
-		func.args:sub(2, -2):gsub('[%w_]+', '*%0*')))
-	write_description(f, func.summary .. func.description)
+	local level = module_name ~= 'buffer' and 3 or 4
+	local args = func.args:sub(2, -2)
+	args = args:gsub('[%w_]+', '*%0*') -- italicize args
+	args = args:gsub('=[^[%]]+', function(default) return default:gsub('*', '') end) -- de-italicize
+	f:write(string.format(FUNCTION, func.name:gsub(':', '.'), string.rep('#', level), func.name, args))
+	write_description(f, func)
 	write_hashmap(f, PARAM, func.params)
-	write_list(f, USAGE, func.usage)
 	write_list(f, RETURN, func.ret)
-	-- Note: LDoc 1.4.6's *docs.lua* `Module:resolve_references()` removes tags.see values
-	-- for found references. This interferes with custom `--filter` functions. Comment out
-	-- the `tags.see:remove_value()` call.
+	if func.usage then write_list(f, USAGE, table.concat(func.usage)) end
 	write_list(f, SEE, func.tags.see, module_name)
 end
 
---- Writes an LDoc table to the given file.
--- @param f The markdown file being written to.
--- @param tbl The LDoc table.
--- @param module_name The LDoc table's module name.
+--- Writes an LDoc table to a file.
+-- @param f File to write to.
+-- @param tbl LDoc table to write.
+-- @param module_name String LDoc table's module name.
 local function write_table(f, tbl, module_name)
 	if not tbl.name:find('%.') and module_name ~= '_G' then
 		tbl.name = module_name .. '.' .. tbl.name -- absolute name
 	else
-		tbl.name = tbl.name:gsub('^_G%.', '') -- strip _G required for LDoc/LuaDoc
+		tbl.name = tbl.name:gsub('^_G%.', '') -- strip _G required for LDoc
 	end
 	local tbl_id = tbl.name ~= 'buffer' and tbl.name ~= 'view' and tbl.name ~= 'keys' and
 		tbl.name:gsub('^_G.', '') or ('_G.' .. tbl.name)
-	f:write(string.format(TABLE, tbl_id, tbl.name))
-	write_description(f, tbl.summary .. tbl.description)
+	local level = module_name ~= 'buffer' and 3 or 4
+	f:write(string.format(TABLE, tbl_id, string.rep('#', level), tbl.name))
+	write_description(f, tbl)
 	write_hashmap(f, TFIELD, tbl.params)
-	write_list(f, USAGE, tbl.usage)
+	if tbl.usage then write_list(f, USAGE, table.concat(tbl.usage)) end
 	write_list(f, SEE, tbl.tags.see, module_name)
 end
 
---- Writes an LDoc module to the given file.
--- @param f The markdown file being written to.
--- @param module The LDoc module.
+--- Writes an LDoc module to a file.
+-- @param f File to write to.
+-- @param module LDoc module to write.
 local function write_module(f, module)
 	local name = module.name
 
 	-- Write the header and description.
 	f:write(string.format(MODULE, name, name))
-	f:write('---\n\n')
-	write_description(f, module.summary .. module.description, name)
+	f:write('\n')
+	write_description(f, module, name)
 
-	-- Write fields.
-	local fields = {}
-	for _, item in ipairs(module.items) do
-		if item.type == 'field' or item.type == 'table' then fields[#fields + 1] = item end
-	end
-	table.sort(fields, function(a, b) return a.name < b.name end)
-	if #fields > 0 then
-		f:write('### Fields defined by `', name, '`\n\n')
-		for _, field in ipairs(fields) do write(f, field, name) end
-		f:write('\n')
-	end
-
-	-- Write functions.
-	local funcs = {}
-	for _, item in ipairs(module.items) do
-		if item.type == 'function' then funcs[#funcs + 1] = item end
-	end
-	table.sort(funcs, function(a, b) return a.name < b.name end)
-	if #funcs > 0 then
-		f:write('### Functions defined by `', name, '`\n\n')
-		for _, func in ipairs(funcs) do write(f, func, name) end
-		f:write('\n')
-	end
+	table.sort(module.items, function(a, b) return a.name < b.name end)
+	for _, item in ipairs(module.items) do write(f, item, name) end
+	f:write('\n')
 end
 
---- Writes an LDoc section to the given file.
--- @param f The markdown file being written to.
--- @param section The LDoc section.
+--- Writes an LDoc section to a file.
+-- @param f File to write to.
+-- @param section LDoc section to write.
 local function write_section(f, section)
 	f:write('### ', section.display_name, '\n\n')
-	f:write(section.description, '\n')
+	local description = link_known_symbols(section.description):gsub('\n ', '\n') -- strip leading spaces
+	f:write(description, '\n')
 end
 
---- Writes an LDoc class module to the given file.
--- @param f The markdown file being written to.
--- @param module The LDoc class module.
+--- Writes an LDoc class module to a file.
+-- @param f File to write to.
+-- @param module LDoc class module to write.
 local function write_classmod(f, module)
 	local name = module.name
 
 	-- Write the header and description.
 	f:write(string.format(MODULE, name, name))
-	f:write('---\n\n')
-	write_description(f, module.summary .. module.description, name)
+	write_description(f, module, name)
+
+	-- Write the table of contents for the module's sections.
+	for i, item in ipairs(module.sections) do
+		local section = item.display_name
+		f:write(string.format(TOC, i, section, section:gsub(' ', '-'):lower()))
+	end
+	f:write('\n')
 
 	-- Write module items.
 	local section
@@ -226,10 +221,10 @@ write = function(f, item, module_name)
 end
 
 --- Called by LDoc to process a doc object.
--- @param doc The LDoc doc object.
+-- @param doc LDoc doc object to process.
 function M.ldoc(doc)
 	local f = io.stdout
-	f:write('## Scintillua API Documentation\n\n')
+	f:write('# Scintillua API Documentation\n\n')
 
 	table.sort(doc, function(a, b) return a.name < b.name end)
 
@@ -265,105 +260,24 @@ function M.ldoc(doc)
 		end
 	end
 
-	-- Populate `known_symbols`.
+	-- Populate `known_symbols`, but skip some buffer/view/lexer field constants.
 	for _, module in ipairs(doc) do
 		known_symbols[module.name] = true
 		for _, item in ipairs(module.items) do
+			local skip_constant = item.name:find('buffer.[A-Z]+') or item.name:find('view.[A-Z]+') or
+				(module.name == 'lexer' and item.name:find('^[A-Z]+'))
+			if skip_constant then goto continue end
+			if item.name == 'buffer:new' then item.name = 'buffer.new' end -- fix
 			known_symbols[not item.name:find('[.:]') and module.name ~= '_G' and module.name .. '.' ..
 				item.name or item.name] = true
+			::continue::
 		end
 	end
 
 	-- Loop over modules, writing the Markdown document (to stdout).
 	for _, module in ipairs(doc) do
 		write(f, module, module.name)
-		f:write('---\n')
-	end
-end
-
---- Called by LuaDoc to process a doc object.
--- @param doc The LuaDoc doc object.
-function M.start(doc)
-	local modules, files = doc.modules, doc.files
-	local f = io.stdout
-	f:write('## Scintillua API Documentation\n\n')
-
-	-- Create a map of doc objects to file names so their Markdown doc comments can be extracted.
-	local filedocs = {}
-	for _, name in ipairs(files) do filedocs[files[name].doc] = name end
-
-	-- Loop over modules, writing the Markdown document to stdout.
-	for _, name in ipairs(modules) do
-		local module = modules[name]
-
-		-- Write the header and description.
-		f:write(string.format(MODULE, name, name))
-		f:write('---\n\n')
-		write_description(f, module.description, name)
-
-		-- Write fields.
-		if module.doc[1].class == 'module' then
-			local fields = module.doc[1].field
-			if fields and #fields > 0 then
-				table.sort(fields)
-				f:write('### Fields defined by `', name, '`\n\n')
-				for _, field in ipairs(fields) do
-					local type, description = fields[field]:match('^(%b())%s*(.+)$')
-					if not field:find('%.') and name ~= '_G' then
-						field = name .. '.' .. field -- absolute name
-					else
-						field = field:gsub('^_G%.', '') -- strip _G required for LuaDoc
-					end
-					f:write(string.format(FIELD, field, field, type or ''))
-					write_description(f, description or fields[field])
-				end
-				f:write('\n')
-			end
-		end
-
-		-- Write functions.
-		local funcs = module.functions
-		if #funcs > 0 then
-			f:write('### Functions defined by `', name, '`\n\n')
-			for _, fname in ipairs(funcs) do
-				local func = funcs[fname]
-				local params = table.concat(func.param, ', '):gsub('_', '\\_')
-				if not func.name:find('[%.:]') and name ~= '_G' then
-					func.name = name .. '.' .. func.name -- absolute name
-				end
-				if params ~= '' then
-					f:write(string.format(FUNCTION, func.name, func.name, params))
-				else
-					f:write(string.format(FUNCTION_NO_PARAMS, func.name, func.name))
-				end
-				write_description(f, func.description)
-				write_hashmap(f, PARAM, func.param)
-				write_list(f, USAGE, func.usage)
-				write_list(f, RETURN, func.ret)
-				write_list(f, SEE, func.see, name)
-			end
-			f:write('\n')
-		end
-
-		-- Write tables.
-		local tables = module.tables
-		if #tables > 0 then
-			f:write('### Tables defined by `', name, '`\n\n')
-			for _, tname in ipairs(tables) do
-				local tbl = tables[tname]
-				if not tname:find('%.') and (name ~= '_G' or tname == 'buffer' or tname == 'view') then
-					tname = name .. '.' .. tname -- absolute name
-				elseif tname ~= '_G.keys' and tname ~= '_G.snippets' then
-					tname = tname:gsub('^_G%.', '') -- strip _G required for LuaDoc
-				end
-				f:write(string.format(TABLE, tname, tname))
-				write_description(f, tbl.description)
-				write_hashmap(f, TFIELD, tbl.field)
-				write_list(f, USAGE, tbl.usage)
-				write_list(f, SEE, tbl.see, name)
-			end
-		end
-		f:write('---\n')
+		f:write('\n')
 	end
 end
 

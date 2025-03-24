@@ -19,7 +19,7 @@ jobs:
         run: |
           version="${{ github.event.inputs.tag }}"
           if [[ -z "$version" ]]; then
-            version=`grep -m1 '###' docs/changelog.md | cut -d ' ' -f 2`
+            version=`grep -m1 '##' docs/changelog.md | cut -d ' ' -f 2`
           fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
@@ -92,7 +92,7 @@ jobs:
           prefix="https://orbitalquark.github.io/scintillua"
           echoing=0
           while read line; do
-            if [[ $line == \#\#\#* ]]; then
+            if [[ $line == \#\#* ]]; then
               if [[ $echoing -eq 0 ]]; then
                 echoing=1
               else

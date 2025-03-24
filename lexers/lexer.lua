@@ -2,6 +2,24 @@
 
 --- Lexes Scintilla documents and source code with Lua and LPeg.
 --
+-- ### Contents
+--
+-- 1. [Writing Lua Lexers](#writing-lua-lexers)
+-- 2. [Lexer Basics](#lexer-basics)
+--   - [New Lexer Template](#new-lexer-template)
+--   - [Tags](#tags)
+--   - [Rules](#rules)
+--   - [Summary](#summary)
+-- 3. [Advanced Techniques](#advanced-techniques)
+--   - [Line Lexers](#line-lexers)
+--   - [Embedded Lexers](#embedded-lexers)
+--   - [Lexers with Complex State](#lexers-with-complex-state)
+-- 4. [Code Folding](#code-folding)
+-- 5. [Using Lexers](#using-lexers)
+-- 6. [Migrating Legacy Lexers](#migrating-legacy-lexers)
+-- 7. [Considerations](#considerations)
+-- 8. [API Documentation](#lexer.add_fold_point)
+--
 -- ### Writing Lua Lexers
 --
 -- Lexers recognize and tag elements of source code for syntax highlighting. Scintilla (the
