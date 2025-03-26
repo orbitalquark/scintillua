@@ -72,10 +72,17 @@ jobs:
           path: scintillua/lexers
           merge-multiple: true
 
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+          working-directory: scintillua/docs
+
       - name: Generate HTML documentation
         run: |
           sudo apt-get update
-          sudo apt-get install lua5.4 discount --no-install-recommends -y
+          sudo apt-get install lua5.4 --no-install-recommends -y
           cd scintillua && ./gen_docs.sh
 
       - name: Tag

@@ -20,8 +20,9 @@ exit 0
 pushd ../docs
 bundle install
 if [ -z "$LANG" ]; then export LANG="en_US.UTF-8"; fi
-bundle exec jekyll build --baseurl "`pwd`" --quiet
+bundle exec jekyll build --quiet
 cp _site/*.html .
+sed -i 's|href="/|href="|g;' *.html
 cp -r _site/assets/css assets
-rm -r _site
+rm -rf _site vendor
 popd
