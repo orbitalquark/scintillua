@@ -1,6 +1,6 @@
 local lexer = require('lexer')
 local token = lexer.token
-local P, S, B, R, C = lpeg.P, lpeg.S, lpeg.B, lpeg.R, lpeg.C
+local P, S, B = lpeg.P, lpeg.S, lpeg.B
 
 local lex = lexer.new(...)
 
@@ -45,7 +45,7 @@ local keyword_condition = B('#') * lex:word_match(lexer.KEYWORD)
 lex:add_rule('keyword', lex:tag(lexer.KEYWORD, keyword_condition))
 
 -- FIXME: This mustn't apply when in plain text
-local func = lex:tag(lexer.FUNCTION, (B('.') + B('#')) * lexer.word * P('('))
+local func = lex:tag(lexer.FUNCTION, (B('.') + B('#')) * lexer.word * #P('('))
 lex:add_rule('function', func)
 
 local field = lex:tag('FIELD', B('.') * lexer.word * (lexer.any - P('(')))
