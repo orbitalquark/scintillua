@@ -39,12 +39,13 @@ lex:add_rule('comment', lex:tag(lexer.COMMENT,
 lex:add_rule('list', lex:tag(lexer.LIST,
   lexer.starts_line(lexer.digit^1 * '.' + S('+-'), true) * S(' \t')))
 
--- TODO: The keywords currently are matched ANYWHERE (even in plain text), fix this later
+-- TODO: The keywords are currently matched only when precedded by #
+-- we must also match when nested in #{...}
 local keyword_condition = B('#') * lex:word_match(lexer.KEYWORD)
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, keyword_condition))
 
--- NOTE: same goes for the functions and fields
-local func = lex:tag(lexer.FUNCTION, (B('.') + B('#')) * lexer.word * P('()'))
+-- FIXME: This mustn't apply when in plain text
+local func = lex:tag(lexer.FUNCTION, (B('.') + B('#')) * lexer.word * P('('))
 lex:add_rule('function', func)
 
 local field = lex:tag('FIELD', B('.') * lexer.word * (lexer.any - P('(')))
