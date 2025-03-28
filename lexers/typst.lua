@@ -38,7 +38,7 @@ lex:add_rule('list', lex:tag(lexer.LIST, lexer.starts_line(lexer.digit^1 * '.' +
 local function_call = -B('\\') * '#' * (lex:tag(lexer.FUNCTION, lexer.word) * #S('(['))
 lex:add_rule('function', function_call)
 
-local function_method = lex:tag(lexer.FUNCTION_METHOD, (B('.') + B('#')) * lexer.word * #P('('))
+local function_method = lex:tag(lexer.FUNCTION_METHOD, (B('.')) * lexer.word * #P('('))
 lex:add_rule('function_method', function_method)
 
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, -B('\\') * '#' * -keyword_match * lexer.word * (-S('(') * -(P('.') * lexer.word))))
