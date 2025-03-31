@@ -9,6 +9,11 @@ local function header(level)
   local equals_signs = P('=')^level
   -- Stupid header rule for now
   local header = (lexer.starts_line(hspace^0 * equals_signs * hspace^1) * (lexer.any - S('\n'))^0)
+--[[
+  local header = (lexer.starts_line(hspace^0 * equals_signs * hspace^1) * (lexer.any - S('#@<\n'))^0) +
+				(((B('[') * hspace^0 * equals_signs * hspace^1)) *
+				(lexer.any - S('#@<'))^0)
+]]
   return lex:tag(string.format('%s.h%s', lexer.HEADING, level), header)
 end
 
@@ -34,7 +39,8 @@ local function build_rules(pre)
     field = lex:tag(lexer.IDENTIFIER, hash_word) *
             lex:tag(lexer.OPERATOR, P('.')) *
             lex:tag('FIELD', lexer.word) * -S('[('),
-    label = -B('\\') * lex:tag(lexer.LABEL, lexer.range('<','>')),
+    operator = lex:tag(lexer.OPERATOR, S('+-/*%<>~!=^&|?~:;,.()[]{}')),
+    label = -B('\\') * lex:tag(lexer.LABEL, P('<') * lexer.word * P('>')),
     label_two = -B('\\') * lex:tag(lexer.LABEL, P('@') * lexer.word),
     
     italic = -B('\\') * lex:tag(lexer.ITALIC, lexer.range('_', '_')),
@@ -45,7 +51,6 @@ local function build_rules(pre)
     list = lex:tag(lexer.LIST, lexer.starts_line(lexer.digit^1 * '.' + S('+-'), true) * S(' \t')),
     numeric_value = lexer.number^1 * ('.' * lexer.number^1)^-1 * lex:word_match('UNITS')^-1,
     comment = lex:tag(lexer.COMMENT, lexer.range('/*', '*/') + lexer.to_eol('//')),
-    operator = lex:tag(lexer.OPERATOR, S('+-/*%<>~!=^&|?~:;,.()[]{}')),
     
     keyword = lex:tag(lexer.KEYWORD, keyword_match),
     
@@ -61,10 +66,10 @@ local emb_lex = lexer.new('scripting')
  #let x = { ... }
 ]]
 local start = (lex:tag(lexer.KEYWORD, P('#') * lex:word_match(lexer.KEYWORD)) *
-	      #((lexer.any - S('{;\n'))^1 * S('[{') * lexer.space^0)) +
-	      lex:tag(lexer.OPERATOR,P('#') * S('[{'))
+	      #((lexer.any - S('{;\n'))^1 * S('{') * lexer.space^0)) +
+	      lex:tag(lexer.OPERATOR,P('#') * S('{'))
 local embed_start = lex:tag('emb_tag', start)
-local embed_end = lexer:tag('emb_tag', S(']}'))
+local embed_end = lexer:tag('emb_tag', S('}'))
 
 local function add_rules(lexer_obj, pre)
   local rules = build_rules(pre)
@@ -86,7 +91,7 @@ local function add_rules(lexer_obj, pre)
   lexer_obj:add_rule('operator', rules.operator)
 end
 
--- Keywords, functions... don't need '#' in code
+-- Keywords, functions... don't need '#' when in code
 -- the character `#` is not valid in code
 add_rules(emb_lex, '')
 
