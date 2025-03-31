@@ -4,76 +4,102 @@ local P, S, B = lpeg.P, lpeg.S, lpeg.B
 
 local lex = lexer.new(...)
 
-local horizontal_space = lexer.space - '\n'
-
-local keyword_match = lex:word_match(lexer.KEYWORD) * #' '
-
-local bold_text = -B('\\') * lex:tag(lexer.BOLD, lexer.range('*', '*'))
-lex:add_rule('bold', bold_text)
-local italic_text = -B('\\') * lex:tag(lexer.ITALIC, lexer.range('_', '_'))
-lex:add_rule('italic', italic_text)
-
-
 local function header(level)
+  local hspace = (lexer.space - '\n')
   local equals_signs = P('=')^level
-  local standalone_header = lexer.starts_line(horizontal_space^0 * equals_signs * horizontal_space^1) * (lexer.any - S('#@<'))^0
-  local bracketed_header = P('[') * (lexer.space + '\n')^0 * equals_signs * horizontal_space^0 * (lexer.any - P(']'))^0 * (lexer.space + '\n')^0 * P(']')
-  return lex:tag(string.format('%s.h%s', lexer.HEADING, level), standalone_header + bracketed_header)
+  -- Stupid header rule for now
+  local header = (lexer.starts_line(hspace^0 * equals_signs * hspace^1) * (lexer.any - S('\n'))^0)
+  return lex:tag(string.format('%s.h%s', lexer.HEADING, level), header)
 end
-lex:add_rule('header', header(6) + header(5) + header(4) + header(3) + header(2) + header(1))
 
-local label_definition = -B('\\') * lex:tag('LABEL', P('<') * lexer.word * P('>'))
-local label_call = -B('\\') * lex:tag('LABEL', P('@') * lexer.word)
-lex:add_rule('label', label_definition + label_call)
+local function build_rules(pre)
+  local hash_word = -B('\\') * pre * lexer.word
+  local keyword_match = -B('\\') * pre * lex:word_match(lexer.KEYWORD)
 
-local inline_code = lexer.range('`', false, false)
-local double_quote_string = lexer.range('"', true)
-lex:add_rule('string', lex:tag(lexer.STRING, inline_code + double_quote_string))
+  return {
+    in_code = -B('\\') * lexer.range('`', false, false),
+    dq_string = -B('\\') * lexer.range('"', true),
+    string = -B('\\') * lexer.range('`', false, false) + -B('\\') * lexer.range('"', true),
+    
+    hash_word = hash_word,
+    keyword_match = keyword_match,
+    
+    iden = lex:tag(lexer.IDENTIFIER, hash_word),
+    mod_func = lex:tag(lexer.KEYWORD, hash_word) * lexer.space^1 * 
+               lex:tag(lexer.FUNCTION, lexer.word) * lex:tag(lexer.OPERATOR, S('[(')),
+    func = lex:tag(lexer.FUNCTION, hash_word) * lex:tag(lexer.OPERATOR, S('[(')),
+    method = lex:tag(lexer.IDENTIFIER, hash_word) *
+             lex:tag(lexer.OPERATOR, P('.')) *
+             lex:tag(lexer.FUNCTION_METHOD, lexer.word) * S('[('),
+    field = lex:tag(lexer.IDENTIFIER, hash_word) *
+            lex:tag(lexer.OPERATOR, P('.')) *
+            lex:tag('FIELD', lexer.word) * -S('[('),
+    label = -B('\\') * lex:tag(lexer.LABEL, lexer.range('<','>')),
+    label_two = -B('\\') * lex:tag(lexer.LABEL, P('@') * lexer.word),
+    
+    italic = -B('\\') * lex:tag(lexer.ITALIC, lexer.range('_', '_')),
+    bold = -B('\\') * lex:tag(lexer.BOLD, lexer.range('*', '*')),
+    
+    math = -B('\\') * lexer.range('$', false, false),
+    code = lexer.range('```', '```', false),
+    list = lex:tag(lexer.LIST, lexer.starts_line(lexer.digit^1 * '.' + S('+-'), true) * S(' \t')),
+    numeric_value = lexer.number^1 * ('.' * lexer.number^1)^-1 * lex:word_match('UNITS')^-1,
+    comment = lex:tag(lexer.COMMENT, lexer.range('/*', '*/') + lexer.to_eol('//')),
+    operator = lex:tag(lexer.OPERATOR, S('+-/*%<>~!=^&|?~:;,.()[]{}')),
+    
+    keyword = lex:tag(lexer.KEYWORD, keyword_match),
+    
+    header = header(6) + header(5) + header(4) + header(3) + header(2) + header(1)
+  }
+end
 
-lex:add_rule('comment', lex:tag(lexer.COMMENT,
-  lexer.range('/*', '*/') + lexer.to_eol('//')))
+local emb_lex = lexer.new('scripting')
 
-lex:add_rule('list', lex:tag(lexer.LIST, lexer.starts_line(lexer.digit^1 * '.' + S('+-'), true) * S(' \t')))
+--[[
+ #{ ... }
+   OR
+ #let x = { ... }
+]]
+local start = (lex:tag(lexer.KEYWORD, P('#') * lex:word_match(lexer.KEYWORD)) *
+	      #((lexer.any - S('{;\n'))^1 * S('[{') * lexer.space^0)) +
+	      lex:tag(lexer.OPERATOR,P('#') * S('[{'))
+local embed_start = lex:tag('emb_tag', start)
+local embed_end = lexer:tag('emb_tag', S(']}'))
 
-local function_call = -B('\\') * '#' * (lex:tag(lexer.FUNCTION, lexer.word) * #S('(['))
-lex:add_rule('function', function_call)
+local function add_rules(lexer_obj, pre)
+  local rules = build_rules(pre)
+  lexer_obj:add_rule('header', rules.header)
+  lexer_obj:add_rule('field', rules.field)
+  lexer_obj:add_rule('bold', rules.bold)
+  lexer_obj:add_rule('italic', rules.italic)
+  lexer_obj:add_rule('function', rules.mod_func + rules.func)
+  lexer_obj:add_rule('method', rules.method)
+  lexer_obj:add_rule('label', rules.label + rules.label_two)
+  lexer_obj:add_rule('code', lex:tag(lexer.CODE, rules.code))
+  lexer_obj:add_rule('string', lex:tag(lexer.STRING, rules.string))
+  lexer_obj:add_rule('math', lex:tag('environment.math', rules.math))
+  lexer_obj:add_rule('keyword', rules.keyword)
+  lexer_obj:add_rule('identifier', rules.iden)
+  lexer_obj:add_rule('number', lex:tag(lexer.NUMBER, rules.numeric_value))
+  lexer_obj:add_rule('list', rules.list)
+  lexer_obj:add_rule('comment', rules.comment)
+  lexer_obj:add_rule('operator', rules.operator)
+end
 
-local function_method = lex:tag(lexer.FUNCTION_METHOD, (B('.')) * lexer.word * #P('('))
-lex:add_rule('function_method', function_method)
+-- Keywords, functions... don't need '#' in code
+-- the character `#` is not valid in code
+add_rules(emb_lex, '')
 
-lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, -B('\\') * '#' * -keyword_match * lexer.word * (-S('(') * -(P('.') * lexer.word))))
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, -B('\\') * '#' * keyword_match))
+lex:embed(emb_lex, embed_start, embed_end)
 
-local field_access = lex:tag('FIELD', B('.') * lexer.word * (lexer.any - P('(')))
-lex:add_rule('field', field_access)
-
-
-local numeric_value = lexer.number^1 * ('.' * lexer.number^1)^-1 * lex:word_match('UNITS')^-1
-lex:add_rule('number', lex:tag(lexer.NUMBER, numeric_value))
-
-lex:add_rule('markup', lex:tag(lexer.TAG, (S('[]'))))
-
-local math_environment = P('$') * (lexer.space + '\n')^0 * (lexer.any - P('$'))^0 * (lexer.space + '\n')^0 * P('$')
-lex:add_rule('math', lex:tag('environment.math', math_environment))
-
-local code_block = lexer.range('```', '```', false)
-lex:add_rule('code_block', lex:tag(lexer.CODE, code_block))
-
-lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('+-*/%&|^<>=!~:;.,()[]{}')))
+add_rules(lex, '#')
 
 lex:set_word_list(lexer.KEYWORD, {
   'if', 'else', 'for', 'while', 'let', 'set', 'import', 'include', 'return',
   'true', 'false', 'none', 'auto', 'not', 'in', 'and', 'or', 'as', 'show'
 })
 
-lex:set_word_list('UNITS', {'em', 'in', '%', 'mm', 'cm', 'pt', 'fr'})
-
---[[
--- FIXME: Only match within math mode, for now deal with math block as whole tag instead
-lex:set_word_list(lexer.FUNCTION, {
-  'min', 'max', 'abs', 'sqrt', 'sin', 'cos', 'tan', 'log', 'exp'
-})
-]]
+lex:set_word_list('UNITS', {'em', 'in', '%', 'mm', 'deg', 'rad', 'cm', 'pt', 'fr'})
 
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
 lex:add_fold_point(lexer.COMMENT, '/*', '*/')
