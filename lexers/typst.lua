@@ -69,6 +69,9 @@ local emb_lex = lexer.new('scripting')
    OR
  #let x = { ... }
 ]]
+-- This is very limited, since it would only work correctly if no nested structures (w/ brackets) are found inside
+-- otherwise (if they're found inside), the first closing bracket of that nested structure would close the whole embedded
+-- script, causing the rest of the script to not be treated as a part of embedded script
 local start = (lex:tag(lexer.KEYWORD, P('#') * lex:word_match(lexer.KEYWORD)) *
 	      #((lexer.any - S('{;\n'))^1 * S('{') * lexer.space^0)) +
 	      lex:tag(lexer.OPERATOR,P('#') * S('{'))
