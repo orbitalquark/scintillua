@@ -93,6 +93,7 @@ end
 
 -- Keywords, functions... don't need '#' when in code
 -- the character `#` is not valid in code
+-- TODO: only enable styling and text related rules when in []
 add_rules(emb_lex, '')
 
 lex:embed(emb_lex, embed_start, embed_end)
