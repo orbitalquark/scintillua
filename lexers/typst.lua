@@ -3,6 +3,12 @@ local token = lexer.token
 local P, S, B = lpeg.P, lpeg.S, lpeg.B
 
 local lex = lexer.new(...)
+-- Keep things simple for now and only allow bold and italic in non-code mode
+local italic = -B('\\') * lex:tag(lexer.ITALIC, lexer.range('_', '_'))
+local bold = -B('\\') * lex:tag(lexer.BOLD, lexer.range('*', '*'))
+
+lex:add_rule('bold', bold)
+lex:add_rule('italic', italic)
 
 local function header(level)
   local hspace = (lexer.space - '\n')
@@ -25,10 +31,10 @@ local function build_rules(pre)
     in_code = -B('\\') * lexer.range('`', false, false),
     dq_string = -B('\\') * lexer.range('"', true),
     string = -B('\\') * lexer.range('`', false, false) + -B('\\') * lexer.range('"', true),
-    
+
     hash_word = hash_word,
     keyword_match = keyword_match,
-    
+
     iden = lex:tag(lexer.IDENTIFIER, hash_word),
     mod_func = lex:tag(lexer.KEYWORD, hash_word) * lexer.space^1 * 
                lex:tag(lexer.FUNCTION, lexer.word) * lex:tag(lexer.OPERATOR, S('[(')),
@@ -42,18 +48,16 @@ local function build_rules(pre)
     operator = lex:tag(lexer.OPERATOR, S('+-/*%<>~!=^&|?~:;,.()[]{}')),
     label = -B('\\') * lex:tag(lexer.LABEL, P('<') * lexer.word * P('>')),
     label_two = -B('\\') * lex:tag(lexer.LABEL, P('@') * lexer.word),
-    
-    italic = -B('\\') * lex:tag(lexer.ITALIC, lexer.range('_', '_')),
-    bold = -B('\\') * lex:tag(lexer.BOLD, lexer.range('*', '*')),
-    
+    link = P('http') * P('s')^-1 * P(':') * (lexer.word + S('.:/'))^1,
+
     math = -B('\\') * lexer.range('$', false, false),
     code = lexer.range('```', '```', false),
     list = lex:tag(lexer.LIST, lexer.starts_line(lexer.digit^1 * '.' + S('+-'), true) * S(' \t')),
     numeric_value = lexer.number^1 * ('.' * lexer.number^1)^-1 * lex:word_match('UNITS')^-1,
     comment = lex:tag(lexer.COMMENT, lexer.range('/*', '*/') + lexer.to_eol('//')),
-    
+
     keyword = lex:tag(lexer.KEYWORD, keyword_match),
-    
+
     header = header(6) + header(5) + header(4) + header(3) + header(2) + header(1)
   }
 end
@@ -75,13 +79,12 @@ local function add_rules(lexer_obj, pre)
   local rules = build_rules(pre)
   lexer_obj:add_rule('header', rules.header)
   lexer_obj:add_rule('field', rules.field)
-  lexer_obj:add_rule('bold', rules.bold)
-  lexer_obj:add_rule('italic', rules.italic)
   lexer_obj:add_rule('function', rules.mod_func + rules.func)
   lexer_obj:add_rule('method', rules.method)
   lexer_obj:add_rule('label', rules.label + rules.label_two)
   lexer_obj:add_rule('code', lex:tag(lexer.CODE, rules.code))
   lexer_obj:add_rule('string', lex:tag(lexer.STRING, rules.string))
+  lexer_obj:add_rule('link', lex:tag(lexer.LINK, rules.link))
   lexer_obj:add_rule('math', lex:tag('environment.math', rules.math))
   lexer_obj:add_rule('keyword', rules.keyword)
   lexer_obj:add_rule('identifier', rules.iden)
@@ -100,6 +103,7 @@ lex:embed(emb_lex, embed_start, embed_end)
 
 add_rules(lex, '#')
 
+
 lex:set_word_list(lexer.KEYWORD, {
   'if', 'else', 'for', 'while', 'let', 'set', 'import', 'include', 'return',
   'true', 'false', 'none', 'auto', 'not', 'in', 'and', 'or', 'as', 'show'
@@ -113,3 +117,4 @@ lex:add_fold_point(lexer.PREPROCESSOR, '```', '```')
 lexer.property['scintillua.comment'] = '//'
 
 return lex
+
