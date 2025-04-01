@@ -1661,6 +1661,7 @@ function M.detect(filename, line)
 		ans = 'apdl', inp = 'apdl', mac = 'apdl', --
 		apl = 'apl', --
 		applescript = 'applescript', --
+		adoc = 'asciidoc', asciidoc = 'asciidoc', --
 		asm = 'asm', ASM = 'asm', s = 'asm', S = 'asm', --
 		asa = 'asp', asp = 'asp', hta = 'asp', --
 		ahk = 'autohotkey', --
