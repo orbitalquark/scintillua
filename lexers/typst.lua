@@ -35,13 +35,15 @@ local function build_rules(pre)
     hash_word = hash_word,
     keyword_match = keyword_match,
 
+--    TODO: limit numeric values to only be tagged when used as args, assigned values
+--    numeric_value = (lexer.number^1 * ('.' * lexer.number^1)^-1 * lex:word_match('UNITS')^-1),
     iden = lex:tag(lexer.IDENTIFIER, hash_word),
     mod_func = lex:tag(lexer.KEYWORD, hash_word) * lexer.space^1 * 
                lex:tag(lexer.FUNCTION, lexer.word) * lex:tag(lexer.OPERATOR, S('[(')),
     func = lex:tag(lexer.FUNCTION, hash_word) * lex:tag(lexer.OPERATOR, S('[(')),
     method = lex:tag(lexer.IDENTIFIER, hash_word) *
              lex:tag(lexer.OPERATOR, P('.')) *
-             lex:tag(lexer.FUNCTION_METHOD, lexer.word) * S('[('),
+             lex:tag(lexer.FUNCTION_METHOD, lexer.word) * lex:tag(lexer.OPERATOR, S('[(')),
     field = lex:tag(lexer.IDENTIFIER, hash_word) *
             lex:tag(lexer.OPERATOR, P('.')) *
             lex:tag('FIELD', lexer.word) * -S('[('),
@@ -53,7 +55,7 @@ local function build_rules(pre)
     math = -B('\\') * lexer.range('$', false, false),
     code = lexer.range('```', '```', false),
     list = lex:tag(lexer.LIST, lexer.starts_line(lexer.digit^1 * '.' + S('+-'), true) * S(' \t')),
-    numeric_value = lexer.number^1 * ('.' * lexer.number^1)^-1 * lex:word_match('UNITS')^-1,
+    -- TODO: Do we really need to not tag a number if procceded by an alpha
     comment = lex:tag(lexer.COMMENT, lexer.range('/*', '*/') + lexer.to_eol('//')),
 
     keyword = lex:tag(lexer.KEYWORD, keyword_match),
@@ -91,7 +93,7 @@ local function add_rules(lexer_obj, pre)
   lexer_obj:add_rule('math', lex:tag('environment.math', rules.math))
   lexer_obj:add_rule('keyword', rules.keyword)
   lexer_obj:add_rule('identifier', rules.iden)
-  lexer_obj:add_rule('number', lex:tag(lexer.NUMBER, rules.numeric_value))
+  --lexer_obj:add_rule('number', lex:tag(lexer.NUMBER, rules.numeric_value))
   lexer_obj:add_rule('list', rules.list)
   lexer_obj:add_rule('comment', rules.comment)
   lexer_obj:add_rule('operator', rules.operator)
