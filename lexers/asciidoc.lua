@@ -9,9 +9,6 @@ local lex = lexer.new(...)
 -- Distinguish between horizontal and vertical space so html start rule has a chance to match.
 lex:modify_rule('whitespace', lex:tag(lexer.WHITESPACE, S(' \t')^1 + S('\r\n')^1))
 
--- Operators.
-lex:add_rule('operator', lex:tag(lexer.OPERATOR, S("*:^'`|~+<=>")))
-
 -- Keywords
 lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 lex:set_word_list(lexer.KEYWORD, {"NOTE", "IMPORTANT", "WARNING", "TIP", "CAUTION", "TESTME"})
