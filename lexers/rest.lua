@@ -19,7 +19,7 @@ local block = '::' * (lexer.newline + -1) * function(input, index)
 	end
 	return #input + 1
 end
-lex:add_rule(lexer.LABEL .. 'literal', lex:tag(lexer.LABEL .. 'literal', block))
+lex:add_rule('literal_block', lex:tag(lexer.LABEL .. '.literal', block))
 
 -- Lists.
 local option_word = lexer.alnum * (lexer.alnum + '-')^0
@@ -39,10 +39,10 @@ local prefix = any_indent * '.. '
 
 -- Explicit markup blocks.
 local footnote_label = '[' * (lexer.digit^1 + '#' * word^-1 + '*') * ']'
-local footnote = lex:tag(lexer.LABEL .. 'footnote', prefix * footnote_label * lexer.space)
+local footnote = lex:tag(lexer.LABEL .. '.footnote', prefix * footnote_label * lexer.space)
 local citation_label = '[' * word * ']'
-local citation = lex:tag(lexer.LABEL .. 'citation', prefix * citation_label * lexer.space)
-local link = lex:tag(lexer.LABEL, prefix * '_' *
+local citation = lex:tag(lexer.LABEL .. '.citation', prefix * citation_label * lexer.space)
+local link = lex:tag(lexer.LABEL .. '.link', prefix * '_' *
 	(lexer.range('`') + (P('\\') * 1 + lexer.nonnewline - ':')^1) * ':' * lexer.space)
 lex:add_rule('markup_block', #prefix * starts_line(footnote + citation + link))
 
@@ -57,24 +57,24 @@ local indented_block = function(input, index)
 end
 local code_block =
 	prefix * 'code-block::' * S(' \t')^1 * lexer.nonnewline^0 * (lexer.newline + -1) * indented_block
-lex:add_rule(lexer.LABEL .. 'literal', #prefix * lex:tag(lexer.LABEL .. 'literal', starts_line(code_block)))
+lex:add_rule('code_block', #prefix * lex:tag(lexer.LABEL .. '.code', starts_line(code_block)))
 
 -- Directives.
 local known_directive = lex:tag(lexer.OPERATOR, prefix * lex:word_match(lexer.OPERATOR) * '::' * lexer.space)
-local sphinx_directive = lex:tag(lexer.OPERATOR .. 'sphinx', prefix * lex:word_match(lexer.OPERATOR .. 'sphinx') * '::' * lexer.space)
-local unknown_directive = lex:tag(lexer.OPERATOR .. 'unknown', prefix * word * '::' * lexer.space)
-lex:add_rule(lexer.OPERATOR,
+local sphinx_directive = lex:tag(lexer.OPERATOR .. '.sphinx', prefix * lex:word_match(lexer.OPERATOR .. '.sphinx') * '::' * lexer.space)
+local unknown_directive = lex:tag(lexer.OPERATOR .. '.unknown', prefix * word * '::' * lexer.space)
+lex:add_rule('directive',
 	#prefix * starts_line(known_directive + sphinx_directive + unknown_directive))
 
 -- Substitution definitions.
-lex:add_rule(lexer.FUNCTION, #prefix * lex:tag(lexer.FUNCTION, starts_line(prefix * lexer.range('|') *
+lex:add_rule('substitution', #prefix * lex:tag(lexer.FUNCTION, starts_line(prefix * lexer.range('|') *
 	lexer.space^1 * word * '::' * lexer.space)))
 
 -- Comments.
 local line_comment = lexer.to_eol(prefix)
 local bprefix = any_indent * '..'
 local block_comment = bprefix * lexer.newline * indented_block
-lex:add_rule(lexer.COMMENT, #bprefix * lex:tag(lexer.COMMENT, starts_line(line_comment + block_comment)))
+lex:add_rule('comment', #bprefix * lex:tag(lexer.COMMENT, starts_line(line_comment + block_comment)))
 
 -- Section titles (2 or more characters).
 local adornment_chars = lpeg.C(S('!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'))
@@ -106,7 +106,7 @@ lex:add_rule('whitespace', lex:tag(lexer.WHITESPACE, S(' \t')^1 + lexer.newline^
 -- Inline markup.
 local strong = lex:tag(lexer.BOLD, lexer.range('**'))
 local em = lex:tag(lexer.ITALIC, lexer.range('*'))
-local inline_literal = lex:tag(lexer.CODE, lexer.range('``'))
+local inline_literal = lex:tag(lexer.CODE .. '.inline', lexer.range('``'))
 local postfix_link = (word + lexer.range('`')) * '_' * P('_')^-1
 local prefix_link = '_' * lexer.range('`')
 local link_ref = lex:tag(lexer.LINK, postfix_link + prefix_link)
@@ -117,7 +117,7 @@ local citation_ref = lex:tag(lexer.REFERENCE, citation_label * '_')
 local substitution_ref = lex:tag(lexer.FUNCTION, lexer.range('|', true) * ('_' * P('_')^-1)^-1)
 local link = lex:tag(lexer.LINK,
 	lexer.alpha * (lexer.alnum + S('-.'))^1 * ':' * (lexer.alnum + S('/.+-%@'))^1)
-lex:add_rule(lexer.CODE,
+lex:add_rule('inline_markup',
 	(strong + em + inline_literal + link_ref + interpreted + footnote_ref + citation_ref +
 		substitution_ref + link) * -lexer.alnum)
 
@@ -190,7 +190,7 @@ lex:set_word_list(lexer.OPERATOR, {
 	'include', 'raw', 'class', 'role', 'default-role', 'title', 'restructuredtext-test-directive'
 })
 
-lex:set_word_list(lexer.OPERATOR .. 'sphinx', {
+lex:set_word_list(lexere.OPERATOR .. '.sphinx', {
 	-- The TOC tree.
 	'toctree',
 	-- Paragraph-level markup.
