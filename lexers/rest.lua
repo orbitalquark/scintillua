@@ -122,7 +122,8 @@ lex:add_rule('inline_markup',
 		substitution_ref + link) * -lexer.alnum)
 
 -- Other.
--- TODO Not sure what it is good for
+-- This prevents matching any of the above rules in part of a word.
+-- For example, a::block would not tag ::block as a block. The entire entity would be tagged lexer.DEFAULT.
 lex:add_rule('non_space', lex:tag(lexer.DEFAULT, lexer.alnum * (lexer.any - lexer.space)^0))
 lex:add_rule('escape', lex:tag(lexer.DEFAULT, '\\' * lexer.any))
 
