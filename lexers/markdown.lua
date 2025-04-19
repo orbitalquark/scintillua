@@ -40,11 +40,7 @@ local code_inline = lpeg.Cmt(lpeg.C(P('`')^1), function(input, index, bt)
 end)
 lex:add_rule('block_code', lex:tag(lexer.CODE, code_line + code_block + code_inline))
 
-lex:add_rule('blockquote',
-	lex:tag(lexer.STRING, lpeg.Cmt(lexer.starts_line('>', true), function(input, index)
-		local _, e = input:find('\n[ \t]*\r?\n', index) -- the next blank line (possibly with indentation)
-		return (e or #input) + 1
-	end)))
+lex:add_rule('blockquote', lex:tag(lexer.STRING, lexer.starts_line('>', true)))
 
 -- Span elements.
 lex:add_rule('escape', lex:tag(lexer.DEFAULT, P('\\') * 1))
