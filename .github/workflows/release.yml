@@ -19,7 +19,7 @@ jobs:
         run: |
           version="${{ github.event.inputs.tag }}"
           if [[ -z "$version" ]]; then
-            version=`grep -m1 '##' docs/changelog.md | cut -d ' ' -f 2`
+            version=$(grep -m1 '##' docs/changelog.md | cut -d ' ' -f 2)
           fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
@@ -95,11 +95,11 @@ jobs:
         run: |
           echo -n "Scintillua " > log.md
           echo -n "${{ needs.get-version.outputs.version }} " >> log.md
-          echo \(`date +"%d %b %Y"`\) >> log.md
+          echo \($(date +"%d %b %Y")\) >> log.md
           prefix="https://orbitalquark.github.io/scintillua"
           echoing=0
           while read line; do
-            if [[ $line == \#\#* ]]; then
+            if [[ $line = \#\#* ]]; then
               if [[ $echoing -eq 0 ]]; then
                 echoing=1
               else

@@ -4,7 +4,7 @@
 # Generates Scintillua's documentation.
 # Requires LDoc and Discount.
 
-if [ "`uname`" = "Darwin" ]; then
+if [ "$(uname)" = "Darwin" ]; then
 	sed () {
 		gsed "$@"
 	}
