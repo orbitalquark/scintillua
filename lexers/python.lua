@@ -33,7 +33,7 @@ lex:add_rule('constant', builtin_const + attr)
 local sq_str = lexer.range("'", true)
 local dq_str = lexer.range('"', true)
 local tq_str = lexer.range("'''") + lexer.range('"""')
-lex:add_rule('string', lex:tag(lexer.STRING, (S('fFrRbBrR') * S('rRfFrRbB') + S('ruRUfFbB'))^-1 *
+lex:add_rule('string', lex:tag(lexer.STRING, (S('fFrRbBrRtT') * S('rRfFrRbBtT') + S('ruRUfFbBtT'))^-1 *
 	(tq_str + sq_str + dq_str)))
 
 -- Identifiers.
