@@ -542,6 +542,11 @@
 -- local lex = lexer.new(..., {fold_by_indentation = true})
 -- ```
 --
+-- #### Custom Folding
+--
+-- Lexers with complex folding needs can implement their own folders by defining their own
+-- [`lex:fold()`](#lexer.fold) method. Writing custom folders is beyond the scope of this document.
+--
 -- ### Using Lexers
 --
 -- **Textadept**
@@ -1330,6 +1335,7 @@ end
 -- @return table of line numbers mapped to fold levels
 -- @usage lex:fold(...) --> {[1] = 1024, [2] = 9216, [3] = 1025, [4] = 1025, [5] = 1024}
 function M.fold(lexer, text, start_line, start_level)
+	if rawget(lexer, 'fold') then return rawget(lexer, 'fold')(lexer, text, start_line, start_level) end
 	local folds = {}
 	if text == '' then return folds end
 	local fold = M.property_int['fold'] > 0
