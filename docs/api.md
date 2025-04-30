@@ -546,6 +546,11 @@ in indentation, create the lexer with a `fold_by_indentation = true` option:
 local lex = lexer.new(..., {fold_by_indentation = true})
 ```
 
+#### Custom Folding
+
+Lexers with complex folding needs can implement their own folders by defining their own
+[`lex:fold()`](#lexer.fold) method. Writing custom folders is beyond the scope of this document.
+
 ### Using Lexers
 
 **Textadept**

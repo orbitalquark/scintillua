@@ -1294,9 +1294,9 @@ function test_markdown()
     # header1
     ## header2
 
-    > block1
-    > block2
-    block3
+    > b1
+    > b2
+    b3
 
     1. l1
     2
@@ -1329,7 +1329,9 @@ function test_markdown()
 	local tags = {
 		HEADING .. '.h1', '# header1', --
 		HEADING .. '.h2', '## header2', --
-		STRING, '> block1\n> block2\nblock3\n\n', --
+		STRING, '>', DEFAULT, 'b', DEFAULT, '1', --
+		STRING, '>', DEFAULT, 'b', DEFAULT, '2', --
+		DEFAULT, 'b', DEFAULT, '3', --
 		LIST, '1. ', DEFAULT, 'l', DEFAULT, '1', --
 		DEFAULT, '2', --
 		LIST, '* ', DEFAULT, 'l', DEFAULT, '2', --
@@ -1352,6 +1354,27 @@ function test_markdown()
 		CODE, '<a>'
 	}
 	assert_lex(md, code, tags)
+end
+
+-- Tests Markdown's custom folder for headers.
+function test_markdown_folding()
+	local md = lexer.load('markdown')
+	local code = [[
+		# Level 1
+
+		Description
+
+		## Level 2
+
+		### Level 3
+
+		## Another Level 2
+
+		## Last Level 2
+
+  ]]
+	local folds = {1, 5, -7, 9, 11}
+	assert_fold_points(md, code, folds)
 end
 
 -- Tests the YAML lexer.

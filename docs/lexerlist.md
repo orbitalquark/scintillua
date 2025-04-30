@@ -82,7 +82,7 @@ used if [`fold.scintillua.by.indentation`][] is enabled. For SciTE, see *lexers/
 1. Logtalk
 1. Lua`*`
 1. Makefile
-1. Markdown
+1. Markdown`*`
 1. MATLAB`*`
 1. MediaWiki
 1. Meson
