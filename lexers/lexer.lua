@@ -1527,6 +1527,24 @@ local function initialize_standalone_library()
 		return line - 1 -- should not get to here
 	end
 
+	M.text_range = function(pos, length) return M._text:sub(pos, pos + length - 1) end
+
+	--- Returns a line number's start and end positions.
+	-- @param line Line number (1-based) to get the start and end positions of.
+	local function get_line_range(line)
+		local current_line = 1
+		for s, e in M._text:gmatch('()[^\n]*()') do
+			if current_line == line then return s, e end
+			current_line = current_line + 1
+		end
+		return 1, 1 -- should not get to here
+	end
+
+	M.line_start = setmetatable({}, {__index = function(_, line) return get_line_range(line) end})
+	M.line_end = setmetatable({}, {
+		__index = function(_, line) return select(2, get_line_range(line)) end
+	})
+
 	M.indent_amount = setmetatable({}, {
 		__index = function(_, line)
 			local current_line = 1
@@ -2048,7 +2066,22 @@ function M.fold_consecutive_lines() end -- legacy
 -- @table style_at
 
 --- Returns a position's line number (starting from 1).
--- @param pos The position (starting from 1) to get the line number of.
+-- @param pos Position (starting from 1) to get the line number of.
 -- @function line_from_position
+
+--- Map of line numbers (starting from 1) to their start positions. (Read-only)
+-- @table line_start
+
+--- Map of line numbers (starting from 1) to their end positions. (Read-only)
+-- @table line_end
+
+--- Returns a range of buffer text.
+-- The current text being lexed or folded may be a subset of buffer text. This function can
+-- return any text in the buffer.
+-- @param pos Position (starting from 1) of the text range to get. It needs to be an absolute
+--	position. Use a combination of `lexer.line_from_position()` and `lexer.line_start`
+--	to get one.
+-- @param length Length of the text range to get.
+-- @function text_range
 
 return M

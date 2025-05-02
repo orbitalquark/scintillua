@@ -157,6 +157,12 @@ int lexer_field_index(lua_State *L) {
   } else if (field == "line_state") {
     if (!buffer) luaL_error(L, "must be lexing or folding");
     lua_pushinteger(L, buffer->GetLineState(luaL_checkinteger(L, 2) - 1)); // 1-based line
+  } else if (field == "line_start") {
+    if (!buffer) luaL_error(L, "must be lexing or folding");
+    lua_pushinteger(L, buffer->LineStart(luaL_checkinteger(L, 2) - 1) + 1); // 1-based line
+  } else if (field == "line_end") {
+    if (!buffer) luaL_error(L, "must be lexing or folding");
+    lua_pushinteger(L, buffer->LineEnd(luaL_checkinteger(L, 2) - 1) + 1); // 1-based line
   }
   return 1;
 }
@@ -166,7 +172,7 @@ int lexer_field_newindex(lua_State *L) {
   const std::string_view field{lua_tostring(L, lua_upvalueindex(1))};
   luaL_argcheck(L,
     field != "fold_level" && field != "indent_amount" && field != "property_int" &&
-      field != "style_at" && field != "line_from_position",
+      field != "style_at" && field != "line_start" && field != "line_end",
     3, "read-only field");
   lua_getfield(L, LUA_REGISTRYINDEX, "scintillua"); // REGISTRY.scintillua
   const auto lexer = reinterpret_cast<Scintillua *>(lua_touserdata(L, -1));
@@ -199,11 +205,28 @@ int line_from_position(lua_State *L) {
   return 1;
 }
 
+// lexer.text_range()
+// Note: position argument from Lua is 1-based.
+int text_range(lua_State *L) {
+  if (lua_getfield(L, LUA_REGISTRYINDEX, "buffer") != LUA_TLIGHTUSERDATA) // REGISTRY.buffer
+    luaL_error(L, "must be lexing or folding");
+  const auto buffer = static_cast<Scintilla::IDocument *>(lua_touserdata(L, -1));
+  const Sci_PositionU startPos = luaL_checkinteger(L, 1) - 1; // incoming pos is 1-based
+  Sci_Position length = luaL_checkinteger(L, 2);
+  if (startPos + length >= buffer->Length())
+    length = buffer->Length() - startPos; // GetCharRange will fail otherwise
+  auto *text = new char[length + 1]{};
+  buffer->GetCharRange(text, startPos, length);
+  lua_pushstring(L, text);
+  delete[] text;
+  return 1;
+}
+
 // lexer[key] metamethod.
 int lexer_index(lua_State *L) {
   const std::string_view key{lua_tostring(L, 2)};
   if (key == "fold_level" || key == "indent_amount" || key == "property" || key == "property_int" ||
-    key == "style_at" || key == "line_state") {
+    key == "style_at" || key == "line_state" || key == "line_start" || key == "line_end") {
     lua_newtable(L);
     lua_createtable(L, 0, 2);
     lua_pushvalue(L, 2), lua_pushcclosure(L, lexer_field_index, 1), lua_setfield(L, -2, "__index");
@@ -212,6 +235,8 @@ int lexer_index(lua_State *L) {
     lua_setmetatable(L, -2); // return setmetatable({}, {__index = f, __newindex = f})
   } else if (key == "line_from_position")
     lua_pushcfunction(L, line_from_position);
+  else if (key == "text_range")
+    lua_pushcfunction(L, text_range);
   else
     lua_rawget(L, 1); // lexer[key]
   return 1;
@@ -222,7 +247,8 @@ int lexer_newindex(lua_State *L) {
   const std::string_view key{lua_tostring(L, 2)};
   luaL_argcheck(L,
     key != "fold_level" && key != "indent_amount" && key != "property" && key != "property_int" &&
-      key != "style_at" && key != "line_state" && key != "line_from_position",
+      key != "style_at" && key != "line_state" && key != "line_start" && key != "line_end" &&
+      key != "line_from_position" && key != "text_range",
     3, "read-only field");
   return (lua_rawset(L, 1), 0); // lexer[key] = value
 }

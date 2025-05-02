@@ -1029,13 +1029,25 @@ Usage:
 lex:lex(...) --> {'keyword', 2, 'whitespace.lua', 3, 'identifier', 7}
 ```
 
+<a id="lexer.line_end"></a>
+### `lexer.line_end`
+
+Map of line numbers (starting from 1) to their end positions.
+(Read-only)
+
 <a id="lexer.line_from_position"></a>
 ### `lexer.line_from_position`(*pos*)
 
 Returns a position's line number (starting from 1).
 
 Parameters:
-- *pos*:  The position (starting from 1) to get the line number of.
+- *pos*:  Position (starting from 1) to get the line number of.
+
+<a id="lexer.line_start"></a>
+### `lexer.line_start`
+
+Map of line numbers (starting from 1) to their start positions.
+(Read-only)
 
 <a id="lexer.line_state"></a>
 ### `lexer.line_state`
@@ -1265,6 +1277,20 @@ Usage:
 local number = lex:tag(lexer.NUMBER, lexer.number)
 local addition = lex:tag('addition', '+' * lexer.word)
 ```
+
+<a id="lexer.text_range"></a>
+### `lexer.text_range`(*pos*, *length*)
+
+Returns a range of buffer text.
+
+The current text being lexed or folded may be a subset of buffer text. This function can
+return any text in the buffer.
+
+Parameters:
+- *pos*:  Position (starting from 1) of the text range to get. It needs to be an absolute
+	position. Use a combination of [`lexer.line_from_position()`](#lexer.line_from_position) and [`lexer.line_start`](#lexer.line_start)
+	to get one.
+- *length*:  Length of the text range to get.
 
 <a id="lexer.to_eol"></a>
 ### `lexer.to_eol`([*prefix*[, *escape*=false]])
