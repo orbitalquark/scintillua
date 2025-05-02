@@ -1301,6 +1301,7 @@ function test_markdown()
     1. l1
     2
     * l2
+        !code
 
         code1
 
@@ -1335,6 +1336,7 @@ function test_markdown()
 		LIST, '1. ', DEFAULT, 'l', DEFAULT, '1', --
 		DEFAULT, '2', --
 		LIST, '* ', DEFAULT, 'l', DEFAULT, '2', --
+		DEFAULT, '!', DEFAULT, 'c', DEFAULT, 'o', DEFAULT, 'd', DEFAULT, 'e', --
 		CODE, 'code1', --
 		CODE, '```\ncode2\n```\n', --
 		CODE, '`code3`', CODE, '``code4``', CODE, '``code`5``', CODE, '`code``6`', --

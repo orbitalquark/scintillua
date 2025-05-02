@@ -29,7 +29,22 @@ lex:add_rule('list', lex:tag(lexer.LIST,
 local hspace = lexer.space - '\n'
 local blank_line = '\n' * hspace^0 * ('\n' + P(-1))
 
-local code_line = lexer.starts_line((B('    ') + B('\t')) * lexer.to_eol(), true)
+local code_line = lexer.starts_line((B('    ') + B('\t')) * lpeg.P(function(input, index)
+	-- Backtrack to the start of the current paragraph, which is either after a blank line,
+	-- at the start of a higher level of indentation, or at the start of the buffer.
+	local line = lexer.line_from_position(index)
+	while line > 0 do
+		local s, e = lexer.line_start[line], lexer.line_end[line]
+		if s == e or lexer.text_range(s, e - s + 1):find('^%s+$') then break end
+		local indent_amount = lexer.indent_amount[line]
+		line = line - 1
+		if line > 0 and lexer.indent_amount[line] > indent_amount then break end
+	end
+	-- This is only a valid code block if the paragraph started with '    ' or '\t'.
+	-- Otherwise, it is a continuation of the current paragraph.
+	local text = lexer.text_range(lexer.line_start[line + 1], 4)
+	if text:find('^\t') or text == '    ' then return true end
+end) * lexer.to_eol(), true)
 local code_block = lexer.range(lexer.starts_line('```', true),
 	'\n' * hspace^0 * '```' * hspace^0 * ('\n' + P(-1))) +
 	lexer.range(lexer.starts_line('~~~', true), '\n' * hspace^0 * '~~~' * hspace^0 * ('\n' + P(-1)))
