@@ -32,27 +32,48 @@ local blank_line = '\n' * hspace^0 * ('\n' + P(-1))
 local code_line = lexer.starts_line((B('    ') + B('\t')) * lpeg.P(function(input, index)
 	-- Backtrack to the start of the current paragraph, which is either after a blank line,
 	-- at the start of a higher level of indentation, or at the start of the buffer.
-	local line = lexer.line_from_position(index)
+	local line, blank_line = lexer.line_from_position(index), false
 	while line > 0 do
 		local s, e = lexer.line_start[line], lexer.line_end[line]
-		if s == e or lexer.text_range(s, e - s + 1):find('^%s+$') then break end
+		blank_line = s == e or lexer.text_range(s, e - s + 1):find('^%s+$')
+		if blank_line then break end
 		local indent_amount = lexer.indent_amount[line]
 		line = line - 1
 		if line > 0 and lexer.indent_amount[line] > indent_amount then break end
 	end
-	-- This is only a valid code block if the paragraph started with '    ' or '\t'.
-	-- Otherwise, it is a continuation of the current paragraph.
+
+	-- If the start of the paragraph does not being with a '    ' or '\t', then this line
+	-- is a continuation of the current paragraph, not a code block.
 	local text = lexer.text_range(lexer.line_start[line + 1], 4)
-	if text:find('^\t') or text == '    ' then return true end
+	if not text:find('^\t') and text ~= '    ' then return false end
+
+	-- If the current paragraph is a code block, then so is this line.
+	if line <= 1 then return true end
+
+	-- Backtrack to see if this line is in a list item. If so, it is not a code block.
+	while line > 1 do
+		line = line - 1
+		local s, e = lexer.line_start[line], lexer.line_end[line]
+		local blank = s == e or lexer.text_range(s, e - s + 1):find('^%s+$')
+		if not blank and lexer.indent_amount[line] == 0 then break end
+	end
+	text = lexer.text_range(lexer.line_start[line], 8) -- note: only 2 is needed for unordered lists
+	if text:find('^[*+-][ \t]') then return false end
+	if text:find('^%d+%.[ \t]') then return false end
+
+	return true -- if all else fails, it is probably a code block
 end) * lexer.to_eol(), true)
+
 local code_block = lexer.range(lexer.starts_line('```', true),
 	'\n' * hspace^0 * '```' * hspace^0 * ('\n' + P(-1))) +
 	lexer.range(lexer.starts_line('~~~', true), '\n' * hspace^0 * '~~~' * hspace^0 * ('\n' + P(-1)))
+
 local code_inline = lpeg.Cmt(lpeg.C(P('`')^1), function(input, index, bt)
 	-- `foo`, ``foo``, ``foo`bar``, `foo``bar` are all allowed.
 	local _, e = input:find('[^`]' .. bt .. '%f[^`]', index)
 	return (e or #input) + 1
 end)
+
 lex:add_rule('block_code', lex:tag(lexer.CODE, code_line + code_block + code_inline))
 
 lex:add_rule('blockquote', lex:tag(lexer.STRING, lexer.starts_line('>', true)))

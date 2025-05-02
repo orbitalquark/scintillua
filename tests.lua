@@ -1303,6 +1303,8 @@ function test_markdown()
     * l2
         !code
 
+    t
+
         code1
 
     ```
@@ -1337,6 +1339,7 @@ function test_markdown()
 		DEFAULT, '2', --
 		LIST, '* ', DEFAULT, 'l', DEFAULT, '2', --
 		DEFAULT, '!', DEFAULT, 'c', DEFAULT, 'o', DEFAULT, 'd', DEFAULT, 'e', --
+		DEFAULT, 't', --
 		CODE, 'code1', --
 		CODE, '```\ncode2\n```\n', --
 		CODE, '`code3`', CODE, '``code4``', CODE, '``code`5``', CODE, '`code``6`', --
