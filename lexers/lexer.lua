@@ -1758,7 +1758,7 @@ function M.detect(filename, line)
 		lua = 'lua', --
 		GNUmakefile = 'makefile', iface = 'makefile', mak = 'makefile', makefile = 'makefile',
 		Makefile = 'makefile', --
-		md = 'markdown', --
+		md = 'markdown', markdown = 'md', --
 		['meson.build'] = 'meson', --
 		moon = 'moonscript', --
 		myr = 'myrddin', --
