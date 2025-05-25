@@ -26,39 +26,39 @@ installation version 5.3.0 or higher with or without administrator privileges.
 In order to install Scintillua for all users (likely requiring administrator privileges):
 
 1. Unpack Scintillua to the root of your SciTE installation, typically *C:\Program Files\SciTE\\*
-   on Windows and */usr/share/scite/* on Linux, and rename the directory to simply *scintillua*.
+	on Windows and */usr/share/scite/* on Linux, and rename the directory to simply *scintillua*.
 2. Add the following to the end of your *SciTEGlobal.properties*:
 
-       import scintillua/scintillua
+		import scintillua/scintillua
 
 In order to install Scintillua for one user (e.g. yourself) without administrator privileges:
 
 1. Unpack Scintillua to a location of your choosing.
 2. Add the following to the end of your *SciTEUser.properties* on Windows or
-   *.SciTEUser.properties* on Linux:
+	*.SciTEUser.properties* on Linux:
 
-       import /path/to/scintillua/scintillua
-       lexilla.context.scintillua.lexers=/path/to/scintillua/lexers
+		import /path/to/scintillua/scintillua
+		lexilla.context.scintillua.lexers=/path/to/scintillua/lexers
 
-   where `/path/to/scintillua/lexers` is the full path of Scintillua's *lexers/* directory from
-   step 1.
+	where `/path/to/scintillua/lexers` is the full path of Scintillua's *lexers/* directory from
+	step 1.
 
 With Scintillua installed, SciTE will use Scintillua's Lua lexers whenever possible (as indicated
 in *scintillua.properties*). If a Lua lexer is loaded but you prefer to use a different
 one, add to your *SciTEUser.properties* (Windows) or *.SciTEUser.properties* (Linux) file:
 
-    lexer.$(file.patterns.name)=scintillua.name
+	lexer.$(file.patterns.name)=scintillua.name
 
 where `name` is the name of the Scintillua lexer you prefer. (Note that Scintillua lexers have
 a "scintillua." prefix when used with SciTE.)  If you prefer to use SciTE's lexer instead of
 Scintillua's, simply remove from *scintillua.properties* the lines:
 
-    file.patterns.name=...
-    lexer.$(file.patterns.name)=scintillua.name
-    keywords.$(file.patterns.name)=scintillua
-    keywords2.$(file.patterns.name)=scintillua
-    ...
-    keywords9.$(file.patterns.name)=scintillua
+	file.patterns.name=...
+	lexer.$(file.patterns.name)=scintillua.name
+	keywords.$(file.patterns.name)=scintillua
+	keywords2.$(file.patterns.name)=scintillua
+	...
+	keywords9.$(file.patterns.name)=scintillua
 
 (You could manually override Scintillua's `file.patterns.name`, `lexer`, and `keywords` settings
 from your SciTE user properties file, but it's easier to just change *scintillua.properties*.)
@@ -67,9 +67,9 @@ Scintillua's Lua lexers also have their own keyword sets, which are distinct fro
 keyword sets. If you would like to change the set of keywords that a Scintillua lexer uses,
 add to your *SciTEUser.properties* (Windows) or *.SciTEUser.properties* (Linux) file:
 
-    keywords.$(file.patterns.name)=set of keywords
-    keywords2.$(filepatterns.name)=another set of keywords
-    ...
+	keywords.$(file.patterns.name)=set of keywords
+	keywords2.$(filepatterns.name)=another set of keywords
+	...
 
 with the desired set(s) of keywords in the same order as the Scintillua *lexers/*`name`*.lua*
 lexer's calls to `lex:set_word_list()`. For example, the Lua lexer's first set of keywords is for
@@ -80,27 +80,27 @@ Scintillua comes with a set of universal color themes in its *themes/* directory
 'scite' theme is used, which is similar to SciTE's default color theme. You can use a different
 theme by importing it in a properties file. For example:
 
-    import /path/to/scintillua/themes/light
+	import /path/to/scintillua/themes/light
 
 Scintillua's lexers support the following properties which can also be set from a properties file:
 
 * `fold.scintillua.by.indentation`: Whether or not to fold based on indentation level if a lexer does not
-   have a folder. Some lexers automatically enable this option. It is disabled by default.
+	have a folder. Some lexers automatically enable this option. It is disabled by default.
 * `fold.scintillua.on.zero.sum.lines`: Whether or not to mark as a fold point lines that contain both an
-   ending and starting fold point. For example, `} else {` would be marked as a fold point. This
-   option is disabled by default.
+	ending and starting fold point. For example, `} else {` would be marked as a fold point. This
+	option is disabled by default.
 * `fold.scintillua.compact`: Whether or not to include in a fold any subsequent blank lines. It
-   is disabled by default.
+	is disabled by default.
 
 If you get incorrect or no syntax highlighting, check the following:
 
 1. Does the language in question have a Lua lexer in Scintillua's *lexers/* directory? If not,
-   you will have to [write one][].
+	you will have to [write one][].
 2. Does Scintillua's *scintillua.properties* have your language's file extension defined? If not,
-   add it to the `file.patterns.`*`name`* property.
+	add it to the `file.patterns.`*`name`* property.
 3. Does the file extension recognized in Scintillua's *scintillua.properties* correspond to the
-   language in question? If not, add or re-assign it to the appropriate Lua lexer. Do not forget
-   the "scintillua." prefix for lexers.
+	language in question? If not, add or re-assign it to the appropriate Lua lexer. Do not forget
+	the "scintillua." prefix for lexers.
 
 Feel free to [contribute][] new lexers, as well as submit corrections, updates, or additions
 to file types.
@@ -122,18 +122,18 @@ In order to drop Scintillua into any other existing installation of a Scintilla-
 that supports the Lexilla protocol, that application must allow you to:
 
 * Specify the location of, and/or load Scintillua's *Scintillua.dll* (Windows) or
-   *libscintillua.so* (Linux) library.
+	*libscintillua.so* (Linux) library.
 * Specify the path to Scintillua's *lexers/* directory via an internal call to the Lexilla
-   protocol's `SetLibraryProperty()` function using the "scintillua.lexers" key.
+	protocol's `SetLibraryProperty()` function using the "scintillua.lexers" key.
 * Load a lexer using the Lexilla protocol's `CreateLexer()` function, passing in the name of
-   a Lua lexer to load (without the *.lua* extension).
+	a Lua lexer to load (without the *.lua* extension).
 * Give the resulting `ILexer5*` pointer to Scintilla, e.g. via Scintilla's [SCI_SETILEXER][]
-   message.
+	message.
 * Optionally handle errors when the returned pointer is null by calling Scintillua's
-   `GetCreateLexerError()` function to see what went wrong.
+	`GetCreateLexerError()` function to see what went wrong.
 * Optionally set keyword lists via Scintilla's [SCI_SETKEYWORDS][] message with the help of
-   [SCI_DESCRIBEKEYWORDSETS][]. Scintillua's lexers have built-in word lists, but they can
-   be overridden.
+	[SCI_DESCRIBEKEYWORDSETS][]. Scintillua's lexers have built-in word lists, but they can
+	be overridden.
 
 The Scintillua lexer largely behaves like a normal Scintilla lexer. However, unlike most
 other lexers Scintillua does not have static style numbers, which makes styling a bit more
@@ -156,33 +156,33 @@ an example of how [SciTE][] does it:
 // create the property:
 //   style.scintillua.lua.20=$(scintillua.styles.string),$(scintillua.styles.string.longstring)
 void SetScintilluaStyles(GUI::ScintillaWindow &wEditor, PropSetFile& props, const char *languageName) {
-  const auto setStyle = [&wEditor, &props, &languageName](int style) {
-    std::string finalPropStr;
-    const std::string &name = wEditor.NameOfStyle(style);
-    size_t end = std::string::npos;
-    do {
-      end = name.find('.', ++end);
-      char propStr[128] = "";
-      sprintf(propStr, "$(scintillua.styles.%s),", end == std::string::npos ?
-        name.c_str() : name.substr(0, end).c_str());
-      finalPropStr += propStr;
-    } while (end != std::string::npos);
-    char key[256] = "";
-    sprintf(key, "style.%s.%0d", languageName, style);
-    props.Set(key, finalPropStr.c_str());
-  };
-  const int namedStyles = wEditor.NamedStyles(); // this count includes predefined styles
-  constexpr int LastPredefined = static_cast<int>(Scintilla::StylesCommon::LastPredefined);
-  constexpr int numPredefined = LastPredefined - StyleDefault + 1;
-  for (int i = 0; i < std::min(namedStyles - numPredefined, StyleDefault); i++) {
-    setStyle(i);
-  }
-  for (int i = StyleDefault; i <= LastPredefined; i++) {
-    setStyle(i);
-  }
-  for (int i = LastPredefined + 1; i < namedStyles; i++) {
-    setStyle(i);
-  }
+	const auto setStyle = [&wEditor, &props, &languageName](int style) {
+		std::string finalPropStr;
+		const std::string &name = wEditor.NameOfStyle(style);
+		size_t end = std::string::npos;
+		do {
+			end = name.find('.', ++end);
+			char propStr[128] = "";
+			sprintf(propStr, "$(scintillua.styles.%s),", end == std::string::npos ?
+				name.c_str() : name.substr(0, end).c_str());
+			finalPropStr += propStr;
+		} while (end != std::string::npos);
+		char key[256] = "";
+		sprintf(key, "style.%s.%0d", languageName, style);
+		props.Set(key, finalPropStr.c_str());
+	};
+	const int namedStyles = wEditor.NamedStyles(); // this count includes predefined styles
+	constexpr int LastPredefined = static_cast<int>(Scintilla::StylesCommon::LastPredefined);
+	constexpr int numPredefined = LastPredefined - StyleDefault + 1;
+	for (int i = 0; i < std::min(namedStyles - numPredefined, StyleDefault); i++) {
+		setStyle(i);
+	}
+	for (int i = StyleDefault; i <= LastPredefined; i++) {
+		setStyle(i);
+	}
+	for (int i = LastPredefined + 1; i < namedStyles; i++) {
+		setStyle(i);
+	}
 }
 ```
 
@@ -195,15 +195,15 @@ function with an index of `0` and a list of overriding words. For the second, us
 Scintillua's lexers support the following properties:
 
 * `fold`: Whether or not folding is enabled for the lexers that support it. This option is
-   disabled by default. Set to `1` to enable.
+	disabled by default. Set to `1` to enable.
 * `fold.scintillua.by.indentation`: Whether or not to fold based on indentation level if a
-   lexer does not have a folder. Some lexers automatically enable this option. It is disabled
-   by default. Set to `1` to enable.
+	lexer does not have a folder. Some lexers automatically enable this option. It is disabled
+	by default. Set to `1` to enable.
 * `fold.scintillua.on.zero.sum.lines`: Whether or not to mark as a fold point lines that contain
-   both an ending and starting fold point. For example, `} else {` would be marked as a fold
-   point. This option is disabled by default. Set to `1` to enable.
+	both an ending and starting fold point. For example, `} else {` would be marked as a fold
+	point. This option is disabled by default. Set to `1` to enable.
 * `fold.scintillua.compact`: Whether or not blank lines after an ending fold point are included
-   in that fold. This option is disabled by default. Set to `1` to enable.
+	in that fold. This option is disabled by default. Set to `1` to enable.
 
 [SCI_SETILEXER]: https://scintilla.org/ScintillaDoc.html#SCI_SETILEXER
 [SCI_SETKEYWORDS]: https://scintilla.org/ScintillaDoc.html#SCI_SETKEYWORDS
@@ -216,17 +216,17 @@ Applications can leverage Scintillua's internal database of lexer names associat
 and extensions, and lexer names associated with content lines like shebang lines. In order to do this:
 
 1. Initially call `CreateLexer("text")` and then set it using Scintilla's [SCI_SETILEXER][]
-   message.
+	message.
 2. Set the `lexer.scintillua.filename` and/or `lexer.scintillua.line` properties to set the
-   filename and/or content line, respectively, used for detecting a lexer. You may wish to
-   truncate the content line in order to avoid the overhead of dealing with a very long line,
-   such as minified JavaScript.  The first 128 bytes seems reasonable.
+	filename and/or content line, respectively, used for detecting a lexer. You may wish to
+	truncate the content line in order to avoid the overhead of dealing with a very long line,
+	such as minified JavaScript.  The first 128 bytes seems reasonable.
 3. Use Scintilla's [SCI_PRIVATELEXERCALL][] message along with the operation `SCLUA_DETECT`
-   (1) to store the detected lexer's name in the given `pointer` argument. This operation
-   behaves like other Scintilla string API functions: when passing a null pointer argument,
-   the length of the string that should be allocated is returned.
+	(1) to store the detected lexer's name in the given `pointer` argument. This operation
+	behaves like other Scintilla string API functions: when passing a null pointer argument,
+	the length of the string that should be allocated is returned.
 4. If the result is a non-empty string, call `CreateLexer()` with that result and set the newly
-   created lexer using SCI_SETILEXER.
+	created lexer using SCI_SETILEXER.
 
 [SCI_SETILEXER]: https://scintilla.org/ScintillaDoc.html#SCI_SETILEXER
 [SCI_PRIVATELEXERCALL]: https://scintilla.org/ScintillaDoc.html#SCI_PRIVATELEXERCALL
@@ -249,9 +249,9 @@ You can compile Scintillua directly (statically) into your Scintilla-based appli
 
 1. Adding *Scintillua.h* and *Scintillua.cxx* to your project's sources.
 2. Downloading and adding [Lua][] and [LPeg][] to your project's sources. Scintillua supports
-   Lua 5.3+.
+	Lua 5.3+.
 3. Adding infrastructure to build Lua, LPeg, *Scintillua.cxx*, and linking them all into your
-   application.
+	application.
 
 Here is a sample portion of a *Makefile* with Lua 5.3 as an example:
 
@@ -281,12 +281,12 @@ to the compiler when compiling *Scintillua.cxx*.
 In order to use Scintillua's lexers in your application:
 
 1. Call Scintillua's `SetLibraryProperty()` with "scintillua.lexers" as the key and the path to
-   Scintillua's *lexers/* directory as the value.
+	Scintillua's *lexers/* directory as the value.
 2. Call Scintillua's `CreateLexer()` with the name of a Lua lexer (without the *.lua* extension)
-   to load.
+	to load.
 3. Call Scintilla's [SCI_SETILEXER][] message, passing the lexer returned in step 2.
 4. Optionally handle errors when the returned pointer is null by calling Scintillua's
-   `GetCreateLexerError()` to see what went wrong.
+	`GetCreateLexerError()` to see what went wrong.
 
 For example, using the GTK platform:
 
@@ -295,9 +295,9 @@ GtkWidget *sci = scintilla_new();
 SetLibraryProperty("scintillua.lexers", "/path/to/lexers/");
 ILEXER5* lua_lexer = CreateLexer("lua");
 if (lua_lexer)
-  send_scintilla_message(SCINTILLA(sci), SCI_SETILEXER, 0, (sptr_t)lua_lexer);
+	send_scintilla_message(SCINTILLA(sci), SCI_SETILEXER, 0, (sptr_t)lua_lexer);
 else
-  fprintf("error creating lexer: %s\n", GetCreateLexerError());
+	fprintf("error creating lexer: %s\n", GetCreateLexerError());
 ```
 
 Your application will then have to query Scintillua for how many styles are currently defined

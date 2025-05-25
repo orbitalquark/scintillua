@@ -15,13 +15,13 @@ information of source code. Scintilla is not required in that case.
 
 ## Features
 
-* Drop-in installation in most Scintilla environments -- no modifications to Scintilla are
-  necessary.
-* Support for [over 120][] programming languages.
-* Easy lexer embedding for multi-language lexers.
-* Universal color themes.
-* Comparable speed to native Scintilla/Lexilla lexers.
-* Can be used as a standalone Lua library (Scintilla is not required).
+- Drop-in installation in most Scintilla environments -- no modifications to Scintilla are
+	necessary.
+- Support for [over 120][] programming languages.
+- Easy lexer embedding for multi-language lexers.
+- Universal color themes.
+- Comparable speed to native Scintilla/Lexilla lexers.
+- Can be used as a standalone Lua library (Scintilla is not required).
 
 [over 120]: lexerlist.md
 
@@ -55,7 +55,7 @@ based Text Editor, by moving Scintillua's directory into SciTE's installation di
 renaming it simply *scintillua*, and then adding the following to your *SciTEGlobal.properties*
 file:
 
-    import scintillua/scintillua
+	import scintillua/scintillua
 
 Scintillua's Application Programming Interface [(API) documentation][] is also located in
 *docs/*. It provides information on how to write and utilize Lua lexers.
@@ -75,16 +75,16 @@ General requirements:
 
 - [CMake][] 3.16+
 - A C and C++ compiler, such as:
-  - [GNU C compiler][] (*gcc*) 7.1+
-  - [Microsoft Visual Studio][] 2019+
+	- [GNU C compiler][] (*gcc*) 7.1+
+	- [Microsoft Visual Studio][] 2019+
 
 Basic procedure:
 
 1. Configure CMake to build Scintillua by pointing it to Scintillua's source directory (where
-  *CMakeLists.txt* is) and specifying a binary directory to compile to.
+	*CMakeLists.txt* is) and specifying a binary directory to compile to.
 2. Build Scintillua.
 3. Either copy the built shared object library to Scintillua's *lexers/* directory or use CMake to
-  install it there.
+	install it there.
 
 For example:
 
