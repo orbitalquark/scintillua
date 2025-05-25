@@ -4,8 +4,9 @@ local format, concat = string.format, table.concat
 
 -- Do not glob these files. (e.g. *.foo)
 local noglobs = {
-	Dockerfile = true, GNUmakefile = true, Makefile = true, makefile = true, Rakefile = true,
-	['Rout.save'] = true, ['Rout.fail'] = true, fstab = true, ['meson.build'] = true
+	['CMakeLists.txt'] = true, Dockerfile = true, GNUmakefile = true, Makefile = true,
+	makefile = true, Rakefile = true, ['Rout.save'] = true, ['Rout.fail'] = true, fstab = true,
+	['meson.build'] = true
 }
 
 local alt_name = {actionscript = 'flash', javascript = 'js', python = 'py', ruby = 'rb'}
