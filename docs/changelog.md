@@ -2,6 +2,38 @@
 
 [Atom Feed](https://github.com/orbitalquark/scintillua/releases.atom)
 
+## 6.5 (25 May 2025)
+
+Download:
+
+- [Scintillua 6.5][]
+
+Bugfixes:
+
+- Fixed Nix lexer recognition in SciTE.
+- Fixed Markdown lexer to allow indented code fence blocks and not lex some indented continuation
+	lines as code.
+- Fixed SciTE not using Scintillua's Markdown lexer.
+- Fixed SciTE not recognizing CMakeLists.txt.
+
+Changes:
+
+- Added org lexer.
+- Switch to building with CMake.
+- Revamped website, manual, and API documentation.
+- Migrated systemd, rpmspec, and reST lexers.
+- Updated Lisp lexer to highlight character escapes.
+- Updated Markdown lexer to just tag the beginning of a blockquote.
+- The output lexer can highlight terminal CSI color sequences.
+- Allow lexers to define their own fold functions.
+- Updated Markdown lexer to fold headers.
+- Added [`lexer.line_start`][], [`lexer.line_end`][], and [`lexer.text_range()`][].
+
+[Scintillua 6.5]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_6.5/scintillua_6.5.zip
+[`lexer.line_start`]: api.html#lexer.line_start
+[`lexer.line_end`]: api.html#lexer.line_end
+[`lexer.text_range()`]: api.html#lexer.text_range
+
 ## 6.4 (31 Jan 2025)
 
 Download:
