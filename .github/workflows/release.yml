@@ -88,6 +88,7 @@ jobs:
       - name: Tag
         if: github.ref_name == github.event.repository.default_branch
         run: |
+          cd scintillua
           git tag scintillua_${{ needs.get-version.outputs.version }}
           git push -f origin scintillua_${{ needs.get-version.outputs.version }}
 
