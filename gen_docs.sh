@@ -23,6 +23,6 @@ if [ -z "$LANG" ]; then export LANG="en_US.UTF-8"; fi
 bundle exec jekyll build --quiet
 cp _site/*.html .
 sed -i 's|href="/|href="|g;' *.html
-cp -r _site/assets/* assets
+cp -r _site/assets .
 rm -rf _site vendor
 popd
