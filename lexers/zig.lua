@@ -17,7 +17,8 @@ lex:add_rule('type', lex:tag(lexer.TYPE, lex:word_match(lexer.TYPE)))
 lex:add_rule('constant', lex:tag(lexer.CONSTANT, lex:word_match(lexer.CONSTANT)))
 
 -- Built-in functions.
-lex:add_rule('function', lex:tag(lexer.FUNCTION, '@' * lex:word_match(lexer.FUNCTION)))
+lex:add_rule('function',
+	lex:tag(lexer.FUNCTION_BUILTIN, '@' * lex:word_match(lexer.FUNCTION_BUILTIN)))
 
 -- Strings.
 local sq_str = lexer.range("'", true) -- Character/Byte literal
@@ -45,8 +46,9 @@ lex:set_word_list(lexer.KEYWORD, {
 	-- Defering code blocks.
 	'defer', 'errdefer',
 	-- Functions and structures related keywords.
-	'align', 'allowzero', 'noalias', 'noinline', 'callconv', 'packed', 'linksection', 'unreachable',
-	'test', 'asm', 'volatile',
+	'align', 'allowzero', 'noalias', 'noinline',
+	'callconv', 'packed', 'linksection', 'unreachable', 'test', 'asm',
+	'volatile',
 	-- Parallelism and concurrency related keywords.
 	'async', 'await', 'noasync', 'suspend', 'nosuspend', 'resume', 'threadlocalanyframe',
 	-- Control flow: conditions and loops.
@@ -65,25 +67,31 @@ lex:set_word_list(lexer.TYPE, {
 	'c_void', -- C void type
 	'f16', 'f32', 'f64', 'f128', -- Floating-point types
 	'bool', 'void', 'noreturn', 'type', 'anytype', 'error', 'anyerror', -- Special types
+	'addrspace', 'anyframe', 'anyopaque', 'opaque', 'threadlocal',
 	'comptime_int', 'comptime_float' -- Comptime types
 })
 
-lex:set_word_list(lexer.FUNCTION, {
+lex:set_word_list(lexer.FUNCTION_BUILTIN, {
 	-- Extensive list of @-prefixed built-in functions
 	'addWithOverflow', 'alignCast', 'alignOf', 'as', 'asyncCall', 'atomicLoad', 'atomicRmw',
 	'atomicStore', 'bitCast', 'bitOffsetOf', 'boolToInt', 'bitSizeOf', 'breakpoint', 'mulAdd',
 	'byteSwap', 'bitReverse', 'byteOffsetOf', 'call', 'cDefine', 'cImport', 'cInclude', 'clz',
-	'cmpxchgStrong', 'cmpxchgWeak', 'compileError', 'compileLog', 'ctz', 'cUndef', 'divExact',
-	'divFloor', 'divTrunc', 'embedFile', 'enumToInt', 'errorName', 'errorReturnTrace', 'errorToInt',
-	'errSetCast', 'export', 'fence', 'field', 'fieldParentPtr', 'floatCast', 'floatToInt', 'frame',
-	'Frame', 'frameAddress', 'frameSize', 'hasDecl', 'hasField', 'import', 'intCast', 'intToEnum',
-	'intToError', 'intToFloat', 'intToPtr', 'memcpy', 'memset', 'wasmMemorySize', 'wasmMemoryGrow',
-	'mod', 'mulWithOverflow', 'panic', 'popCount', 'ptrCast', 'ptrToInt', 'rem', 'returnAddress',
-	'setAlignStack', 'setCold', 'setEvalBranchQuota', 'setFloatMode', 'setRuntimeSafety', 'shlExact',
-	'shlWithOverflow', 'shrExact', 'shuffle', 'sizeOf', 'splat', 'reduce', 'src', 'sqrt', 'sin',
-	'cos', 'exp', 'exp2', 'log', 'log2', 'log10', 'fabs', 'floor', 'ceil', 'trunc', 'round',
-	'subWithOverflow', 'tagName', 'TagType', 'This', 'truncate', 'Type', 'typeInfo', 'typeName',
-	'TypeOf', 'unionInit'
+	'cmpxchgStrong', 'cmpxchgWeak', 'compileError', 'compileLog', "constCast", 'ctz', 'cUndef',
+	'divExact', 'divFloor', 'divTrunc', 'embedFile', 'enumToInt', "enumFromInt", "intFromEnum",
+	"errorCast", 'errorName', 'errorReturnTrace', "errorFromInt", 'errorToInt', 'errSetCast',
+	'export', 'fence', 'field', 'fieldParentPtr', 'floatCast',
+	"floatFromInt", 'floatToInt', 'frame', 'Frame', 'frameAddress', 'frameSize',
+	'hasDecl', 'hasField', 'import', "intFromBool", "intFromError", "intFromFloat",
+	"inComptime", 'intCast', "intFromPtr", 'intToEnum', 'intToError', 'intToFloat', 'intToPtr',
+	'memcpy', 'memset', 'wasmMemorySize', 'wasmMemoryGrow', 'mod', 'mulWithOverflow',
+	"newStackCall", "offsetOf", "OpaqueType", 'panic', "prefetch",
+	'popCount', 'ptrCast', "ptrFromInt", 'ptrToInt', 'reduce', 'rem', 'returnAddress', "select",
+	'setAlignStack', 'setCold', 'setEvalBranchQuota', 'setFloatMode', 'setRuntimeSafety',
+	'shlExact', 'shlWithOverflow', 'shrExact', 'shuffle', 'sizeOf', 'splat',
+	'src', 'sqrt', 'sin', 'cos', 'tan', 'exp', 'exp2', 'log', 'log2', 'log10',
+	'max', 'min', 'abs', 'fabs', 'floor', 'ceil', 'trap', 'trunc', 'round',
+	'subWithOverflow', 'tagName', 'TagType', 'This', 'truncate',
+	'Type', 'typeInfo', 'typeName', 'TypeOf', 'unionInit', 'Vector', 'volatileCast'
 })
 
 -- Strings.
