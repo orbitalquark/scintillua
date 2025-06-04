@@ -20,10 +20,18 @@ lex:add_rule('constant', lex:tag(lexer.CONSTANT, lex:word_match(lexer.CONSTANT))
 lex:add_rule('function',
 	lex:tag(lexer.FUNCTION_BUILTIN, '@' * lex:word_match(lexer.FUNCTION_BUILTIN)))
 
+-- Bare functions (function calls without @).
+lex:add_rule('function_call',
+	lex:tag(lexer.FUNCTION, lexer.word * #(lexer.space^0 * '(')))
+
+-- Struct methods (word followed by dot and another word).
+lex:add_rule('method', lex:tag(lexer.FUNCTION, lexer.word * '.' * lexer.word))
+
 -- Strings.
+local raw_str = P('\\\\') * lexer.range('\n', false, false) -- Multi-line strings
 local sq_str = lexer.range("'", true) -- Character/Byte literal
 local dq_str = lexer.range('"', true) -- String/Byte array literal
-lex:add_rule('string', lex:tag(lexer.STRING, sq_str + dq_str))
+lex:add_rule('string', lex:tag(lexer.STRING, raw_str + sq_str + dq_str))
 
 -- Identifiers.
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
@@ -34,15 +42,20 @@ local comment = lexer.to_eol('//', true)     -- Single-line comments
 lex:add_rule('comment', lex:tag(lexer.COMMENT, doc_comment + comment))
 
 -- Numbers.
-lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number))
+local binary = P('0b') * S('01')^1
+local octal = P('0o') * S('01234567')^1  
+local hex = P('0x') * S('0123456789abcdefABCDEF')^1
+local decimal = lexer.number
+lex:add_rule('number', lex:tag(lexer.NUMBER, binary + octal + hex + decimal))
 
 -- Operators.
-lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('+-/*%<>!=^&|?~:;,.()[]{}')))
+lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('+-/*%<>!=^&|?~:;,.()[]{}') +
+	P('**') + P('<<') + P('>>') + P('==') + P('!=') + P('<=') + P('>=')))
 
 -- Word lists
 lex:set_word_list(lexer.KEYWORD, {
 	-- Keywords.
-	'inline', 'pub', 'fn', 'comptime', 'const', 'extern', 'return', 'var', 'usingnamespace',
+	'inline', 'pub', 'fn', 'comptime', 'const', 'return', 'var', 'usingnamespace',
 	-- Defering code blocks.
 	'defer', 'errdefer',
 	-- Functions and structures related keywords.
@@ -50,7 +63,7 @@ lex:set_word_list(lexer.KEYWORD, {
 	'callconv', 'packed', 'linksection', 'unreachable', 'test', 'asm',
 	'volatile',
 	-- Parallelism and concurrency related keywords.
-	'async', 'await', 'noasync', 'suspend', 'nosuspend', 'resume', 'threadlocalanyframe',
+	'async', 'await', 'noasync', 'suspend', 'nosuspend', 'resume', 'threadlocal', 'anyframe',
 	-- Control flow: conditions and loops.
 	'if', 'else', 'orelse', 'or', 'and', 'while', 'for', 'switch', 'continue', 'break', 'catch',
 	'try',
@@ -71,47 +84,27 @@ lex:set_word_list(lexer.TYPE, {
 	'comptime_int', 'comptime_float' -- Comptime types
 })
 
+-- https://ziglang.org/documentation/master/#Builtin-Functions
 lex:set_word_list(lexer.FUNCTION_BUILTIN, {
-	-- Extensive list of @-prefixed built-in functions
-	'addWithOverflow', 'alignCast', 'alignOf', 'as', 'asyncCall', 'atomicLoad', 'atomicRmw',
-	'atomicStore', 'bitCast', 'bitOffsetOf', 'boolToInt', 'bitSizeOf', 'breakpoint', 'mulAdd',
-	'byteSwap', 'bitReverse', 'byteOffsetOf', 'call', 'cDefine', 'cImport', 'cInclude', 'clz',
-	'cmpxchgStrong', 'cmpxchgWeak', 'compileError', 'compileLog', "constCast", 'ctz', 'cUndef',
-	'divExact', 'divFloor', 'divTrunc', 'embedFile', 'enumToInt', "enumFromInt", "intFromEnum",
-	"errorCast", 'errorName', 'errorReturnTrace', "errorFromInt", 'errorToInt', 'errSetCast',
-	'export', 'fence', 'field', 'fieldParentPtr', 'floatCast',
-	"floatFromInt", 'floatToInt', 'frame', 'Frame', 'frameAddress', 'frameSize',
-	'hasDecl', 'hasField', 'import', "intFromBool", "intFromError", "intFromFloat",
-	"inComptime", 'intCast', "intFromPtr", 'intToEnum', 'intToError', 'intToFloat', 'intToPtr',
-	'memcpy', 'memset', 'wasmMemorySize', 'wasmMemoryGrow', 'mod', 'mulWithOverflow',
-	"newStackCall", "offsetOf", "OpaqueType", 'panic', "prefetch",
-	'popCount', 'ptrCast', "ptrFromInt", 'ptrToInt', 'reduce', 'rem', 'returnAddress', "select",
-	'setAlignStack', 'setCold', 'setEvalBranchQuota', 'setFloatMode', 'setRuntimeSafety',
+	'addrSpaceCast', 'addWithOverflow', 'alignCast', 'alignOf', 'as', 'atomicLoad', 'atomicRmw',
+	'atomicStore', 'bitCast', 'bitOffsetOf', 'bitSizeOf', 'branchHint', 'breakpoint', 'mulAdd',
+	'byteSwap', 'bitReverse', 'call', 'cDefine', 'cImport', 'cInclude', 'clz', 'cmpxchgStrong',
+	'cmpxchgWeak', 'compileError', 'compileLog', 'constCast', 'ctz', 'cUndef',
+	'cVaArg', 'cVaCopy', 'cVaEnd', 'cVaStart', 'divExact', 'divFloor', 'divTrunc', 'embedFile',
+	'enumToInt', 'enumFromInt', 'intFromEnum', 'errorCast', 'errorName', 'errorReturnTrace',
+	'errorFromInt', 'export', 'extern', 'field', 'fieldParentPtr', 'floatCast', 'floatFromInt',
+	'frameAddress', 'hasDecl', 'hasField', 'import', 'intFromBool', 'intFromError', 'intFromFloat',
+	'inComptime', 'intCast', 'intFromPtr', 'memcpy', 'memmove', 'memset',
+	'wasmMemorySize', 'wasmMemoryGrow', 'mulWithOverflow', 'panic', 'prefetch',
+	'popCount', 'ptrCast', 'ptrFromInt', 'reduce', 'rem', 'returnAddress', 'select',
+	'setEvalBranchQuota', 'setFloatMode', 'setRuntimeSafety',
 	'shlExact', 'shlWithOverflow', 'shrExact', 'shuffle', 'sizeOf', 'splat',
 	'src', 'sqrt', 'sin', 'cos', 'tan', 'exp', 'exp2', 'log', 'log2', 'log10',
-	'max', 'min', 'abs', 'fabs', 'floor', 'ceil', 'trap', 'trunc', 'round',
-	'subWithOverflow', 'tagName', 'TagType', 'This', 'truncate',
-	'Type', 'typeInfo', 'typeName', 'TypeOf', 'unionInit', 'Vector', 'volatileCast'
+	'max', 'min', 'mod', 'abs', 'floor', 'ceil', 'trap', 'trunc', 'round',
+	'subWithOverflow', 'tagName', 'This', 'truncate',
+	'Type', 'typeInfo', 'typeName', 'TypeOf', 'unionInit', 'Vector', 'volatileCast',
+	'workGroupId', 'workGroupSize', 'workItemId'
 })
-
--- Strings.
-local sq_str = P('L')^-1 * lexer.range("'", true)
-local dq_str = P('L')^-1 * lexer.range('"', true)
-lex:add_rule('string', token(lexer.STRING, sq_str + dq_str))
-
--- Identifiers.
-lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
-
--- Comments.
-local doc_comment = lexer.to_eol('///', true)
-local comment = lexer.to_eol('//', true)
-lex:add_rule('comment', token(lexer.COMMENT, doc_comment + comment))
-
--- Numbers.
-lex:add_rule('number', token(lexer.NUMBER, lexer.number))
-
--- Operators.
-lex:add_rule('operator', token(lexer.OPERATOR, '..' + S('+-/*%<>!=^&|?~:;,.()[]{}')))
 
 -- Special values.
 lex:set_word_list(lexer.CONSTANT, {
