@@ -2,23 +2,42 @@
 -- Janet LPeg lexer.
 -- Contributed by Engenforge
 
-local lexer = require('lexer')
-local token, word_match = lexer.token, lexer.word_match
+local lexer = lexer
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new('janet')
-
--- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+local lex = lexer.new(...)
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
-	'if', 'do', 'fn', 'while', 'def', 'var', 'quote', 'quasiquote',
-	'unquote', 'splice', 'set', 'break'
-}))
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 
 -- Functions.
-lex:add_rule('function', token(lexer.FUNCTION, word_match{
+lex:add_rule('function', lex:tag(lexer.FUNCTION, lex:word_match(lexer.FUNCTION)))
+
+-- Numbers.
+lex:add_rule('number', lex:tag(lexer.NUMBER, P('-')^-1 * lexer.digit^1 * (S('./') * lexer.digit^1)^-1))
+
+-- Identifiers.
+local word = (lexer.alpha + S('-!?*$=-')) * (lexer.alnum + S('.-!?*$+-'))^0
+lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, word))
+
+-- Strings.
+lex:add_rule('string', lex:tag(lexer.STRING, lexer.range('"')))
+
+-- Comments.
+lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.to_eol('#')))
+
+-- Fold points.
+lex:add_fold_point(lexer.OPERATOR, '(', ')')
+lex:add_fold_point(lexer.OPERATOR, '[', ']')
+lex:add_fold_point(lexer.OPERATOR, '{', '}')
+
+-- Word lists.
+lex:set_word_list(lexer.KEYWORD, {
+	'if', 'do', 'fn', 'while', 'def', 'var', 'quote', 'quasiquote',
+	'unquote', 'splice', 'set', 'break'
+})
+
+lex:set_word_list(lexer.FUNCTION, {
 	'%', '*', '*args*', '*current-file*', '*debug*', '*defdyn-prefix*',
 	'*doc-color*', '*doc-width*', '*err*', '*err-color*', '*executable*',
 	'*exit*', '*exit-value*', '*ffi-context*', '*lint-error*',
@@ -137,31 +156,7 @@ lex:add_rule('function', token(lexer.FUNCTION, word_match{
 	'tuple?', 'type', 'unmarshal', 'untrace', 'update', 'update-in',
 	'values', 'varglobal', 'walk', 'warn-compile', 'xprin', 'xprinf',
 	'xprint', 'xprintf', 'yield', 'zero?', 'zipcoll'
-}))
-
--- Numbers.
-lex:add_rule('number', token(lexer.NUMBER, P('-')^-1 * lexer.digit^1 * (S('./') * lexer.digit^1)^-1))
-
--- Identifiers.
-local word = (lexer.alpha + S('-!?*$=-')) * (lexer.alnum + S('.-!?*$+-'))^0
-lex:add_rule('identifier', token(lexer.IDENTIFIER, word))
-
--- Strings.
-lex:add_rule('string', token(lexer.STRING, lexer.range('"')))
-
--- Comments.
-lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('#')))
-
--- Janet keywords.
-lex:add_rule('janet_keyword', token('janet_keyword', ':' * S(':')^-1 * word * ('/' * word)^-1))
-lex:add_style('janet_keyword', lexer.styles.type)
-lex:add_rule('janet_symbol', token('janet_symbol', "\'" * word * ('/' * word)^-1))
-lex:add_style('janet_symbol', lexer.styles.type .. {bold = true})
-
--- Fold points.
-lex:add_fold_point(lexer.OPERATOR, '(', ')')
-lex:add_fold_point(lexer.OPERATOR, '[', ']')
-lex:add_fold_point(lexer.OPERATOR, '{', '}')
+})
 
 lexer.property['scintillua.comment'] = '#'
 
