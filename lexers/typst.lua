@@ -1,5 +1,3 @@
-local lexer = require('lexer')
-local token = lexer.token
 local P, S, B = lpeg.P, lpeg.S, lpeg.B
 
 local lex = lexer.new(...)
@@ -23,48 +21,7 @@ local function header(level)
   return lex:tag(string.format('%s.h%s', lexer.HEADING, level), header)
 end
 
-local function build_rules(pre)
-  local hash_word = -B('\\') * pre * lexer.word
-  local keyword_match = -B('\\') * pre * lex:word_match(lexer.KEYWORD)
-
-  return {
-    in_code = -B('\\') * lexer.range('`', false, false),
-    dq_string = -B('\\') * lexer.range('"', true),
-    string = -B('\\') * lexer.range('`', false, false) + -B('\\') * lexer.range('"', true),
-
-    hash_word = hash_word,
-    keyword_match = keyword_match,
-
---    TODO: limit numeric values to only be tagged when used as args, assigned values
---    numeric_value = (lexer.number^1 * ('.' * lexer.number^1)^-1 * lex:word_match('UNITS')^-1),
-    iden = lex:tag(lexer.IDENTIFIER, hash_word),
-    mod_func = lex:tag(lexer.KEYWORD, hash_word) * lexer.space^1 * 
-               lex:tag(lexer.FUNCTION, lexer.word) * lex:tag(lexer.OPERATOR, S('[(')),
-    func = lex:tag(lexer.FUNCTION, hash_word) * lex:tag(lexer.OPERATOR, S('[(')),
-    method = lex:tag(lexer.IDENTIFIER, hash_word) *
-             lex:tag(lexer.OPERATOR, P('.')) *
-             lex:tag(lexer.FUNCTION_METHOD, lexer.word) * lex:tag(lexer.OPERATOR, S('[(')),
-    field = lex:tag(lexer.IDENTIFIER, hash_word) *
-            lex:tag(lexer.OPERATOR, P('.')) *
-            lex:tag('FIELD', lexer.word) * -S('[('),
-    operator = lex:tag(lexer.OPERATOR, S('+-/*%<>~!=^&|?~:;,.()[]{}')),
-    label = -B('\\') * lex:tag(lexer.LABEL, P('<') * lexer.word * P('>')),
-    label_two = -B('\\') * lex:tag(lexer.LABEL, P('@') * lexer.word),
-    link = P('http') * P('s')^-1 * P(':') * (lexer.word + S('.:/'))^1,
-
-    math = -B('\\') * lexer.range('$', false, false),
-    code = lexer.range('```', '```', false),
-    list = lex:tag(lexer.LIST, lexer.starts_line(lexer.digit^1 * '.' + S('+-'), true) * S(' \t')),
-    -- TODO: Do we really need to not tag a number if procceded by an alpha
-    comment = lex:tag(lexer.COMMENT, lexer.range('/*', '*/') + lexer.to_eol('//')),
-
-    keyword = lex:tag(lexer.KEYWORD, keyword_match),
-
-    header = header(6) + header(5) + header(4) + header(3) + header(2) + header(1)
-  }
-end
-
-local emb_lex = lexer.new('scripting')
+local emb_lex = lexer.new('typst_scripting')
 
 --[[
  #{ ... }
@@ -77,26 +34,62 @@ local emb_lex = lexer.new('scripting')
 local start = (lex:tag(lexer.KEYWORD, P('#') * lex:word_match(lexer.KEYWORD)) *
 	      #((lexer.any - S('{;\n'))^1 * S('{') * lexer.space^0)) +
 	      lex:tag(lexer.OPERATOR,P('#') * S('{'))
-local embed_start = lex:tag('emb_tag', start)
-local embed_end = lexer:tag('emb_tag', S('}'))
+
+local embed_start = lex:tag(lexer.EMBEDDED, start)
+local embed_end = lexer:tag(lexer.EMBEDDED, S('}'))
 
 local function add_rules(lexer_obj, pre)
-  local rules = build_rules(pre)
-  lexer_obj:add_rule('header', rules.header)
-  lexer_obj:add_rule('field', rules.field)
-  lexer_obj:add_rule('function', rules.mod_func + rules.func)
-  lexer_obj:add_rule('method', rules.method)
-  lexer_obj:add_rule('label', rules.label + rules.label_two)
-  lexer_obj:add_rule('code', lex:tag(lexer.CODE, rules.code))
-  lexer_obj:add_rule('string', lex:tag(lexer.STRING, rules.string))
-  lexer_obj:add_rule('link', lex:tag(lexer.LINK, rules.link))
-  lexer_obj:add_rule('math', lex:tag('environment.math', rules.math))
-  lexer_obj:add_rule('keyword', rules.keyword)
-  lexer_obj:add_rule('identifier', rules.iden)
-  --lexer_obj:add_rule('number', lex:tag(lexer.NUMBER, rules.numeric_value))
-  lexer_obj:add_rule('list', rules.list)
-  lexer_obj:add_rule('comment', rules.comment)
-  lexer_obj:add_rule('operator', rules.operator)
+  local hash_word = -B('\\') * pre * lexer.word
+
+  local in_code = -B('\\') * lexer.range('`', false, false)
+  local dq_string = -B('\\') * lexer.range('"', true)
+  local string_rule = -B('\\') * lexer.range('`', false, false) + -B('\\') * lexer.range('"', true)
+  
+  
+  local iden = lex:tag(lexer.IDENTIFIER, hash_word)
+  local mod_func = lex:tag(lexer.KEYWORD, hash_word) * lexer.space^1 * 
+             lex:tag(lexer.FUNCTION, lexer.word) * lex:tag(lexer.OPERATOR, S('[('))
+  local func = lex:tag(lexer.FUNCTION, hash_word) * lex:tag(lexer.OPERATOR, S('[('))
+  local method = lex:tag(lexer.IDENTIFIER, hash_word) *
+           lex:tag(lexer.OPERATOR, P('.')) *
+           lex:tag(lexer.FUNCTION_METHOD, lexer.word) * lex:tag(lexer.OPERATOR, S('[('))
+  local field = lex:tag(lexer.IDENTIFIER, hash_word) *
+          lex:tag(lexer.OPERATOR, P('.')) *
+          lex:tag('FIELD', lexer.word) * -S('[(')
+  local operator = lex:tag(lexer.OPERATOR, S('+-/*%<>~!=^&|?~:;,.()[]{}'))
+  local label = -B('\\') * lex:tag(lexer.LABEL, P('<') * lexer.word * P('>'))
+  local label_two = -B('\\') * lex:tag(lexer.LABEL, P('@') * lexer.word)
+  local link = P('http') * P('s')^-1 * P(':') * (lexer.word + S('.:/'))^1
+  
+  local math_rule = -B('\\') * lexer.range('$', false, false)
+  local code = lexer.range('```', '```', false)
+  local list = lex:tag(lexer.LIST, lexer.starts_line(lexer.digit^1 * '.' + S('+-'), true) * S(' \t'))
+  local comment = lex:tag(lexer.COMMENT, lexer.range('/*', '*/') + lexer.to_eol('//'))
+  
+  local keyword_match = -B('\\') * pre * lex:word_match(lexer.KEYWORD)
+  local keyword = lex:tag(lexer.KEYWORD, keyword_match)
+  
+  local header = header(6) + header(5) + header(4) + header(3) + header(2) + header(1)
+  lexer_obj:add_rule('header', header)
+  lexer_obj:add_rule('field', field)
+  lexer_obj:add_rule('function', mod_func + func)
+  lexer_obj:add_rule('method', method)
+  lexer_obj:add_rule('label', label + label_two)
+  lexer_obj:add_rule('code', lex:tag(lexer.CODE, code))
+  lexer_obj:add_rule('string', lex:tag(lexer.STRING, string_rule))
+  lexer_obj:add_rule('link', lex:tag(lexer.LINK, link))
+  lexer_obj:add_rule('math', lex:tag('environment.math', math_rule))
+  lexer_obj:add_rule('keyword', keyword)
+  lexer_obj:add_rule('identifier', iden)
+
+  -- TODO: Do we really need to not tag a number if procceded by an alpha?
+  -- TODO: limit numeric values to only be tagged when used as args, assigned values
+  -- numeric_value = (lexer.number^1 * ('.' * lexer.number^1)^-1 * lex:word_match('UNITS')^-1),
+  --lexer_obj:add_rule('number', lex:tag(lexer.NUMBER, numeric_value))
+
+  lexer_obj:add_rule('list', list)
+  lexer_obj:add_rule('comment', comment)
+  lexer_obj:add_rule('operator', operator)
 end
 
 -- Keywords, functions... don't need '#' when in code
@@ -122,4 +115,3 @@ lex:add_fold_point(lexer.PREPROCESSOR, '```', '```')
 lexer.property['scintillua.comment'] = '//'
 
 return lex
-
