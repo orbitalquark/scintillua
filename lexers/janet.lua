@@ -1,40 +1,49 @@
--- Copyright 2018-2025 Mitchell. See LICENSE.
+-- Copyright 2025 Jason Lenz code@engenforge.com. See LICENSE.
 -- Janet LPeg lexer.
--- Contributed by Engenforge
 
 local lexer = lexer
 local P, S = lpeg.P, lpeg.S
 
 local lex = lexer.new(...)
 
--- Keywords.
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
+-- Much of the lexical syntax defined below was derived from the following two
+-- Janet documentation links:
+-- https://janet-lang.org/docs/syntax.html
+-- https://janet-lang.org/api/index.html
 
--- Functions.
-lex:add_rule('function', lex:tag(lexer.FUNCTION, lex:word_match(lexer.FUNCTION)))
+-- Note that in some cases Janet documentation uses terminology that differs
+-- with Scintillua typical usage. For example, the Janet documentation defines
+-- keywords as symbols that begin with the character ':' and are treated by the
+-- compiler as constants. In this case they were tagged in Scintillua as
+-- constants. Conversely, keywords in Scintillua were defined as built in names
+-- reserved by the janet compiler such as nil, true, do, fn, etc.
 
--- Numbers.
-lex:add_rule('number', lex:tag(lexer.NUMBER, P('-')^-1 * lexer.digit^1 * (S('./') * lexer.digit^1)^-1))
-
--- Identifiers.
-local word = (lexer.alpha + S('-!?*$=-')) * (lexer.alnum + S('.-!?*$+-'))^0
-lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, word))
-
--- Strings.
-lex:add_rule('string', lex:tag(lexer.STRING, lexer.range('"')))
-
--- Comments.
 lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.to_eol('#')))
 
--- Fold points.
+local sq_str = lexer.range('"') + lexer.range('`')
+local dq_str = lexer.range('``')
+local tq_str = lexer.range('```')
+lex:add_rule('string', lex:tag(lexer.STRING, tq_str + dq_str + sq_str))
+
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
+
+lex:add_rule('function', lex:tag(lexer.FUNCTION, lex:word_match(lexer.FUNCTION)))
+
+lex:add_rule('number', lex:tag(lexer.NUMBER, S('-+')^-1 * lexer.digit^1 * (S('._') + lexer.alnum)^0))
+
+local id_ch = S('!@$%^&*-_+=:<>.?') + lexer.alnum
+lex:add_rule('constant', lex:tag(lexer.CONSTANT, P(':') * id_ch^0))
+
+lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, id_ch^1))
+
 lex:add_fold_point(lexer.OPERATOR, '(', ')')
 lex:add_fold_point(lexer.OPERATOR, '[', ']')
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
 
 -- Word lists.
 lex:set_word_list(lexer.KEYWORD, {
-	'if', 'do', 'fn', 'while', 'def', 'var', 'quote', 'quasiquote',
-	'unquote', 'splice', 'set', 'break'
+	'nil', 'true', 'false', 'if', 'do', 'fn', 'while', 'def', 'var',
+	'quote', 'quasiquote', 'unquote', 'splice', 'set', 'break'
 })
 
 lex:set_word_list(lexer.FUNCTION, {
