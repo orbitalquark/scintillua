@@ -18,23 +18,23 @@ local lex = lexer.new(...)
 -- constants. Conversely, keywords in Scintillua were defined as built in names
 -- reserved by the janet compiler such as nil, true, do, fn, etc.
 
-lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.to_eol('#')))
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
+
+lex:add_rule('function', lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN)))
+
+local id_ch = S('!@$%^&*-_+=:<>.?') + lexer.alnum
+lex:add_rule('constant', lex:tag(lexer.CONSTANT, P(':') * id_ch^0))
+
+lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, id_ch^1))
 
 local sq_str = lexer.range('"') + lexer.range('`')
 local dq_str = lexer.range('``')
 local tq_str = lexer.range('```')
 lex:add_rule('string', lex:tag(lexer.STRING, tq_str + dq_str + sq_str))
 
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
-
-lex:add_rule('function', lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN)))
+lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.to_eol('#')))
 
 lex:add_rule('number', lex:tag(lexer.NUMBER, S('-+')^-1 * lexer.digit^1 * (S('._') + lexer.alnum)^0))
-
-local id_ch = S('!@$%^&*-_+=:<>.?') + lexer.alnum
-lex:add_rule('constant', lex:tag(lexer.CONSTANT, P(':') * id_ch^0))
-
-lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, id_ch^1))
 
 lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('<>=*/+-%()[]{}')))
 
