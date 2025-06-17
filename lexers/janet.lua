@@ -36,6 +36,8 @@ lex:add_rule('constant', lex:tag(lexer.CONSTANT, P(':') * id_ch^0))
 
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, id_ch^1))
 
+lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('<>=*/+-%()[]{}')))
+
 lex:add_fold_point(lexer.OPERATOR, '(', ')')
 lex:add_fold_point(lexer.OPERATOR, '[', ']')
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
@@ -47,35 +49,34 @@ lex:set_word_list(lexer.KEYWORD, {
 })
 
 lex:set_word_list(lexer.FUNCTION_BUILTIN, {
-	'%', '*', '*args*', '*current-file*', '*debug*', '*defdyn-prefix*',
+	'*args*', '*current-file*', '*debug*', '*defdyn-prefix*',
 	'*doc-color*', '*doc-width*', '*err*', '*err-color*', '*executable*',
 	'*exit*', '*exit-value*', '*ffi-context*', '*lint-error*',
 	'*lint-levels*', '*lint-warn*', '*macro-form*', '*macro-lints*',
 	'*module/cache*', '*module/loaders*', '*module/loading*',
 	'*module/paths*', '*out*', '*peg-grammar*', '*pretty-format*',
-	'*profilepath*', '*redef*', '*syspath*', '*task-id*', '+', '-', '/',
-	'<', '<=', '=', '>', '>=', 'abstract?', 'accumulate', 'accumulate2',
-	'all', 'all-bindings', 'all-dynamics', 'any?', 'apply', 'array',
-	'array/clear', 'array/concat', 'array/ensure', 'array/fill',
-	'array/insert', 'array/new', 'array/new-filled', 'array/peek',
-	'array/pop', 'array/push', 'array/remove', 'array/slice', 'array/trim',
-	'array/weak', 'array?', 'asm', 'bad-compile', 'bad-parse', 'band',
-	'blshift', 'bnot', 'boolean?', 'bor', 'brshift', 'brushift', 'buffer',
-	'buffer/bit', 'buffer/bit-clear', 'buffer/bit-set',
-	'buffer/bit-toggle', 'buffer/blit', 'buffer/clear', 'buffer/fill',
-	'buffer/format', 'buffer/from-bytes', 'buffer/new',
-	'buffer/new-filled', 'buffer/popn', 'buffer/push', 'buffer/push-at',
-	'buffer/push-byte', 'buffer/push-float32', 'buffer/push-float64',
-	'buffer/push-string', 'buffer/push-uint16', 'buffer/push-uint32',
-	'buffer/push-uint64', 'buffer/push-word', 'buffer/slice',
-	'buffer/trim', 'buffer?', 'bxor', 'bytes?', 'cancel', 'cfunction?',
-	'cli-main', 'cmp', 'comp', 'compare', 'compare<', 'compare<=',
-	'compare=', 'compare>', 'compare>=', 'compile', 'complement', 'count',
-	'curenv', 'debug', 'debug/arg-stack', 'debug/break', 'debug/fbreak',
-	'debug/lineage', 'debug/stack', 'debug/stacktrace', 'debug/step',
-	'debug/unbreak', 'debug/unfbreak', 'debugger', 'debugger-env',
-	'debugger-on-status', 'dec', 'deep-not=', 'deep=',
-	'default-peg-grammar', 'defglobal', 'describe', 'dictionary?',
+	'*profilepath*', '*redef*', '*syspath*', '*task-id*', 'abstract?',
+	'accumulate', 'accumulate2', 'all', 'all-bindings', 'all-dynamics',
+	'any?', 'apply', 'array', 'array/clear', 'array/concat',
+	'array/ensure', 'array/fill', 'array/insert', 'array/new',
+	'array/new-filled', 'array/peek', 'array/pop', 'array/push',
+	'array/remove', 'array/slice', 'array/trim', 'array/weak', 'array?',
+	'asm', 'bad-compile', 'bad-parse', 'band', 'blshift', 'bnot',
+	'boolean?', 'bor', 'brshift', 'brushift', 'buffer', 'buffer/bit',
+	'buffer/bit-clear', 'buffer/bit-set', 'buffer/bit-toggle',
+	'buffer/blit', 'buffer/clear', 'buffer/fill', 'buffer/format',
+	'buffer/from-bytes', 'buffer/new', 'buffer/new-filled', 'buffer/popn',
+	'buffer/push', 'buffer/push-at', 'buffer/push-byte',
+	'buffer/push-float32', 'buffer/push-float64', 'buffer/push-string',
+	'buffer/push-uint16', 'buffer/push-uint32', 'buffer/push-uint64',
+	'buffer/push-word', 'buffer/slice', 'buffer/trim', 'buffer?', 'bxor',
+	'bytes?', 'cancel', 'cfunction?', 'cli-main', 'cmp', 'comp', 'compare',
+	'compare<', 'compare<=', 'compare=', 'compare>', 'compare>=',
+	'compile', 'complement', 'count', 'curenv', 'debug', 'debug/arg-stack',
+	'debug/break', 'debug/fbreak', 'debug/lineage', 'debug/stack',
+	'debug/stacktrace', 'debug/step', 'debug/unbreak', 'debug/unfbreak',
+	'debugger', 'debugger-env', 'debugger-on-status', 'dec', 'deep-not=',
+	'deep=', 'default-peg-grammar', 'defglobal', 'describe', 'dictionary?',
 	'disasm', 'distinct', 'div', 'doc*', 'doc-format', 'doc-of', 'dofile',
 	'drop', 'drop-until', 'drop-while', 'dyn', 'eflush', 'empty?',
 	'env-lookup', 'eprin', 'eprinf', 'eprint', 'eprintf', 'error',
