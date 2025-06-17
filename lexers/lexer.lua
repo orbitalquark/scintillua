@@ -1743,6 +1743,7 @@ function M.detect(filename, line)
 		cfg = 'ini', cnf = 'ini', inf = 'ini', ini = 'ini', reg = 'ini', --
 		io = 'io_lang', --
 		bsh = 'java', java = 'java', --
+		janet = 'janet', --
 		js = 'javascript', jsfl = 'javascript', --
 		jq = 'jq', --
 		json = 'json', --
