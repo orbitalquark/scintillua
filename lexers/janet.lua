@@ -27,7 +27,7 @@ lex:add_rule('string', lex:tag(lexer.STRING, tq_str + dq_str + sq_str))
 
 lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 
-lex:add_rule('function', lex:tag(lexer.FUNCTION, lex:word_match(lexer.FUNCTION)))
+lex:add_rule('function', lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN)))
 
 lex:add_rule('number', lex:tag(lexer.NUMBER, S('-+')^-1 * lexer.digit^1 * (S('._') + lexer.alnum)^0))
 
@@ -46,7 +46,7 @@ lex:set_word_list(lexer.KEYWORD, {
 	'quote', 'quasiquote', 'unquote', 'splice', 'set', 'break'
 })
 
-lex:set_word_list(lexer.FUNCTION, {
+lex:set_word_list(lexer.FUNCTION_BUILTIN, {
 	'%', '*', '*args*', '*current-file*', '*debug*', '*defdyn-prefix*',
 	'*doc-color*', '*doc-width*', '*err*', '*err-color*', '*executable*',
 	'*exit*', '*exit-value*', '*ffi-context*', '*lint-error*',
