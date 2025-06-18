@@ -67,18 +67,19 @@ lex:add_rule('date', lex:tag(lexer.NUMBER, lexer.digit^4*P('-') * lexer.digit^2 
 -- Project and Context last, as same characters can show up in key:value
 
 -- Project +
-lex:add_rule('project', lex:tag(lexer.REFERENCE, lexer.range('+', lexer.space, true)))  -- REFERENCE and lexer.LINK seem the same
+lex:add_rule('project', lex:tag(lexer.LABEL, lexer.range('+', lexer.space, true)))
 -- Context @
-lex:add_rule('context', lex:tag(lexer.ITALIC, lexer.range('@', lexer.space, true)))
+lex:add_rule('context', lex:tag(lexer.TYPE, lexer.range('@', lexer.space, true)))
 
 -- Regular string / todo text body - override as needed
 --lex:add_rule('todo_txt', lex:tag(lexer.STRING, lexer.any))
 
--- style notes
+-- scite style notes
 -- OPERATOR? - sort of bold
 -- lexer.KEYWORD - different color
 -- Consider using:
 -- lexer.LABEL
 -- lexer.TYPE
+-- REFERENCE and lexer.LINK seem the same
 
 return lex
