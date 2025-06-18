@@ -56,7 +56,7 @@ lex:add_rule('link', link)
 -- Different style for key and value so they are clearly marked
 local key = lex:tag(lexer.KEYWORD, not_whitespace_word)
 local colon = lex:tag(lexer.OPERATOR, P(':'))
-local value = lex:tag(lexer.CONSTANT, not_whitespace_word)
+local value = lex:tag(lexer.STRING, not_whitespace_word)
 lex:add_rule('key_value', key * colon * value)
 
 
