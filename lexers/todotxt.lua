@@ -10,22 +10,12 @@ local lex = lexer.new(...)
 local not_whitespace = lexer.any - lexer.space - P(':')
 local not_whitespace_word = not_whitespace^1
 
-
--- Done/Complete items, map to comment style
+-- Done/Complete items
 lex:add_rule('done', lex:tag(lexer.COMMENT, lexer.starts_line(lexer.to_eol('x '))))
 
 -- Priority
---lex:add_rule('priority', lex:tag(lexer.LIST .. '.priority', lexer.starts_line(P('(') * lexer.upper * P(') '))))
---lex:add_rule('priority', lex:tag(lexer.LIST, lexer.starts_line(P('(') * lexer.upper * P(') '))))
-
-
 -- priority A-Z can have different styles. Below sets A-F as different and then G-Z all the same - similar approach as Markor Android app https://github.com/gsantner/markor/blob/master/app/src/main/java/net/gsantner/markor/format/todotxt/TodoTxtBasicSyntaxHighlighter.java#L13
--- in theme properties:
---      scintillua.styles.list.priority
---      scintillua.styles.list.priority.a
---      scintillua.styles.list.priority.b
---      scintillua.styles.list.priority....
--- Example
+-- Example for theme properties with SciTE editor:
 --      scintillua.styles.list.priority=fore:$(scintillua.colors.grey),bold
 --      scintillua.styles.list.priority.a=fore:$(scintillua.colors.red),bold
 --      scintillua.styles.list.priority.b=fore:$(scintillua.colors.orange),bold
@@ -40,34 +30,8 @@ for letter in string.gmatch('abcdefghijklmnopqrstuvwxyz', '.') do
 end
 lex:add_rule('priority', priority)
 
-
--- URLs - NOTE not part of todo.txt, extension to make editing cleaner
---lex:add_rule('URL', lex:tag(lexer.STRING, 'http' * P('s')^-1 * '://' * (lexer.any - lexer.space)^1)
---lex:add_rule('URL', lex:tag(lexer.STRING, 'http' * P('s')^-1 * '://')
---lex:add_rule('url', lex:tag(lexer.STRING, P('milk')))
---lex:add_rule('url_http', lex:tag(lexer.STRING, P('https://') * (lexer.any - lexer.space)^1))
---lex:add_rule('url_https', lex:tag(lexer.STRING, P('https://') * (lexer.any - lexer.space)^1))
---lex:add_rule('url_httpX', lex:tag(lexer.STRING .. 'url', P('http') * P('s')^-1 * P('://') * (lexer.any - lexer.space)^1))
---lex:add_rule('url_httpX', lex:tag(lexer.STRING, P('http') * P('s')^-1 * P('://') * (lexer.any - lexer.space)^1))
---lex:add_rule('url_httpX', lex:tag(lexer.LINK, P('http') * P('s')^-1 * P('://') * (lexer.any - lexer.space)^1))
-
---lex:add_rule('uri', lex:tag(lexer.STRING, '://' * (lexer.any - lexer.space)^1))  -- not working
---local really_not_whitespace = lexer.any - lexer.space
---local really_not_whitespace_word = really_not_whitespace^1
---lex:add_rule('uri', lex:tag(lexer.STRING, P('://') * really_not_whitespace_word))  -- not working
---lex:add_rule('uri', lex:tag(lexer.STRING, (lexer.any - lexer.space)^1 * P('://') * (lexer.any - lexer.space)^1))  -- not working
---lex:add_rule('uri', lex:tag(lexer.STRING, (lexer.any - lexer.space)^1 * P('://') * really_not_whitespace_word))  -- not working
-
--- from nix.lua
--- URIs.
---local uri_char = lexer.alnum + S("%/?:@&=+$,-_.!~*'")
---local uri = lexer.alpha * (lexer.alnum + S('+-.'))^0 * ':' * uri_char^1
---lex:add_rule('uri', lex:tag(lexer.LINK, uri))
-
--- from text2tags.lua
--- URLs, emails, and domain names
+-- URLs, emails, domain names - NOTE not part of todo.txt, extension to make editing cleaner
 local nonspace = lexer.any - lexer.space
--- Link.
 local email = token(lexer.LINK,
 	(nonspace - '@')^1 * '@' * (nonspace - '.')^1 * ('.' * (nonspace - S('.?'))^1)^1 *
 		('?' * nonspace^1)^-1)
