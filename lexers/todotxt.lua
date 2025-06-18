@@ -71,8 +71,8 @@ lex:add_rule('project', lex:tag(lexer.REFERENCE, lexer.range('+', lexer.space, t
 -- Context @
 lex:add_rule('context', lex:tag(lexer.ITALIC, lexer.range('@', lexer.space, true)))
 
-
-lex:add_rule('todo_txt', lex:tag(lexer.STRING, lexer.any))
+-- Regular string / todo text body - override as needed
+--lex:add_rule('todo_txt', lex:tag(lexer.STRING, lexer.any))
 
 -- style notes
 -- OPERATOR? - sort of bold
