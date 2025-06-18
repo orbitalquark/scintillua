@@ -11,18 +11,26 @@ local lex = lexer.new(...)
 -- https://janet-lang.org/docs/syntax.html
 -- https://janet-lang.org/api/index.html
 
--- Note that in some cases Janet documentation uses terminology that differs
--- with Scintillua typical usage. For example, the Janet documentation defines
+-- Note: In some cases Janet documentation uses terminology that differs with
+-- Scintillua typical usage. For example, the Janet documentation defines
 -- keywords as symbols that begin with the character ':' and are treated by the
 -- compiler as constants. In this case they were tagged in Scintillua as
 -- constants. Conversely, keywords in Scintillua were defined as built in names
 -- reserved by the janet compiler such as nil, true, do, fn, etc.
 
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
+-- Note: The order of these rules below is important. In particular, number,
+-- operator, constant, and identifier need to occur in that order for lexing
+-- rules to function properly.
 
 lex:add_rule('function', lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN)))
 
-local id_ch = S('!@$%^&*-_+=:<>.?') + lexer.alnum
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
+
+lex:add_rule('number', lex:tag(lexer.NUMBER, S('-+')^-1 * lexer.digit^1 * (S('._') + lexer.alnum)^0))
+
+lex:add_rule('operator', lex:tag(lexer.OPERATOR, S("<>=*/+-%&',;~@()[]{}")))
+
+local id_ch = S('!@$%^&*:-_+=<>.?') + lexer.alnum
 lex:add_rule('constant', lex:tag(lexer.CONSTANT, P(':') * id_ch^0))
 
 lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, id_ch^1))
@@ -33,10 +41,6 @@ local tq_str = lexer.range('```')
 lex:add_rule('string', lex:tag(lexer.STRING, tq_str + dq_str + sq_str))
 
 lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.to_eol('#')))
-
-lex:add_rule('number', lex:tag(lexer.NUMBER, S('-+')^-1 * lexer.digit^1 * (S('._') + lexer.alnum)^0))
-
-lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('<>=*/+-%()[]{}')))
 
 lex:add_fold_point(lexer.OPERATOR, '(', ')')
 lex:add_fold_point(lexer.OPERATOR, '[', ']')
