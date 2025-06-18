@@ -60,7 +60,7 @@ local value = lex:tag(lexer.CONSTANT, not_whitespace_word)
 lex:add_rule('key_value', key * colon * value)
 
 
--- date - any context, for now treat due and complete (or anywhere in string) the same
+-- date (similar to ISO 8601, YYYY-MM-DD) - any context, for now treat due and complete (or anywhere in string) the same
 lex:add_rule('date', lex:tag(lexer.NUMBER, lexer.digit^4*P('-') * lexer.digit^2 * P('-') * lexer.digit^2 * #lexer.space))
 
 
