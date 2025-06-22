@@ -37,7 +37,7 @@ lex:add_rule('number', lex:tag(lexer.NUMBER,
 lex:add_rule('operator', lex:tag(lexer.OPERATOR, S("()[]{}") + shorthand + P('@') * S('([{')))
 
 -- Constants.
-local id_ch = S('!@$%^&*:-_+=<>.?') + lexer.alnum + lpeg.utfR(0x7F, 0x10FFFF)
+local id_ch = S('!@$%^&*:-_+=<>.?') + lexer.alnum -- + lpeg.utfR(0x7F, 0x10FFFF)
 lex:add_rule('constant', lex:tag(lexer.CONSTANT, ':' * id_ch^0))
 
 -- Strings and buffers.
