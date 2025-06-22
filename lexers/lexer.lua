@@ -1742,6 +1742,7 @@ function M.detect(filename, line)
 		ni = 'inform', --
 		cfg = 'ini', cnf = 'ini', inf = 'ini', ini = 'ini', reg = 'ini', --
 		io = 'io_lang', --
+		janet = 'janet', --
 		bsh = 'java', java = 'java', --
 		js = 'javascript', jsfl = 'javascript', --
 		jq = 'jq', --
