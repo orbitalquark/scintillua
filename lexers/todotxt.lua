@@ -3,7 +3,6 @@
 
 local lexer = lexer
 local P, S = lpeg.P, lpeg.S
-local token, word_match = lexer.token, lexer.word_match
 
 local lex = lexer.new(...)
 
@@ -32,13 +31,13 @@ lex:add_rule('priority', priority)
 
 -- URLs, emails, domain names - NOTE not part of todo.txt, extension to make editing cleaner
 local nonspace = lexer.any - lexer.space
-local email = token(lexer.LINK,
+local email = lex:tag(lexer.LINK,
 	(nonspace - '@')^1 * '@' * (nonspace - '.')^1 * ('.' * (nonspace - S('.?'))^1)^1 *
 		('?' * nonspace^1)^-1)
-local host = token(lexer.LINK,
-	word_match('www ftp', true) * (nonspace - '.')^0 * '.' * (nonspace - '.')^1 * '.' *
+local host = lex:tag(lexer.LINK,
+	lexer.word_match('www ftp', true) * (nonspace - '.')^0 * '.' * (nonspace - '.')^1 * '.' *
 		(nonspace - S(',.'))^1)
-local url = token(lexer.LINK,
+local url = lex:tag(lexer.LINK,
 	(nonspace - '://')^1 * '://' * (nonspace - ',' - '.')^1 * ('.' * (nonspace - S(',./?#'))^1)^1 *
 		('/' * (nonspace - S('./?#'))^0 * ('.' * (nonspace - S(',.?#'))^1)^0)^0 *
 		('?' * (nonspace - '#')^1)^-1 * ('#' * nonspace^0)^-1)
