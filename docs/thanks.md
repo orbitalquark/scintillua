@@ -13,6 +13,7 @@ and better over the years.
 - Alexander Misel
 - Brian Schott
 - Carl Sturtivant
+- Chris Clark
 - Chris Emerson
 - Christian Hesse
 - Christos Chatzifountas

@@ -137,6 +137,7 @@ used if [`fold.scintillua.by.indentation`][] is enabled. For SciTE, see *lexers/
 1. Tcl`*`
 1. TeX`*`
 1. Texinfo`*`
+1. todo.txt
 1. TOML
 1. Troff
 1. txt2tags

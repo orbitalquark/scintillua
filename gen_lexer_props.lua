@@ -6,7 +6,7 @@ local format, concat = string.format, table.concat
 local noglobs = {
 	['CMakeLists.txt'] = true, Dockerfile = true, GNUmakefile = true, Makefile = true,
 	makefile = true, Rakefile = true, ['Rout.save'] = true, ['Rout.fail'] = true, fstab = true,
-	['meson.build'] = true
+	['meson.build'] = true, ['todo.txt'] = true
 }
 
 local alt_name = {actionscript = 'flash', javascript = 'js', python = 'py', ruby = 'rb'}
