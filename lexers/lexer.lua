@@ -1812,7 +1812,8 @@ function M.detect(filename, line)
 		taskpaper = 'taskpaper', --
 		tcl = 'tcl', tk = 'tcl', --
 		texi = 'texinfo', --
-		['todo.txt'] = 'todotxt', --
+		['todo.txt'] = 'todotxt', ['Todo.txt'] = 'todotxt', ['done.txt'] = 'todotxt',
+		['Done.txt'] = 'todotxt', --
 		toml = 'toml', --
 		['1'] = 'troff', ['2'] = 'troff', ['3'] = 'troff', ['4'] = 'troff', ['5'] = 'troff',
 		['6'] = 'troff', ['7'] = 'troff', ['8'] = 'troff', ['9'] = 'troff', ['1x'] = 'troff',
