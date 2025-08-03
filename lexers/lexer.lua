@@ -1772,7 +1772,7 @@ function M.detect(filename, line)
 		m = 'objective_c', mm = 'objective_c', objc = 'objective_c', --
 		caml = 'caml', ml = 'caml', mli = 'caml', mll = 'caml', mly = 'caml', --
 		org = 'org', --
-		dpk = 'pascal', dpr = 'pascal', p = 'pascal', pas = 'pascal', --
+		dpk = 'pascal', dpr = 'pascal', p = 'pascal', pas = 'pascal', pp = 'pascal', --
 		al = 'perl', perl = 'perl', pl = 'perl', pm = 'perl', pod = 'perl', --
 		inc = 'php', php = 'php', php3 = 'php', php4 = 'php', phtml = 'php', --
 		p8 = 'pico8', --
