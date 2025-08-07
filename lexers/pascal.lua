@@ -61,7 +61,7 @@ local integer = hex_num + oct_num + bin_num + lexer.integer
 lex:add_rule('number', token(lexer.NUMBER, lexer.float + integer))
 
 -- Operators.
-lex:add_rule('operator', token(lexer.OPERATOR, S('.,;^@:=<>+-/*()[]')))
+lex:add_rule('operator', token(lexer.OPERATOR, '..' + S('.,;^@:=<>+-/*()[]')))
 
 lexer.property['scintillua.comment'] = '//'
 
