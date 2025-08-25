@@ -4,7 +4,7 @@
 local lexer = require('lexer')
 local P, S, R = lpeg.P, lpeg.S, lpeg.R
 
-local lex = lexer.new(...)
+local lex = lexer.new(..., {no_user_word_lists = true})
 
 -- Define basic patterns
 local space = S(' \t')
@@ -17,7 +17,7 @@ local alnum = alpha + digit
 lex:add_rule('whitespace', lexer.token(lexer.WHITESPACE, space^1))
 
 -- Comments
-lex:add_rule('comment', lexer.token(lexer.COMMENT, P('#') * (P(1) - newline)^0))
+lex:add_rule('comment', lexer.token(lexer.COMMENT, lexer.to_eol('#')))
 
 -- Numbers (field-specific)
 lex:add_rule('minute', lexer.token('minute', digit^1))
@@ -56,9 +56,7 @@ lex:add_rule('environment', lexer.token('environment', alpha * (alnum + P('_'))^
 lex:add_rule('command', lexer.token('command', alpha * (P(1) - space - newline)^0))
 
 -- Strings
-local sq_str = P("'") * (P(1) - P("'"))^0 * P("'")
-local dq_str = P('"') * (P(1) - P('"'))^0 * P('"')
-lex:add_rule('string', lexer.token(lexer.STRING, sq_str + dq_str))
+lex:add_rule('string', lexer.token(lexer.STRING, lexer.range("'") + lexer.range('"')))
 
 -- Identifiers
 lex:add_rule('identifier', lexer.token(lexer.IDENTIFIER, alpha * (alnum + S('_.-'))^0))
@@ -66,14 +64,14 @@ lex:add_rule('identifier', lexer.token(lexer.IDENTIFIER, alpha * (alnum + S('_.-
 -- Default
 lex:add_rule('default', lexer.token(lexer.DEFAULT, P(1)))
 
--- Add custom styles for cron fields
-lex:add_style('minute', lexer.styles.number)
-lex:add_style('hour', lexer.styles.number) 
-lex:add_style('dom', lexer.styles.number)
-lex:add_style('month_num', lexer.styles.number)
-lex:add_style('dow_num', lexer.styles.number)
-lex:add_style('environment', lexer.styles.variable)
-lex:add_style('command', lexer.styles['function'])
+-- Add custom styles for cron fields (new format)
+lex:add_style('minute', lexer.styles.number .. {color = 0xFF6B35})      -- Orange
+lex:add_style('hour', lexer.styles.number .. {color = 0x4ECDC4})        -- Teal
+lex:add_style('dom', lexer.styles.number .. {color = 0x45B7D1})         -- Blue
+lex:add_style('month_num', lexer.styles.number .. {color = 0x96CEB4})   -- Green
+lex:add_style('dow_num', lexer.styles.number .. {color = 0xFFEAA7})     -- Yellow
+lex:add_style('environment', lexer.styles.variable .. {color = 0x9B59B6}) -- Purple
+lex:add_style('command', lexer.styles['function'] .. {color = 0xE67E22})  -- Orange
 
 -- Add folding points (fold comment blocks)
 lex:add_fold_point(lexer.COMMENT, '#', newline)
