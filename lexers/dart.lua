@@ -11,9 +11,11 @@ local lex = lexer.new(...)
 -- Keywords.
 lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 -- Built-ins.
-lex:add_rule('builtin', lex:tag(lexer.CONSTANT, lex:word_match(lexer.CONSTANT)))
+lex:add_rule('constant', lex:tag(lexer.CONSTANT_BUILTIN, lex:word_match(lexer.CONSTANT_BUILTIN)))
 -- Types.
 lex:add_rule('type', lex:tag(lexer.TYPE, lex:word_match(lexer.TYPE)))
+-- Directives
+lex:add_rule('directive', lex:tag(lexer.PREPROCESSOR, lex:word_match(lexer.PREPROCESSOR)))
 
 -- Strings.
 local sq_str = S('r')^-1 * lexer.range("'", true)
@@ -48,20 +50,25 @@ lex:add_fold_point(lexer.OPERATOR, '[', ']')
 lex:add_fold_point(lexer.COMMENT, '/*', '*/')
 
 lex:set_word_list(lexer.KEYWORD, {
-	'assert', 'break', 'case', 'catch', 'class', 'const', 'continue', 'default', 'do', 'else', 'enum',
-	'extends', 'false', 'final', 'finally', 'for', 'if', 'in', 'is', 'new', 'rethrow', 'return',
-	'super', 'switch', 'this', 'throw', 'true', 'try', 'var', 'while', 'with', 'import', 'await',
-	'async', 'required'
+	'abstract', 'as', 'assert', 'async', 'await', 'break', 'case', 'catch', 'class', 'continue',
+	'covariant', 'default', 'do', 'else', 'enum', 'extends', 'factory', 'finally', 'for', 'get', 'if',
+	'implements', 'in', 'interface', 'is', 'mixin', 'on', 'operator', 'rethrow', 'return', 'set',
+	'super', 'switch', 'sync', 'this', 'throw', 'try', 'with', 'while', 'yield', --
+	'base', 'extension', 'external', 'late', 'of', 'required', 'sealed', 'when'
 })
 
-lex:set_word_list(lexer.CONSTANT, {
-	'abstract', 'as', 'dynamic', 'export', 'external', 'factory', 'get', 'implements', 'import',
-	'library', 'operator', 'part', 'set', 'static', 'typedef'
+lex:set_word_list(lexer.PREPROCESSOR, {
+	'deferred', 'export', 'hide', 'import', 'library', 'part'
+})
+
+lex:set_word_list(lexer.CONSTANT_BUILTIN, {
+	'false', 'true', 'null'
 })
 
 lex:set_word_list(lexer.TYPE, {
-	'int', 'double', 'String', 'bool', 'Function', 'List', 'Set', 'Map', 'null', 'Future', 'Stream',
-	'Iterable', 'dynamic', 'Object', 'Null', 'void'
+	'const', 'dynamic', 'final', 'Function', 'new', 'static', 'typedef', 'var', 'void', 'int',
+	'double', 'String', 'bool', 'List', 'Set', 'Map', 'Future', 'Stream', 'Iterable', 'Object',
+	'Null', 'type'
 })
 
 lexer.property['scintillua.comment'] = '//'
