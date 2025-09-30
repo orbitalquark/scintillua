@@ -2,6 +2,27 @@
 
 [Atom Feed](https://github.com/orbitalquark/scintillua/releases.atom)
 
+## 6.6 (30 Sep 2025)
+
+Download:
+
+- [Scintillua 6.6][]
+
+Bugfixes:
+
+- Fixed Pascal numeric literals.
+- Fixed folding of HTML/XML comments and XML processing instructions.
+- Fixed incorrectly highlighting '..' range operators between numbers.
+
+Changes:
+
+- Added Janet and todo.txt lexers.
+- Updated Python lexer to recognize t-strings.
+- Migrated ini and Dart lexers.
+- Updated org lexer word lists.
+
+[Scintillua 6.6]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_6.6/scintillua_6.6.zip
+
 ## 6.5 (25 May 2025)
 
 Download:
