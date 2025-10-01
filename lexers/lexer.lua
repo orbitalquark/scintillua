@@ -1658,9 +1658,23 @@ function M.names(path)
 	return lexers
 end
 
---- Map of file extensions, without the '.' prefix, to their associated lexer names.
+--- Map of file extensions/names to their associated lexer names.
+-- name equals filename not filepath
+-- extensions lack '.' prefix
 -- @usage lexer.detect_extensions.luadoc = 'lua'
 M.detect_extensions = {}
+
+--- List of ignored file (lua) patterns
+-- @usage lexer.ignored_file_patterns.luadoc = 'lua'
+M.ignored_file_patterns = {
+	"~+$" -- vim backupext
+}
+
+--- Map of file extensions to be ignored (without '.' prefix)
+-- @usage lexer.ignored_extensions.luadoc = 'lua'
+M.ignored_extensions = {
+	orig = true, bak = true, old = true, new = true
+}
 
 --- Map of first-line patterns to their associated lexer names.
 -- These are Lua string patterns, not LPeg patterns.
@@ -1847,9 +1861,28 @@ function M.detect(filename, line)
 
 	for patt, name in pairs(M.detect_patterns) do if line:find(patt) then return name end end
 	for patt, name in pairs(patterns) do if line:find(patt) then return name end end
-	local name, ext = filename:match('[^/\\]+$'), filename:match('[^.]*$')
-	return M.detect_extensions[name] or extensions[name] or M.detect_extensions[ext] or
-		extensions[ext]
+	local name, ext = filename:match("[^/\\]+$")
+	if name then
+		-- remove all suffixes
+		local unchanged
+		while #name > 0 and name ~= unchanged do
+			unchanged = name
+			for _, pattern in ipairs(M.ignored_file_patterns) do
+				name = name:gsub(pattern, "")
+			end
+			local n
+			n, ext = name:match"(.-)%.([^.]+)$"
+			if M.ignored_extensions[ext] then
+				name = n
+				ext = nil
+			end
+		end
+		return M.detect_extensions[name]
+			or extensions[name]
+			or M.detect_extensions[ext]
+			or extensions[ext]
+	end
+	return nil
 end
 
 -- The following are utility functions lexers will have access to.
