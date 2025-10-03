@@ -1676,20 +1676,106 @@ M.ignored_extensions = {
 	orig = true, bak = true, old = true, new = true
 }
 
+--- Map of hashbang utilities to associated lexer names.
+-- @usage lexer.detect_utilities.luadoc = 'lua'
+M.detect_utilities = {}
+
 --- Map of first-line patterns to their associated lexer names.
 -- These are Lua string patterns, not LPeg patterns.
 -- @usage lexer.detect_patterns['^#!.+/zsh'] = 'bash'
 M.detect_patterns = {}
 
---- Returns the name of the lexer often associated a particular filename and/or file content.
--- @param[opt] filename String filename to inspect. The default value is read from the
---   "lexer.scintillua.filename" property.
--- @param[optchain] line String first content line, such as a shebang line. The default value
---   is read from the "lexer.scintillua.line" property.
--- @return string lexer name to pass to `lexer.load()`, or `nil` if none was detected
-function M.detect(filename, line)
-	if not filename then filename = M.property and M.property['lexer.scintillua.filename'] or '' end
-	if not line then line = M.property and M.property['lexer.scintillua.line'] or '' end
+--[[ hashbang check
+	hashbangs only have PATH <SPACE> ARG
+	NOTE: #! have a line limit of 256 characters
+		if PATH matches /env, utility should be in args
+			POSIX does not have -S, but BSDs/Linux seem to
+			All do seem to have name=value
+			discard first arg if /-[^S]*S/; and all subsequent /=/
+			NOTE: this means you can't have a command with /^-|=/
+	NOTES: long-options (GNUisms) unsupported
+--]]
+local function GetHashBang(line)
+	local pathname, args = line:match"^#![ \t]*(/%S+)%s*(.-)%s*$"
+	local interpreter = pathname and pathname:match"[^/]+$"
+	if interpreter=="env" then -- get interpreter from args
+		local a = args:match"^%-[^S-]*S%s*(.+)" -- #!env -Ssh or -S sh are valid
+		if a then
+			args = a
+				:gsub("%-[Cu] %S+%s+", "")
+				:gsub("[^%s=]+=[^%s=]+","")
+		end
+		interpreter = args:match"%S+"
+	end
+	return interpreter
+end
+
+function M.detect_data(line)
+	if line==nil or line=="" then return end
+	local utility = GetHashBang(line)
+	if utility then
+		local utilities = {
+			awk = 'awk', mawk = 'awk', nawk = 'awk', gawk = 'awk', goawk = 'awk',
+			runawk = 'awk',
+
+			sh = 'bash', bash = 'bash', ash = 'bash', dash = 'bash',
+			ksh = 'bash', mksh = 'bash',
+			csh = 'bash', tcsh = 'bash',
+			zsh = 'bash',
+
+			make = 'make',
+
+			python = 'python', python2 = 'python', python3 = 'python',
+
+			rc = 'rc', es = 'rc',
+
+			tclsh = 'tcl', jimsh = 'tcl',
+
+			lua = 'lua',
+
+			octave = 'matlab',
+			perl = 'perl',
+			php = 'php',
+			ruby = 'ruby',
+		}
+		local lex = M.detect_utilities[utility] or utilities[utility]
+		if lex then return lex end
+	end
+	for patt, lex in pairs(M.detect_patterns) do
+		if line:find(patt) then return lex end
+	end
+	for patt, lex in pairs{
+		['^%s*class%s+%S+%s*<%s*ApplicationController'] = 'rails',
+		['^%s*class%s+%S+%s*<%s*ActionController::Base'] = 'rails',
+		['^%s*class%s+%S+%s*<%s*ActiveRecord::Base'] = 'rails',
+		['^%s*class%s+%S+%s*<%s*ActiveRecord::Migration'] = 'rails',
+		['^%s*<%?xml%s'] = 'xml',
+		['^#cloud%-config'] = 'yaml'
+	} do
+		if line:find(patt) then return lex end
+	end
+end
+
+function M.detect_path(filepath)
+	if filepath=="" or filepath==nil then return end
+	local name, ext = filepath:match("[^/\\]+$")
+	if name then
+		-- remove all suffixes
+		local unchanged
+		while #name > 0 and name ~= unchanged do
+			unchanged = name
+			for _, pattern in ipairs(M.ignored_file_patterns) do
+				name = name:gsub(pattern, "")
+			end
+			local n
+			n, ext = name:match"(.-)%.([^.]+)$"
+			if M.ignored_extensions[ext] then
+				name = n
+				ext = nil
+			end
+		end
+	end
+	if name=="" or name==nil then return end
 
 	-- Locally scoped in order to avoid persistence in memory.
 	local extensions = {
@@ -1848,41 +1934,31 @@ function M.detect(filename, line)
 		yaml = 'yaml', yml = 'yaml', --
 		zig = 'zig'
 	}
-	local patterns = {
-		['^#!.+[/ ][gm]?awk'] = 'awk', ['^#!.+[/ ]lua'] = 'lua', ['^#!.+[/ ]octave'] = 'matlab',
-		['^#!.+[/ ]perl'] = 'perl', ['^#!.+[/ ]php'] = 'php', ['^#!.+[/ ]python'] = 'python',
-		['^#!.+[/ ]ruby'] = 'ruby', ['^#!.+[/ ]bash'] = 'bash', ['^#!.+/m?ksh'] = 'bash',
-		['^#!.+/sh'] = 'bash', ['^%s*class%s+%S+%s*<%s*ApplicationController'] = 'rails',
-		['^%s*class%s+%S+%s*<%s*ActionController::Base'] = 'rails',
-		['^%s*class%s+%S+%s*<%s*ActiveRecord::Base'] = 'rails',
-		['^%s*class%s+%S+%s*<%s*ActiveRecord::Migration'] = 'rails', ['^%s*<%?xml%s'] = 'xml',
-		['^#cloud%-config'] = 'yaml'
-	}
 
-	for patt, name in pairs(M.detect_patterns) do if line:find(patt) then return name end end
-	for patt, name in pairs(patterns) do if line:find(patt) then return name end end
-	local name, ext = filename:match("[^/\\]+$")
-	if name then
-		-- remove all suffixes
-		local unchanged
-		while #name > 0 and name ~= unchanged do
-			unchanged = name
-			for _, pattern in ipairs(M.ignored_file_patterns) do
-				name = name:gsub(pattern, "")
-			end
-			local n
-			n, ext = name:match"(.-)%.([^.]+)$"
-			if M.ignored_extensions[ext] then
-				name = n
-				ext = nil
-			end
-		end
-		return M.detect_extensions[name]
-			or extensions[name]
-			or M.detect_extensions[ext]
-			or extensions[ext]
+	local lower = ext and ext:lower()
+	return M.detect_extensions[name]
+		or extensions[name]
+		or M.detect_extensions[ext]
+		or extensions[ext]
+		or M.detect_extensions[lower]
+		or extensions[lower]
+end
+
+--- Returns the name of the lexer often associated a particular filename and/or file content.
+-- @param[opt] filename String filename to inspect. The default value is read from the
+--   "lexer.scintillua.filename" property.
+-- @param[optchain] line String first content line, such as a shebang line. The default value
+--   is read from the "lexer.scintillua.line" property.
+-- @return string lexer name to pass to `lexer.load()`, or `nil` if none was detected
+function M.detect(filename, line)
+	line = line or M.property and M.property['lexer.scintillua.line']
+	if line then
+		local lexer_name = M.detect_data(line)
+		if lexer_name then return lexer_name end
 	end
-	return nil
+
+	filename = filename or M.property and M.property['lexer.scintillua.filename']
+	return filename and M.detect_path(filename)
 end
 
 -- The following are utility functions lexers will have access to.
