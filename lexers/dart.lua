@@ -23,6 +23,12 @@ local dq_str = S('r')^-1 * lexer.range('"', true)
 local tq_str = S('r')^-1 * (lexer.range("'''") + lexer.range('"""'))
 lex:add_rule('string', lex:tag(lexer.STRING, tq_str + sq_str + dq_str))
 
+-- Capitalized identifiers (likely classes or constructors).
+local upper = lpeg.R('AZ')
+local alnum = lpeg.R('AZ', 'az', '09') + P('_')
+local capitalized_word = (lexer.word_boundary or P(true)) * upper * alnum^0
+lex:add_rule('constructor', lex:tag(lexer.TYPE, capitalized_word))
+
 -- Functions.
 lex:add_rule('function', lex:tag(lexer.FUNCTION, lexer.word) * #(lexer.space^0 * '('))
 
