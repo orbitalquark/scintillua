@@ -60,7 +60,7 @@ lex:set_word_list(lexer.KEYWORD, {
 	'implements', 'in', 'interface', 'is', 'mixin', 'on', 'operator', 'rethrow', 'return', 'set',
 	'super', 'switch', 'sync', 'this', 'throw', 'try', 'with', 'while', 'yield', --
 	'base', 'extension', 'external', 'late', 'of', 'required', 'sealed', 'when', --
-	'typedef', 'void', 'var'
+	'typedef', 'void', 'var', 'const', 'final', 'new', 'static'
 })
 
 lex:set_word_list(lexer.PREPROCESSOR, {
@@ -72,9 +72,7 @@ lex:set_word_list(lexer.CONSTANT_BUILTIN, {
 })
 
 lex:set_word_list(lexer.TYPE, {
-	'const', 'dynamic', 'final', 'Function', 'new', 'static', 'int',
-	'double', 'String', 'bool', 'List', 'Set', 'Map', 'Future', 'Stream', 'Iterable', 'Object',
-	'Null', 'type'
+    'dynamic', 'int', 'double', 'bool', 'type'
 })
 
 lexer.property['scintillua.comment'] = '//'
