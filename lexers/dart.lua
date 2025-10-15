@@ -12,8 +12,13 @@ local lex = lexer.new(...)
 lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 -- Built-ins.
 lex:add_rule('constant', lex:tag(lexer.CONSTANT_BUILTIN, lex:word_match(lexer.CONSTANT_BUILTIN)))
--- Types.
-lex:add_rule('type', lex:tag(lexer.TYPE, lex:word_match(lexer.TYPE)))
+
+-- Types (also matches capitalised words)
+local upper = lpeg.R('AZ')
+local alnum = lpeg.R('AZ', 'az', '09') + P('_')
+local capitalized_word = upper * alnum^0
+lex:add_rule('type', lex:tag(lexer.TYPE, lex:word_match(lexer.TYPE) + capitalized_word))
+
 -- Directives
 lex:add_rule('directive', lex:tag(lexer.PREPROCESSOR, lex:word_match(lexer.PREPROCESSOR)))
 
@@ -22,12 +27,6 @@ local sq_str = S('r')^-1 * lexer.range("'", true)
 local dq_str = S('r')^-1 * lexer.range('"', true)
 local tq_str = S('r')^-1 * (lexer.range("'''") + lexer.range('"""'))
 lex:add_rule('string', lex:tag(lexer.STRING, tq_str + sq_str + dq_str))
-
--- Capitalized identifiers (likely classes or constructors).
-local upper = lpeg.R('AZ')
-local alnum = lpeg.R('AZ', 'az', '09') + P('_')
-local capitalized_word = (lexer.word_boundary or P(true)) * upper * alnum^0
-lex:add_rule('constructor', lex:tag(lexer.TYPE, capitalized_word))
 
 -- Functions.
 lex:add_rule('function', lex:tag(lexer.FUNCTION, lexer.word) * #(lexer.space^0 * '('))
@@ -60,7 +59,8 @@ lex:set_word_list(lexer.KEYWORD, {
 	'covariant', 'default', 'do', 'else', 'enum', 'extends', 'factory', 'finally', 'for', 'get', 'if',
 	'implements', 'in', 'interface', 'is', 'mixin', 'on', 'operator', 'rethrow', 'return', 'set',
 	'super', 'switch', 'sync', 'this', 'throw', 'try', 'with', 'while', 'yield', --
-	'base', 'extension', 'external', 'late', 'of', 'required', 'sealed', 'when'
+	'base', 'extension', 'external', 'late', 'of', 'required', 'sealed', 'when', --
+	'typedef', 'void', 'var'
 })
 
 lex:set_word_list(lexer.PREPROCESSOR, {
@@ -72,7 +72,7 @@ lex:set_word_list(lexer.CONSTANT_BUILTIN, {
 })
 
 lex:set_word_list(lexer.TYPE, {
-	'const', 'dynamic', 'final', 'Function', 'new', 'static', 'typedef', 'var', 'void', 'int',
+	'const', 'dynamic', 'final', 'Function', 'new', 'static', 'int',
 	'double', 'String', 'bool', 'List', 'Set', 'Map', 'Future', 'Stream', 'Iterable', 'Object',
 	'Null', 'type'
 })
