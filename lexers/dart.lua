@@ -4,7 +4,7 @@
 -- Migrated by Jamie Drinkell
 
 local lexer = lexer
-local P, S = lpeg.P, lpeg.S
+local P, S, R = lpeg.P, lpeg.S, lpeg.R
 
 local lex = lexer.new(...)
 
@@ -14,8 +14,9 @@ lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 lex:add_rule('constant', lex:tag(lexer.CONSTANT_BUILTIN, lex:word_match(lexer.CONSTANT_BUILTIN)))
 
 -- Types (also matches capitalised words)
-local capitalized_word = lpeg.R('AZ') * (lpeg.R('AZ', 'az', '09') + P('_'))^0
-lex:add_rule('type', lex:tag(lexer.TYPE, lex:word_match(lexer.TYPE) + capitalized_word))
+local capitalized_word = R('AZ') * (R('AZ', 'az', '09') + P('_'))^0
+local underscore_then_caps =  P('_') * capitalized_word
+lex:add_rule('type', lex:tag(lexer.TYPE, lex:word_match(lexer.TYPE) + capitalized_word + underscore_then_caps))
 
 -- Directives
 lex:add_rule('directive', lex:tag(lexer.PREPROCESSOR, lex:word_match(lexer.PREPROCESSOR)))
