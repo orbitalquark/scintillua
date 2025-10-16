@@ -14,9 +14,7 @@ lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 lex:add_rule('constant', lex:tag(lexer.CONSTANT_BUILTIN, lex:word_match(lexer.CONSTANT_BUILTIN)))
 
 -- Types (also matches capitalised words)
-local upper = lpeg.R('AZ')
-local alnum = lpeg.R('AZ', 'az', '09') + P('_')
-local capitalized_word = upper * alnum^0
+local capitalized_word = lpeg.R('AZ') * (lpeg.R('AZ', 'az', '09') + P('_'))^0
 lex:add_rule('type', lex:tag(lexer.TYPE, lex:word_match(lexer.TYPE) + capitalized_word))
 
 -- Directives
