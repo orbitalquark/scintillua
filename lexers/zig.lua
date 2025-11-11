@@ -14,7 +14,7 @@ lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 lex:add_rule('type', lex:tag(lexer.TYPE, lex:word_match(lexer.TYPE)))
 
 -- Constants.
-lex:add_rule('constant', lex:tag(lexer.CONSTANT, lex:word_match(lexer.CONSTANT)))
+lex:add_rule('constant', lex:tag(lexer.CONSTANT_BUILTIN, lex:word_match(lexer.CONSTANT_BUILTIN)))
 
 -- Built-in functions.
 lex:add_rule('function',
@@ -25,10 +25,10 @@ lex:add_rule('function_call',
 	lex:tag(lexer.FUNCTION, lexer.word * #(lexer.space^0 * '(')))
 
 -- Struct methods (word followed by dot and another word).
-lex:add_rule('method', lex:tag(lexer.FUNCTION, lexer.word * '.' * lexer.word))
+lex:add_rule('method', lex:tag(lexer.FUNCTION_METHOD, lexer.word * '.' * lexer.word))
 
 -- Strings.
-local raw_str = P('\\\\') * lexer.range('\n', false, false) -- Multi-line strings
+local raw_str = lexer.to_eol('\\\\') -- Line strings
 local sq_str = lexer.range("'", true) -- Character/Byte literal
 local dq_str = lexer.range('"', true) -- String/Byte array literal
 lex:add_rule('string', lex:tag(lexer.STRING, raw_str + sq_str + dq_str))
@@ -42,15 +42,10 @@ local comment = lexer.to_eol('//', true)     -- Single-line comments
 lex:add_rule('comment', lex:tag(lexer.COMMENT, doc_comment + comment))
 
 -- Numbers.
-local binary = P('0b') * S('01')^1
-local octal = P('0o') * S('01234567')^1  
-local hex = P('0x') * S('0123456789abcdefABCDEF')^1
-local decimal = lexer.number
-lex:add_rule('number', lex:tag(lexer.NUMBER, binary + octal + hex + decimal))
+lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number_('_')))
 
 -- Operators.
-lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('+-/*%<>!=^&|?~:;,.()[]{}') +
-	P('**') + P('<<') + P('>>') + P('==') + P('!=') + P('<=') + P('>=')))
+lex:add_rule('operator', token(lexer.OPERATOR, '..' + S('+-/*%<>!=^&|?~:;,.()[]{}')))
 
 -- Word lists
 lex:set_word_list(lexer.KEYWORD, {
@@ -107,7 +102,7 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
 })
 
 -- Special values.
-lex:set_word_list(lexer.CONSTANT, {
+lex:set_word_list(lexer.CONSTANT_BUILTIN, {
 	'false', 'true', 'null', 'undefined'
 })
 
