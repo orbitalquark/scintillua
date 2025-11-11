@@ -11,12 +11,12 @@ local lex = lexer.new(...)
 lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.range('<!--', '-->')))
 
 -- HTML-like tags
+local tag_start = lex:tag(lexer.TAG, '<' * P('/')^-1 * lexer.alnum^1 * lexer.space^0)
+local tag_end = lex:tag(lexer.TAG, P('/')^-1 * '>')
 local unquoted_attr = (lexer.any - (S('"' .. "'" .. '<>=') + lexer.space))^1
-local tag_name = lexer.alpha^1
 local tag_attr = lex:tag(lexer.ATTRIBUTE, lexer.alpha^1 * lexer.space^0 *
 	('=' * lexer.space^0 * (lexer.range('"') + unquoted_attr))^-1 * lexer.space^0)
-lex:add_rule('tag', lex:tag(lexer.TAG, '<' * P('/')^-1 * tag_name *
-	(lexer.space^1 * tag_attr)^0 * lexer.space^0 * P('/')^-1 * '>'))
+lex:add_rule('tag', tag_start * tag_attr^0 * tag_end)
 
 -- Internal Links
 lex:add_rule('internal_link', lex:tag(lexer.LINK, lexer.range('[[', ']]')))
