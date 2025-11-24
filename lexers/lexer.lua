@@ -1739,6 +1739,7 @@ function M.detect(filename, line)
 		htm = 'html', html = 'html', shtm = 'html', shtml = 'html', xhtml = 'html', vue = 'html', --
 		icn = 'icon', --
 		idl = 'idl', odl = 'idl', --
+		idr = 'idris2', --
 		ni = 'inform', --
 		cfg = 'ini', cnf = 'ini', inf = 'ini', ini = 'ini', reg = 'ini', --
 		io = 'io_lang', --
