@@ -1,4 +1,4 @@
-// Copyright 2006-2025 Mitchell. See LICENSE.
+// Copyright 2006-2026 Mitchell. See LICENSE.
 // Include file for directly (statically) compiling Scintillua into a Scintilla-based application.
 
 #ifndef SCINTILLUA_H

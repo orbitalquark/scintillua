@@ -1,4 +1,4 @@
-# Copyright 2025 Mitchell. See LICENSE.
+# Copyright 2025-2026 Mitchell. See LICENSE.
 
 cmake_minimum_required(VERSION 3.16)
 

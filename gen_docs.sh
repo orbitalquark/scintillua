@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright 2025 Mitchell. See LICENSE.
+# Copyright 2025-2026 Mitchell. See LICENSE.
 
 # Generates Scintillua's documentation.
 # Requires LDoc and Discount.
