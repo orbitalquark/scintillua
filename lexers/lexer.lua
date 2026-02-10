@@ -1667,6 +1667,19 @@ M.detect_extensions = {}
 -- @usage lexer.detect_patterns['^#!.+/zsh'] = 'bash'
 M.detect_patterns = {}
 
+--- List of lua patterns removed from filename to get real filename.
+-- @usage table.insert(lexer.detect_removed_patterns, '%.bak$')
+-- @usage lexer.detect_removed_patterns.bak = ''
+M.detect_removed_patterns = {
+	-- list is luapatterns matching filename --
+	'~+$',
+
+	-- dict is extensions --
+	-- Used by gsub, MUST BE ''
+	orig = '', bak = '', old = '', new = ''
+}
+
+
 --- Returns the name of the lexer often associated a particular filename and/or file content.
 -- @param[opt] filename String filename to inspect. The default value is read from the
 --   "lexer.scintillua.filename" property.
@@ -1847,6 +1860,17 @@ function M.detect(filename, line)
 
 	for patt, name in pairs(M.detect_patterns) do if line:find(patt) then return name end end
 	for patt, name in pairs(patterns) do if line:find(patt) then return name end end
+
+	-- Remove suffixes from filename
+	local unchanged
+	while #filename > 0 and filename ~= unchanged do
+		unchanged = filename
+		for _, pattern in ipairs(M.detect_removed_patterns) do
+			filename = filename:gsub(pattern, '')
+		end
+		filename = filename:gsub('%.([^.]+)$', M.detect_removed_patterns)
+	end
+
 	local name, ext = filename:match('[^/\\]+$'), filename:match('[^.]*$')
 	return M.detect_extensions[name] or extensions[name] or M.detect_extensions[ext] or
 		extensions[ext]
