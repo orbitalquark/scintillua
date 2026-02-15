@@ -1667,6 +1667,36 @@ M.detect_extensions = {}
 -- @usage lexer.detect_patterns['^#!.+/zsh'] = 'bash'
 M.detect_patterns = {}
 
+--- Map of #! utilites to their associated lexer names.
+-- @usage lexer.detect_utilities.bash = 'bash'
+M.detect_utilities = {}
+
+
+--[[ Hashbang Utility Extractor
+	#! is UTILITY <SPACE> ARG
+	If UTILITY matches /env, its in ARG
+
+	FreeBSD/GNU has -S flag which splits ARG by spaces and has other options
+		if -S is found, all options are discarded until it finds utility
+		options are identified as /^-|=/
+		NOTE: This means a utility cannot match this pattern
+--]]
+local function GetHashBang(line)
+	local hb, pathname, args = line:match"^#![ \t]*((/%S+)[\t ]*(.*))"
+	local utility = pathname and pathname:match"[^/]+$"
+	if utility=="env" then
+		local a = args:match"^%-[^S-]*S%s*(.+)" -- #!env -Ssh or -S sh
+		if a then
+			args = a
+				:gsub("%-[Cu] %S+", "")
+				:gsub("[^%s=]+=[^%s=]+","")
+		end
+		utility = args:match"%S+"
+	end
+	return hb, utility
+end
+
+
 --- Returns the name of the lexer often associated a particular filename and/or file content.
 -- @param[opt] filename String filename to inspect. The default value is read from the
 --   "lexer.scintillua.filename" property.
@@ -1834,16 +1864,52 @@ function M.detect(filename, line)
 		yaml = 'yaml', yml = 'yaml', --
 		zig = 'zig'
 	}
+	local utilities = {
+		awk = 'awk', mawk = 'awk', nawk = 'awk', gawk = 'awk', goawk = 'awk',
+
+		sh = 'bash', ash = 'bash', dash = 'bash',
+		bash = 'bash',
+		ksh = 'bash', mksh = 'bash',
+		csh = 'bash', tcsh = 'bash',
+		zsh = 'bash',
+
+		make = 'make',
+
+		python = 'python', python2 = 'python', python3 = 'python',
+
+		rc = 'rc', es = 'rc',
+
+		tclsh = 'tcl', jimsh = 'tcl',
+
+		lua = 'lua',
+
+		octave = 'matlab',
+		perl = 'perl',
+		php = 'php',
+		ruby = 'ruby',
+	}
 	local patterns = {
-		['^#!.+[/ ][gm]?awk'] = 'awk', ['^#!.+[/ ]lua'] = 'lua', ['^#!.+[/ ]octave'] = 'matlab',
-		['^#!.+[/ ]perl'] = 'perl', ['^#!.+[/ ]php'] = 'php', ['^#!.+[/ ]python'] = 'python',
-		['^#!.+[/ ]ruby'] = 'ruby', ['^#!.+[/ ]bash'] = 'bash', ['^#!.+/m?ksh'] = 'bash',
-		['^#!.+/sh'] = 'bash', ['^%s*class%s+%S+%s*<%s*ApplicationController'] = 'rails',
+		['^%s*class%s+%S+%s*<%s*ApplicationController'] = 'rails',
 		['^%s*class%s+%S+%s*<%s*ActionController::Base'] = 'rails',
 		['^%s*class%s+%S+%s*<%s*ActiveRecord::Base'] = 'rails',
-		['^%s*class%s+%S+%s*<%s*ActiveRecord::Migration'] = 'rails', ['^%s*<%?xml%s'] = 'xml',
-		['^#cloud%-config'] = 'yaml'
+		['^%s*class%s+%S+%s*<%s*ActiveRecord::Migration'] = 'rails',
+
+		['^%s*<%?xml%s'] = 'xml',
+		['^#cloud%-config'] = 'yaml',
 	}
+
+
+	local hashbang, utility = GetHashBang(line)
+	if hashbang then
+		if utility then
+			local m = utility:match'^%w+'
+			local R =
+				M.detect_utilities[utility] or utilities[utility]
+				or M.detect.utilities[m] or utilities[m] -- false positives
+			if R then return R end
+		end
+	end
+
 
 	for patt, name in pairs(M.detect_patterns) do if line:find(patt) then return name end end
 	for patt, name in pairs(patterns) do if line:find(patt) then return name end end
