@@ -1715,6 +1715,7 @@ function M.detect(filename, line)
 		elm = 'elm', --
 		erl = 'erlang', hrl = 'erlang', --
 		fs = 'fsharp', --
+	--	fs = "forth", -- DUPLICATE
 		factor = 'factor', --
 		fan = 'fantom', --
 		dsp = 'faust', --
@@ -1832,7 +1833,82 @@ function M.detect(filename, line)
 		xs = 'xs', xsin = 'xs', xsrc = 'xs', --
 		xtend = 'xtend', --
 		yaml = 'yaml', yml = 'yaml', --
-		zig = 'zig'
+		zig = 'zig',
+
+		-- extensions
+		["1p"] = "man",
+		["2p"] = "man",
+		["3p"] = "man",
+		["4p"] = "man",
+		["5p"] = "man",
+		["6p"] = "man",
+		["7p"] = "man",
+		["8p"] = "man",
+		["9p"] = "man",
+		ash = "bash",
+		cjs = "javascript",
+		conf = "ini",
+		container = "systemd",
+		ebuild = "bash",
+		es = "rc",
+		fth = "forth",
+		glif = "xml",
+		glsl = "glsl",
+		i = "c",
+		ily = "lilypond",
+		jsx = "javascript",
+		me = "man",
+		meson = "meson",
+		mjs = "javascript",
+		mk = "makefile",
+		mom = "man",
+		ms = "man",
+		plist = "xml",
+		pro = "prolog",
+		psm1 = "powershell",
+		pyi = "python",
+		pyx = "python",
+		rc = "rc",
+		rej = "diff",
+		rkt = "scheme",
+		sld = "scheme",
+		sls = "scheme",
+		ss = "scheme",
+		sv = "verilog",
+		tmac = "man",
+		tsx = "typescript",
+		txt = "text",
+		wiki = "mediawiki",
+		xhtm = "html",
+		yash = "bash",
+
+		-- filenames
+		[".bash_logout"] = "bash",
+		[".bash_profile"] = "bash",
+		[".bashrc"] = "bash",
+		[".login"] = "bash",
+		[".mkshrc"] = "bash",
+		[".profile"] = "bash",
+		[".sh.profile"] = "bash",
+		[".shinit"] = "bash",
+		[".xprofile"] = "bash",
+		[".yash_profile"] = "bash",
+		[".yashrc"] = "bash",
+		APKBUILD = "bash",
+		COMMIT_EDITMSG = "diff",
+		Jenkinsfile = "groovy",
+		Vagrantfile = "ruby",
+		["bash.bash.logout"] = "bash",
+		["bash.bashrc"] = "bash",
+		["git%-rebase%-todo"] = "git-rebase",
+		group = "dsv",
+		gshadow = "dsv",
+		["meson.options"] = "meson",
+		["meson_options.txt"] = "meson",
+		mkshrc = "bash",
+		passwd = "dsv",
+		profile = "bash",
+		shadow = "dsv",
 	}
 	local patterns = {
 		['^#!.+[/ ][gm]?awk'] = 'awk', ['^#!.+[/ ]lua'] = 'lua', ['^#!.+[/ ]octave'] = 'matlab',
@@ -1842,7 +1918,9 @@ function M.detect(filename, line)
 		['^%s*class%s+%S+%s*<%s*ActionController::Base'] = 'rails',
 		['^%s*class%s+%S+%s*<%s*ActiveRecord::Base'] = 'rails',
 		['^%s*class%s+%S+%s*<%s*ActiveRecord::Migration'] = 'rails', ['^%s*<%?xml%s'] = 'xml',
-		['^#cloud%-config'] = 'yaml'
+		['^#cloud%-config'] = 'yaml',
+		["^execve%("] = 'strace',
+		["^#.* by RouterOS"] = 'routeros',
 	}
 
 	for patt, name in pairs(M.detect_patterns) do if line:find(patt) then return name end end
