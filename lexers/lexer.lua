@@ -1717,7 +1717,7 @@ function M.detect(filename, line)
 		d = 'd', di = 'd', --
 		dart = 'dart', --
 		desktop = 'desktop', --
-		diff = 'diff', patch = 'diff', --
+		diff = 'diff', patch = 'diff', rej = 'diff', --
 		Dockerfile = 'dockerfile', --
 		dot = 'dot', --
 		e = 'eiffel', eif = 'eiffel', --
@@ -1754,7 +1754,7 @@ function M.detect(filename, line)
 		io = 'io_lang', --
 		janet = 'janet', --
 		bsh = 'java', java = 'java', --
-		js = 'javascript', jsfl = 'javascript', --
+		cjs = 'javascript', js = 'javascript', jsfl = 'javascript', mjs = 'javascript', --
 		jq = 'jq', --
 		json = 'json', --
 		jsp = 'jsp', --
@@ -1768,7 +1768,7 @@ function M.detect(filename, line)
 		lgt = 'logtalk', --
 		lua = 'lua', --
 		GNUmakefile = 'makefile', iface = 'makefile', mak = 'makefile', makefile = 'makefile',
-		Makefile = 'makefile', --
+		Makefile = 'makefile', mk = 'makefile', --
 		md = 'markdown', markdown = 'markdown', --
 		['meson.build'] = 'meson', --
 		moon = 'moonscript', --
@@ -1790,12 +1790,12 @@ function M.detect(filename, line)
 		PKGBUILD = 'pkgbuild', --
 		pony = 'pony', --
 		eps = 'ps', ps = 'ps', --
-		ps1 = 'powershell', --
+		ps1 = 'powershell', psm1 = 'powershell', --
 		prolog = 'prolog', --
 		props = 'props', properties = 'props', --
 		proto = 'protobuf', --
 		pure = 'pure', --
-		sc = 'python', py = 'python', pyw = 'python', --
+		sc = 'python', py = 'python', pyi = 'python', pyw = 'python', --
 		R = 'r', Rout = 'r', Rhistory = 'r', Rt = 'r', ['Rout.save'] = 'r', ['Rout.fail'] = 'r', --
 		re = 'reason', --
 		r = 'rebol', reb = 'rebol', --
