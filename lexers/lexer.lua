@@ -1864,10 +1864,8 @@ function M.detect(filename, line)
 
 	-- Strip ignored filename parts and extensions, and try again.
 	-- Do not do this first for the sake of performance; this should be a fallback option.
-	for _, patt in ipairs(M.ignore_patterns) do
-		filename = filename:gsub(patt, '')
-		ext = filename:match('[^.]*$')
-	end
+	for _, patt in ipairs(M.ignore_patterns) do filename = filename:gsub(patt, '') end
+	ext = filename:match('[^.]*$')
 	while M.ignore_extensions[ext] do filename, ext = filename:match('^(.-%.?([^.]*))%.[^.]+$') end
 	return M.detect_extensions[ext] or extensions[ext]
 end
