@@ -1752,6 +1752,13 @@ function test_detect()
 
 	assert(lexer.detect('CMakeLists.txt') == 'cmake') -- not text
 
+	assert(lexer.detect('foo.lua.orig') == 'lua')
+	assert(lexer.detect('foo.lua~') == 'lua')
+	assert(lexer.detect('foo.lua.orig~') == 'lua')
+	assert(lexer.detect('foo.lua.10~') == nil)
+	table.insert(lexer.ignore_patterns, '%.%d+$')
+	assert(lexer.detect('foo.lua.10~') == 'lua')
+
 	-- Simulate SCI_PRIVATELEXERCALL.
 	assert(not lexer.detect()) -- should not error or anything
 	lexer.property['lexer.scintillua.filename'] = 'foo.lua'

@@ -1662,10 +1662,20 @@ end
 -- @usage lexer.detect_extensions.luadoc = 'lua'
 M.detect_extensions = {}
 
+--- Map of file extensions (without the '.' prefix) to strip from filenames during detection to
+-- `true`.
+-- @usage lexer.ignore_extensions.backup = true
+M.ignore_extensions = {orig = true, back = true, old = true, new = true}
+
 --- Map of first-line patterns to their associated lexer names.
 -- These are Lua string patterns, not LPeg patterns.
 -- @usage lexer.detect_patterns['^#!.+/zsh'] = 'bash'
 M.detect_patterns = {}
+
+--- List of filename parts to strip from filenames during detection.
+-- Filename parts are expressed as Lua patterns.
+-- @usage table.insert(lexer.ignore_patterns, '%.%d+$') -- ignore digit extensions
+M.ignore_patterns = {'~+$'}
 
 --- Returns the name of the lexer often associated a particular filename and/or file content.
 -- @param[opt] filename String filename to inspect. The default value is read from the
@@ -1848,8 +1858,18 @@ function M.detect(filename, line)
 	for patt, name in pairs(M.detect_patterns) do if line:find(patt) then return name end end
 	for patt, name in pairs(patterns) do if line:find(patt) then return name end end
 	local name, ext = filename:match('[^/\\]+$'), filename:match('[^.]*$')
-	return M.detect_extensions[name] or extensions[name] or M.detect_extensions[ext] or
+	local detected = M.detect_extensions[name] or extensions[name] or M.detect_extensions[ext] or
 		extensions[ext]
+	if detected then return detected end
+
+	-- Strip ignored filename parts and extensions, and try again.
+	-- Do not do this first for the sake of performance; this should be a fallback option.
+	for _, patt in ipairs(M.ignore_patterns) do
+		filename = filename:gsub(patt, '')
+		ext = filename:match('[^.]*$')
+	end
+	while M.ignore_extensions[ext] do filename, ext = filename:match('^(.-%.?([^.]*))%.[^.]+$') end
+	return M.detect_extensions[ext] or extensions[ext]
 end
 
 -- The following are utility functions lexers will have access to.
