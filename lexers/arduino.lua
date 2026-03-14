@@ -16,12 +16,15 @@ local method = (B('.') + B('->')) * lex:tag(lexer.FUNCTION_METHOD, lexer.word)
 lex:modify_rule('function',
 	((stl_func + builtin_func) * non_member + method + func) * #(lexer.space^0 * '('))
 
-lex:set_word_list(lexer.TYPE, 'word String', true)
+lex:add_rule('peripheral',
+	lex:tag(lexer.VARIABLE_BUILTIN, lex:word_match(lexer.VARIABLE_BUILTIN)))
 
-lex:set_word_list(lexer.CONSTANT_BUILTIN,
-	'HIGH LOW INPUT INPUT_PULLUP OUTPUT LED_BUILTIN', true)
+-- Identifiers.
+lex:modify_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
 
 lex:set_word_list(lexer.KEYWORD, 'PROGMEM', true)
+
+lex:set_word_list(lexer.TYPE, 'word String', true)
 
 lex:set_word_list(lexer.FUNCTION_BUILTIN, {
 	-- I/O
@@ -53,6 +56,15 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
 	'setTimeout', 'getTimeout', 'flush',
 	'begin', 'end' -- Not in spec but common
 	}, true)
+
+
+lex:set_word_list(lexer.CONSTANT_BUILTIN,
+	'HIGH LOW INPUT INPUT_PULLUP OUTPUT LED_BUILTIN', true)
+
+lex:set_word_list(lexer.VARIABLE_BUILTIN, {
+	'EEPROM', 'SPI', 'Wire', 'Serial', 'Mouse', 'Keyboard',	'WiFi', 'BLE',
+	'LiquidCrystal', 'lcd'
+})
 
 lexer.property['scintillua.comment'] = '//'
 
