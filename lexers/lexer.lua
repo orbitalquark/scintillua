@@ -1704,8 +1704,8 @@ function M.detect(filename, line)
 		bib = 'bibtex', --
 		boo = 'boo', --
 		cs = 'csharp', --
-		c = 'c', C = 'c', cc = 'cpp', cpp = 'cpp', cxx = 'cpp', ['c++'] = 'cpp', h = 'cpp', hh = 'cpp',
-		hpp = 'cpp', hxx = 'cpp', ['h++'] = 'cpp', --
+		c = 'c', C = 'c', cc = 'cpp', cpp = 'cpp', cxx = 'cpp', ['c++'] = 'cpp', h = 'cpp', H = 'cpp',
+		hh = 'cpp', hpp = 'cpp', hxx = 'cpp', ['h++'] = 'cpp', --
 		ck = 'chuck', --
 		clj = 'clojure', cljs = 'clojure', cljc = 'clojure', edn = 'clojure', --
 		['CMakeLists.txt'] = 'cmake', cmake = 'cmake', ['cmake.in'] = 'cmake', ctest = 'cmake',
