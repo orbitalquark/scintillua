@@ -19,9 +19,6 @@ lex:modify_rule('function',
 lex:add_rule('peripheral',
 	lex:tag(lexer.VARIABLE_BUILTIN, lex:word_match(lexer.VARIABLE_BUILTIN)))
 
--- Identifiers.
-lex:modify_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
-
 lex:set_word_list(lexer.KEYWORD, 'PROGMEM', true)
 
 lex:set_word_list(lexer.TYPE, 'word String', true)
