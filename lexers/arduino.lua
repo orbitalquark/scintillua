@@ -1,4 +1,4 @@
--- Arduino LPeg lexer.
+-- Arduino LPeg lexer. Mostly copied from C++ lexer (preamble below)
 -- Reference: https://docs.arduino.cc/language-reference/
 
 -- Copyright 2006-2026 Mitchell. See LICENSE.
