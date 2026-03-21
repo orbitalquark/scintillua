@@ -68,11 +68,13 @@ local lit_array = 'qw' * literal_delimited
 local lit_cmd = 'qx' * literal_delimited
 local string = lex:tag(lexer.STRING,
 	sq_str + dq_str + cmd_str + heredoc + lit_str + lit_array + lit_cmd)
-local regex_str = lexer.after_set('-<>+*!~\\=%&|^?:;([{', lexer.range('/', true) * S('imosx')^0)
+local regex_str_range = lexer.range('/', true) * S('cgimosx')^0
+local regex_str = (lexer.after_set('-<>+*!~\\=%&|^?:;([{', regex_str_range)) +
+	(regex_str_range * #(lexer.space^0 * ','))
 local lit_regex = 'qr' * literal_delimited * S('imosx')^0
 local lit_match = 'm' * literal_delimited * S('cgimosx')^0
-local lit_sub = 's' * literal_delimited2 * S('ecgimosx')^0
-local lit_tr = (P('tr') + 'y') * literal_delimited2 * S('cds')^0
+local lit_sub = 's' * literal_delimited2 * S('ecgimosxr')^0
+local lit_tr = (P('tr') + 'y') * literal_delimited2 * S('cdsr')^0
 local regex = lex:tag(lexer.REGEX, regex_str + lit_regex + lit_match + lit_sub + lit_tr)
 lex:add_rule('string', string + regex)
 
@@ -108,7 +110,7 @@ lex:add_rule('variable_builtin',
 local special_var = '$' *
 	('^' * S('ADEFHILMOPSTWX')^-1 + S('\\"[]\'&`+*.,;=%~?@<>(|/!-') + ':' * (lexer.any - ':') +
 		(P('$') * -lexer.word) + lexer.digit^1)
-local plain_var = ('$#' + S('$@%')) * P('$')^0 * lexer.word + '$#'
+local plain_var = ('$#' + S('$@%&*')) * P('$')^0 * lexer.word + '$#'
 lex:add_rule('variable', lex:tag(lexer.VARIABLE, special_var + plain_var))
 
 -- Operators.
@@ -120,10 +122,11 @@ lex:add_fold_point(lexer.OPERATOR, '{', '}')
 
 -- Word lists.
 lex:set_word_list(lexer.KEYWORD, {
-	'STDIN', 'STDOUT', 'STDERR', 'BEGIN', 'END', 'CHECK', 'INIT', --
+	'STDIN', 'STDOUT', 'STDERR', 'BEGIN', 'END', 'CHECK', 'INIT', 'UNITCHECK',
+	'CLONE', 'CLONE_SKIP', 'DESTROY', --
 	'require', 'use', --
 	'break', 'continue', 'do', 'each', 'else', 'elsif', 'foreach', 'for', 'if', 'last', 'local', 'my',
-	'next', 'our', 'package', 'return', 'sub', 'unless', 'until', 'while', '__FILE__', '__LINE__',
+	'next', 'our', 'package', 'return', 'state', 'sub', 'unless', 'until', 'while', '__FILE__', '__LINE__',
 	'__PACKAGE__', --
 	'and', 'or', 'not', 'eq', 'ne', 'lt', 'gt', 'le', 'ge'
 })
@@ -132,8 +135,8 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
 	'abs', 'accept', 'alarm', 'atan2', 'bind', 'binmode', 'bless', 'caller', 'chdir', 'chmod',
 	'chomp', 'chop', 'chown', 'chr', 'chroot', 'closedir', 'close', 'connect', 'cos', 'crypt',
 	'dbmclose', 'dbmopen', 'defined', 'delete', 'die', 'dump', 'each', 'endgrent', 'endhostent',
-	'endnetent', 'endprotoent', 'endpwent', 'endservent', 'eof', 'eval', 'exec', 'exists', 'exit',
-	'exp', 'fcntl', 'fileno', 'flock', 'fork', 'format', 'formline', 'getc', 'getgrent', 'getgrgid',
+	'endnetent', 'endprotoent', 'endpwent', 'endservent', 'eof', 'eval', 'evalbytes', 'exec', 'exists', 'exit',
+	'exp', 'fc', 'fcntl', 'fileno', 'flock', 'fork', 'format', 'formline', 'getc', 'getgrent', 'getgrgid',
 	'getgrnam', 'gethostbyaddr', 'gethostbyname', 'gethostent', 'getlogin', 'getnetbyaddr',
 	'getnetbyname', 'getnetent', 'getpeername', 'getpgrp', 'getppid', 'getpriority', 'getprotobyname',
 	'getprotobynumber', 'getprotoent', 'getpwent', 'getpwnam', 'getpwuid', 'getservbyname',
@@ -142,7 +145,7 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
 	'link', 'listen', 'localtime', 'log', 'lstat', 'map', 'mkdir', 'msgctl', 'msgget', 'msgrcv',
 	'msgsnd', 'new', 'oct', 'opendir', 'open', 'ord', 'pack', 'pipe', 'pop', 'pos', 'printf', 'print',
 	'prototype', 'push', 'quotemeta', 'rand', 'readdir', 'read', 'readlink', 'recv', 'redo', 'ref',
-	'rename', 'reset', 'reverse', 'rewinddir', 'rindex', 'rmdir', 'scalar', 'seekdir', 'seek',
+	'rename', 'reset', 'reverse', 'rewinddir', 'rindex', 'rmdir', 'say', 'scalar', 'seekdir', 'seek',
 	'select', 'semctl', 'semget', 'semop', 'send', 'setgrent', 'sethostent', 'setnetent', 'setpgrp',
 	'setpriority', 'setprotoent', 'setpwent', 'setservent', 'setsockopt', 'shift', 'shmctl', 'shmget',
 	'shmread', 'shmwrite', 'shutdown', 'sin', 'sleep', 'socket', 'socketpair', 'sort', 'splice',
