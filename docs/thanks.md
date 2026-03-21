@@ -63,6 +63,7 @@ and better over the years.
 - Roberto Ierusalimschy
 - S\. Gilles
 - Samuel Marquis
+- Samuel Young
 - Simeon Maryasin
 - Snoopy
 - Stéphane Rivière
