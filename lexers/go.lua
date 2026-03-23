@@ -62,8 +62,8 @@ lex:set_word_list(lexer.TYPE, {
 })
 
 lex:set_word_list(lexer.FUNCTION_BUILTIN, {
-	'append', 'cap', 'close', 'complex', 'copy', 'delete', 'imag', 'len', 'make', 'new', 'panic',
-	'print', 'println', 'real', 'recover'
+	'append', 'cap', 'clear', 'close', 'complex', 'copy', 'delete', 'imag', 'len', 'make', 'max',
+	'min', 'new', 'panic', 'print', 'println', 'real', 'recover'
 })
 
 lexer.property['scintillua.comment'] = '//'
