@@ -74,7 +74,7 @@ lex:set_word_list(lexer.CONSTANT_BUILTIN,
 lex:set_word_list(lexer.VARIABLE_BUILTIN, {
 	'EEPROM', 'SPI', 'Wire', 'Serial', 'Mouse', 'Keyboard',	'WiFi', 'BLE',
 	'LiquidCrystal', 'lcd'
-}, true)
+})
 
 lexer.property['scintillua.comment'] = '//'
 
