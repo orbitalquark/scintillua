@@ -67,7 +67,6 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
 	'begin', 'end' -- Not in spec but common
 	}, true)
 
-
 lex:set_word_list(lexer.CONSTANT_BUILTIN,
 	'HIGH LOW INPUT INPUT_PULLUP OUTPUT LED_BUILTIN', true)
 
