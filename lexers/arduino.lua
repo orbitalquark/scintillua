@@ -5,7 +5,7 @@ local lexer = lexer
 local P, S, B = lpeg.P, lpeg.S, lpeg.B
 local lex = lexer.new(..., {inherit = lexer.load('c')})
 
--- Modify to allow builtins to be highlighted even as class members
+-- C++ member rule that also allows builtins to be highlighted
 local non_member = -(B('.') + B('->') + B('::'))
 local builtin_func = lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN))
 local func = lex:tag(lexer.FUNCTION, lexer.word)
@@ -45,7 +45,7 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
 	'noTone', 'pulseIn', 'pulseInLong', 'shiftIn', 'shiftOut', 'tone',
 	-- Time
 	'delay', 'delayMicroseconds', 'micros', 'millis',
-	-- Maths (most are covered by cmath, just adding the missing ones)
+	-- Maths
 	'abs', 'constrain', 'map', 'max', 'min', 'pow', 'sq', 'exp', 'bit',
 	-- Characters
 	'isAlpha', 'isAlphaNumeric', 'isAscii', 'isControl', 'isDigit', 'isGraph',
