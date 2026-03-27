@@ -10,6 +10,7 @@ used if [`fold.scintillua.by.indentation`][] is enabled. For SciTE, see *lexers/
 1. APDL`*`
 1. APL
 1. Applescript
+1. Arduino`*`
 1. ASM`*` (NASM)
 1. ASP`*`
 1. AutoHotkey

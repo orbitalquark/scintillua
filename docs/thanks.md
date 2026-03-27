@@ -26,6 +26,7 @@ and better over the years.
 - Hugo O. Rivera
 - ittegrat
 - Ivan Baidakou
+- Jamie Drinkell
 - Jason Lenz
 - Jason Schindler
 - Jeff Stone
