@@ -134,6 +134,7 @@ used if [`fold.scintillua.by.indentation`][] is enabled. For SciTE, see *lexers/
 1. SNOBOL4
 1. Spin
 1. SQL
+1. Swift`*`
 1. Systemd
 1. TaskPaper
 1. Tcl`*`

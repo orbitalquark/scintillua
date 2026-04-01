@@ -1817,6 +1817,7 @@ function M.detect(filename, line)
 		sno = 'snobol4', SNO = 'snobol4', --
 		spin = 'spin', --
 		ddl = 'sql', sql = 'sql', --
+		swift = 'swift', --
 		automount = 'systemd', device = 'systemd', mount = 'systemd', path = 'systemd',
 		scope = 'systemd', service = 'systemd', slice = 'systemd', socket = 'systemd', swap = 'systemd',
 		target = 'systemd', timer = 'systemd', --
