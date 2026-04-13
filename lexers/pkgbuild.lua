@@ -27,10 +27,10 @@ end)
 lex:add_rule('string', token(lexer.STRING, sq_str + dq_str + ex_str + heredoc))
 
 -- Numbers.
-lex:add_rule('number', token(lexer.NUMBER, lexer.number))
+lex:add_rule('number', token(lexer.NUMBER, lexer.number * -lexer.alpha))
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+lex:add_rule('keyword', token(lexer.KEYWORD, -lpeg.B('.') * word_match{
 	'patch', 'cd', 'make', 'patch', 'mkdir', 'cp', 'sed', 'install', 'rm', 'if', 'then', 'elif',
 	'else', 'fi', 'case', 'in', 'esac', 'while', 'for', 'do', 'done', 'continue', 'local', 'return',
 	'git', 'svn', 'co', 'clone', 'gconf-merge-schema', 'msg', 'echo', 'ln', 'tar', 'bsdtar',
