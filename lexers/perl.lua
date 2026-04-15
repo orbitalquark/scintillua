@@ -123,12 +123,12 @@ lex:add_fold_point(lexer.OPERATOR, '{', '}')
 -- Word lists.
 lex:set_word_list(lexer.KEYWORD, {
 	'STDIN', 'STDOUT', 'STDERR', 'BEGIN', 'END', 'CHECK', 'INIT', 'UNITCHECK', 'CLONE', 'CLONE_SKIP',
-	'DESTROY', --
+	'DESTROY', 'AUTOLOAD', --
 	'require', 'use', --
 	'break', 'continue', 'do', 'each', 'else', 'elsif', 'foreach', 'for', 'if', 'last', 'local', 'my',
 	'next', 'our', 'package', 'return', 'state', 'sub', 'unless', 'until', 'while', '__FILE__',
-	'__LINE__', '__PACKAGE__', --
-	'and', 'or', 'not', 'eq', 'ne', 'lt', 'gt', 'le', 'ge'
+	'__LINE__', '__PACKAGE__', '__SUB__', --
+	'and', 'or', 'not', 'eq', 'ne', 'lt', 'gt', 'le', 'ge', 'xor'
 })
 
 lex:set_word_list(lexer.FUNCTION_BUILTIN, {
@@ -142,17 +142,18 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
 	'getprotobyname', 'getprotobynumber', 'getprotoent', 'getpwent', 'getpwnam', 'getpwuid',
 	'getservbyname', 'getservbyport', 'getservent', 'getsockname', 'getsockopt', 'glob', 'gmtime',
 	'goto', 'grep', 'hex', 'import', 'index', 'int', 'ioctl', 'join', 'keys', 'kill', 'lcfirst', 'lc',
-	'length', 'link', 'listen', 'localtime', 'log', 'lstat', 'map', 'mkdir', 'msgctl', 'msgget',
-	'msgrcv', 'msgsnd', 'new', 'oct', 'opendir', 'open', 'ord', 'pack', 'pipe', 'pop', 'pos',
-	'printf', 'print', 'prototype', 'push', 'quotemeta', 'rand', 'readdir', 'read', 'readlink',
-	'recv', 'redo', 'ref', 'rename', 'reset', 'reverse', 'rewinddir', 'rindex', 'rmdir', 'say',
-	'scalar', 'seekdir', 'seek', 'select', 'semctl', 'semget', 'semop', 'send', 'setgrent',
-	'sethostent', 'setnetent', 'setpgrp', 'setpriority', 'setprotoent', 'setpwent', 'setservent',
-	'setsockopt', 'shift', 'shmctl', 'shmget', 'shmread', 'shmwrite', 'shutdown', 'sin', 'sleep',
-	'socket', 'socketpair', 'sort', 'splice', 'split', 'sprintf', 'sqrt', 'srand', 'stat', 'study',
-	'substr', 'symlink', 'syscall', 'sysread', 'sysseek', 'system', 'syswrite', 'telldir', 'tell',
-	'tied', 'tie', 'time', 'times', 'truncate', 'ucfirst', 'uc', 'umask', 'undef', 'unlink', 'unpack',
-	'unshift', 'untie', 'utime', 'values', 'vec', 'wait', 'waitpid', 'wantarray', 'warn', 'write'
+	'length', 'link', 'listen', 'localtime', 'lock', 'log', 'lstat', 'map', 'mkdir', 'msgctl',
+	'msgget', 'msgrcv', 'msgsnd', 'new', 'oct', 'opendir', 'open', 'ord', 'pack', 'pipe', 'pop',
+	'pos', 'printf', 'print', 'prototype', 'push', 'quotemeta', 'rand', 'readdir', 'read', 'readline',
+	'readlink', 'readpipe', 'recv', 'redo', 'ref', 'rename', 'reset', 'reverse', 'rewinddir',
+	'rindex', 'rmdir', 'say', 'scalar', 'seekdir', 'seek', 'select', 'semctl', 'semget', 'semop',
+	'send', 'setgrent', 'sethostent', 'setnetent', 'setpgrp', 'setpriority', 'setprotoent',
+	'setpwent', 'setservent', 'setsockopt', 'shift', 'shmctl', 'shmget', 'shmread', 'shmwrite',
+	'shutdown', 'sin', 'sleep', 'socket', 'socketpair', 'sort', 'splice', 'split', 'sprintf', 'sqrt',
+	'srand', 'stat', 'study', 'substr', 'symlink', 'syscall', 'sysopen', 'sysread', 'sysseek',
+	'system', 'syswrite', 'telldir', 'tell', 'tied', 'tie', 'time', 'times', 'truncate', 'ucfirst',
+	'uc', 'umask', 'undef', 'unlink', 'unpack', 'unshift', 'untie', 'utime', 'values', 'vec', 'wait',
+	'waitpid', 'wantarray', 'warn', 'write'
 })
 
 lex:set_word_list(lexer.CONSTANT_BUILTIN, {
