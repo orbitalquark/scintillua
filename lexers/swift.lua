@@ -30,7 +30,7 @@ local block_comment = lexer.range('/*', '*/')
 lex:add_rule('comment', lex:tag(lexer.COMMENT, line_comment + block_comment))
 
 -- Strings.
-local dq_str = P('#')^0 * lexer.range('"', true, false) * P('#')^0 -- TODO: balanced #
+local dq_str = P('#')^0 * lexer.range('"', true) * P('#')^0 -- TODO: balanced #
 local ml_str = lexer.range('"""')
 local string = lex:tag(lexer.STRING, ml_str + dq_str)
 local regex_str = lexer.after_set('+-*%^!=&|?:;,([{<>',
