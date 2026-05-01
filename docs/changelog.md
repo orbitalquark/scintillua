@@ -2,6 +2,35 @@
 
 [Atom Feed](https://github.com/orbitalquark/scintillua/releases.atom)
 
+## 6.7 (01 May 2026)
+
+Download:
+
+- [Scintillua 6.7][]
+
+Bugfixes:
+
+- Fixed PKGBUILD lexer to not tag keywords after '.' and numbers that are parts of words.
+
+Changes:
+
+- Updated RouterOS lexer keywords.
+- Updated PKGBUILD lexer keywords, functions, and constants.
+- Added Swift lexer.
+- Added Arduino lexer.
+- Updated Go lexer with new functions.
+- Various Perl lexer improvements.
+- Recognize more extensions for C++, diff, Javascript, Makefile, Powershell, and Python lexers.
+- Added [`lexer.ignore_extensions`][] and [`lexer.ignore_patterns`][] for ignoring extensions
+	and filename parts, respectively, in `lexer.detect()`.
+- Added more LaTeX math environment keywords.
+- Updated Lua lexer to reflect changes in Lua 5.5.
+- Dart lexer recognizes capitalized words as types.
+
+[Scintillua 6.7]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_6.7/scintillua_6.7.zip
+[`lexer.ignore_extensions`]: api.html#lexer.ignore_extensions
+[`lexer.ignore_patterns`]: api.html#lexer.ignore_patterns
+
 ## 6.6 (30 Sep 2025)
 
 Download:
