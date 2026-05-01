@@ -13,16 +13,19 @@ local lex = lexer.new(...)
 
 -- Admonitions.
 lex:add_rule('admonition', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD) * #S(':')))
-lex:add_rule('block_admonition', lex:tag(lexer.KEYWORD, P('[') * lex:word_match(lexer.KEYWORD) * P(']')))
+lex:add_rule('block_admonition',
+	lex:tag(lexer.KEYWORD, P('[') * lex:word_match(lexer.KEYWORD) * P(']')))
 lex:set_word_list(lexer.KEYWORD, {"NOTE", "IMPORTANT", "WARNING", "TIP", "CAUTION", "TESTME"})
 
 -- Block elements.
 local function h(n)
 	return lex:tag(string.format('%s.h%s', lexer.HEADING, n),
-		lexer.to_eol(lexer.starts_line(string.rep('=', n))))
+		lexer.to_eol(lexer.starts_line((string.rep('=', n) * S(' ') * lexer.alnum)) +
+			string.rep('#', n) * S(' ') * lexer.alnum))
 end
 lex:add_rule('header', h(6) + h(5) + h(4) + h(3) + h(2) + h(1))
-lex:add_rule('block_title', lex:tag(lexer.HEADING, lexer.to_eol(lexer.starts_line('.') * lexer.alnum)))
+lex:add_rule('block_title',
+	lex:tag(lexer.HEADING, lexer.to_eol(lexer.starts_line('.') * lexer.alnum)))
 
 lex:add_rule('hr',
 	lex:tag('hr', lpeg.Cmt(lexer.starts_line(lpeg.C(S("*-'")), true), function(input, index, c)
@@ -31,8 +34,7 @@ lex:add_rule('hr',
 		return (select(2, input:find('\r?\n', index)) or #input) + 1 -- include \n for eolfilled styles
 	end)))
 
-lex:add_rule('list', lex:tag(lexer.LIST,
-	lexer.starts_line(S('*.')^1, true) * S(' \t')))
+lex:add_rule('list', lex:tag(lexer.LIST, lexer.starts_line(S('*.')^1, true) * S(' \t')))
 
 -- Span elements.
 lex:add_rule('escape', lex:tag(lexer.DEFAULT, P('\\') * 1))
@@ -80,15 +82,11 @@ local underscore_em = (B(punct_space) + #lexer.starts_line('_')) * flanked_range
 	#(punct_space + -1)
 lex:add_rule('em', lex:tag(lexer.ITALIC, underscore_em))
 
--- TODO: Bold with Italic doesn't work, but it doesn't on the site either
--- https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/#text-formatting
-
 local attribute = flanked_range(':')
 lex:add_rule('attribute', lex:tag(lexer.ATTRIBUTE, attribute))
 
 -- Comments.
-lex:add_rule('comment', lex:tag(lexer.COMMENT,
-	lexer.range(lexer.starts_line('////')) +
+lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.range(lexer.starts_line('////')) +
 	lexer.starts_line(lexer.to_eol('//'))))
 
 lexer.property['scintillua.comment'] = '//'
