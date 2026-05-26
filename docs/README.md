@@ -100,7 +100,7 @@ your Scintilla-based application please see the [manual][].
 [CMake]: https://cmake.org
 [GNU C compiler]: https://gcc.gnu.org
 [Microsoft Visual Studio]: https://visualstudio.microsoft.com/
-[manual]: manual.html#compiling-scintillua-directly-into-an-app
+[manual]: manual.md#compiling-scintillua-directly-into-an-app
 
 ## Support
 

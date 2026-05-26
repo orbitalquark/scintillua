@@ -157,5 +157,5 @@ used if [`fold.scintillua.by.indentation`][] is enabled. For SciTE, see *lexers/
 1. YAML
 1. Zig`*`
 
-[folders]: api.html#code-folding
+[folders]: api.md#code-folding
 [`fold.scintillua.by.indentation`]: manual.html#using-scintillua-with-other-apps

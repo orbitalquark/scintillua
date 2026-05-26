@@ -113,7 +113,7 @@ These include, but are not limited to:
 * HTML/XML tag auto-completion.
 
 [SciTE]: https://scintilla.org/SciTE.html
-[write one]: api.html#lexer
+[write one]: api.md#lexer
 [contribute]: index.html#contribute
 
 #### Using Scintillua with Other Apps
@@ -308,7 +308,7 @@ an example of this process.
 [Lua]: https://lua.org
 [LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
 [Scintilla's SCI_SETILEXER]: https://scintilla.org/ScintillaDoc.html#SCI_SETILEXER
-[SCI_SETILEXER]: api.html#SCI_SETILEXER
+[SCI_SETILEXER]: api.md#SCI_SETILEXER
 
 #### Error Handling
 
@@ -356,6 +356,6 @@ operator	25
 If you are unsure of which lexer to use for a given filename and/or content line (e.g. shebang line), you can
 call [`detect()`][] and pass the result to `load()` if it is non-nil.
 
-[`load()`]: api.html#lexer.load
-[`lex()`]: api.html#lexer.lex
-[`detect()`]: api.html#lexer.detect
+[`load()`]: api.md#lexer.load
+[`lex()`]: api.md#lexer.lex
+[`detect()`]: api.md#lexer.detect

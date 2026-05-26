@@ -28,8 +28,8 @@ Changes:
 - Dart lexer recognizes capitalized words as types.
 
 [Scintillua 6.7]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_6.7/scintillua_6.7.zip
-[`lexer.ignore_extensions`]: api.html#lexer.ignore_extensions
-[`lexer.ignore_patterns`]: api.html#lexer.ignore_patterns
+[`lexer.ignore_extensions`]: api.md#lexer.ignore_extensions
+[`lexer.ignore_patterns`]: api.md#lexer.ignore_patterns
 
 ## 6.6 (30 Sep 2025)
 
@@ -80,9 +80,9 @@ Changes:
 - Added [`lexer.line_start`][], [`lexer.line_end`][], and [`lexer.text_range()`][].
 
 [Scintillua 6.5]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_6.5/scintillua_6.5.zip
-[`lexer.line_start`]: api.html#lexer.line_start
-[`lexer.line_end`]: api.html#lexer.line_end
-[`lexer.text_range()`]: api.html#lexer.text_range
+[`lexer.line_start`]: api.md#lexer.line_start
+[`lexer.line_end`]: api.md#lexer.line_end
+[`lexer.text_range()`]: api.md#lexer.text_range
 
 ## 6.4 (31 Jan 2025)
 
@@ -158,7 +158,7 @@ Changes:
 - Updated to [LPeg][] 1.1.0.
 
 [Scintillua 6.2]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_6.2/scintillua_6.2.zip
-[`lexer.names()`]: api.html#lexer.names
+[`lexer.names()`]: api.md#lexer.names
 [LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
 
 ## 6.1 (22 Dec 2022)
@@ -246,14 +246,14 @@ Changes:
 - Removed `fold.line.groups` property and `lexer.fold_consecutive_lines()`.
 
 [Scintillua 6.0]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_6.0/scintillua_6.0.zip
-[`CreateLexer()`]: manual.html#using-scintillua-with-other-apps
-[tags]: api.html#tags
-[`lexer.tag()`]: api.html#lexer.tag
-[`lexer.after_set()`]: api.html#lexer.after_set
-[`lexer.number_()`]: api.html#lexer.number_
-[lexer template]: api.html#new-lexer-template
-[lexer detection]: manual.html#lexer-detection
-[`lexer.detect()`]: api.html#lexer.detect
+[`CreateLexer()`]: manual.md#using-scintillua-with-other-apps
+[tags]: api.md#tags
+[`lexer.tag()`]: api.md#lexer.tag
+[`lexer.after_set()`]: api.md#lexer.after_set
+[`lexer.number_()`]: api.md#lexer.number_
+[lexer template]: api.md#new-lexer-template
+[lexer detection]: manual.md#lexer-detection
+[`lexer.detect()`]: api.md#lexer.detect
 
 ## 5.3 (03 Nov 2021)
 
@@ -336,10 +336,10 @@ Changes:
 - Support [SciTE][] 5.0.3.
 
 [Scintillua 5.0]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_5.0/scintillua_5.0.zip
-[SCI\_SETILEXER]: api.html#SCI_SETILEXER
-[SCI\_CREATELOADER]: api.html#SCI_CREATELOADER
-[SCI\_GETLEXER]: api.html#SCI_GETLEXER
-[SCI\_GETLEXERLANGUAGE]: api.html#SCI_GETLEXERLANGUAGE
+[SCI\_SETILEXER]: api.md#SCI_SETILEXER
+[SCI\_CREATELOADER]: api.md#SCI_CREATELOADER
+[SCI\_GETLEXER]: api.md#SCI_GETLEXER
+[SCI\_GETLEXERLANGUAGE]: api.md#SCI_GETLEXERLANGUAGE
 [Scintilla]: https://scintilla.org
 [Lexilla]: https://scintilla.org/Lexilla.html
 [SciTE]: https://scintilla.org/SciTE.html
@@ -398,7 +398,7 @@ Changes:
 
 [Scintillua 4.4.5-1]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_4.4.5-1/scintillua_4.4.5-1.zip
 [Lexilla]: https://scintilla.org/Lexilla.html
-[`lexer.fold_line_groups`]: api.html#lexer.fold_line_groups
+[`lexer.fold_line_groups`]: api.md#lexer.fold_line_groups
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
@@ -426,10 +426,10 @@ Changes:
 - Updated C lexer with C99 bool, true, and false.
 
 [Scintilla 3.21.0]: https://sourceforge.net/projects/scintilla/files/scintilla/3.21.0/scintilla3210.zip/download
-[SCI_GETNAMEDSTYLES]: api.html#SCI_GETNAMEDSTYLES
-[`lexer.colors`]: api.html#lexer.colors
-[`lexer.styles`]: api.html#lexer.styles
-[`lexer.fold*`]: api.html#lexer.folding
+[SCI_GETNAMEDSTYLES]: api.md#SCI_GETNAMEDSTYLES
+[`lexer.colors`]: api.md#lexer.colors
+[`lexer.styles`]: api.md#lexer.styles
+[`lexer.fold*`]: api.md#lexer.folding
 
 ## 3.20.0-1 (9 May 2020)
 
@@ -461,9 +461,9 @@ Changes:
 - Added [`lexer.number`][] convenience pattern, replacing `lexer.float + lexer.integer`.
 
 [Scintilla 3.20.0]: https://sourceforge.net/projects/scintilla/files/scintilla/3.20.0/scintilla3200.zip/download
-[`lexer.range()`]: api.html#lexer.range
-[`lexer.to_eol()`]: api.html#lexer.to_eol
-[`lexer.number`]: api.html#lexer.number
+[`lexer.range()`]: api.md#lexer.range
+[`lexer.to_eol()`]: api.md#lexer.to_eol
+[`lexer.number`]: api.md#lexer.number
 
 ## 3.11.1-1 (26 Oct 2019)
 
@@ -612,16 +612,16 @@ Changes:
 - Added `fold.compact` property for folding trailing blank lines.
 
 [Scintilla 3.8.0]: https://sourceforge.net/projects/scintilla/files/scintilla/3.8.0/scintilla380.zip/download
-[`lexer.new()`]: api.html#lexer.new
-[`lexer.add_rule()`]: api.html#lexer.add_rule
-[`lexer.add_style()`]: api.html#lexer.add_style
-[`lexer.add_fold_point()`]: api.html#lexer.add_fold_point
-[`lexer.embed()`]: api.html#lexer.embed
-[`lexer.word_match()`]: api.html#lexer.word_match
-[`lexer.get_rule()`]: api.html#lexer.get_rule
-[`lexer.modify_rule()`]: api.html#lexer.modify_rule
-[object-oriented]: api.html#new-lexer-template
-[migrate them]: api.html#migrating-legacy-lexers
+[`lexer.new()`]: api.md#lexer.new
+[`lexer.add_rule()`]: api.md#lexer.add_rule
+[`lexer.add_style()`]: api.md#lexer.add_style
+[`lexer.add_fold_point()`]: api.md#lexer.add_fold_point
+[`lexer.embed()`]: api.md#lexer.embed
+[`lexer.word_match()`]: api.md#lexer.word_match
+[`lexer.get_rule()`]: api.md#lexer.get_rule
+[`lexer.modify_rule()`]: api.md#lexer.modify_rule
+[object-oriented]: api.md#new-lexer-template
+[migrate them]: api.md#migrating-legacy-lexers
 
 ## 3.7.5-1 (19 Aug 2017)
 
@@ -684,7 +684,7 @@ Changes:
 - Updated to [Scintilla][]/[SciTE][] 3.7.3.
 
 [Scintillua 3.7.3-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.7.3-1.zip
-[query for lexer errors]: api.html#SCI_GETSTATUS
+[query for lexer errors]: api.md#SCI_GETSTATUS
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
@@ -729,8 +729,8 @@ Changes:
 - Updated to [Scintilla][]/[SciTE][] 3.7.0.
 
 [Scintillua 3.7.0-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.7.0-1.zip
-[`lexer.float`]: api.html#lexer.float
-[`lexer.property_int`]: api.html#lexer.property_int
+[`lexer.float`]: api.md#lexer.float
+[`lexer.property_int`]: api.md#lexer.property_int
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
@@ -808,10 +808,10 @@ Changes:
 - Updated to [Scintilla][]/[SciTE][] 3.6.4.
 
 [Scintillua 3.6.4-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.6.4-1.zip
-[style property]: api.html#styles-and-styling
-[`lexer.line_state`]: api.html#lexer.line_state
-[`lexer.line_from_position()`]: api.html#lexer.line_from_position
-[stateful lexers]: api.html#lexers-with-complex-state
+[style property]: api.md#styles-and-styling
+[`lexer.line_state`]: api.md#lexer.line_state
+[`lexer.line_from_position()`]: api.md#lexer.line_from_position
+[stateful lexers]: api.md#lexers-with-complex-state
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
@@ -956,7 +956,7 @@ Changes:
 - Updated to [Scintilla][]/[SciTE][] 3.5.5.
 
 [Scintillua 3.5.5-1]: https://github.com/orbitalquark/scintillua/archive/scintillua_3.5.5-1.zip
-[`_FOLDBYINDENTATION`]: api.html#fold-by-indentation
+[`_FOLDBYINDENTATION`]: api.md#fold-by-indentation
 [Scintilla]: https://scintilla.org
 [SciTE]: https://scintilla.org/SciTE.html
 
@@ -1104,8 +1104,8 @@ Changes:
 - Scintillua can accept and use [external Lua states][].
 
 [Scintillua 3.3.9-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.3.9-1.zip
-[Lua library]: manual.html#using-scintillua-as-a-lua-library
-[external Lua states]: api.html#SCI_CHANGELEXERSTATE
+[Lua library]: manual.md#using-scintillua-as-a-lua-library
+[external Lua states]: api.md#SCI_CHANGELEXERSTATE
 
 ## 3.3.7-1 (21 Dec 2013)
 
@@ -1147,18 +1147,18 @@ Changes:
 - Added Dart lexer.
 - Renamed "hypertext" and "Io" lexers to "html" and "io\_lang" internally.
 
-[theme implementation]: api.html#styles-and-styling
+[theme implementation]: api.md#styles-and-styling
 [Scintillua 3.3.7-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.3.7-1.zip
-[`lexer._tokenstyles`]: api.html#token-styles
-[`lexer.fold_level`]: api.html#lexer.fold_level
-[`lexer.indent_amount`]: api.html#lexer.indent_amount
-[`lexer.property`]: api.html#lexer.property
-[`lexer.style_at`]: api.html#lexer.style_at
-[`lexer.property_int`]: api.html#lexer.property_int
-[`lexer.property_expanded`]: api.html#lexer.property_expanded
-[`lexer.load()`]: api.html#lexer.load
-[rule]: api.html#rules
-[Child lexers]: api.html#child-lexer
+[`lexer._tokenstyles`]: api.md#token-styles
+[`lexer.fold_level`]: api.md#lexer.fold_level
+[`lexer.indent_amount`]: api.md#lexer.indent_amount
+[`lexer.property`]: api.md#lexer.property
+[`lexer.style_at`]: api.md#lexer.style_at
+[`lexer.property_int`]: api.md#lexer.property_int
+[`lexer.property_expanded`]: api.md#lexer.property_expanded
+[`lexer.load()`]: api.md#lexer.load
+[rule]: api.md#rules
+[Child lexers]: api.md#child-lexer
 
 ## 3.3.2-1 (25 May 2013)
 
@@ -1362,8 +1362,8 @@ Changes:
 - Updated lexers and [API documentation][] to [Lua 5.2][].
 
 [Scintillua 3.0.2-1]: https://github.com/orbitalquark/scintillua/archive/scintillua3.0.2-1.zip
-[tokens]: api.html#tokens
-[API documentation]: api.html#lexer
+[tokens]: api.md#tokens
+[API documentation]: api.md#lexer
 [Lua 5.2]: https://www.lua.org/manual/5.2/
 
 ## 3.0.0-1 (01 Nov 2011)
@@ -1444,8 +1444,8 @@ Changes:
 	indentation by default.
 
 [Scintillua 2.26-1]: https://github.com/orbitalquark/scintillua/archive/scintillua226-1.zip
-[`get_style_at()`]: api.html#lexer.style_at
-[easier]: api.html#code-folding
+[`get_style_at()`]: api.md#lexer.style_at
+[easier]: api.md#code-folding
 
 ## 2.25-1 (20 Mar 2011)
 
