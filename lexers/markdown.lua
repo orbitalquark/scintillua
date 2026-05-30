@@ -118,6 +118,9 @@ local underscore_em = (B(punct_space) + #lexer.starts_line('_')) * flanked_range
 	#(punct_space + -1)
 lex:add_rule('em', lex:tag(lexer.ITALIC, asterisk_em + underscore_em))
 
+-- Plain text.
+lex:add_rule('word', lex:tag(lexer.DEFAULT, lexer.word_utf8))
+
 -- Embedded HTML.
 local html = lexer.load('html')
 local start_rule = lexer.starts_line(P(' ')^-3) * #P('<') * html:get_rule('tag') -- P(' ')^4 starts code_line

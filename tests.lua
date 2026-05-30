@@ -732,7 +732,7 @@ function test_html()
 	assert_default_tags(html)
 	local rules = {
 		'comment', 'doctype', 'tag', 'tag_close', 'attribute', -- 'equals',
-		'string', 'number', 'entity'
+		'word', 'string', 'number', 'entity'
 	}
 	assert_rules(html, rules)
 	local tags = {
@@ -771,7 +771,7 @@ function test_html()
       </HEAD>
       <bod clss = "unknown">
       <hr tabindex=1/> &copy;
-      <div style="float: right">
+      <div style="float: right">floating
     </html>
   ]]
 	local tag_chars = TAG .. '.chars'
@@ -836,6 +836,7 @@ function test_html()
 		ATTRIBUTE, 'style', OPERATOR, '=', STRING, '"', --
 		'property', 'float', OPERATOR, ':', CONSTANT_BUILTIN, 'right', --
 		STRING, '"', tag_chars, '>', --
+		DEFAULT, 'floating', --
 		tag_chars, '</', TAG, 'html', tag_chars, '>'
 	}
 	assert_lex(html, code, tags)
@@ -1332,13 +1333,13 @@ function test_markdown()
 	local tags = {
 		HEADING .. '.h1', '# header1', --
 		HEADING .. '.h2', '## header2', --
-		STRING, '>', DEFAULT, 'b', DEFAULT, '1', --
-		STRING, '>', DEFAULT, 'b', DEFAULT, '2', --
-		DEFAULT, 'b', DEFAULT, '3', --
-		LIST, '1. ', DEFAULT, 'l', DEFAULT, '1', --
+		STRING, '>', DEFAULT, 'b1', --
+		STRING, '>', DEFAULT, 'b2', --
+		DEFAULT, 'b3', --
+		LIST, '1. ', DEFAULT, 'l1', --
 		DEFAULT, '2', --
-		LIST, '* ', DEFAULT, 'l', DEFAULT, '2', --
-		DEFAULT, '!', DEFAULT, 'c', DEFAULT, 'o', DEFAULT, 'd', DEFAULT, 'e', --
+		LIST, '* ', DEFAULT, 'l2', --
+		DEFAULT, '!', DEFAULT, 'code', --
 		DEFAULT, 't', --
 		CODE, 'code1', --
 		CODE, '```\ncode2\n```\n', --
@@ -1348,12 +1349,12 @@ function test_markdown()
 		'hr', '* * *\n', --
 		LINK, '[link](target)', LINK, '![image](target "alt_text")', REFERENCE, '[link] [1]', --
 		LINK, 'http://link', --
-		DEFAULT, 't', DEFAULT, 'e', DEFAULT, 'x', DEFAULT, 't', --
+		DEFAULT, 'text', --
 		LINK, '<http://link>', --
 		REFERENCE, '[1]:', LINK, 'link#text', --
 		BOLD, '**strong**', --
 		ITALIC, '*emphasis*', --
-		DEFAULT, '\\*', DEFAULT, 't', DEFAULT, 'e', DEFAULT, 'x', DEFAULT, 't', DEFAULT, '\\*', --
+		DEFAULT, '\\*', DEFAULT, 'text', DEFAULT, '\\*', --
 		TAG .. '.chars', '<', TAG, 'html', TAG .. '.chars', '>', --
 		TAG .. '.chars', '</', TAG, 'html', TAG .. '.chars', '>', --
 		CODE, '<a>'
@@ -1439,7 +1440,7 @@ function test_yaml()
 		OPERATOR, ']', --
 		OPERATOR, '-', --
 		OPERATOR, '&', LABEL, 'anchor', TYPE, '!!str', --
-		DEFAULT, 'i', DEFAULT, 't', DEFAULT, 'e', DEFAULT, 'm', --
+		DEFAULT, 'item', --
 		OPERATOR, '-', OPERATOR, '*', LABEL, 'anchor', --
 		OPERATOR, '...', COMMENT, '# document end', --
 		STRING, 'key', OPERATOR, ':', DEFAULT, 'value', --

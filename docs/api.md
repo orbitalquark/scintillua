@@ -1384,6 +1384,13 @@ local keyword = lex:tag(lexer.KEYWORD, lexer.word_match({'foo-bar', 'foo-baz',
 local keyword = lex:tag(lexer.KEYWORD, lexer.word_match('foo bar baz'))
 ```
 
+<a id="lexer.word_utf8"></a>
+### `lexer.word_utf8`
+
+A pattern that matches a typical UTF-8 word.
+UTF-8 words begin with a letter, underscore,
+or UTF-8 character, and consist of alphanumeric, underscore, and UTF-8 characters.
+
 <a id="lexer.xdigit"></a>
 ### `lexer.xdigit`
 

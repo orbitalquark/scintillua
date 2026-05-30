@@ -1960,6 +1960,11 @@ M.number = M.number_(false)
 -- of alphanumeric and underscore characters.
 M.word = (M.alpha + '_') * (M.alnum + '_')^0
 
+local utf8_char = lpeg.utfR and lpeg.utfR(0x7F, 0x10FFFF) or R('\128\255')^1
+--- A pattern that matches a typical UTF-8 word. UTF-8 words begin with a letter, underscore,
+-- or UTF-8 character, and consist of alphanumeric, underscore, and UTF-8 characters.
+M.word_utf8 = (M.alpha + '_' + utf8_char) * (M.alnum + '_' + utf8_char)^1
+
 --- Returns a pattern that matches a prefix until the end of its line.
 -- @param[opt] prefix String or pattern prefix to start matching at. The default value is any
 --   non-newline character.
