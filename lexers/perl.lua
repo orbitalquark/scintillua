@@ -56,9 +56,9 @@ local sq_str = lexer.range("'")
 local dq_str = lexer.range('"')
 local cmd_str = lexer.range('`')
 local heredoc = '<<' * P(function(input, index)
-	local s, e, indented, _, delimiter = input:find('(~?)(["\'`]?)([%a_][%w_]*)%2[\n\r\f;]+', index)
+	local s, e, indented, _, delimiter = input:find('(~?)(["\'`]?)([%a_][%w_]*)%2.-[\r\n]+', index)
 	if s == index and delimiter then
-		local end_heredoc = (#indented > 0 and '[\n\r\f]+ *' or '[\n\r\f]+')
+		local end_heredoc = (#indented > 0 and '[\r\n]+ *' or '[\r\n]+')
 		e = select(2, input:find(end_heredoc .. delimiter, e))
 		return e and e + 1 or #input + 1
 	end

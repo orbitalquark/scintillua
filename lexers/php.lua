@@ -32,9 +32,9 @@ local sq_str = lexer.range("'")
 local dq_str = lexer.range('"')
 local bq_str = lexer.range('`')
 local heredoc = '<<<' * P(function(input, index)
-	local _, e, delimiter = input:find('([%a_][%w_]*)[\n\r\f]+', index)
+	local _, e, delimiter = input:find('([%a_][%w_]*)[\r\n]+', index)
 	if delimiter then
-		_, e = input:find('[\n\r\f]+' .. delimiter, e)
+		_, e = input:find('[\r\n]+' .. delimiter, e)
 		return e and e + 1
 	end
 end)
