@@ -131,13 +131,16 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
 	'strtoimax', 'strtoumax', -- inttypes.h C99
 	'signal', 'raise', -- signal.h
 	'setjmp', 'longjmp', -- setjmp.h
-	'va_start', 'va_arg', 'va_end', -- stdarg.h
+	-- stdarg.h
+	'va_start', 'va_arg', 'va_end', --
+	'va_copy', -- C99
 	-- stdio.h.
 	'fopen', 'freopen', 'fclose', 'fflush', 'setbuf', 'setvbuf', 'fwide', 'fread', 'fwrite', 'fgetc',
 	'getc', 'fgets', 'fputc', 'putc', 'getchar', 'gets', 'putchar', 'puts', 'ungetc', 'scanf',
 	'fscanf', 'sscanf', 'printf', 'fprintf', 'sprintf', 'vprintf', 'vfprintf', 'vsprintf', 'ftell',
 	'fgetpos', 'fseek', 'fsetpos', 'rewind', 'clearerr', 'feof', 'ferror', 'perror', 'remove',
-	'rename', 'tmpfile', 'tmpnam',
+	'rename', 'tmpfile', 'tmpnam', --
+	'vscanf', 'vfscanf', 'snprintf', 'vsnprintf', -- C99
 	-- stdlib.h.
 	'abort', 'exit', 'atexit', 'system', 'getenv', 'malloc', 'calloc', 'realloc', 'free', 'atof',
 	'atoi', 'atol', 'strtol', 'strtoul', 'strtod', 'mblen', 'mbsinit', 'mbrlen', 'qsort', 'bsearch',
@@ -154,7 +157,9 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
 
 lex:set_word_list(lexer.CONSTANT_BUILTIN, {
 	'NULL', --
-	'__DATE__', '__FILE__', '__LINE__', '__TIME__', '__func__', -- preprocessor
+	-- Preprocessor.
+	'__DATE__', '__FILE__', '__LINE__', '__TIME__', '__func__', --
+	'__VA_ARGS__', -- C99
 	-- errno.h.
 	'errno', --
 	'E2BIG', 'EACCES', 'EADDRINUSE', 'EADDRNOTAVAIL', 'EAFNOSUPPORT', 'EAGAIN', 'EALREADY', 'EBADF',
