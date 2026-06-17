@@ -12,6 +12,23 @@ local P, S = lpeg.P, lpeg.S
 local lex = lexer.new(...)
 
 -- Rules.
+local sq_str = P('L')^-1 * lexer.range("'")
+local dq_str = P('L')^-1 * lexer.range('"')
+local ml_str = P('L')^-1 * lexer.range('`')
+lex:add_rule('string', lex:tag(lexer.STRING, sq_str + dq_str + ml_str))
+
+local comment = lexer.to_eol('//', true)
+local block_comment = lexer.range('/*', '*/')
+lex:add_rule('comment', lex:tag(lexer.COMMENT, comment + block_comment))
+
+local directive = lex:tag(lexer.PREPROCESSOR, '#' * lexer.word)
+lex:add_rule('directive', directive)
+
+local attribute = lex:tag(lexer.PREPROCESSOR,
+	'@(' * (lexer.word + lexer.number + lexer.range('"') + lexer.range("'") + P('=') + P(' '))^0 * ')'
+)
+lex:add_rule('attribute', attribute)
+
 lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 lex:add_rule('type', lex:tag(lexer.TYPE, lex:word_match(lexer.TYPE)))
 lex:add_rule('constant', lex:tag(lexer.CONSTANT, lex:word_match(lexer.CONSTANT)))
@@ -20,23 +37,13 @@ lex:modify_rule('constant', lex:get_rule('constant') + lex:word_match(lexer.VARI
 lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number))
 lex:add_rule('operator', lex:tag(lexer.OPERATOR, '..' + S('+-/*%<>!=^&|?~:;,.()[]{}')))
 
-local sq_str = P('L')^-1 * lexer.range("'")
-local dq_str = P('L')^-1 * lexer.range('"')
-local ml_str = P('L')^-1 * lexer.range('`')
-lex:add_rule('string', lex:tag(lexer.STRING, sq_str + dq_str + ml_str))
-
 local identifier = lex:tag(lexer.IDENTIFIER, lexer.word)
 local function_call = lex:tag(lexer.FUNCTION, lexer.word * #P('('))
 lex:add_rule('function_call', function_call)
 lex:add_rule('identifier', identifier)
 
-local comment = lexer.to_eol('//', true)
-local block_comment = lexer.range('/*', '*/')
-lex:add_rule('comment', lex:tag(lexer.COMMENT, comment + block_comment))
-
 lex:add_fold_point(lexer.OPERATOR, '{', '}')
 lex:add_fold_point(lexer.COMMENT, '/*', '*/')
-lexer.property['scintillua.comment'] = '//'
 
 -- Word lists.
 lex:set_word_list(lexer.KEYWORD, {
