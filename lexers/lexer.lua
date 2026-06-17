@@ -1844,7 +1844,8 @@ function M.detect(filename, line)
 		xs = 'xs', xsin = 'xs', xsrc = 'xs', --
 		xtend = 'xtend', --
 		yaml = 'yaml', yml = 'yaml', --
-		zig = 'zig'
+		zig = 'zig',
+		odin = 'odin',
 	}
 	local patterns = {
 		['^#!.+[/ ][gm]?awk'] = 'awk', ['^#!.+[/ ]lua'] = 'lua', ['^#!.+[/ ]octave'] = 'matlab',
