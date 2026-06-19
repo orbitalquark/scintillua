@@ -127,7 +127,18 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
 	'cbrt', 'hypot', 'asinh', 'acosh', 'atanh', 'erf', 'erfc', 'tgamma', 'lgamma', 'trunc', 'round',
 	'nearbyint', 'rint', 'scalbn', 'ilogb', 'logb', 'nextafter', 'nexttoward', 'copysign', 'isfinite',
 	'isinf', 'isnan', 'isnormal', 'signbit', 'isgreater', 'isgreaterequal', 'isless', 'islessequal',
-	'islessgreater', 'isunordered', --
+	'islessgreater', 'isunordered', 'fpclassify', 'labs', 'llabs', 'imaxabs', 'ldiv', 'lldiv',
+	'imaxdiv', 'fabsf', 'fabsl', 'fmodf', 'fmodl', 'expf', 'expl', 'logf', 'logl', 'log10f', 'log10l',
+	'powf', 'powl', 'sqrtf', 'sqrtl', 'sinf', 'sinl', 'cosf', 'cosl', 'tanf', 'tanl', 'asinf',
+	'asinl', 'acosf', 'acosl', 'atanf', 'atanl', 'atan2f', 'atan2l', 'sinhf', 'sinhl', 'coshf',
+	'coshl', 'tanhf', 'tanhl', 'ceilf', 'ceill', 'floorf', 'floorl', 'frexpf', 'frexpl', 'ldexpf',
+	'ldexpl', 'modff', 'modfl', 'remainderf', 'remainderl', 'remquof', 'remquol', 'fmaf', 'fmal',
+	'fmaxf', 'fmaxl', 'fminf', 'fminl', 'fdimf', 'fdiml', 'nanf', 'nanl', 'exp2f', 'exp2l', 'expm1f',
+	'expm1l', 'log2f', 'log2l', 'log1pf', 'log1pl', 'cbrtf', 'cbrtl', 'hypotf', 'hypotl', 'asinhf',
+	'asinhl', 'acoshf', 'acoshl', 'erff', 'erfl', 'erfcf', 'erfcl', 'tgammaf', 'tgammal', 'lgammaf',
+	'lgammal', 'truncf', 'truncl', 'roundf', 'roundl', 'nearbyintf', 'nearbyintl', 'rintf', 'rintl',
+	'scalbnf', 'scalbnf', 'scalbnl', 'scalbln', 'scalblnf', 'scalblnl', 'ilogf', 'ilogl', 'logbf',
+	'logbl', 'nextafterf', 'nextafterl', 'nexttowardf', 'nexttowardl', 'copysignf', 'copysignl', --
 	'strtoimax', 'strtoumax', -- inttypes.h C99
 	'signal', 'raise', -- signal.h
 	'setjmp', 'longjmp', -- setjmp.h
@@ -145,6 +156,7 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
 	'abort', 'exit', 'atexit', 'system', 'getenv', 'malloc', 'calloc', 'realloc', 'free', 'atof',
 	'atoi', 'atol', 'strtol', 'strtoul', 'strtod', 'mblen', 'mbsinit', 'mbrlen', 'qsort', 'bsearch',
 	'rand', 'srand', --
+	'strtoll', 'strtoull', 'strtof', 'strtold', -- C99
 	'quick_exit', '_Exit', 'at_quick_exit', 'aligned_alloc', -- C11
 	-- string.h.
 	'strcpy', 'strncpy', 'strcat', 'strncat', 'strxfrm', 'strlen', 'strcmp', 'strncmp', 'strcoll',
@@ -178,8 +190,8 @@ lex:set_word_list(lexer.CONSTANT_BUILTIN, {
 	'CHAR_BIT', 'MB_LEN_MAX', 'CHAR_MIN', 'CHAR_MAX', 'SCHAR_MIN', 'SHRT_MIN', 'INT_MIN', 'LONG_MIN',
 	'SCHAR_MAX', 'SHRT_MAX', 'INT_MAX', 'LONG_MAX', 'UCHAR_MAX', 'USHRT_MAX', 'UINT_MAX', 'ULONG_MAX',
 	-- C99.
-	'LLONG_MIN', 'ULLONG_MAX', 'PTRDIFF_MIN', 'PTRDIFF_MAX', 'SIZE_MAX', 'SIG_ATOMIC_MIN',
-	'SIG_ATOMIC_MAX', 'WINT_MIN', 'WINT_MAX', 'WCHAR_MIN', 'WCHAR_MAX', --
+	'LLONG_MIN', 'LLONG_MAX', 'ULLONG_MIN', 'ULLONG_MAX', 'PTRDIFF_MIN', 'PTRDIFF_MAX', 'SIZE_MAX',
+	'SIG_ATOMIC_MIN', 'SIG_ATOMIC_MAX', 'WINT_MIN', 'WINT_MAX', 'WCHAR_MIN', 'WCHAR_MAX', --
 	'LC_ALL', 'LC_COLLATE', 'LC_CTYPE', 'LC_MONETARY', 'LC_NUMERIC', 'LC_TIME', -- locale.h
 	-- math.h.
 	'HUGE_VAL', --
