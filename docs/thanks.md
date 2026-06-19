@@ -11,6 +11,7 @@ and better over the years.
 - Alexey Melnichuk
 - Alexey Yerin
 - Alexander Misel
+- Artur Ugnivenko
 - Brian Schott
 - Carl Sturtivant
 - Chris Clark
