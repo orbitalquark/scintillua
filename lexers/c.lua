@@ -71,8 +71,8 @@ lex:add_fold_point(lexer.COMMENT, '/*', '*/')
 
 -- Word lists.
 lex:set_word_list(lexer.KEYWORD, {
-	'auto', 'break', 'case', 'const', 'continue', 'default', 'do', 'else', 'enum', 'extern', 'for',
-	'goto', 'if', 'inline', 'register', 'restrict', 'return', 'sizeof', 'static', 'switch', 'typedef',
+	'auto', 'break', 'case', 'const', 'continue', 'default', 'do', 'else', 'extern', 'for', 'goto',
+	'if', 'inline', 'register', 'restrict', 'return', 'sizeof', 'static', 'switch', 'typedef',
 	'volatile', 'while', --
 	'false', 'true', -- C99
 	'alignas', 'alignof', '_Atomic', '_Generic', 'noreturn', '_Static_assert', 'thread_local', -- C11
@@ -81,7 +81,7 @@ lex:set_word_list(lexer.KEYWORD, {
 })
 
 lex:set_word_list(lexer.TYPE, {
-	'bool', 'char', 'double', 'float', 'int', 'long', 'short', 'signed', 'struct', 'union',
+	'bool', 'char', 'double', 'enum', 'float', 'int', 'long', 'short', 'signed', 'struct', 'union',
 	'unsigned', 'void', --
 	'complex', 'imaginary', '_Complex', '_Imaginary', -- complex.h C99
 	'lconv', -- locale.h
