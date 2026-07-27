@@ -101,7 +101,9 @@ lex:set_word_list(lexer.TYPE, {
 	'div_t', 'ldiv_t', -- stdlib.h
 	-- time.h.
 	'tm', 'time_t', 'clock_t', --
-	'timespec' -- C11
+	'timespec', -- C11
+	-- wchar.h
+	'wchar_t', 'wint_t', 'mbstate_t',
 })
 
 lex:set_word_list(lexer.FUNCTION_BUILTIN, {
@@ -164,7 +166,20 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
 	'memset', 'memcpy', 'memmove', 'strerror',
 	-- time.h.
 	'difftime', 'time', 'clock', 'asctime', 'ctime', 'gmtime', 'localtime', 'mktime', --
-	'timespec_get' -- C11
+	'timespec_get', -- C11
+	-- wchar.h
+	'fwprintf', 'fwscanf', 'swprintf', 'swscanf', 'vfwprintf', 'vfwscanf', 'vswprintf',
+	'vswscanf', 'vwprintf', 'vwscanf', 'wprintf', 'wscanf', 'fgetwc', 'fgetws', 'fputwc',
+	'fputws', 'fwide', 'getwc', 'getwchar', 'putwc', 'putwchar', 'ungetwc', 'wcstod', 'wcstof',
+	'wcstold', 'wcstol', 'wcstoll', 'wcstoul', 'wcstoull', 'wcscpy', 'wcsncpy', 'wmemcpy',
+	'wmemmove', 'wcscat', 'wcsncat', 'wcscmp', 'wcscoll', 'wcsncmp', 'wcsxfrm', 'wmemcmp',
+	'wcschr', 'wcscspn', 'wcspbrk', 'wcsrchr', 'wcsspn', 'wcsstr', 'wcstok', 'wmemchr',
+	'wcslen', 'wcsnlen', 'wmemset', 'wcsftime', 'btowc', 'wctob', 'mbsinit', 'mbrlen',
+	'mbrtowc', 'wcrtomb', 'mbsrtowcs', 'wcsrtombs',
+	-- wctype.h
+	'wctype', 'iswctype', 'iswalnum', 'iswalpha', 'iswblank', 'iswcntrl', 'iswdigit', 'iswgraph',
+	'iswlower', 'iswprint', 'iswpunct', 'iswspace', 'iswupper', 'iswxdigit', 'towlower',
+	'towupper', 'towctrans', 'wctrans'
 })
 
 lex:set_word_list(lexer.CONSTANT_BUILTIN, {
@@ -211,7 +226,8 @@ lex:set_word_list(lexer.CONSTANT_BUILTIN, {
 	'EXIT_SUCCESS', 'EXIT_FAILURE', 'RAND_MAX', -- stdlib.h
 	-- signal.h.
 	'SIG_DFL', 'SIG_IGN', 'SIG_ERR', 'SIGABRT', 'SIGFPE', 'SIGILL', 'SIGINT', 'SIGSEGV', 'SIGTERM', --
-	'CLOCKS_PER_SEC' -- time.h.
+	'CLOCKS_PER_SEC', -- time.h.
+	'WEOF' -- wchar.h
 })
 
 lex:set_word_list(lexer.PREPROCESSOR, {
