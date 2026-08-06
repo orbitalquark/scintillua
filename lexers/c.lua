@@ -101,7 +101,8 @@ lex:set_word_list(lexer.TYPE, {
 	'div_t', 'ldiv_t', -- stdlib.h
 	-- time.h.
 	'tm', 'time_t', 'clock_t', --
-	'timespec' -- C11
+	'timespec', -- C11
+	'wchar_t', 'wint_t', 'mbstate_t' -- whar.h C95
 })
 
 lex:set_word_list(lexer.FUNCTION_BUILTIN, {
@@ -164,7 +165,19 @@ lex:set_word_list(lexer.FUNCTION_BUILTIN, {
 	'memset', 'memcpy', 'memmove', 'strerror',
 	-- time.h.
 	'difftime', 'time', 'clock', 'asctime', 'ctime', 'gmtime', 'localtime', 'mktime', --
-	'timespec_get' -- C11
+	'timespec_get', -- C11
+	-- wchar.h C95.
+	'fwprintf', 'fwscanf', 'swprintf', 'swscanf', 'vfwprintf', 'vfwscanf', 'vswprintf', 'vswscanf',
+	'vwprintf', 'vwscanf', 'wprintf', 'wscanf', 'fgetwc', 'fgetws', 'fputwc', 'fputws', 'fwide',
+	'getwc', 'getwchar', 'putwc', 'putwchar', 'ungetwc', 'wcstod', 'wcstof', 'wcstold', 'wcstol',
+	'wcstoll', 'wcstoul', 'wcstoull', 'wcscpy', 'wcsncpy', 'wmemcpy', 'wmemmove', 'wcscat', 'wcsncat',
+	'wcscmp', 'wcscoll', 'wcsncmp', 'wcsxfrm', 'wmemcmp', 'wcschr', 'wcscspn', 'wcspbrk', 'wcsrchr',
+	'wcsspn', 'wcsstr', 'wcstok', 'wmemchr', 'wcslen', 'wcsnlen', 'wmemset', 'wcsftime', 'btowc',
+	'wctob', 'mbsinit', 'mbrlen', 'mbrtowc', 'wcrtomb', 'mbsrtowcs', 'wcsrtombs',
+	-- wctype.h C95.
+	'wctype', 'iswctype', 'iswalnum', 'iswalpha', 'iswblank', 'iswcntrl', 'iswdigit', 'iswgraph',
+	'iswlower', 'iswprint', 'iswpunct', 'iswspace', 'iswupper', 'iswxdigit', 'towlower', 'towupper',
+	'towctrans', 'wctrans'
 })
 
 lex:set_word_list(lexer.CONSTANT_BUILTIN, {
@@ -205,13 +218,16 @@ lex:set_word_list(lexer.CONSTANT_BUILTIN, {
 	'UINT16_MAX', 'UINT32_MAX', 'UINT64_MAX', 'UINT_FAST8_MAX', 'UINT_FAST16_MAX', 'UINT_FAST32_MAX',
 	'UINT_FAST64_MAX', 'UINT_LEAST8_MAX', 'UINT_LEAST16_MAX', 'UINT_LEAST32_MAX', 'UINT_LEAST64_MAX',
 	'UINTPTR_MAX', 'UINTMAX_MAX',
-	-- stdio.h
+	-- stdio.h.
 	'stdin', 'stdout', 'stderr', 'EOF', 'FOPEN_MAX', 'FILENAME_MAX', 'BUFSIZ', '_IOFBF', '_IOLBF',
 	'_IONBF', 'SEEK_SET', 'SEEK_CUR', 'SEEK_END', 'TMP_MAX', --
 	'EXIT_SUCCESS', 'EXIT_FAILURE', 'RAND_MAX', -- stdlib.h
 	-- signal.h.
 	'SIG_DFL', 'SIG_IGN', 'SIG_ERR', 'SIGABRT', 'SIGFPE', 'SIGILL', 'SIGINT', 'SIGSEGV', 'SIGTERM', --
-	'CLOCKS_PER_SEC' -- time.h.
+	'CLOCKS_PER_SEC', -- time.h
+	-- wchar.h C95.
+	'WEOF', 'WCHAR_MIN', 'WCHAR_MAX', --
+	'WCHAR_WIDTH' -- C23
 })
 
 lex:set_word_list(lexer.PREPROCESSOR, {
