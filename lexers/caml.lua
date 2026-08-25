@@ -1,30 +1,55 @@
 -- Copyright 2006-2026 Mitchell. See LICENSE.
 -- OCaml LPeg lexer.
+-- Migrated by Samuel Marquis.
 
-local lexer = require('lexer')
-local token, word_match = lexer.token, lexer.word_match
+local lexer = lexer
 local P, S = lpeg.P, lpeg.S
 
-local lex = lexer.new('caml')
-
--- Whitespace.
-lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+local lex = lexer.new(..., {fold_by_indentation = true})
 
 -- Keywords.
-lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
-	'and', 'as', 'asr', 'begin', 'class', 'closed', 'constraint', 'do', 'done', 'downto', 'else',
-	'end', 'exception', 'external', 'failwith', 'false', 'flush', 'for', 'fun', 'function', 'functor',
-	'if', 'in', 'include', 'incr', 'inherit', 'land', 'let', 'load', 'los', 'lsl', 'lsr', 'lxor',
-	'match', 'method', 'mod', 'module', 'mutable', 'new', 'not', 'of', 'open', 'option', 'or',
-	'parser', 'private', 'raise', 'rec', 'ref', 'regexp', 'sig', 'stderr', 'stdin', 'stdout',
-	'struct', 'then', 'to', 'true', 'try', 'type', 'val', 'virtual', 'when', 'while', 'with'
-}))
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 
 -- Types.
-lex:add_rule('type', token(lexer.TYPE, word_match('bool char float int string unit')))
+lex:add_rule('type', lex:tag(lexer.TYPE, lex:word_match(lexer.TYPE)))
 
 -- Functions.
-lex:add_rule('function', token(lexer.FUNCTION, word_match{
+lex:add_rule('function', lex:tag(lexer.FUNCTION, lex:word_match(lexer.FUNCTION)))
+
+-- Identifiers.
+local word = (lexer.alnum + S("_'"))^1
+lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, word))
+
+-- Strings.
+lex:add_rule('string', lex:tag(lexer.STRING, lexer.range('"'))
+
+-- Comments.
+lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.range('(*', '*)', false, false, true)))
+
+-- Numbers.
+lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number))
+
+-- Operators.
+lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('=<>+-*/.,:;~!#%^&|?[](){}')))
+
+lexer.property['scintillua.comment'] = '(*|*)'
+
+lex:set_word_list(lexer.KEYWORD, {
+	'and', 'as', 'asr', 'begin', 'class', 'closed', 'constraint', 'do', 'done',
+	'downto', 'else', 'end', 'exception', 'external', 'failwith', 'false', 'flush',
+	'for', 'fun', 'function', 'functor', 'if', 'in', 'include', 'incr', 'inherit',
+	'land', 'let', 'load', 'los', 'lsl', 'lsr', 'lxor', 'match', 'method', 'mod',
+	'module', 'mutable', 'new', 'not', 'of', 'open', 'option', 'or', 'parser',
+	'private', 'raise', 'rec', 'ref', 'regexp', 'sig', 'stderr', 'stdin', 'stdout',
+	'struct', 'then', 'to', 'true', 'try', 'type', 'val', 'virtual', 'when', 'while',
+	'with'
+})
+
+lex:set_word_list(lexer.TYPE, {
+	'bool', 'char', 'float', 'int', 'list', 'string', 'unit'
+})
+
+lex:set_word_list(lexer.FUNCTION, {
 	'abs', 'abs_float', 'acos', 'asin', 'atan', 'atan2', 'at_exit', 'bool_of_string', 'ceil',
 	'char_of_int', 'classify_float', 'close_in', 'close_in_noerr', 'close_out', 'close_out_noerr',
 	'compare', 'cos', 'cosh', 'decr', 'epsilon_float', 'exit', 'exp', 'failwith', 'float',
@@ -41,25 +66,5 @@ lex:add_rule('function', token(lexer.FUNCTION, word_match{
 	'seek_out', 'set_binary_mode_in', 'set_binary_mode_out', 'sin', 'sinh', 'snd', 'sqrt', 'stderr',
 	'stdin', 'stdout', 'string_of_bool', 'string_of_float', 'string_of_format', 'string_of_int',
 	'succ', 'tan', 'tanh', 'truncate'
-}))
-
--- Identifiers.
-lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
-
--- Strings.
-local sq_str = lexer.range("'", true)
-local dq_str = lexer.range('"', true)
-lex:add_rule('string', token(lexer.STRING, sq_str + dq_str))
-
--- Comments.
-lex:add_rule('comment', token(lexer.COMMENT, lexer.range('(*', '*)', false, false, true)))
-
--- Numbers.
-lex:add_rule('number', token(lexer.NUMBER, lexer.number))
-
--- Operators.
-lex:add_rule('operator', token(lexer.OPERATOR, S('=<>+-*/.,:;~!#%^&|?[](){}')))
-
-lexer.property['scintillua.comment'] = '(*|*)'
-
+})
 return lex
