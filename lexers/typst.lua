@@ -10,11 +10,11 @@ local lex = lexer.new(...)
 -- Typst Code Expression
 local ranges =
 	lexer.range('{', '}', false, false, true) + lexer.range('(', ')', false, false, true) +
-		lexer.word^1 * lexer.space^-1 * lexer.word^-1 * lexer.range('(', ')', false, false, true)^-1
+		lexer.word^1 * lexer.space^-1 * lexer.word^-1 * lexer.range('(', ')', false, false, true)
 
 local expression = '#' *
-	(lexer.word * lexer.space^-1 * lexer.word^-1 * ranges^-1 * lexer.space^-1 * P'= ' *
-		(ranges + lexer.range('"') + lexer.number + lexer.word) + ranges + lexer.word) * P(';')^-1
+	((lexer.word * lexer.space^-1 * lexer.word^-1 * ranges^-1 * lexer.space^-1 * P('= ') *
+		(ranges + lexer.range('"') + lexer.number + lexer.word)) + ranges + lexer.word) * P(';')^-1
 
 lex:add_rule('expression', lex:tag(lexer.EMBEDDED, expression))
 
