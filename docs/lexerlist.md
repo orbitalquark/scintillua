@@ -65,6 +65,7 @@ used if [`fold.scintillua.by.indentation`][] is enabled. For SciTE, see *lexers/
 1. HTML`*`
 1. Icon`*`
 1. IDL
+1. Idris2
 1. Inform
 1. ini
 1. Io`*`
