@@ -3,26 +3,23 @@
 -- Reference: https://typst.app/docs/reference/syntax/
 
 local lexer = lexer
-local P, S, B = lpeg.P, lpeg.S, lpeg.B
+local P, S = lpeg.P, lpeg.S
 
 local lex = lexer.new(...)
 
--- Typst Code Expression
-local ranges =
-	lexer.range('{', '}', false, false, true) + lexer.range('(', ')', false, false, true) +
-		lexer.word^1 * lexer.space^-1 * lexer.word^-1 * lexer.range('(', ')', false, false, true)
+-- Escaped characters (capture them before other rules)
+lex:add_rule('escapes', P('\\*') + P('\\_') + P('\\;') + P('\\#') + P('\\<') + P('\\>'))
 
-local expression = '#' *
-	((lexer.word * lexer.space^-1 * lexer.word^-1 * ranges^-1 * lexer.space^-1 * P('= ') *
-		(ranges + lexer.range('"') + lexer.number + lexer.word)) + ranges + lexer.word) * P(';')^-1
-
-lex:add_rule('expression', lex:tag(lexer.EMBEDDED, expression))
+-- Comments
+local line_comment = lexer.to_eol('//', true)
+local block_comment = lexer.range('/*', '*/')
+lex:add_rule('comment', lex:tag(lexer.COMMENT, line_comment + block_comment))
 
 -- Headings
 lex:add_rule('header', lex:tag(lexer.HEADING, lexer.to_eol(lexer.starts_line('='))))
 
 -- Lists
-lex:add_rule('list', lex:tag(lexer.LIST, lexer.starts_line(S('*+-'), true) * S(' \t')))
+lex:add_rule('list', lex:tag(lexer.LIST, lexer.starts_line(S('+-'), true) * S(' \t')))
 
 -- Raw Text
 local raw_text = lpeg.Cmt(lpeg.C(P('`')^1), function(input, index, bt)
@@ -32,17 +29,56 @@ local raw_text = lpeg.Cmt(lpeg.C(P('`')^1), function(input, index, bt)
 end)
 lex:add_rule('raw', lex:tag(lexer.CODE, raw_text))
 
--- Links
-local link_url = 'http' * P('s')^-1 * '://' * (lexer.any - lexer.space)^1 +
-	('<' * lexer.alpha^2 * ':' * (lexer.any - lexer.space - '>')^1 * '>')
-lex:add_rule('link', lex:tag(lexer.LINK, link_url))
+-- Labels
+lex:add_rule('label', lex:tag(lexer.LABEL, lexer.range('<', '>', false, false, true)))
+
+-- References
+lex:add_rule('reference', lex:tag(lexer.REFERENCE, '@' * lexer.word_utf8))
 
 -- Strong and Emphasis
 lex:add_rule('strong', lex:tag(lexer.BOLD, lexer.range('*', true)))
 lex:add_rule('em', lex:tag(lexer.ITALIC, lexer.range('_', true)))
 
+-- Code Expressions
+-- Using rules from: https://typst.app/docs/reference/syntax/#code
+local operators = S'-+*/=!<>'^-2 + P'not' + P'in' + P'and' + P'or'
+local varwithdot = lexer.word * P('.')^-1 * lexer.word^-1
+local string_type = lexer.range('"')
+local code_block = lexer.range('{', '}', false, false, true)
+local parenthesized = lexer.range('(', ')', false, false, true)
+local content = lexer.range('[', ']', false, false, true)
+local code_content = code_block + content
+local func = varwithdot * parenthesized * content^-1
+local assignables = string_type + func + lexer.number + parenthesized + varwithdot
+local assignment = varwithdot * P' = ' * assignables * (P' ' * (operators * ' ' * assignables))^0
+local let_bind = P'let ' * varwithdot * P' = ' *
+	(parenthesized + assignables * (P' ' * (operators * ' ' * assignables))^0)
+local named_func = P'let ' * func * P' = ' * (parenthesized + code_block + lexer.to_eol())
+local conditional_if = P'if ' * assignables * (P' ' * (operators * ' ' * assignables))^0 * ' ' *
+	code_content
+local conditional = conditional_if * (P' else ' * conditional_if * (P' else '^-1) + code_content)^0
+local for_loop = P'for ' * varwithdot * P' in ' * assignables * ' ' * code_content
+local while_loop = P'while ' * varwithdot * ' ' * operators * ' ' * assignables * ' ' * code_content
+local set_rule = P'set ' * func
+local set_if = set_rule * conditional
+local show = P'show' * (': ' + (' ' * varwithdot)) * S': '^-2 * (func + set_rule + varwithdot)
+local include = P'include ' * string_type
+local import = P'import ' * string_type * ((P': ' + P' as ') * lexer.to_eol())^-1
+
+local expression = '#' *
+	(code_block + parenthesized + content + func + let_bind + named_func + set_if + set_rule +
+		for_loop + while_loop + conditional + assignment + include + import + show + varwithdot) *
+	P';'^-1
+
+lex:add_rule('expression', lex:tag(lexer.EMBEDDED, expression))
+
 -- Math
 lex:add_rule('math', lex:tag(lexer.NUMBER, lexer.range('$')))
+
+-- Links
+local link_url = 'http' * P('s')^-1 * '://' * (lexer.any - lexer.space)^1 +
+	('<' * lexer.alpha^2 * ':' * (lexer.any - lexer.space - '>')^1 * '>')
+lex:add_rule('link', lex:tag(lexer.LINK, link_url))
 
 -- Plain text.
 lex:add_rule('word', lex:tag(lexer.DEFAULT, lexer.word_utf8))
@@ -70,11 +106,6 @@ function lex:fold(text, start_line, start_level)
 	end
 	return levels
 end
-
--- Comments
-local line_comment = lexer.to_eol('//', true)
-local block_comment = lexer.range('/*', '*/')
-lex:add_rule('comment', lex:tag(lexer.COMMENT, line_comment + block_comment))
 
 lexer.property['scintillua.comment'] = '//'
 
