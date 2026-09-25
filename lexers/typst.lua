@@ -33,7 +33,7 @@ lex:add_rule('raw', lex:tag(lexer.CODE, raw_text))
 lex:add_rule('label', lex:tag(lexer.LABEL, lexer.range('<', '>', false, false, true)))
 
 -- References
-lex:add_rule('reference', lex:tag(lexer.REFERENCE, '@' * lexer.word_utf8))
+lex:add_rule('reference', lex:tag(lexer.REFERENCE, '@' * (lexer.word_utf8 * (P'-'^-1 * lexer.word_utf8)^0) ))
 
 -- Strong and Emphasis
 lex:add_rule('strong', lex:tag(lexer.BOLD, lexer.range('*', true)))
@@ -49,7 +49,7 @@ local parenthesized = lexer.range('(', ')', false, false, true)
 local content = lexer.range('[', ']', false, false, true)
 local code_content = code_block + content
 local func = varwithdot * parenthesized * content^-1
-local assignables = string_type + func + lexer.number + parenthesized + varwithdot
+local assignables = string_type + func + lexer.number + parenthesized + varwithdot + code_content
 local assignment = varwithdot * P' = ' * assignables * (P' ' * (operators * ' ' * assignables))^0
 local let_bind = P'let ' * varwithdot * P' = ' *
 	(parenthesized + assignables * (P' ' * (operators * ' ' * assignables))^0)
