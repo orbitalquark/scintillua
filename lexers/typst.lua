@@ -65,9 +65,8 @@ local include = P'include ' * lexer.range('"')
 local import = P'import ' * lexer.range('"') * ((P': ' + P' as ') * lexer.to_eol())^-1
 
 local expression = '#' *
-	(code_block + parenthesized + content + func + let_bind + named_func + set_if + set_rule +
-		for_loop + while_loop + include + import + show + conditional + assignment + variable) *
-	P';'^-1
+	(for_loop + while_loop + include + import + show + conditional + set_if + set_rule + let_bind +
+		parenthesized + code_content + func + named_func + assignment + variable) * P';'^-1
 
 lex:add_rule('expression', lex:tag(lexer.EMBEDDED, expression))
 
