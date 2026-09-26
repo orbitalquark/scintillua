@@ -33,7 +33,8 @@ lex:add_rule('raw', lex:tag(lexer.CODE, raw_text))
 lex:add_rule('label', lex:tag(lexer.LABEL, lexer.range('<', '>', false, false, true)))
 
 -- References
-lex:add_rule('reference', lex:tag(lexer.REFERENCE, '@' * (lexer.word_utf8 * (P'-'^-1 * lexer.word_utf8)^0) ))
+local variable = lexer.word_utf8 * (S'-.'^-1 * lexer.word_utf8)^0
+lex:add_rule('reference', lex:tag(lexer.REFERENCE, '@' * variable))
 
 -- Strong and Emphasis
 lex:add_rule('strong', lex:tag(lexer.BOLD, lexer.range('*', true)))
@@ -42,32 +43,30 @@ lex:add_rule('em', lex:tag(lexer.ITALIC, lexer.range('_', true)))
 -- Code Expressions
 -- Using rules from: https://typst.app/docs/reference/syntax/#code
 local operators = S'-+*/=!<>'^-2 + P'not' + P'in' + P'and' + P'or'
-local varwithdot = lexer.word * P('.')^-1 * lexer.word^-1
-local string_type = lexer.range('"')
 local code_block = lexer.range('{', '}', false, false, true)
 local parenthesized = lexer.range('(', ')', false, false, true)
 local content = lexer.range('[', ']', false, false, true)
 local code_content = code_block + content
-local func = varwithdot * parenthesized * content^-1
-local assignables = string_type + func + lexer.number + parenthesized + varwithdot + code_content
-local assignment = varwithdot * P' = ' * assignables * (P' ' * (operators * ' ' * assignables))^0
-local let_bind = P'let ' * varwithdot * P' = ' *
-	(parenthesized + assignables * (P' ' * (operators * ' ' * assignables))^0)
+local func = variable * parenthesized * content^-1
+local assignables = lexer.range('"') + func + lexer.number + parenthesized + variable + code_content
+local assignment = variable * P' = ' * assignables * (' ' * (operators * ' ' * assignables))^0
+local let_bind = P'let ' * variable * P' = ' *
+	(parenthesized + assignables * (' ' * (operators * ' ' * assignables))^0)
 local named_func = P'let ' * func * P' = ' * (parenthesized + code_block + lexer.to_eol())
-local conditional_if = P'if ' * assignables * (P' ' * (operators * ' ' * assignables))^0 * ' ' *
+local conditional_if = P'if ' * assignables * (' ' * (operators * ' ' * assignables))^0 * ' ' *
 	code_content
 local conditional = conditional_if * (P' else ' * conditional_if * (P' else '^-1) + code_content)^0
-local for_loop = P'for ' * varwithdot * P' in ' * assignables * ' ' * code_content
-local while_loop = P'while ' * varwithdot * ' ' * operators * ' ' * assignables * ' ' * code_content
+local for_loop = P'for ' * variable * P' in ' * assignables * ' ' * code_content
+local while_loop = P'while ' * variable * ' ' * operators * ' ' * assignables * ' ' * code_content
 local set_rule = P'set ' * func
 local set_if = set_rule * conditional
-local show = P'show' * (': ' + (' ' * varwithdot)) * S': '^-2 * (func + set_rule + varwithdot)
-local include = P'include ' * string_type
-local import = P'import ' * string_type * ((P': ' + P' as ') * lexer.to_eol())^-1
+local show = P'show' * (': ' + (' ' * variable)) * S': '^-2 * (func + set_rule + variable)
+local include = P'include ' * lexer.range('"')
+local import = P'import ' * lexer.range('"') * ((P': ' + P' as ') * lexer.to_eol())^-1
 
 local expression = '#' *
 	(code_block + parenthesized + content + func + let_bind + named_func + set_if + set_rule +
-		for_loop + while_loop + conditional + assignment + include + import + show + varwithdot) *
+		for_loop + while_loop + include + import + show + conditional + assignment + variable) *
 	P';'^-1
 
 lex:add_rule('expression', lex:tag(lexer.EMBEDDED, expression))
