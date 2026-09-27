@@ -37,8 +37,8 @@ local variable = lexer.word_utf8 * (S'-.'^-1 * lexer.word_utf8)^0
 lex:add_rule('reference', lex:tag(lexer.REFERENCE, '@' * variable))
 
 -- Strong and Emphasis
-lex:add_rule('strong', lex:tag(lexer.BOLD, lexer.range('*', true)))
-lex:add_rule('em', lex:tag(lexer.ITALIC, lexer.range('_', true)))
+lex:add_rule('strong', lex:tag(lexer.BOLD, lexer.range('*', false)))
+lex:add_rule('em', lex:tag(lexer.ITALIC, lexer.range('_', false)))
 
 -- Code Expressions
 -- Using rules from: https://typst.app/docs/reference/syntax/#code
