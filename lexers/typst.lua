@@ -42,6 +42,7 @@ lex:add_rule('em', lex:tag(lexer.ITALIC, lexer.range('_', false)))
 
 -- Code Expressions
 -- Using rules from: https://typst.app/docs/reference/syntax/#code
+local ws = lexer.space^1
 local operators = S'-+*/=!<>'^-2 + P'not' + P'in' + P'and' + P'or'
 local code_block = lexer.range('{', '}', false, false, true)
 local parenthesized = lexer.range('(', ')', false, false, true)
@@ -49,20 +50,20 @@ local content = lexer.range('[', ']', false, false, true)
 local code_content = code_block + content
 local func = variable * parenthesized * content^-1
 local assignables = lexer.range('"') + func + lexer.number + parenthesized + variable + code_content
-local assignment = variable * P' = ' * assignables * (' ' * (operators * ' ' * assignables))^0
-local let_bind = P'let ' * variable * P' = ' *
-	(parenthesized + assignables * (' ' * (operators * ' ' * assignables))^0)
-local named_func = P'let ' * func * P' = ' * (parenthesized + code_block + lexer.to_eol())
-local conditional_if = P'if ' * assignables * (' ' * (operators * ' ' * assignables))^0 * ' ' *
+local assignment = variable * (ws * '=' * ws) * assignables * (ws * (operators * ws * assignables))^0
+local let_bind = P'let' * ws * variable * (ws * '=' * ws) *
+	(parenthesized + assignables * (ws * (operators * ws * assignables))^0)
+local named_func = P'let' * ws * func * (ws * '=' * ws) * (parenthesized + code_block + lexer.to_eol())
+local conditional_if = P'if' * ws * assignables * (ws * (operators * ws * assignables))^0 * ws *
 	code_content
-local conditional = conditional_if * (P' else ' * conditional_if * (P' else '^-1) + code_content)^0
-local for_loop = P'for ' * variable * P' in ' * assignables * ' ' * code_content
-local while_loop = P'while ' * variable * ' ' * operators * ' ' * assignables * ' ' * code_content
-local set_rule = P'set ' * func
+local conditional = conditional_if * (ws * P'else' * ws * conditional_if * ((ws * P'else' * ws)^-1) + code_content)^0
+local for_loop = P'for' * ws * variable * (ws * P'in' * ws) * assignables * ws * code_content
+local while_loop = P'while' * ws * variable * ws * operators * ws * assignables * ws * code_content
+local set_rule = P'set' * ws * func
 local set_if = set_rule * conditional
-local show = P'show' * (': ' + (' ' * variable)) * S': '^-2 * (func + set_rule + variable)
-local include = P'include ' * lexer.range('"')
-local import = P'import ' * lexer.range('"') * ((P': ' + P' as ') * lexer.to_eol())^-1
+local show = P'show' * ((':' * ws) + (ws * variable)) * S': '^-2 * (func + set_rule + variable)
+local include = P'include' * ws * lexer.range('"')
+local import = P'import' * ws * lexer.range('"') * (((':' * ws) + (ws * P'as' * ws)) * lexer.to_eol())^-1
 
 local expression = '#' *
 	(for_loop + while_loop + include + import + show + conditional + set_if + set_rule + let_bind +
