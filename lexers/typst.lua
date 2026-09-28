@@ -63,10 +63,10 @@ lex:add_rule('set', lex:tag(lexer.KEYWORD, P'set' * #(ws * func)))
 
 lex:add_rule('show', lex:tag(lexer.KEYWORD, P'show' * #(ws * (func + (variable * P': ')))))
 
-lex:add_rule('for', lex:tag(lexer.KEYWORD, P'for' *
-	#(ws * assignable * ws * P'in' * #(ws * assignable * ws * S'[{'))))
+lex:add_rule('for', lex:tag(lexer.KEYWORD, P'for' * #(ws *
+	((assignable * ws * P'in' * ws * assignable * ws * S'[{') + (lexer.range('(', ')') * ws * P'in')))))
 
-lex:add_rule('in', lex:tag(lexer.KEYWORD, P'in' * #(ws * assignable * ws * S'[{')))
+lex:add_rule('in', lex:tag(lexer.KEYWORD, P'in' * #(ws * ((assignable * ws * S'[{') + func))))
 
 lex:add_rule('while',
 	lex:tag(lexer.KEYWORD, P'while' * #(ws * ((assignable + operators^2) * ws)^0 * S'[{')))
@@ -125,14 +125,7 @@ lex:set_word_list(lexer.KEYWORD, {
 
 -- Unit types
 lex:set_word_list('units', {
-	-- Fractions
-	'fr',
-	-- Length
-	'pt', 'mm', 'cm', 'in', 'em',
-	-- Angles
-	'deg', 'rad',
-	-- Ratio
-	'%'
+	'fr', 'pt', 'mm', 'cm', 'in', 'em', 'deg', 'rad', '%'
 })
 
 lexer.property['scintillua.comment'] = '//'
