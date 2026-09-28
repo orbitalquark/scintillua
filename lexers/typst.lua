@@ -3,7 +3,7 @@
 -- Reference: https://typst.app/docs/reference/syntax/
 
 local lexer = lexer
-local P, S = lpeg.P, lpeg.S
+local P, S, B = lpeg.P, lpeg.S, lpeg.B
 
 local lex = lexer.new(...)
 
@@ -13,7 +13,7 @@ lex:add_rule('escapes', P'\\' * escapes)
 
 -- Comments
 -- Don't try to capture URLs as comments
-local line_comment = -lpeg.B(S'ps' * ':') * lexer.to_eol('//', true)
+local line_comment = -B(S'ps' * ':') * lexer.to_eol('//', true)
 local block_comment = lexer.range('/*', '*/')
 lex:add_rule('comment', lex:tag(lexer.COMMENT, line_comment + block_comment))
 
@@ -36,13 +36,13 @@ local variable = lex:tag(lexer.VARIABLE, lexer.word_utf8 * (S'-.:'^-1 * lexer.wo
 lex:add_rule('reference', lex:tag(lexer.REFERENCE, '@' * variable))
 
 -- Strong and Emphasis
-lex:add_rule('strong', lex:tag(lexer.BOLD, lexer.range('*') - (P'* ' + (lpeg.B(P': ') * P'*\n'))))
-lex:add_rule('em', lex:tag(lexer.ITALIC, lexer.range('_') - ((lpeg.B('let ') * '_') + P('_,'))))
+lex:add_rule('strong', lex:tag(lexer.BOLD, lexer.range('*') - (P'* ' + (B(P': ') * P'*\n'))))
+lex:add_rule('em', lex:tag(lexer.ITALIC, lexer.range('_') - ((B('let ') * '_') + ('_' * (S' ,')))))
 
 -- Code Expressions
 -- Using rules from: https://typst.app/docs/reference/syntax/#code
-lex:add_rule('code_mode', lex:tag(lexer.EMBEDDED, P'#' - lpeg.B('\\') * P'#'))
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lpeg.B'#' * lex:word_match(lexer.KEYWORD)))
+lex:add_rule('code_mode', lex:tag(lexer.EMBEDDED, P'#' - B('\\') * P'#'))
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, B'#' * lex:word_match(lexer.KEYWORD)))
 
 local operators = S'-+*/=!<>' + P'not' + P'in' + P'and' + P'or'
 local func = variable * #S'(['
@@ -55,7 +55,7 @@ local assignable = P'"'^-1 * (variable + lexer.number) * P'"'^-1
 lex:add_rule('let_bind', lex:tag(lexer.KEYWORD, P'let' * #(ws * ((variable * ws * P'=') + ('(' * variable * ',')))))
 
 lex:add_rule('else_if',
-	lex:tag(lexer.KEYWORD, (P'else' * ws * P'if'^-1) - (-lpeg.B(S']}' * ' ') * P'else')))
+	lex:tag(lexer.KEYWORD, (P'else' * ws * P'if'^-1) - (-B(S']}' * ' ') * P'else')))
 
 lex:add_rule('if', lex:tag(lexer.KEYWORD,
 	P'if' * #(ws * ((((assignable + operators^-2) * ws)^0 * S'[{') + func + ('(' * variable * ws* operators)))))
@@ -72,13 +72,20 @@ lex:add_rule('in', lex:tag(lexer.KEYWORD, P'in' * #(ws * ((assignable * ws * S'[
 lex:add_rule('while',
 	lex:tag(lexer.KEYWORD, P'while' * #(ws * ((assignable + operators^2) * ws)^0 * S'[{')))
 
-lex:add_rule('variable', lex:tag(lexer.VARIABLE, lpeg.B'#' * variable))
+lex:add_rule('variable', lex:tag(lexer.VARIABLE, B'#' * variable))
 
 lex:add_rule('string', lex:tag(lexer.STRING, lexer.range('"') * #((S'\n:,)') + (ws * S'[{'))))
 
+lex:add_rule('values', lex:tag(lexer.NUMBER, lexer.number * lex:word_match('units')))
+
+-- Lex as a number if after a keyword, assignment or being passed into a function
 lex:add_rule('numeric', lex:tag(lexer.NUMBER,
-	(lpeg.B(S'-+*/=!<>{,:' * P' ') + lpeg.B('(')) * lexer.number *
-		lex:word_match('units')^-1) * #(S',)' * S(', \n')))
+	((B(P'if ') + B(P'while ') + B(P'for ') + B(P'in ')) +
+	(B(S'-–+*/=!<>{(,: ' * ' ') + B('(')))
+	* lexer.number
+	-- Don't match comma delimited numbers, e.g. "4,200+"
+	- (lexer.number * ',' * lexer.number)
+	))
 
 -- Labels
 lex:add_rule('label',
@@ -88,7 +95,7 @@ lex:add_rule('label',
 lex:add_rule('math', lex:tag(lexer.NUMBER, lexer.range('$')))
 
 -- Links
-local link_url = -lpeg.B(P'"') * 'http' * P('s')^-1 * '://' * (lexer.any - lexer.space)^1 +
+local link_url = -B(P'"') * 'http' * P('s')^-1 * '://' * (lexer.any - lexer.space)^1 +
 	('<' * lexer.alpha^2 * ':' * (lexer.any - lexer.space - '>')^1 * '>')
 lex:add_rule('link', lex:tag(lexer.LINK, link_url))
 
