@@ -52,13 +52,15 @@ lex:add_rule('function', lex:tag(lexer.FUNCTION, func))
 local ws = lexer.space^1
 local assignable = P'"'^-1 * (variable + lexer.number) * P'"'^-1
 
-lex:add_rule('let_bind', lex:tag(lexer.KEYWORD, P'let' * #(ws * ((variable * ws * P'=') + ('(' * variable * ',')))))
+lex:add_rule('let_bind', lex:tag(lexer.KEYWORD,
+	P'let' * #(ws * ((variable * ws * P'=') + ('(' * variable * ',')))))
 
 lex:add_rule('else_if',
 	lex:tag(lexer.KEYWORD, (P'else' * ws * P'if'^-1) - (-B(S']}' * ' ') * P'else')))
 
-lex:add_rule('if', lex:tag(lexer.KEYWORD,
-	P'if' * #(ws * ((((assignable + operators^-2) * ws)^0 * S'[{') + func + ('(' * variable * ws* operators)))))
+lex:add_rule('if', lex:tag(lexer.KEYWORD, P'if' *
+	#(ws *
+		((((assignable + operators^-2) * ws)^0 * S'[{') + func + ('(' * variable * ws * operators)))))
 
 lex:add_rule('set', lex:tag(lexer.KEYWORD, P'set' * #(ws * func)))
 
@@ -80,12 +82,10 @@ lex:add_rule('values', lex:tag(lexer.NUMBER, lexer.number * lex:word_match('unit
 
 -- Lex as a number if after a keyword, assignment or being passed into a function
 lex:add_rule('numeric', lex:tag(lexer.NUMBER,
-	((B(P'if ') + B(P'while ') + B(P'for ') + B(P'in ')) +
-	(B(S'-–+*/=!<>{(,: ' * ' ') + B('(')))
-	* lexer.number
+	((B(P'if ') + B(P'while ') + B(P'for ') + B(P'in ')) + (B(S'-–+*/=!<>{(,: ' * ' ') + B('('))) *
+		lexer.number
 	-- Don't match comma delimited numbers, e.g. "4,200+"
-	- (lexer.number * ',' * lexer.number)
-	))
+	- (lexer.number * ',' * lexer.number)))
 
 -- Labels
 lex:add_rule('label',
