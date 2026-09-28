@@ -8,7 +8,8 @@ local P, S = lpeg.P, lpeg.S
 local lex = lexer.new(...)
 
 -- Escaped characters (capture them before other rules)
-lex:add_rule('escapes', P('\\*') + P('\\_') + P('\\;') + P('\\#') + P('\\<') + P('\\>') + P'\\$')
+local escapes = S'*_;#<>$'
+lex:add_rule('escapes', P'\\' * escapes)
 
 -- Comments
 -- Don't try to capture URLs as comments
@@ -36,7 +37,7 @@ lex:add_rule('reference', lex:tag(lexer.REFERENCE, '@' * variable))
 
 -- Strong and Emphasis
 lex:add_rule('strong', lex:tag(lexer.BOLD, lexer.range('*') - (P'* ' + (lpeg.B(P': ') * P'*\n'))))
-lex:add_rule('em', lex:tag(lexer.ITALIC, lexer.range('_')))
+lex:add_rule('em', lex:tag(lexer.ITALIC, lexer.range('_') - P('_,')))
 
 -- Code Expressions
 -- Using rules from: https://typst.app/docs/reference/syntax/#code
