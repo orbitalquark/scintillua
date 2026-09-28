@@ -52,7 +52,7 @@ lex:add_rule('function', lex:tag(lexer.FUNCTION, func))
 local ws = lexer.space^1
 local assignable = P'"'^-1 * (variable + lexer.number) * P'"'^-1
 
-lex:add_rule('let_bind', lex:tag(lexer.KEYWORD, P'let' * #(ws * variable * ws * P'=')))
+lex:add_rule('let_bind', lex:tag(lexer.KEYWORD, P'let' * #(ws * ((variable * ws * P'=') + ('(' * variable * ',')))))
 
 lex:add_rule('else_if',
 	lex:tag(lexer.KEYWORD, (P'else' * ws * P'if'^-1) - (-lpeg.B(S']}' * ' ') * P'else')))
