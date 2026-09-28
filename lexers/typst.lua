@@ -37,7 +37,7 @@ lex:add_rule('reference', lex:tag(lexer.REFERENCE, '@' * variable))
 
 -- Strong and Emphasis
 lex:add_rule('strong', lex:tag(lexer.BOLD, lexer.range('*') - (P'* ' + (lpeg.B(P': ') * P'*\n'))))
-lex:add_rule('em', lex:tag(lexer.ITALIC, lexer.range('_') - P('_,')))
+lex:add_rule('em', lex:tag(lexer.ITALIC, lexer.range('_') - ((lpeg.B('let ') * '_') + P('_,'))))
 
 -- Code Expressions
 -- Using rules from: https://typst.app/docs/reference/syntax/#code
@@ -58,7 +58,7 @@ lex:add_rule('else_if',
 	lex:tag(lexer.KEYWORD, (P'else' * ws * P'if'^-1) - (-lpeg.B(S']}' * ' ') * P'else')))
 
 lex:add_rule('if', lex:tag(lexer.KEYWORD,
-	P'if' * #(ws * ((((assignable + operators^-2) * ws)^0 * S'[{') + func))))
+	P'if' * #(ws * ((((assignable + operators^-2) * ws)^0 * S'[{') + func + ('(' * variable * ws* operators)))))
 
 lex:add_rule('set', lex:tag(lexer.KEYWORD, P'set' * #(ws * func)))
 
