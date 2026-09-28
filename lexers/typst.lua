@@ -44,14 +44,14 @@ lex:add_rule('code_mode', lex:tag(lexer.EMBEDDED, P'#' - lpeg.B('\\') * P'#'))
 lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lpeg.B'#' * lex:word_match(lexer.KEYWORD)))
 
 local operators = S'-+*/=!<>' + P'not' + P'in' + P'and' + P'or'
-local func = variable * #P'('
+local func = variable * #S'(['
 lex:add_rule('function', lex:tag(lexer.FUNCTION, func))
 
 -- Match some more code mode aspects if they seem like they are situationally in a expression
 local ws = lexer.space^1
 local assignable = P'"'^-1 * (variable + lexer.number) * P'"'^-1
 
-lex:add_rule('let_bind', lex:tag(lexer.KEYWORD, P'let' * #(' ' * variable * P' =')))
+lex:add_rule('let_bind', lex:tag(lexer.KEYWORD, P'let' * #(ws * variable * ws * P'=')))
 
 lex:add_rule('else_if',
 	lex:tag(lexer.KEYWORD, (P'else' * ws * P'if'^-1) - (-lpeg.B(S']}' * ' ') * P'else')))
@@ -76,8 +76,8 @@ lex:add_rule('variable', lex:tag(lexer.VARIABLE, lpeg.B'#' * variable))
 lex:add_rule('string', lex:tag(lexer.STRING, lexer.range('"') * #((S'\n:,)') + (ws * S'[{'))))
 
 lex:add_rule('numeric', lex:tag(lexer.NUMBER,
-	(lpeg.B(P', ' + P': ' + (S'-+*/=!<>{' * P' ')) + lpeg.B('(')) * lexer.number *
-		lex:word_match('units')^-1) * #S',)')
+	(lpeg.B(S'-+*/=!<>{,:' * P' ') + lpeg.B('(')) * lexer.number *
+		lex:word_match('units')^-1) * #(S',)' * S(', \n')))
 
 -- Labels
 lex:add_rule('label',
