@@ -16,6 +16,16 @@ local function h(n)
 end
 lex:add_rule('header', h(6) + h(5) + h(4) + h(3) + h(2) + h(1))
 
+lex:add_rule('hr',
+	lex:tag('hr', lpeg.Cmt(lexer.starts_line(lpeg.C(S('*-_')), true), function(input, index, c)
+		local line = input:match('[^\r\n]*', index):gsub('[ \t]', '')
+		if line:find('[^' .. c .. ']') or #line < 2 then return nil end
+		return (select(2, input:find('\r?\n', index)) or #input) + 1 -- include \n for eolfilled styles
+	end)))
+
+lex:add_rule('list', lex:tag(lexer.LIST,
+	lexer.starts_line(lexer.digit^1 * '.' + S('*+-'), true) * S(' \t')))
+
 local hspace = lexer.space - '\n'
 local blank_line = '\n' * hspace^0 * ('\n' + P(-1))
 
@@ -65,16 +75,6 @@ local code_inline = lpeg.Cmt(lpeg.C(P('`')^1), function(input, index, bt)
 end)
 
 lex:add_rule('block_code', lex:tag(lexer.CODE, code_line + code_block + code_inline))
-
-lex:add_rule('hr',
-	lex:tag('hr', lpeg.Cmt(lexer.starts_line(lpeg.C(S('*-_')), true), function(input, index, c)
-		local line = input:match('[^\r\n]*', index):gsub('[ \t]', '')
-		if line:find('[^' .. c .. ']') or #line < 2 then return nil end
-		return (select(2, input:find('\r?\n', index)) or #input) + 1 -- include \n for eolfilled styles
-	end)))
-
-lex:add_rule('list', lex:tag(lexer.LIST,
-	lexer.starts_line(lexer.digit^1 * '.' + S('*+-'), true) * S(' \t')))
 
 lex:add_rule('blockquote', lex:tag(lexer.STRING, lexer.starts_line('>', true)))
 
