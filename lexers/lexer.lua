@@ -1747,6 +1747,7 @@ function M.detect(filename, line)
 		gtkrc = 'gtkrc', --
 		ha = 'hare', --
 		hs = 'haskell', --
+		hcl = 'hcl', nomad = 'hcl', tf = 'hcl', tfvars = 'hcl', --
 		htm = 'html', html = 'html', shtm = 'html', shtml = 'html', xhtml = 'html', vue = 'html', --
 		icn = 'icon', --
 		idl = 'idl', odl = 'idl', --
