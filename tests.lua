@@ -1759,6 +1759,8 @@ function test_detect()
 	assert(lexer.detect('foo.lua.10~') == nil)
 	table.insert(lexer.ignore_patterns, '%.%d+$')
 	assert(lexer.detect('foo.lua.10~') == 'lua')
+	assert(lexer.detect('CMakeLists.txt.orig') == 'cmake')
+	assert(lexer.detect('CMakeLists.txt~') == 'cmake')
 
 	-- Simulate SCI_PRIVATELEXERCALL.
 	assert(not lexer.detect()) -- should not error or anything
