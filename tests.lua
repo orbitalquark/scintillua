@@ -1752,6 +1752,8 @@ function test_detect()
 	assert(lexer.detect('foo.m') == 'matlab')
 
 	assert(lexer.detect('CMakeLists.txt') == 'cmake') -- not text
+	assert(lexer.detect('CMakeLists.txt.orig') == 'cmake')
+	assert(lexer.detect('notes/todo.txt~') == 'todotxt')
 
 	assert(lexer.detect('foo.lua.orig') == 'lua')
 	assert(lexer.detect('foo.lua~') == 'lua')

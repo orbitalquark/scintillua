@@ -1870,7 +1870,8 @@ function M.detect(filename, line)
 	for _, patt in ipairs(M.ignore_patterns) do filename = filename:gsub(patt, '') end
 	ext = filename:match('[^.]*$')
 	while M.ignore_extensions[ext] do filename, ext = filename:match('^(.-%.?([^.]*))%.[^.]+$') end
-	return M.detect_extensions[ext] or extensions[ext]
+	name = filename:match('[^/\\]+$')
+	return M.detect_extensions[name] or extensions[name] or M.detect_extensions[ext] or extensions[ext]
 end
 
 -- The following are utility functions lexers will have access to.
