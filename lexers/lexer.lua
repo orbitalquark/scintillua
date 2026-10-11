@@ -1736,6 +1736,7 @@ function M.detect(filename, line)
 		f90 = 'fortran', f95 = 'fortran', f03 = 'fortran', f08 = 'fortran', --
 		fstab = 'fstab', --
 		gd = 'gap', gi = 'gap', gap = 'gap', --
+		['git-rebase-todo'] = 'git-rebase', ['COMMIT_EDITMSG'] = 'git-commit', --
 		gmi = 'gemini', --
 		po = 'gettext', pot = 'gettext', --
 		feature = 'gherkin', --
