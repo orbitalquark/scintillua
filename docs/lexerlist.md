@@ -22,6 +22,7 @@ used if [`fold.scintillua.by.indentation`][] is enabled. For SciTE, see *lexers/
 1. C`*`
 1. C++`*`
 1. C#`*`
+1. Cangjie`*`
 1. ChucK
 1. Clojure`*`
 1. CMake`*`

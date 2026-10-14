@@ -1704,6 +1704,7 @@ function M.detect(filename, line)
 		bat = 'batch', cmd = 'batch', --
 		bib = 'bibtex', --
 		boo = 'boo', --
+		cj = 'cangjie', --
 		cs = 'csharp', --
 		c = 'c', C = 'c', cc = 'cpp', cpp = 'cpp', cxx = 'cpp', ['c++'] = 'cpp', h = 'cpp', H = 'cpp',
 		hh = 'cpp', hpp = 'cpp', hxx = 'cpp', ['h++'] = 'cpp', --
