@@ -48,12 +48,11 @@ local sq_str = lexer.range("'")
 local dq_str = lexer.range('"')
 local lit_str = '%' * S('qQ')^-1 * literal_delimited
 local heredoc = '<<' * P(function(input, index)
-	local s, e, indented, _, delimiter = input:find('([%-~]?)(["`]?)([%a_][%w_]*)%2.-[\r\n]+', index)
-	if s == index and delimiter then
-		local end_heredoc = (#indented > 0 and '[\r\n]+ *' or '[\r\n]+')
-		s, e = input:find(end_heredoc .. delimiter, e)
-		return e and e + 1 or #input + 1
-	end
+	local _, e, indented, _, delimiter = input:find('^([%-~]?)(["`]?)([%a_][%w_]*)%2.-[\r\n]+', index)
+	if not delimiter then return end
+	local end_heredoc = (#indented > 0 and '[\r\n]+[ \t]*' or '[\r\n]+')
+	e = select(2, input:find(end_heredoc .. delimiter, e))
+	return e and e + 1 or #input + 1
 end)
 local string = lex:tag(lexer.STRING, (sq_str + dq_str + lit_str + heredoc + cmd_str + lit_cmd +
 	lit_array) * S('f')^-1)
