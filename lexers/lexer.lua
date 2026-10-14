@@ -1696,6 +1696,7 @@ function M.detect(filename, line)
 		apl = 'apl', --
 		applescript = 'applescript', --
 		ino = 'arduino', --
+		adoc = 'asciidoc', --
 		asm = 'asm', ASM = 'asm', s = 'asm', S = 'asm', --
 		asa = 'asp', asp = 'asp', hta = 'asp', --
 		ahk = 'autohotkey', --
