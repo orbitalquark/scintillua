@@ -75,7 +75,7 @@ lex:add_rule('let_bind', lex:tag(lexer.KEYWORD, P'let' *
 local else_rule = B(S(']}') * ' ') * 'else'
 lex:add_rule('else', lex:tag(lexer.KEYWORD, else_rule * #(ws * (P'if' + S'[{'))))
 lex:add_rule('if',
-	lex:tag(lexer.KEYWORD, (B(else_rule * ' ') * P'if') + P'if' * (to_brace + #P' (')))
+	lex:tag(lexer.KEYWORD, (B(else_rule * ' ') * P'if') + P'if' * (to_brace + #(ws * (P'(' + lexer.number)))))
 
 local in_rule = P'in' * #(to_brace + (ws * func))
 lex:add_rule('for', lex:tag(lexer.KEYWORD,
