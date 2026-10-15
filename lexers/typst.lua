@@ -63,31 +63,27 @@ local operators = S'-+*/=!<>' + P'not' + P'in' + P'and' + P'or'
 local func = identifier * #S'(['
 lex:add_rule('function', lex:tag(lexer.FUNCTION, func))
 
--- Match some more code mode aspects if they seem like they are situationally in a expression
-local ws = lexer.space^1
+-- Match some more code mode aspects if they seem like they are situationally in a expression.
+local ws = S(' \t')^1
 local assignable = P'"'^-1 * (identifier + lexer.number) * P'"'^-1
+local to_brace = #(ws * ((assignable + operators^2) * ws)^0 * S'[{')
 
-lex:add_rule('let_bind', lex:tag(lexer.KEYWORD,
-	P'let' * #(ws * ((identifier * ws * P'=') + ('(' * identifier * ',')))))
+lex:add_rule('let_bind', lex:tag(lexer.KEYWORD, P'let' *
+	#(ws * ((identifier * ws * P'=') + ('(' * identifier * ',')))))
 
-lex:add_rule('else_if',
-	lex:tag(lexer.KEYWORD, (P'else' * ws * P'if'^-1) - (-B(S']}' * ' ') * P'else')))
+lex:add_rule('else', lex:tag(lexer.KEYWORD, B(S(']}') * ' ') * 'else' * #(' ' * (P'if' + S'[{'))))
 
-lex:add_rule('if', lex:tag(lexer.KEYWORD, P'if' *
-	#(ws *
-		((((assignable + operators^-2) * ws)^0 * S'[{') + func + ('(' * identifier * ws * operators)))))
+lex:add_rule('if', lex:tag(lexer.KEYWORD, (B(P'else ') * P'if') + P'if' * to_brace))
 
 lex:add_rule('set', lex:tag(lexer.KEYWORD, P'set' * #(ws * func)))
 
 lex:add_rule('show', lex:tag(lexer.KEYWORD, P'show' * #(ws * (func + (identifier * P': ')))))
 
-lex:add_rule('for', lex:tag(lexer.KEYWORD, P'for' * #(ws *
-	((assignable * ws * P'in' * ws * assignable * ws * S'[{') + (lexer.range('(', ')') * ws * P'in')))))
+lex:add_rule('for', lex:tag(lexer.KEYWORD, P'for' * #(ws * (assignable + lexer.range('(', ')')) * ws * P'in')))
 
-lex:add_rule('in', lex:tag(lexer.KEYWORD, P'in' * #(ws * ((assignable * ws * S'[{') + func))))
+lex:add_rule('in', lex:tag(lexer.KEYWORD, P'in' * #(to_brace + (' ' * func))))
 
-lex:add_rule('while',
-	lex:tag(lexer.KEYWORD, P'while' * #(ws * ((assignable + operators^2) * ws)^0 * S'[{')))
+lex:add_rule('while', lex:tag(lexer.KEYWORD, P'while' * to_brace))
 
 lex:add_rule('variable', lex:tag(lexer.VARIABLE, B'#' * identifier))
 
