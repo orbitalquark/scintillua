@@ -73,7 +73,7 @@ lex:add_rule('let_bind', lex:tag(lexer.KEYWORD, P'let' *
 
 lex:add_rule('else', lex:tag(lexer.KEYWORD, B(S(']}') * ' ') * 'else' * #(' ' * (P'if' + S'[{'))))
 
-lex:add_rule('if', lex:tag(lexer.KEYWORD, (B(P'else ') * P'if') + P'if' * to_brace))
+lex:add_rule('if', lex:tag(lexer.KEYWORD, (B(P'else ') * P'if') + P'if' * (to_brace + #P' (')))
 
 lex:add_rule('set', lex:tag(lexer.KEYWORD, P'set' * #(ws * func)))
 
