@@ -46,7 +46,8 @@ lex:add_rule('raw', lex:tag(lexer.CODE, raw_text))
 
 -- Strong and Emphasis
 -- Don't capture use as code mode multiply or import statements.
-lex:add_rule('strong', lex:tag(lexer.BOLD, lexer.range('*') - (P'* ' + (B(P': ') * '*' * lexer.newline))))
+lex:add_rule('strong',
+	lex:tag(lexer.BOLD, lexer.range('*') - (P'* ' + (B(P': ') * '*' * lexer.newline))))
 -- Don't capture underscores used in code mode identifiers.
 lex:add_rule('em', lex:tag(lexer.ITALIC, lexer.range('_') - ((B('let ') * '_') + ('_' * (S' ,')))))
 
@@ -72,11 +73,13 @@ lex:add_rule('let_bind', lex:tag(lexer.KEYWORD, P'let' *
 	#(ws * ((identifier * ws * P'=') + ('(' * identifier * ',')))))
 
 local else_rule = B(S(']}') * ' ') * 'else'
-lex:add_rule('else', lex:tag(lexer.KEYWORD, else_rule * #(' ' * (P'if' + S'[{'))))
-lex:add_rule('if', lex:tag(lexer.KEYWORD, (B(else_rule * ' ') * P'if') + P'if' * (to_brace + #P' (')))
+lex:add_rule('else', lex:tag(lexer.KEYWORD, else_rule * #(ws * (P'if' + S'[{'))))
+lex:add_rule('if',
+	lex:tag(lexer.KEYWORD, (B(else_rule * ' ') * P'if') + P'if' * (to_brace + #P' (')))
 
-local in_rule = P'in' * #(to_brace + (' ' * func))
-lex:add_rule('for', lex:tag(lexer.KEYWORD, P'for' * #(ws * (assignable + lexer.range('(', ')')) * ws * in_rule)))
+local in_rule = P'in' * #(to_brace + (ws * func))
+lex:add_rule('for', lex:tag(lexer.KEYWORD,
+	P'for' * #(ws * (assignable + lexer.range('(', ')')) * ws * in_rule)))
 lex:add_rule('in', lex:tag(lexer.KEYWORD, in_rule))
 
 lex:add_rule('while', lex:tag(lexer.KEYWORD, P'while' * to_brace))
@@ -87,7 +90,8 @@ lex:add_rule('show', lex:tag(lexer.KEYWORD, P'show' * #(ws * (func + (identifier
 
 lex:add_rule('variable', lex:tag(lexer.VARIABLE, B'#' * identifier))
 
-lex:add_rule('string', lex:tag(lexer.STRING, lexer.range('"') * #((S':,)' + lexer.newline) + (ws * S'[{'))))
+lex:add_rule('string',
+	lex:tag(lexer.STRING, lexer.range('"') * #((S':,)' + lexer.newline) + (ws * S'[{'))))
 
 lex:add_rule('values', lex:tag(lexer.NUMBER, lexer.number * lex:word_match('units')))
 
