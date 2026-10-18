@@ -7,7 +7,8 @@ local P, S = lpeg.P, lpeg.S
 local lex = lexer.new(...)
 
 -- Keywords.
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
+-- Note: some keywords like 'class' can be method names.
+lex:add_rule('keyword', -lpeg.B('.') * lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 
 -- Functions.
 local builtin_func = lex:tag(lexer.FUNCTION_BUILTIN, lex:word_match(lexer.FUNCTION_BUILTIN))
@@ -43,7 +44,8 @@ end)
 
 local cmd_str = lexer.range('`')
 local lit_cmd = '%x' * literal_delimited
-local lit_array = '%w' * literal_delimited
+local lit_array = '%' * S('wW') * literal_delimited
+local lit_sym = '%' * S('iI') * literal_delimited
 local sq_str = lexer.range("'")
 local dq_str = lexer.range('"')
 local lit_str = '%' * S('qQ')^-1 * literal_delimited
@@ -55,7 +57,7 @@ local heredoc = '<<' * P(function(input, index)
 	return e and e + 1 or #input + 1
 end)
 local string = lex:tag(lexer.STRING, (sq_str + dq_str + lit_str + heredoc + cmd_str + lit_cmd +
-	lit_array) * S('f')^-1)
+	lit_array + lit_sym))
 -- TODO: regex_str fails with `obj.method /patt/` syntax.
 local regex_str = lexer.after_set('!%^&*([{-=+|:;,?<>~', lexer.range('/', true) * S('iomx')^0)
 local lit_regex = '%r' * literal_delimited * S('iomx')^0
