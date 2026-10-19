@@ -31,6 +31,7 @@ and better over the years.
 - Jason Lenz
 - Jason Schindler
 - Jeff Stone
+- jgart
 - John Benediktsson
 - Jonathon Levi
 - Joseph Eib
