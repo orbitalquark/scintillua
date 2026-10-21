@@ -1518,13 +1518,26 @@ local function initialize_standalone_library()
 		__index = function() return '' end, __newindex = function(t, k, v) rawset(t, k, tostring(v)) end
 	})
 
-	M.line_from_position = function(pos)
-		local line = 1
-		for s in M._text:gmatch('[^\n]*()') do
-			if pos <= s then return line end
-			line = line + 1
+	--- Returns a list of the start positions of all lines in the text being lexed.
+	-- The list is computed once per text so that line lookups do not have to scan the text from
+	-- the beginning each time.
+	local line_starts_text, line_starts
+	local function get_line_starts()
+		if M._text ~= line_starts_text then
+			line_starts_text, line_starts = M._text, {1}
+			for s in M._text:gmatch('\n()') do line_starts[#line_starts + 1] = s end
 		end
-		return line - 1 -- should not get to here
+		return line_starts
+	end
+
+	M.line_from_position = function(pos)
+		local starts = get_line_starts()
+		local low, high = 1, #starts
+		while low < high do
+			local mid = math.floor((low + high + 1) / 2)
+			if starts[mid] <= pos then low = mid else high = mid - 1 end
+		end
+		return low
 	end
 
 	M.text_range = function(pos, length) return M._text:sub(pos, pos + length - 1) end
@@ -1532,12 +1545,10 @@ local function initialize_standalone_library()
 	--- Returns a line number's start and end positions.
 	-- @param line Line number (1-based) to get the start and end positions of.
 	local function get_line_range(line)
-		local current_line = 1
-		for s, e in M._text:gmatch('()[^\n]*()') do
-			if current_line == line then return s, e end
-			current_line = current_line + 1
-		end
-		return 1, 1 -- should not get to here
+		local starts = get_line_starts()
+		local s = starts[line]
+		if not s then return 1, 1 end -- should not get to here
+		return s, starts[line + 1] and starts[line + 1] - 1 or #M._text + 1
 	end
 
 	M.line_start = setmetatable({}, {__index = function(_, line) return get_line_range(line) end})
@@ -1547,13 +1558,8 @@ local function initialize_standalone_library()
 
 	M.indent_amount = setmetatable({}, {
 		__index = function(_, line)
-			local current_line = 1
-			for s in M._text:gmatch('()[^\n]*') do
-				if current_line == line then
-					return #M._text:match('^[ \t]*', s):gsub('\t', string.rep(' ', 8))
-				end
-				current_line = current_line + 1
-			end
+			local s = get_line_starts()[line]
+			if s then return #M._text:match('^[ \t]*', s):gsub('\t', string.rep(' ', 8)) end
 		end
 	})
 

@@ -518,6 +518,23 @@ function test_fold_by_indentation()
 	assert_fold_points(lex, code, folds)
 end
 
+-- Tests the standalone substitutes for Scintilla's line information.
+function test_standalone_line_info()
+	local text = 'a\n  bb\r\n\n\tc'
+	lexer.load('text'):lex(text) -- sets the text to get line information for
+	local lines = {1, 1, 2, 2, 2, 2, 2, 2, 3, 4, 4, 4}
+	for pos = 1, #text + 1 do
+		assert(lexer.line_from_position(pos) == lines[pos],
+			string.format('wrong line for position %d', pos))
+	end
+	local starts, ends, indents = {1, 3, 9, 10}, {2, 8, 9, 12}, {0, 2, 0, 8}
+	for line = 1, 4 do
+		assert(lexer.line_start[line] == starts[line], 'wrong line start for line ' .. line)
+		assert(lexer.line_end[line] == ends[line], 'wrong line end for line ' .. line)
+		assert(lexer.indent_amount[line] == indents[line], 'wrong indent amount for line ' .. line)
+	end
+end
+
 -- Tests that all lexers load and lex text.
 function test_loads()
 	local p = io.popen('ls -1 lexers/*.lua')
