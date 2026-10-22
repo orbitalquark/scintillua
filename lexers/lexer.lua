@@ -1518,42 +1518,43 @@ local function initialize_standalone_library()
 		__index = function() return '' end, __newindex = function(t, k, v) rawset(t, k, tostring(v)) end
 	})
 
+	-- Cache line start positions for subsequent functions.
+	local line_starts, cached_text
+	local function get_line_starts()
+		if cached_text == M._text then return line_starts end
+		cached_text, line_starts = M._text, {1}
+		for s in cached_text:gmatch('\n()') do line_starts[#line_starts + 1] = s end
+		return line_starts
+	end
+
 	M.line_from_position = function(pos)
-		local line = 1
-		for s in M._text:gmatch('[^\n]*()') do
-			if pos <= s then return line end
-			line = line + 1
+		local line_starts = get_line_starts()
+		local low, high = 1, #line_starts
+		while low < high do
+			local mid = math.floor((low + high + 1) / 2)
+			if line_starts[mid] <= pos then
+				low = mid
+			else
+				high = mid - 1
+			end
 		end
-		return line - 1 -- should not get to here
+		return low
 	end
 
 	M.text_range = function(pos, length) return M._text:sub(pos, pos + length - 1) end
 
-	--- Returns a line number's start and end positions.
-	-- @param line Line number (1-based) to get the start and end positions of.
-	local function get_line_range(line)
-		local current_line = 1
-		for s, e in M._text:gmatch('()[^\n]*()') do
-			if current_line == line then return s, e end
-			current_line = current_line + 1
-		end
-		return 1, 1 -- should not get to here
-	end
-
-	M.line_start = setmetatable({}, {__index = function(_, line) return get_line_range(line) end})
+	M.line_start = setmetatable({},
+		{__index = function(_, line) return get_line_starts()[line] or 1 end})
 	M.line_end = setmetatable({}, {
-		__index = function(_, line) return select(2, get_line_range(line)) end
+		__index = function(_, line)
+			local s = get_line_starts()[line + 1]
+			return s and s - 1 or #M._text + 1
+		end
 	})
 
 	M.indent_amount = setmetatable({}, {
 		__index = function(_, line)
-			local current_line = 1
-			for s in M._text:gmatch('()[^\n]*') do
-				if current_line == line then
-					return #M._text:match('^[ \t]*', s):gsub('\t', string.rep(' ', 8))
-				end
-				current_line = current_line + 1
-			end
+			return #M._text:match('^[ \t]*', get_line_starts()[line]):gsub('\t', string.rep(' ', 8))
 		end
 	})
 

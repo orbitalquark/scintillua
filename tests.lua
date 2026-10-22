@@ -1778,6 +1778,39 @@ function test_lua51()
 	assert(output:find(CONSTANT_BUILTIN .. '\t3', 1, true))
 end
 
+function test_standalone_library()
+	local text = '1foo\n\t2bar\n  3baz'
+	lexer.load('text'):lex(text)
+
+	assert(lexer.property['scintillua.lexers'] ~= '')
+
+	assert(lexer.line_from_position(1) == 1)
+	assert(lexer.line_from_position(5) == 1)
+	assert(lexer.line_from_position(6) == 2)
+	assert(lexer.line_from_position(#text) == 3)
+
+	assert(lexer.text_range(1, 5) == '1foo\n')
+	assert(lexer.text_range(6, 5) == '\t2bar')
+
+	assert(lexer.line_start[1] == 1)
+	assert(lexer.line_start[2] == 6)
+	assert(lexer.line_start[3] == 12)
+	assert(lexer.line_start[4] == 1) -- fallback
+
+	assert(lexer.line_end[1] == 5)
+	assert(lexer.line_end[2] == 11)
+	assert(lexer.line_end[3] == #text + 1)
+	assert(lexer.line_end[4] == #text + 1) -- fallback
+
+	assert(lexer.indent_amount[1] == 0)
+	assert(lexer.indent_amount[2] == 8)
+	assert(lexer.indent_amount[3] == 2)
+
+	assert(lexer.FOLD_BASE)
+	assert(lexer.FOLD_HEADER)
+	assert(lexer.FOLD_BLANK)
+end
+
 -- Run tests.
 print('Starting test suite.')
 local tests = {}
