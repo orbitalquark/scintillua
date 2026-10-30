@@ -2,6 +2,31 @@
 
 [Atom Feed](https://github.com/orbitalquark/scintillua/releases.atom)
 
+## 6.8 (30 Oct 2026)
+
+Download:
+
+- [Scintillua 6.8][]
+
+Bugfixes:
+
+- Improve heredoc matching for lexers that support it.
+- `lexer.word_utf8` should be able to match single-letter words.
+- Fixed detection of whole names with extensions and suffixes to ignore.
+
+Changes:
+
+- Match plain-text words in markup languages for better performance.
+- Fixed performance issue detecting Markdown code blocks.
+- Updated C lexer to add more C99 identifiers and types.
+- Added Odin lexer.
+- Updated C++, Prolog and Logtalk lexer keywords.
+- Added Cangjie and AsciiDoc lexer.
+- Updated Ruby lexer.
+- Cache line start positions when using Scintillua as a standalone Lua library.
+
+[Scintillua 6.8]: https://github.com/orbitalquark/scintillua/releases/download/scintillua_6.8/scintillua_6.8.zip
+
 ## 6.7 (01 May 2026)
 
 Download:
