@@ -1738,6 +1738,7 @@ function M.detect(filename, line)
 		f = 'fortran', ['for'] = 'fortran', ftn = 'fortran', fpp = 'fortran', f77 = 'fortran',
 		f90 = 'fortran', f95 = 'fortran', f03 = 'fortran', f08 = 'fortran', --
 		fstab = 'fstab', --
+		fut = 'futhark', --
 		gd = 'gap', gi = 'gap', gap = 'gap', --
 		gmi = 'gemini', --
 		po = 'gettext', pot = 'gettext', --
