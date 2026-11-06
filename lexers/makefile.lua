@@ -17,11 +17,11 @@ lex:add_rule('function_def', lex:tag(lexer.KEYWORD, lexer.word_match('define')) 
 -- Keywords.
 lex:add_rule('keyword', lex:tag(lexer.KEYWORD, P('!')^-1 * lex:word_match(lexer.KEYWORD, true)))
 
--- Targets.
-local special_target = lex:tag(lexer.CONSTANT_BUILTIN, '.' * lex:word_match('special_targets'))
--- local normal_target = lex:tag('target', (lexer.any - lexer.space - S(':+?!=#'))^1)
-local target = special_target -- + normal_target * (ws * normal_target)^0
-lex:add_rule('target', lexer.starts_line(target * ws^-1 * #(':' * lexer.space)))
+-- Target definitions.
+local special_target = lex:tag('target.special', '.' * lex:word_match('special_targets'))
+local normal_target = lex:tag('target', (lexer.any - lexer.space - S(':+?!=#'))^1)
+local target = special_target + normal_target * (ws * normal_target)^0
+lex:add_rule('target', lexer.starts_line(target * ws^-1 * lex:tag('target', ':') * #lexer.space))
 
 -- Variable and function assignments.
 local func_assign = func_name * ws^-1 * eq *
@@ -33,7 +33,7 @@ local var_assign = (builtin_var + var_name) * ws^-1 *
 lex:add_rule('assign', lexer.starts_line(func_assign + var_assign, true) + B(': ') * var_assign)
 
 -- Operators.
-lex:add_rule('operator', lex:tag(lexer.OPERATOR, S(':(){}|')))
+lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('(){}|')))
 
 -- Strings.
 lex:add_rule('string', lexer.range("'", true) + lexer.range('"', true))
