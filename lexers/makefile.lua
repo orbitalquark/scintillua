@@ -18,10 +18,11 @@ lex:add_rule('function_def', lex:tag(lexer.KEYWORD, lexer.word_match('define')) 
 lex:add_rule('keyword', lex:tag(lexer.KEYWORD, P('!')^-1 * lex:word_match(lexer.KEYWORD, true)))
 
 -- Target definitions.
-local special_target = lex:tag('target.special', '.' * lex:word_match('special_targets'))
-local normal_target = lex:tag('target', (lexer.any - lexer.space - S(':+?!=#'))^1)
-local target = special_target + normal_target * (ws * normal_target)^0
-lex:add_rule('target', lexer.starts_line(target * ws^-1 * lex:tag('target', ':') * #lexer.space))
+local special_target = lex:tag('target.special',
+	'.' * lex:word_match('special_targets') * ws^-1 * ':')
+local target = (lexer.any - lexer.space - S(':+?!=#'))^1
+local normal_target = lex:tag('target', target * (ws * target)^0 * ws^-1 * ':')
+lex:add_rule('target', lexer.starts_line((special_target + normal_target) * #lexer.space))
 
 -- Variable and function assignments.
 local func_assign = func_name * ws^-1 * eq *

@@ -1111,9 +1111,9 @@ function test_makefile()
 		COMMENT, '# Comment.', --
 		VARIABLE_BUILTIN, '.DEFAULT_GOAL', OPERATOR, ':=', IDENTIFIER, 'all', --
 		VARIABLE, 'foo', OPERATOR, '?=', IDENTIFIER, 'bar', DEFAULT, '=', IDENTIFIER, 'baz', --
-		'target', 'all', 'target', ':', OPERATOR, '$(', VARIABLE, 'foo', OPERATOR, ')', --
-		'target', '$(foo)', 'target', ':', OPERATOR, ';', FUNCTION_BUILTIN, 'echo', STRING, "'hi'", --
-		'target.special', '.PHONY', 'target', ':', IDENTIFIER, 'docs', --
+		'target', 'all:', OPERATOR, '$(', VARIABLE, 'foo', OPERATOR, ')', --
+		'target', '$(foo):', OPERATOR, ';', FUNCTION_BUILTIN, 'echo', STRING, "'hi'", --
+		'target.special', '.PHONY:', IDENTIFIER, 'docs', --
 		KEYWORD, 'define', FUNCTION, 'build-cc', OPERATOR, '=', --
 		OPERATOR, '$(', VARIABLE_BUILTIN, 'CC', OPERATOR, ')', --
 		OPERATOR, '${', VARIABLE_BUILTIN, 'CFLAGS', OPERATOR, '}', --
