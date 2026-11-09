@@ -534,6 +534,29 @@ function test_loads()
 	end
 end
 
+function test_zig()
+	local zig = lexer.load('zig')
+
+	assert_lex(zig, 'extern fn f() void;', {
+		KEYWORD, 'extern', KEYWORD, 'fn', FUNCTION, 'f', OPERATOR, '(', OPERATOR, ')',
+		TYPE, 'void', OPERATOR, ';'
+	})
+	assert_lex(zig, 'export fn main() void {}', {
+		KEYWORD, 'export', KEYWORD, 'fn', FUNCTION, 'main', OPERATOR, '(', OPERATOR, ')',
+		TYPE, 'void', OPERATOR, '{', OPERATOR, '}'
+	})
+	assert_lex(zig, '@extern @export', {
+		FUNCTION_BUILTIN, '@extern', FUNCTION_BUILTIN, '@export'
+	})
+	assert_lex(zig, 'anyframe', {TYPE, 'anyframe'})
+	assert_lex(zig, 'foo.bar', {
+		IDENTIFIER, 'foo', OPERATOR, '.', IDENTIFIER, 'bar'
+	})
+	assert_lex(zig, 'foo.bar()', {
+		IDENTIFIER, 'foo', OPERATOR, '.', FUNCTION_METHOD, 'bar', OPERATOR, '(', OPERATOR, ')'
+	})
+end
+
 function test_names()
 	lexer.property['scintillua.lexers'] = ''
 	local names = lexer.names()

@@ -3,7 +3,7 @@
 -- (Based on the C++ LPeg lexer from Mitchell.)
 
 local lexer = lexer
-local P, S = lpeg.P, lpeg.S
+local S, B = lpeg.S, lpeg.B
 
 local lex = lexer.new(...)
 
@@ -20,12 +20,13 @@ lex:add_rule('constant', lex:tag(lexer.CONSTANT_BUILTIN, lex:word_match(lexer.CO
 lex:add_rule('function',
 	lex:tag(lexer.FUNCTION_BUILTIN, '@' * lex:word_match(lexer.FUNCTION_BUILTIN)))
 
+-- Struct methods.
+lex:add_rule('method', B('.') * lex:tag(lexer.FUNCTION_METHOD,
+	lexer.word * #(lexer.space^0 * '(')))
+
 -- Bare functions (function calls without @).
 lex:add_rule('function_call',
 	lex:tag(lexer.FUNCTION, lexer.word * #(lexer.space^0 * '(')))
-
--- Struct methods (word followed by dot and another word).
-lex:add_rule('method', lex:tag(lexer.FUNCTION_METHOD, lexer.word * '.' * lexer.word))
 
 -- Strings.
 local raw_str = lexer.to_eol('\\\\') -- Line strings
@@ -45,12 +46,13 @@ lex:add_rule('comment', lex:tag(lexer.COMMENT, doc_comment + comment))
 lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number_('_')))
 
 -- Operators.
-lex:add_rule('operator', token(lexer.OPERATOR, '..' + S('+-/*%<>!=^&|?~:;,.()[]{}')))
+lex:add_rule('operator', lex:tag(lexer.OPERATOR, '..' + S('+-/*%<>!=^&|?~:;,.()[]{}')))
 
 -- Word lists
 lex:set_word_list(lexer.KEYWORD, {
 	-- Keywords.
-	'inline', 'pub', 'fn', 'comptime', 'const', 'return', 'var', 'usingnamespace',
+	'inline', 'pub', 'fn', 'comptime', 'const', 'extern', 'export', 'return', 'var',
+	'usingnamespace',
 	-- Defering code blocks.
 	'defer', 'errdefer',
 	-- Functions and structures related keywords.
@@ -58,7 +60,7 @@ lex:set_word_list(lexer.KEYWORD, {
 	'callconv', 'packed', 'linksection', 'unreachable', 'test', 'asm',
 	'volatile',
 	-- Parallelism and concurrency related keywords.
-	'async', 'await', 'noasync', 'suspend', 'nosuspend', 'resume', 'threadlocal', 'anyframe',
+	'async', 'await', 'noasync', 'suspend', 'nosuspend', 'resume', 'threadlocal',
 	-- Control flow: conditions and loops.
 	'if', 'else', 'orelse', 'or', 'and', 'while', 'for', 'switch', 'continue', 'break', 'catch',
 	'try',
@@ -75,7 +77,7 @@ lex:set_word_list(lexer.TYPE, {
 	'c_void', -- C void type
 	'f16', 'f32', 'f64', 'f128', -- Floating-point types
 	'bool', 'void', 'noreturn', 'type', 'anytype', 'error', 'anyerror', -- Special types
-	'addrspace', 'anyframe', 'anyopaque', 'opaque', 'threadlocal',
+	'addrspace', 'anyframe', 'anyopaque', 'opaque',
 	'comptime_int', 'comptime_float' -- Comptime types
 })
 
