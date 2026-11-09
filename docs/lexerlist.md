@@ -51,6 +51,7 @@ used if [`fold.scintillua.by.indentation`][] is enabled. For SciTE, see *lexers/
 1. Forth
 1. Fortran
 1. fstab
+1. Futhark
 1. GAP`*`
 1. Gemini
 1. gettext
