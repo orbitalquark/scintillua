@@ -534,6 +534,20 @@ function test_loads()
 	end
 end
 
+function test_mediawiki()
+	local mediawiki = lexer.load('mediawiki')
+
+	assert_lex(mediawiki, '<a data-id="x" title=\'y\'>', {
+		TAG, '<a ', ATTRIBUTE, 'data-id="x" ', ATTRIBUTE, "title='y'", TAG, '>'
+	})
+	assert_lex(mediawiki, '[https://example.com label]', {LINK, '[https://example.com label]'})
+	assert_lex(mediawiki, '[mailto:user@example.com label]', {LINK, '[mailto:user@example.com label]'})
+	assert_lex(mediawiki, '{{#if:condition|yes|no}}', {FUNCTION, '{{#if:condition|yes|no}}'})
+	assert_lex(mediawiki, '{{Template:Name|label}}', {VARIABLE, '{{Template:Name|label}}'})
+	assert_lex(mediawiki, '=== Heading ===', {HEADING, '=== Heading ==='})
+	assert_lex(mediawiki, '====== Heading ======', {HEADING, '====== Heading ======'})
+end
+
 function test_names()
 	lexer.property['scintillua.lexers'] = ''
 	local names = lexer.names()

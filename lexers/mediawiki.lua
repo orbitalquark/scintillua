@@ -11,34 +11,40 @@ local lex = lexer.new(...)
 lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.range('<!--', '-->')))
 
 -- HTML-like tags
-local tag_start = lex:tag(lexer.TAG, '<' * P('/')^-1 * lexer.alnum^1 * lexer.space^0)
+local tag_name = lexer.alpha * (lexer.alnum + S('_:-'))^0
+local tag_start = lex:tag(lexer.TAG, '<' * P('/')^-1 * tag_name * lexer.space^0)
 local tag_end = lex:tag(lexer.TAG, P('/')^-1 * '>')
 local unquoted_attr = (lexer.any - (S('"' .. "'" .. '<>=') + lexer.space))^1
-local tag_attr = lex:tag(lexer.ATTRIBUTE, lexer.alpha^1 * lexer.space^0 *
-	('=' * lexer.space^0 * (lexer.range('"') + unquoted_attr))^-1 * lexer.space^0)
+local attr_name = lexer.alpha * (lexer.alnum + S('_:-'))^0
+local attr_value = lexer.range('"') + lexer.range("'") + unquoted_attr
+local tag_attr = lex:tag(lexer.ATTRIBUTE, attr_name * lexer.space^0 *
+	('=' * lexer.space^0 * attr_value)^-1 * lexer.space^0)
 lex:add_rule('tag', tag_start * tag_attr^0 * tag_end)
 
 -- Internal Links
 lex:add_rule('internal_link', lex:tag(lexer.LINK, lexer.range('[[', ']]')))
 
 -- External Links
+local hierarchical_protocol = lex:word_match(lexer.TYPE) * P('://')
+local simple_protocol = lexer.word_match({'mailto', 'news'}) * P(':')
 lex:add_rule('external_link', lex:tag(lexer.LINK,
-	P('[') * lex:word_match(lexer.TYPE) * P('://') *
+	P('[') * (hierarchical_protocol + simple_protocol) *
 	(lexer.any - P(']'))^0 * P(']')))
 
 -- Parser Functions
 lex:add_rule('parser_func', lex:tag(lexer.FUNCTION,
-	P('{{') * P('#')^-1 * lexer.alpha^1 * P(':') *
+	P('{{') * P('#') * lexer.alpha^1 * P(':') *
 	(lexer.any - S('{}'))^0 * P('}}')))
 
 -- Templates and Variables
 lex:add_rule('template', lex:tag(lexer.VARIABLE,
-	P('{{') * lexer.alpha^1 * (P('|') * (lexer.any - S('{}'))^0)^0 * P('}}')))
+	P('{{') * (lexer.any - S('{}|'))^1 * (P('|') * (lexer.any - S('{}'))^0)^0 * P('}}')))
 
 -- Headings
+local heading_marks = S('=')^2 * S('=')^-4 * -S('=')
 lex:add_rule('heading', lex:tag(lexer.HEADING,
-	lexer.starts_line(S('=')^2 * lexer.space^0 *
-	(lexer.any - S('=\r\n'))^1 * lexer.space^0 * S('=')^2)))
+	lexer.starts_line(heading_marks * lexer.space^0 *
+	(lexer.any - S('=\r\n'))^1 * lexer.space^0 * heading_marks)))
 
 -- Bold and Italic formatting
 lex:add_rule('bold', lex:tag(lexer.BOLD, lexer.range("'''", "'''")))
