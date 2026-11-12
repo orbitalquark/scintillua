@@ -1740,6 +1740,7 @@ function M.detect(filename, line)
 		fstab = 'fstab', --
 		fut = 'futhark', --
 		gd = 'gap', gi = 'gap', gap = 'gap', --
+		['git-rebase-todo'] = 'git-rebase', ['COMMIT_EDITMSG'] = 'git-commit', --
 		gmi = 'gemini', --
 		po = 'gettext', pot = 'gettext', --
 		feature = 'gherkin', --
